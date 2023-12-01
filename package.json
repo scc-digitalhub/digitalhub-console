@@ -1,0 +1,45 @@
+{
+  "name": "platformadmin",
+  "private": true,
+  "scripts": {
+    "start": "env-cmd -f .env.development vite",
+    "start:localhost": "env-cmd -f .env.localhost vite",
+    "start:production": "env-cmd -f .env.production vite",
+    "build": "env-cmd -f .env.development vite build",
+    "build:localhost": "env-cmd -f .env.localhost vite build",
+    "build:production": "env-cmd -f .env.production vite build",
+    "serve": "env-cmd -f .env.development vite preview",
+    "serve:localhost": "env-cmd -f .env.localhost vite preview",
+    "serve:production": "env-cmd -f .env.production vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dslab/ra-auth-oidc": "^1.0.1",
+    "@dslab/ra-delete-dialog-button": "^1.0.0",
+    "@dslab/ra-export-record-button": "^1.0.0",
+    "@dslab/ra-export-yaml": "^1.0.0",
+    "@dslab/ra-inspect-button": "^1.0.0",
+    "@dslab/ra-jsonschema-input": "^1.0.0",
+    "@dslab/ra-language-italian": "^1.0.0",
+    "@dslab/ra-root-selector": "^1.0.0",
+    "env-cmd": "^10.1.0",
+    "react": "^18.2.0",
+    "react-admin": "^4.14.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.1",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "@vitejs/plugin-react": "^4.0.1",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.6",
+    "vite": "^4.3.9"
+  }
+}
