@@ -29,6 +29,7 @@ import {
   FunctionCreate,
   FunctionShow,
 } from "./resources/functions";
+import { Dashboard } from "./components/Dashboard";
 
 const API_URL: string = process.env.REACT_APP_API_URL as string;
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
@@ -41,11 +42,14 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
   return fetchUtils.fetchJson(url, options);
 };
 const dataProvider = appDataProvider(API_URL, httpClient);
+import { Route } from "react-router-dom";
+import { FunctionUpdate } from "./resources/functions/update";
 
 export const App = () => {
   return (
     <RootSelector resource="projects" selector={<ProjectSelectorList />}>
-      <Admin 
+      <Admin
+        dashboard={Dashboard}
         layout={MyLayout}
         i18nProvider={i18nProvider}
         dataProvider={dataProvider}
@@ -59,7 +63,9 @@ export const App = () => {
           show={<FunctionShow />}
           edit={<FunctionEdit />}
           create={<FunctionCreate />}
-        />
+        >
+          <Route path=":id/update" element={<FunctionUpdate/>} />
+        </Resource>
         <Resource
           name="dataitems"
           list={<DataItemList />}
