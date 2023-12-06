@@ -1,21 +1,20 @@
-import { DeleteWithConfirmButton, EditButton, Show, SimpleShowLayout, TextField, TopToolbar, useRecordContext, useTranslate } from "react-admin";
+import { Show, SimpleShowLayout, TextField, useRecordContext, useTranslate } from "react-admin";
   import { Grid, Typography } from "@mui/material";
   import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
 import { getDataItemSpec, getDataItemUiSpec } from "./types";
-import { ExportRecordButton } from "@dslab/ra-export-record-button";
-import { InspectButton } from "@dslab/ra-inspect-button";
+import { PostShowActions } from "../../components/helper";
 
 
   
-const PostShowActions = () => (
-  <TopToolbar>
-      <EditButton />
-      <InspectButton />
-      <ExportRecordButton language="yaml" />
-      <DeleteWithConfirmButton/>
-  </TopToolbar>
-);
+// const PostShowActions = () => (
+//   <TopToolbar>
+//      <BackButton />
+//       <EditButton  style={{marginLeft:'auto'}}/>      <InspectButton />
+//       <ExportRecordButton language="yaml" />
+//       <DeleteWithConfirmButton/>
+//   </TopToolbar>
+// );
   export const DataItemShow = () => {
     const translate = useTranslate();
     const record = useRecordContext();

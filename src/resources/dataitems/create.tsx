@@ -1,9 +1,9 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
 import { Create, SelectInput, SimpleForm, TextInput, useRecordContext } from "react-admin";
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
-import JsonSchemaInput from "../../components/metadata/JsonSchemaInput";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 
 
 export const DataItemCreate = () => {

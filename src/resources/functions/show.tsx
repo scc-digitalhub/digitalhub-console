@@ -1,31 +1,73 @@
-import { DeleteWithConfirmButton, EditButton, Show, SimpleShowLayout, TextField, TopToolbar, useRecordContext, useTranslate } from "react-admin";
+import { RaRecord, Show, ShowButton, SimpleShowLayout, TextField, useDataProvider, useRecordContext, useResourceContext, useTranslate } from "react-admin";
 import { Grid, Typography } from "@mui/material";
 import { getFunctionSpec, getFunctionUiSpec } from "./types";
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { ExportRecordButton } from "@dslab/ra-export-record-button";
-import { InspectButton } from "@dslab/ra-inspect-button";
+import { useRootSelector } from "@dslab/ra-root-selector";
+import { useState, useEffect } from "react";
+import { PostShowActions } from "../../components/helper";
+import { TableCell,TableHead,  TableRow,TableBody,Table } from "@mui/material";
 
 
 
-const ShowActions = () => (
-  <TopToolbar>
-      <EditButton />
-      <InspectButton />
-      <ExportRecordButton language="yaml" />
-      <DeleteWithConfirmButton/>
-  </TopToolbar>
-);
+// const ShowActions = () => (
+//   <TopToolbar>
+//      <BackButton />
+//       <EditButton  style={{marginLeft:'auto'}}/>
+//       <InspectButton />
+//       <ExportRecordButton language="yaml" />
+//      <DeleteWithConfirmButtonShowingName/> 
+//   </TopToolbar>
+// );
+const Aside = () => {
+  const record = useRecordContext();
+  const resource = useResourceContext();
+  const dataProvider = useDataProvider();
+  const { root } = useRootSelector();
+  const [versions, setVersions] = useState<RaRecord>();
+
+  useEffect(() => {
+    if (dataProvider && record && dataProvider) {
+      dataProvider.getLatest(resource, { record, root }).then((versions) => {
+        setVersions(versions.data);
+      });
+    }
+  }, [dataProvider, record, resource]);
+  if (!versions || !record ||!dataProvider) return <></>;
+  return (
+    <div >
+<Table>
+      <TableHead>
+          <TableRow>
+            <TableCell align="center">Version</TableCell>
+            <TableCell align="center">Created</TableCell>
+            <TableCell align="right"></TableCell>
+
+          </TableRow>
+        </TableHead>
+    <TableBody>
+      {versions.map(item => (
+        <TableRow key={item.id} style={{ backgroundColor: item.id===record.id ?'aliceblue':'white' }}>
+          <TableCell component="th" scope="row" align="center">{item.metadata?.version}</TableCell>
+          <TableCell align="center">{item.metadata?.created}</TableCell>
+          <TableCell size="small" align="right"><ShowButton record={item}/></TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+  </div>
+  );
+};
 export const FunctionShow = () => {
   const translate = useTranslate();
   const record = useRecordContext();
   const kind = record?.kind || undefined;
 
   return (
-    <Show actions={<ShowActions />}>
+    <Show actions={<PostShowActions />} aside={<Aside />}>
       <div>
-        <Grid container width={{ xs: "100%", xl: 800 }} spacing={2}>
-          <Grid item xs={12} md={8}>
+        <Grid >
+          <Grid >
             <Typography variant="h6" gutterBottom>
             {translate("resources.function.title")}
             </Typography>

@@ -5,12 +5,14 @@ import {
   ShowButton,
   TextField,
 } from "react-admin";
-import yamlExporter from '@dslab/ra-export-yaml';
-import { DeleteWithConfirmButtonShowingName } from "../../components/helper";
+import yamlExporter from "@dslab/ra-export-yaml";
+import { DeleteWithConfirmButtonShowingName, ListVersion } from "../../components/helper";
+
+
 
 export const FunctionList = () => (
   <List exporter={yamlExporter}>
-  <Datagrid rowClick="show">
+    <Datagrid rowClick="show" expand={ListVersion}>
       <TextField source="name" />
       <TextField source="kind" />
       <ShowButton />

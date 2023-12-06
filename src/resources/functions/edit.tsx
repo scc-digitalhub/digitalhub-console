@@ -1,7 +1,6 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
   Button,
-  CloneButton,
   Edit,
   SaveButton,
   SelectInput,
@@ -11,10 +10,10 @@ import {
   useRecordContext,
   useTranslate,
 } from "react-admin";
-import JsonSchemaInput from "../../components/metadata/JsonSchemaInput";
+import { JsonSchemaInput,JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
-import { RecordTitle } from "../../components/helper";
+import { NewVersionButton, PostEditToolbar, RecordTitle } from "../../components/helper";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 
@@ -25,26 +24,6 @@ const kinds = Object.values(FunctionTypes).map((v) => {
   };
 });
 
-const PostCreateToolbar = () => {
-  const translate = useTranslate();
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(-1);
-  };
-  return (
-    <Toolbar>
-      <SaveButton />
-      <Button
-        color="info"
-        label={translate("buttons.cancel")}
-        onClick={handleClick}
-      >
-        <ClearIcon />
-      </Button>
-      <CloneButton />
-    </Toolbar>
-  );
-};
 export const FunctionEdit = (props) => {
   const record = useRecordContext();
   const translate = useTranslate();
@@ -62,15 +41,16 @@ const FunctionEditForm = () => {
   const kind = record?.kind || undefined;
 
   return (
-    <SimpleForm  toolbar={<PostCreateToolbar />}>
+    <SimpleForm  toolbar={<PostEditToolbar />}>
       <TextInput source="name" disabled />
       <SelectInput source="kind" choices={kinds} disabled />
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaInput
-        source="spec"
-        schema={getFunctionSpec(kind)}
-        uiSchema={getFunctionUiSpec(kind)}
-      />
+      <JsonSchemaField
+                source="spec"
+                schema={getFunctionSpec(kind)}
+                uiSchema={getFunctionUiSpec(kind)}
+                label={false}
+              />
     </SimpleForm>
   );
 };

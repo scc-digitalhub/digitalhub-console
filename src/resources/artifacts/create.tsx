@@ -3,7 +3,7 @@ import { Create, SelectInput, SimpleForm, TextInput, useRecordContext } from "re
 import { ArtifactTypes, getArtifactSpec } from "./types";
 import { alphaNumericName } from "../../common/helper";
 import { MetadataSchema } from "../../common/types";
-import JsonSchemaInput from "../../components/metadata/JsonSchemaInput";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 
 export const ArtifactCreate = () => {
   const { root } = useRootSelector();
