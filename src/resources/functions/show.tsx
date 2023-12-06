@@ -10,15 +10,6 @@ import { TableCell,TableHead,  TableRow,TableBody,Table } from "@mui/material";
 
 
 
-// const ShowActions = () => (
-//   <TopToolbar>
-//      <BackButton />
-//       <EditButton  style={{marginLeft:'auto'}}/>
-//       <InspectButton />
-//       <ExportRecordButton language="yaml" />
-//      <DeleteWithConfirmButtonShowingName/> 
-//   </TopToolbar>
-// );
 const Aside = () => {
   const record = useRecordContext();
   const resource = useResourceContext();

@@ -44,6 +44,8 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 const dataProvider = appDataProvider(API_URL, httpClient);
 import { Route } from "react-router-dom";
 import { FunctionUpdate } from "./resources/functions/update";
+import { DataItemUpdate } from "./resources/dataitems/update";
+import { ArtifactUpdate } from "./resources/artifacts/update";
 
 export const App = () => {
   return (
@@ -64,7 +66,7 @@ export const App = () => {
           edit={<FunctionEdit />}
           create={<FunctionCreate />}
         >
-          <Route path=":id/update" element={<FunctionUpdate/>} />
+          <Route path=":id/update" element={<FunctionUpdate />} />
         </Resource>
         <Resource
           name="dataitems"
@@ -72,14 +74,18 @@ export const App = () => {
           show={<DataItemShow />}
           edit={<DataItemEdit />}
           create={<DataItemCreate />}
-        />
+        >
+          <Route path=":id/update" element={<DataItemUpdate />} />
+        </Resource>
         <Resource
           name="artifacts"
           list={<ArtifactList />}
           show={<ArtifactShow />}
           edit={<ArtifactEdit />}
           create={<ArtifactCreate />}
-        />
+        >
+          <Route path=":id/update" element={<ArtifactUpdate />} />
+        </Resource>
         <Resource
           name="projects"
           list={ProjectSelectorList}

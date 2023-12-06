@@ -96,6 +96,7 @@ export const PostEditToolbar = () => {
       >
         <ClearIcon />
       </Button>
+      <NewVersionButton />
     </Toolbar>
   );
 };
