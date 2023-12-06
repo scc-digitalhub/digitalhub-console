@@ -1,21 +1,16 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
-  Button,
   Edit,
-  SaveButton,
   SelectInput,
   SimpleForm,
   TextInput,
-  Toolbar,
   useRecordContext,
   useTranslate,
 } from "react-admin";
 import { JsonSchemaInput,JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
-import { NewVersionButton, PostEditToolbar, RecordTitle } from "../../components/helper";
-import ClearIcon from "@mui/icons-material/Clear";
-import { useNavigate } from "react-router-dom";
+import { PostEditToolbar, RecordTitle } from "../../components/helper";
 
 const kinds = Object.values(FunctionTypes).map((v) => {
   return {
