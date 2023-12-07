@@ -1,4 +1,5 @@
 import {
+  Labeled,
   Show,
   SimpleShowLayout,
   TextField,
@@ -18,27 +19,33 @@ export const ArtifactShow = () => {
 
   return (
     <Show actions={<PostShowActions />}>
-      <div>
-        <Grid container width={{ xs: "100%", xl: 800 }} spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h6" gutterBottom>
-              {translate("resources.artifact.title")}
-            </Typography>
+      <Grid>
+        <Typography variant="h6" gutterBottom>
+          {translate("resources.artifact.title")}
+        </Typography>
 
-            <SimpleShowLayout>
-              <TextField source="name" />
-              <TextField source="kind" />
-              <JsonSchemaField source="metadata" schema={MetadataSchema} />
-              <JsonSchemaField
-                source="spec"
-                schema={getArtifactSpec(kind)}
-                uiSchema={getArtifactUiSpec(kind)}
-                label={false}
-              />
-            </SimpleShowLayout>
+        <SimpleShowLayout>
+          <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={6}>
+              <Labeled label="My Label">
+                <TextField source="name" />
+              </Labeled>
+            </Grid>
+            <Grid item xs={6}>
+              <Labeled label="My Label">
+                <TextField source="kind" />
+              </Labeled>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
+          <JsonSchemaField source="metadata" schema={MetadataSchema} />
+          <JsonSchemaField
+            source="spec"
+            schema={getArtifactSpec(kind)}
+            uiSchema={getArtifactUiSpec(kind)}
+            label={false}
+          />
+        </SimpleShowLayout>
+      </Grid>
     </Show>
   );
 };
