@@ -28,6 +28,11 @@ const messages = {
         created: "Data di creazione",
       },
     },
+    aside: {
+      allVersion: "Tutte le versioni",
+      version: "Versione",
+      created: "Data di creazione",
+    },
   },
   buttons: {
     cancel: "Annulla",

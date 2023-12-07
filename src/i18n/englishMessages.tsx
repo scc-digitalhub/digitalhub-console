@@ -22,9 +22,14 @@ const messages = {
     },
     list: {
       expandable: {
-        version: "Versione",
+        version: "Version",
         created: "Creation Date",
       },
+    },
+    aside: {
+      allVersion: "All versions",
+      version: "Version",
+      created: "Creation Date",
     },
   },
   buttons: {

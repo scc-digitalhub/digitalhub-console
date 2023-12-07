@@ -10,7 +10,7 @@ import { Grid, Typography } from "@mui/material";
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
 import { getDataItemSpec, getDataItemUiSpec } from "./types";
-import { PostShowActions } from "../../components/helper";
+import { Aside, PostShowActions } from "../../components/helper";
 
 export const DataItemShow = () => {
   const translate = useTranslate();
@@ -18,7 +18,7 @@ export const DataItemShow = () => {
   const kind = record?.kind || undefined;
 
   return (
-    <Show actions={<PostShowActions />}>
+    <Show actions={<PostShowActions />} aside={<Aside />}>
       <Grid>
         <Typography variant="h6" gutterBottom>
           {translate("resources.dataitem.title")}

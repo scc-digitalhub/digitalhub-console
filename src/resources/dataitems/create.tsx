@@ -1,5 +1,5 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, SelectInput, SimpleForm, TextInput, useRecordContext } from "react-admin";
+import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput } from "react-admin";
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
@@ -8,8 +8,6 @@ import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 
 export const DataItemCreate = () => {
   const { root } = useRootSelector();
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
   const transform = (data) => ({
     ...data,
     project: root || "",
@@ -41,11 +39,16 @@ export const DataItemCreate = () => {
         <TextInput source="name" required />
         <SelectInput source="kind" choices={kinds} required />
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaInput
-        source="spec"
-        schema={getDataItemSpec(kind)}
-        uiSchema={getDataItemUiSpec(kind)}
-      />
+
+              <FormDataConsumer<{ kind: string }>>
+                 {({ formData }) => formData.kind &&
+                                <JsonSchemaInput
+                                source="spec"
+                                schema={getDataItemSpec(formData.kind)}
+                                uiSchema={getDataItemUiSpec(formData.kind)}
+                              />
+                 }
+             </FormDataConsumer>
       </SimpleForm>
     </Create>
   );

@@ -1,5 +1,5 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, SelectInput, SimpleForm, TextInput, useRecordContext } from "react-admin";
+import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput } from "react-admin";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
@@ -8,8 +8,8 @@ import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 
 export const FunctionCreate = () => {
   const { root } = useRootSelector();
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
+  // const record = useRecordContext();
+  // const kind = record?.kind || undefined;
   const transform = (data) => ({
     ...data,
     project: root || "",
@@ -40,11 +40,15 @@ export const FunctionCreate = () => {
         <TextInput source="name" required />
         <SelectInput source="kind" choices={kinds} required />
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaInput
-        source="spec"
-        schema={getFunctionSpec(kind)}
-        uiSchema={getFunctionUiSpec(kind)}
-      />
+        <FormDataConsumer<{ kind: string }>>
+                 {({ formData }) => formData.kind &&
+                           <JsonSchemaInput
+                           source="spec"
+                           schema={getFunctionSpec(formData.kind)}
+                           uiSchema={getFunctionUiSpec(formData.kind)}
+                         />
+                 }
+             </FormDataConsumer>
       </SimpleForm>
     </Create>
   );

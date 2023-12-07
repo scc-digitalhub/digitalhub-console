@@ -7,7 +7,7 @@ import {
   useRecordContext,
   useTranslate,
 } from "react-admin";
-import { JsonSchemaInput,JsonSchemaField } from "@dslab/ra-jsonschema-input";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
@@ -40,7 +40,7 @@ const FunctionEditForm = () => {
       <TextInput source="name" disabled />
       <SelectInput source="kind" choices={kinds} disabled />
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaField
+      <JsonSchemaInput
                 source="spec"
                 schema={getFunctionSpec(kind)}
                 uiSchema={getFunctionUiSpec(kind)}

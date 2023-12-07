@@ -1,5 +1,5 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, SelectInput, SimpleForm, TextInput, useRecordContext } from "react-admin";
+import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput } from "react-admin";
 import { ArtifactTypes, getArtifactSpec } from "./types";
 import { alphaNumericName } from "../../common/helper";
 import { MetadataSchema } from "../../common/types";
@@ -7,8 +7,7 @@ import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 
 export const ArtifactCreate = () => {
   const { root } = useRootSelector();
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
+
   const transform = (data) => ({
     ...data,
     project: root || "",  });
@@ -38,11 +37,16 @@ export const ArtifactCreate = () => {
         <TextInput source="name" />
         <SelectInput source="kind" choices={kinds} required />
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaInput
-        source="spec"
-        schema={getArtifactSpec(kind)}
-        uiSchema={getArtifactSpec(kind)}
-      />
+
+                    <FormDataConsumer<{ kind: string }>>
+                 {({ formData }) => formData.kind &&
+                                      <JsonSchemaInput
+                                      source="spec"
+                                      schema={getArtifactSpec(formData.kind)}
+                                      uiSchema={getArtifactSpec(formData.kind)}
+                                    />
+                 }
+             </FormDataConsumer>
       </SimpleForm>
     </Create>
   );

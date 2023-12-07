@@ -8,6 +8,8 @@ import { useRootSelector } from "@dslab/ra-root-selector";
 import { useState, useEffect } from "react";
 import { TableCell,TableHead,  TableRow,TableBody,Table } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import { CardHeader, CardContent, Card } from '@mui/material';
+
 
 export const RecordTitle = ({ prompt}:any) => {
   const record = useRecordContext();
@@ -98,5 +100,55 @@ export const PostEditToolbar = () => {
       </Button>
       <NewVersionButton />
     </Toolbar>
+  );
+};
+export const Aside = () => {
+  const record = useRecordContext();
+  const resource = useResourceContext();
+  const dataProvider = useDataProvider();
+  const { root } = useRootSelector();
+  const translate =useTranslate();
+  const [versions, setVersions] = useState<RaRecord>();
+
+  useEffect(() => {
+    if (dataProvider && record && dataProvider) {
+      dataProvider.getLatest(resource, { record, root }).then((versions) => {
+        setVersions(versions.data);
+      });
+    }
+  }, [dataProvider, record, resource]);
+  if (!versions || !record || !dataProvider) return <></>;
+  return (
+    <Card>
+      <CardHeader title={translate("resources.aside.allVersion")}
+         />
+        <CardContent> <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">{translate("resources.aside.version")}</TableCell>
+            <TableCell align="center">{translate("resources.aside.created")}</TableCell>
+            <TableCell align="right"></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {versions.map((item) => (
+            <TableRow
+              key={item.id}
+              style={{
+                backgroundColor: item.id === record.id ? "aliceblue" : "white",
+              }}
+            >
+              <TableCell component="th" scope="row" align="center">
+                {item.metadata?.version}
+              </TableCell>
+              <TableCell align="center"><DateField source="created" record={item.metadata} /></TableCell>
+              <TableCell size="small" align="right">
+                <ShowButton record={item} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table></CardContent>
+    </Card>     
   );
 };
