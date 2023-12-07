@@ -1,4 +1,4 @@
-import { Button, ButtonProps, DeleteWithConfirmButton, EditButton, RaRecord, SaveButton, ShowButton, Toolbar, TopToolbar, useDataProvider, useRecordContext, useResourceContext, useTranslate } from "react-admin";
+import { Button, ButtonProps, DateField, DeleteWithConfirmButton, EditButton, RaRecord, SaveButton, ShowButton, Toolbar, TopToolbar, useDataProvider, useRecordContext, useResourceContext, useTranslate } from "react-admin";
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { useNavigate } from 'react-router-dom';
 import { BackButton } from "@dslab/ra-back-button";
@@ -70,7 +70,7 @@ export const ListVersion = () => {
       {versions.map(item => (
         <TableRow key={item.id}>
           <TableCell component="th" scope="row" align="center">{item.metadata?.version}</TableCell>
-          <TableCell align="center">{item.metadata?.created}</TableCell>
+          <TableCell align="center"><DateField source="created" record={item.metadata} /></TableCell>
           <TableCell size="small" align="right"><ShowButton record={item}/></TableCell>
         </TableRow>
       ))}
