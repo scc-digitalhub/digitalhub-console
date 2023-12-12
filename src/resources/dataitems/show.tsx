@@ -18,7 +18,6 @@ export const DataItemShowLayout = () => {
   const kind = record?.kind || undefined;
 
   return (
-    <Show actions={<PostShowActions />} aside={<Aside />}>
       <Grid>
         <Typography variant="h6" gutterBottom>
           {translate("resources.dataitem.title")}
@@ -46,7 +45,6 @@ export const DataItemShowLayout = () => {
           />
         </SimpleShowLayout>
       </Grid>
-    </Show>
   );
 };
 export const DataItemShow = () => {

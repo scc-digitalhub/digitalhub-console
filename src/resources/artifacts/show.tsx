@@ -17,7 +17,6 @@ export const ArtifactShowLayout = () => {
   const record = useRecordContext();
   const kind = record?.kind || undefined;
   return (
-    <Show actions={<PostShowActions />} aside={<Aside />} >
       <Grid>
         <Typography variant="h6" gutterBottom>
           {translate("resources.artifact.title")}
@@ -45,7 +44,6 @@ export const ArtifactShowLayout = () => {
           />
         </SimpleShowLayout>
       </Grid>
-    </Show>
   );
 };
 
