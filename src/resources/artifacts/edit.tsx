@@ -1,29 +1,40 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
   Edit,
+  FormDataConsumer,
   SelectInput,
   SimpleForm,
   TextInput,
-  useRecordContext,
   useTranslate,
 } from "react-admin";
-import { JsonSchemaInput,JsonSchemaField } from "@dslab/ra-jsonschema-input";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
 import { ArtifactTypes, getArtifactSpec, getArtifactUiSpec } from "./types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
-
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import { alphaNumericName } from "../../common/helper";
 const kinds = Object.values(ArtifactTypes).map((v) => {
   return {
     id: v,
     name: v,
   };
 });
+const validator = (data) => {
+  const errors: any = {};
 
+  if (!("kind" in data)) {
+    errors.kind = "messages.validation.required";
+  }
+
+  if (!alphaNumericName(data.name)) {
+    errors.name = "validation.wrongChar";
+  }
+  return errors;
+};
 export const ArtifactEdit = (props) => {
-  const record = useRecordContext();
   const translate = useTranslate();
-  const kind = record?.kind || undefined;
-  console.log(kind);
+
   return (
     <Edit title={<RecordTitle prompt={translate("ArtifactString")} />}>
       <ArtifactEditForm {...props} />
@@ -32,20 +43,33 @@ export const ArtifactEdit = (props) => {
 };
 
 const ArtifactEditForm = () => {
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
+  const translate = useTranslate();
 
   return (
-    <SimpleForm toolbar={<PostEditToolbar />}>
+    <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
       <TextInput source="name" disabled />
       <SelectInput source="kind" choices={kinds} disabled />
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaField
-        source="spec"
-        schema={getArtifactSpec(kind)}
-        uiSchema={getArtifactUiSpec(kind)}
-        label={false}
-      />
+      <FormDataConsumer<{ kind: string }>>
+        {({ formData }) => {
+          if (formData.kind)
+            return (
+              <JsonSchemaInput
+                source="spec"
+                schema={getArtifactSpec(formData.kind)}
+                uiSchema={getArtifactUiSpec(formData.kind)}
+              />
+            );
+          else
+            return (
+              <Card sx={{ width: 1, textAlign: "center" }}>
+                <CardContent>
+                  {translate("resources.common.emptySpec")}{" "}
+                </CardContent>
+              </Card>
+            );
+        }}
+      </FormDataConsumer>
     </SimpleForm>
   );
 };

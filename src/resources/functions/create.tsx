@@ -1,15 +1,16 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput } from "react-admin";
+import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput, useTranslate } from "react-admin";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
 import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
-
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 export const FunctionCreate = () => {
   const { root } = useRootSelector();
-  // const record = useRecordContext();
-  // const kind = record?.kind || undefined;
+  const translate = useTranslate();
+
   const transform = (data) => ({
     ...data,
     project: root || "",
@@ -41,14 +42,25 @@ export const FunctionCreate = () => {
         <SelectInput source="kind" choices={kinds} required />
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
         <FormDataConsumer<{ kind: string }>>
-                 {({ formData }) => formData.kind &&
-                           <JsonSchemaInput
-                           source="spec"
-                           schema={getFunctionSpec(formData.kind)}
-                           uiSchema={getFunctionUiSpec(formData.kind)}
-                         />
-                 }
-             </FormDataConsumer>
+          {({ formData }) => {
+            if (formData.kind)
+              return (
+                <JsonSchemaInput
+                  source="spec"
+                  schema={getFunctionSpec(formData.kind)}
+                  uiSchema={getFunctionUiSpec(formData.kind)}
+                />
+              );
+            else
+              return (
+                <Card sx={{ width: 1, textAlign: "center" }}>
+                  <CardContent>
+                    {translate("resources.common.emptySpec")}{" "}
+                  </CardContent>
+                </Card>
+              );
+          }}
+        </FormDataConsumer>
       </SimpleForm>
     </Create>
   );

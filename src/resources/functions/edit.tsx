@@ -1,6 +1,7 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
   Edit,
+  FormDataConsumer,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -11,6 +12,9 @@ import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
+import { alphaNumericName } from "../../common/helper";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 const kinds = Object.values(FunctionTypes).map((v) => {
   return {
@@ -18,6 +22,17 @@ const kinds = Object.values(FunctionTypes).map((v) => {
     name: v,
   };
 });
+const validator = (data) => {
+  const errors: any = {};
+
+  if (!("kind" in data)) {
+    errors.kind = "messages.validation.required";
+  }
+  if (!alphaNumericName(data.name)) {
+    errors.name = "validation.wrongChar";
+  }
+  return errors;
+};
 
 export const FunctionEdit = (props) => {
   const record = useRecordContext();
@@ -32,20 +47,33 @@ export const FunctionEdit = (props) => {
 };
 
 const FunctionEditForm = () => {
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
+  const translate = useTranslate();
 
   return (
-    <SimpleForm  toolbar={<PostEditToolbar />}>
+    <SimpleForm  toolbar={<PostEditToolbar />} validate={validator}>
       <TextInput source="name" disabled />
       <SelectInput source="kind" choices={kinds} disabled />
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaInput
+      <FormDataConsumer<{ kind: string }>>
+        {({ formData }) => {
+          if (formData.kind)
+            return (
+              <JsonSchemaInput
                 source="spec"
-                schema={getFunctionSpec(kind)}
-                uiSchema={getFunctionUiSpec(kind)}
-                label={false}
+                schema={getFunctionSpec(formData.kind)}
+                uiSchema={getFunctionUiSpec(formData.kind)}
               />
+            );
+          else
+            return (
+              <Card sx={{ width: 1, textAlign: "center" }}>
+                <CardContent>
+                  {translate("resources.common.emptySpec")}{" "}
+                </CardContent>
+              </Card>
+            );
+        }}
+      </FormDataConsumer>
     </SimpleForm>
   );
 };

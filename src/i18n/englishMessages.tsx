@@ -20,6 +20,9 @@ const messages = {
     dataitem: {
       title: "Data Item details",
     },
+    common: {
+      emptySpec:"Select the Kind for spec modification"
+    },
     list: {
       expandable: {
         version: "Version",

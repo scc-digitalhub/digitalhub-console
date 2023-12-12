@@ -22,6 +22,9 @@ const messages = {
     dataitem: {
       title: "Dettagli dell'Data Item",
     },
+    common: {
+      emptySpec:"Selezionare Kind per visualizzare le specifiche"
+    },
     list: {
       expandable: {
         version: "Versione",

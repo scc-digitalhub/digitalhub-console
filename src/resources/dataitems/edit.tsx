@@ -1,16 +1,19 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
   Edit,
+  FormDataConsumer,
   SelectInput,
   SimpleForm,
   TextInput,
   useRecordContext,
   useTranslate,
 } from "react-admin";
-import { JsonSchemaInput,JsonSchemaField } from "@dslab/ra-jsonschema-input";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 const kinds = Object.values(DataItemTypes).map((v) => {
   return {
@@ -34,20 +37,34 @@ export const DataItemEdit = (props) => {
 };
 
 const DataItemEditForm = () => {
-  const record = useRecordContext();
-  const kind = record?.kind || undefined;
+  const translate = useTranslate();
+
 
   return (
     <SimpleForm toolbar={<PostEditToolbar />}>
       <TextInput source="name" disabled />
       <SelectInput source="kind" choices={kinds} disabled />
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <JsonSchemaField
-        source="spec"
-        schema={getDataItemSpec(kind)}
-        uiSchema={getDataItemUiSpec(kind)}
-        label={false}
-      />
+      <FormDataConsumer<{ kind: string }>>
+          {({ formData }) => {
+            if (formData.kind)
+              return (
+                <JsonSchemaInput
+                  source="spec"
+                  schema={getDataItemSpec(formData.kind)}
+                  uiSchema={getDataItemUiSpec(formData.kind)}
+                />
+              );
+            else
+              return (
+                <Card sx={{ width: 1, textAlign: "center" }}>
+                  <CardContent>
+                    {translate("resources.common.emptySpec")}{" "}
+                  </CardContent>
+                </Card>
+              );
+          }}
+        </FormDataConsumer>
     </SimpleForm>
   );
 };
