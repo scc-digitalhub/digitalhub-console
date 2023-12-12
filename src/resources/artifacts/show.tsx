@@ -12,13 +12,12 @@ import { MetadataSchema } from "../../common/types";
 import { getArtifactSpec, getArtifactUiSpec } from "./types";
 import { Aside, PostShowActions } from "../../components/helper";
 
-export const ArtifactShow = () => {
+export const ArtifactShowLayout = () => {
   const translate = useTranslate();
   const record = useRecordContext();
   const kind = record?.kind || undefined;
-
   return (
-    <Show actions={<PostShowActions />} aside={<Aside />}>
+    <Show actions={<PostShowActions />} aside={<Aside />} >
       <Grid>
         <Typography variant="h6" gutterBottom>
           {translate("resources.artifact.title")}
@@ -46,6 +45,18 @@ export const ArtifactShow = () => {
           />
         </SimpleShowLayout>
       </Grid>
+    </Show>
+  );
+};
+
+export const ArtifactShow = () => {
+  return (
+    <Show
+      actions={<PostShowActions />}
+      aside={<Aside />}
+      sx={{ "& .RaShow-card": { width: "50%" } }}
+    >
+      <ArtifactShowLayout />
     </Show>
   );
 };

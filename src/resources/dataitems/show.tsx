@@ -12,7 +12,7 @@ import { MetadataSchema } from "../../common/types";
 import { getDataItemSpec, getDataItemUiSpec } from "./types";
 import { Aside, PostShowActions } from "../../components/helper";
 
-export const DataItemShow = () => {
+export const DataItemShowLayout = () => {
   const translate = useTranslate();
   const record = useRecordContext();
   const kind = record?.kind || undefined;
@@ -46,6 +46,17 @@ export const DataItemShow = () => {
           />
         </SimpleShowLayout>
       </Grid>
+    </Show>
+  );
+};
+export const DataItemShow = () => {
+  return (
+    <Show
+      actions={<PostShowActions />}
+      aside={<Aside />}
+      sx={{ "& .RaShow-card": { width: "50%" } }}
+    >
+      <DataItemShowLayout />
     </Show>
   );
 };
