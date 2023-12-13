@@ -15,12 +15,22 @@ const messages = {
   resources: {
     function: {
       title: "Dettagli della funzione",
+      name: "Nome",
+      kind:"Tipo",
+      tab: {
+        summary: "Descrizione",
+        test:"test"
+      }
     },
     artifact: {
       title: "Dettagli dell'artefatto",
+      name: "Nome",
+      kind:"Tipo",
     },
     dataitem: {
       title: "Dettagli dell'Data Item",
+      name: "Nome",
+      kind:"Tipo",
     },
     common: {
       emptySpec:"Selezionare Kind per visualizzare le specifiche"
@@ -36,6 +46,10 @@ const messages = {
       version: "Versione",
       created: "Data di creazione",
     },
+  },
+  search:{
+    name: "Nome",
+    kind:"Tipo"
   },
   buttons: {
     cancel: "Annulla",

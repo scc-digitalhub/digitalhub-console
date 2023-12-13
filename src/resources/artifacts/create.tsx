@@ -2,6 +2,7 @@ import { useRootSelector } from "@dslab/ra-root-selector";
 import {
   Create,
   FormDataConsumer,
+  Labeled,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -13,6 +14,7 @@ import { MetadataSchema } from "../../common/types";
 import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { Grid } from "@mui/material";
 
 export const ArtifactCreate = () => {
   const { root } = useRootSelector();
@@ -44,8 +46,18 @@ export const ArtifactCreate = () => {
   return (
     <Create transform={transform} redirect="list">
       <SimpleForm validate={validator}>
-        <TextInput source="name" />
-        <SelectInput source="kind" choices={kinds} required />
+      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={4}>
+          <Labeled label={translate("resources.dataitem.name")}>
+          <TextInput source="name" required />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <Labeled label={translate("resources.dataitem.kind")}>
+          <SelectInput source="kind" choices={kinds} required />
+          </Labeled>
+        </Grid>
+      </Grid>
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
         <FormDataConsumer<{ kind: string }>>
           {({ formData }) => {

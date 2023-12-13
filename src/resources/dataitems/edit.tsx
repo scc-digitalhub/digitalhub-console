@@ -2,6 +2,7 @@
 import {
   Edit,
   FormDataConsumer,
+  Labeled,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -14,6 +15,7 @@ import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { Grid } from "@mui/material";
 
 const kinds = Object.values(DataItemTypes).map((v) => {
   return {
@@ -42,8 +44,18 @@ const DataItemEditForm = () => {
 
   return (
     <SimpleForm toolbar={<PostEditToolbar />}>
-      <TextInput source="name" disabled />
-      <SelectInput source="kind" choices={kinds} disabled />
+       <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={4}>
+          <Labeled label={translate("resources.function.name")}>
+            <TextInput source="name" disabled />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <Labeled label={translate("resources.function.kind")}>
+            <SelectInput source="kind" choices={kinds} disabled />
+          </Labeled>
+        </Grid>
+      </Grid>
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
       <FormDataConsumer<{ kind: string }>>
           {({ formData }) => {

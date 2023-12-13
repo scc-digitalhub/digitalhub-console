@@ -2,6 +2,7 @@
 import {
   Edit,
   FormDataConsumer,
+  Labeled,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -15,6 +16,7 @@ import { PostEditToolbar, RecordTitle } from "../../components/helper";
 import { alphaNumericName } from "../../common/helper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { Grid } from "@mui/material";
 
 const kinds = Object.values(FunctionTypes).map((v) => {
   return {
@@ -50,9 +52,19 @@ const FunctionEditForm = () => {
   const translate = useTranslate();
 
   return (
-    <SimpleForm  toolbar={<PostEditToolbar />} validate={validator}>
-      <TextInput source="name" disabled />
-      <SelectInput source="kind" choices={kinds} disabled />
+    <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
+      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={4}>
+          <Labeled label={translate("resources.function.name")}>
+            <TextInput source="name" disabled />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <Labeled label={translate("resources.function.kind")}>
+            <SelectInput source="kind" choices={kinds} disabled />
+          </Labeled>
+        </Grid>
+      </Grid>
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
       <FormDataConsumer<{ kind: string }>>
         {({ formData }) => {

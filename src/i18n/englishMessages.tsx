@@ -13,12 +13,22 @@ const messages = {
   resources: {
     function: {
       title: "Funtion Details",
+      name: "Name",
+      kind:"Kind",
+      tab: {
+        summary: "Summary",
+        test:"test"
+      }
     },
     artifact: {
       title: "Artifact Details",
+      name: "Name",
+      kind:"Kind",
     },
     dataitem: {
       title: "Data Item details",
+      name: "Name",
+      kind:"Kind",
     },
     common: {
       emptySpec:"Select the Kind for spec modification"
@@ -34,6 +44,10 @@ const messages = {
       version: "Version",
       created: "Creation Date",
     },
+  },
+  search:{
+    name: "Name",
+    kind:"Kind"
   },
   buttons: {
     cancel: "Cancel",

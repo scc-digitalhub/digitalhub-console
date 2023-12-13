@@ -1,11 +1,12 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, FormDataConsumer, SelectInput, SimpleForm, TextInput, useTranslate } from "react-admin";
+import { Create, FormDataConsumer, Labeled, SelectInput, SimpleForm, TextInput, useTranslate } from "react-admin";
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
 import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { Grid } from "@mui/material";
 
 export const DataItemCreate = () => {
   const { root } = useRootSelector();
@@ -39,8 +40,18 @@ export const DataItemCreate = () => {
   return (
     <Create transform={transform} redirect="list">
       <SimpleForm validate={validator}>
-        <TextInput source="name" required />
-        <SelectInput source="kind" choices={kinds} required />
+      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={4}>
+          <Labeled label={translate("resources.dataitem.name")}>
+          <TextInput source="name" required />
+          </Labeled>
+        </Grid>
+        <Grid item xs={6}>
+          <Labeled label={translate("resources.dataitem.kind")}>
+          <SelectInput source="kind" choices={kinds} required />
+          </Labeled>
+        </Grid>
+      </Grid>
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
         <FormDataConsumer<{ kind: string }>>
           {({ formData }) => {
