@@ -3,8 +3,14 @@ export enum FunctionTypes {
   NEFERTEM = "nefertem",
   JOB = "job",
 }
+export const TaskMap ={
+  dbt:["transform"],
+  nefertem: ["profile", "validate", "metric", "infer"]
 
-
+}
+export const getTaskByFunction = (kind) =>{
+return TaskMap[kind];
+}
 export const FunctionDbtSchema = {
   $schema: "http://json-schema.org/draft-07/schema",
   type: "object",

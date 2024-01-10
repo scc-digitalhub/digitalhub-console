@@ -5,6 +5,7 @@ import {
   DateField,
   DeleteWithConfirmButton,
   EditButton,
+  List,
   ListBase,
   Pagination,
   RaRecord,
@@ -34,6 +35,8 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Card } from "@mui/material";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
+import { MetadataSchema } from "../common/types";
 
 export const RecordTitle = ({ prompt }: any) => {
   const record = useRecordContext();
@@ -138,58 +141,53 @@ export const PostEditToolbar = () => {
     </Toolbar>
   );
 };
-const postRowSx = (record, index) => ({
-  backgroundColor: index === 1 ? "aliceblue" : "white",
-});
+const getStyle= (record:any) => {
+  const curRecord = record;
+  return {
+     postRowSx: (record) => ({
+      backgroundColor: record.id === curRecord.id ? "aliceblue" : "white",
+    })
+  }
+}
+
 export const Aside = () => {
   const record = useRecordContext();
-  const resource = useResourceContext();
   const dataProvider = useDataProvider();
-  const { root } = useRootSelector();
-  
-  const [versions, setVersions] = useState<RaRecord>();  useEffect(() => {
-    if (dataProvider) {
-      dataProvider.getLatest(resource, { record, root }).then((versions) => {
-        setVersions(versions.data);
-      });
-    }
-  }, [dataProvider, record, resource]);
-
-  if (!versions || !record || !dataProvider) return <></>;
+  if ( !record ||!record.metadata|| !dataProvider) return <></>;
   return (
-    <ListBase >
+    <ListBase queryOptions={{ meta: { allVersion: true,record:record } }}>
       <div >
         <Card>
-          <Datagrid rowClick="show" rowSx={postRowSx}>
-            <TextField source="id" />
-            <TextField source="version" />
+          <Datagrid rowClick="show" rowSx={getStyle(record).postRowSx}>
+            <DateField source="metadata.created"  />
+            <TextField source="metadata.version" />
           </Datagrid>
         </Card>
         <Pagination />
       </div>
     </ListBase>
-    // <ListContextProvider
-    //   value={{
-    //     data: data || [],
-    //     total: total || 0,
-    //     page,
-    //     perPage,
-    //     setPage
-    //   }}
-    // >
-    //   <div>
-    //     <Title title="Book list" />
-
-    //     <Card>
-    //       <Datagrid>
-    //         <TextField source="id" />
-    //         <TextField source="title" />
-    //         <TextField source="author" />
-    //         <TextField source="year" />
-    //       </Datagrid>
-    //     </Card>
-    //     <Pagination />
-    //   </div>
-    // </ListContextProvider>
   );
 };
+
+
+export const TaskComponent = () => {
+
+  return (
+    <div>Json Scehma input</div>
+  );
+};
+export const FunctionList = () => {
+  const record = useRecordContext();
+  const dataProvider = useDataProvider();
+  if ( !record ||!record.metadata|| !dataProvider) return <></>;
+  return (
+    <List>
+      <Datagrid>
+            <TextField source="id" />
+            <TextField source="title" />
+
+      </Datagrid>
+    </List>
+  );
+};
+

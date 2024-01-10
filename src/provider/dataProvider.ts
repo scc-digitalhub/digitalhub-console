@@ -38,7 +38,7 @@ const springDataProvider = (
     return {
         getLatest: (resource, params) => {
             //handle pagination request as pageable (page,size)
-            const record =params.record;
+            const record = params.record;
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
                 sort: 'created' + ',' + 'DESC', //sorting
@@ -65,41 +65,43 @@ const springDataProvider = (
                 };
             });
         },
-        getAllVersions: (resource, params) => {
-             //handle pagination request as pageable (page,size)
-             const { page, perPage } = params.pagination;
-             const { field, order } = params.sort;
-             const record =params.record;
-             const query = {
-                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
-                 sort: field + ',' + order, //sorting
-                 page: page - 1, //page starts from zero
-                 size: perPage,
-             };
-             let prefix = '';
-             if (resource !== 'projects' && params.meta?.root) {
-                 prefix = '/-/' + params.meta.root;
-             }
-             const url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;
-             return httpClient(url).then(({ status, json }) => {
-                 if (status !== 200) {
-                     throw new Error('Invalid response status ' + status);
-                 }
-                 if (!json.content) {
-                     throw new Error('the response must match page<> model');
-                 }
- 
-                 //extract data from content
-                 return {
-                     data: json.content,
-                     total: parseInt(json.totalElements),
-                 };
-             });
-        },
+        // getAllVersions: (resource, params) => {
+        //      //handle pagination request as pageable (page,size)
+        //      const { page, perPage } = params.pagination;
+        //      const { field, order } = params.sort;
+        //      const record =params.record;
+        //      const query = {
+        //          ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
+        //          sort: field + ',' + order, //sorting
+        //          page: page - 1, //page starts from zero
+        //          size: perPage,
+        //      };
+        //      let prefix = '';
+        //      if (resource !== 'projects' && params.meta?.root) {
+        //          prefix = '/-/' + params.meta.root;
+        //      }
+        //      const url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;
+        //      return httpClient(url).then(({ status, json }) => {
+        //          if (status !== 200) {
+        //              throw new Error('Invalid response status ' + status);
+        //          }
+        //          if (!json.content) {
+        //              throw new Error('the response must match page<> model');
+        //          }
+
+        //          //extract data from content
+        //          return {
+        //              data: json.content,
+        //              total: parseInt(json.totalElements),
+        //          };
+        //      });
+        // },
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
             const { page, perPage } = params.pagination;
             const { field, order } = params.sort;
+            const record = params.meta?.record;
+            const allVersion = params.meta?.allVersion
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
                 sort: field + ',' + order, //sorting
@@ -110,7 +112,10 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
+            let url = '';
+            if (allVersion)
+                {url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;}
+            else {url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;}
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -189,7 +194,14 @@ const springDataProvider = (
             });
         },
         update: (resource, params) => {
-            const url = `${apiUrl}/${resource}/${params.id}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            if (!params.data){
+                throw new Error('Invalid data');
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.data?.name}/${params.id}`;
             return httpClient(url, {
                 method: 'PUT',
                 body:
@@ -199,7 +211,11 @@ const springDataProvider = (
             }).then(({ json }) => ({ data: json }));
         },
         updateMany: (resource, params) => {
-            const url = `${apiUrl}/${resource}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}`;
 
             //make a distinct call for every entry
             return Promise.all(
