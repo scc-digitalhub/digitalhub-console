@@ -113,7 +113,7 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             let url = '';
-            if (allVersion)
+            if (allVersion && record)
                 {url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;}
             else {url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;}
             return httpClient(url).then(({ status, json }) => {
