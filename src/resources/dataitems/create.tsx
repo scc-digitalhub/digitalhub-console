@@ -1,5 +1,13 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { Create, FormDataConsumer, Labeled, SelectInput, SimpleForm, TextInput, useTranslate } from "react-admin";
+import {
+  Create,
+  FormDataConsumer,
+  SelectInput,
+  SimpleForm,
+  TextInput,
+  required,
+  useTranslate,
+} from "react-admin";
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
 import { MetadataSchema } from "../../common/types";
 import { alphaNumericName } from "../../common/helper";
@@ -17,19 +25,6 @@ export const DataItemCreate = () => {
     project: root || "",
   });
 
-  const validator = (data) => {
-    const errors: any = {};
-
-    if (!("kind" in data)) {
-      errors.kind = "messages.validation.required";
-    }
-    if (!alphaNumericName(data.name)) {
-      errors.name = "validation.wrongChar";
-    }
-    return errors;
-  };
-
-
   const kinds = Object.values(DataItemTypes).map((v) => {
     return {
       id: v,
@@ -39,20 +34,28 @@ export const DataItemCreate = () => {
 
   return (
     <Create transform={transform} redirect="list">
-      <SimpleForm validate={validator}>
-      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={4}>
-          <Labeled label={translate("resources.dataitem.name")}>
-          <TextInput source="name" required />
-          </Labeled>
+      <SimpleForm>
+        <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid item xs={4}>
+            <TextInput
+              source="name"
+              label="resources.dataitem.name"
+              validate={validateName}
+              sx={{ marginTop: "8px" }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <SelectInput
+              source="kind"
+              label="resources.dataitem.kind"
+              choices={kinds}
+              validate={required()}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <Labeled label={translate("resources.dataitem.kind")}>
-          <SelectInput source="kind" choices={kinds} required />
-          </Labeled>
-        </Grid>
-      </Grid>
+
         <JsonSchemaInput source="metadata" schema={MetadataSchema} />
+
         <FormDataConsumer<{ kind: string }>>
           {({ formData }) => {
             if (formData.kind)
@@ -77,3 +80,12 @@ export const DataItemCreate = () => {
     </Create>
   );
 };
+
+const nameValidation = (value) => {
+  if (!alphaNumericName(value)) {
+    return "validation.wrongChar";
+  }
+  return undefined;
+};
+
+const validateName = [required(), nameValidation];

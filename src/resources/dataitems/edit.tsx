@@ -2,7 +2,6 @@
 import {
   Edit,
   FormDataConsumer,
-  Labeled,
   SelectInput,
   SimpleForm,
   TextInput,
@@ -11,7 +10,7 @@ import {
 } from "react-admin";
 import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from "./types";
+import { DataItemTypes } from "./types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -46,18 +45,16 @@ const DataItemEditForm = () => {
     <SimpleForm toolbar={<PostEditToolbar />}>
        <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={4}>
-          <Labeled label={translate("resources.function.name")}>
-            <TextInput source="name" disabled />
-          </Labeled>
+          <TextInput source="name" label="resources.function.name" disabled sx={{marginTop: "8px"}} />
         </Grid>
         <Grid item xs={6}>
-          <Labeled label={translate("resources.function.kind")}>
-            <SelectInput source="kind" choices={kinds} disabled />
-          </Labeled>
+          <SelectInput source="kind" label="resources.function.kind" choices={kinds} disabled />
         </Grid>
       </Grid>
+
       <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-      <FormDataConsumer<{ kind: string }>>
+
+      {/* <FormDataConsumer<{ kind: string }>>
           {({ formData }) => {
             if (formData.kind)
               return (
@@ -76,7 +73,7 @@ const DataItemEditForm = () => {
                 </Card>
               );
           }}
-        </FormDataConsumer>
+        </FormDataConsumer> */}
     </SimpleForm>
   );
 };

@@ -25,7 +25,7 @@ import { BackButton } from "@dslab/ra-back-button";
 import { ExportRecordButton } from "@dslab/ra-export-record-button";
 import { InspectButton } from "@dslab/ra-inspect-button";
 import { useRootSelector } from "@dslab/ra-root-selector";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import {
   TableCell,
   TableHead,
@@ -50,6 +50,7 @@ export const DeleteWithConfirmButtonShowingName = () => {
   if (!record) return <></>;
   return <DeleteWithConfirmButton translateOptions={{ id: record.name }} />;
 };
+
 export const NewVersionButton = (props: ButtonProps) => {
   const navigate = useNavigate();
   const { label = "buttons.newVersion", ...rest } = props;
@@ -60,15 +61,31 @@ export const NewVersionButton = (props: ButtonProps) => {
   );
 };
 
-export const PostShowActions = () => (
-  <TopToolbar>
-    <BackButton />
-    <EditButton style={{ marginLeft: "auto" }} />
-    <InspectButton />
-    <ExportRecordButton language="yaml" />
-    <DeleteWithConfirmButtonShowingName />
-  </TopToolbar>
-);
+export const PostShowActions = () => {
+  const record = useRecordContext();
+  return <ShowToolbar record={record} />;
+};
+
+const arePropsEqual = (oldProps: any, newProps: any) => {
+  if (!newProps.record) return true;
+  return Object.is(oldProps.record, newProps.record);
+};
+
+const ShowToolbar = memo(function ShowToolbar(props: { record: any }) {
+  if (!props.record) return <></>;
+  return (
+    <TopToolbar>
+      <BackButton />
+      <EditButton style={{ marginLeft: "auto" }} record={props.record} />
+      <InspectButton record={props.record} />
+      <ExportRecordButton language="yaml" record={props.record} />
+      <DeleteWithConfirmButton
+        translateOptions={{ id: props.record.name }}
+        record={props.record}
+      />
+    </TopToolbar>
+  );
+}, arePropsEqual);
 
 export const ListVersion = () => {
   const record = useRecordContext();
@@ -146,25 +163,40 @@ export const TaskToolbar = () => {
     </Toolbar>
   );
 };
-const getStyle= (record:any) => {
-  const curRecord = record;
+const getStyle = (record: any) => {
+  const curRecord = record || {};
   return {
-     postRowSx: (record) => ({
-      backgroundColor: record.id === curRecord.id ? "aliceblue" : "white",
-    })
-  }
-}
+    postRowSx: (record) => ({
+      backgroundColor: record.id === curRecord?.id ? "aliceblue" : "white",
+    }),
+  };
+};
 
 export const Aside = () => {
   const record = useRecordContext();
   const dataProvider = useDataProvider();
-  if ( !record ||!record.metadata|| !dataProvider) return <></>;
+
+  if (!dataProvider) return <></>;
+  return <AsideList record={record} />;
+};
+
+const AsideList = memo(function AsideList(props: { record: any }) {
+  if (!props.record) return <></>;
   return (
-    <ListBase queryOptions={{ meta: { allVersion: true,record:record } }}>
-      <div >
+    <ListBase
+      queryOptions={{ meta: { allVersion: true, record: props.record } }}
+    >
+      <div style={{ marginLeft: "2rem" }}>
         <Card>
-          <Datagrid rowClick="show" rowSx={getStyle(record).postRowSx}>
-            <DateField source="metadata.created"  />
+          <Datagrid
+            rowClick="show"
+            rowSx={getStyle(props.record).postRowSx}
+            bulkActionButtons={false}
+          >
+            <DateField
+              source="metadata.created"
+              label="resources.aside.created"
+            />
             <TextField source="metadata.version" />
           </Datagrid>
         </Card>
@@ -172,20 +204,21 @@ export const Aside = () => {
       </div>
     </ListBase>
   );
-};
+}, arePropsEqual);
 
+export const TaskComponent = () => {
+  return <div>Json Scehma input</div>;
+};
 export const FunctionList = () => {
   const record = useRecordContext();
   const dataProvider = useDataProvider();
-  if ( !record ||!record.metadata|| !dataProvider) return <></>;
+  if (!record || !record.metadata || !dataProvider) return <></>;
   return (
     <List>
       <Datagrid>
-            <TextField source="id" />
-            <TextField source="title" />
-
+        <TextField source="id" />
+        <TextField source="title" />
       </Datagrid>
     </List>
   );
 };
-
