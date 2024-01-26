@@ -29,7 +29,7 @@ import {
   FunctionCreate,
   FunctionShow,
 } from "./resources/functions";
-import { Dashboard } from "./components/Dashboard";
+import { Dashboard } from "./pages/Dashboard";
 
 const API_URL: string = process.env.REACT_APP_API_URL as string;
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
@@ -56,8 +56,8 @@ export const App = () => {
         i18nProvider={i18nProvider}
         dataProvider={dataProvider}
         theme={theme}
-        authProvider={authProvider}
-        requireAuth={true}
+        // authProvider={authProvider}
+        // requireAuth={true}
       >
         <Resource
           name="functions"

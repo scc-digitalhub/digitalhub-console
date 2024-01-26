@@ -14,24 +14,24 @@ const messages = {
     function: {
       title: "Funtion Details",
       name: "Name",
-      kind:"Kind",
+      kind: "Kind",
       tab: {
         summary: "Summary",
-        test:"test"
-      }
+        test: "test",
+      },
     },
     artifact: {
       title: "Artifact Details",
       name: "Name",
-      kind:"Kind",
+      kind: "Kind",
     },
     dataitem: {
       title: "Data Item details",
       name: "Name",
-      kind:"Kind",
+      kind: "Kind",
     },
     common: {
-      emptySpec:"Select the Kind for spec modification"
+      emptySpec: "Select the Kind for spec modification",
     },
     list: {
       expandable: {
@@ -45,9 +45,28 @@ const messages = {
       created: "Creation Date",
     },
   },
-  search:{
+  pages: {
+    dashboard: {
+      title: "Dashboard",
+      description: "Project overview",
+      text: "Define, build and execute functions to manage artifacts and dataitems.",
+      functions: {
+        title: "Functions and code",
+        description: "Define and manage functions",
+      },
+      dataitems: {
+        title: "Data items",
+        description: "Review and manage data items",
+      },
+      artifacts: {
+        title: "Artifacts",
+        description: "Review and manage artifacts",
+      },
+    },
+  },
+  search: {
     name: "Name",
-    kind:"Kind"
+    kind: "Kind",
   },
   buttons: {
     cancel: "Cancel",
