@@ -78,7 +78,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false}>
       <div>
         <PageTitle
           text={project.name}

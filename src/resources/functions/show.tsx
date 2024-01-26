@@ -1,24 +1,34 @@
 import {
   Labeled,
   Show,
+  ShowBase,
+  ShowView,
   SimpleShowLayout,
   TabbedShowLayout,
   TextField,
   useRecordContext,
+  useShowContext,
   useTranslate,
 } from "react-admin";
 import { Grid, Typography } from "@mui/material";
 import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from "./types";
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { Aside, FunctionList, PostShowActions, TaskComponent } from "../../components/helper";
+import {
+  Aside,
+  FunctionList,
+  PostShowActions,
+  TaskComponent,
+} from "../../components/helper";
+import { PageTitle, ShowPageTitle } from "../../components/pageTitle";
+import { FunctionIcon } from "./icon";
+import { VersionsList } from "../../components/versionsList";
 
 const FunctionShowLayout = () => {
   const translate = useTranslate();
   const record = useRecordContext();
   const kind = record?.kind || undefined;
-  if (!record)
-  return <></>
+  if (!record) return <></>;
   return (
     <TabbedShowLayout syncWithLocation={false}>
       <TabbedShowLayout.Tab label={translate("resources.function.tab.summary")}>
@@ -50,25 +60,31 @@ const FunctionShowLayout = () => {
           </SimpleShowLayout>
         </Grid>
       </TabbedShowLayout.Tab>
-      {getTaskByFunction(record?.kind).map((item,index) => (
-        <TabbedShowLayout.Tab  label={item} key={index}>
-            <div>
-              <TaskComponent></TaskComponent>
-              <FunctionList></FunctionList>
-            </div>
+      {getTaskByFunction(record?.kind).map((item, index) => (
+        <TabbedShowLayout.Tab label={item} key={index}>
+          <div>
+            <TaskComponent></TaskComponent>
+            <FunctionList></FunctionList>
+          </div>
         </TabbedShowLayout.Tab>
       ))}
     </TabbedShowLayout>
   );
 };
+
 export const FunctionShow = () => {
   return (
-    <Show
-      actions={<PostShowActions />}
-      aside={<Aside />}
-      sx={{ "& .RaShow-card": { width: "50%" } }}
-    >
-      <FunctionShowLayout />
-    </Show>
+    <ShowBase>
+      <>
+        <ShowPageTitle />
+        <ShowView
+          actions={<PostShowActions />}
+          aside={<VersionsList showActions={false} />}
+          sx={{ "& .RaShow-card": { width: "50%" } }}
+        >
+          <FunctionShowLayout />
+        </ShowView>
+      </>
+    </ShowBase>
   );
 };

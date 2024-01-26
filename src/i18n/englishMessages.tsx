@@ -63,6 +63,21 @@ const messages = {
         description: "Review and manage artifacts",
       },
     },
+    functions: {
+      show: {
+        title: "Function #%{name}",
+        subtitle: "%{kind} function",
+      },
+    },
+  },
+  pageTitle: {
+    show: {
+      title: "%{resource} #%{name}",
+      subtitle: "%{kind} %{resource}",
+    },
+    list: {
+      title: "%{resource}",
+    },
   },
   search: {
     name: "Name",
