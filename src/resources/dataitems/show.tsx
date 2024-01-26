@@ -1,7 +1,7 @@
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import * as changeCase from "change-case";
-import { ReactElement, memo } from "react";
+import { ReactElement, memo, useEffect, useState } from "react";
 import {
   Datagrid,
   Labeled,
@@ -14,18 +14,26 @@ import {
   useTranslate,
 } from "react-admin";
 import { MetadataSchema } from "../../common/types";
-import { Aside, PostShowActions } from "../../components/helper";
+import {
+  LayoutContent,
+  OutlinedCard,
+  PostShowActions,
+} from "../../components/helper";
 import { getReactField, isFieldValid } from "./helper";
 import { DataItemSpecSchema, DataItemSpecUiSchema } from "./types";
-import { Typography } from "@mui/material";
 
 const arePropsEqual = (oldProps: any, newProps: any) => {
   if (!newProps.record) return true;
   return Object.is(oldProps.record, newProps.record);
 };
 
-const ShowComponent = () => {
+const ShowComponent = (props: { setRecord: (record: any) => void }) => {
   const record = useRecordContext();
+
+  useEffect(() => {
+    props.setRecord(record);
+  }, [record]);
+
   return <DataItemShowLayout record={record} />;
 };
 
@@ -33,7 +41,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
   record: any;
 }) {
   const translate = useTranslate();
-  
+
   if (!props.record) return <></>;
   return (
     <TabbedShowLayout syncWithLocation={false} record={props.record}>
@@ -78,14 +86,18 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 arePropsEqual);
 
 export const DataItemShow = () => {
+  const [record, setRecord] = useState(undefined);
+
   return (
-    <Show
-      actions={<PostShowActions />}
-      aside={<Aside />}
-      sx={{ "& .RaShow-card": { width: "50%" } }}
-    >
-      <ShowComponent />
-    </Show>
+    <LayoutContent record={record}>
+      <Show
+        actions={<PostShowActions />}
+        sx={{ width: "100%" }}
+        component={OutlinedCard}
+      >
+        <ShowComponent setRecord={setRecord} />
+      </Show>
+    </LayoutContent>
   );
 };
 

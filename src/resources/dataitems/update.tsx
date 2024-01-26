@@ -83,7 +83,7 @@ const DataItemEditForm = (props: { record: any }) => {
     <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>
       <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={4}>
-          <TextInput source="name" label="resources.function.name" disabled sx={{marginTop: "8px"}}/>
+          <TextInput source="name" label="resources.function.name" disabled />
         </Grid>
         <Grid item xs={6}>
           <SelectInput source="kind" label="resources.function.kind" choices={kinds} disabled />

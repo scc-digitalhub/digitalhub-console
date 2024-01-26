@@ -1,5 +1,8 @@
+import { defaultTheme } from "react-admin";
+
 export const theme = {
-    sidebar: {
-      width: 200,
-    },
-  };
+  ...defaultTheme,
+  sidebar: {
+    width: 160,
+  },
+};
