@@ -1,3 +1,21 @@
+import { BackButton } from "@dslab/ra-back-button";
+import { ExportRecordButton } from "@dslab/ra-export-record-button";
+import { InspectButton } from "@dslab/ra-inspect-button";
+import { useRootSelector } from "@dslab/ra-root-selector";
+import ClearIcon from "@mui/icons-material/Clear";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { ReactNode, memo, useEffect, useState } from "react";
 import {
   Button,
   ButtonProps,
@@ -6,7 +24,6 @@ import {
   DeleteWithConfirmButton,
   EditButton,
   List,
-  ListBase,
   Pagination,
   RaRecord,
   SaveButton,
@@ -19,22 +36,7 @@ import {
   useResourceContext,
   useTranslate,
 } from "react-admin";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { useNavigate } from "react-router-dom";
-import { BackButton } from "@dslab/ra-back-button";
-import { ExportRecordButton } from "@dslab/ra-export-record-button";
-import { InspectButton } from "@dslab/ra-inspect-button";
-import { useRootSelector } from "@dslab/ra-root-selector";
-import { useState, useEffect, memo } from "react";
-import {
-  TableCell,
-  TableHead,
-  TableRow,
-  TableBody,
-  Table,
-} from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
-import { Card } from "@mui/material";
 
 export const RecordTitle = ({ prompt }: any) => {
   const record = useRecordContext();
@@ -75,7 +77,6 @@ const ShowToolbar = memo(function ShowToolbar(props: { record: any }) {
   if (!props.record) return <></>;
   return (
     <TopToolbar>
-      <BackButton />
       <EditButton style={{ marginLeft: "auto" }} record={props.record} />
       <InspectButton record={props.record} />
       <ExportRecordButton language="yaml" record={props.record} />
@@ -166,45 +167,107 @@ export const TaskToolbar = () => {
 const getStyle= (record:any) => {
   const curRecord = record || {};
   return {
-    postRowSx: (record) => ({
-      backgroundColor: record.id === curRecord?.id ? "aliceblue" : "white",
+    rowSx: (record) => ({
+      backgroundColor:
+        record.id === curRecord.id ? "rgb(25, 118, 210, 0.15)" : "white",
+      ":hover": {
+        backgroundColor:
+          record.id === curRecord.id
+            ? "rgb(25, 118, 210, 0.25) !important"
+            : "rgba(0, 0, 0, 0.04)",
+      },
     }),
   };
 };
 
-export const Aside = () => {
-  const record = useRecordContext();
+export const LayoutContent = (props: LayoutContentProps) => {
+  const { children, record } = props;
   const dataProvider = useDataProvider();
+  const translate = useTranslate();
 
   if (!dataProvider) return <></>;
-  return <AsideList record={record} />;
+  return (
+    <Box
+      sx={(theme) => ({
+        display: "flex",
+        flexDirection: "column",
+        [theme.breakpoints.up("lg")]: {
+          flexDirection: "row",
+        },
+      })}
+    >
+      <Box display="block">
+        <Box
+          display="flex"
+          flexDirection="column"
+          sx={(theme) => ({
+            paddingRight: 0,
+            [theme.breakpoints.up("lg")]: {
+              paddingRight: 4,
+            },
+          })}
+        >
+          <TopToolbar sx={{ justifyContent: "flex-start" }}>
+            <BackButton />
+          </TopToolbar>
+
+          <Card
+            sx={{
+              minWidth: { lg: 500, xl: 550 },
+              height: "fit-content",
+              borderRadius: "10px",
+            }}
+            variant="outlined"
+          >
+            <CardHeader title={translate("resources.common.version.title")} />
+
+            <CardContent
+              sx={{ paddingTop: 1, paddingBottom: "8px !important" }}
+            >
+              <BoxContent record={record} />
+            </CardContent>
+          </Card>
+        </Box>
+      </Box>
+      
+      {children}
+    </Box>
+  );
 };
 
-const AsideList = memo(function AsideList(props: { record: any }) {
+const BoxContent = memo(function AsideList(props: { record: any }) {
   if (!props.record) return <></>;
   return (
-    <ListBase
-      queryOptions={{ meta: { allVersion: true, record: props.record } }}
-    >
-      <div style={{ marginLeft: "2rem" }}>
-        <Card>
-          <Datagrid
-            rowClick="show"
-            rowSx={getStyle(props.record).postRowSx}
-            bulkActionButtons={false}
-          >
-            <DateField
-              source="metadata.created"
-              label="resources.aside.created"
-            />
-            <TextField source="metadata.version" />
-          </Datagrid>
-        </Card>
-        <Pagination />
-      </div>
-    </ListBase>
+    <Box>
+      <List
+        queryOptions={{ meta: { allVersion: true, record: props.record } }}
+        actions={false}
+        disableSyncWithLocation={true}
+        pagination={<Pagination rowsPerPageOptions={[5, 10, 25]} />}
+      >
+        <Datagrid
+          rowClick="show"
+          rowSx={getStyle(props.record).rowSx}
+          bulkActionButtons={false}
+        >
+          <TextField
+            source="metadata.version"
+            label="resources.common.version.version"
+          />
+          <DateField
+            source="metadata.created"
+            label="resources.common.version.created"
+          />
+        </Datagrid>
+      </List>
+    </Box>
   );
 }, arePropsEqual);
+
+type LayoutContentProps = {
+  children: ReactNode;
+  record: any;
+};
 
 export const TaskComponent = () => {
   return <div>Json Scehma input</div>;
@@ -222,3 +285,9 @@ export const FunctionList = () => {
     </List>
   );
 };
+
+export const OutlinedCard = (props: { children }) => (
+  <Card variant="outlined" sx={{ width: "100%", borderRadius: "10px" }}>
+    {props.children}
+  </Card>
+);

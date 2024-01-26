@@ -47,7 +47,12 @@ const messages = {
       }
     },
     common: {
-      emptySpec: "Select the Kind for spec modification",
+      emptySpec:"Select the Kind for spec modification",
+      version: {
+        title: "Versions",
+        version: "Version",
+        created: "Creation date",
+      },
     },
     list: {
       expandable: {

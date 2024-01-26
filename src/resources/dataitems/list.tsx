@@ -29,7 +29,6 @@ export const DataItemList = () => {
       source="name"
       alwaysOn
       key={1}
-      sx={{ marginBottom: "4px" }}
     />,
     <SelectInput alwaysOn key={2} source="kind" choices={kinds} />,
   ];

@@ -49,18 +49,18 @@ const messages = {
       }
     },
     common: {
-      emptySpec:"Selezionare Kind per visualizzare le specifiche"
+      emptySpec:"Selezionare Kind per visualizzare le specifiche",
+      version: {
+        title: "Versioni",
+        version: "Versione",
+        created: "Data di creazione",
+      },
     },
     list: {
       expandable: {
         version: "Versione",
         created: "Data di creazione",
       },
-    },
-    aside: {
-      allVersion: "Tutte le versioni",
-      version: "Versione",
-      created: "Data di creazione",
     },
   },
   search:{
