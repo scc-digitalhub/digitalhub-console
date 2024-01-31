@@ -2,15 +2,12 @@ import {
   Labeled,
   RecordContextProvider,
   Show,
-  ShowBase,
-  ShowView,
   SimpleShowLayout,
   TabbedShowLayout,
   TextField,
   useDataProvider,
   useGetList,
   useRecordContext,
-  useShowContext,
   useTranslate,
 } from "react-admin";
 import { Grid, Typography } from "@mui/material";
@@ -135,17 +132,12 @@ const FunctionShowLayout = () => {
 
 export const FunctionShow = () => {
   return (
-    <ShowBase>
-      <>
-        <ShowPageTitle />
-        <ShowView
-          actions={<PostShowActions />}
-          aside={<VersionsList showActions={false} />}
-          sx={{ "& .RaShow-card": { width: "50%" } }}
-        >
-          <FunctionShowLayout />
-        </ShowView>
-      </>
-    </ShowBase>
+    <Show
+      actions={<PostShowActions />}
+      aside={<Aside />}
+      sx={{ "& .RaShow-card": { width: "50%" } }}
+    >
+      <FunctionShowLayout />
+    </Show>
   );
 };
