@@ -1,9 +1,12 @@
 import {
   Labeled,
+  RecordContextProvider,
   Show,
   SimpleShowLayout,
   TabbedShowLayout,
   TextField,
+  useDataProvider,
+  useGetList,
   useRecordContext,
   useTranslate,
 } from "react-admin";
@@ -11,14 +14,69 @@ import { Grid, Typography } from "@mui/material";
 import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from "./types";
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { Aside, FunctionList, PostShowActions, TaskComponent } from "../../components/helper";
+import {
+  Aside,
+  PostShowActions,
+} from "../../components/helper";
+import { TaskAndRun } from "./TaskAndRun";
+import { useEffect, useState } from "react";
+// import { useEffect } from "react";
 
 const FunctionShowLayout = () => {
   const translate = useTranslate();
   const record = useRecordContext();
+  const dataProvider = useDataProvider();
   const kind = record?.kind || undefined;
-  if (!record)
-  return <></>
+  const [tasks, setTasks] = useState<any>();
+  const { data,  isLoading, error } = useGetList(
+    'tasks',
+    {
+        filter: {function:`${record?.kind}://${record?.project}/${record?.name}:${record?.id}`},
+    }
+    );
+    useEffect(()=> {
+      if ( !isLoading && data && record) {
+        const mapTask={};
+       getTaskByFunction(record?.kind)?.forEach(async kind => { //task=profile
+         //check task for function contains a task with kind of profile
+         let typeTask =data?.find(data => kind === data.kind)
+         if (!typeTask)
+           {
+             console.log('kind'+kind+'non presente')
+             //crealo con await su dataprovider
+            const task = await dataProvider.create('tasks', { data: {
+              "project": record?.project,
+              "kind": kind,
+              "spec": {
+                  "function": `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`
+              }
+          } });
+              //  .then(response => console.log(response))
+             //array locale
+             if (task)
+             {
+              mapTask[kind]=typeTask;
+            }
+           }
+           else {
+             console.log('kind'+kind+' presente'+ JSON.stringify(data))
+             mapTask[kind]=typeTask;
+            }
+           
+       });
+       //setTask con array locale + task esistenti in data. Uso mappa per tipo {profile: {...}, validate: {{}}}
+       setTasks(mapTask);
+     }
+    },[dataProvider, data, isLoading]);
+    if (isLoading) { return <></>; }
+    if (error) { return <p>ERROR</p>; }
+    if (!record || !tasks) return <></>;
+  //record = function
+  //data = task for that function
+  //get type of tasks by kind in array format like ["profile", "validate", "metric", "infer"]
+  
+
+
   return (
     <TabbedShowLayout syncWithLocation={false}>
       <TabbedShowLayout.Tab label={translate("resources.function.tab.summary")}>
@@ -50,12 +108,22 @@ const FunctionShowLayout = () => {
           </SimpleShowLayout>
         </Grid>
       </TabbedShowLayout.Tab>
-      {getTaskByFunction(record?.kind).map((item,index) => (
-        <TabbedShowLayout.Tab  label={item} key={index}>
+      {getTaskByFunction(record?.kind).map((item, index) => (
+        <TabbedShowLayout.Tab label={item} key={index}>
+          {/* {tasks['transform']} */}
+          {/* switchare a componente che prende il record del task come parametro (tipo funzione?) */}
+          {/* passo task per tipo */}
+            {/* {Object.keys(tasks).forEach((value) => { */}
             <div>
-              <TaskComponent></TaskComponent>
-              <FunctionList></FunctionList>
+              {/* {item} */}
+              <RecordContextProvider value={tasks[item]}>
+              <TaskAndRun  key={item.id}/>
+              </RecordContextProvider>
+              {/* {tasks[item]} */}
             </div>
+            {/* // <TaskAndRun record={tasks.get(key)}  key={key}/>
+        //   })
+        // }  */}
         </TabbedShowLayout.Tab>
       ))}
     </TabbedShowLayout>

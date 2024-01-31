@@ -133,6 +133,10 @@ const springDataProvider = (
         },
         //get the specific version based on id. The Url changes and it 
         getOne: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
             const url = `${apiUrl}/${resource}/${params.id}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
@@ -148,8 +152,11 @@ const springDataProvider = (
             const query = {
                 id: params.ids ? params.ids.join(',') : '',
             };
-
-            const url = `${apiUrl}/${resource}?${stringify(query)}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -176,8 +183,11 @@ const springDataProvider = (
                 page: page - 1, //page starts from zero
                 size: perPage,
             };
-
-            const url = `${apiUrl}/${resource}?${stringify(query)}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -230,7 +240,11 @@ const springDataProvider = (
             }));
         },
         create: (resource, params) => {
-            const url = `${apiUrl}/${resource}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}`;
             return httpClient(url, {
                 method: "POST",
                 body:
@@ -242,14 +256,22 @@ const springDataProvider = (
             }));
         },
         delete: (resource, params) => {
-            const url = `${apiUrl}/${resource}/${params.id}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}`;
 
             return httpClient(url, {
                 method: 'DELETE',
             }).then(({ json }) => ({ data: json }));
         },
         deleteMany: (resource, params) => {
-            const url = `${apiUrl}/${resource}`;
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}`;
 
             //make a distinct call for every entry
             return Promise.all(

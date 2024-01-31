@@ -46,6 +46,8 @@ import { Route } from "react-router-dom";
 import { FunctionUpdate } from "./resources/functions/update";
 import { DataItemUpdate } from "./resources/dataitems/update";
 import { ArtifactUpdate } from "./resources/artifacts/update";
+import { TaskEdit } from "./resources/tasks";
+import { RunShow, RunCreate, RunList } from "./resources/runs";
 
 export const App = () => {
   return (
@@ -85,6 +87,18 @@ export const App = () => {
           create={<ArtifactCreate />}
         >
           <Route path=":id/update" element={<ArtifactUpdate />} />
+        </Resource>
+        <Resource
+          name="tasks"
+          edit={<TaskEdit />}
+        >
+        </Resource>
+        <Resource
+          name="runs"
+          show={<RunShow />}
+          create={<RunCreate />}
+          list={<RunList />}
+        >
         </Resource>
         <Resource
           name="projects"

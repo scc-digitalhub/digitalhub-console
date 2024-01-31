@@ -11,6 +11,7 @@ export const TaskMap ={
 export const getTaskByFunction = (kind) =>{
 return TaskMap[kind];
 }
+
 export const FunctionDbtSchema = {
   $schema: "http://json-schema.org/draft-07/schema",
   type: "object",
