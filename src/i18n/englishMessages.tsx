@@ -60,11 +60,6 @@ const messages = {
         created: "Creation Date",
       },
     },
-    aside: {
-      allVersion: "All versions",
-      version: "Version",
-      created: "Creation Date",
-    },
   },
   pages: {
     dashboard: {
