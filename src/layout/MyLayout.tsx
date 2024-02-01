@@ -5,6 +5,7 @@ import { MyAppBar } from "./MyAppBar";
 import { MyMenu } from "./MyMenu";
 import { MySidebar } from "./MySidebar";
 import { SxProps } from "@mui/material/styles";
+import { useTheme } from '@mui/material/styles';
 
 export const MyLayout = (props: any) => {
   const url = useLocation();
@@ -13,8 +14,9 @@ export const MyLayout = (props: any) => {
     backgroundColor: "rgb(250, 250, 250)",
     paddingX: 4,
   };
-  const isLarge = useMediaQuery<Theme>((theme) => theme.breakpoints.down("lg"));
-  const isSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
+  const theme = useTheme();
+  const isLarge = useMediaQuery(theme.breakpoints.down("lg"));
+  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (url.pathname === "/") {
     style = {
