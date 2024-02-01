@@ -1,20 +1,17 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
+import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
+import { Grid } from "@mui/material";
 import {
   Edit,
-  FormDataConsumer,
   SelectInput,
   SimpleForm,
   TextInput,
   useRecordContext,
   useTranslate,
 } from "react-admin";
-import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { DataItemTypes } from "./types";
 import { PostEditToolbar, RecordTitle } from "../../components/helper";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { Grid } from "@mui/material";
+import { DataItemTypes, Schema } from "./types";
 
 const kinds = Object.values(DataItemTypes).map((v) => {
   return {
@@ -22,8 +19,6 @@ const kinds = Object.values(DataItemTypes).map((v) => {
     name: v,
   };
 });
-
-
 
 export const DataItemEdit = (props) => {
   const record = useRecordContext();
@@ -40,15 +35,19 @@ export const DataItemEdit = (props) => {
 const DataItemEditForm = () => {
   const translate = useTranslate();
 
-
   return (
     <SimpleForm toolbar={<PostEditToolbar />}>
-       <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={4}>
           <TextInput source="name" label="resources.function.name" disabled />
         </Grid>
         <Grid item xs={6}>
-          <SelectInput source="kind" label="resources.function.kind" choices={kinds} disabled />
+          <SelectInput
+            source="kind"
+            label="resources.function.kind"
+            choices={kinds}
+            disabled
+          />
         </Grid>
       </Grid>
 
