@@ -29,7 +29,7 @@ export const RunList = () => {
           project: taskRecordProp?.project,
           kind: "run",
           spec: {
-            local_execution: true,
+            local_execution: false,
             task: `${taskRecordProp.spec.function.split("://")[0]}+${
               taskRecordProp.kind
             }://${taskRecordProp.spec.function.split("://")[1]}`,
