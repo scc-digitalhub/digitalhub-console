@@ -20,6 +20,11 @@ const messages = {
         test: "test",
       },
     },
+    run: {
+      title:"Run",
+      create:"Create",
+      total:"Total"
+    },
     artifact: {
       title: "Artifact Details",
       name: "Name",

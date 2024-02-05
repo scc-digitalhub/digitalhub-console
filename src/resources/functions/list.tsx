@@ -2,41 +2,19 @@ import {
   Datagrid,
   DateField,
   EditButton,
-  Link,
-  List,
   ListBase,
   ListView,
-  RaRecord,
   SelectInput,
   ShowButton,
   TextField,
   TextInput,
-  useCreatePath,
-  useDataProvider,
-  useRecordContext,
-  useResourceContext,
   useTranslate,
 } from "react-admin";
-import {
-  TableCell,
-  TableHead,
-  TableRow,
-  TableBody,
-  Table,
-  Typography,
-  Box,
-  List as MuiList,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-} from "@mui/material";
 import yamlExporter from "@dslab/ra-export-yaml";
 import { DeleteWithConfirmButtonShowingName } from "../../components/helper";
 import { FunctionTypes } from "./types";
-import { ListPageTitle, PageTitle } from "../../components/pageTitle";
+import { ListPageTitle } from "../../components/pageTitle";
 import { FunctionIcon } from "./icon";
-import { useRootSelector } from "@dslab/ra-root-selector";
-import { useState, useEffect } from "react";
 import { VersionsList } from "../../components/versionsList";
 
 const kinds = Object.values(FunctionTypes).map((v) => {

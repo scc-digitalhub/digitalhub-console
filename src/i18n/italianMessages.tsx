@@ -22,6 +22,12 @@ const messages = {
         test:"test"
       }
     },
+    run: {
+      title:"Esecuzione",
+      create:"Crea",
+      total:"Total"
+
+    },
     artifact: {
       title: "Dettagli dell'artefatto",
       name: "Nome",
