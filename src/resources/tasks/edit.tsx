@@ -7,7 +7,7 @@ import {
 } from "react-admin";
 import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { TaskToolbar } from "../../components/helper";
-import { TaskSchema } from "./types";
+import { getSchemaTask } from "./types";
 
 export interface TaskProp {
   record?: any;
@@ -18,7 +18,7 @@ export interface TaskProp {
 export const TaskEdit = () => {
   const recordProp = useRecordContext();
   const kind = recordProp?.kind || undefined;
-  // const recordContext = useRecordContext();
+  const schema = getSchemaTask(recordProp?.kind);
 
   console.log(kind);
   return (
@@ -26,7 +26,7 @@ export const TaskEdit = () => {
       <RecordContextProvider value={recordProp}>
         <SimpleForm toolbar={<TaskToolbar />}>
           <TextField source="kind"></TextField>
-          <JsonSchemaInput source="spec" schema={TaskSchema} />
+          <JsonSchemaInput source="spec" schema={schema} />
         </SimpleForm>
       </RecordContextProvider>
     </Edit>
