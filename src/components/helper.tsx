@@ -38,6 +38,7 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
+import { VersionsList } from './versionsList';
 
 export const RecordTitle = ({ prompt }: any) => {
     const record = useRecordContext();
@@ -78,7 +79,7 @@ const ShowToolbar = memo(function ShowToolbar(props: { record: any }) {
     if (!props.record) return <></>;
     return (
         <TopToolbar>
-            <BackButton sx={{ display: { xs: 'none', lg: 'flex' } }} />
+            <BackButton sx={{ display: { xs: 'none', xl: 'flex' } }} />
             <EditButton style={{ marginLeft: 'auto' }} record={props.record} />
             <InspectButton record={props.record} />
             <ExportRecordButton language="yaml" record={props.record} />
@@ -165,15 +166,14 @@ export const PostEditToolbar = () => {
     );
 };
 export const TaskToolbar = () => {
-  return (
-    <Toolbar>
-      <SaveButton />
-    </Toolbar>
-  );
+    return (
+        <Toolbar>
+            <SaveButton />
+        </Toolbar>
+    );
 };
 const getStyle = (record: any) => {
-    const curRecord = record;
-
+    const curRecord = record || {};
     return {
         rowSx: record => ({
             backgroundColor:
@@ -200,16 +200,16 @@ export const LayoutContent = (props: LayoutContentProps) => {
         <Grid
             container
             spacing={4}
-            direction={{ xs: 'column-reverse', lg: 'row' }}
-            flexWrap={{ xs: 'nowrap', lg: 'wrap' }}
+            direction={{ xs: 'column-reverse', xl: 'row' }}
+            flexWrap={{ xs: 'nowrap', xl: 'wrap' }}
         >
-            <Grid item xs={12} lg={6} xl={7} pb={2}>
+            <Grid item xs={12} xl={7} pb={2}>
                 {children}
             </Grid>
 
-            <Grid item xs={12} lg={6} xl={5}>
+            <Grid item xs={12} xl={5}>
                 <TopToolbar sx={{ justifyContent: 'flex-start' }}>
-                    <BackButton sx={{ display: { xs: 'flex', lg: 'none' } }} />
+                    <BackButton sx={{ display: { xs: 'flex', xl: 'none' } }} />
                 </TopToolbar>
 
                 <Card
@@ -239,29 +239,7 @@ export const LayoutContent = (props: LayoutContentProps) => {
 
 const BoxContent = memo(function BoxContent(props: { record: any }) {
     if (!props.record) return <></>;
-    return (
-        <List
-            queryOptions={{ meta: { allVersion: true, record: props.record } }}
-            actions={false}
-            disableSyncWithLocation={true}
-            pagination={<Pagination rowsPerPageOptions={[5, 10, 25]} />}
-        >
-            <Datagrid
-                rowClick="show"
-                rowSx={getStyle(props.record).rowSx}
-                bulkActionButtons={false}
-            >
-                <TextField
-                    source="metadata.version"
-                    label="resources.common.version.version"
-                />
-                <DateField
-                    source="metadata.created"
-                    label="resources.common.version.created"
-                />
-            </Datagrid>
-        </List>
-    );
+    return <VersionsList record={props.record} />;
 }, arePropsEqual);
 
 type LayoutContentProps = {
@@ -287,7 +265,10 @@ export const FunctionList = () => {
 };
 
 export const OutlinedCard = (props: { children }) => (
-    <Card variant="outlined" sx={{ width: '100%', borderRadius: '10px' }}>
+    <Card
+        variant="outlined"
+        sx={{ width: '100%', borderRadius: '10px', maxWidth: '990px' }}
+    >
         {props.children}
     </Card>
 );

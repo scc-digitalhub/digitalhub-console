@@ -49,6 +49,9 @@ const messages = {
       schema: {
         name: "Name",
         type: "Type",
+      },
+      preview: {
+        unsupported: "Unsupported",
       }
     },
     common: {

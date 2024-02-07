@@ -25,11 +25,12 @@ import { useState, useEffect } from "react";
 export type VersionListProps = {
   showActions?: boolean;
   sx?: SxProps<Theme>;
+  record: any
 };
 
 export const VersionsList = (props: VersionListProps) => {
-  const { showActions = true, sx } = props;
-  const record = useRecordContext();
+  const { showActions = true, sx, record } = props;
+  //const record = useRecordContext();
   const resource = useResourceContext();
   const dataProvider = useDataProvider();
   const { root } = useRootSelector();
@@ -54,9 +55,9 @@ export const VersionsList = (props: VersionListProps) => {
 
   return (
     <Box sx={sxProps}>
-      <Typography variant="body1" sx={{}}>
+      {/* <Typography variant="body1" sx={{}}>
         {translate("versions")}
-      </Typography>
+      </Typography> */}
       <MuiList>
         {versions.map((item) => {
           const path = createPath({

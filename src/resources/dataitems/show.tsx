@@ -1,19 +1,16 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { Box, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import inflection from 'inflection';
-import { ReactElement, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import {
-    Datagrid,
     Labeled,
-    ListContextProvider,
     Show,
     TabbedShowLayout,
     TextField,
-    useList,
     useRecordContext,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
 import { MetadataSchema } from '../../common/types';
 import {
@@ -21,8 +18,8 @@ import {
     OutlinedCard,
     PostShowActions,
 } from '../../components/helper';
-import { getReactField, isFieldValid } from './helper';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
+import { getTypeFields, getValue, isUnsupported } from './helper';
 
 const arePropsEqual = (oldProps: any, newProps: any) => {
     if (!newProps.record) return true;
@@ -91,82 +88,161 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 arePropsEqual);
 
 const SchemaTabComponent = (props: { record: any }) => {
-    const schema = props.record?.spec?.schema || [];
+    const [columns, setColumns] = useState<GridColDef[]>([]);
+    const [rows, setRows] = useState<GridRowsProp>([]);
     const translate = useTranslate();
 
-    const columns: GridColDef[] = [
-        {
-            field: 'name',
-            headerName: translate('resources.dataitem.schema.name'),
-        },
-        {
-            field: 'type',
-            headerName: translate('resources.dataitem.schema.type'),
-        },
-    ];
+    useEffect(() => {
+        const schema = props.record?.spec?.schema || [];
 
-    schema
-        .filter(fieldDescriptor => Object.keys(fieldDescriptor).length > 2)
-        .forEach(fieldDescriptor => {
-            const filteredKeys = Object.keys(fieldDescriptor).filter(
-                key => key !== 'name' && key !== 'type'
-            );
+        const baseColumns: GridColDef[] = [
+            {
+                field: 'name',
+                headerName: translate('resources.dataitem.schema.name'),
+                flex: 1,
+            },
+            {
+                field: 'type',
+                headerName: translate('resources.dataitem.schema.type'),
+                flex: 1,
+            },
+        ];
 
-            filteredKeys.forEach(key => {
-                if (!columns.some(r => r.field === key)) {
-                    const label = inflection.transform(
-                        key.replace(/\./g, ' '),
-                        ['underscore', 'humanize']
-                    );
+        const dynamicColumns = schema.reduce(
+            (acc: GridColDef[], fieldDescriptor: any) => {
+                const filteredKeys = Object.keys(fieldDescriptor).filter(
+                    key => key !== 'name' && key !== 'type'
+                );
 
-                    columns.push({
-                        field: key,
-                        headerName: label,
-                    });
-                }
-            });
-        });
+                filteredKeys.forEach(key => {
+                    if (!acc.some(r => r.field === key)) {
+                        const label = inflection.transform(
+                            key.replace(/\./g, ' '),
+                            ['underscore', 'humanize']
+                        );
 
-    const rows = schema.map((obj: any, i: number) => ({ id: i, ...obj }));
+                        acc.push({
+                            field: key,
+                            headerName: label,
+                            flex: 1,
+                        });
+                    }
+                });
+                return acc;
+            },
+            []
+        );
+
+        setColumns([...baseColumns, ...dynamicColumns]);
+    }, [props.record]);
+
+    useEffect(() => {
+        const schema = props.record?.spec?.schema || [];
+        setRows(schema.map((obj: any, i: number) => ({ id: i, ...obj })));
+    }, [props.record]);
 
     return (
-        <Box style={{ width: '100%' }}>
-            <DataGrid columns={columns} rows={rows} />
+        <Box
+            sx={{
+                width: '100%',
+            }}
+        >
+            <DataGrid columns={columns} rows={rows} autoHeight />
         </Box>
     );
 };
 
 const PreviewTabComponent = (props: { record: any }) => {
-    const schema = props.record?.spec?.schema || [];
-    const reactFields: ReactElement[] = [];
+    const [columns, setColumns] = useState<GridColDef[]>([]);
+    const [rows, setRows] = useState<GridRowsProp>([]);
+    const translate = useTranslate();
+    const unsupportedLabel: string = translate(
+        'resources.dataitem.preview.unsupported'
+    );
 
-    schema.forEach((fieldDescriptor: any, i: number) => {
-        reactFields.push(getReactField(fieldDescriptor, i));
-    });
+    useEffect(() => {
+        const schema = props.record?.spec?.schema || [];
+        const useEffectColumns = schema.map((obj: any) => {
+            const basicFields = {
+                field: changeCase.camelCase(obj.name),
+                //flex: 1,
+                headerAlign: 'left',
+                align: 'left',
+                renderHeader: () => {
+                    const typeLabel = `(${obj.type.toUpperCase()})`;
+                    return (
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            lineHeight="16px"
+                        >
+                            <span
+                                style={{
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                    fontWeight: '500',
+                                    paddingBottom: '5px',
+                                }}
+                            >
+                                {obj.name}
+                            </span>
+                            <span
+                                style={{
+                                    opacity: 0.6,
+                                    fontSize: '12px',
+                                }}
+                            >
+                                {typeLabel}
+                            </span>
+                        </Box>
+                    );
+                },
+            };
 
-    const data: any[] = [];
-    const preview = props.record?.status?.preview || [];
+            const typeFields = getTypeFields(obj);
 
-    preview.forEach(obj => {
-        const field = changeCase.camelCase(obj.name);
-
-        const fieldDescriptor = schema.find(s => s.name === obj.name);
-        const isValid = isFieldValid(fieldDescriptor);
-
-        obj.value.forEach((v: any, i: number) => {
-            const value = isValid ? v : undefined;
-            data[i] ? (data[i][field] = value) : (data[i] = { [field]: value });
+            return typeFields ? { ...basicFields, ...typeFields } : basicFields;
         });
-    });
+        setColumns([...useEffectColumns, ...useEffectColumns, ...useEffectColumns,]);
+    }, [props.record]);
 
-    const listContext = useList({ data });
+    useEffect(() => {
+        const preview = props.record?.status?.preview || [];
+        const schema = props.record?.spec?.schema || [];
+        const useEffectRows: { [key: string]: any }[] = [];
+
+        preview.forEach((obj: any) => {
+            const field = changeCase.camelCase(obj.name);
+            const fieldDescriptor = schema.find(
+                (s: any) => s.name === obj.name
+            );
+
+            if (fieldDescriptor) {
+                obj.value.forEach((v: any, i: number) => {
+                    let value = getValue(v, fieldDescriptor);
+                    if (isUnsupported(value)) value = unsupportedLabel;
+
+                    if (!useEffectRows.some(r => r.id === i)) {
+                        useEffectRows.push({ id: i, [field]: value });
+                    } else {
+                        useEffectRows[i][field] = value;
+                    }
+                });
+            }
+        });
+
+        setRows(useEffectRows);
+    }, [props.record]);
 
     return (
-        <ListContextProvider value={listContext}>
-            <Datagrid bulkActionButtons={false}>
-                {reactFields && reactFields.map(field => field)}
-            </Datagrid>
-        </ListContextProvider>
+        <Box
+            sx={{
+                width: '100%',
+            }}
+        >
+            <DataGrid columns={columns} rows={rows} autoHeight />
+        </Box>
     );
 };
 
