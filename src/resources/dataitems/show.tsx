@@ -20,11 +20,7 @@ import {
 } from '../../components/helper';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 import { getTypeFields, getValue, isUnsupported } from './helper';
-
-const arePropsEqual = (oldProps: any, newProps: any) => {
-    if (!newProps.record) return true;
-    return Object.is(oldProps.record, newProps.record);
-};
+import { arePropsEqual } from '../../common/helper';
 
 const ShowComponent = (props: { setRecord: (record: any) => void }) => {
     const record = useRecordContext();
@@ -165,7 +161,7 @@ const PreviewTabComponent = (props: { record: any }) => {
         const useEffectColumns = schema.map((obj: any) => {
             const basicFields = {
                 field: changeCase.camelCase(obj.name),
-                //flex: 1,
+                flex: 1,
                 headerAlign: 'left',
                 align: 'left',
                 renderHeader: () => {
@@ -204,7 +200,7 @@ const PreviewTabComponent = (props: { record: any }) => {
 
             return typeFields ? { ...basicFields, ...typeFields } : basicFields;
         });
-        setColumns([...useEffectColumns, ...useEffectColumns, ...useEffectColumns,]);
+        setColumns(useEffectColumns);
     }, [props.record]);
 
     useEffect(() => {

@@ -24,7 +24,6 @@ import {
     DeleteWithConfirmButton,
     EditButton,
     List,
-    Pagination,
     RaRecord,
     SaveButton,
     ShowButton,
@@ -37,7 +36,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
+import { arePropsEqual } from '../common/helper';
 import { VersionsList } from './versionsList';
 
 export const RecordTitle = ({ prompt }: any) => {
@@ -70,16 +69,11 @@ export const PostShowActions = () => {
     return <ShowToolbar record={record} />;
 };
 
-const arePropsEqual = (oldProps: any, newProps: any) => {
-    if (!newProps.record) return true;
-    return Object.is(oldProps.record, newProps.record);
-};
-
 const ShowToolbar = memo(function ShowToolbar(props: { record: any }) {
     if (!props.record) return <></>;
     return (
         <TopToolbar>
-            <BackButton sx={{ display: { xs: 'none', xl: 'flex' } }} />
+            <BackButton sx={{ display: { xs: 'none', lg: 'flex' } }} />
             <EditButton style={{ marginLeft: 'auto' }} record={props.record} />
             <InspectButton record={props.record} />
             <ExportRecordButton language="yaml" record={props.record} />
@@ -197,43 +191,36 @@ export const LayoutContent = (props: LayoutContentProps) => {
 
     if (!dataProvider) return <></>;
     return (
-        <Grid
-            container
-            spacing={4}
-            direction={{ xs: 'column-reverse', xl: 'row' }}
-            flexWrap={{ xs: 'nowrap', xl: 'wrap' }}
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column-reverse', lg: 'row' },
+            }}
         >
-            <Grid item xs={12} xl={7} pb={2}>
+            <Box
+                sx={{
+                    paddingRight: { xs: 0, lg: 2 },
+                    width: '100%',
+                    paddingBottom: 4,
+                    minWidth: '50vw',
+                    //maxWidth: { xs: '99.9%', lg: '100vw' },
+                }}
+            >
                 {children}
-            </Grid>
+            </Box>
 
-            <Grid item xs={12} xl={5}>
-                <TopToolbar sx={{ justifyContent: 'flex-start' }}>
-                    <BackButton sx={{ display: { xs: 'flex', xl: 'none' } }} />
-                </TopToolbar>
+            <Box display="block">
+                <Box display="flex" flexDirection="column">
+                    <TopToolbar sx={{ justifyContent: 'flex-start' }}>
+                        <BackButton
+                            sx={{ display: { xs: 'flex', lg: 'none' } }}
+                        />
+                    </TopToolbar>
 
-                <Card
-                    sx={{
-                        height: 'fit-content',
-                        borderRadius: '10px',
-                    }}
-                    variant="outlined"
-                >
-                    <CardHeader
-                        title={translate('resources.common.version.title')}
-                    />
-
-                    <CardContent
-                        sx={{
-                            paddingTop: 1,
-                            paddingBottom: '8px !important',
-                        }}
-                    >
-                        <BoxContent record={record} />
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid>
+                    <BoxContent record={record} />
+                </Box>
+            </Box>
+        </Box>
     );
 };
 
@@ -265,10 +252,7 @@ export const FunctionList = () => {
 };
 
 export const OutlinedCard = (props: { children }) => (
-    <Card
-        variant="outlined"
-        sx={{ width: '100%', borderRadius: '10px', maxWidth: '990px' }}
-    >
+    <Card variant="outlined" sx={{ width: '100%', borderRadius: '10px' }}>
         {props.children}
     </Card>
 );

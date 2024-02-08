@@ -14,14 +14,31 @@ import { Grid, Typography } from "@mui/material";
 import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from "./types";
 import { JsonSchemaField } from "@dslab/ra-jsonschema-input";
 import { MetadataSchema } from "../../common/types";
-import { Aside, PostShowActions } from "../../components/helper";
+import { 
+  LayoutContent,
+  OutlinedCard,
+  //Aside, 
+  PostShowActions } from "../../components/helper";
 import { TaskAndRun } from "./TaskAndRun";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { arePropsEqual } from "../../common/helper";
 // import { useEffect } from "react";
 
-const FunctionShowLayout = () => {
-  const translate = useTranslate();
+const ShowComponent = (props: { setRecord: (record: any) => void }) => {
   const record = useRecordContext();
+
+  useEffect(() => {
+      props.setRecord(record);
+  }, [record]);
+
+  return <FunctionShowLayout record={record} />;
+}
+
+const FunctionShowLayout = memo(function FunctionShowLayout(props: {
+  record: any;
+}){
+  const translate = useTranslate();
+  const { record } = props;
   const dataProvider = useDataProvider();
   const kind = record?.kind || undefined;
   const [tasks, setTasks] = useState<any>();
@@ -62,16 +79,16 @@ const FunctionShowLayout = () => {
       setTasks(mapTask);
     }
   }, [dataProvider, data, isLoading]);
-  if (isLoading) {
-    return <></>;
-  }
+  // if (isLoading) {
+  //   return <></>;
+  // }
   if (error) {
     return <p>ERROR</p>;
   }
   if (!record || !tasks) return <></>;
 
   return (
-    <TabbedShowLayout syncWithLocation={false}>
+    <TabbedShowLayout syncWithLocation={false} record={record}>
       <TabbedShowLayout.Tab label={translate("resources.function.tab.summary")}>
         <Grid>
           <Typography variant="h6" gutterBottom>
@@ -112,16 +129,19 @@ const FunctionShowLayout = () => {
       ))}
     </TabbedShowLayout>
   );
-};
+}, arePropsEqual);
 
 export const FunctionShow = () => {
+  const [record, setRecord] = useState(undefined);
   return (
-    <Show
-      actions={<PostShowActions />}
-      aside={<Aside />}
-      sx={{ "& .RaShow-card": { width: "50%" } }}
-    >
-      <FunctionShowLayout />
-    </Show>
+    <LayoutContent record={record}>
+      <Show
+        actions={<PostShowActions />}
+        sx={{ width: '100%' }}
+        component={OutlinedCard}
+      >
+        <ShowComponent setRecord={setRecord}/>
+      </Show>
+    </LayoutContent>
   );
 };
