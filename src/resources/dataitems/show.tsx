@@ -162,6 +162,7 @@ const PreviewTabComponent = (props: { record: any }) => {
             const basicFields = {
                 field: changeCase.camelCase(obj.name),
                 flex: 1,
+                //minWidth: 100,
                 headerAlign: 'left',
                 align: 'left',
                 renderHeader: () => {

@@ -7,13 +7,11 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import {
     Box,
     Card,
-    CardContent,
-    CardHeader,
     Table as MaterialTable,
     TableBody,
     TableCell,
     TableHead,
-    TableRow,
+    TableRow
 } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
@@ -166,50 +164,33 @@ export const TaskToolbar = () => {
         </Toolbar>
     );
 };
-const getStyle = (record: any) => {
-    const curRecord = record || {};
-    return {
-        rowSx: record => ({
-            backgroundColor:
-                record.id === curRecord.id
-                    ? 'rgb(25, 118, 210, 0.15)'
-                    : 'white',
-            ':hover': {
-                backgroundColor:
-                    record.id === curRecord.id
-                        ? 'rgb(25, 118, 210, 0.25) !important'
-                        : 'rgba(0, 0, 0, 0.04)',
-            },
-        }),
-    };
-};
 
 export const LayoutContent = (props: LayoutContentProps) => {
     const { children, record } = props;
     const dataProvider = useDataProvider();
-    const translate = useTranslate();
 
     if (!dataProvider) return <></>;
     return (
         <Box
             sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column-reverse', lg: 'row' },
+                display: 'grid',
+                gridTemplateColumns: { lg: '1fr 350px' },
+                gridTemplateRows: { xs: 'repeat(1, 1fr)', lg: '' },
+                gap: 2,
             }}
         >
             <Box
                 sx={{
-                    paddingRight: { xs: 0, lg: 2 },
-                    width: '100%',
                     paddingBottom: 4,
-                    minWidth: '50vw',
-                    //maxWidth: { xs: '99.9%', lg: '100vw' },
+                    maxWidth: '70vw',
+                    minWidth: '100%',
+                    order: { xs: 2, lg: 1 },
                 }}
             >
                 {children}
             </Box>
 
-            <Box display="block">
+            <Box display="block" sx={{ order: { xs: 1, lg: 2 } }}>
                 <Box display="flex" flexDirection="column">
                     <TopToolbar sx={{ justifyContent: 'flex-start' }}>
                         <BackButton

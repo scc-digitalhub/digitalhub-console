@@ -1,8 +1,13 @@
+import { GridValueFormatterParams } from '@mui/x-data-grid';
+
 //method to get column type and, if necessary, valueGetter
 export const getTypeFields = (fieldDescriptor: any) => {
     const { type } = fieldDescriptor;
 
-    const unsupportedFields = { sortable: false, filterable: false };
+    const unsupportedFields = {
+        sortable: false,
+        filterable: false,
+    };
 
     switch (type) {
         case 'number':
@@ -25,10 +30,24 @@ export const getTypeFields = (fieldDescriptor: any) => {
         case 'date':
             return {
                 type: 'date',
+                valueFormatter: (
+                    params: GridValueFormatterParams<Date | null>
+                ) => {
+                    if (params.value === null) return 'Invalid date';
+                    return params.value.toLocaleDateString('en-GB');
+                },
             };
         case 'datetime':
             return {
                 type: 'datetime',
+                valueFormatter: (
+                    params: GridValueFormatterParams<Date | null>
+                ) => {
+                    if (params.value === null) return 'Invalid datetime';
+                    return params.value.toLocaleString('en-GB', {
+                        timeZone: 'UTC',
+                    });
+                },
             };
         case 'geojson':
             return unsupportedFields;
@@ -63,7 +82,7 @@ export const getValue = (value: any, fieldDescriptor: any) => {
         case 'time':
             return value.toString();
         case 'datetime':
-            return dateTimeTransform(value);
+            return dateTransform(value);
         case 'year':
             return value.toString();
         case 'month':
@@ -111,26 +130,16 @@ const booleanTransform = (value: any) =>
 
 const dateTransform = (value: any) => {
     if (typeof value === 'string' || typeof value === 'number') {
-        try {
-            return new Date(value);
-            //return date.toLocaleDateString('en-GB');
-        } catch (e) {
-            console.error(e);
-            return unsupported;
+        const date = new Date(value);
+        if (!isNaN(date)) {
+            return date;
+        } else {
+            console.error('Invalid date format');
+            return null;
         }
-    } else return unsupported;
-};
-
-const dateTimeTransform = (value: any) => {
-    if (typeof value === 'string' || typeof value === 'number') {
-        try {
-            return new Date(value);
-            //return date.toLocaleString('en-GB', { timeZone: 'UTC' });
-        } catch (e) {
-            console.error(e);
-            return unsupported;
-        }
-    } else return unsupported;
+    } else {
+        return null;
+    }
 };
 
 const geopointTransform = (value: any, format?: string) => {
@@ -158,6 +167,7 @@ interface Return {
 }
 
 export const isUnsupported = (value: any): value is Return =>
+    value &&
     typeof value === 'object' &&
     'type' in value &&
     value.type === 'unsupported';
