@@ -31,23 +31,42 @@ const messages = {
       kind: "Kind",
     },
     dataitem: {
-      title: "Data Item details",
+      title: "Data item details",
       name: "Name",
-      kind: "Kind",
+      kind:"Kind",
+      tab: {
+        summary: "Summary",
+        schema: "Schema",
+        preview: "Preview",
+      },
+      summary: {
+        spec: {
+          title: "Spec",
+          key: "Key",
+          path: "Path",
+        }
+      },
+      schema: {
+        name: "Name",
+        type: "Type",
+      },
+      preview: {
+        unsupported: "Unsupported",
+      }
     },
     common: {
-      emptySpec: "Select the Kind for spec modification",
+      emptySpec:"Select the Kind for spec modification",
+      version: {
+        title: "Versions",
+        version: "Version",
+        created: "Creation date",
+      },
     },
     list: {
       expandable: {
         version: "Version",
         created: "Creation Date",
       },
-    },
-    aside: {
-      allVersion: "All versions",
-      version: "Version",
-      created: "Creation Date",
     },
   },
   pages: {
@@ -95,7 +114,7 @@ const messages = {
   validation: {
     minValue: "Value must be greater that or equal to %{min}",
     noSpace: "Value must contain no space",
-    wrongChar: "Value must contain alphanumeric, -, .",
+    wrongChar: "The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word",
   },
 };
 

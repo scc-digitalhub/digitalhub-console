@@ -18,7 +18,7 @@ const messages = {
       name: "Nome",
       kind:"Tipo",
       tab: {
-        summary: "Descrizione",
+        summary: "Riepilogo",
         test:"test"
       }
     },
@@ -34,23 +34,42 @@ const messages = {
       kind:"Tipo",
     },
     dataitem: {
-      title: "Dettagli dell'Data Item",
+      title: "Dettagli del data item",
       name: "Nome",
       kind:"Tipo",
+      tab: {
+        summary: "Riepilogo",
+        schema: "Schema",
+        preview: "Anteprima",
+      },
+      summary: {
+        spec: {
+          title: "Spec",
+          key: "Key",
+          path: "Path",
+        }
+      },
+      schema: {
+        name: "Nome",
+        type: "Tipo",
+      },
+      preview: {
+        unsupported: "Non supportato",
+      }
     },
     common: {
-      emptySpec:"Selezionare Kind per visualizzare le specifiche"
+      emptySpec:"Selezionare Kind per visualizzare le specifiche",
+      version: {
+        title: "Versioni",
+        version: "Versione",
+        created: "Data di creazione",
+      },
     },
     list: {
       expandable: {
         version: "Versione",
         created: "Data di creazione",
       },
-    },
-    aside: {
-      allVersion: "Tutte le versioni",
-      version: "Versione",
-      created: "Data di creazione",
     },
   },
   search:{
@@ -64,7 +83,7 @@ const messages = {
   validation: {
     minValue: "Il valore deve esere maggiore o uguale a %{min}",
     noSpace: "Il valore non deve contenere spazi",
-    wrongChar: "Il valore puó contenere caratteri alfanumerici, -, .",
+    wrongChar: "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
   },
 };
 
