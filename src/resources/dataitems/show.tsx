@@ -1,6 +1,12 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { Box, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import {
+    DataGrid,
+    GridCellParams,
+    GridColDef,
+    GridRowsProp,
+    GridValueFormatterParams,
+} from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import inflection from 'inflection';
 import { memo, useEffect, useState } from 'react';
@@ -19,8 +25,14 @@ import {
     PostShowActions,
 } from '../../components/helper';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
-import { getTypeFields, getValue, isUnsupported } from './helper';
+import {
+    getTypeFields,
+    getValue,
+    isUnsupported,
+    stringComparator,
+} from './helper';
 import { arePropsEqual } from '../../common/helper';
+import clsx from 'clsx';
 
 const ShowComponent = (props: { setRecord: (record: any) => void }) => {
     const record = useRecordContext();
@@ -152,9 +164,13 @@ const PreviewTabComponent = (props: { record: any }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<GridRowsProp>([]);
     const translate = useTranslate();
-    const unsupportedLabel: string = translate(
-        'resources.dataitem.preview.unsupported'
-    );
+    const translations = {
+        unsupported: translate('resources.dataitem.preview.unsupported'),
+        invalidDate: translate('resources.dataitem.preview.invalidDate'),
+        invalidDatetime: translate(
+            'resources.dataitem.preview.invalidDatetime'
+        ),
+    };
 
     useEffect(() => {
         const schema = props.record?.spec?.schema || [];
@@ -162,7 +178,7 @@ const PreviewTabComponent = (props: { record: any }) => {
             const basicFields = {
                 field: changeCase.camelCase(obj.name),
                 flex: 1,
-                //minWidth: 100,
+                minWidth: 120,
                 headerAlign: 'left',
                 align: 'left',
                 renderHeader: () => {
@@ -195,9 +211,18 @@ const PreviewTabComponent = (props: { record: any }) => {
                         </Box>
                     );
                 },
+                valueFormatter: (params: GridValueFormatterParams<any>) => {
+                    if (isUnsupported(params.value))
+                        return translations.unsupported;
+                },
+                sortComparator: stringComparator,
+                cellClassName: (params: GridCellParams) =>
+                    clsx({
+                        unsupported: isUnsupported(params.value),
+                    }),
             };
 
-            const typeFields = getTypeFields(obj);
+            const typeFields = getTypeFields(obj, translations);
 
             return typeFields ? { ...basicFields, ...typeFields } : basicFields;
         });
@@ -218,10 +243,12 @@ const PreviewTabComponent = (props: { record: any }) => {
             if (fieldDescriptor) {
                 obj.value.forEach((v: any, i: number) => {
                     let value = getValue(v, fieldDescriptor);
-                    if (isUnsupported(value)) value = unsupportedLabel;
 
                     if (!useEffectRows.some(r => r.id === i)) {
-                        useEffectRows.push({ id: i, [field]: value });
+                        useEffectRows.push({
+                            id: i,
+                            [field]: value,
+                        });
                     } else {
                         useEffectRows[i][field] = value;
                     }
@@ -234,9 +261,12 @@ const PreviewTabComponent = (props: { record: any }) => {
 
     return (
         <Box
-            sx={{
+            sx={theme => ({
                 width: '100%',
-            }}
+                '& .unsupported': {
+                    backgroundColor: theme.palette.grey[200],
+                },
+            })}
         >
             <DataGrid columns={columns} rows={rows} autoHeight />
         </Box>

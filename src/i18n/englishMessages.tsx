@@ -52,6 +52,8 @@ const messages = {
       },
       preview: {
         unsupported: "Unsupported",
+        invalidDate: "Invalid date",
+        invalidDatetime: "Invalid datetime",
       }
     },
     common: {
