@@ -22,7 +22,7 @@
     "@dslab/ra-inspect-button": "^1.0.0",
     "@dslab/ra-jsonschema-input": "^1.0.0",
     "@dslab/ra-language-italian": "^1.0.0",
-    "@dslab/ra-root-selector": "^1.0.0",
+    "@dslab/ra-root-selector": "^1.0.1",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.6",
