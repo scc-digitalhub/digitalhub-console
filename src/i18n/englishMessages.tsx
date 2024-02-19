@@ -54,6 +54,7 @@ const messages = {
         unsupported: "Unsupported",
         invalidDate: "Invalid date",
         invalidDatetime: "Invalid datetime",
+        unsupportedField: "Unsupported field"
       }
     },
     common: {

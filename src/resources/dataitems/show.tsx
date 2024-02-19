@@ -1,12 +1,6 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { Box, Grid, Typography } from '@mui/material';
-import {
-    DataGrid,
-    GridCellParams,
-    GridColDef,
-    GridRowsProp,
-    GridValueFormatterParams,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import inflection from 'inflection';
 import { memo, useEffect, useState } from 'react';
@@ -18,21 +12,20 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
+import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
 import {
     LayoutContent,
     OutlinedCard,
     PostShowActions,
 } from '../../components/helper';
-import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 import {
-    getTypeFields,
+    getBasicFields,
+    getColumnFields,
     getValue,
-    isUnsupported,
-    stringComparator,
+    isUnsupportedColumn,
 } from './helper';
-import { arePropsEqual } from '../../common/helper';
-import clsx from 'clsx';
+import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 
 const ShowComponent = (props: { setRecord: (record: any) => void }) => {
     const record = useRecordContext();
@@ -117,8 +110,8 @@ const SchemaTabComponent = (props: { record: any }) => {
         ];
 
         const dynamicColumns = schema.reduce(
-            (acc: GridColDef[], fieldDescriptor: any) => {
-                const filteredKeys = Object.keys(fieldDescriptor).filter(
+            (acc: GridColDef[], columnDescriptor: any) => {
+                const filteredKeys = Object.keys(columnDescriptor).filter(
                     key => key !== 'name' && key !== 'type'
                 );
 
@@ -163,6 +156,8 @@ const SchemaTabComponent = (props: { record: any }) => {
 const PreviewTabComponent = (props: { record: any }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<GridRowsProp>([]);
+    const [isAtLeastOneColumnUnsupported, setIsAtLeastOneColumnUnsupported] =
+        useState<boolean>(false);
     const translate = useTranslate();
     const translations = {
         unsupported: translate('resources.dataitem.preview.unsupported'),
@@ -174,59 +169,22 @@ const PreviewTabComponent = (props: { record: any }) => {
 
     useEffect(() => {
         const schema = props.record?.spec?.schema || [];
+
         const useEffectColumns = schema.map((obj: any) => {
-            const basicFields = {
-                field: changeCase.camelCase(obj.name),
-                flex: 1,
-                minWidth: 120,
-                headerAlign: 'left',
-                align: 'left',
-                renderHeader: () => {
-                    const typeLabel = `(${obj.type.toUpperCase()})`;
-                    return (
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            lineHeight="16px"
-                        >
-                            <span
-                                style={{
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                    fontWeight: '500',
-                                    paddingBottom: '5px',
-                                }}
-                            >
-                                {obj.name}
-                            </span>
-                            <span
-                                style={{
-                                    opacity: 0.6,
-                                    fontSize: '12px',
-                                }}
-                            >
-                                {typeLabel}
-                            </span>
-                        </Box>
-                    );
-                },
-                valueFormatter: (params: GridValueFormatterParams<any>) => {
-                    if (isUnsupported(params.value))
-                        return translations.unsupported;
-                },
-                sortComparator: stringComparator,
-                cellClassName: (params: GridCellParams) =>
-                    clsx({
-                        unsupported: isUnsupported(params.value),
-                    }),
-            };
+            const basicFields = getBasicFields(obj, translations);
 
-            const typeFields = getTypeFields(obj, translations);
+            const columnFields = getColumnFields(obj, translations);
 
-            return typeFields ? { ...basicFields, ...typeFields } : basicFields;
+            return columnFields
+                ? { ...basicFields, ...columnFields }
+                : basicFields;
         });
+
         setColumns(useEffectColumns);
+
+        if (schema.some((obj: any) => isUnsupportedColumn(obj))) {
+            setIsAtLeastOneColumnUnsupported(true);
+        }
     }, [props.record]);
 
     useEffect(() => {
@@ -236,13 +194,13 @@ const PreviewTabComponent = (props: { record: any }) => {
 
         preview.forEach((obj: any) => {
             const field = changeCase.camelCase(obj.name);
-            const fieldDescriptor = schema.find(
+            const columnDescriptor = schema.find(
                 (s: any) => s.name === obj.name
             );
 
-            if (fieldDescriptor) {
+            if (columnDescriptor) {
                 obj.value.forEach((v: any, i: number) => {
-                    let value = getValue(v, fieldDescriptor);
+                    let value = getValue(v, columnDescriptor);
 
                     if (!useEffectRows.some(r => r.id === i)) {
                         useEffectRows.push({
@@ -261,14 +219,30 @@ const PreviewTabComponent = (props: { record: any }) => {
 
     return (
         <Box
-            sx={theme => ({
+            sx={{
                 width: '100%',
                 '& .unsupported': {
-                    backgroundColor: theme.palette.grey[200],
+                    backgroundColor: 'rgba(0, 0, 0, 0.06)',
                 },
-            })}
+                '& .unsupported .MuiDataGrid-cellContent, .unsupported .cellContent':
+                    {
+                        fontWeight: 'bold',
+                    },
+                '& .unsupported .MuiDataGrid-columnHeaderTitleContainerContent':
+                    {
+                        width: '100%',
+                    },
+                '& .unsupported .MuiDataGrid-menuIcon': {
+                    display: 'none',
+                },
+            }}
         >
-            <DataGrid columns={columns} rows={rows} autoHeight />
+            <DataGrid
+                columns={columns}
+                rows={rows}
+                autoHeight
+                columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
+            />
         </Box>
     );
 };
@@ -277,11 +251,14 @@ export const DataItemShow = () => {
     const [record, setRecord] = useState(undefined);
 
     return (
+        //add Showbase
         <LayoutContent record={record}>
+            {/* use ShowView insted of Show */}
             <Show
                 actions={<PostShowActions />}
                 sx={{ width: '100%' }}
                 component={OutlinedCard}
+                //add aside
             >
                 <ShowComponent setRecord={setRecord} />
             </Show>

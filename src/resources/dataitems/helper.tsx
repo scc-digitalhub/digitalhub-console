@@ -1,13 +1,18 @@
 import {
     GRID_DATETIME_COL_DEF,
     GRID_DATE_COL_DEF,
+    GridCellParams,
     GridComparatorFn,
+    GridRenderCellParams,
     GridValueFormatterParams,
     gridDateComparator,
     gridNumberComparator,
     gridStringOrNumberComparator,
 } from '@mui/x-data-grid';
+import * as changeCase from 'change-case';
 import clsx from 'clsx';
+import { GridCellExpand } from './GridCellExpand';
+import { PreviewHeaderCell } from './PreviewHeaderCell';
 
 const unsupportedComparator = (
     isFirstValueUnsupported: boolean,
@@ -36,8 +41,8 @@ const invalidDateComparator = (
 };
 
 export const stringComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-    const isFirstValueUnsupported = isUnsupported(v1);
-    const isSecondValueUnsupported = isUnsupported(v2);
+    const isFirstValueUnsupported = isUnsupportedValue(v1);
+    const isSecondValueUnsupported = isUnsupportedValue(v2);
     if (isFirstValueUnsupported || isSecondValueUnsupported) {
         return unsupportedComparator(
             isFirstValueUnsupported,
@@ -48,8 +53,8 @@ export const stringComparator: GridComparatorFn = (v1, v2, param1, param2) => {
 };
 
 const numberComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-    const isFirstValueUnsupported = isUnsupported(v1);
-    const isSecondValueUnsupported = isUnsupported(v2);
+    const isFirstValueUnsupported = isUnsupportedValue(v1);
+    const isSecondValueUnsupported = isUnsupportedValue(v2);
     if (isFirstValueUnsupported || isSecondValueUnsupported) {
         return unsupportedComparator(
             isFirstValueUnsupported,
@@ -60,8 +65,8 @@ const numberComparator: GridComparatorFn = (v1, v2, param1, param2) => {
 };
 
 const dateComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-    const isFirstValueUnsupported = isUnsupported(v1);
-    const isSecondValueUnsupported = isUnsupported(v2);
+    const isFirstValueUnsupported = isUnsupportedValue(v1);
+    const isSecondValueUnsupported = isUnsupportedValue(v2);
     if (isFirstValueUnsupported || isSecondValueUnsupported) {
         return unsupportedComparator(
             isFirstValueUnsupported,
@@ -78,44 +83,92 @@ const dateComparator: GridComparatorFn = (v1, v2, param1, param2) => {
     return gridDateComparator(v1, v2, param1, param2);
 };
 
-//method to get column type and, if necessary, valueGetter
-export const getTypeFields = (fieldDescriptor: any, translations: any) => {
-    const { type, format } = fieldDescriptor;
+export function renderCellExpand(params: GridRenderCellParams<any, string>) {
+    return (
+        <GridCellExpand
+            value={params.value || ''}
+            width={params.colDef.computedWidth}
+        />
+    );
+}
 
-    const unsupportedFields = {
-        sortable: false,
-        filterable: false,
-        cellClassName: () => clsx('unsupported'),
+//TODO: optimize this method
+export const getBasicFields = (columnDescriptor: any, translations: any) => {
+    const { name } = columnDescriptor;
+
+    const basicFields = {
+        field: changeCase.camelCase(name),
+        flex: 1,
+        minWidth: 121,
+        headerAlign: 'left',
+        align: 'left',
+        cellClassName: (params: GridCellParams) =>
+            clsx({
+                unsupported: isUnsupportedValue(params.value),
+            }),
+        renderHeader: () => (
+            <PreviewHeaderCell columnDescriptor={columnDescriptor} />
+        ),
+        valueFormatter: (params: GridValueFormatterParams<any>) => {
+            if (isUnsupportedValue(params.value)) {
+                return translations.unsupported;
+            }
+            return params.value;
+        },
+        sortComparator: stringComparator,
+    };
+
+    return basicFields;
+};
+
+/**
+ * Method to obtain the fields for a column according to its characteristics (type and, if available, format)
+*/
+export const getColumnFields = (columnDescriptor: any, translations: any) => {
+    if (isUnsupportedColumn(columnDescriptor)) {
+        const fieldsForUnsupportedColumn = {
+            sortable: false,
+            filterable: false,
+            cellClassName: () => clsx('unsupported'),
+            headerClassName: () => clsx('unsupported'),
+            valueFormatter: () => '',
+            renderHeader: () => (
+                <PreviewHeaderCell
+                    columnDescriptor={columnDescriptor}
+                    isUnsupported={true}
+                />
+            ),
+            minWidth: 220,
+        };
+
+        return fieldsForUnsupportedColumn;
+    }
+
+    const { type } = columnDescriptor;
+    const renderCell = {
+        renderCell: renderCellExpand,
     };
 
     switch (type) {
         case 'string':
-            switch (format) {
-                case 'binary':
-                    return unsupportedFields;
-            }
-            break;
+            return renderCell;
         case 'number':
             return {
                 type: 'number',
                 sortComparator: numberComparator,
+                ...renderCell,
             };
         case 'integer':
             return {
                 type: 'number',
                 sortComparator: numberComparator,
+                ...renderCell,
             };
         case 'boolean':
             return {
                 type: 'boolean',
-                minWidth: 40,
                 sortComparator: numberComparator,
             };
-        case 'object':
-            //TODO: decide how to handle this case
-            return unsupportedFields;
-        case 'array':
-            return unsupportedFields;
         case 'date':
             return {
                 ...GRID_DATE_COL_DEF,
@@ -124,14 +177,15 @@ export const getTypeFields = (fieldDescriptor: any, translations: any) => {
                 valueFormatter: (params: GridValueFormatterParams<any>) => {
                     if (params.value === null || params.value === undefined)
                         return params.value;
-                    if (isUnsupported(params.value))
+                    if (isUnsupportedValue(params.value))
                         return translations.unsupported;
                     if (isNaN(params.value)) return translations.invalidDate;
                     return params.value.toLocaleDateString('en-GB');
                 },
-                minWidth: 120,
                 sortComparator: dateComparator,
             };
+        case 'time':
+            return renderCell;
         case 'datetime':
             return {
                 ...GRID_DATETIME_COL_DEF,
@@ -139,7 +193,7 @@ export const getTypeFields = (fieldDescriptor: any, translations: any) => {
                 valueFormatter: (params: GridValueFormatterParams<any>) => {
                     if (params.value === null || params.value === undefined)
                         return params.value;
-                    if (isUnsupported(params.value))
+                    if (isUnsupportedValue(params.value))
                         return translations.unsupported;
                     if (isNaN(params.value))
                         return translations.invalidDatetime;
@@ -150,67 +204,60 @@ export const getTypeFields = (fieldDescriptor: any, translations: any) => {
                 minWidth: 160,
                 sortComparator: dateComparator,
             };
-        //TODO: decide how to manage the "geopoint" format
-        //case 'geopoint'
-        case 'geojson':
-            return unsupportedFields;
-        case 'any':
-            return unsupportedFields;
+        case 'year':
+            return renderCell;
+        case 'yearmonth':
+            return renderCell;
+        case 'duration':
+            return renderCell;
+        case 'geopoint':
+            return renderCell;
         default:
             return null;
     }
 };
 
-export const getValue = (value: any, fieldDescriptor: any) => {
+export const getValue = (value: any, columnDescriptor: any) => {
     if (value === null || value === undefined) return value;
-    const { type, format } = fieldDescriptor;
 
-    //TODO: check the values (first of all the length) that are returned with the use of the toString method
+    if (isUnsupportedColumn(columnDescriptor)) {
+        return unsupported;
+    }
+
+    const { type, format } = columnDescriptor;
+    // The maximum allowed length for values returned using the "toString" method is 10000
+    //TODO: check the values that are returned with the use of the "toString" method
     switch (type) {
         case 'string':
-            return stringTransform(value, format);
+            return stringTransform(value);
         case 'number':
             return numberTransform(value);
         case 'integer':
             return integerTransform(value);
         case 'boolean':
             return booleanTransform(value);
-        case 'object':
-            //TODO: decide how to handle this case
-            return unsupported;
-        case 'array':
-            return unsupported;
         case 'date':
             return dateTransform(value);
         case 'time':
-            return value.toString();
+            return value.toString().slice(0, 10000);
         case 'datetime':
             return dateTransform(value);
         case 'year':
-            return value.toString();
-        case 'month':
-            return value.toString();
+            return value.toString().slice(0, 10000);
+        case 'yearmonth':
+            return value.toString().slice(0, 10000);
         case 'duration':
-            return value.toString();
+            return value.toString().slice(0, 10000);
         case 'geopoint':
             return geopointTransform(value, format);
-        case 'geojson':
-            return unsupported;
-        case 'any':
-            return unsupported;
         default:
             return unsupported;
     }
 };
 
-const stringTransform = (value: any, format?: string) => {
-    //TODO: max length check (1800)
-    switch (format) {
-        case 'binary':
-            return unsupported;
-        default:
-            return value;
-    }
+const stringTransform = (value: any) => {
+    // The maximum allowed length for strings is 10000 
+    return value.toString().slice(0, 10000);
 };
 
 const integerTransform = (value: any) =>
@@ -244,7 +291,7 @@ const dateTransform = (value: any) => {
 };
 
 const geopointTransform = (value: any, format?: string) => {
-    //TODO: manage properly the "array" format
+    //TODO: decide if and how to manage the "array" format. Now it is unsupported
     switch (format) {
         case 'object':
             if (
@@ -255,8 +302,6 @@ const geopointTransform = (value: any, format?: string) => {
             ) {
                 return `${value.lon}, ${value.lat}`;
             } else return unsupported;
-        case 'array':
-            return unsupported;
         default:
             if (typeof value === 'string') return value;
             else return unsupported;
@@ -267,7 +312,7 @@ interface Return {
     type: string;
 }
 
-export const isUnsupported = (value: any): value is Return =>
+export const isUnsupportedValue = (value: any): value is Return =>
     value &&
     typeof value === 'object' &&
     'type' in value &&
@@ -275,4 +320,68 @@ export const isUnsupported = (value: any): value is Return =>
 
 const unsupported: Return = {
     type: 'unsupported',
+};
+
+/**
+ * Determines if the given column is unsupported based on its type and format.
+ * Combinations of column types and formats, if present, that are not supported:
+  - string with binary format
+  - object
+  - array
+  - geopoint with array format
+  - geojson
+  - any
+ */
+export const isUnsupportedColumn = (columnDescriptor: any) => {
+    const { type, format } = columnDescriptor;
+
+    switch (type) {
+        case 'string': {
+            switch (format) {
+                case 'binary':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        case 'number':
+            return false;
+        case 'integer':
+            return false;
+        case 'boolean':
+            return false;
+        case 'object':
+            //TODO: decide if and how to manage the "array" type
+            return true;
+        case 'array':
+            return true;
+        case 'date':
+            return false;
+        case 'time':
+            return false;
+        case 'datetime':
+            return false;
+        case 'year':
+            return false;
+        case 'yearmonth':
+            return false;
+        case 'duration':
+            return false;
+        case 'geopoint':
+            switch (format) {
+                //TODO: decide if and how to manage the "array" format
+                case 'object':
+                    return false;
+                case 'array':
+                    return true;
+                default:
+                    return false;
+            }
+        case 'geojson':
+            return true;
+        case 'any':
+            return true;
+        default:
+            return true;
+    }
 };

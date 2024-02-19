@@ -56,7 +56,8 @@ const messages = {
       preview: {
         unsupported: "Non supportato",
         invalidDate: "Data non valida",
-        invalidDatetime: "Datetime non valido"
+        invalidDatetime: "Datetime non valido",
+        unsupportedField: "Campo non supportato",
       }
     },
     common: {
