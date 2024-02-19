@@ -297,10 +297,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-root-selector@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@dslab/ra-root-selector/-/ra-root-selector-1.0.0.tgz"
-  integrity sha512-SZXaSwoNVS0NmOnuTAUGHvQonwoy8X1q0T9DHZTcR1l+qyT+FnHG8mFhhnxXgcDZteXZNr0WhgDglBAsj3gitw==
+"@dslab/ra-root-selector@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-1.0.1.tgz#06bcbf50e4972c8ee8ed3bfc435fc0253ebe903d"
+  integrity sha512-82CX8ruGQPeDus8AqlRCsPitL+3thGvJSe2S4mR+oRoXftGsqVxZrTKUQ6ppOJsyTpPkcWX2RpsCdiKYk0FWJg==
   dependencies:
     ra-core "^4.11.0"
 
