@@ -1,7 +1,10 @@
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Container, Grid, Typography } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
 import {
     Labeled,
     RecordContextProvider,
-    Show,
     ShowBase,
     ShowView,
     SimpleShowLayout,
@@ -10,20 +13,15 @@ import {
     useDataProvider,
     useGetList,
     useRecordContext,
-    useTranslate,
+    useTranslate
 } from 'react-admin';
-import { Container, Grid, Typography } from '@mui/material';
-import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from './types';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { MetadataSchema } from '../../common/types';
-import { Aside, PostShowActions } from '../../components/helper';
-import { TaskAndRun } from './TaskAndRun';
-import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
+import { MetadataSchema } from '../../common/types';
 import { ShowOutlinedCard } from '../../components/OutlinedCard';
+import { Aside, PostShowActions } from '../../components/helper';
 import { ShowPageTitle } from '../../components/pageTitle';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-// import { useEffect } from "react";
+import { TaskAndRun } from './TaskAndRun';
+import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from './types';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -140,7 +138,7 @@ arePropsEqual);
 
 export const FunctionShow = () => {
     return (
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
                     <ShowPageTitle

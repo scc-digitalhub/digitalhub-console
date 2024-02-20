@@ -1,24 +1,23 @@
+import yamlExporter from '@dslab/ra-export-yaml';
+import { Container } from '@mui/material';
 import {
     Datagrid,
     EditButton,
-    List,
     ListBase,
     ListView,
     SelectInput,
     ShowButton,
     TextField,
     TextInput,
-    useTranslate,
+    useTranslate
 } from 'react-admin';
-import yamlExporter from '@dslab/ra-export-yaml';
 import {
     DeleteWithConfirmButtonShowingName,
     ListVersion,
 } from '../../components/helper';
-import { ArtifactTypes } from './types';
-import { Container } from '@mui/material';
 import { ListPageTitle } from '../../components/pageTitle';
-import { FunctionIcon } from '../../components/icons';
+import { ArtifactIcon } from './icon';
+import { ArtifactTypes } from './types';
 
 const kinds = Object.values(ArtifactTypes).map(v => {
     return {
@@ -47,7 +46,7 @@ export const ArtifactList = () => {
         <Container maxWidth={false}>
             <ListBase exporter={yamlExporter}>
                 <>
-                    <ListPageTitle icon={<FunctionIcon fontSize={"large"} />}/>
+                    <ListPageTitle icon={<ArtifactIcon fontSize={"large"} />}/>
                     <ListView filters={postFilters}>
                         <Datagrid rowClick="show" expand={ListVersion}>
                             <TextField source="name" />

@@ -3,8 +3,8 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import { memo, useEffect, useRef, useState } from 'react';
-import { isUnsupportedValue } from './helper';
 import { useTranslate } from 'react-admin';
+import { PreviewHelper } from './PreviewHelper';
 
 interface GridCellExpandProps {
     value: any;
@@ -24,7 +24,7 @@ export const GridCellExpand = memo(function GridCellExpand(
     const { width, value: propsValue } = props;
 
     const translate = useTranslate();
-    const isUnsupported = isUnsupportedValue(propsValue);
+    const isUnsupported = PreviewHelper.isUnsupportedValue(propsValue);
     const value = isUnsupported
         ? translate('resources.dataitem.preview.unsupported')
         : propsValue;

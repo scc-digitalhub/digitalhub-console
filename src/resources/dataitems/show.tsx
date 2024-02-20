@@ -1,9 +1,7 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { Box, Container, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import * as changeCase from 'change-case';
-import inflection from 'inflection';
-import { memo, useEffect, useState } from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Container, Grid, Typography } from '@mui/material';
+import { memo } from 'react';
 import {
     Labeled,
     ShowBase,
@@ -16,15 +14,10 @@ import {
 import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
 import { ShowOutlinedCard } from '../../components/OutlinedCard';
-import { ShowPageTitle } from '../../components/pageTitle';
 import { Aside, PostShowActions } from '../../components/helper';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import {
-    getBasicFields,
-    getColumnFields,
-    getValue,
-    isUnsupportedColumn,
-} from './helper';
+import { ShowPageTitle } from '../../components/pageTitle';
+import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
+import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 
 const ShowComponent = () => {
@@ -85,169 +78,9 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 },
 arePropsEqual);
 
-const SchemaTabComponent = (props: { record: any }) => {
-    const [columns, setColumns] = useState<GridColDef[]>([]);
-    const [rows, setRows] = useState<GridRowsProp>([]);
-    const translate = useTranslate();
-
-    useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-
-        const baseColumns: GridColDef[] = [
-            {
-                field: 'name',
-                headerName: translate('resources.dataitem.schema.name'),
-                flex: 1,
-            },
-            {
-                field: 'type',
-                headerName: translate('resources.dataitem.schema.type'),
-                flex: 1,
-            },
-        ];
-
-        const dynamicColumns = schema.reduce(
-            (acc: GridColDef[], columnDescriptor: any) => {
-                const filteredKeys = Object.keys(columnDescriptor).filter(
-                    key => key !== 'name' && key !== 'type'
-                );
-
-                filteredKeys.forEach(key => {
-                    if (!acc.some(r => r.field === key)) {
-                        const label = inflection.transform(
-                            key.replace(/\./g, ' '),
-                            ['underscore', 'humanize']
-                        );
-
-                        acc.push({
-                            field: key,
-                            headerName: label,
-                            flex: 1,
-                        });
-                    }
-                });
-                return acc;
-            },
-            []
-        );
-
-        setColumns([...baseColumns, ...dynamicColumns]);
-    }, [props.record]);
-
-    useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-        setRows(schema.map((obj: any, i: number) => ({ id: i, ...obj })));
-    }, [props.record]);
-
-    return (
-        <Box
-            sx={{
-                width: '100%',
-            }}
-        >
-            <DataGrid columns={columns} rows={rows} autoHeight />
-        </Box>
-    );
-};
-
-const PreviewTabComponent = (props: { record: any }) => {
-    const [columns, setColumns] = useState<GridColDef[]>([]);
-    const [rows, setRows] = useState<GridRowsProp>([]);
-    const [isAtLeastOneColumnUnsupported, setIsAtLeastOneColumnUnsupported] =
-        useState<boolean>(false);
-    const translate = useTranslate();
-    const translations = {
-        unsupported: translate('resources.dataitem.preview.unsupported'),
-        invalidDate: translate('resources.dataitem.preview.invalidDate'),
-        invalidDatetime: translate(
-            'resources.dataitem.preview.invalidDatetime'
-        ),
-    };
-
-    useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-
-        const useEffectColumns = schema.map((obj: any) => {
-            const basicFields = getBasicFields(obj, translations);
-
-            const columnFields = getColumnFields(obj, translations);
-
-            return columnFields
-                ? { ...basicFields, ...columnFields }
-                : basicFields;
-        });
-
-        setColumns(useEffectColumns);
-
-        if (schema.some((obj: any) => isUnsupportedColumn(obj))) {
-            setIsAtLeastOneColumnUnsupported(true);
-        }
-    }, [props.record]);
-
-    useEffect(() => {
-        const preview = props.record?.status?.preview || [];
-        const schema = props.record?.spec?.schema || [];
-        const useEffectRows: { [key: string]: any }[] = [];
-
-        preview.forEach((obj: any) => {
-            const field = changeCase.camelCase(obj.name);
-            const columnDescriptor = schema.find(
-                (s: any) => s.name === obj.name
-            );
-
-            if (columnDescriptor) {
-                obj.value.forEach((v: any, i: number) => {
-                    let value = getValue(v, columnDescriptor);
-
-                    if (!useEffectRows.some(r => r.id === i)) {
-                        useEffectRows.push({
-                            id: i,
-                            [field]: value,
-                        });
-                    } else {
-                        useEffectRows[i][field] = value;
-                    }
-                });
-            }
-        });
-
-        setRows(useEffectRows);
-    }, [props.record]);
-
-    return (
-        <Box
-            sx={{
-                width: '100%',
-                '& .unsupported': {
-                    backgroundColor: 'rgba(0, 0, 0, 0.06)',
-                },
-                '& .unsupported .MuiDataGrid-cellContent, .unsupported .cellContent':
-                    {
-                        fontWeight: 'bold',
-                    },
-                '& .unsupported .MuiDataGrid-columnHeaderTitleContainerContent':
-                    {
-                        width: '100%',
-                    },
-                '& .unsupported .MuiDataGrid-menuIcon': {
-                    display: 'none',
-                },
-            }}
-        >
-            <DataGrid
-                columns={columns}
-                rows={rows}
-                autoHeight
-                columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
-                hideFooter={true}
-            />
-        </Box>
-    );
-};
-
 export const DataItemShow = () => {
     return (
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
                     <ShowPageTitle

@@ -38,40 +38,37 @@ export const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 
     if (!record) return <></>;
     return (
-        <Grid>
+        <SimpleShowLayout record={record}>
             <Typography variant="h6" gutterBottom>
                 {translate('resources.artifact.title')}
             </Typography>
-
-            <SimpleShowLayout record={record}>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                        <Labeled label="My Label">
-                            <TextField source="name" />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label="My Label">
-                            <TextField source="kind" />
-                        </Labeled>
-                    </Grid>
+            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item xs={6}>
+                    <Labeled label="My Label">
+                        <TextField source="name" />
+                    </Labeled>
                 </Grid>
-                <JsonSchemaField source="metadata" schema={MetadataSchema} />
-                <JsonSchemaField
-                    source="spec"
-                    schema={getArtifactSpec(kind)}
-                    uiSchema={getArtifactUiSpec(kind)}
-                    label={false}
-                />
-            </SimpleShowLayout>
-        </Grid>
+                <Grid item xs={6}>
+                    <Labeled label="My Label">
+                        <TextField source="kind" />
+                    </Labeled>
+                </Grid>
+            </Grid>
+            <JsonSchemaField source="metadata" schema={MetadataSchema} />
+            <JsonSchemaField
+                source="spec"
+                schema={getArtifactSpec(kind)}
+                uiSchema={getArtifactUiSpec(kind)}
+                label={false}
+            />
+        </SimpleShowLayout>
     );
 },
 arePropsEqual);
 
 export const ArtifactShow = () => {
     return (
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
                     <ShowPageTitle

@@ -1,25 +1,23 @@
+import yamlExporter from '@dslab/ra-export-yaml';
+import { Container } from '@mui/material';
 import {
     Datagrid,
     EditButton,
-    List,
     ListBase,
     ListView,
     SelectInput,
     ShowButton,
     TextField,
     TextInput,
-    useTranslate,
+    useTranslate
 } from 'react-admin';
-import yamlExporter from '@dslab/ra-export-yaml';
 import {
-    DeleteWithConfirmButtonShowingName,
-    ListVersion,
+    DeleteWithConfirmButtonShowingName
 } from '../../components/helper';
-import { DataItemTypes } from './types';
 import { ListPageTitle } from '../../components/pageTitle';
-import { DataItemIcon } from '../../components/icons';
 import { VersionsList } from '../../components/versionsList';
-import { Container } from '@mui/material';
+import { DataItemIcon } from './icon';
+import { DataItemTypes } from './types';
 
 const kinds = Object.values(DataItemTypes).map(v => {
     return {

@@ -1,3 +1,6 @@
+import yamlExporter from '@dslab/ra-export-yaml';
+import { Container } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
@@ -10,15 +13,12 @@ import {
     TextInput,
     useTranslate,
 } from 'react-admin';
-import yamlExporter from '@dslab/ra-export-yaml';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
 import { ListPageTitle } from '../../components/pageTitle';
-import { FunctionIcon } from '../../components/icons';
 import { VersionsList } from '../../components/versionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useEffect, useState } from 'react';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { Container } from '@mui/material';
+import { FunctionIcon } from './icon';
 
 export const FunctionList = () => {
     const translate = useTranslate();
