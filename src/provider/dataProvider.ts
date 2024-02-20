@@ -49,7 +49,9 @@ const springDataProvider = (
             if (resource !== 'projects' && params.root) {
                 prefix = '/-/' + params.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${record?.name}?${stringify(query)}`;
+            const url = `${apiUrl}${prefix}/${resource}/${
+                record?.name
+            }?${stringify(query)}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -101,7 +103,7 @@ const springDataProvider = (
             const { page, perPage } = params.pagination;
             const { field, order } = params.sort;
             const record = params.meta?.record;
-            const allVersion = params.meta?.allVersion
+            const allVersion = params.meta?.allVersion;
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
                 sort: field + ',' + order, //sorting
@@ -113,9 +115,13 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             let url = '';
-            if (allVersion && record)
-                {url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;}
-            else {url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;}
+            if (allVersion && record) {
+                url = `${apiUrl}${prefix}/${resource}/${
+                    record.name
+                }?${stringify(query)}`;
+            } else {
+                url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
+            }
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -131,7 +137,7 @@ const springDataProvider = (
                 };
             });
         },
-        //get the specific version based on id. The Url changes and it 
+        //get the specific version based on id. The Url changes and it
         getOne: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
@@ -208,7 +214,7 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            if (!params.data){
+            if (!params.data) {
                 throw new Error('Invalid data');
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.data?.name}/${params.id}`;
@@ -246,9 +252,9 @@ const springDataProvider = (
             }
             const url = `${apiUrl}${prefix}/${resource}`;
             return httpClient(url, {
-                method: "POST",
+                method: 'POST',
                 body:
-                    typeof params.data === "string"
+                    typeof params.data === 'string'
                         ? params.data
                         : JSON.stringify(params.data),
             }).then(({ json }) => ({

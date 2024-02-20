@@ -18,14 +18,12 @@ export const ProjectSelectorList = props => {
     };
 
     return (
-        <List {...props} actions={<Toolbar />} perPage={50} >
+        <List {...props} actions={<Toolbar />} perPage={50}>
             <Datagrid rowClick={false} bulkActionButtons={false}>
                 <TextField source="name" />
                 <TextField source="description" />
                 <RootSelectorButton />
-                <DeleteWithDialogButton
-                        confirmTitle="Resource Deletion"
-                    />
+                <DeleteWithDialogButton confirmTitle="Resource Deletion" />
             </Datagrid>
         </List>
     );

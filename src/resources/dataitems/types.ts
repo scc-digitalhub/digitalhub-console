@@ -1,48 +1,48 @@
 export enum DataItemTypes {
-  DATAITEM = "dataitem",
+    DATAITEM = 'dataitem',
 }
 
 export const BlankSchema = {
-  $schema: "http://json-schema.org/draft-07/schema",
-  type: "object",
-  properties: {},
+    $schema: 'http://json-schema.org/draft-07/schema',
+    type: 'object',
+    properties: {},
 };
 
 export const getDataItemSpec = (kind: string | undefined) => {
-  if (!kind) {
-    return BlankSchema;
-  }
+    if (!kind) {
+        return BlankSchema;
+    }
 
-  return BlankSchema;
+    return BlankSchema;
 };
 
 export const getDataItemUiSpec = (kind: string | undefined) => {
-  if (!kind) {
-    return undefined;
-  }
+    if (!kind) {
+        return undefined;
+    }
 
-  return undefined;
+    return undefined;
 };
 
 export const DataItemSpecSchema = {
-  $schema: "http://json-schema.org/draft-07/schema",
-  type: "object",
-  title: "Spec",
-  properties: {
-    key: {
-      type: "string",
+    $schema: 'http://json-schema.org/draft-07/schema',
+    type: 'object',
+    title: 'Spec',
+    properties: {
+        key: {
+            type: 'string',
+        },
+        path: {
+            type: 'string',
+        },
     },
-    path: {
-      type: "string",
-    },
-  },
 };
 
 export const DataItemSpecUiSchema = {
-  key: {
-    "ui:title": "Key",
-  },
-  path: {
-    "ui:title": "Path",
-  }
+    key: {
+        'ui:title': 'Key',
+    },
+    path: {
+        'ui:title': 'Path',
+    },
 };

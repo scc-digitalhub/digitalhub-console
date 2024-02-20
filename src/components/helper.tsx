@@ -12,7 +12,7 @@ import {
     TableBody,
     TableCell,
     TableHead,
-    TableRow
+    TableRow,
 } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
@@ -223,7 +223,7 @@ const VersionsListWrapper = memo(function VersionsListWrapper(props: {
             sx={{
                 height: 'fit-content',
                 borderRadius: '10px',
-                order: { xs: 1, lg: 2 }
+                order: { xs: 1, lg: 2 },
             }}
             variant="outlined"
         >

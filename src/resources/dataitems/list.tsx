@@ -9,11 +9,9 @@ import {
     ShowButton,
     TextField,
     TextInput,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
-import {
-    DeleteWithConfirmButtonShowingName
-} from '../../components/helper';
+import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
 import { ListPageTitle } from '../../components/pageTitle';
 import { VersionsList } from '../../components/versionsList';
 import { DataItemIcon } from './icon';

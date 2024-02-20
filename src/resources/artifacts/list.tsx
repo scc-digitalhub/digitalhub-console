@@ -9,7 +9,7 @@ import {
     ShowButton,
     TextField,
     TextInput,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
 import {
     DeleteWithConfirmButtonShowingName,
@@ -46,7 +46,7 @@ export const ArtifactList = () => {
         <Container maxWidth={false}>
             <ListBase exporter={yamlExporter}>
                 <>
-                    <ListPageTitle icon={<ArtifactIcon fontSize={"large"} />}/>
+                    <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
                     <ListView filters={postFilters}>
                         <Datagrid rowClick="show" expand={ListVersion}>
                             <TextField source="name" />

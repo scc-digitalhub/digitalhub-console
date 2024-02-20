@@ -1,4 +1,4 @@
 export enum RunTypes {
-  COMPLETED = "CREATED",
-  EXECUTION = "EXECUTION"
+    COMPLETED = 'CREATED',
+    EXECUTION = 'EXECUTION',
 }

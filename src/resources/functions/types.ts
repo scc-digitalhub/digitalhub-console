@@ -1,61 +1,60 @@
 export enum FunctionTypes {
-  DBT = "dbt",
-  NEFERTEM = "nefertem",
-  JOB = "job",
+    DBT = 'dbt',
+    NEFERTEM = 'nefertem',
+    JOB = 'job',
 }
-export const TaskMap ={
-  dbt:["transform"],
-  nefertem: ["profile", "validate", "metric", "infer"]
-
-}
-export const getTaskByFunction = (kind) =>{
-return TaskMap[kind];
-}
+export const TaskMap = {
+    dbt: ['transform'],
+    nefertem: ['profile', 'validate', 'metric', 'infer'],
+};
+export const getTaskByFunction = kind => {
+    return TaskMap[kind];
+};
 
 export const FunctionDbtSchema = {
-  $schema: "http://json-schema.org/draft-07/schema",
-  type: "object",
-  title: "DBT",
-  required: ["source"],
-  properties: {
-    source: {
-      type: "string",
+    $schema: 'http://json-schema.org/draft-07/schema',
+    type: 'object',
+    title: 'DBT',
+    required: ['source'],
+    properties: {
+        source: {
+            type: 'string',
+        },
     },
-  },
 };
 
 export const FunctionDbtUiSchema = {
-  source: {
-    "ui:widget": "textarea",
-  },
+    source: {
+        'ui:widget': 'textarea',
+    },
 };
 
 export const BlankSchema = {
-  $schema: "http://json-schema.org/draft-07/schema",
-  type: "object",
-  properties: {},
+    $schema: 'http://json-schema.org/draft-07/schema',
+    type: 'object',
+    properties: {},
 };
 
 export const getFunctionSpec = (kind: string | undefined) => {
-  if (!kind) {
+    if (!kind) {
+        return BlankSchema;
+    }
+
+    if (kind === 'dbt') {
+        return FunctionDbtSchema;
+    }
+
     return BlankSchema;
-  }
-
-  if (kind === "dbt") {
-    return FunctionDbtSchema;
-  }
-
-  return BlankSchema;
 };
 
 export const getFunctionUiSpec = (kind: string | undefined) => {
-  if (!kind) {
+    if (!kind) {
+        return undefined;
+    }
+
+    if (kind === 'dbt') {
+        return FunctionDbtUiSchema;
+    }
+
     return undefined;
-  }
-
-  if (kind === "dbt") {
-    return FunctionDbtUiSchema;
-  }
-
-  return undefined;
 };

@@ -13,7 +13,7 @@ import {
     useDataProvider,
     useGetList,
     useRecordContext,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
@@ -80,7 +80,7 @@ const FunctionShowLayout = memo(function FunctionShowLayout(props: {
     // if (isLoading) {
     //   return <></>;
     // }
-    
+
     if (error) {
         return <p>ERROR</p>;
     }

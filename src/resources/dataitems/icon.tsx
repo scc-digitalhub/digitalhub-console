@@ -1,3 +1,3 @@
-import TableChartIcon from "@mui/icons-material/TableChart";
+import TableChartIcon from '@mui/icons-material/TableChart';
 
-export const DataItemIcon = TableChartIcon
+export const DataItemIcon = TableChartIcon;

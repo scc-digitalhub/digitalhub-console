@@ -1,85 +1,91 @@
-import { useRootSelector } from "@dslab/ra-root-selector";
+import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-  Create,
-  FormDataConsumer,
-  Labeled,
-  SelectInput,
-  SimpleForm,
-  TextInput,
-  useTranslate,
-} from "react-admin";
-import { ArtifactTypes, getArtifactSpec } from "./types";
-import { alphaNumericName } from "../../common/helper";
-import { MetadataSchema } from "../../common/types";
-import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import { Grid } from "@mui/material";
+    Create,
+    FormDataConsumer,
+    Labeled,
+    SelectInput,
+    SimpleForm,
+    TextInput,
+    useTranslate,
+} from 'react-admin';
+import { ArtifactTypes, getArtifactSpec } from './types';
+import { alphaNumericName } from '../../common/helper';
+import { MetadataSchema } from '../../common/types';
+import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { Grid } from '@mui/material';
 
 export const ArtifactCreate = () => {
-  const { root } = useRootSelector();
-  const translate = useTranslate();
-  const transform = (data) => ({
-    ...data,
-    project: root || "",
-  });
-  const validator = (data) => {
-    const errors: any = {};
+    const { root } = useRootSelector();
+    const translate = useTranslate();
+    const transform = data => ({
+        ...data,
+        project: root || '',
+    });
+    const validator = data => {
+        const errors: any = {};
 
-    if (!("kind" in data)) {
-      errors.kind = "messages.validation.required";
-    }
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
 
-    if (!alphaNumericName(data.name)) {
-      errors.name = "validation.wrongChar";
-    }
-    return errors;
-  };
-
-  const kinds = Object.values(ArtifactTypes).map((v) => {
-    return {
-      id: v,
-      name: v,
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+        return errors;
     };
-  });
 
-  return (
-    <Create transform={transform} redirect="list">
-      <SimpleForm validate={validator}>
-      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={4}>
-          <Labeled label={translate("resources.dataitem.name")}>
-          <TextInput source="name" required />
-          </Labeled>
-        </Grid>
-        <Grid item xs={6}>
-          <Labeled label={translate("resources.dataitem.kind")}>
-          <SelectInput source="kind" choices={kinds} required />
-          </Labeled>
-        </Grid>
-      </Grid>
-        <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-        <FormDataConsumer<{ kind: string }>>
-          {({ formData }) => {
-            if (formData.kind)
-              return (
-                <JsonSchemaInput
-                  source="spec"
-                  schema={getArtifactSpec(formData.kind)}
-                  uiSchema={getArtifactSpec(formData.kind)}
-                />
-              );
-            else
-              return (
-                <Card sx={{ width: 1, textAlign: "center" }}>
-                  <CardContent>
-                    {translate("resources.common.emptySpec")}{" "}
-                  </CardContent>
-                </Card>
-              );
-          }}
-        </FormDataConsumer>
-      </SimpleForm>
-    </Create>
-  );
+    const kinds = Object.values(ArtifactTypes).map(v => {
+        return {
+            id: v,
+            name: v,
+        };
+    });
+
+    return (
+        <Create transform={transform} redirect="list">
+            <SimpleForm validate={validator}>
+                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid item xs={4}>
+                        <Labeled label={translate('resources.dataitem.name')}>
+                            <TextInput source="name" required />
+                        </Labeled>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Labeled label={translate('resources.dataitem.kind')}>
+                            <SelectInput
+                                source="kind"
+                                choices={kinds}
+                                required
+                            />
+                        </Labeled>
+                    </Grid>
+                </Grid>
+                <JsonSchemaInput source="metadata" schema={MetadataSchema} />
+                <FormDataConsumer<{ kind: string }>>
+                    {({ formData }) => {
+                        if (formData.kind)
+                            return (
+                                <JsonSchemaInput
+                                    source="spec"
+                                    schema={getArtifactSpec(formData.kind)}
+                                    uiSchema={getArtifactSpec(formData.kind)}
+                                />
+                            );
+                        else
+                            return (
+                                <Card sx={{ width: 1, textAlign: 'center' }}>
+                                    <CardContent>
+                                        {translate(
+                                            'resources.common.emptySpec'
+                                        )}{' '}
+                                    </CardContent>
+                                </Card>
+                            );
+                    }}
+                </FormDataConsumer>
+            </SimpleForm>
+        </Create>
+    );
 };

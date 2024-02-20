@@ -2,9 +2,7 @@ import { Box } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import inflection from 'inflection';
 import { useEffect, useState } from 'react';
-import {
-    useTranslate
-} from 'react-admin';
+import { useTranslate } from 'react-admin';
 
 export const SchemaTabComponent = (props: { record: any }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);

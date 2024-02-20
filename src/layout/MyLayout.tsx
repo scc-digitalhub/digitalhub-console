@@ -12,7 +12,7 @@ export const MyLayout = (props: any) => {
     let style: SxProps = {};
     const sharedStyle: SxProps = {
         backgroundColor: 'rgb(250, 250, 250)',
-        px: 0
+        px: 0,
     };
     const theme = useTheme();
     const isLarge = useMediaQuery(theme.breakpoints.down('lg'));
