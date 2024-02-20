@@ -1,12 +1,13 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import inflection from 'inflection';
 import { memo, useEffect, useState } from 'react';
 import {
     Labeled,
-    Show,
+    ShowBase,
+    ShowView,
     TabbedShowLayout,
     TextField,
     useRecordContext,
@@ -14,11 +15,10 @@ import {
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
-import {
-    LayoutContent,
-    OutlinedCard,
-    PostShowActions,
-} from '../../components/helper';
+import { ShowOutlinedCard } from '../../components/OutlinedCard';
+import { ShowPageTitle } from '../../components/pageTitle';
+import { Aside, PostShowActions } from '../../components/helper';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
     getBasicFields,
     getColumnFields,
@@ -27,12 +27,8 @@ import {
 } from './helper';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 
-const ShowComponent = (props: { setRecord: (record: any) => void }) => {
+const ShowComponent = () => {
     const record = useRecordContext();
-
-    useEffect(() => {
-        props.setRecord(record);
-    }, [record]);
 
     return <DataItemShowLayout record={record} />;
 };
@@ -40,11 +36,12 @@ const ShowComponent = (props: { setRecord: (record: any) => void }) => {
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     record: any;
 }) {
+    const { record } = props;
     const translate = useTranslate();
 
-    if (!props.record) return <></>;
+    if (!record) return <></>;
     return (
-        <TabbedShowLayout syncWithLocation={false} record={props.record}>
+        <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="resources.dataitem.tab.summary">
                 <Grid>
                     <Typography variant="h6" gutterBottom>
@@ -242,26 +239,41 @@ const PreviewTabComponent = (props: { record: any }) => {
                 rows={rows}
                 autoHeight
                 columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
+                hideFooter={true}
             />
         </Box>
     );
 };
 
 export const DataItemShow = () => {
-    const [record, setRecord] = useState(undefined);
-
     return (
-        //add Showbase
-        <LayoutContent record={record}>
-            {/* use ShowView insted of Show */}
-            <Show
-                actions={<PostShowActions />}
-                sx={{ width: '100%' }}
-                component={OutlinedCard}
-                //add aside
-            >
-                <ShowComponent setRecord={setRecord} />
-            </Show>
-        </LayoutContent>
+        <Container maxWidth={false}>
+            <ShowBase>
+                <>
+                    <ShowPageTitle
+                        icon={<VisibilityIcon fontSize={'large'} />}
+                    />
+                    <ShowView
+                        actions={<PostShowActions />}
+                        sx={{
+                            width: '100%',
+                            '& .RaShow-main': {
+                                display: 'grid',
+                                gridTemplateColumns: { lg: '1fr 350px' },
+                                gridTemplateRows: {
+                                    xs: 'repeat(1, 1fr)',
+                                    lg: '',
+                                },
+                                gap: 2,
+                            },
+                        }}
+                        component={ShowOutlinedCard}
+                        aside={<Aside />}
+                    >
+                        <ShowComponent />
+                    </ShowView>
+                </>
+            </ShowBase>
+        </Container>
     );
 };

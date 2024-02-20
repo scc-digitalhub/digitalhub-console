@@ -5,8 +5,9 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import {
-    Box,
     Card,
+    CardContent,
+    CardHeader,
     Table as MaterialTable,
     TableBody,
     TableCell,
@@ -71,7 +72,7 @@ const ShowToolbar = memo(function ShowToolbar(props: { record: any }) {
     if (!props.record) return <></>;
     return (
         <TopToolbar>
-            <BackButton sx={{ display: { xs: 'none', lg: 'flex' } }} />
+            <BackButton />
             <EditButton style={{ marginLeft: 'auto' }} record={props.record} />
             <InspectButton record={props.record} />
             <ExportRecordButton language="yaml" record={props.record} />
@@ -165,55 +166,80 @@ export const TaskToolbar = () => {
     );
 };
 
-export const LayoutContent = (props: LayoutContentProps) => {
-    const { children, record } = props;
-    const dataProvider = useDataProvider();
+// export const ShowWrapper = (props: LayoutContentProps) => {
+//     const { children } = props;
+//     const record = useRecordContext();
+//     const dataProvider = useDataProvider();
 
-    if (!dataProvider) return <></>;
+//     if (!dataProvider) return <></>;
+//     return (
+//         <>
+//             <ShowPageTitle icon={<VisibilityIcon fontSize={'large'} />} />
+
+//             <Box
+//                 sx={{
+//                     display: 'grid',
+//                     gridTemplateColumns: { lg: '1fr 350px' },
+//                     gridTemplateRows: { xs: 'repeat(1, 1fr)', lg: '' },
+//                     gap: 2,
+//                 }}
+//             >
+//                 <Box
+//                     sx={{
+//                         paddingBottom: 4,
+//                         maxWidth: '70vw',
+//                         minWidth: '100%',
+//                         order: { xs: 2, lg: 1 },
+//                     }}
+//                 >
+//                     {children}
+//                 </Box>
+
+//                 <Box
+//                     display="block"
+//                     sx={{ order: { xs: 1, lg: 2 } }}
+//                     pt={{ xs: 0, lg: 6 }}
+//                 >
+//                     <VersionsListWrapper record={record} />
+//                 </Box>
+//             </Box>
+//         </>
+//     );
+// };
+
+export const Aside = () => {
+    const record = useRecordContext();
+    return <VersionsListWrapper record={record} />;
+};
+
+const VersionsListWrapper = memo(function VersionsListWrapper(props: {
+    record: any;
+}) {
+    const { record } = props;
+    const translate = useTranslate();
+
     return (
-        <Box
+        <Card
             sx={{
-                display: 'grid',
-                gridTemplateColumns: { lg: '1fr 350px' },
-                gridTemplateRows: { xs: 'repeat(1, 1fr)', lg: '' },
-                gap: 2,
+                height: 'fit-content',
+                borderRadius: '10px',
+                order: { xs: 1, lg: 2 }
             }}
+            variant="outlined"
         >
-            <Box
+            <CardHeader title={translate('resources.common.version.title')} />
+
+            <CardContent
                 sx={{
-                    paddingBottom: 4,
-                    maxWidth: '70vw',
-                    minWidth: '100%',
-                    order: { xs: 2, lg: 1 },
+                    paddingTop: 0,
                 }}
             >
-                {children}
-            </Box>
-
-            <Box display="block" sx={{ order: { xs: 1, lg: 2 } }}>
-                <Box display="flex" flexDirection="column">
-                    <TopToolbar sx={{ justifyContent: 'flex-start' }}>
-                        <BackButton
-                            sx={{ display: { xs: 'flex', lg: 'none' } }}
-                        />
-                    </TopToolbar>
-
-                    <BoxContent record={record} />
-                </Box>
-            </Box>
-        </Box>
+                <VersionsList record={record} />
+            </CardContent>
+        </Card>
     );
-};
-
-const BoxContent = memo(function BoxContent(props: { record: any }) {
-    if (!props.record) return <></>;
-    return <VersionsList record={props.record} />;
-}, arePropsEqual);
-
-type LayoutContentProps = {
-    children: ReactNode;
-    record: any;
-};
+},
+arePropsEqual);
 
 export const TaskComponent = () => {
     return <div>Json Scehma input</div>;
@@ -231,9 +257,3 @@ export const FunctionList = () => {
         </List>
     );
 };
-
-export const OutlinedCard = (props: { children }) => (
-    <Card variant="outlined" sx={{ width: '100%', borderRadius: '10px' }}>
-        {props.children}
-    </Card>
-);
