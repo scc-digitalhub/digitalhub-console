@@ -17,6 +17,7 @@ import { FunctionIcon } from './icon';
 import { VersionsList } from '../../components/versionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useEffect, useState } from 'react';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 
 export const FunctionList = () => {
     const translate = useTranslate();
@@ -72,11 +73,13 @@ export const FunctionList = () => {
                             showDate={true}
                             showTime={true}
                         />
-                        <div style={{ display: 'flex', justifyContent: 'end' }}>
+                        {/* <div style={{ display: 'flex', justifyContent: 'end' }}> */}
+                        <RowButtonGroup>
                             <ShowButton />
                             <EditButton />
                             <DeleteWithConfirmButtonShowingName />
-                        </div>
+                        </RowButtonGroup>
+                        {/* </div> */}
                     </Datagrid>
                 </ListView>
             </>
