@@ -84,7 +84,7 @@ export const Dashboard = () => {
           text={project.name}
           secondaryText={translate("pages.dashboard.description")}
           icon={<DashboardIcon fontSize={"large"} />}
-          sx={{ pb: 0 }}
+          sx={{ pl: 0, pr: 0 }}
         />
         <Box color={grey[500]} sx={{ pt: 0, pb: 1, textAlign: "left" }}>
           {project.metadata && (
