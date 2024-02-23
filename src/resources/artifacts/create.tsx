@@ -3,22 +3,29 @@ import {
     Create,
     FormDataConsumer,
     Labeled,
+    LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
     useTranslate,
 } from 'react-admin';
-import { ArtifactTypes, getArtifactSpec } from './types';
+import { ArtifactTypes, BlankSchema, getArtifactUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useState, useEffect } from 'react';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
+    const schemaProvider = useSchemaProvider();
+    const [kinds, setKinds] = useState<any[]>();
+    const [schemas, setSchemas] = useState<any[]>();
+
     const transform = data => ({
         ...data,
         project: root || '',
@@ -36,12 +43,38 @@ export const ArtifactCreate = () => {
         return errors;
     };
 
-    const kinds = Object.values(ArtifactTypes).map(v => {
-        return {
-            id: v,
-            name: v,
-        };
-    });
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.list('artifacts').then(res => {
+                if (res) {
+                    setSchemas(res);
+
+                    const values = res.map(s => ({
+                        id: s.kind,
+                        name: s.kind,
+                    }));
+
+                    setKinds(values);
+                }
+            });
+        }
+    }, [schemaProvider, setKinds]);
+
+    if (!kinds) {
+        return <LoadingIndicator />;
+    }
+
+    const getArtifactSpec = (kind: string | undefined) => {
+        if (!kind) {
+            return BlankSchema;
+        }
+
+        if (schemas) {
+            return schemas.find(s => s.id === 'ARTIFACT:' + kind)?.schema;
+        }
+
+        return BlankSchema;
+    };
 
     return (
         <Create transform={transform} redirect="list">
@@ -70,7 +103,7 @@ export const ArtifactCreate = () => {
                                 <JsonSchemaInput
                                     source="spec"
                                     schema={getArtifactSpec(formData.kind)}
-                                    uiSchema={getArtifactSpec(formData.kind)}
+                                    uiSchema={getArtifactUiSpec(formData.kind)}
                                 />
                             );
                         else

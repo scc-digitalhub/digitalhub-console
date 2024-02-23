@@ -3,6 +3,7 @@ import {
     Edit,
     FormDataConsumer,
     Labeled,
+    LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
@@ -10,20 +11,17 @@ import {
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from './types';
+import { BlankSchema, FunctionTypes, getFunctionSpec, getFunctionUiSpec } from './types';
 import { MetadataSchema } from '../../common/types';
 import { PostEditToolbar, RecordTitle } from '../../components/helper';
 import { alphaNumericName } from '../../common/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useState, useEffect } from 'react';
 
-const kinds = Object.values(FunctionTypes).map(v => {
-    return {
-        id: v,
-        name: v,
-    };
-});
+
 const validator = data => {
     const errors: any = {};
 
@@ -37,10 +35,8 @@ const validator = data => {
 };
 
 export const FunctionEdit = props => {
-    const record = useRecordContext();
     const translate = useTranslate();
-    const kind = record?.kind || undefined;
-    console.log(kind);
+    
     return (
         <Edit title={<RecordTitle prompt={translate('functionsString')} />}>
             <FunctionEditForm {...props} />
@@ -50,7 +46,40 @@ export const FunctionEdit = props => {
 
 const FunctionEditForm = () => {
     const translate = useTranslate();
+    const schemaProvider = useSchemaProvider();
+    const [kinds, setKinds] = useState<any[]>();
+    const [schemas, setSchemas] = useState<any[]>();
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.list('functions').then(res => {
+                if (res) {
+                    setSchemas(res);
 
+                    const values = res.map(s => ({
+                        id: s.kind,
+                        name: s.kind
+                    }));
+                    setKinds(values);
+                }
+            });
+        }
+    }, [schemaProvider, setKinds]);
+
+    if (!kinds) {
+        return <LoadingIndicator />;
+    }
+
+    const getFunctionSpec = (kind: string | undefined) => {
+        if (!kind) {
+            return BlankSchema;
+        }
+
+        if (schemas) {
+            return schemas.find(s => s.id === 'FUNCTION:' + kind)?.schema;
+        }
+
+        return BlankSchema;
+    };
     return (
         <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
