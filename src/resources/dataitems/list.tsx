@@ -16,26 +16,47 @@ import { ListPageTitle } from '../../components/pageTitle';
 import { VersionsList } from '../../components/versionsList';
 import { DataItemIcon } from './icon';
 import { DataItemTypes } from './types';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useState, useEffect } from 'react';
 
-const kinds = Object.values(DataItemTypes).map(v => {
-    return {
-        id: v,
-        name: v,
-    };
-});
 export const DataItemList = () => {
     const translate = useTranslate();
-    const postFilters = [
-        <TextInput
-            label={translate('search.name')}
-            source="name"
-            alwaysOn
-            key={1}
-        />,
-        <SelectInput alwaysOn key={2} source="kind" choices={kinds} />,
-    ];
+    const schemaProvider = useSchemaProvider();
+    const [kinds, setKinds] = useState<any[]>();
 
-    return (
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.kinds('dataitems').then(res => {
+                if (res) {
+                    const values = res.map(s => ({
+                        id: s,
+                        name: s,
+                    }));
+
+                    setKinds(values);
+                }
+            });
+        }
+    }, [schemaProvider, setKinds]);
+
+    const postFilters = kinds
+    ? [
+          <TextInput
+              label={translate('search.name')}
+              source="name"
+              alwaysOn
+              key={1}
+          />,
+          <SelectInput
+              alwaysOn
+              key={2}
+              source="kind"
+              choices={kinds}
+              sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+          />,
+      ]
+    : [];
+return (
         <Container maxWidth={false}>
             <ListBase exporter={yamlExporter}>
                 <>
