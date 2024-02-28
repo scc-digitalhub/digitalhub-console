@@ -4,16 +4,16 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 export const PreviewHeaderCell = (props: {
     columnDescriptor: any;
-    isUnsupported?: boolean;
+    isUnsupportedColumn?: boolean;
 }) => {
-    const { columnDescriptor, isUnsupported = false } = props;
+    const { columnDescriptor, isUnsupportedColumn = false } = props;
     const typeLabel = `(${columnDescriptor.type.toUpperCase()})`;
     const translate = useTranslate();
 
     return (
         <Box
             display="grid"
-            gridTemplateRows={isUnsupported ? '16px 16px 32px' : '16px 16px'}
+            gridTemplateRows={isUnsupportedColumn ? '16px 16px 32px' : '16px 16px'}
             lineHeight="16px"
             gap="6px"
             width="100%"
@@ -23,7 +23,7 @@ export const PreviewHeaderCell = (props: {
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
-                    fontWeight: '500',
+                    fontWeight: 'bold',
                 }}
             >
                 {columnDescriptor.name}
@@ -37,7 +37,7 @@ export const PreviewHeaderCell = (props: {
                 {typeLabel}
             </span>
 
-            {isUnsupported && (
+            {isUnsupportedColumn && (
                 <Box
                     display="flex"
                     alignItems="center"
@@ -47,8 +47,9 @@ export const PreviewHeaderCell = (props: {
                     p={0.5}
                     width="fit-content"
                     justifySelf="center"
+                    gap={0.5}
                 >
-                    <WarningAmberIcon sx={{ mr: 0.5 }} />
+                    <WarningAmberIcon />
                     <span
                         style={{
                             fontWeight: 'bold',

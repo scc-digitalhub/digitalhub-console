@@ -1,15 +1,38 @@
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
+import { InvalidFieldInfo, PreviewHelper, Type } from './PreviewHelper';
 import { useTranslate } from 'react-admin';
-import { PreviewHelper } from './PreviewHelper';
 
-interface GridCellExpandProps {
+type ExpandableCellWrapperProps = {
+    params: GridRenderCellParams<any>;
+};
+
+type ExpandableCellProps = {
     value: any;
+    formattedValue: string;
     width: number;
-}
+    isContentInvalid: boolean;
+    invalidityType: Type | null;
+};
+
+type CellContentProps = Omit<ExpandableCellProps, 'width'> & {
+    showIcon?: boolean;
+};
+
+type InvalidCellContentProps = {
+    value: any;
+    invalidityType: Type | null;
+    showIcon: boolean;
+};
+
+type ValidCellContentProps = {
+    formattedValue: string;
+};
 
 function isOverflown(element: Element): boolean {
     return (
@@ -18,16 +41,65 @@ function isOverflown(element: Element): boolean {
     );
 }
 
-export const GridCellExpand = memo(function GridCellExpand(
-    props: GridCellExpandProps
-) {
-    const { width, value: propsValue } = props;
-
+const InvalidCellContent = (props: InvalidCellContentProps) => {
+    const { value, invalidityType, showIcon } = props;
     const translate = useTranslate();
-    const isUnsupported = PreviewHelper.isUnsupportedValue(propsValue);
-    const value = isUnsupported
-        ? translate('resources.dataitem.preview.unsupported')
-        : propsValue;
+
+    let label: string;
+    switch (invalidityType) {
+        case Type.InvalidDate:
+            label = translate('resources.dataitem.preview.invalidDate');
+            break;
+        case Type.InvalidDatetime:
+            label = translate('resources.dataitem.preview.invalidDatetime');
+            break;
+        default:
+            label = translate('resources.dataitem.preview.invalidValue');
+            break;
+    }
+
+    return (
+        <Box display="flex" alignItems="center" gap={1}>
+            {showIcon && <WarningAmberIcon />}
+            <span className="cell-content">{value}</span>
+        </Box>
+    );
+};
+
+const ValidCellContent = (props: ValidCellContentProps) => {
+    const { formattedValue } = props;
+
+    return <span className="cell-content">{formattedValue}</span>;
+};
+
+const CellContent = (props: CellContentProps) => {
+    const {
+        isContentInvalid,
+        value,
+        formattedValue,
+        invalidityType,
+        showIcon = true,
+    } = props;
+
+    return (
+        <>
+            {isContentInvalid ? (
+                <InvalidCellContent
+                    value={value}
+                    invalidityType={invalidityType}
+                    showIcon={showIcon}
+                />
+            ) : (
+                <ValidCellContent formattedValue={formattedValue} />
+            )}
+        </>
+    );
+};
+
+const ExpandableCell = memo(function ExpandableCell(
+    props: ExpandableCellProps
+) {
+    const { width, ...rest } = props;
 
     const wrapper = useRef<HTMLDivElement | null>(null);
     const cellDiv = useRef(null);
@@ -100,11 +172,13 @@ export const GridCellExpand = memo(function GridCellExpand(
                     textOverflow: 'ellipsis',
                 }}
             >
-                <span className="cellContent">{value}</span>
+                <CellContent {...rest} />
             </Box>
+
             {showPopper && (
                 <Popper
                     open={showFullCell && anchorEl !== null}
+                    //open={true}
                     anchorEl={anchorEl}
                     style={{ width, zIndex: 1 }}
                 >
@@ -116,10 +190,10 @@ export const GridCellExpand = memo(function GridCellExpand(
                             variant="body2"
                             style={{
                                 padding: 8,
-                                overflowWrap: 'break-word',
+                                overflowWrap: 'anywhere',
                             }}
                         >
-                            {value}
+                            <CellContent {...rest} showIcon={false} />
                         </Typography>
                     </Paper>
                 </Popper>
@@ -127,3 +201,28 @@ export const GridCellExpand = memo(function GridCellExpand(
         </Box>
     );
 });
+
+export const ExpandableCellWrapper = (props: ExpandableCellWrapperProps) => {
+    const { params } = props;
+
+    const isContentInvalid = PreviewHelper.isContentInvalid(
+        params.row,
+        params.field
+    );
+    const invalidityType = isContentInvalid
+        ? params.row.invalidFieldsInfo?.find(
+              (info: InvalidFieldInfo) => info.field === params.field
+          )?.invalidityType
+        : null;
+
+    return (
+        //TODO: remove "|| ''"
+        <ExpandableCell
+            value={params.value}
+            formattedValue={params.formattedValue}
+            width={params.colDef.computedWidth}
+            isContentInvalid={isContentInvalid}
+            invalidityType={invalidityType}
+        />
+    );
+};

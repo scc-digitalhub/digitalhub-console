@@ -28,12 +28,12 @@ export const PageTitle = (props: PageTitleProps) => {
                 <Typography
                     variant="h4"
                     sx={{ pb: secondaryText ? 1 : 0 }}
-                    color={'secondary'}
+                    color={'black'}
                 >
                     {text}
                 </Typography>
                 {secondaryText && (
-                    <Typography variant="h6">{secondaryText}</Typography>
+                    <Typography variant="h6" color={'gray'}>{secondaryText}</Typography>
                 )}
             </Box>
             {icon && isValidElement(icon) ? (

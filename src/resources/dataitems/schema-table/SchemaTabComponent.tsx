@@ -64,7 +64,22 @@ export const SchemaTabComponent = (props: { record: any }) => {
                 width: '100%',
             }}
         >
-            <DataGrid columns={columns} rows={rows} autoHeight />
+            <DataGrid
+                columns={columns}
+                rows={rows}
+                autoHeight
+                hideFooter={rows.length > 100 ? false : true}
+                sx={{
+                    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+                        '&:not(:last-child)': {
+                            borderRight: '1px solid rgba(224, 224, 224, 1)',
+                        },
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
         </Box>
     );
 };

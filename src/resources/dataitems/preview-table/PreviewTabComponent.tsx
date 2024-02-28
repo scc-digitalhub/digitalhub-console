@@ -3,7 +3,7 @@ import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import { useEffect, useState } from 'react';
 import { useTranslate } from 'react-admin';
-import { PreviewHelper } from './PreviewHelper';
+import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
@@ -12,7 +12,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
         useState<boolean>(false);
     const translate = useTranslate();
     const translations = {
-        unsupported: translate('resources.dataitem.preview.unsupported'),
+        invalidValue: translate('resources.dataitem.preview.invalidValue'),
         invalidDate: translate('resources.dataitem.preview.invalidDate'),
         invalidDatetime: translate(
             'resources.dataitem.preview.invalidDatetime'
@@ -55,22 +55,49 @@ export const PreviewTabComponent = (props: { record: any }) => {
 
             if (columnDescriptor) {
                 obj.value.forEach((v: any, i: number) => {
-                    let value = PreviewHelper.getValue(v, columnDescriptor);
+                    const valueObj: Value = PreviewHelper.getValue(
+                        v,
+                        columnDescriptor
+                    );
 
+                    // TODO: field must not be equal to "id" and "invalidFieldsInfo"
                     if (!useEffectRows.some(r => r.id === i)) {
                         useEffectRows.push({
                             id: i,
-                            [field]: value,
+                            [field]: valueObj.value,
+                            invalidFieldsInfo: valueObj.isValid
+                                ? []
+                                : [
+                                      new InvalidFieldInfo(
+                                          field,
+                                          valueObj.invalidityType!
+                                      ),
+                                  ],
                         });
                     } else {
-                        useEffectRows[i][field] = value;
+                        useEffectRows[i][field] = valueObj.value;
+                        if (!valueObj.isValid) {
+                            useEffectRows[i].invalidFieldsInfo.push(
+                                new InvalidFieldInfo(
+                                    field,
+                                    valueObj.invalidityType!
+                                )
+                            );
+                        }
                     }
+
+                    console.error("external", useEffectRows, valueObj);
                 });
             }
         });
 
+        console.error("useEffectRows", useEffectRows);
         setRows(useEffectRows);
     }, [props.record]);
+
+    if (!columns || !rows) {
+        return null;
+    }
 
     return (
         <Box
@@ -84,14 +111,16 @@ export const PreviewTabComponent = (props: { record: any }) => {
                 autoHeight
                 columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
                 hideFooter={true}
-                sx={{
-                    '& .unsupported': {
+                sx={theme => ({
+                    '& .MuiDataGrid-cell.invalid': {
+                        backgroundColor: theme.palette.warning.light,
+                    },
+                    '& .invalid .cell-content': {
+                        fontWeight: 'bold',
+                    },
+                    '& .MuiDataGrid-cell.unsupported': {
                         backgroundColor: 'rgba(0, 0, 0, 0.06)',
                     },
-                    '& .unsupported .MuiDataGrid-cellContent, .unsupported .cellContent':
-                        {
-                            fontWeight: 'bold',
-                        },
                     '& .unsupported .MuiDataGrid-columnHeaderTitleContainerContent':
                         {
                             width: '100%',
@@ -104,7 +133,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
                             borderRight: '1px solid rgba(224, 224, 224, 1)',
                         },
                     },
-                }}
+                })}
             />
         </Box>
     );

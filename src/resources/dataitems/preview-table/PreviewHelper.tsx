@@ -11,18 +11,18 @@ import {
 } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import clsx from 'clsx';
-import { GridCellExpand } from './GridCellExpand';
+import { ExpandableCellWrapper } from './GridCellExpand';
 import { PreviewHeaderCell } from './PreviewHeaderCell';
 
 export class PreviewHelper {
-    static unsupportedComparator = (
-        isFirstValueUnsupported: boolean,
-        isSecondValueUnsupported: boolean
+    static invalidComparator = (
+        isFirstValueInvalid: boolean,
+        isSecondValueInvalid: boolean
     ) => {
-        if (isFirstValueUnsupported && isSecondValueUnsupported) {
+        if (isFirstValueInvalid && isSecondValueInvalid) {
             return 0;
         }
-        if (isFirstValueUnsupported) {
+        if (isFirstValueInvalid) {
             return -1;
         }
         return 1;
@@ -42,36 +42,63 @@ export class PreviewHelper {
     };
 
     static stringComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-        const isFirstValueUnsupported = PreviewHelper.isUnsupportedValue(v1);
-        const isSecondValueUnsupported = PreviewHelper.isUnsupportedValue(v2);
-        if (isFirstValueUnsupported || isSecondValueUnsupported) {
-            return PreviewHelper.unsupportedComparator(
-                isFirstValueUnsupported,
-                isSecondValueUnsupported
+        const row1 = param1.api.getRow(param1.id);
+        const row2 = param2.api.getRow(param2.id);
+        const isFirstValueInvalid = PreviewHelper.isContentInvalid(
+            row1,
+            param1.field
+        );
+        const isSecondValueInvalid = PreviewHelper.isContentInvalid(
+            row2,
+            param2.field
+        );
+
+        if (isFirstValueInvalid || isSecondValueInvalid) {
+            return PreviewHelper.invalidComparator(
+                isFirstValueInvalid,
+                isSecondValueInvalid
             );
         }
         return gridStringOrNumberComparator(v1, v2, param1, param2);
     };
 
     static numberComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-        const isFirstValueUnsupported = PreviewHelper.isUnsupportedValue(v1);
-        const isSecondValueUnsupported = PreviewHelper.isUnsupportedValue(v2);
-        if (isFirstValueUnsupported || isSecondValueUnsupported) {
-            return PreviewHelper.unsupportedComparator(
-                isFirstValueUnsupported,
-                isSecondValueUnsupported
+        const row1 = param1.api.getRow(param1.id);
+        const row2 = param2.api.getRow(param2.id);
+        const isFirstValueInvalid = PreviewHelper.isContentInvalid(
+            row1,
+            param1.field
+        );
+        const isSecondValueInvalid = PreviewHelper.isContentInvalid(
+            row2,
+            param2.field
+        );
+
+        if (isFirstValueInvalid || isSecondValueInvalid) {
+            return PreviewHelper.invalidComparator(
+                isFirstValueInvalid,
+                isSecondValueInvalid
             );
         }
         return gridNumberComparator(v1, v2, param1, param2);
     };
 
     static dateComparator: GridComparatorFn = (v1, v2, param1, param2) => {
-        const isFirstValueUnsupported = PreviewHelper.isUnsupportedValue(v1);
-        const isSecondValueUnsupported = PreviewHelper.isUnsupportedValue(v2);
-        if (isFirstValueUnsupported || isSecondValueUnsupported) {
-            return PreviewHelper.unsupportedComparator(
-                isFirstValueUnsupported,
-                isSecondValueUnsupported
+        const row1 = param1.api.getRow(param1.id);
+        const row2 = param2.api.getRow(param2.id);
+        const isFirstValueInvalid = PreviewHelper.isContentInvalid(
+            row1,
+            param1.field
+        );
+        const isSecondValueInvalid = PreviewHelper.isContentInvalid(
+            row2,
+            param2.field
+        );
+
+        if (isFirstValueInvalid || isSecondValueInvalid) {
+            return PreviewHelper.invalidComparator(
+                isFirstValueInvalid,
+                isSecondValueInvalid
             );
         }
 
@@ -87,15 +114,6 @@ export class PreviewHelper {
         return gridDateComparator(v1, v2, param1, param2);
     };
 
-    static renderCellExpand = (params: GridRenderCellParams<any, string>) => {
-        return (
-            <GridCellExpand
-                value={params.value || ''}
-                width={params.colDef.computedWidth}
-            />
-        );
-    };
-
     //TODO: optimize this method
     static getBasicFields = (columnDescriptor: any, translations: any) => {
         const { name } = columnDescriptor;
@@ -103,23 +121,32 @@ export class PreviewHelper {
         const basicFields = {
             field: changeCase.camelCase(name),
             flex: 1,
-            minWidth: 121,
+            minWidth: 120,
             headerAlign: 'left',
             align: 'left',
-            cellClassName: (params: GridCellParams) =>
-                clsx({
-                    unsupported: PreviewHelper.isUnsupportedValue(params.value),
-                }),
+            cellClassName: (params: GridCellParams) => {
+                const isContentInvalid = PreviewHelper.isContentInvalid(
+                    params.row,
+                    params.field
+                );
+                return clsx({
+                    invalid: isContentInvalid,
+                });
+            },
             renderHeader: () => (
                 <PreviewHeaderCell columnDescriptor={columnDescriptor} />
             ),
             valueFormatter: (params: GridValueFormatterParams<any>) => {
-                if (PreviewHelper.isUnsupportedValue(params.value)) {
-                    return translations.unsupported;
+                const row = params.api.getRow(params.id!);
+                if (PreviewHelper.isContentInvalid(row, params.field)) {
+                    return translations.invalidValue;
                 }
                 return params.value;
             },
             sortComparator: PreviewHelper.stringComparator,
+            renderCell: (params: GridRenderCellParams<any>) => (
+                <ExpandableCellWrapper params={params} />
+            ),
         };
 
         return basicFields;
@@ -139,9 +166,10 @@ export class PreviewHelper {
                 renderHeader: () => (
                     <PreviewHeaderCell
                         columnDescriptor={columnDescriptor}
-                        isUnsupported={true}
+                        isUnsupportedColumn={true}
                     />
                 ),
+                renderCell: () => '',
                 minWidth: 220,
             };
 
@@ -149,24 +177,19 @@ export class PreviewHelper {
         }
 
         const { type } = columnDescriptor;
-        const renderCell = {
-            renderCell: PreviewHelper.renderCellExpand,
-        };
 
         switch (type) {
             case 'string':
-                return renderCell;
+                return null;
             case 'number':
                 return {
                     type: 'number',
                     sortComparator: PreviewHelper.numberComparator,
-                    ...renderCell,
                 };
             case 'integer':
                 return {
                     type: 'number',
                     sortComparator: PreviewHelper.numberComparator,
-                    ...renderCell,
                 };
             case 'boolean':
                 return {
@@ -181,16 +204,39 @@ export class PreviewHelper {
                     valueFormatter: (params: GridValueFormatterParams<any>) => {
                         if (params.value === null || params.value === undefined)
                             return params.value;
-                        if (PreviewHelper.isUnsupportedValue(params.value))
-                            return translations.unsupported;
-                        if (isNaN(params.value))
+                        if (
+                            PreviewHelper.isContentInvalid(
+                                params.api.getRow(params.id!),
+                                params.field,
+                                Type.InvalidValue
+                            )
+                        )
+                            return translations.invalidValue;
+                        if (
+                            PreviewHelper.isContentInvalid(
+                                params.api.getRow(params.id!),
+                                params.field,
+                                Type.InvalidDate
+                            )
+                        )
                             return translations.invalidDate;
+                        //manage date properly (UTC time offsets, right locale)
+                        console.error(
+                            'switch',
+                            params.value,
+                            params.api.getRow(params.id!),
+                            params.api.getRow(1),
+                            params.api.getRow(2),
+                            params.api.getRow(3),
+                            params.id
+                        );
                         return params.value.toLocaleDateString('en-GB');
                     },
+                    minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
                 };
             case 'time':
-                return renderCell;
+                return null;
             case 'datetime':
                 return {
                     ...GRID_DATETIME_COL_DEF,
@@ -198,35 +244,48 @@ export class PreviewHelper {
                     valueFormatter: (params: GridValueFormatterParams<any>) => {
                         if (params.value === null || params.value === undefined)
                             return params.value;
-                        if (PreviewHelper.isUnsupportedValue(params.value))
-                            return translations.unsupported;
-                        if (isNaN(params.value))
+                        if (
+                            PreviewHelper.isContentInvalid(
+                                params.api.getRow(params.id!),
+                                params.field,
+                                Type.InvalidValue
+                            )
+                        )
+                            return translations.invalidValue;
+                        if (
+                            PreviewHelper.isContentInvalid(
+                                params.api.getRow(params.id!),
+                                params.field,
+                                Type.InvalidDatetime
+                            )
+                        )
                             return translations.invalidDatetime;
+                        //manage datetime properly (UTC time offsets, right locale)
                         return params.value.toLocaleString('en-GB', {
                             timeZone: 'UTC',
                         });
                     },
-                    minWidth: 160,
+                    minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
                 };
             case 'year':
-                return renderCell;
+                return null;
             case 'yearmonth':
-                return renderCell;
+                return null;
             case 'duration':
-                return renderCell;
+                return null;
             case 'geopoint':
-                return renderCell;
+                return null;
             default:
                 return null;
         }
     };
 
-    static getValue = (value: any, columnDescriptor: any) => {
-        if (value === null || value === undefined) return value;
+    static getValue = (value: any, columnDescriptor: any): Value => {
+        if (value === null || value === undefined) return new Value(value);
 
         if (PreviewHelper.isUnsupportedColumn(columnDescriptor)) {
-            return PreviewHelper.unsupported;
+            return new Value(value.toString(), false, Type.UnsupportedColumn);
         }
 
         const { type, format } = columnDescriptor;
@@ -242,61 +301,63 @@ export class PreviewHelper {
             case 'boolean':
                 return PreviewHelper.booleanTransform(value);
             case 'date':
-                return PreviewHelper.dateTransform(value);
+                return PreviewHelper.dateTransform(value, type);
             case 'time':
-                return value.toString().slice(0, 10000);
+                return new Value(value.toString());
             case 'datetime':
-                return PreviewHelper.dateTransform(value);
+                return PreviewHelper.dateTransform(value, type);
             case 'year':
-                return value.toString().slice(0, 10000);
+                return new Value(value.toString());
             case 'yearmonth':
-                return value.toString().slice(0, 10000);
+                return new Value(value.toString());
             case 'duration':
-                return value.toString().slice(0, 10000);
+                return new Value(value.toString());
             case 'geopoint':
                 return PreviewHelper.geopointTransform(value, format);
             default:
-                return PreviewHelper.unsupported;
+                return new Value(value.toString(), false, Type.InvalidValue);
         }
     };
 
     static stringTransform = (value: any) => {
-        // The maximum allowed length for strings is 10000
-        return value.toString().slice(0, 10000);
+        return new Value(value.toString());
     };
 
     static integerTransform = (value: any) =>
         typeof value === 'number' && !Number.isNaN(value)
-            ? value
+            ? new Value(value)
             : typeof value === 'string' && !Number.isNaN(parseInt(value))
-            ? parseInt(value)
-            : PreviewHelper.unsupported;
+            ? new Value(parseInt(value))
+            : new Value(value.toString(), false, Type.InvalidValue);
 
     static numberTransform = (value: any) =>
         //TODO: manage the following properties: decimalChar, groupChar, bareNumber
         typeof value === 'number' && !Number.isNaN(value)
-            ? value
+            ? new Value(value)
             : typeof value === 'string' && !Number.isNaN(parseFloat(value))
-            ? parseFloat(value)
-            : PreviewHelper.unsupported;
+            ? new Value(parseFloat(value))
+            : new Value(value.toString(), false, Type.InvalidValue);
 
     static booleanTransform = (value: any) =>
-        typeof value === 'boolean' ? value : PreviewHelper.unsupported;
+        typeof value === 'boolean'
+            ? new Value(value)
+            : new Value(value.toString(), false, Type.InvalidValue);
 
-    static dateTransform = (value: any) => {
+    static dateTransform = (value: any, type: string) => {
         if (typeof value === 'string' || typeof value === 'number') {
             const date = new Date(value);
-            if (isNaN(date)) {
-                console.error('Invalid date format');
-            }
-            return date;
+            console.error('dateTransform', value, date);
+            if (!isNaN(date)) return new Value(date);
+            else if (type === 'date')
+                return new Value(value.toString(), false, Type.InvalidDate);
+            return new Value(value.toString(), false, Type.InvalidDatetime);
         } else {
-            return PreviewHelper.unsupported;
+            return new Value(value.toString(), false, Type.InvalidValue);
         }
     };
 
     static geopointTransform = (value: any, format?: string) => {
-        //TODO: decide if and how to manage the "array" format. Now it is unsupported
+        //TODO: decide if and how to manage the "array" format. Now it is invalid
         switch (format) {
             case 'object':
                 if (
@@ -305,23 +366,31 @@ export class PreviewHelper {
                     typeof value.lon === 'number' &&
                     typeof value.lat === 'number'
                 ) {
-                    return `${value.lon}, ${value.lat}`;
-                } else return PreviewHelper.unsupported;
+                    return new Value(`${value.lon}, ${value.lat}`);
+                } else
+                    return new Value(
+                        value.toString(),
+                        false,
+                        Type.InvalidValue
+                    );
             default:
-                if (typeof value === 'string') return value;
-                else return PreviewHelper.unsupported;
+                if (typeof value === 'string') return new Value(value);
+                else
+                    return new Value(
+                        value.toString(),
+                        false,
+                        Type.InvalidValue
+                    );
         }
     };
 
-    static unsupported: Return = {
-        type: 'unsupported',
-    };
-
-    static isUnsupportedValue = (value: any): value is Return =>
-        value &&
-        typeof value === 'object' &&
-        'type' in value &&
-        value.type === 'unsupported';
+    static isContentInvalid(row: any, field: string, type?: Type) {
+        return row.invalidFieldsInfo?.some((info: InvalidFieldInfo) => {
+            return (
+                info.field === field && (!type || info.invalidityType === type)
+            );
+        });
+    }
 
     /**
      * Determines if the given column is unsupported based on its type and format.
@@ -387,6 +456,32 @@ export class PreviewHelper {
         }
     };
 }
-interface Return {
-    type: string;
+
+export enum Type {
+    InvalidValue = 'INVALID_VALUE',
+    UnsupportedColumn = 'UNSUPPORTED_COLUMN',
+    InvalidDate = 'INVALID_DATE',
+    InvalidDatetime = 'INVALID_DATETIME',
+}
+
+export class Value {
+    value: any;
+    isValid: boolean;
+    invalidityType?: Type;
+
+    constructor(value: any, isValid = true, invalidityType?: Type) {
+        this.value = typeof value === 'string' ? value.slice(0, 10000) : value;
+        this.isValid = isValid;
+        if (invalidityType) this.invalidityType = invalidityType;
+    }
+}
+
+export class InvalidFieldInfo {
+    field: string;
+    invalidityType: Type;
+
+    constructor(field: string, invalidityType: Type) {
+        this.field = field;
+        this.invalidityType = invalidityType;
+    }
 }
