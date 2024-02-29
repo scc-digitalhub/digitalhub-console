@@ -1,15 +1,12 @@
 import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import * as changeCase from 'change-case';
-import { useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 import { useTranslate } from 'react-admin';
-import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
+import { useDataGridController } from './usePreviewDataGridController';
+import { Spinner } from '../../../components/Spinner';
 
 export const PreviewTabComponent = (props: { record: any }) => {
-    const [columns, setColumns] = useState<GridColDef[]>([]);
-    const [rows, setRows] = useState<GridRowsProp>([]);
-    const [isAtLeastOneColumnUnsupported, setIsAtLeastOneColumnUnsupported] =
-        useState<boolean>(false);
+    const { record } = props;
+
     const translate = useTranslate();
     const translations = {
         invalidValue: translate('resources.dataitem.preview.invalidValue'),
@@ -19,86 +16,13 @@ export const PreviewTabComponent = (props: { record: any }) => {
         ),
     };
 
-    useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-
-        const useEffectColumns = schema.map((obj: any) => {
-            const basicFields = PreviewHelper.getBasicFields(obj, translations);
-
-            const columnFields = PreviewHelper.getColumnFields(
-                obj,
-                translations
-            );
-
-            return columnFields
-                ? { ...basicFields, ...columnFields }
-                : basicFields;
+    const { dataGridData, isSettingUpData, isAtLeastOneColumnUnsupported } =
+        useDataGridController({
+            record,
+            translations,
         });
 
-        setColumns(useEffectColumns);
-
-        if (schema.some((obj: any) => PreviewHelper.isUnsupportedColumn(obj))) {
-            setIsAtLeastOneColumnUnsupported(true);
-        }
-    }, [props.record]);
-
-    useEffect(() => {
-        const preview = props.record?.status?.preview || [];
-        const schema = props.record?.spec?.schema || [];
-        const useEffectRows: { [key: string]: any }[] = [];
-
-        preview.forEach((obj: any) => {
-            const field = changeCase.camelCase(obj.name);
-            const columnDescriptor = schema.find(
-                (s: any) => s.name === obj.name
-            );
-
-            if (columnDescriptor) {
-                obj.value.forEach((v: any, i: number) => {
-                    const valueObj: Value = PreviewHelper.getValue(
-                        v,
-                        columnDescriptor
-                    );
-
-                    // TODO: field must not be equal to "id" and "invalidFieldsInfo"
-                    if (!useEffectRows.some(r => r.id === i)) {
-                        useEffectRows.push({
-                            id: i,
-                            [field]: valueObj.value,
-                            invalidFieldsInfo: valueObj.isValid
-                                ? []
-                                : [
-                                      new InvalidFieldInfo(
-                                          field,
-                                          valueObj.invalidityType!
-                                      ),
-                                  ],
-                        });
-                    } else {
-                        useEffectRows[i][field] = valueObj.value;
-                        if (!valueObj.isValid) {
-                            useEffectRows[i].invalidFieldsInfo.push(
-                                new InvalidFieldInfo(
-                                    field,
-                                    valueObj.invalidityType!
-                                )
-                            );
-                        }
-                    }
-
-                    console.error("external", useEffectRows, valueObj);
-                });
-            }
-        });
-
-        console.error("useEffectRows", useEffectRows);
-        setRows(useEffectRows);
-    }, [props.record]);
-
-    if (!columns || !rows) {
-        return null;
-    }
-
+    if (isSettingUpData) return <Spinner />;
     return (
         <Box
             sx={{
@@ -106,8 +30,8 @@ export const PreviewTabComponent = (props: { record: any }) => {
             }}
         >
             <DataGrid
-                columns={columns}
-                rows={rows}
+                columns={dataGridData ? dataGridData.columns : []}
+                rows={dataGridData ? dataGridData.rows : []}
                 autoHeight
                 columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
                 hideFooter={true}

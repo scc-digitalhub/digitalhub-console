@@ -221,15 +221,6 @@ export class PreviewHelper {
                         )
                             return translations.invalidDate;
                         //manage date properly (UTC time offsets, right locale)
-                        console.error(
-                            'switch',
-                            params.value,
-                            params.api.getRow(params.id!),
-                            params.api.getRow(1),
-                            params.api.getRow(2),
-                            params.api.getRow(3),
-                            params.id
-                        );
                         return params.value.toLocaleDateString('en-GB');
                     },
                     minWidth: 120,
@@ -346,7 +337,6 @@ export class PreviewHelper {
     static dateTransform = (value: any, type: string) => {
         if (typeof value === 'string' || typeof value === 'number') {
             const date = new Date(value);
-            console.error('dateTransform', value, date);
             if (!isNaN(date)) return new Value(date);
             else if (type === 'date')
                 return new Value(value.toString(), false, Type.InvalidDate);
