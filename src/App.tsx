@@ -142,9 +142,13 @@ import { SecretIcon } from './resources/secrets/icon';
 import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
-
+import { SearchList } from './components/SearchList';
+import {
+    Search,
+} from '@dslab/ra-search-bar';
 const CoreApp = () => {
     return (
+        <Search searchProvider={dataProvider}>
         <RootSelectorContextProvider
             resource="projects"
             initialApp={<InitialWrapper />}
@@ -232,10 +236,15 @@ const CoreApp = () => {
                         <CustomRoutes>
                             <Route path="/config" element={<ProjectConfig />} />
                         </CustomRoutes>
+                        <CustomRoutes>
+                        <Route path="/searchresults" element={<SearchList />} />
+                    </CustomRoutes>
                     </AdminUI>
                 </ResourceSchemaProvider>
             </AdminContext>
         </RootSelectorContextProvider>
+        </Search>
+
     );
 };
 
