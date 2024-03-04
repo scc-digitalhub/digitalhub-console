@@ -1,6 +1,11 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-
+import {
+    SearchProvider,
+    SearchParams,
+    SearchFilter,
+    SearchResults
+} from '@dslab/ra-search-bar';
 /**
  * Data Provider for Spring REST with Pageable support.
  * List/ManyReference expects a page in return, and will send paging/sorting parameters,
@@ -34,7 +39,7 @@ const springDataProvider = (
         body: string;
         json: any;
     }> = fetchUtils.fetchJson
-): DataProvider => {
+): DataProvider & SearchProvider => {
     return {
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
@@ -279,6 +284,14 @@ const springDataProvider = (
                 method: 'PUT',
                 body: JSON.stringify(params),
             }).then(({ json }) => ({ data: json }));
+        },
+        search: (params: SearchParams, resource): Promise<SearchResults> => {
+            const q = params.q ? `q=${encodeURIComponent(params.q)}` : '';
+            const fq = params.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
+    
+            return httpClient(`${apiUrl}/solr/search/item?${[q,fq].filter(Boolean).join('&')}`, {
+                method: 'GET',
+            }).then(({ json }) => ({ data: json }))
         },
     };
 };
