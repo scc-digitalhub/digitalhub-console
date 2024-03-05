@@ -6,6 +6,7 @@ import {
     SearchFilter,
     SearchResults
 } from '@dslab/ra-search-bar';
+import { GetListParams } from 'react-admin';
 /**
  * Data Provider for Spring REST with Pageable support.
  * List/ManyReference expects a page in return, and will send paging/sorting parameters,
@@ -285,11 +286,19 @@ const springDataProvider = (
                 body: JSON.stringify(params),
             }).then(({ json }) => ({ data: json }));
         },
-        search: (params: SearchParams, resource): Promise<SearchResults> => {
-            const q = params.q ? `q=${encodeURIComponent(params.q)}` : '';
-            const fq = params.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
-    
-            return httpClient(`${apiUrl}/solr/search/item?${[q,fq].filter(Boolean).join('&')}`, {
+        search: (searchParams: SearchParams, params: GetListParams): Promise<SearchResults> => {
+            const { page, perPage } = params.pagination;
+            const { field, order } = params.sort;
+            const query = {
+                ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
+                sort: field + ',' + order, //sorting
+                page: page - 1, //page starts from zero
+                size: perPage,
+            };
+            const q = searchParams.q ? `q=${encodeURIComponent(searchParams.q)}` : '';
+            const fq = searchParams.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
+            const pageQuery= stringify(query);
+            return httpClient(`${apiUrl}/solr/search/item?${[q,fq,pageQuery].filter(Boolean).join('&')}`, {
                 method: 'GET',
             }).then(({ json }) => ({ data: json }))
         },
