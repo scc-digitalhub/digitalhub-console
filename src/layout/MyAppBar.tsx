@@ -73,6 +73,21 @@ const filters = [
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
+    <TextInput
+    label="Labels"
+    source="metadata.labels"
+    alwaysOn
+    key={5}
+    defaultValue=""
+    parse={v => {
+        return `metadata.labels:(${v.split(',').join(' AND ')})`
+    }}
+    format={v => {
+        const startIndex = v.indexOf('(')
+        const endIndex = v.indexOf(')')
+        return v.substring(startIndex + 1, endIndex).split(' AND ').join(',')
+    }}
+/>,
 ]
 export const MyAppBar = () => {
     const { root: projectId } = useRootSelector();
