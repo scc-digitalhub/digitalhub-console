@@ -8,10 +8,10 @@ import {
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './i18n/i18nProvider';
 import appDataProvider from './provider/dataProvider';
-// import { LoginPage } from "./loginPage/LoginPage";
 import { MyLayout } from './layout/MyLayout';
 import { theme } from './layout/theme';
-import { authHeader } from './provider/authProvider';
+import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
+import { OidcAuthProvider, BasicAuthProvider } from './provider/authProvider';
 import {
     RootSelectorContextProvider,
     RootSelectorInitialWrapper,
@@ -42,16 +42,45 @@ import {
 import { Dashboard } from './pages/Dashboard';
 
 const API_URL: string = process.env.REACT_APP_API_URL as string;
-const httpClient = (url: string, options: fetchUtils.Options = {}) => {
-    const customHeaders = (options.headers ||
+const ISSUER_URI: string = process.env.REACT_APP_ISSUER_URI as string;
+const CLIENT_ID: string = process.env.REACT_APP_CLIENT_ID as string;
+const LOGIN_URL: string = process.env.REACT_APP_LOGIN_URL as string;
+
+const authProvider =
+    ISSUER_URI && CLIENT_ID
+        ? OidcAuthProvider({
+              clientId: CLIENT_ID,
+              issuer: ISSUER_URI,
+              scope: 'openid profile email user.roles.me',
+              logoutTo: '/login',
+          })
+        : LOGIN_URL
+        ? BasicAuthProvider({
+              loginUrl: API_URL + LOGIN_URL,
+              logoutTo: '/login',
+          })
+        : undefined;
+
+const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
+    const headers = (options.headers ||
         new Headers({
             Accept: 'application/json',
         })) as Headers;
-    customHeaders.set('Authorization', 'Basic ' + authHeader());
-    options.headers = customHeaders;
+    if (authProvider) {
+        const authHeader = await authProvider.getAuthorization();
+        if (authHeader) {
+            headers.set('Authorization', authHeader);
+        }
+    }
+
+    options.headers = headers;
     return fetchUtils.fetchJson(url, options);
 };
+
 const dataProvider = appDataProvider(API_URL, httpClient);
+const MyLoginPage =
+    authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
+
 import { FunctionUpdate } from './resources/functions/update';
 import { DataItemUpdate } from './resources/dataitems/update';
 import { ArtifactUpdate } from './resources/artifacts/update';
@@ -70,8 +99,7 @@ const CoreApp = () => {
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 theme={theme}
-                // authProvider={authProvider}
-                // requireAuth={true}
+                authProvider={authProvider}
             >
                 <ResourceSchemaProvider
                     dataProvider={dataProvider}
@@ -80,8 +108,8 @@ const CoreApp = () => {
                     <AdminUI
                         dashboard={Dashboard}
                         layout={MyLayout}
-                        // authProvider={authProvider}
-                        // requireAuth={true}
+                        loginPage={MyLoginPage}
+                        requireAuth={!!authProvider}
                     >
                         <Resource
                             name="functions"
@@ -152,8 +180,9 @@ const InitialWrapper = () => {
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 theme={theme}
-                // authProvider={authProvider}
-                // requireAuth={true}
+                authProvider={authProvider}
+                loginPage={MyLoginPage}
+                requireAuth={!!authProvider}
             >
                 <Resource
                     name="projects"
