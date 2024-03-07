@@ -6,21 +6,20 @@ import { AppBar, TitlePortal } from 'react-admin';
 import { Typography } from '@mui/material';
 
 export const MyAppBar = () => {
-  const { root: projectId } = useRootSelector();
-  return (
-    <AppBar sx={{ backgroundColor: "#DB6A13"}}>
-      <Typography
-        flex="1"
-        textOverflow="ellipsis"
-        whiteSpace="nowrap"
-        overflow="hidden"
-        variant="h6"
-        color="inherit"
-      >
-        {projectId}
-      </Typography>
-      {/* <TitlePortal /> */}
-      <RootResourceSelectorMenu source="name" showSelected={false} />
-    </AppBar>
-  );
+    const { root: projectId } = useRootSelector();
+    return (
+        <AppBar color="primary">
+            <Typography
+                flex="1"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                variant="h6"
+                color="inherit"
+            >
+                {projectId}
+            </Typography>
+            <RootResourceSelectorMenu source="name" showSelected={false} />
+        </AppBar>
+    );
 };

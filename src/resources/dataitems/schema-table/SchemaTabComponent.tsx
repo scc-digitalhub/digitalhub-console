@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import inflection from 'inflection';
 import { useEffect, useState } from 'react';
@@ -64,6 +64,10 @@ export const SchemaTabComponent = (props: { record: any }) => {
                 width: '100%',
             }}
         >
+            <Typography variant="h6" gutterBottom>
+                {translate('resources.dataitem.schema.title')}
+            </Typography>
+
             <DataGrid
                 columns={columns}
                 rows={rows}

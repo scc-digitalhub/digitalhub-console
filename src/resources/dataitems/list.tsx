@@ -13,11 +13,12 @@ import {
 } from 'react-admin';
 import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
 import { ListPageTitle } from '../../components/pageTitle';
-import { VersionsList } from '../../components/versionsList';
+import { VersionsList } from '../../components/VersionsList';
 import { DataItemIcon } from './icon';
 import { DataItemTypes } from './types';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 
 export const DataItemList = () => {
     const translate = useTranslate();
@@ -40,23 +41,23 @@ export const DataItemList = () => {
     }, [schemaProvider, setKinds]);
 
     const postFilters = kinds
-    ? [
-          <TextInput
-              label={translate('search.name')}
-              source="name"
-              alwaysOn
-              key={1}
-          />,
-          <SelectInput
-              alwaysOn
-              key={2}
-              source="kind"
-              choices={kinds}
-              sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-          />,
-      ]
-    : [];
-return (
+        ? [
+              <TextInput
+                  label={translate('search.name')}
+                  source="name"
+                  alwaysOn
+                  key={1}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={2}
+                  source="kind"
+                  choices={kinds}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+          ]
+        : [];
+    return (
         <Container maxWidth={false}>
             <ListBase exporter={yamlExporter}>
                 <>
@@ -75,9 +76,11 @@ return (
                                     justifyContent: 'end',
                                 }}
                             >
-                                <ShowButton />
-                                <EditButton />
-                                <DeleteWithConfirmButtonShowingName />
+                                <RowButtonGroup>
+                                    <ShowButton />
+                                    <EditButton />
+                                    <DeleteWithConfirmButtonShowingName />
+                                </RowButtonGroup>
                             </div>
                         </Datagrid>
                     </ListView>

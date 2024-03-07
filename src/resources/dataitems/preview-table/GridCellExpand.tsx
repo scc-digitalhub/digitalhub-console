@@ -3,10 +3,13 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColType, GridRenderCellParams } from '@mui/x-data-grid';
 import { memo, useEffect, useRef, useState } from 'react';
 import { InvalidFieldInfo, PreviewHelper, Type } from './PreviewHelper';
 import { useTranslate } from 'react-admin';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { Tooltip } from '@mui/material';
 
 type ExpandableCellWrapperProps = {
     params: GridRenderCellParams<any>;
@@ -14,35 +17,34 @@ type ExpandableCellWrapperProps = {
 
 type ExpandableCellProps = {
     value: any;
-    formattedValue: string;
+    formattedValue: any;
     width: number;
     isContentInvalid: boolean;
     invalidityType: Type | null;
+    type: GridColType | undefined;
 };
 
 type CellContentProps = Omit<ExpandableCellProps, 'width'> & {
-    showIcon?: boolean;
+    isCellContent?: boolean;
 };
 
 type InvalidCellContentProps = {
     value: any;
     invalidityType: Type | null;
-    showIcon: boolean;
+    isCellContent: boolean;
 };
 
 type ValidCellContentProps = {
-    formattedValue: string;
+    formattedValue: any;
+    type: GridColType | undefined;
 };
 
 function isOverflown(element: Element): boolean {
-    return (
-        element.scrollHeight > element.clientHeight ||
-        element.scrollWidth > element.clientWidth
-    );
+    return element.scrollWidth > element.clientWidth;
 }
 
-const InvalidCellContent = (props: InvalidCellContentProps) => {
-    const { value, invalidityType, showIcon } = props;
+const InvalidContent = (props: InvalidCellContentProps) => {
+    const { value, invalidityType, isCellContent } = props;
     const translate = useTranslate();
 
     let label: string;
@@ -60,37 +62,59 @@ const InvalidCellContent = (props: InvalidCellContentProps) => {
 
     return (
         <Box display="flex" alignItems="center" gap={1}>
-            {showIcon && <WarningAmberIcon />}
+            {isCellContent && (
+                <Tooltip title={label}>
+                    <WarningAmberIcon />
+                </Tooltip>
+            )}
             <span className="cell-content">{value}</span>
         </Box>
     );
 };
 
-const ValidCellContent = (props: ValidCellContentProps) => {
-    const { formattedValue } = props;
+const ValidContent = (props: ValidCellContentProps) => {
+    const { formattedValue, type } = props;
 
-    return <span className="cell-content">{formattedValue}</span>;
+    const isBoolean =
+        type && type === 'boolean' && typeof formattedValue === 'boolean';
+
+    return (
+        <>
+            {isBoolean ? (
+                <>
+                    {formattedValue === true ? (
+                        <CheckIcon sx={{ color: 'rgba(0, 0, 0, 0.6)' }} />
+                    ) : (
+                        <CloseIcon sx={{ color: 'rgba(0, 0, 0, 0.38)' }} />
+                    )}
+                </>
+            ) : (
+                <span className="cell-content">{formattedValue}</span>
+            )}
+        </>
+    );
 };
 
-const CellContent = (props: CellContentProps) => {
+const Content = (props: CellContentProps) => {
     const {
         isContentInvalid,
         value,
         formattedValue,
         invalidityType,
-        showIcon = true,
+        isCellContent = true,
+        type,
     } = props;
 
     return (
         <>
             {isContentInvalid ? (
-                <InvalidCellContent
+                <InvalidContent
                     value={value}
                     invalidityType={invalidityType}
-                    showIcon={showIcon}
+                    isCellContent={isCellContent}
                 />
             ) : (
-                <ValidCellContent formattedValue={formattedValue} />
+                <ValidContent formattedValue={formattedValue} type={type} />
             )}
         </>
     );
@@ -170,9 +194,10 @@ const ExpandableCell = memo(function ExpandableCell(
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
+                    height: '24px',
                 }}
             >
-                <CellContent {...rest} />
+                <Content {...rest} />
             </Box>
 
             {showPopper && (
@@ -184,7 +209,9 @@ const ExpandableCell = memo(function ExpandableCell(
                 >
                     <Paper
                         elevation={1}
-                        style={{ minHeight: wrapper.current!.offsetHeight - 3 }}
+                        style={{
+                            minHeight: wrapper.current!.offsetHeight - 3,
+                        }}
                     >
                         <Typography
                             variant="body2"
@@ -193,7 +220,7 @@ const ExpandableCell = memo(function ExpandableCell(
                                 overflowWrap: 'anywhere',
                             }}
                         >
-                            <CellContent {...rest} showIcon={false} />
+                            <Content {...rest} isCellContent={false} />
                         </Typography>
                     </Paper>
                 </Popper>
@@ -216,13 +243,13 @@ export const ExpandableCellWrapper = (props: ExpandableCellWrapperProps) => {
         : null;
 
     return (
-        //TODO: remove "|| ''"
         <ExpandableCell
             value={params.value}
             formattedValue={params.formattedValue}
             width={params.colDef.computedWidth}
             isContentInvalid={isContentInvalid}
             invalidityType={invalidityType}
+            type={params.colDef.type}
         />
     );
 };

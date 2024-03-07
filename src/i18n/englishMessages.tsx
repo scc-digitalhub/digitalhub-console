@@ -1,124 +1,128 @@
 import englishMessages from 'ra-language-english';
 
 const messages = {
-  ...englishMessages,
-  login: {
-    basicMessage: "Authenticate to continue",
-    title: "Resource Manager",
-    message: "Access with AAC",
-  },
-  menu: {
-    projects: "Projects",
-  },
-  resources: {
-    function: {
-      title: "Funtion Details",
-      name: "Name",
-      kind: "Kind",
-      tab: {
-        summary: "Summary",
-        test: "test",
-      },
+    ...englishMessages,
+    login: {
+        basicMessage: 'Authenticate to continue',
+        title: 'Resource Manager',
+        message: 'Access with AAC',
     },
-    run: {
-      title:"Run",
-      create:"Create",
-      total:"Total"
+    menu: {
+        projects: 'Projects',
     },
-    artifact: {
-      title: "Artifact Details",
-      name: "Name",
-      kind: "Kind",
+    resources: {
+        function: {
+            title: 'Funtion Details',
+            name: 'Name',
+            kind: 'Kind',
+            tab: {
+                summary: 'Summary',
+                test: 'test',
+            },
+        },
+        run: {
+            title: 'Run',
+            create: 'Create',
+            total: 'Total',
+        },
+        artifact: {
+            title: 'Artifact Details',
+            name: 'Name',
+            kind: 'Kind',
+        },
+        dataitem: {
+            title: 'Data item',
+            name: 'Name',
+            kind: 'Kind',
+            tab: {
+                summary: 'Summary',
+                schema: 'Schema',
+                preview: 'Preview',
+            },
+            summary: {
+                title: 'Data item details',
+                spec: {
+                    title: 'Spec',
+                    key: 'Key',
+                    path: 'Path',
+                },
+            },
+            schema: {
+                title: 'Schema',
+                name: 'Name',
+                type: 'Type',
+            },
+            preview: {
+                title: 'Preview',
+                invalidValue: 'Invalid value',
+                invalidDate: 'Invalid date',
+                invalidDatetime: 'Invalid datetime',
+                unsupportedField: 'Unsupported field',
+            },
+        },
+        common: {
+            emptySpec: 'Select the Kind for spec modification',
+            version: {
+                title: 'Versions',
+                version: 'Version',
+                created: 'Creation date',
+            },
+        },
+        list: {
+            expandable: {
+                version: 'Version',
+                created: 'Creation Date',
+            },
+        },
     },
-    dataitem: {
-      title: "Data item details",
-      name: "Name",
-      kind:"Kind",
-      tab: {
-        summary: "Summary",
-        schema: "Schema",
-        preview: "Preview",
-      },
-      summary: {
-        spec: {
-          title: "Spec",
-          key: "Key",
-          path: "Path",
-        }
-      },
-      schema: {
-        name: "Name",
-        type: "Type",
-      },
-      preview: {
-        invalidValue: "Invalid value",
-        invalidDate: "Invalid date",
-        invalidDatetime: "Invalid datetime",
-        unsupportedField: "Unsupported field"
-      }
+    pages: {
+        dashboard: {
+            title: 'Dashboard',
+            description: 'Project overview',
+            text: 'Define, build and execute functions to manage artifacts and dataitems.',
+            functions: {
+                title: 'Functions and code',
+                description: 'Define and manage functions',
+            },
+            dataitems: {
+                title: 'Data items',
+                description: 'Review and manage data items',
+            },
+            artifacts: {
+                title: 'Artifacts',
+                description: 'Review and manage artifacts',
+            },
+        },
+        functions: {
+            show: {
+                title: 'Function #%{name}',
+                subtitle: '%{kind} function',
+            },
+        },
     },
-    common: {
-      emptySpec:"Select the Kind for spec modification",
-      version: {
-        title: "Versions",
-        version: "Version",
-        created: "Creation date",
-      },
+    pageTitle: {
+        show: {
+            title: '%{resource} #%{name}',
+            subtitle: '%{kind} %{resource}',
+        },
+        list: {
+            title: '%{resource}',
+        },
     },
-    list: {
-      expandable: {
-        version: "Version",
-        created: "Creation Date",
-      },
+    search: {
+        name: 'Name',
+        kind: 'Kind',
     },
-  },
-  pages: {
-    dashboard: {
-      title: "Dashboard",
-      description: "Project overview",
-      text: "Define, build and execute functions to manage artifacts and dataitems.",
-      functions: {
-        title: "Functions and code",
-        description: "Define and manage functions",
-      },
-      dataitems: {
-        title: "Data items",
-        description: "Review and manage data items",
-      },
-      artifacts: {
-        title: "Artifacts",
-        description: "Review and manage artifacts",
-      },
+    buttons: {
+        cancel: 'Cancel',
+        newVersion: ' New version',
     },
-    functions: {
-      show: {
-        title: "Function #%{name}",
-        subtitle: "%{kind} function",
-      },
+    validation: {
+        minValue: 'Value must be greater that or equal to %{min}',
+        noSpace: 'Value must contain no space',
+        wrongChar:
+            'The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word',
     },
-  },
-  pageTitle: {
-    show: {
-      title: "%{resource} #%{name}",
-      subtitle: "%{kind} %{resource}",
-    },
-    list: {
-      title: "%{resource}",
-    },
-  },
-  search: {
-    name: "Name",
-    kind: "Kind",
-  },
-  buttons: {
-    cancel: "Cancel",
-    newVersion: " New version",
-  },
-  validation: {
-    minValue: "Value must be greater that or equal to %{min}",
-    noSpace: "Value must contain no space",
-    wrongChar: "The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word",
-  },
 };
 
 export default messages;

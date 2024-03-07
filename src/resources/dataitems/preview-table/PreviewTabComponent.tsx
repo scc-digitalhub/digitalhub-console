@@ -1,8 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useTranslate } from 'react-admin';
-import { useDataGridController } from './usePreviewDataGridController';
 import { Spinner } from '../../../components/Spinner';
+import { useDataGridController } from './usePreviewDataGridController';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -29,6 +29,10 @@ export const PreviewTabComponent = (props: { record: any }) => {
                 width: '100%',
             }}
         >
+            <Typography variant="h6" gutterBottom>
+                {translate('resources.dataitem.preview.title')}
+            </Typography>
+
             <DataGrid
                 columns={dataGridData ? dataGridData.columns : []}
                 rows={dataGridData ? dataGridData.rows : []}
@@ -37,7 +41,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
                 hideFooter={true}
                 sx={theme => ({
                     '& .MuiDataGrid-cell.invalid': {
-                        backgroundColor: theme.palette.warning.light,
+                        backgroundColor: theme.palette.warning.main,
                     },
                     '& .invalid .cell-content': {
                         fontWeight: 'bold',
