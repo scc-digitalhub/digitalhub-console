@@ -50,7 +50,7 @@ const messages = {
                 },
             },
             schema: {
-                title: "Schema",
+                title: 'Schema',
                 name: 'Nome',
                 type: 'Tipo',
             },
@@ -60,6 +60,8 @@ const messages = {
                 invalidDate: 'Data non valida',
                 invalidDatetime: 'Datetime non valido',
                 unsupportedField: 'Campo non supportato',
+                true: 'Vero',
+                false: 'Falso',
             },
         },
         common: {

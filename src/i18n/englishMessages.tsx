@@ -58,6 +58,8 @@ const messages = {
                 invalidDate: 'Invalid date',
                 invalidDatetime: 'Invalid datetime',
                 unsupportedField: 'Unsupported field',
+                true: 'True',
+                false: 'False',
             },
         },
         common: {
