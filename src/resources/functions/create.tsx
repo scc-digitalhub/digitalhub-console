@@ -1,24 +1,40 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     Create,
+    CreateActionsProps,
+    CreateBase,
+    CreateView,
     FormDataConsumer,
     Labeled,
+    ListButton,
     LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
+    TopToolbar,
     useDataProvider,
     useTranslate,
 } from 'react-admin';
 import { BlankSchema, getFunctionUiSpec } from './types';
-import { MetadataSchema } from '../../common/types';
+import { MetadataEditUiSchema, MetadataSchema } from '../../common/types';
 import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
+import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { FlatCard } from '../../components/FlatCard';
+import { CreatePageTitle } from '../../components/PageTitle';
+import { FunctionIcon } from './icon';
+
+const CreateToolbar = (props: CreateActionsProps) => {
+    return (
+        <TopToolbar>
+            <ListButton />
+        </TopToolbar>
+    );
+};
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
@@ -79,48 +95,70 @@ export const FunctionCreate = () => {
     };
 
     return (
-        <Create transform={transform} redirect="list">
-            <SimpleForm validate={validator}>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={4}>
-                        <Labeled label={translate('resources.function.name')}>
-                            <TextInput source="name" required />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.function.kind')}>
-                            <SelectInput
-                                source="kind"
-                                choices={kinds}
-                                required
-                            />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-                <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-                <FormDataConsumer<{ kind: string }>>
-                    {({ formData }) => {
-                        if (formData.kind)
-                            return (
+        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+            <CreateBase transform={transform} redirect="list">
+                <>
+                    <CreatePageTitle
+                        icon={<FunctionIcon fontSize={'large'} />}
+                    />
+
+                    <CreateView component={Box} actions={<CreateToolbar />}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm validate={validator}>
+                                <Typography variant="h6" gutterBottom>
+                                    {translate('fields.base')}
+                                </Typography>
+                                <Stack direction={'row'} spacing={3}>
+                                    <TextInput source="name" required />
+                                    <SelectInput
+                                        source="kind"
+                                        choices={kinds}
+                                        required
+                                    />
+                                </Stack>
+
                                 <JsonSchemaInput
-                                    source="spec"
-                                    schema={getFunctionSpec(formData.kind)}
-                                    uiSchema={getFunctionUiSpec(formData.kind)}
+                                    source="metadata"
+                                    schema={MetadataSchema}
+                                    uiSchema={MetadataEditUiSchema}
+                                    label={false}
                                 />
-                            );
-                        else
-                            return (
-                                <Card sx={{ width: 1, textAlign: 'center' }}>
-                                    <CardContent>
-                                        {translate(
-                                            'resources.common.emptySpec'
-                                        )}{' '}
-                                    </CardContent>
-                                </Card>
-                            );
-                    }}
-                </FormDataConsumer>
-            </SimpleForm>
-        </Create>
+                                <FormDataConsumer<{ kind: string }>>
+                                    {({ formData }) => {
+                                        if (formData.kind)
+                                            return (
+                                                <JsonSchemaInput
+                                                    source="spec"
+                                                    schema={getFunctionSpec(
+                                                        formData.kind
+                                                    )}
+                                                    uiSchema={getFunctionUiSpec(
+                                                        formData.kind
+                                                    )}
+                                                />
+                                            );
+                                        else
+                                            return (
+                                                <Card
+                                                    sx={{
+                                                        width: 1,
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        {translate(
+                                                            'resources.common.emptySpec'
+                                                        )}{' '}
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                    }}
+                                </FormDataConsumer>
+                            </SimpleForm>
+                        </FlatCard>
+                    </CreateView>
+                </>
+            </CreateBase>
+        </Container>
     );
 };

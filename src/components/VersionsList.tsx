@@ -25,6 +25,7 @@ import { arePropsEqual } from '../common/helper';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { memo, useEffect, useState } from 'react';
+import { FlatCard } from './FlatCard';
 
 export type VersionListProps = {
     showActions?: boolean;
@@ -40,6 +41,7 @@ export const VersionsList = (props: VersionListProps) => {
     const { root } = useRootSelector();
     const createPath = useCreatePath();
 
+    //TODO fetch latest and add label
     const [versions, setVersions] = useState<RaRecord[]>();
 
     useEffect(() => {
@@ -66,7 +68,7 @@ export const VersionsList = (props: VersionListProps) => {
 
     if (!versions || !record || !dataProvider) return <></>;
 
-    const sxProps = showActions ? { ...sx } : { ml: 2, pl: 1, mr: 2, ...sx };
+    const sxProps = showActions ? { ...sx } : { ml: 2, mr: 2, ...sx };
 
     return (
         <Box sx={sxProps}>
@@ -77,11 +79,31 @@ export const VersionsList = (props: VersionListProps) => {
                         resource: resource,
                         id: item.id,
                     });
+                    const value = item.metadata?.updated
+                        ? new Date(item.metadata.updated).toLocaleString()
+                        : item.id;
+
+                    //TODO move to component
+                    //TODO add icon for state
+                    //TODO add label for latest
+                    const text = () => {
+                        return item.metadata?.version &&
+                            item.metadata.version != item.id ? (
+                            <>
+                                <strong> {item.metadata.version}</strong> <br />
+                                {item.id}
+                            </>
+                        ) : (
+                            <> {item.id} </>
+                        );
+                    };
+
                     return (
                         <ListItem
-                            disablePadding
+                            selected={record.id == item.id}
                             key={resource + ':versions:' + item.id}
                             sx={{
+                                paddingY: '4px',
                                 '&:hover': {
                                     backgroundColor: 'rgba(0, 0, 0, 0.04)',
                                 },
@@ -89,8 +111,8 @@ export const VersionsList = (props: VersionListProps) => {
                         >
                             <Link to={path}>
                                 <ListItemText
-                                    primary={item.id}
-                                    secondary={item.metadata.updated}
+                                    primary={value}
+                                    secondary={text()}
                                 />
                             </Link>
                             {showActions && (
@@ -106,31 +128,30 @@ export const VersionsList = (props: VersionListProps) => {
     );
 };
 
-export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
-    record: any;
-}) {
-    const { record } = props;
+// export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
+export const VersionsListWrapper = () => {
     const translate = useTranslate();
 
     return (
-        <Card
-            sx={{
-                height: 'fit-content',
-                borderRadius: '10px',
-                order: { xs: 1, lg: 2 },
-            }}
-            variant="outlined"
+        <FlatCard
+        // sx={{
+        //     height: 'fit-content',
+        //     borderRadius: '10px',
+        //     order: { xs: 1, lg: 2 },
+        // }}
+        // variant="outlined"
         >
             <CardHeader title={translate('resources.common.version.title')} />
 
             <CardContent
                 sx={{
-                    paddingTop: 0,
+                    padding: 0,
                 }}
             >
-                <VersionsList record={record} />
+                <VersionsList showActions={false} />
             </CardContent>
-        </Card>
+        </FlatCard>
     );
-},
-arePropsEqual);
+};
+// },
+// arePropsEqual);

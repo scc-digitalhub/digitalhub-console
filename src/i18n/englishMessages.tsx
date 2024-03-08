@@ -7,8 +7,8 @@ const fields = {
     key: 'Key',
     project: 'Project',
     metadata: {
-        created: 'Date of creation',
-        updated: 'Date of update',
+        created: 'Created',
+        updated: 'Updated',
         name: 'Name',
         description: 'Description',
         project: 'Project',
@@ -18,6 +18,8 @@ const fields = {
     status: {
         state: 'Status',
     },
+    base: 'Base',
+    summary: 'Summary',
 };
 
 const messages = {
@@ -126,6 +128,15 @@ const messages = {
         show: {
             title: '%{resource} #%{name}',
             subtitle: '%{kind} %{resource}',
+        },
+        create: {
+            title: 'Create a new %{resource}',
+            subtitle: 'Fill the form to create and save a new %{resource}',
+        },
+        edit: {
+            title: 'Edit %{resource} #%{name}',
+            subtitle:
+                'Modify the %{resource} for %{kind} by updating metadata and specification',
         },
         list: {
             title: '%{resource}',

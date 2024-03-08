@@ -1,5 +1,5 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Container } from '@mui/material';
+import { Box, Container, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     Datagrid,
@@ -20,6 +20,11 @@ import {
     sanitizeListRestProps,
     ExportButton,
     CreateButton,
+    DatagridHeader,
+    DatagridHeaderProps,
+    useDatagridContext,
+    useRecordContext,
+    useExpanded,
 } from 'react-admin';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
@@ -27,30 +32,39 @@ import { ListPageTitle } from '../../components/PageTitle';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
+import { FlatCard } from '../../components/FlatCard';
 
-const ListToolbar = (props: ListActionsProps) => {
-    const {
-        className,
-        filters: filtersProp,
-        hasCreate: _,
-        selectedIds = [],
-        onUnselectItems = () => null,
-        ...rest
-    } = props;
+const ListToolbar = () => {
+    return (
+        <TopToolbar>
+            <CreateButton
+            // variant="contained"
+            // label={''}
+            // size="large"
+            // sx={{
+            //     '&.MuiButton-contained': {
+            //         paddingY: '12px',
+            //         paddingX: '12px',
+            //     },
+            //     '& .MuiButton-startIcon': { margin: 0 },
+            // }}
+            />
+        </TopToolbar>
+    );
+};
 
-    const {
-        sort,
-        displayedFilters,
-        filterValues,
-        exporter,
-        showFilter,
-        total,
-    } = useListContext({ ...props, selectedIds, onUnselectItems });
+const DatagridToolbar = (props: ListActionsProps) => {
+    const { selectedIds = [], onUnselectItems = () => null } = props;
+
+    const { sort, filterValues, total } = useListContext({
+        ...props,
+        selectedIds,
+        onUnselectItems,
+    });
     const resource = useResourceContext(props);
 
     return (
-        <TopToolbar {...sanitizeListRestProps(rest)}>
-            <CreateButton variant="contained" />
+        <TopToolbar>
             <ExportButton
                 disabled={total === 0}
                 resource={resource}
@@ -58,6 +72,24 @@ const ListToolbar = (props: ListActionsProps) => {
                 filterValues={filterValues}
             />
         </TopToolbar>
+    );
+};
+
+const RowActions = () => {
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    const context = useDatagridContext();
+    const [expanded] = useExpanded(
+        resource,
+        record.id,
+        context && context.expandSingle
+    );
+    return (
+        <RowButtonGroup label="⋮">
+            <ShowButton disabled={expanded} />
+            <EditButton disabled={expanded} />
+            <DeleteWithConfirmButtonShowingName disabled={expanded} />
+        </RowButtonGroup>
     );
 };
 
@@ -99,32 +131,32 @@ export const FunctionList = () => {
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<FunctionIcon fontSize={'large'} />} />
-                    <ListView
-                        filters={postFilters}
-                        actions={<ListToolbar />}
-                        component={Box}
-                    >
-                        <Datagrid
-                            rowClick="show"
-                            expand={VersionsList}
-                            expandSingle={true}
+                    <ListToolbar />
+                    <FlatCard>
+                        <ListView
+                            filters={postFilters}
+                            actions={<DatagridToolbar />}
+                            component={Box}
                         >
-                            <TextField source="name" />
-                            <TextField source="kind" />
-                            <DateField
-                                source="metadata.updated"
-                                showDate={true}
-                                showTime={true}
-                            />
-                            {/* <div style={{ display: 'flex', justifyContent: 'end' }}> */}
-                            <RowButtonGroup>
-                                <ShowButton />
-                                <EditButton />
-                                <DeleteWithConfirmButtonShowingName />
-                            </RowButtonGroup>
-                            {/* </div> */}
-                        </Datagrid>
-                    </ListView>
+                            <Datagrid
+                                rowClick="show"
+                                expand={VersionsList}
+                                expandSingle={true}
+                                bulkActionButtons={false}
+                            >
+                                <TextField source="name" />
+                                <TextField source="kind" />
+                                <DateField
+                                    source="metadata.updated"
+                                    showDate={true}
+                                    showTime={true}
+                                />
+                                {/* <div style={{ display: 'flex', justifyContent: 'end' }}> */}
+                                <RowActions />
+                                {/* </div> */}
+                            </Datagrid>
+                        </ListView>
+                    </FlatCard>
                 </>
             </ListBase>
         </Container>

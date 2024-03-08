@@ -3,6 +3,8 @@ import { isValidElement, ReactElement } from 'react';
 import {
     Identifier,
     RaRecord,
+    useCreateContext,
+    useEditContext,
     useGetResourceLabel,
     useListContext,
     useShowContext,
@@ -25,7 +27,11 @@ export const PageTitle = (props: PageTitleProps) => {
     return (
         <Box sx={sxProps}>
             <Box sx={{ textAlign: 'left', flexGrow: 1 }}>
-                <Typography variant="h4" color={'secondary.main'} sx={{ pb: secondaryText ? 1 : 0 }}>
+                <Typography
+                    variant="h4"
+                    color={'secondary.main'}
+                    sx={{ pb: secondaryText ? 1 : 0 }}
+                >
                     {text}
                 </Typography>
                 {secondaryText && (
@@ -100,6 +106,66 @@ export const ShowPageTitle = (props: RecordPageTitleProps) => {
                 name,
             })}
             secondaryText={translate('pageTitle.show.subtitle', {
+                resource: label,
+                kind,
+            })}
+            {...rest}
+        />
+    );
+};
+
+export const CreatePageTitle = (props: RecordPageTitleProps) => {
+    const {
+        resource: resourceFromProps,
+        record: recordFromProps,
+        ...rest
+    } = props;
+    const { resource, record } = useCreateContext({
+        resource: resourceFromProps,
+        record: recordFromProps,
+    });
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    const label = getResourceLabel(resource, 1).toLowerCase();
+
+    return (
+        <PageTitle
+            text={translate('pageTitle.create.title', {
+                resource: label,
+            })}
+            secondaryText={translate('pageTitle.create.subtitle', {
+                resource: label,
+            })}
+            {...rest}
+        />
+    );
+};
+
+export const EditPageTitle = (props: RecordPageTitleProps) => {
+    const {
+        resource: resourceFromProps,
+        record: recordFromProps,
+        ...rest
+    } = props;
+    const { resource, record } = useEditContext({
+        resource: resourceFromProps,
+        record: recordFromProps,
+    });
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    const label = getResourceLabel(resource, 1).toLowerCase();
+    const name = record?.name || '';
+    const kind = record?.kind || '';
+
+    return (
+        <PageTitle
+            text={translate('pageTitle.edit.title', {
+                resource: label,
+                name,
+            })}
+            secondaryText={translate('pageTitle.edit.subtitle', {
                 resource: label,
                 kind,
             })}

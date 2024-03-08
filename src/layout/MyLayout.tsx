@@ -10,11 +10,6 @@ export const MyLayout = (props: any) => {
             appBar={MyAppBar}
             menu={MyMenu}
             sidebar={MySidebar}
-            sx={{
-                '& .RaLayout-content': {
-                    px: 0,
-                },
-            }}
         />
     );
 };

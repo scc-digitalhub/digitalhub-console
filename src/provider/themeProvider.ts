@@ -7,40 +7,78 @@ import {
     RaThemeOptions,
 } from 'react-admin';
 import { alpha } from '@mui/material';
+// import { palette } from '@mui/system';
 
 const componentsOverrides = (theme: Theme) => ({
     ...theme.components,
+    // MuiCssBaseline: {
+    //     styleOverrides: {
+    //         '*': {
+    //             boxSizing: 'border-box',
+    //         },
+    //         html: {
+    //             MozOsxFontSmoothing: 'grayscale',
+    //             WebkitFontSmoothing: 'antialiased',
+    //             display: 'flex',
+    //             flexDirection: 'column',
+    //             minHeight: '100%',
+    //             width: '100%',
+    //         },
+    //         body: {
+    //             display: 'flex',
+    //             flex: '1 1 auto',
+    //             flexDirection: 'column',
+    //             minHeight: '100%',
+    //             width: '100%',
+    //         },
+    //         '#root': {
+    //             display: 'flex',
+    //             flex: '1 1 auto',
+    //             flexDirection: 'column',
+    //             height: '100%',
+    //             width: '100%',
+    //         },
+    //     },
+    // },
     RaAppBar: {
         styleOverrides: {
             root: {
                 color: theme.palette.text.primary,
                 '& .RaAppBar-toolbar': {
-                    backgroundColor: theme.palette.primary.main,
+                    // backgroundColor:theme.palette.background.default,
                     color: theme.palette.background.default,
                 },
             },
         },
     },
-    RaMenu: {
+    RaListToolbar: {
         styleOverrides: {
             root: {
-                backgroundColor: theme.palette?.background?.paper,
-                '& .MuiButtonBase-root': {
-                    marginTop: 3,
-                    marginBottom: 3,
-                },
+                marginBottom: theme.spacing(1),
             },
         },
     },
-    RaLayout: {
-        styleOverrides: {
-            root: {
-                '& .RaLayout-content': {
-                    backgroundColor: theme.palette?.background?.default,
-                },
-            },
-        },
-    },
+    // RaMenu: {
+    //     styleOverrides: {
+    //         root: {
+    //             backgroundColor: theme.palette['paper'],
+    //             // borderRight: '1px solid ' + theme.palette.divider,
+    //             '& .MuiButtonBase-root': {
+    //                 marginTop: 3,
+    //                 marginBottom: 3,
+    //             },
+    //         },
+    //     },
+    // },
+    // RaLayout: {
+    //     styleOverrides: {
+    //         root: {
+    //             '& .RaLayout-content': {
+    //                 backgroundColor: theme.palette?.background?.default,
+    //             },
+    //         },
+    //     },
+    // },
     RaMenuItemLink: {
         styleOverrides: {
             root: {
@@ -75,6 +113,9 @@ const componentsOverrides = (theme: Theme) => ({
         styleOverrides: {
             root: {
                 '&:last-child td': { border: 0 },
+                '& th.RaDatagrid-headerCell:last-child': {
+                    textAlign: 'right',
+                },
             },
         },
     },
@@ -88,12 +129,16 @@ const componentsOverrides = (theme: Theme) => ({
                 '&.MuiTableCell-paddingNone': {
                     padding: theme.spacing(0.5),
                 },
+                '&.MuiTableCell-head': {
+                    backgroundColor: alpha(theme.palette?.primary?.main, 0.05),
+                    fontWeight: '600',
+                },
             },
         },
     },
     RaDataGrid: {
         styleOverrides: {
-            header: {
+            root: {
                 '& .RaDatagrid-headerCell': {
                     backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
                 },
@@ -102,7 +147,7 @@ const componentsOverrides = (theme: Theme) => ({
     },
 });
 
-const palette: PaletteOptions = {
+const palette: PaletteOptions & { paper: string } = {
     mode: 'light' as 'light',
     primary: {
         main: '#E0701B',
@@ -110,21 +155,9 @@ const palette: PaletteOptions = {
         light: '#ec934f',
     },
     secondary: { main: '#062D4B' },
-    background: { default: '#FFF' },
+    paper: '#F8F7F2',
+    background: { default: '#f5f5f6', paper: '#FFF' },
 };
-
-// const createApplicationTheme = (palette: RaThemeOptions['palette']) => {
-//     const themeOptions = {
-//         palette,
-//         sidebar: {
-//             width: 170,
-//             closeWidth: 70,
-//         },
-//     };
-//     const theme = createTheme(themeOptions);
-//     theme.components = componentsOverrides(theme);
-//     return theme;
-// };
 
 const createApplicationTheme = (
     themeOptions: RaThemeOptions
@@ -132,10 +165,7 @@ const createApplicationTheme = (
     const options = {
         ...themeOptions,
         palette,
-        sidebar: {
-            width: 170,
-            closeWidth: 70,
-        },
+        shape: { borderRadius: 5 },
     };
     const theme = createTheme(options);
     theme.components = componentsOverrides(theme);
@@ -145,8 +175,8 @@ const createApplicationTheme = (
 export const BASE_THEME = defaultTheme;
 
 export const themeProvider = (): RaThemeOptions => {
-    return createApplicationTheme(BASE_THEME);
-    // return createApplicationTheme(houseLightTheme);
+    // return createApplicationTheme(BASE_THEME);
+    return createApplicationTheme(houseLightTheme);
 };
 
 export default themeProvider;

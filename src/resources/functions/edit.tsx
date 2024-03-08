@@ -1,6 +1,8 @@
 import {
     Button,
     Edit,
+    EditBase,
+    EditView,
     FormDataConsumer,
     Labeled,
     LoadingIndicator,
@@ -9,6 +11,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useCreatePath,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
@@ -20,16 +23,21 @@ import {
     getFunctionUiSpec,
 } from './types';
 import { MetadataSchema } from '../../common/types';
-import { alphaNumericName } from '../../common/helper';
+import { alphaNumericName, arePropsEqual } from '../../common/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
+import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router';
 import { NewVersionButton } from '../../components/NewVersionButton';
 import { RecordTitle } from '../../components/RecordTitle';
+import { EditPageTitle } from '../../components/PageTitle';
+import { FunctionIcon } from './icon';
+import { FlatCard } from '../../components/FlatCard';
+import { useForm, useWatch } from 'react-hook-form';
+import deepEqual from 'deep-is';
 
 const validator = data => {
     const errors: any = {};
@@ -41,16 +49,6 @@ const validator = data => {
         errors.name = 'validation.wrongChar';
     }
     return errors;
-};
-
-export const FunctionEdit = props => {
-    const translate = useTranslate();
-
-    return (
-        <Edit title={<RecordTitle prompt={translate('functionsString')} />}>
-            <FunctionEditForm {...props} />
-        </Edit>
-    );
 };
 
 export const FunctionEditToolbar = () => {
@@ -69,16 +67,58 @@ export const FunctionEditToolbar = () => {
             >
                 <ClearIcon />
             </Button>
-            <NewVersionButton />
+            {/* <NewVersionButton /> */}
         </Toolbar>
     );
 };
 
-const FunctionEditForm = () => {
+const SpecInput = (props: {
+    source: string;
+    onDirty?: (state: boolean) => void;
+}) => {
+    const { source, onDirty } = props;
+    const translate = useTranslate();
+    const record = useRecordContext();
+    const value = useWatch({ name: source });
+    const eq = deepEqual(record[source], value);
+
+    useEffect(() => {
+        if (onDirty) {
+            onDirty(!eq);
+        }
+    }, [eq]);
+
+    if (!record || !record.kind || !(source in record)) {
+        return (
+            <Card
+                sx={{
+                    width: 1,
+                    textAlign: 'center',
+                }}
+            >
+                <CardContent>
+                    {translate('resources.common.emptySpec')}{' '}
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <JsonSchemaInput
+            source={source}
+            schema={getFunctionSpec(record.kind)}
+            uiSchema={getFunctionUiSpec(record.kind)}
+        />
+    );
+};
+
+export const FunctionEdit = () => {
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('functions').then(res => {
@@ -110,41 +150,84 @@ const FunctionEditForm = () => {
 
         return BlankSchema;
     };
+
+    const onSuccessRedirect = (resource, id, data, state) => {
+        console.log(resource, id, data);
+        return 'show';
+    };
+
     return (
-        <SimpleForm toolbar={<FunctionEditToolbar />} validate={validator}>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={4}>
-                    <Labeled label={translate('resources.function.name')}>
-                        <TextInput source="name" readOnly />
-                    </Labeled>
-                </Grid>
-                <Grid item xs={6}>
-                    <Labeled label={translate('resources.function.kind')}>
-                        <SelectInput source="kind" choices={kinds} readOnly />
-                    </Labeled>
-                </Grid>
-            </Grid>
-            <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <FormDataConsumer<{ kind: string }>>
-                {({ formData }) => {
-                    if (formData.kind)
-                        return (
-                            <JsonSchemaInput
-                                source="spec"
-                                schema={getFunctionSpec(formData.kind)}
-                                uiSchema={getFunctionUiSpec(formData.kind)}
-                            />
-                        );
-                    else
-                        return (
-                            <Card sx={{ width: 1, textAlign: 'center' }}>
-                                <CardContent>
-                                    {translate('resources.common.emptySpec')}{' '}
-                                </CardContent>
-                            </Card>
-                        );
-                }}
-            </FormDataConsumer>
-        </SimpleForm>
+        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+            <EditBase
+                redirect={'show'}
+                mutationMode="pessimistic"
+                mutationOptions={{ meta: { update: !isSpecDirty } }}
+            >
+                <>
+                    <EditPageTitle icon={<FunctionIcon fontSize={'large'} />} />
+                    <EditView component={Box}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm
+                                toolbar={<FunctionEditToolbar />}
+                                validate={validator}
+                            >
+                                <Typography variant="h6" gutterBottom>
+                                    {translate('fields.base')}
+                                </Typography>
+                                <Stack direction={'row'} spacing={3}>
+                                    <TextInput source="name" readOnly />
+
+                                    <SelectInput
+                                        source="kind"
+                                        choices={kinds}
+                                        readOnly
+                                    />
+                                </Stack>
+                                <JsonSchemaInput
+                                    source="metadata"
+                                    schema={MetadataSchema}
+                                />
+                                <SpecInput
+                                    source="spec"
+                                    onDirty={setIsSpecDirty}
+                                />
+                                {/* <FormDataConsumer<{ kind: string }>>
+                                    {({ formData }) => {
+                                        console.log('form data', formData);
+                                        if (formData.kind)
+                                            return (
+                                                <JsonSchemaInput
+                                                    source="spec"
+                                                    schema={getFunctionSpec(
+                                                        formData.kind
+                                                    )}
+                                                    uiSchema={getFunctionUiSpec(
+                                                        formData.kind
+                                                    )}
+                                                />
+                                            );
+                                        else
+                                            return (
+                                                <Card
+                                                    sx={{
+                                                        width: 1,
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        {translate(
+                                                            'resources.common.emptySpec'
+                                                        )}{' '}
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                    }}
+                                </FormDataConsumer> */}
+                            </SimpleForm>
+                        </FlatCard>
+                    </EditView>
+                </>
+            </EditBase>
+        </Container>
     );
 };

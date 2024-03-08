@@ -1,6 +1,6 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Stack, Typography } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -19,7 +19,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
+import { MetadataSchema, createMetadataViewUiSchema } from '../../common/types';
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
@@ -28,18 +28,11 @@ import { getFunctionSpec, getFunctionUiSpec, getTaskByFunction } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { FunctionIcon } from './icon';
 
 const ShowComponent = () => {
     const record = useRecordContext();
-
-    return <FunctionShowLayout record={record} />;
-};
-
-const FunctionShowLayout = memo(function FunctionShowLayout(props: {
-    record: any;
-}) {
     const translate = useTranslate();
-    const { record } = props;
     const dataProvider = useDataProvider();
     const kind = record?.kind || undefined;
     const [tasks, setTasks] = useState<any>();
@@ -48,40 +41,40 @@ const FunctionShowLayout = memo(function FunctionShowLayout(props: {
             function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
         },
     });
-    useEffect(() => {
-        if (!isLoading && data && record) {
-            const mapTask = {};
-            getTaskByFunction(record?.kind)?.forEach(async kind => {
-                //task=profile
-                //check task for function contains a task with kind of profile
-                let typeTask = data?.find(data => kind === data.kind);
-                if (!typeTask) {
-                    //crealo con await su dataprovider
-                    const task = await dataProvider.create('tasks', {
-                        data: {
-                            project: record?.project,
-                            kind: kind,
-                            spec: {
-                                function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
-                            },
-                        },
-                    });
-                    //  .then(response => console.log(response))
-                    //array locale
-                    if (task) {
-                        mapTask[kind] = typeTask;
-                    }
-                } else {
-                    console.log(
-                        'kind' + kind + ' presente' + JSON.stringify(data)
-                    );
-                    mapTask[kind] = typeTask;
-                }
-            });
-            //setTask con array locale + task esistenti in data. Uso mappa per tipo {profile: {...}, validate: {{}}}
-            setTasks(mapTask);
-        }
-    }, [dataProvider, data, isLoading]);
+    // useEffect(() => {
+    //     if (!isLoading && data && record) {
+    //         const mapTask = {};
+    //         getTaskByFunction(record?.kind)?.forEach(async kind => {
+    //             //task=profile
+    //             //check task for function contains a task with kind of profile
+    //             let typeTask = data?.find(data => kind === data.kind);
+    //             if (!typeTask) {
+    //                 //crealo con await su dataprovider
+    //                 const task = await dataProvider.create('tasks', {
+    //                     data: {
+    //                         project: record?.project,
+    //                         kind: kind,
+    //                         spec: {
+    //                             function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
+    //                         },
+    //                     },
+    //                 });
+    //                 //  .then(response => console.log(response))
+    //                 //array locale
+    //                 if (task) {
+    //                     mapTask[kind] = typeTask;
+    //                 }
+    //             } else {
+    //                 console.log(
+    //                     'kind' + kind + ' presente' + JSON.stringify(data)
+    //                 );
+    //                 mapTask[kind] = typeTask;
+    //             }
+    //         });
+    //         //setTask con array locale + task esistenti in data. Uso mappa per tipo {profile: {...}, validate: {{}}}
+    //         setTasks(mapTask);
+    //     }
+    // }, [dataProvider, data, isLoading]);
 
     // if (isLoading) {
     //   return <></>;
@@ -90,45 +83,39 @@ const FunctionShowLayout = memo(function FunctionShowLayout(props: {
     if (error) {
         return <p>ERROR</p>;
     }
-    if (!record || !tasks) return <></>;
+    if (!record) return <></>;
 
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab
-                label={translate('resources.function.tab.summary')}
-            >
-                <Grid>
-                    <Typography variant="h6" gutterBottom>
-                        {translate('resources.function.title')}
-                    </Typography>
+            <TabbedShowLayout.Tab label={translate('fields.summary')}>
+                <SimpleShowLayout>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="name" />
+                        </Labeled>
 
-                    <SimpleShowLayout>
-                        <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                            <Grid item xs={6}>
-                                <Labeled label="My Label">
-                                    <TextField source="name" />
-                                </Labeled>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Labeled label="My Label">
-                                    <TextField source="kind" />
-                                </Labeled>
-                            </Grid>
-                        </Grid>
-                        <JsonSchemaField
-                            source="metadata"
-                            schema={MetadataSchema}
-                        />
-                        <JsonSchemaField
-                            source="spec"
-                            schema={getFunctionSpec(kind)}
-                            uiSchema={getFunctionUiSpec(kind)}
-                            label={false}
-                        />
-                    </SimpleShowLayout>
-                </Grid>
+                        <Labeled>
+                            <TextField source="kind" />
+                        </Labeled>
+                    </Stack>
+                    <Labeled>
+                        <TextField source="key" />
+                    </Labeled>
+                    <JsonSchemaField
+                        source="metadata"
+                        schema={MetadataSchema}
+                        uiSchema={createMetadataViewUiSchema(record.metadata)}
+                        label={false}
+                    />
+                    <JsonSchemaField
+                        source="spec"
+                        schema={getFunctionSpec(kind)}
+                        uiSchema={getFunctionUiSpec(kind)}
+                        label={false}
+                    />
+                </SimpleShowLayout>
             </TabbedShowLayout.Tab>
-            {getTaskByFunction(record?.kind).map((item, index) => (
+            {/* {getTaskByFunction(record?.kind).map((item, index) => (
                 <TabbedShowLayout.Tab label={item} key={index}>
                     <div>
                         <RecordContextProvider value={tasks[item]}>
@@ -136,15 +123,9 @@ const FunctionShowLayout = memo(function FunctionShowLayout(props: {
                         </RecordContextProvider>
                     </div>
                 </TabbedShowLayout.Tab>
-            ))}
+            ))} */}
         </TabbedShowLayout>
     );
-},
-arePropsEqual);
-
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
 };
 
 const ShowToolbar = () => (
@@ -162,9 +143,7 @@ export const FunctionShow = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
-                    <ShowPageTitle
-                        icon={<VisibilityIcon fontSize={'large'} />}
-                    />
+                    <ShowPageTitle icon={<FunctionIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{
@@ -180,7 +159,7 @@ export const FunctionShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

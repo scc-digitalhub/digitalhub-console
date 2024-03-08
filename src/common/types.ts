@@ -37,20 +37,27 @@ export const MetadataEditUiSchema = {
     project: {
         'ui:widget': 'hidden',
     },
+    name: {
+        'ui:widget': 'hidden',
+    },
     description: {
         'ui:widget': 'textarea',
+    },
+    updated: {
+        'ui:widget': 'hidden',
     },
 };
 export const MetadataViewUiSchema = {
     project: {
         'ui:widget': 'hidden',
     },
+    name: {
+        'ui:widget': 'hidden',
+    },
     description: {
         'ui:widget': 'text',
     },
-    labels: {
-
-    },
+    labels: {},
 };
 
 export const createMetadataViewUiSchema = (metadata: any) => {

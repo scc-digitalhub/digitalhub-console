@@ -155,6 +155,21 @@ const springDataProvider = (
             if (!params.data) {
                 throw new Error('Invalid data');
             }
+
+            if (params.meta?.update === false) {
+                //not updatable, call create and reset id
+                const url = `${apiUrl}${prefix}/${resource}`;
+                return httpClient(url, {
+                    method: 'POST',
+                    body:
+                        typeof params.data === 'string'
+                            ? params.data
+                            : JSON.stringify({ ...params.data, id: null }),
+                }).then(({ json }) => ({
+                    data: { ...params.data, id: json.id } as any,
+                }));
+            }
+
             const url = `${apiUrl}${prefix}/${resource}/${params.id}`;
             return httpClient(url, {
                 method: 'PUT',

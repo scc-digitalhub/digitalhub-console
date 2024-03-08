@@ -1,7 +1,21 @@
-import { DeleteWithConfirmButton, useRecordContext } from 'react-admin';
+import {
+    RaRecord,
+    DeleteWithConfirmButton,
+    DeleteWithConfirmButtonProps,
+    useRecordContext,
+} from 'react-admin';
 
-export const DeleteWithConfirmButtonShowingName = () => {
-    const record = useRecordContext();
+export const DeleteWithConfirmButtonShowingName = <
+    RecordType extends RaRecord = any
+>(
+    props: DeleteWithConfirmButtonProps<RecordType>
+) => {
+    const record = useRecordContext(props);
     if (!record) return <></>;
-    return <DeleteWithConfirmButton translateOptions={{ id: record.name }} />;
+    return (
+        <DeleteWithConfirmButton
+            translateOptions={{ id: record.name }}
+            {...props}
+        />
+    );
 };

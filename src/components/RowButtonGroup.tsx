@@ -13,8 +13,9 @@ export const StyledButtonGroup = styled(Stack, {
 
 export const RowButtonGroup = (props: {
     children: ReactElement | ReactElement[];
+    label?: string;
 }) => {
-    const { children } = props;
+    const { label = 'actions', children } = props;
     return (
         <StyledButtonGroup direction="row" spacing={1}>
             {children}
