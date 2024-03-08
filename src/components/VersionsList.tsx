@@ -11,6 +11,7 @@ import {
     Theme,
 } from '@mui/material';
 import {
+    GetListParams,
     Link,
     RaRecord,
     ShowButton,
@@ -43,11 +44,23 @@ export const VersionsList = (props: VersionListProps) => {
 
     useEffect(() => {
         if (dataProvider && record) {
-            dataProvider
-                .getLatest(resource, { record, root })
-                .then(versions => {
-                    setVersions(versions.data);
-                });
+            const params: GetListParams = {
+                pagination: {
+                    perPage: 10,
+                    page: 1,
+                },
+                sort: { field: 'created', order: 'DESC' },
+                filter: {
+                    name: record.name,
+                    versions: 'all',
+                },
+            };
+
+            dataProvider.getList(resource, params).then(res => {
+                if (res.data && res.total) {
+                    setVersions(res.data);
+                }
+            });
         }
     }, [dataProvider, record, resource]);
 

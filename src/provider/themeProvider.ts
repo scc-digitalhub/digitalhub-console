@@ -1,13 +1,30 @@
 import { createTheme, PaletteOptions, Theme } from '@mui/material';
-import { defaultTheme, RaThemeOptions } from 'react-admin';
+import {
+    defaultTheme,
+    houseLightTheme,
+    nanoLightTheme,
+    radiantLightTheme,
+    RaThemeOptions,
+} from 'react-admin';
 import { alpha } from '@mui/material';
 
 const componentsOverrides = (theme: Theme) => ({
-    ...defaultTheme.components,
+    ...theme.components,
+    RaAppBar: {
+        styleOverrides: {
+            root: {
+                color: theme.palette.text.primary,
+                '& .RaAppBar-toolbar': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.background.default,
+                },
+            },
+        },
+    },
     RaMenu: {
         styleOverrides: {
             root: {
-                backgroundColor: theme.palette.background.paper,
+                backgroundColor: theme.palette?.background?.paper,
                 '& .MuiButtonBase-root': {
                     marginTop: 3,
                     marginBottom: 3,
@@ -18,17 +35,29 @@ const componentsOverrides = (theme: Theme) => ({
     RaMenuItemLink: {
         styleOverrides: {
             root: {
-                color: theme.palette.text.primary,
+                padding: 10,
+                marginRight: 10,
+                marginLeft: 10,
+                color: theme.palette?.text?.primary,
                 '& .MuiSvgIcon-root': {
-                    fill: theme.palette.text.primary,
-                    transition: 'none',
+                    fill: theme.palette?.text?.primary,
                 },
                 '&.RaMenuItemLink-active': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                    color: theme.palette.primary.main,
+                    backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
+                    color: theme.palette?.primary?.main,
                     '& .MuiSvgIcon-root': {
-                        fill: theme.palette.primary.main,
+                        fill: theme.palette?.primary?.main,
                     },
+                },
+            },
+        },
+    },
+    MuiButton: {
+        styleOverrides: {
+            root: {
+                '&.MuiButton-contained': {
+                    paddingTop: 6,
+                    paddingBottom: 6,
                 },
             },
         },
@@ -46,21 +75,40 @@ const palette: PaletteOptions = {
     success: { main: '#00745f' },
 };
 
-const createApplicationTheme = (palette: RaThemeOptions['palette']) => {
-    const themeOptions = {
+// const createApplicationTheme = (palette: RaThemeOptions['palette']) => {
+//     const themeOptions = {
+//         palette,
+//         sidebar: {
+//             width: 170,
+//             closeWidth: 70,
+//         },
+//     };
+//     const theme = createTheme(themeOptions);
+//     theme.components = componentsOverrides(theme);
+//     return theme;
+// };
+
+const createApplicationTheme = (
+    themeOptions: RaThemeOptions
+): RaThemeOptions => {
+    const options = {
+        ...themeOptions,
         palette,
         sidebar: {
             width: 170,
             closeWidth: 70,
         },
     };
-    const theme = createTheme(themeOptions);
+    const theme = createTheme(options);
     theme.components = componentsOverrides(theme);
     return theme;
 };
 
-export const themeProvider = () => {
-    return createApplicationTheme(palette);
+export const BASE_THEME = defaultTheme;
+
+export const themeProvider = (): RaThemeOptions => {
+    return createApplicationTheme(BASE_THEME);
+    // return createApplicationTheme(houseLightTheme);
 };
 
 export default themeProvider;

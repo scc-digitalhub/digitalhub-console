@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 export const MyAppBar = () => {
     const { root: projectId } = useRootSelector();
     return (
-        <AppBar color="primary">
+        <AppBar>
             <Typography
                 flex="1"
                 textOverflow="ellipsis"

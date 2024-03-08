@@ -115,12 +115,12 @@ const FunctionEditForm = () => {
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <Labeled label={translate('resources.function.name')}>
-                        <TextInput source="name" disabled />
+                        <TextInput source="name" readOnly />
                     </Labeled>
                 </Grid>
                 <Grid item xs={6}>
                     <Labeled label={translate('resources.function.kind')}>
-                        <SelectInput source="kind" choices={kinds} disabled />
+                        <SelectInput source="kind" choices={kinds} readOnly />
                     </Labeled>
                 </Grid>
             </Grid>

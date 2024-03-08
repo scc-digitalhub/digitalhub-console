@@ -85,8 +85,8 @@ const FunctionEditForm = (props: { record: any }) => {
     console.log('record', record);
     return (
         <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>
-            <TextInput source="name" disabled />
-            <SelectInput source="kind" choices={kinds} disabled />
+            <TextInput source="name" readOnly />
+            <SelectInput source="kind" choices={kinds} readOnly />
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
             <JsonSchemaInput
                 source="spec"

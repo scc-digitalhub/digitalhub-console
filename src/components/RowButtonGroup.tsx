@@ -1,12 +1,23 @@
-import { ButtonGroup } from '@mui/material';
+import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { ReactElement } from 'react';
 
-export const RowButtonGroup = styled(ButtonGroup, {
+export const StyledButtonGroup = styled(Stack, {
     name: 'RaRowButtonGroup',
     overridesResolver: (props, styles) => styles.root,
 })({
-    '&.MuiButtonGroup-root': {
-        display: 'flex',
+    '&.MuiStack-root': {
         justifyContent: 'end',
     },
 });
+
+export const RowButtonGroup = (props: {
+    children: ReactElement | ReactElement[];
+}) => {
+    const { children } = props;
+    return (
+        <StyledButtonGroup direction="row" spacing={1}>
+            {children}
+        </StyledButtonGroup>
+    );
+};

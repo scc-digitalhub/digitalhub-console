@@ -36,68 +36,6 @@ const springDataProvider = (
     }> = fetchUtils.fetchJson
 ): DataProvider => {
     return {
-        getLatest: (resource, params) => {
-            //handle pagination request as pageable (page,size)
-            const record = params.record;
-            const query = {
-                ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
-                sort: 'created' + ',' + 'DESC', //sorting
-                page: 0, //page starts from zero
-                size: 5,
-            };
-            let prefix = '';
-            if (resource !== 'projects' && params.root) {
-                prefix = '/-/' + params.root;
-            }
-            const url = `${apiUrl}${prefix}/${resource}/${
-                record?.name
-            }?${stringify(query)}`;
-            return httpClient(url).then(({ status, json }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!json.content) {
-                    throw new Error('the response must match page<> model');
-                }
-
-                //extract data from content
-                return {
-                    data: json.content,
-                    total: parseInt(json.totalElements),
-                };
-            });
-        },
-        // getAllVersions: (resource, params) => {
-        //      //handle pagination request as pageable (page,size)
-        //      const { page, perPage } = params.pagination;
-        //      const { field, order } = params.sort;
-        //      const record =params.record;
-        //      const query = {
-        //          ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
-        //          sort: field + ',' + order, //sorting
-        //          page: page - 1, //page starts from zero
-        //          size: perPage,
-        //      };
-        //      let prefix = '';
-        //      if (resource !== 'projects' && params.meta?.root) {
-        //          prefix = '/-/' + params.meta.root;
-        //      }
-        //      const url = `${apiUrl}${prefix}/${resource}/${record.name}?${stringify(query)}`;
-        //      return httpClient(url).then(({ status, json }) => {
-        //          if (status !== 200) {
-        //              throw new Error('Invalid response status ' + status);
-        //          }
-        //          if (!json.content) {
-        //              throw new Error('the response must match page<> model');
-        //          }
-
-        //          //extract data from content
-        //          return {
-        //              data: json.content,
-        //              total: parseInt(json.totalElements),
-        //          };
-        //      });
-        // },
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
             const { page, perPage } = params.pagination;
@@ -143,7 +81,7 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}/${resource}/${params.id}`;
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);

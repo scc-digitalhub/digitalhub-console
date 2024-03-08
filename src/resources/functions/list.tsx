@@ -65,7 +65,7 @@ export const FunctionList = () => {
                     <ListView filters={postFilters}>
                         <Datagrid
                             rowClick="show"
-                            expand={<VersionsList />}
+                            expand={VersionsList}
                             expandSingle={true}
                         >
                             <TextField source="name" />
