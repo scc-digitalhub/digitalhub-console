@@ -16,7 +16,7 @@ import {
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
 import { ListPageTitle } from '../../components/pageTitle';
-import { VersionsList } from '../../components/versionsList';
+import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 

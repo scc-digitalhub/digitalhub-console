@@ -31,7 +31,7 @@ const messages = {
             kind: 'Kind',
         },
         dataitem: {
-            title: 'Data item details',
+            title: 'Data item',
             name: 'Name',
             kind: 'Kind',
             tab: {
@@ -40,6 +40,7 @@ const messages = {
                 preview: 'Preview',
             },
             summary: {
+                title: 'Data item details',
                 spec: {
                     title: 'Spec',
                     key: 'Key',
@@ -47,14 +48,18 @@ const messages = {
                 },
             },
             schema: {
+                title: 'Schema',
                 name: 'Name',
                 type: 'Type',
             },
             preview: {
-                unsupported: 'Unsupported',
+                title: 'Preview',
+                invalidValue: 'Invalid value',
                 invalidDate: 'Invalid date',
                 invalidDatetime: 'Invalid datetime',
                 unsupportedField: 'Unsupported field',
+                true: 'True',
+                false: 'False',
             },
         },
         common: {

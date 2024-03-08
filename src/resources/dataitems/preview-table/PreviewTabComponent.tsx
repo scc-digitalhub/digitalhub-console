@@ -1,97 +1,54 @@
-import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import * as changeCase from 'change-case';
-import { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { useTranslate } from 'react-admin';
-import { PreviewHelper } from './PreviewHelper';
+import { Spinner } from '../../../components/Spinner';
+import { useDataGridController } from './usePreviewDataGridController';
 
 export const PreviewTabComponent = (props: { record: any }) => {
-    const [columns, setColumns] = useState<GridColDef[]>([]);
-    const [rows, setRows] = useState<GridRowsProp>([]);
-    const [isAtLeastOneColumnUnsupported, setIsAtLeastOneColumnUnsupported] =
-        useState<boolean>(false);
+    const { record } = props;
+
     const translate = useTranslate();
     const translations = {
-        unsupported: translate('resources.dataitem.preview.unsupported'),
+        invalidValue: translate('resources.dataitem.preview.invalidValue'),
         invalidDate: translate('resources.dataitem.preview.invalidDate'),
         invalidDatetime: translate(
             'resources.dataitem.preview.invalidDatetime'
         ),
     };
 
-    useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-
-        const useEffectColumns = schema.map((obj: any) => {
-            const basicFields = PreviewHelper.getBasicFields(obj, translations);
-
-            const columnFields = PreviewHelper.getColumnFields(
-                obj,
-                translations
-            );
-
-            return columnFields
-                ? { ...basicFields, ...columnFields }
-                : basicFields;
+    const { dataGridData, isSettingUpData, isAtLeastOneColumnUnsupported } =
+        useDataGridController({
+            record,
+            translations,
         });
 
-        setColumns(useEffectColumns);
-
-        if (schema.some((obj: any) => PreviewHelper.isUnsupportedColumn(obj))) {
-            setIsAtLeastOneColumnUnsupported(true);
-        }
-    }, [props.record]);
-
-    useEffect(() => {
-        const preview = props.record?.status?.preview || [];
-        const schema = props.record?.spec?.schema || [];
-        const useEffectRows: { [key: string]: any }[] = [];
-
-        preview.forEach((obj: any) => {
-            const field = changeCase.camelCase(obj.name);
-            const columnDescriptor = schema.find(
-                (s: any) => s.name === obj.name
-            );
-
-            if (columnDescriptor) {
-                obj.value.forEach((v: any, i: number) => {
-                    let value = PreviewHelper.getValue(v, columnDescriptor);
-
-                    if (!useEffectRows.some(r => r.id === i)) {
-                        useEffectRows.push({
-                            id: i,
-                            [field]: value,
-                        });
-                    } else {
-                        useEffectRows[i][field] = value;
-                    }
-                });
-            }
-        });
-
-        setRows(useEffectRows);
-    }, [props.record]);
-
+    if (isSettingUpData) return <Spinner />;
     return (
         <Box
             sx={{
                 width: '100%',
             }}
         >
+            <Typography variant="h6" gutterBottom>
+                {translate('resources.dataitem.preview.title')}
+            </Typography>
+
             <DataGrid
-                columns={columns}
-                rows={rows}
+                columns={dataGridData ? dataGridData.columns : []}
+                rows={dataGridData ? dataGridData.rows : []}
                 autoHeight
                 columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
                 hideFooter={true}
-                sx={{
-                    '& .unsupported': {
+                sx={theme => ({
+                    '& .MuiDataGrid-cell.invalid': {
+                        backgroundColor: theme.palette.warning.main,
+                    },
+                    '& .invalid .cell-content': {
+                        fontWeight: 'bold',
+                    },
+                    '& .MuiDataGrid-cell.unsupported': {
                         backgroundColor: 'rgba(0, 0, 0, 0.06)',
                     },
-                    '& .unsupported .MuiDataGrid-cellContent, .unsupported .cellContent':
-                        {
-                            fontWeight: 'bold',
-                        },
                     '& .unsupported .MuiDataGrid-columnHeaderTitleContainerContent':
                         {
                             width: '100%',
@@ -104,7 +61,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
                             borderRight: '1px solid rgba(224, 224, 224, 1)',
                         },
                     },
-                }}
+                })}
             />
         </Box>
     );

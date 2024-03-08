@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 export const MyAppBar = () => {
     const { root: projectId } = useRootSelector();
     return (
-        <AppBar sx={{ backgroundColor: '#FF8C00' }}>
+        <AppBar color="primary">
             <Typography
                 flex="1"
                 textOverflow="ellipsis"
@@ -19,7 +19,6 @@ export const MyAppBar = () => {
             >
                 {projectId}
             </Typography>
-            {/* <TitlePortal /> */}
             <RootResourceSelectorMenu source="name" showSelected={false} />
         </AppBar>
     );

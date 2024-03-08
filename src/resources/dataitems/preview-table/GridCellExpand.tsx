@@ -1,47 +1,200 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
-import Typography from '@mui/material/Typography';
-import { memo, useEffect, useRef, useState } from 'react';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Box, Paper, Popper, Tooltip, Typography } from '@mui/material';
+import { GridColType, GridRenderCellParams } from '@mui/x-data-grid';
+import { forwardRef, memo, useEffect, useRef, useState } from 'react';
 import { useTranslate } from 'react-admin';
-import { PreviewHelper } from './PreviewHelper';
+import { InvalidFieldInfo, PreviewHelper, Type } from './PreviewHelper';
 
-interface GridCellExpandProps {
+type ExpandableCellWrapperProps = {
+    params: GridRenderCellParams<any>;
+};
+
+type ExpandableCellProps = {
     value: any;
+    formattedValue: any;
     width: number;
-}
+    isContentInvalid: boolean;
+    invalidityType: Type | null;
+    type: GridColType | undefined;
+};
+
+type InvalidCellContentProps = {
+    value: any;
+    invalidityType: Type | null;
+};
+
+type ValidCellContentProps = {
+    formattedValue: any;
+    type: GridColType | undefined;
+};
+
+type PopperContentProps = {
+    value: any;
+    minHeight: number;
+};
 
 function isOverflown(element: Element): boolean {
-    return (
-        element.scrollHeight > element.clientHeight ||
-        element.scrollWidth > element.clientWidth
-    );
+    return element.scrollWidth > element.clientWidth;
 }
 
-export const GridCellExpand = memo(function GridCellExpand(
-    props: GridCellExpandProps
-) {
-    const { width, value: propsValue } = props;
-
+const InvalidCellContent = forwardRef<
+    HTMLParagraphElement,
+    InvalidCellContentProps
+>((props, ref) => {
+    const { value, invalidityType } = props;
     const translate = useTranslate();
-    const isUnsupported = PreviewHelper.isUnsupportedValue(propsValue);
-    const value = isUnsupported
-        ? translate('resources.dataitem.preview.unsupported')
-        : propsValue;
 
-    const wrapper = useRef<HTMLDivElement | null>(null);
-    const cellDiv = useRef(null);
-    const cellValue = useRef(null);
+    let label: string;
+    switch (invalidityType) {
+        case Type.InvalidDate:
+            label = translate('resources.dataitem.preview.invalidDate');
+            break;
+        case Type.InvalidDatetime:
+            label = translate('resources.dataitem.preview.invalidDatetime');
+            break;
+        default:
+            label = translate('resources.dataitem.preview.invalidValue');
+            break;
+    }
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    return (
+        <Box
+            display="flex"
+            alignItems="center"
+            gap={1}
+            sx={{
+                width: '100%',
+            }}
+        >
+            <Tooltip title={label}>
+                <WarningAmberIcon sx={{ zIndex: 2 }} />
+            </Tooltip>
+
+            <Typography
+                ref={ref}
+                variant="body2"
+                className="cell-content"
+                sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                }}
+            >
+                {value}
+            </Typography>
+        </Box>
+    );
+});
+InvalidCellContent.displayName = 'InvalidCellContent';
+
+const ValidCellContent = forwardRef<
+    HTMLParagraphElement,
+    ValidCellContentProps
+>((props, ref) => {
+    const { formattedValue, type } = props;
+    const translate = useTranslate();
+
+    const isBoolean =
+        type && type === 'boolean' && typeof formattedValue === 'boolean';
+
+    return (
+        <>
+            {isBoolean ? (
+                <>
+                    {formattedValue === true ? (
+                        <Tooltip
+                            title={translate('resources.dataitem.preview.true')}
+                        >
+                            <CheckIcon
+                                sx={{ color: 'rgba(0, 0, 0, 0.6)', zIndex: 2 }}
+                            />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip
+                            title={translate(
+                                'resources.dataitem.preview.false'
+                            )}
+                        >
+                            <CloseIcon
+                                sx={{ color: 'rgba(0, 0, 0, 0.38)', zIndex: 2 }}
+                            />
+                        </Tooltip>
+                    )}
+                </>
+            ) : (
+                <Typography
+                    ref={ref}
+                    variant="body2"
+                    className="cell-content"
+                    sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                    }}
+                >
+                    {formattedValue}
+                </Typography>
+            )}
+        </>
+    );
+});
+ValidCellContent.displayName = 'ValidCellContent';
+
+const PopperContent = (props: PopperContentProps) => {
+    const { value, minHeight } = props;
+
+    return (
+        <Paper
+            elevation={4}
+            sx={{
+                minHeight: minHeight,
+                display: 'flex',
+                alignItems: 'center',
+            }}
+        >
+            <Typography
+                variant="body2"
+                sx={{
+                    padding: 1.25,
+                    overflowWrap: 'anywhere',
+                }}
+            >
+                {value}
+            </Typography>
+        </Paper>
+    );
+};
+
+const ExpandableCell = memo(function ExpandableCell(
+    props: ExpandableCellProps
+) {
+    const {
+        width,
+        value,
+        formattedValue,
+        isContentInvalid,
+        invalidityType,
+        type,
+    } = props;
+
+    const cellWrapper = useRef<HTMLDivElement | null>(null);
+    const popperDiv = useRef<HTMLDivElement | null>(null);
+    const cellContent = useRef<HTMLDivElement | null>(null);
+    const cellText = useRef<HTMLParagraphElement | null>(null);
+
+    const [anchorEl, setanchorEl] = useState<null | HTMLElement>(null);
     const [showFullCell, setShowFullCell] = useState(false);
     const [showPopper, setShowPopper] = useState(false);
 
     const handleMouseEnter = () => {
-        const isCurrentlyOverflown = isOverflown(cellValue.current!);
-        setShowPopper(isCurrentlyOverflown);
-        setAnchorEl(cellDiv.current);
-        setShowFullCell(true);
+        if (cellText && cellText.current) {
+            const isCurrentlyOverflown = isOverflown(cellText.current);
+            setShowPopper(isCurrentlyOverflown);
+            setanchorEl(popperDiv.current);
+            setShowFullCell(true);
+        }
     };
 
     const handleMouseLeave = () => {
@@ -69,20 +222,18 @@ export const GridCellExpand = memo(function GridCellExpand(
 
     return (
         <Box
-            ref={wrapper}
+            ref={cellWrapper}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             sx={{
-                display: 'flex',
-                alignItems: 'center',
-                lineHeight: '24px',
                 width: '100%',
                 height: '100%',
                 position: 'relative',
+                lineHeight: '24px',
             }}
         >
             <Box
-                ref={cellDiv}
+                ref={popperDiv}
                 sx={{
                     height: '100%',
                     width,
@@ -92,38 +243,73 @@ export const GridCellExpand = memo(function GridCellExpand(
                     left: '-10px',
                 }}
             />
+
             <Box
-                ref={cellValue}
+                ref={cellContent}
                 sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
                 }}
             >
-                <span className="cellContent">{value}</span>
+                {isContentInvalid ? (
+                    <InvalidCellContent
+                        ref={cellText}
+                        value={value}
+                        invalidityType={invalidityType}
+                    />
+                ) : (
+                    <ValidCellContent
+                        ref={cellText}
+                        formattedValue={formattedValue}
+                        type={type}
+                    />
+                )}
             </Box>
+
             {showPopper && (
                 <Popper
                     open={showFullCell && anchorEl !== null}
+                    //open={true}
                     anchorEl={anchorEl}
-                    style={{ width, zIndex: 1 }}
+                    sx={{ width, zIndex: 1 }}
                 >
-                    <Paper
-                        elevation={1}
-                        style={{ minHeight: wrapper.current!.offsetHeight - 3 }}
-                    >
-                        <Typography
-                            variant="body2"
-                            style={{
-                                padding: 8,
-                                overflowWrap: 'break-word',
-                            }}
-                        >
-                            {value}
-                        </Typography>
-                    </Paper>
+                    <PopperContent
+                        value={isContentInvalid ? value : formattedValue}
+                        minHeight={
+                            cellWrapper && cellWrapper.current
+                                ? cellWrapper.current.offsetHeight - 3
+                                : 0
+                        }
+                    />
                 </Popper>
             )}
         </Box>
     );
 });
+
+export const ExpandableCellWrapper = (props: ExpandableCellWrapperProps) => {
+    const { params } = props;
+
+    const isContentInvalid = PreviewHelper.isContentInvalid(
+        params.row,
+        params.field
+    );
+    const invalidityType = isContentInvalid
+        ? params.row.invalidFieldsInfo?.find(
+              (info: InvalidFieldInfo) => info.field === params.field
+          )?.invalidityType
+        : null;
+
+    return (
+        <ExpandableCell
+            value={params.value}
+            formattedValue={params.formattedValue}
+            width={params.colDef.computedWidth}
+            isContentInvalid={isContentInvalid}
+            invalidityType={invalidityType}
+            type={params.colDef.type}
+        />
+    );
+};

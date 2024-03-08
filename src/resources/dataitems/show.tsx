@@ -38,7 +38,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
             <TabbedShowLayout.Tab label="resources.dataitem.tab.summary">
                 <Grid>
                     <Typography variant="h6" gutterBottom>
-                        {translate('resources.dataitem.title')}
+                        {translate('resources.dataitem.summary.title')}
                     </Typography>
 
                     <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

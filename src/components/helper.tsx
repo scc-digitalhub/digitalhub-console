@@ -36,7 +36,7 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { arePropsEqual } from '../common/helper';
-import { VersionsList } from './versionsList';
+import { VersionsList } from './VersionsList';
 
 export const RecordTitle = ({ prompt }: any) => {
     const record = useRecordContext();

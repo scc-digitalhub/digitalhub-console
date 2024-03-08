@@ -33,7 +33,7 @@ const messages = {
             kind: 'Tipo',
         },
         dataitem: {
-            title: 'Dettagli del data item',
+            title: 'Data item',
             name: 'Nome',
             kind: 'Tipo',
             tab: {
@@ -42,6 +42,7 @@ const messages = {
                 preview: 'Anteprima',
             },
             summary: {
+                title: 'Dettagli del data item',
                 spec: {
                     title: 'Spec',
                     key: 'Key',
@@ -49,14 +50,18 @@ const messages = {
                 },
             },
             schema: {
+                title: 'Schema',
                 name: 'Nome',
                 type: 'Tipo',
             },
             preview: {
-                unsupported: 'Non supportato',
+                title: 'Anteprima',
+                invalidValue: 'Valore invalido',
                 invalidDate: 'Data non valida',
                 invalidDatetime: 'Datetime non valido',
                 unsupportedField: 'Campo non supportato',
+                true: 'Vero',
+                false: 'Falso',
             },
         },
         common: {

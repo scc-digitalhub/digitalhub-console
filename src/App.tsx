@@ -87,6 +87,9 @@ import { ArtifactUpdate } from './resources/artifacts/update';
 import { TaskEdit } from './resources/tasks';
 import { RunShow, RunCreate, RunList } from './resources/runs';
 import { ResourceSchemaProvider } from './provider/schemaProvider';
+import { FunctionIcon } from './resources/functions/icon';
+import { DataItemIcon } from './resources/dataitems/icon';
+import { ArtifactIcon } from './resources/artifacts/icon';
 
 const CoreApp = () => {
     return (
@@ -113,10 +116,11 @@ const CoreApp = () => {
                     >
                         <Resource
                             name="functions"
-                            list={<FunctionList />}
-                            show={<FunctionShow />}
-                            edit={<FunctionEdit />}
-                            create={<FunctionCreate />}
+                            list={FunctionList}
+                            show={FunctionShow}
+                            edit={FunctionEdit}
+                            create={FunctionCreate}
+                            icon={FunctionIcon}
                         >
                             <Route
                                 path=":id/update"
@@ -125,10 +129,11 @@ const CoreApp = () => {
                         </Resource>
                         <Resource
                             name="dataitems"
-                            list={<DataItemList />}
-                            show={<DataItemShow />}
-                            edit={<DataItemEdit />}
-                            create={<DataItemCreate />}
+                            list={DataItemList}
+                            show={DataItemShow}
+                            edit={DataItemEdit}
+                            create={DataItemCreate}
+                            icon={DataItemIcon}
                         >
                             <Route
                                 path=":id/update"
@@ -137,22 +142,23 @@ const CoreApp = () => {
                         </Resource>
                         <Resource
                             name="artifacts"
-                            list={<ArtifactList />}
-                            show={<ArtifactShow />}
-                            edit={<ArtifactEdit />}
-                            create={<ArtifactCreate />}
+                            list={ArtifactList}
+                            show={ArtifactShow}
+                            edit={ArtifactEdit}
+                            create={ArtifactCreate}
+                            icon={ArtifactIcon}
                         >
                             <Route
                                 path=":id/update"
                                 element={<ArtifactUpdate />}
                             />
                         </Resource>
-                        <Resource name="tasks" edit={<TaskEdit />}></Resource>
+                        <Resource name="tasks" edit={TaskEdit}></Resource>
                         <Resource
                             name="runs"
-                            show={<RunShow />}
-                            create={<RunCreate />}
-                            list={<RunList />}
+                            show={RunShow}
+                            create={RunCreate}
+                            list={RunList}
                         ></Resource>
                         <Resource
                             name="projects"
