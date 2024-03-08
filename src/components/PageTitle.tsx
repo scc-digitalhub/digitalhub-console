@@ -25,15 +25,11 @@ export const PageTitle = (props: PageTitleProps) => {
     return (
         <Box sx={sxProps}>
             <Box sx={{ textAlign: 'left', flexGrow: 1 }}>
-                <Typography
-                    variant="h4"
-                    sx={{ pb: secondaryText ? 1 : 0 }}
-                    color={'black'}
-                >
+                <Typography variant="h4" color={'secondary.main'} sx={{ pb: secondaryText ? 1 : 0 }}>
                     {text}
                 </Typography>
                 {secondaryText && (
-                    <Typography variant="h6" color={'gray'}>
+                    <Typography variant="h6" color={'secondary.light'}>
                         {secondaryText}
                     </Typography>
                 )}
@@ -67,15 +63,9 @@ export const ListPageTitle = (props: ListPageTitleProps) => {
     const getResourceLabel = useGetResourceLabel();
 
     const label = getResourceLabel(resource, 2);
+    const secondaryText = translate('resources.' + resource + '.list');
 
-    return (
-        <PageTitle
-            text={translate('pageTitle.list.title', {
-                resource: label,
-            })}
-            {...rest}
-        />
-    );
+    return <PageTitle text={label} secondaryText={secondaryText} {...rest} />;
 };
 
 export type RecordPageTitleProps = Omit<

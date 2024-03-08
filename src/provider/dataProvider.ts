@@ -155,7 +155,7 @@ const springDataProvider = (
             if (!params.data) {
                 throw new Error('Invalid data');
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.data?.name}/${params.id}`;
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}`;
             return httpClient(url, {
                 method: 'PUT',
                 body:

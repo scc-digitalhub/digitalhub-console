@@ -1,17 +1,25 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
     EditButton,
+    ListActions,
+    ListActionsProps,
     ListBase,
     ListView,
     SelectInput,
     ShowButton,
     TextField,
     TextInput,
+    TopToolbar,
+    useListContext,
+    useResourceContext,
     useTranslate,
+    sanitizeListRestProps,
+    ExportButton,
+    CreateButton,
 } from 'react-admin';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
@@ -19,6 +27,39 @@ import { ListPageTitle } from '../../components/PageTitle';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
+
+const ListToolbar = (props: ListActionsProps) => {
+    const {
+        className,
+        filters: filtersProp,
+        hasCreate: _,
+        selectedIds = [],
+        onUnselectItems = () => null,
+        ...rest
+    } = props;
+
+    const {
+        sort,
+        displayedFilters,
+        filterValues,
+        exporter,
+        showFilter,
+        total,
+    } = useListContext({ ...props, selectedIds, onUnselectItems });
+    const resource = useResourceContext(props);
+
+    return (
+        <TopToolbar {...sanitizeListRestProps(rest)}>
+            <CreateButton variant="contained" />
+            <ExportButton
+                disabled={total === 0}
+                resource={resource}
+                sort={sort}
+                filterValues={filterValues}
+            />
+        </TopToolbar>
+    );
+};
 
 export const FunctionList = () => {
     const translate = useTranslate();
@@ -42,13 +83,9 @@ export const FunctionList = () => {
 
     const postFilters = kinds
         ? [
-              <TextInput
-                  label={translate('search.name')}
-                  source="name"
-                  alwaysOn
-                  key={1}
-              />,
+              <TextInput label="fields.name" source="name" alwaysOn key={1} />,
               <SelectInput
+                  label="fields.kind"
                   alwaysOn
                   key={2}
                   source="kind"
@@ -62,7 +99,11 @@ export const FunctionList = () => {
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<FunctionIcon fontSize={'large'} />} />
-                    <ListView filters={postFilters}>
+                    <ListView
+                        filters={postFilters}
+                        actions={<ListToolbar />}
+                        component={Box}
+                    >
                         <Datagrid
                             rowClick="show"
                             expand={VersionsList}

@@ -1,5 +1,25 @@
 import englishMessages from 'ra-language-english';
 
+const fields = {
+    id: 'Id',
+    name: 'Name',
+    kind: 'Kind',
+    key: 'Key',
+    project: 'Project',
+    metadata: {
+        created: 'Date of creation',
+        updated: 'Date of update',
+        name: 'Name',
+        description: 'Description',
+        project: 'Project',
+        version: 'Version',
+        labels: 'Labels',
+    },
+    status: {
+        state: 'Status',
+    },
+};
+
 const messages = {
     ...englishMessages,
     login: {
@@ -10,30 +30,30 @@ const messages = {
     menu: {
         projects: 'Projects',
     },
+    fields: fields,
     resources: {
-        function: {
-            title: 'Funtion Details',
-            name: 'Name',
-            kind: 'Kind',
+        functions: {
+            name: 'Function |||| Functions',
+            list: 'List and search functions',
+            fields: { ...fields },
             tab: {
-                summary: 'Summary',
+                summary: 'Recap',
                 test: 'test',
             },
         },
-        run: {
-            title: 'Run',
-            create: 'Create',
-            total: 'Total',
+        runs: {
+            name: 'Run |||| Runs',
+            fields: {
+                ...fields,
+            },
         },
-        artifact: {
-            title: 'Artifact Details',
-            name: 'Name',
-            kind: 'Kind',
+        artifacts: {
+            name: 'Artifact |||| Artifacts',
+            fields: { ...fields },
         },
-        dataitem: {
-            title: 'Data item',
-            name: 'Name',
-            kind: 'Kind',
+        dataitems: {
+            name: 'Data item |||| Data items',
+            fields: { ...fields },
             tab: {
                 summary: 'Summary',
                 schema: 'Schema',

@@ -11,13 +11,17 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Stack, Typography } from '@mui/material';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { MetadataSchema } from '../../common/types';
+import {
+    MetadataSchema,
+    MetadataViewUiSchema,
+    createMetadataViewUiSchema,
+} from '../../common/types';
 import { getArtifactSpec, getArtifactUiSpec } from './types';
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
-import { ShowOutlinedCard } from '../../components/OutlinedCard';
+import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { BackButton } from '@dslab/ra-back-button';
@@ -41,7 +45,7 @@ const ShowToolbar = () => (
     </TopToolbar>
 );
 
-export const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
+const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
     const translate = useTranslate();
@@ -54,19 +58,29 @@ export const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             <Typography variant="h6" gutterBottom>
                 {translate('resources.artifact.title')}
             </Typography>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6}>
-                    <Labeled label="My Label">
-                        <TextField source="name" />
-                    </Labeled>
-                </Grid>
-                <Grid item xs={6}>
-                    <Labeled label="My Label">
-                        <TextField source="kind" />
-                    </Labeled>
-                </Grid>
-            </Grid>
-            <JsonSchemaField source="metadata" schema={MetadataSchema} />
+            <Labeled>
+                <TextField source="name" />
+            </Labeled>
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <TextField source="kind" />
+                </Labeled>
+
+                <Labeled>
+                    <TextField source="id" />
+                </Labeled>
+            </Stack>
+
+            <Labeled>
+                <TextField source="key" />
+            </Labeled>
+
+            <JsonSchemaField
+                source="metadata"
+                schema={MetadataSchema}
+                uiSchema={createMetadataViewUiSchema(record.metadata)}
+            />
+
             <JsonSchemaField
                 source="spec"
                 schema={getArtifactSpec(kind)}
@@ -105,7 +119,7 @@ export const ArtifactShow = () => {
                                 gap: 2,
                             },
                         }}
-                        component={ShowOutlinedCard}
+                        component={FlatCard}
                         aside={<Aside />}
                     >
                         <ShowComponent />

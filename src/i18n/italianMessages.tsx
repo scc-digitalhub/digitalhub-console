@@ -1,6 +1,21 @@
 import italianMessages from '@dslab/ra-language-italian';
 import { importLibraryItalianMessages } from './importLibraryItalianMessages';
 
+const fields = {
+    id: 'Id',
+    name: 'Nome',
+    kind: 'Tipo',
+    key: 'Chiave',
+    project: 'Progetto',
+    metadata: {
+        created: 'Data di creazione',
+        updated: 'Data di aggiornamento',
+    },
+    status: {
+        state: 'Stato',
+    },
+};
+
 const messages = {
     ...italianMessages,
     ...importLibraryItalianMessages,
@@ -12,30 +27,29 @@ const messages = {
     menu: {
         projects: 'Progetti',
     },
+    fields: fields,
     resources: {
-        function: {
-            title: 'Dettagli della funzione',
-            name: 'Nome',
-            kind: 'Tipo',
+        functions: {
+            name: 'Funzione |||| Funzioni',
+            fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
                 test: 'test',
             },
         },
-        run: {
-            title: 'Esecuzione',
-            create: 'Crea',
-            total: 'Total',
+        runs: {
+            name: 'Esecuzione |||| Esecuzioni',
+            fields: {
+                ...fields,
+            },
         },
-        artifact: {
-            title: "Dettagli dell'artefatto",
-            name: 'Nome',
-            kind: 'Tipo',
+        artifacts: {
+            name: 'Artefatto |||| Artefatti',
+            fields: { ...fields },
         },
-        dataitem: {
-            title: 'Data item',
-            name: 'Nome',
-            kind: 'Tipo',
+        dataitems: {
+            name: 'Dato |||| Dati',
+            fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
                 schema: 'Schema',

@@ -20,7 +20,7 @@ import {
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
-import { ShowOutlinedCard } from '../../components/OutlinedCard';
+import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { TaskAndRun } from './TaskAndRun';
@@ -179,7 +179,7 @@ export const FunctionShow = () => {
                                 gap: 2,
                             },
                         }}
-                        component={ShowOutlinedCard}
+                        component={FlatCard}
                         aside={<Aside />}
                     >
                         <ShowComponent />

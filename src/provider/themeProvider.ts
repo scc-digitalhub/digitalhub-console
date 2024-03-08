@@ -32,6 +32,15 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
+    RaLayout: {
+        styleOverrides: {
+            root: {
+                '& .RaLayout-content': {
+                    backgroundColor: theme.palette?.background?.default,
+                },
+            },
+        },
+    },
     RaMenuItemLink: {
         styleOverrides: {
             root: {
@@ -62,17 +71,46 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
+    MuiTableRow: {
+        styleOverrides: {
+            root: {
+                '&:last-child td': { border: 0 },
+            },
+        },
+    },
+    MuiTableCell: {
+        styleOverrides: {
+            root: {
+                padding: theme.spacing(2),
+                '&.MuiTableCell-sizeSmall': {
+                    padding: theme.spacing(1.5),
+                },
+                '&.MuiTableCell-paddingNone': {
+                    padding: theme.spacing(0.5),
+                },
+            },
+        },
+    },
+    RaDataGrid: {
+        styleOverrides: {
+            header: {
+                '& .RaDatagrid-headerCell': {
+                    backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
+                },
+            },
+        },
+    },
 });
 
 const palette: PaletteOptions = {
     mode: 'light' as 'light',
-    primary: { main: '#db6a13' },
-    secondary: { main: '#1384db' },
-    background: { default: '#fafafa', paper: '#fff' },
-    error: { main: '#b57185' },
-    warning: { main: '#f2cb05' },
-    info: { main: '#39aea9' },
-    success: { main: '#00745f' },
+    primary: {
+        main: '#E0701B',
+        dark: '#9c3b15',
+        light: '#ec934f',
+    },
+    secondary: { main: '#062D4B' },
+    background: { default: '#FFF' },
 };
 
 // const createApplicationTheme = (palette: RaThemeOptions['palette']) => {

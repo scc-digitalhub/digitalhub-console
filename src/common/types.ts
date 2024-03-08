@@ -32,3 +32,35 @@ export const MetadataSchema = {
         },
     },
 };
+
+export const MetadataEditUiSchema = {
+    project: {
+        'ui:widget': 'hidden',
+    },
+    description: {
+        'ui:widget': 'textarea',
+    },
+};
+export const MetadataViewUiSchema = {
+    project: {
+        'ui:widget': 'hidden',
+    },
+    description: {
+        'ui:widget': 'text',
+    },
+    labels: {
+
+    },
+};
+
+export const createMetadataViewUiSchema = (metadata: any) => {
+    const schema = Object.assign({}, MetadataViewUiSchema);
+    for (const f in schema) {
+        //replace missing values with hidden field
+        if (!(f in metadata)) {
+            schema[f]['ui:widget'] = 'hidden';
+        }
+    }
+
+    return schema;
+};
