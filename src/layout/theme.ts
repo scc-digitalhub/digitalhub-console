@@ -4,14 +4,6 @@ import { alpha } from '@mui/material';
 
 const componentsOverrides = (theme: Theme) => ({
     ...defaultTheme.components,
-    // MuiButton: {
-    //     styleOverrides: {
-    //         root: {
-    //             //color: theme.palette.text.primary,
-    //         },
-    //     },
-    // },
-
     RaMenu: {
         styleOverrides: {
             root: {

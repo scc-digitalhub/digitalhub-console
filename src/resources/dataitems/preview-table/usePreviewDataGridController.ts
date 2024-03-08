@@ -22,7 +22,7 @@ export const useDataGridController = (
         setIsSettingUpData(true);
 
         const schema = record?.spec?.schema || [];
-        const preview = record?.status?.preview || [];
+        const preview = record?.status?.preview?.cols || [];
 
         // columns
         const columns = schema.map((obj: any) => {
