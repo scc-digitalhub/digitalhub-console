@@ -1,12 +1,14 @@
-// import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
+    Button,
     Edit,
     FormDataConsumer,
     Labeled,
     LoadingIndicator,
+    SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
+    Toolbar,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
@@ -18,13 +20,16 @@ import {
     getFunctionUiSpec,
 } from './types';
 import { MetadataSchema } from '../../common/types';
-import { PostEditToolbar, RecordTitle } from '../../components/helper';
 import { alphaNumericName } from '../../common/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
+import ClearIcon from '@mui/icons-material/Clear';
+import { useNavigate } from 'react-router';
+import { NewVersionButton } from '../../components/NewVersionButton';
+import { RecordTitle } from '../../components/RecordTitle';
 
 const validator = data => {
     const errors: any = {};
@@ -45,6 +50,27 @@ export const FunctionEdit = props => {
         <Edit title={<RecordTitle prompt={translate('functionsString')} />}>
             <FunctionEditForm {...props} />
         </Edit>
+    );
+};
+
+export const FunctionEditToolbar = () => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(-1);
+    };
+    return (
+        <Toolbar>
+            <SaveButton />
+            <Button
+                color="info"
+                label={translate('buttons.cancel')}
+                onClick={handleClick}
+            >
+                <ClearIcon />
+            </Button>
+            <NewVersionButton />
+        </Toolbar>
     );
 };
 
@@ -85,7 +111,7 @@ const FunctionEditForm = () => {
         return BlankSchema;
     };
     return (
-        <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
+        <SimpleForm toolbar={<FunctionEditToolbar />} validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <Labeled label={translate('resources.function.name')}>

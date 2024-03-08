@@ -13,12 +13,12 @@ import {
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/types';
-import { RecordTitle } from '../../components/helper';
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
+import { RecordTitle } from '../../components/RecordTitle';
 
 const kinds = Object.values(DataItemTypes).map(v => {
     return {

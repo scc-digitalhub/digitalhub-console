@@ -2,23 +2,29 @@
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { Card, CardContent, Container, Grid } from '@mui/material';
 import {
+    Button,
     Edit,
     EditBase,
     FormDataConsumer,
     LoadingIndicator,
+    SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
+    Toolbar,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
 import { MetadataSchema } from '../../common/types';
-import { PostEditToolbar, RecordTitle } from '../../components/helper';
 import { BlankSchema, DataItemTypes } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getFunctionSpec } from '../functions/types';
+import { useNavigate } from 'react-router';
+import ClearIcon from '@mui/icons-material/Clear';
+import { RecordTitle } from '../../components/RecordTitle';
+import { NewVersionButton } from '../../components/NewVersionButton';
 
 const validator = data => {
     const errors: any = {};
@@ -38,6 +44,27 @@ export const DataItemEdit = props => {
         <Edit title={<RecordTitle prompt={translate('dataItemsString')} />}>
             <DataItemEditForm {...props} />
         </Edit>
+    );
+};
+
+export const DataItemEditToolbar = () => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(-1);
+    };
+    return (
+        <Toolbar>
+            <SaveButton />
+            <Button
+                color="info"
+                label={translate('buttons.cancel')}
+                onClick={handleClick}
+            >
+                <ClearIcon />
+            </Button>
+            <NewVersionButton />
+        </Toolbar>
     );
 };
 
@@ -78,7 +105,7 @@ const DataItemEditForm = () => {
         return BlankSchema;
     };
     return (
-        <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
+        <SimpleForm toolbar={<DataItemEditToolbar />} validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <TextInput

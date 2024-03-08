@@ -1,10 +1,13 @@
 import {
+    DeleteWithConfirmButton,
+    EditButton,
     Labeled,
     Show,
     ShowBase,
     ShowView,
     SimpleShowLayout,
     TextField,
+    TopToolbar,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
@@ -12,22 +15,31 @@ import { Container, Grid, Typography } from '@mui/material';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { MetadataSchema } from '../../common/types';
 import { getArtifactSpec, getArtifactUiSpec } from './types';
-import {
-    Aside,
-    //Aside
-    PostShowActions,
-} from '../../components/helper';
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
 import { ShowOutlinedCard } from '../../components/OutlinedCard';
-import { ShowPageTitle } from '../../components/pageTitle';
+import { ShowPageTitle } from '../../components/PageTitle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { VersionsListWrapper } from '../../components/VersionsList';
 
 const ShowComponent = () => {
     const record = useRecordContext();
 
     return <ArtifactShowLayout record={record} />;
 };
+
+const ShowToolbar = () => (
+    <TopToolbar>
+        <BackButton />
+        <EditButton style={{ marginLeft: 'auto' }} />
+        <InspectButton />
+        <ExportRecordButton language="yaml" />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
 
 export const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
@@ -66,6 +78,11 @@ export const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 },
 arePropsEqual);
 
+const Aside = () => {
+    const record = useRecordContext();
+    return <VersionsListWrapper record={record} />;
+};
+
 export const ArtifactShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -75,7 +92,7 @@ export const ArtifactShow = () => {
                         icon={<VisibilityIcon fontSize={'large'} />}
                     />
                     <ShowView
-                        actions={<PostShowActions />}
+                        actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
                             '& .RaShow-main': {

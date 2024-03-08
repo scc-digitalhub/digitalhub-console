@@ -14,8 +14,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
-import { ListPageTitle } from '../../components/pageTitle';
+import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { ListPageTitle } from '../../components/PageTitle';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';

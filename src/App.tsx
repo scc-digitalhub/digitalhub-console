@@ -9,7 +9,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './i18n/i18nProvider';
 import appDataProvider from './provider/dataProvider';
 import { MyLayout } from './layout/MyLayout';
-import { theme } from './layout/theme';
+import { themeProvider } from './provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
 import { OidcAuthProvider, BasicAuthProvider } from './provider/authProvider';
 import {
@@ -80,6 +80,8 @@ const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
 const dataProvider = appDataProvider(API_URL, httpClient);
 const MyLoginPage =
     authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
+
+const theme = themeProvider();
 
 import { FunctionUpdate } from './resources/functions/update';
 import { DataItemUpdate } from './resources/dataitems/update';

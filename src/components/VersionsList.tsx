@@ -20,9 +20,10 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import { arePropsEqual } from '../common/helper';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 export type VersionListProps = {
     showActions?: boolean;
@@ -91,3 +92,32 @@ export const VersionsList = (props: VersionListProps) => {
         </Box>
     );
 };
+
+export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
+    record: any;
+}) {
+    const { record } = props;
+    const translate = useTranslate();
+
+    return (
+        <Card
+            sx={{
+                height: 'fit-content',
+                borderRadius: '10px',
+                order: { xs: 1, lg: 2 },
+            }}
+            variant="outlined"
+        >
+            <CardHeader title={translate('resources.common.version.title')} />
+
+            <CardContent
+                sx={{
+                    paddingTop: 0,
+                }}
+            >
+                <VersionsList record={record} />
+            </CardContent>
+        </Card>
+    );
+},
+arePropsEqual);

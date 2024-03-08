@@ -1,12 +1,16 @@
 import {
+    DeleteWithConfirmButton,
     Labeled,
     Show,
     SimpleShowLayout,
     TextField,
+    TopToolbar,
     useTranslate,
 } from 'react-admin';
 import { Grid, Typography } from '@mui/material';
-import { PostShowActions } from '../../components/helper';
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -28,10 +32,20 @@ export const RunShowLayout = () => {
         </Grid>
     );
 };
+
+const ShowToolbar = () => (
+    <TopToolbar>
+        <BackButton />
+        <InspectButton />
+        <ExportRecordButton language="yaml" />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
+
 export const RunShow = () => {
     return (
         <Show
-            actions={<PostShowActions />}
+            actions={<ShowToolbar />}
             sx={{ '& .RaShow-card': { width: '50%' } }}
         >
             <RunShowLayout />

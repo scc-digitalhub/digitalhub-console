@@ -13,11 +13,11 @@ import {
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/types';
-import { RecordTitle } from '../../components/helper';
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
+import { RecordTitle } from '../../components/RecordTitle';
 
 const kinds = Object.values(FunctionTypes).map(v => {
     return {

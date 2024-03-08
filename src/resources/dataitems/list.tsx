@@ -11,8 +11,8 @@ import {
     TextInput,
     useTranslate,
 } from 'react-admin';
-import { DeleteWithConfirmButtonShowingName } from '../../components/helper';
-import { ListPageTitle } from '../../components/pageTitle';
+import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { ListPageTitle } from '../../components/PageTitle';
 import { VersionsList } from '../../components/VersionsList';
 import { DataItemIcon } from './icon';
 import { DataItemTypes } from './types';

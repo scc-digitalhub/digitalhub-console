@@ -59,4 +59,8 @@ const createApplicationTheme = (palette: RaThemeOptions['palette']) => {
     return theme;
 };
 
-export const theme = createApplicationTheme(palette);
+export const themeProvider = () => {
+    return createApplicationTheme(palette);
+};
+
+export default themeProvider;

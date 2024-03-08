@@ -3,22 +3,28 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Container, Grid, Typography } from '@mui/material';
 import { memo } from 'react';
 import {
+    DeleteWithConfirmButton,
+    EditButton,
     Labeled,
     ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
+    TopToolbar,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import { MetadataSchema } from '../../common/types';
 import { ShowOutlinedCard } from '../../components/OutlinedCard';
-import { Aside, PostShowActions } from '../../components/helper';
-import { ShowPageTitle } from '../../components/pageTitle';
+import { VersionsListWrapper } from '../../components/VersionsList';
+import { ShowPageTitle } from '../../components/PageTitle';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -78,6 +84,21 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 },
 arePropsEqual);
 
+const Aside = () => {
+    const record = useRecordContext();
+    return <VersionsListWrapper record={record} />;
+};
+
+const ShowToolbar = () => (
+    <TopToolbar>
+        <BackButton />
+        <EditButton style={{ marginLeft: 'auto' }} />
+        <InspectButton />
+        <ExportRecordButton language="yaml" />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
+
 export const DataItemShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -87,7 +108,7 @@ export const DataItemShow = () => {
                         icon={<VisibilityIcon fontSize={'large'} />}
                     />
                     <ShowView
-                        actions={<PostShowActions />}
+                        actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
                             '& .RaShow-main': {

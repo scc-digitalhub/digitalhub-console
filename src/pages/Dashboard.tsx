@@ -21,7 +21,7 @@ import {
     ListItem,
 } from '@mui/material';
 
-import { PageTitle } from '../components/pageTitle';
+import { PageTitle } from '../components/PageTitle';
 import LaunchIcon from '@mui/icons-material/Launch';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import TableChartIcon from '@mui/icons-material/TableChart';

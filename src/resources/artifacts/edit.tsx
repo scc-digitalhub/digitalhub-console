@@ -1,24 +1,34 @@
-// import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
+    Button,
     Edit,
     FormDataConsumer,
     Labeled,
     LoadingIndicator,
+    SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
+    Toolbar,
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { MetadataSchema } from '../../common/types';
-import { ArtifactTypes, getArtifactSpec, getArtifactUiSpec } from './types';
-import { PostEditToolbar, RecordTitle } from '../../components/helper';
+import {
+    ArtifactTypes,
+    BlankSchema,
+    getArtifactSpec,
+    getArtifactUiSpec,
+} from './types';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { alphaNumericName } from '../../common/helper';
 import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useNavigate } from 'react-router';
+import ClearIcon from '@mui/icons-material/Clear';
+import { NewVersionButton } from '../../components/NewVersionButton';
+import { RecordTitle } from '../../components/RecordTitle';
 
 const validator = data => {
     const errors: any = {};
@@ -39,6 +49,27 @@ export const ArtifactEdit = props => {
         <Edit title={<RecordTitle prompt={translate('ArtifactString')} />}>
             <ArtifactEditForm {...props} />
         </Edit>
+    );
+};
+
+export const ArtifactEditToolbar = () => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(-1);
+    };
+    return (
+        <Toolbar>
+            <SaveButton />
+            <Button
+                color="info"
+                label={translate('buttons.cancel')}
+                onClick={handleClick}
+            >
+                <ClearIcon />
+            </Button>
+            <NewVersionButton />
+        </Toolbar>
     );
 };
 
@@ -79,7 +110,7 @@ const ArtifactEditForm = () => {
         return BlankSchema;
     };
     return (
-        <SimpleForm toolbar={<PostEditToolbar />} validate={validator}>
+        <SimpleForm toolbar={<ArtifactEditToolbar />} validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <Labeled label={translate('resources.function.name')}>
