@@ -37,6 +37,7 @@ const messages = {
                 test: 'test',
             },
         },
+        secret: { title: 'Segreti', showData: 'Mostra i dati' },
         runs: {
             name: 'Esecuzione |||| Esecuzioni',
             fields: {

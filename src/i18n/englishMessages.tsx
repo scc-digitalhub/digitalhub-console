@@ -43,6 +43,7 @@ const messages = {
                 test: 'test',
             },
         },
+        secret: { title: 'Secrets', showData: 'Show data' },
         runs: {
             name: 'Run |||| Runs',
             fields: {
