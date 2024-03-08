@@ -58,7 +58,7 @@ export const DataItemCreate = () => {
             });
         }
     }, [schemaProvider, setKinds]);
-        if (!kinds) {
+    if (!kinds) {
         return <LoadingIndicator />;
     }
     const getDataItemSpec = (kind: string | undefined) => {

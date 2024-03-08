@@ -67,9 +67,11 @@ export const VersionsList = (props: VersionListProps) => {
                         <ListItem
                             disablePadding
                             key={resource + ':versions:' + item.id}
-                            sx={{ "&:hover": {
-                                backgroundColor: "rgba(0, 0, 0, 0.04)"
-                            }}}
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                },
+                            }}
                         >
                             <Link to={path}>
                                 <ListItemText

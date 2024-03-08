@@ -13,7 +13,9 @@ export const PreviewHeaderCell = (props: {
     return (
         <Box
             display="grid"
-            gridTemplateRows={isUnsupportedColumn ? '16px 16px 32px' : '16px 16px'}
+            gridTemplateRows={
+                isUnsupportedColumn ? '16px 16px 32px' : '16px 16px'
+            }
             lineHeight="16px"
             gap="6px"
             width="100%"

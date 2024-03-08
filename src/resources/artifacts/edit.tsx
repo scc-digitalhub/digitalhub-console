@@ -20,7 +20,6 @@ import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 
-
 const validator = data => {
     const errors: any = {};
 
@@ -56,7 +55,7 @@ const ArtifactEditForm = () => {
 
                     const values = res.map(s => ({
                         id: s.kind,
-                        name: s.kind
+                        name: s.kind,
                     }));
                     setKinds(values);
                 }

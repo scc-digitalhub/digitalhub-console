@@ -54,7 +54,7 @@ const DataItemEditForm = () => {
 
                     const values = res.map(s => ({
                         id: s.kind,
-                        name: s.kind
+                        name: s.kind,
                     }));
                     setKinds(values);
                 }

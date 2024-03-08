@@ -21,7 +21,6 @@ import { ArtifactTypes } from './types';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
 
-
 export const ArtifactList = () => {
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
@@ -43,23 +42,23 @@ export const ArtifactList = () => {
     }, [schemaProvider, setKinds]);
 
     const postFilters = kinds
-    ? [
-          <TextInput
-              label={translate('search.name')}
-              source="name"
-              alwaysOn
-              key={1}
-          />,
-          <SelectInput
-              alwaysOn
-              key={2}
-              source="kind"
-              choices={kinds}
-              sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-          />,
-      ]
-    : [];
-return (
+        ? [
+              <TextInput
+                  label={translate('search.name')}
+                  source="name"
+                  alwaysOn
+                  key={1}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={2}
+                  source="kind"
+                  choices={kinds}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+          ]
+        : [];
+    return (
         <Container maxWidth={false}>
             <ListBase exporter={yamlExporter}>
                 <>

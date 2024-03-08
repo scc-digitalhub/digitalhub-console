@@ -11,7 +11,12 @@ import {
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { BlankSchema, FunctionTypes, getFunctionSpec, getFunctionUiSpec } from './types';
+import {
+    BlankSchema,
+    FunctionTypes,
+    getFunctionSpec,
+    getFunctionUiSpec,
+} from './types';
 import { MetadataSchema } from '../../common/types';
 import { PostEditToolbar, RecordTitle } from '../../components/helper';
 import { alphaNumericName } from '../../common/helper';
@@ -20,7 +25,6 @@ import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
-
 
 const validator = data => {
     const errors: any = {};
@@ -36,7 +40,7 @@ const validator = data => {
 
 export const FunctionEdit = props => {
     const translate = useTranslate();
-    
+
     return (
         <Edit title={<RecordTitle prompt={translate('functionsString')} />}>
             <FunctionEditForm {...props} />
@@ -57,7 +61,7 @@ const FunctionEditForm = () => {
 
                     const values = res.map(s => ({
                         id: s.kind,
-                        name: s.kind
+                        name: s.kind,
                     }));
                     setKinds(values);
                 }
