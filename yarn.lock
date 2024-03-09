@@ -241,6 +241,13 @@
   dependencies:
     ra-core "^4.11.0"
 
+"@dslab/ra-dialog-crud@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-1.0.0.tgz#a2a08ad00bf641495a2fca133bd4c0c7e2b409a0"
+  integrity sha512-Lj5PLrxP/aMbSP1kkM+CmxjrDtab5Z3d8/yuvvLv9RwIzSpwv8jlZ0te/wNCM7wJlvfaDXawy4rSHkkrVUXo2A==
+  dependencies:
+    ra-core "^4.11.0"
+
 "@dslab/ra-export-record-button@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@dslab/ra-export-record-button/-/ra-export-record-button-1.0.0.tgz#395c5dace51626a2cd98fa713c05cc2b9b2fb77e"

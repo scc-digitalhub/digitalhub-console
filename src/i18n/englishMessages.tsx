@@ -84,6 +84,13 @@ const messages = {
                 false: 'False',
             },
         },
+        tasks: {
+            name: 'Task |||| Tasks',
+            fields: { ...fields },
+            kinds: {
+                'dbt+transform': 'Transform',
+            },
+        },
         common: {
             emptySpec: 'Select the Kind for spec modification',
             version: {

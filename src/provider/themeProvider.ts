@@ -145,6 +145,8 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
+    MuiTab: {},
+    MuiTabs: {},
 });
 
 const palette: PaletteOptions & { paper: string } = {

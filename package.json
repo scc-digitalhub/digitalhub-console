@@ -32,6 +32,7 @@
         "@dslab/ra-auth-oidc": "^1.0.1",
         "@dslab/ra-back-button": "^1.0.0",
         "@dslab/ra-delete-dialog-button": "^1.0.0",
+        "@dslab/ra-dialog-crud": "^1.0.0",
         "@dslab/ra-export-record-button": "^1.0.0",
         "@dslab/ra-export-yaml": "^1.0.0",
         "@dslab/ra-inspect-button": "^1.0.0",

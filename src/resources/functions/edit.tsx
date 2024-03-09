@@ -1,42 +1,32 @@
 import {
     Button,
-    Edit,
     EditBase,
     EditView,
-    FormDataConsumer,
-    Labeled,
     LoadingIndicator,
     SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
     Toolbar,
-    useCreatePath,
     useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import {
-    BlankSchema,
-    FunctionTypes,
-    getFunctionSpec,
-    getFunctionUiSpec,
-} from './types';
+import { BlankSchema, getFunctionUiSpec } from './types';
 import { MetadataSchema } from '../../common/types';
-import { alphaNumericName, arePropsEqual } from '../../common/helper';
+import { alphaNumericName } from '../../common/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Box, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, Container, Stack, Typography } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router';
-import { NewVersionButton } from '../../components/NewVersionButton';
-import { RecordTitle } from '../../components/RecordTitle';
 import { EditPageTitle } from '../../components/PageTitle';
 import { FunctionIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import { useForm, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 import deepEqual from 'deep-is';
 
 const validator = data => {
@@ -78,9 +68,20 @@ const SpecInput = (props: {
 }) => {
     const { source, onDirty } = props;
     const translate = useTranslate();
+    const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
     const eq = deepEqual(record[source], value);
+
+    const schemaProvider = useSchemaProvider();
+    const [spec, setSpec] = useState<any>();
+    const kind = record?.kind || null;
+
+    useEffect(() => {
+        if (schemaProvider && record) {
+            schemaProvider.get(resource, kind).then(s => setSpec(s));
+        }
+    }, [record, schemaProvider]);
 
     useEffect(() => {
         if (onDirty) {
@@ -88,7 +89,7 @@ const SpecInput = (props: {
         }
     }, [eq]);
 
-    if (!record || !record.kind || !(source in record)) {
+    if (!record || !record.kind || !spec) {
         return (
             <Card
                 sx={{
@@ -106,7 +107,7 @@ const SpecInput = (props: {
     return (
         <JsonSchemaInput
             source={source}
-            schema={getFunctionSpec(record.kind)}
+            schema={spec.schema}
             uiSchema={getFunctionUiSpec(record.kind)}
         />
     );

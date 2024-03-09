@@ -25,7 +25,9 @@ function mapType(resource) {
     if (resource === 'dataitems') {
         return 'DATAITEM';
     }
-
+    if (resource === 'tasks') {
+        return 'TASK';
+    }
     return null;
 }
 
@@ -34,11 +36,11 @@ const schemaProvider = (
     prefix: string
 ): SchemaProvider => {
     return {
-        list: resource => {
+        list: (resource, runtime) => {
             const params = {
                 pagination: { page: 0, perPage: 100 },
                 sort: { field: 'id', order: 'ASC' } as SortPayload,
-                filter: null,
+                filter: runtime ? { runtime: runtime } : null,
             };
             const type = mapType(resource);
             if (!type) {
@@ -61,7 +63,10 @@ const schemaProvider = (
 };
 
 export type SchemaProvider<ResourceType extends string = string> = {
-    list: (resource: ResourceType) => Promise<GetListResult<any>>;
+    list: (
+        resource: ResourceType,
+        runtime?: string
+    ) => Promise<GetListResult<any>>;
 
     get: (resource: ResourceType, kind: string) => Promise<GetOneResult<any>>;
 };
@@ -70,7 +75,7 @@ interface SchemaProviderContextValue {
     provider: SchemaProvider | undefined;
     schemas: any | null;
     kinds: (resource: string) => Promise<string[] | null>;
-    list: (resource: string) => Promise<any[] | null>;
+    list: (resource: string, runtime?: string) => Promise<any[] | null>;
     get: (resource: string, kind: string) => Promise<any>;
 }
 
@@ -101,35 +106,40 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
         //TODO cleanup
         let _cache = { ...cache };
 
-        const list = async (resource: string): Promise<any[] | null> => {
+        const list = async (
+            resource: string,
+            runtime?: string
+        ): Promise<any[] | null> => {
+            const k = runtime ? resource + '.' + runtime : resource;
+
             if (!(resource in definitions)) {
                 return null;
             }
 
-            if (!(resource in _cache)) {
-                const res = await finalProvider.list(resource);
+            if (!(k in _cache)) {
+                const res = await finalProvider.list(resource, runtime);
                 if (res.data) {
-                    _cache[resource] = res;
+                    _cache[k] = res.data;
                     setCache(_cache);
                 }
             }
 
-            return _cache[resource].data as any[];
+            return _cache[k] as any[];
         };
 
         const get = async (
             resource: string,
-            id: string
+            kind: string
         ): Promise<any | null> => {
             if (!(resource in definitions)) {
                 return null;
             }
 
             if (!(resource in _cache)) {
-                _cache = await list(resource);
+                _cache[resource] = await list(resource);
             }
-
-            return _cache[resource].data.find(r => r.id === id);
+            console.log('from cache', _cache);
+            return _cache[resource].find(r => r.kind === kind);
         };
 
         const kinds = async (resource: string): Promise<string[] | null> => {

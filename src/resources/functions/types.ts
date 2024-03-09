@@ -11,24 +11,6 @@ export const getTaskByFunction = kind => {
     return TaskMap[kind];
 };
 
-export const FunctionDbtSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
-    type: 'object',
-    title: 'DBT',
-    required: ['source'],
-    properties: {
-        source: {
-            type: 'string',
-        },
-    },
-};
-
-export const FunctionDbtUiSchema = {
-    source: {
-        'ui:widget': 'textarea',
-    },
-};
-
 export const BlankSchema = {
     $schema: 'http://json-schema.org/draft-07/schema',
     type: 'object',
@@ -40,20 +22,12 @@ export const getFunctionSpec = (kind: string | undefined) => {
         return BlankSchema;
     }
 
-    if (kind === 'dbt') {
-        return FunctionDbtSchema;
-    }
-
     return BlankSchema;
 };
 
 export const getFunctionUiSpec = (kind: string | undefined) => {
     if (!kind) {
         return undefined;
-    }
-
-    if (kind === 'dbt') {
-        return FunctionDbtUiSchema;
     }
 
     return undefined;
