@@ -38,7 +38,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Funzione |||| Funzioni',
-            list: "Lista e ricerca funzioni",
+            list: 'Lista delle funzioni con filtri di ricerca',
             fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
@@ -53,10 +53,12 @@ const messages = {
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',
+            list: 'Lista degli artefatti con filtri di ricerca',
             fields: { ...fields },
         },
         dataitems: {
             name: 'Dato |||| Dati',
+            list: 'Lista dei dati con filtri di ricerca',
             fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
@@ -91,6 +93,13 @@ const messages = {
             fields: { ...fields },
             kinds: {
                 'dbt+transform': 'Transform',
+                'nefertem+infer': 'Infer',
+                'nefertem+metric': 'Metric',
+                'nefertem+profile': 'Profile',
+                'nefertem+validate': 'Validate',
+                'container+deploy': 'Deploy',
+                'container+job': 'Job',
+                'container+serve': 'Serve',
             },
         },
         common: {
