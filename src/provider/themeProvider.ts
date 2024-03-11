@@ -43,11 +43,8 @@ const componentsOverrides = (theme: Theme) => ({
     RaAppBar: {
         styleOverrides: {
             root: {
-                color: theme.palette.text.primary,
-                '& .RaAppBar-toolbar': {
-                    // backgroundColor:theme.palette.background.default,
-                    color: theme.palette.background.default,
-                },
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.contrastText,
             },
         },
     },
