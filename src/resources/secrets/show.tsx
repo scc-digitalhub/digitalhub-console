@@ -110,7 +110,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
 
                 .catch(error => {
                     setError(error);
-                    notify(`Comment approval error: ${error.message}`, {
+                    notify(`Error getting secret: ${error.message}`, {
                         type: 'error',
                     });
                     setValue('');

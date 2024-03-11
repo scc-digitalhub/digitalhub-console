@@ -1,27 +1,20 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     Create,
-    FormDataConsumer,
     Labeled,
-    LoadingIndicator,
-    SelectInput,
     SimpleForm,
     TextInput,
     useDataProvider,
+    useNotify,
     useTranslate,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { Grid } from '@mui/material';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
 
 export const SecretCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
+    const notify = useNotify();
     const dataProvider = useDataProvider();
     const validator = data => {
         const errors: any = {};
@@ -46,7 +39,12 @@ export const SecretCreate = () => {
             configurable: true,
             enumerable: true,
         });
-        dataProvider.createSecret( obj);
+        dataProvider.createSecret( obj)
+        .catch(error => {
+            notify(`Error creating secret: ${error.message}`, {
+                type: 'error',
+            });
+        });
     };
     return (
         <Create
