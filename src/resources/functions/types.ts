@@ -5,13 +5,6 @@ export enum FunctionTypes {
     NEFERTEM = 'nefertem',
     JOB = 'job',
 }
-export const TaskMap = {
-    dbt: ['transform'],
-    nefertem: ['profile', 'validate', 'metric', 'infer'],
-};
-export const getTaskByFunction = kind => {
-    return TaskMap[kind];
-};
 
 export const getFunctionSpec = (kind: string | undefined) => {
     if (!kind) {
