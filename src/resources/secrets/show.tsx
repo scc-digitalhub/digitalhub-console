@@ -14,6 +14,9 @@ import {
     LoadingIndicator,
     useNotify,
     List,
+    DeleteWithConfirmButton,
+    EditButton,
+    TopToolbar,
 } from 'react-admin';
 import {
     Avatar,
@@ -31,18 +34,18 @@ import {
 } from '@mui/material';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { MetadataSchema } from '../../common/types';
-import {
-    Aside,
-    //Aside
-    PostShowActions,
-} from '../../components/helper';
+
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
-import { ShowOutlinedCard } from '../../components/OutlinedCard';
-import { ShowPageTitle } from '../../components/pageTitle';
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { blue } from '@mui/material/colors';
+import { ShowPageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../components/FlatCard';
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -54,6 +57,16 @@ export interface SimpleDialogProps {
     selectedValue: string;
     onClose: (value: string) => void;
 }
+
+const ShowToolbar = () => (
+    <TopToolbar>
+        <BackButton />
+        <EditButton style={{ marginLeft: 'auto' }} />
+        <InspectButton />
+        <ExportRecordButton language="yaml" />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
 
 export const SecretShowLayout = memo(function SecretShowLayout(props: {
     record: any;
@@ -170,7 +183,7 @@ export const SecretShow = () => {
                         icon={<VisibilityIcon fontSize={'large'} />}
                     />
                     <ShowView
-                        actions={<PostShowActions />}
+                        actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
                             '& .RaShow-main': {
@@ -183,7 +196,7 @@ export const SecretShow = () => {
                                 gap: 2,
                             },
                         }}
-                        component={ShowOutlinedCard}
+                        component={FlatCard}
                     >
                         <ShowComponent />
                     </ShowView>

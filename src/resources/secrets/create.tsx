@@ -6,6 +6,7 @@ import {
     TextInput,
     useDataProvider,
     useNotify,
+    useRedirect,
     useTranslate,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
@@ -16,6 +17,7 @@ export const SecretCreate = () => {
     const translate = useTranslate();
     const notify = useNotify();
     const dataProvider = useDataProvider();
+    const redirect = useRedirect();
     const validator = data => {
         const errors: any = {};
 
@@ -31,7 +33,7 @@ export const SecretCreate = () => {
         }
         return errors;
     };
-    const postSave = (data) => {
+    const postSave = data => {
         const obj = { project: root || '' };
         Object.defineProperty(obj, data.name, {
             value: data.value,
@@ -39,17 +41,19 @@ export const SecretCreate = () => {
             configurable: true,
             enumerable: true,
         });
-        dataProvider.createSecret( obj)
-        .catch(error => {
-            notify(`Error creating secret: ${error.message}`, {
-                type: 'error',
+        dataProvider
+            .createSecret(obj)
+            .then(() => {
+                redirect('list', 'secrets');
+            })
+            .catch(error => {
+                notify(`Error creating secret: ${error.message}`, {
+                    type: 'error',
+                });
             });
-        });
     };
     return (
-        <Create
-            redirect="list"
-        >
+        <Create redirect="list">
             <SimpleForm validate={validator} onSubmit={postSave}>
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>

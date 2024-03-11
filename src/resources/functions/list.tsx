@@ -53,28 +53,6 @@ const ListToolbar = () => {
     );
 };
 
-const DatagridToolbar = (props: ListActionsProps) => {
-    const { selectedIds = [], onUnselectItems = () => null } = props;
-
-    const { sort, filterValues, total } = useListContext({
-        ...props,
-        selectedIds,
-        onUnselectItems,
-    });
-    const resource = useResourceContext(props);
-
-    return (
-        <TopToolbar>
-            <ExportButton
-                disabled={total === 0}
-                resource={resource}
-                sort={sort}
-                filterValues={filterValues}
-            />
-        </TopToolbar>
-    );
-};
-
 const RowActions = () => {
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -135,7 +113,7 @@ export const FunctionList = () => {
                     <FlatCard>
                         <ListView
                             filters={postFilters}
-                            actions={<DatagridToolbar />}
+                            actions={false}
                             component={Box}
                         >
                             <Datagrid

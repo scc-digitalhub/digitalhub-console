@@ -11,14 +11,13 @@ import {
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { MetadataSchema } from '../../common/types';
-import { PostEditToolbar, RecordTitle } from '../../components/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { alphaNumericName } from '../../common/helper';
 import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-
+import { RecordTitle } from '../../components/RecordTitle';
 
 const validator = data => {
     const errors: any = {};
@@ -55,7 +54,7 @@ const SecretEditForm = () => {
 
                     const values = res.map(s => ({
                         id: s.kind,
-                        name: s.kind
+                        name: s.kind,
                     }));
                     setKinds(values);
                 }
@@ -67,16 +66,16 @@ const SecretEditForm = () => {
         return <LoadingIndicator />;
     }
     return (
-        <SimpleForm  validate={validator}>
+        <SimpleForm validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <Labeled label={translate('resources.function.name')}>
-                        <TextInput source="name"  />
+                        <TextInput source="name" />
                     </Labeled>
                 </Grid>
                 <Grid item xs={6}>
                     <Labeled label={translate('resources.function.kind')}>
-                        <TextInput source="value"  />
+                        <TextInput source="value" />
                     </Labeled>
                 </Grid>
             </Grid>

@@ -99,6 +99,7 @@ import { ResourceSchemaProvider } from './provider/schemaProvider';
 import { FunctionIcon } from './resources/functions/icon';
 import { DataItemIcon } from './resources/dataitems/icon';
 import { ArtifactIcon } from './resources/artifacts/icon';
+import { SecretIcon } from './resources/secrets/icon';
 
 const CoreApp = () => {
     return (
@@ -167,7 +168,6 @@ const CoreApp = () => {
                             name="runs"
                             show={RunShow}
                             create={RunCreate}
-                            list={RunList}
                         ></Resource>
                         <Resource
                             name="projects"
@@ -178,10 +178,11 @@ const CoreApp = () => {
                         <Resource name="schemas" />
                         <Resource
                             name="secrets"
-                            list={<SecretList />}
-                            show={<SecretShow />}
-                            edit={<SecretEdit />}
-                            create={<SecretCreate />}
+                            list={SecretList}
+                            show={SecretShow}
+                            edit={SecretEdit}
+                            create={SecretCreate}
+                            icon={SecretIcon}
                         ></Resource>
                     </AdminUI>
                 </ResourceSchemaProvider>
