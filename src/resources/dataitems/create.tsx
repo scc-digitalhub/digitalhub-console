@@ -9,8 +9,8 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import { BlankSchema, getDataItemUiSpec } from './types';
-import { MetadataSchema } from '../../common/types';
+import { getDataItemUiSpec } from './types';
+import { BlankSchema, MetadataSchema } from '../../common/schemas';
 import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import Card from '@mui/material/Card';

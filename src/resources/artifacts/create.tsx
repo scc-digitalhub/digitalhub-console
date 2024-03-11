@@ -9,9 +9,9 @@ import {
     TextInput,
     useTranslate,
 } from 'react-admin';
-import { ArtifactTypes, BlankSchema, getArtifactUiSpec } from './types';
+import { ArtifactTypes, getArtifactUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
+import { BlankSchema, MetadataSchema } from '../../common/schemas';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

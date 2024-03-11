@@ -10,10 +10,17 @@ const fields = {
     metadata: {
         created: 'Data di creazione',
         updated: 'Data di aggiornamento',
+        name: 'Nome',
+        description: 'Descrizione',
+        project: 'Progetto',
+        version: 'Versione',
+        labels: 'Labels',
     },
     status: {
         state: 'Stato',
     },
+    base: 'Base',
+    summary: 'Riepilogo',
 };
 
 const messages = {
@@ -31,6 +38,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Funzione |||| Funzioni',
+            list: "Lista e ricerca funzioni",
             fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
@@ -78,6 +86,13 @@ const messages = {
                 false: 'Falso',
             },
         },
+        tasks: {
+            name: 'Task |||| Tasks',
+            fields: { ...fields },
+            kinds: {
+                'dbt+transform': 'Transform',
+            },
+        },
         common: {
             emptySpec: 'Selezionare Kind per visualizzare le specifiche',
             version: {
@@ -91,6 +106,49 @@ const messages = {
                 version: 'Versione',
                 created: 'Data di creazione',
             },
+        },
+    },
+    pages: {
+        dashboard: {
+            title: 'Dashboard',
+            description: 'Project overview',
+            text: 'Define, build and execute functions to manage artifacts and dataitems.',
+            functions: {
+                title: 'Functions and code',
+                description: 'Define and manage functions',
+            },
+            dataitems: {
+                title: 'Data items',
+                description: 'Review and manage data items',
+            },
+            artifacts: {
+                title: 'Artifacts',
+                description: 'Review and manage artifacts',
+            },
+        },
+        functions: {
+            show: {
+                title: 'Function #%{name}',
+                subtitle: '%{kind} function',
+            },
+        },
+    },
+    pageTitle: {
+        show: {
+            title: '%{resource} #%{name}',
+            subtitle: '%{kind} %{resource}',
+        },
+        create: {
+            title: 'Create a new %{resource}',
+            subtitle: 'Fill the form to create and save a new %{resource}',
+        },
+        edit: {
+            title: 'Edit %{resource} #%{name}',
+            subtitle:
+                'Modify the %{resource} for %{kind} by updating metadata and specification',
+        },
+        list: {
+            title: '%{resource}',
         },
     },
     search: {

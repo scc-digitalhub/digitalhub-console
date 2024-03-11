@@ -1,3 +1,5 @@
+import { BlankSchema } from "../../common/schemas";
+
 export enum TaskTypes {
     PROFILE = 'profile',
     VALIDATE = 'validate',
@@ -174,12 +176,6 @@ export const TaskNefertemSchema = {
             required: ['name', 'value'],
         },
     },
-};
-
-export const BlankSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
-    type: 'object',
-    properties: {},
 };
 
 export const getSchemaTask = (kind: string | undefined) => {

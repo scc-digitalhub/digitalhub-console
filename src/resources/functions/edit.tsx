@@ -13,8 +13,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { BlankSchema, getFunctionUiSpec } from './types';
-import { MetadataSchema } from '../../common/types';
+import { getFunctionUiSpec } from './types';
+import { BlankSchema, MetadataSchema } from '../../common/schemas';
 import { alphaNumericName } from '../../common/helper';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';

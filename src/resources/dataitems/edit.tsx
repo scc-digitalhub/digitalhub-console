@@ -15,8 +15,8 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
-import { MetadataSchema } from '../../common/types';
-import { BlankSchema, DataItemTypes } from './types';
+import { BlankSchema, MetadataSchema } from '../../common/schemas';
+import { DataItemTypes } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';

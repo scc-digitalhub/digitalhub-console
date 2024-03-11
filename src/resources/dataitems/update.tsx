@@ -12,7 +12,7 @@ import {
     useDataProvider,
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
-import { MetadataSchema } from '../../common/types';
+import { MetadataSchema } from '../../common/schemas';
 import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
