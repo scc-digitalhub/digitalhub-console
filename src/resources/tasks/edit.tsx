@@ -4,7 +4,6 @@ import {
     RecordContextProvider,
     SaveButton,
     SimpleForm,
-    SimpleShowLayout,
     TextField,
     Toolbar,
     useRecordContext,

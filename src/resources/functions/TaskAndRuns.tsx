@@ -1,31 +1,18 @@
-import { TaskEdit, TaskEditComponent, TaskShowComponent } from '../tasks';
+import { EditInDialogButton, ShowInDialogButton } from '@dslab/ra-dialog-crud';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { Stack } from '@mui/material';
 import {
     Datagrid,
     DateField,
-    Empty,
-    EmptyClasses,
     Labeled,
     List,
-    ListNoResults,
-    RecordContextProvider,
-    SimpleForm,
-    SimpleShowLayout,
     TextField,
-    TextInput,
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Box, Stack, Typography } from '@mui/material';
-import {
-    CreateInDialogButton,
-    EditInDialogButton,
-    ShowInDialogButton,
-} from '@dslab/ra-dialog-crud';
-import { InspectButton } from '@dslab/ra-inspect-button';
-import { Inbox } from '@mui/icons-material';
+import { TaskEditComponent, TaskShowComponent } from '../tasks';
 
 export const TaskAndRuns = () => {
     const record = useRecordContext();
@@ -50,19 +37,20 @@ export const TaskAndRuns = () => {
                 </EditInDialogButton>
                 <InspectButton />
             </TopToolbar>
-            <SimpleShowLayout>
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" />
-                    </Labeled>
-                    <Labeled>
-                        <TextField source="id" />
-                    </Labeled>
-                </Stack>
+
+            <Stack direction={'row'} spacing={3}>
                 <Labeled>
-                    <TextField source="key" />
+                    <TextField source="kind" />
                 </Labeled>
-            </SimpleShowLayout>
+                <Labeled>
+                    <TextField source="id" />
+                </Labeled>
+            </Stack>
+
+            <Labeled>
+                <TextField source="key" />
+            </Labeled>
+
             <TaskRunList />
         </>
     );

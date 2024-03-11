@@ -58,9 +58,9 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             <Typography variant="h6" gutterBottom>
                 {translate('resources.artifacts.title')}
             </Typography>
-            <Labeled>
-                <TextField source="name" />
-            </Labeled>
+
+            <TextField source="name" />
+
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
                     <TextField source="kind" />
@@ -71,14 +71,13 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 </Labeled>
             </Stack>
 
-            <Labeled>
-                <TextField source="key" />
-            </Labeled>
+            <TextField source="key" />
 
             <JsonSchemaField
                 source="metadata"
                 schema={MetadataSchema}
                 uiSchema={createMetadataViewUiSchema(record.metadata)}
+                label={false}
             />
 
             <JsonSchemaField

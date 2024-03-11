@@ -36,7 +36,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Function |||| Functions',
-            list: 'List and search functions',
+            list: 'Functions\' list with search filters',
             fields: { ...fields },
             tab: {
                 summary: 'Recap',
@@ -57,10 +57,12 @@ const messages = {
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
+            list: 'Artifacts\' list with search filters',
             fields: { ...fields },
         },
         dataitems: {
             name: 'Data item |||| Data items',
+            list: 'Data items\' list with search filters',
             fields: { ...fields },
             tab: {
                 summary: 'Summary',
@@ -95,6 +97,13 @@ const messages = {
             fields: { ...fields },
             kinds: {
                 'dbt+transform': 'Transform',
+                'nefertem+infer': 'Infer',
+                'nefertem+metric': 'Metric',
+                'nefertem+profile': 'Profile',
+                'nefertem+validate': 'Validate',
+                'container+deploy': 'Deploy',
+                'container+job': 'Job',
+                'container+serve': 'Serve',
             },
         },
         common: {

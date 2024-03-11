@@ -10,7 +10,6 @@ import {
     ResourceContextProvider,
     ShowBase,
     ShowView,
-    SimpleShowLayout,
     TabbedShowLayout,
     TextField,
     TopToolbar,
@@ -19,7 +18,10 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { MetadataSchema, createMetadataViewUiSchema } from '../../common/schemas';
+import {
+    MetadataSchema,
+    createMetadataViewUiSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
@@ -62,7 +64,7 @@ const ShowComponent = () => {
                     console.log('schema  for ' + record.kind, schemas);
                     return schemas?.map(s => s.kind);
                 }),
-                
+
                 dataProvider.getList('tasks', {
                     pagination: { page: 1, perPage: 100 },
                     sort: { field: 'kind', order: 'ASC' },
@@ -169,35 +171,36 @@ const ShowComponent = () => {
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
-                <SimpleShowLayout>
-                    <Stack direction={'row'} spacing={3}>
-                        <Labeled>
-                            <TextField source="name" />
-                        </Labeled>
-
-                        <Labeled>
-                            <TextField source="kind" />
-                        </Labeled>
-                    </Stack>
+                <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="key" />
+                        <TextField source="name" />
                     </Labeled>
+
+                    <Labeled>
+                        <TextField source="kind" />
+                    </Labeled>
+                </Stack>
+
+                <Labeled>
+                    <TextField source="key" />
+                </Labeled>
+                
+                <JsonSchemaField
+                    source="metadata"
+                    schema={MetadataSchema}
+                    uiSchema={createMetadataViewUiSchema(record.metadata)}
+                    label={false}
+                />
+                {spec && (
                     <JsonSchemaField
-                        source="metadata"
-                        schema={MetadataSchema}
-                        uiSchema={createMetadataViewUiSchema(record.metadata)}
+                        source="spec"
+                        schema={spec.schema}
+                        uiSchema={getFunctionUiSpec(kind)}
                         label={false}
                     />
-                    {spec && (
-                        <JsonSchemaField
-                            source="spec"
-                            schema={spec.schema}
-                            uiSchema={getFunctionUiSpec(kind)}
-                            label={false}
-                        />
-                    )}
-                </SimpleShowLayout>
+                )}
             </TabbedShowLayout.Tab>
+
             {tasks.map(task => (
                 <TabbedShowLayout.Tab
                     label={'resources.tasks.kinds.' + task.kind}
