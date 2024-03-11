@@ -28,6 +28,9 @@ function mapType(resource) {
     if (resource === 'tasks') {
         return 'TASK';
     }
+    if (resource === 'runs') {
+        return 'RUN';
+    }
     return null;
 }
 
