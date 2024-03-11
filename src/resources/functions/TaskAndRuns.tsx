@@ -35,7 +35,7 @@ export const TaskAndRuns = () => {
                 <EditInDialogButton fullWidth>
                     <TaskEditComponent />
                 </EditInDialogButton>
-                <InspectButton />
+                <InspectButton color="primary" />
             </TopToolbar>
 
             <Stack direction={'row'} spacing={3}>

@@ -64,7 +64,6 @@ const messages = {
                 preview: 'Preview',
             },
             summary: {
-                title: 'Data item details',
                 spec: {
                     title: 'Spec',
                     key: 'Key',
