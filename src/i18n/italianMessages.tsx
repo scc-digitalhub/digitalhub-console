@@ -72,7 +72,6 @@ const messages = {
                 preview: 'Anteprima',
             },
             summary: {
-                title: 'Dettagli del data item',
                 spec: {
                     title: 'Spec',
                     key: 'Key',

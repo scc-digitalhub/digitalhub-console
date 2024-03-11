@@ -39,7 +39,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton color='primary' />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>
@@ -56,7 +56,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     return (
         <SimpleShowLayout record={record}>
             <Typography variant="h6" gutterBottom>
-                {translate('resources.artifacts.title')}
+                {translate('resources.artifacts.fields.summary')}
             </Typography>
 
             <TextField source="name" />

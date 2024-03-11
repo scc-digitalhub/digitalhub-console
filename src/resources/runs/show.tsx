@@ -20,7 +20,7 @@ export const RunShowLayout = () => {
             <Typography variant="h6" gutterBottom>
                 {translate('resources.runs.title')}
             </Typography>
-            
+
             <SimpleShowLayout>
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
@@ -37,7 +37,7 @@ export const RunShowLayout = () => {
 const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
-        <InspectButton />
+        <InspectButton color="primary" />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>

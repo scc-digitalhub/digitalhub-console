@@ -184,7 +184,7 @@ const ShowComponent = () => {
                 <Labeled>
                     <TextField source="key" />
                 </Labeled>
-                
+
                 <JsonSchemaField
                     source="metadata"
                     schema={MetadataSchema}
@@ -221,7 +221,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton color="primary" />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>

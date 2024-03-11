@@ -43,18 +43,15 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="resources.dataitems.tab.summary">
                 <Grid>
-                    <Typography variant="h6" gutterBottom>
-                        {translate('resources.dataitems.summary.title')}
-                    </Typography>
 
                     <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitems.name">
+                            <Labeled>
                                 <TextField source="name" />
                             </Labeled>
                         </Grid>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitems.kind">
+                            <Labeled>
                                 <TextField source="kind" />
                             </Labeled>
                         </Grid>
@@ -93,7 +90,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton color="primary" />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>

@@ -112,12 +112,12 @@ const ArtifactEditForm = () => {
         <SimpleForm toolbar={<ArtifactEditToolbar />} validate={validator}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
-                    <Labeled label={translate('resources.functions.name')}>
+                    <Labeled>
                         <TextInput source="name" readOnly />
                     </Labeled>
                 </Grid>
                 <Grid item xs={6}>
-                    <Labeled label={translate('resources.functions.kind')}>
+                    <Labeled>
                         <SelectInput source="kind" choices={kinds} readOnly />
                     </Labeled>
                 </Grid>
