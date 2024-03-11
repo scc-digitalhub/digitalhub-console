@@ -15,8 +15,8 @@ import {
     useDataProvider,
     useTranslate,
 } from 'react-admin';
-import { BlankSchema, getFunctionUiSpec } from './types';
-import { MetadataEditUiSchema, MetadataSchema } from '../../common/types';
+import { getFunctionUiSpec } from './types';
+import { BlankSchema, MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
 import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import Card from '@mui/material/Card';

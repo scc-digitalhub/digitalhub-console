@@ -17,7 +17,7 @@ import {
     MetadataSchema,
     MetadataViewUiSchema,
     createMetadataViewUiSchema,
-} from '../../common/types';
+} from '../../common/schemas';
 import { getArtifactSpec, getArtifactUiSpec } from './types';
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';

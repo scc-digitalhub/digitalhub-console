@@ -15,7 +15,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
+import { MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';

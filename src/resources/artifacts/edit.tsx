@@ -12,10 +12,9 @@ import {
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { MetadataSchema } from '../../common/types';
+import { BlankSchema, MetadataSchema } from '../../common/schemas';
 import {
     ArtifactTypes,
-    BlankSchema,
     getArtifactSpec,
     getArtifactUiSpec,
 } from './types';

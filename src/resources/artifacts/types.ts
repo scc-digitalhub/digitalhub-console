@@ -1,3 +1,5 @@
+import { BlankSchema } from "../../common/schemas";
+
 export enum ArtifactTypes {
     ARTIFACT = 'artifact',
 }
@@ -6,12 +8,6 @@ export const ArtifactDbtUiSchema = {
     source: {
         'ui:widget': 'textarea',
     },
-};
-
-export const BlankSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
-    type: 'object',
-    properties: {},
 };
 
 export const getArtifactSpec = (kind: string | undefined) => {
