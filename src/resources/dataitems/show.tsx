@@ -1,7 +1,7 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Container, Grid, Typography } from '@mui/material';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
@@ -12,6 +12,7 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
@@ -21,22 +22,32 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
-import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
+import { DataItemSpecSchema, DataItemSpecUiSchema, getDataItemUiSpec } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { DataItemIcon } from './icon';
 
 const ShowComponent = () => {
+     const resource = useResourceContext();
     const record = useRecordContext();
+    const kind = record?.kind || undefined;
+     const translate = useTranslate();
+    const schemaProvider = useSchemaProvider();
+    const [spec, setSpec] = useState<any>();
 
-    return <DataItemShowLayout record={record} />;
-};
-
-const DataItemShowLayout = memo(function DataItemShowLayout(props: {
-    record: any;
-}) {
-    const { record } = props;
-    const translate = useTranslate();
+    useEffect(() => {
+        if (!schemaProvider ) {
+            return;
+        }
+        if (record) {
+            schemaProvider.get(resource, record.kind).then(s => {
+                console.log('spec', s);
+                setSpec(s);
+            });
+        }
+    }, [record, schemaProvider]);
 
     if (!record) return <></>;
     return (
@@ -64,30 +75,26 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         source="metadata"
                         schema={MetadataSchema}
                     />
-
-                    <JsonSchemaField
-                        source="spec"
-                        schema={DataItemSpecSchema}
-                        uiSchema={DataItemSpecUiSchema}
-                        label="resources.dataitem.summary.spec.title"
-                    />
+                    {spec && (
+                        <JsonSchemaField
+                            source="spec"
+                            schema={spec.schema}
+                            uiSchema={getDataItemUiSpec(kind)}
+                            label={false}
+                        />
+                    )}
                 </Grid>
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="resources.dataitem.tab.schema">
-                <SchemaTabComponent record={props.record} />
+                <SchemaTabComponent record={record} />
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="resources.dataitem.tab.preview">
-                <PreviewTabComponent record={props.record} />
+                <PreviewTabComponent record={record} />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
-},
-arePropsEqual);
+}
 
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
 
 const ShowToolbar = () => (
     <TopToolbar>
@@ -102,32 +109,30 @@ const ShowToolbar = () => (
 export const DataItemShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
-                <>
-                    <ShowPageTitle
-                        icon={<VisibilityIcon fontSize={'large'} />}
-                    />
-                    <ShowView
-                        actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
+        <ShowBase>
+            <>
+                <ShowPageTitle icon={<DataItemIcon fontSize={'large'} />} />
+                <ShowView
+                    actions={<ShowToolbar />}
+                    sx={{
+                        width: '100%',
+                        '& .RaShow-main': {
+                            display: 'grid',
+                            gridTemplateColumns: { lg: '1fr 350px' },
+                            gridTemplateRows: {
+                                xs: 'repeat(1, 1fr)',
+                                lg: '',
                             },
-                        }}
-                        component={FlatCard}
-                        aside={<Aside />}
-                    >
-                        <ShowComponent />
-                    </ShowView>
-                </>
-            </ShowBase>
-        </Container>
+                            gap: 2,
+                        },
+                    }}
+                    component={FlatCard}
+                    aside={<VersionsListWrapper />}
+                >
+                    <ShowComponent />
+                </ShowView>
+            </>
+        </ShowBase>
+    </Container>
     );
 };

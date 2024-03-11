@@ -65,12 +65,7 @@ const DatagridToolbar = (props: ListActionsProps) => {
 
     return (
         <TopToolbar>
-            <ExportButton
-                disabled={total === 0}
-                resource={resource}
-                sort={sort}
-                filterValues={filterValues}
-            />
+
         </TopToolbar>
     );
 };
@@ -135,7 +130,7 @@ export const FunctionList = () => {
                     <FlatCard>
                         <ListView
                             filters={postFilters}
-                            actions={<DatagridToolbar />}
+                            actions={false}
                             component={Box}
                         >
                             <Datagrid

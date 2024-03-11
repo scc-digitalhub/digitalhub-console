@@ -42,11 +42,6 @@ const ShowComponent = () => {
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<any>([]);
 
-    // const { data, isLoading, error } = useGetList('tasks', {
-    //     filter: {
-    //         function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
-    //     },
-    // });
     useEffect(() => {
         if (!schemaProvider || !dataProvider) {
             return;

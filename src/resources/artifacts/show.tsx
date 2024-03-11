@@ -2,25 +2,22 @@ import {
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
-    Show,
     ShowBase,
     ShowView,
     SimpleShowLayout,
     TextField,
     TopToolbar,
     useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Container, Grid, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import {
     MetadataSchema,
-    MetadataViewUiSchema,
-    createMetadataViewUiSchema,
 } from '../../common/types';
-import { getArtifactSpec, getArtifactUiSpec } from './types';
-import { memo, useEffect, useState } from 'react';
-import { arePropsEqual } from '../../common/helper';
+import { getArtifactUiSpec } from './types';
+import { useEffect, useState } from 'react';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -28,30 +25,27 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { VersionsListWrapper } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 
 const ShowComponent = () => {
+      const resource = useResourceContext();
     const record = useRecordContext();
-
-    return <ArtifactShowLayout record={record} />;
-};
-
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
-        <ExportRecordButton language="yaml" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
-
-const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
-    record: any;
-}) {
     const translate = useTranslate();
-    const { record } = props;
     const kind = record?.kind || undefined;
+    const schemaProvider = useSchemaProvider();
+    const [spec, setSpec] = useState<any>();
 
+    useEffect(() => {
+        if (!schemaProvider ) {
+            return;
+        }
+        if (record) {
+            schemaProvider.get(resource, record.kind).then(s => {
+                console.log('spec', s);
+                setSpec(s);
+            });
+        }
+    }, [record, schemaProvider]);
     if (!record) return <></>;
     return (
         <SimpleShowLayout record={record}>
@@ -70,33 +64,33 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                     <TextField source="id" />
                 </Labeled>
             </Stack>
-
             <Labeled>
                 <TextField source="key" />
             </Labeled>
-
             <JsonSchemaField
                 source="metadata"
                 schema={MetadataSchema}
-                uiSchema={createMetadataViewUiSchema(record.metadata)}
-            />
-
-            <JsonSchemaField
-                source="spec"
-                schema={getArtifactSpec(kind)}
-                uiSchema={getArtifactUiSpec(kind)}
-                label={false}
-            />
+            />{spec && (
+                        <JsonSchemaField
+                            source="spec"
+                            schema={spec.schema}
+                            uiSchema={getArtifactUiSpec(kind)}
+                            label={false}
+                        />
+                    )}
         </SimpleShowLayout>
     );
-},
-arePropsEqual);
+}
 
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
-
+const ShowToolbar = () => (
+    <TopToolbar>
+        <BackButton />
+        <EditButton style={{ marginLeft: 'auto' }} />
+        <InspectButton />
+        <ExportRecordButton language="yaml" />
+        <DeleteWithConfirmButton />
+    </TopToolbar>
+);
 export const ArtifactShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -120,7 +114,7 @@ export const ArtifactShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

@@ -23,7 +23,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router';
-import { EditPageTitle } from '../../components/PageTitle';
+import { EditPageTitle, PageTitle } from '../../components/PageTitle';
 import { FunctionIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { useWatch } from 'react-hook-form';
@@ -72,7 +72,6 @@ const SpecInput = (props: {
     const record = useRecordContext();
     const value = useWatch({ name: source });
     const eq = deepEqual(record[source], value);
-
     const schemaProvider = useSchemaProvider();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || null;
@@ -192,38 +191,7 @@ export const FunctionEdit = () => {
                                     source="spec"
                                     onDirty={setIsSpecDirty}
                                 />
-                                {/* <FormDataConsumer<{ kind: string }>>
-                                    {({ formData }) => {
-                                        console.log('form data', formData);
-                                        if (formData.kind)
-                                            return (
-                                                <JsonSchemaInput
-                                                    source="spec"
-                                                    schema={getFunctionSpec(
-                                                        formData.kind
-                                                    )}
-                                                    uiSchema={getFunctionUiSpec(
-                                                        formData.kind
-                                                    )}
-                                                />
-                                            );
-                                        else
-                                            return (
-                                                <Card
-                                                    sx={{
-                                                        width: 1,
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <CardContent>
-                                                        {translate(
-                                                            'resources.common.emptySpec'
-                                                        )}{' '}
-                                                    </CardContent>
-                                                </Card>
-                                            );
-                                    }}
-                                </FormDataConsumer> */}
+                               
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
