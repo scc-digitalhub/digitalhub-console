@@ -1,6 +1,5 @@
 import {
     Box,
-    Card,
     CardContent,
     CardHeader,
     ListItem,
@@ -9,32 +8,140 @@ import {
     List as MuiList,
     SxProps,
     Theme,
+    Typography,
 } from '@mui/material';
 import {
     GetListParams,
     Link,
+    List,
+    Pagination,
     RaRecord,
     ShowButton,
+    SimpleList,
     useCreatePath,
     useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual } from '../common/helper';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatCard } from './FlatCard';
 
 export type VersionListProps = {
     showActions?: boolean;
+    usePagination?: boolean;
+    perPage?: number;
     sx?: SxProps<Theme>;
     record?: any;
 };
 
 export const VersionsList = (props: VersionListProps) => {
-    const { showActions = true, sx, ...rest } = props;
+    const {
+        showActions = true,
+        usePagination = false,
+        perPage = 10,
+        sx,
+        ...rest
+    } = props;
+    const record = useRecordContext(rest);
+    const resource = useResourceContext();
+
+    if (!record) {
+        return <></>;
+    }
+
+    //TODO fetch latest and add label
+
+    const filter = { name: record.name, versions: 'all' };
+
+    const sxProps = showActions ? { ...sx } : { ml: 2, mr: 2, ...sx };
+    const rowSx = (item, index) => {
+        return record.id == item.id
+            ? {
+                  //TODO pick style from theme rule
+                  backgroundColor: 'rgba(224, 112, 27, 0.08)',
+              }
+            : {};
+    };
+    return (
+        <List
+            component={Box}
+            resource={resource}
+            actions={false}
+            sort={{ field: 'created', order: 'DESC' }}
+            filter={filter}
+            perPage={perPage}
+            pagination={
+                usePagination ? (
+                    <Pagination rowsPerPageOptions={[perPage]} />
+                ) : (
+                    false
+                )
+            }
+            disableSyncWithLocation
+        >
+            <SimpleList
+                linkType="show"
+                rowSx={rowSx}
+                key={resource + ':versions:'}
+                primaryText={item => {
+                    const value = item.metadata?.updated
+                        ? new Date(item.metadata.updated).toLocaleString()
+                        : item.id;
+
+                    return <Typography color={'primary'}>{value}</Typography>;
+                }}
+                secondaryText={item => {
+                    return item.metadata?.version &&
+                        item.metadata.version != item.id ? (
+                        <>
+                            <strong> {item.metadata.version}</strong> <br />
+                            {item.id}
+                        </>
+                    ) : (
+                        <> {item.id} </>
+                    );
+                }}
+                rightIcon={item =>
+                    showActions ? <ShowButton record={item} /> : undefined
+                }
+            />
+        </List>
+    );
+};
+
+// export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
+export const VersionsListWrapper = () => {
+    const translate = useTranslate();
+
+    return (
+        <FlatCard
+        // sx={{
+        //     height: 'fit-content',
+        //     borderRadius: '10px',
+        //     order: { xs: 1, lg: 2 },
+        // }}
+        // variant="outlined"
+        >
+            <CardHeader title={translate('resources.common.version.title')} />
+
+            <CardContent
+                sx={{
+                    padding: 0,
+                }}
+            >
+                <VersionsList usePagination={true} showActions={false} />
+            </CardContent>
+        </FlatCard>
+    );
+};
+// },
+// arePropsEqual);
+
+const VersionsSimpleList = (props: VersionListProps) => {
+    const { showActions = true, usePagination = false, sx, ...rest } = props;
     const record = useRecordContext(rest);
     const resource = useResourceContext();
     const dataProvider = useDataProvider();
@@ -127,31 +234,3 @@ export const VersionsList = (props: VersionListProps) => {
         </Box>
     );
 };
-
-// export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
-export const VersionsListWrapper = () => {
-    const translate = useTranslate();
-
-    return (
-        <FlatCard
-        // sx={{
-        //     height: 'fit-content',
-        //     borderRadius: '10px',
-        //     order: { xs: 1, lg: 2 },
-        // }}
-        // variant="outlined"
-        >
-            <CardHeader title={translate('resources.common.version.title')} />
-
-            <CardContent
-                sx={{
-                    padding: 0,
-                }}
-            >
-                <VersionsList showActions={false} />
-            </CardContent>
-        </FlatCard>
-    );
-};
-// },
-// arePropsEqual);
