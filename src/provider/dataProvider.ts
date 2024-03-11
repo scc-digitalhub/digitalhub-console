@@ -204,6 +204,7 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}`;
+
             return httpClient(url, {
                 method: 'POST',
                 body:
@@ -241,6 +242,37 @@ const springDataProvider = (
                 )
             ).then(responses => ({ data: responses.map(({ json }) => json) }));
         },
+        getSecretData: (params) => {
+            let prefix = '';
+            if (params.root) {
+                prefix = '/-/' + params.root;
+                delete params.root;
+
+            }
+            const url = `${apiUrl}${prefix}/secrets/data?${stringify(params)}`;
+            return httpClient(url).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return {
+                    data: json,
+                };
+            });
+        },
+        createSecret: (params) => {
+            let prefix = '/-/' + params.project;
+            let url = `${apiUrl}${prefix}/secrets`;
+                url+='/data '
+                delete params['project'];
+                // const paramsSecret=JSON.parse(JSON.stringify(params.data));
+                // const newObj = Object.assign({}, params.data);
+
+                return httpClient(url, {
+                    method: 'PUT',
+                    body: JSON.stringify(params),
+                }).then(({ json }) => ({ data: json }));
+            
+        }
     };
 };
 

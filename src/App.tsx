@@ -39,6 +39,13 @@ import {
     FunctionCreate,
     FunctionShow,
 } from './resources/functions';
+import {
+    SecretCreate,
+    SecretEdit,
+    SecretList,
+    SecretShow,
+} from './resources/secrets';
+
 import { Dashboard } from './pages/Dashboard';
 
 const API_URL: string = process.env.REACT_APP_API_URL as string;
@@ -169,6 +176,13 @@ const CoreApp = () => {
                             create={ProjectCreate}
                         />
                         <Resource name="schemas" />
+                        <Resource
+                            name="secrets"
+                            list={<SecretList />}
+                            show={<SecretShow />}
+                            edit={<SecretEdit />}
+                            create={<SecretCreate />}
+                        ></Resource>
                     </AdminUI>
                 </ResourceSchemaProvider>
             </AdminContext>

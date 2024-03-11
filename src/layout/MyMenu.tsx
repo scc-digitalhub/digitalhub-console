@@ -11,5 +11,6 @@ export const MyMenu = () => (
         <Menu.ResourceItem name="artifacts" />
         <Menu.ResourceItem name="dataitems" />
         <Menu.ResourceItem name="functions" />
+        <Menu.ResourceItem name="secrets" />
     </Menu>
 );
