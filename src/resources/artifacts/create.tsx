@@ -1,23 +1,47 @@
+import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { Box, Container, Stack, Typography } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { useEffect, useState } from 'react';
 import {
-    Create,
+    CreateActionsProps,
+    CreateBase,
+    CreateView,
     FormDataConsumer,
-    Labeled,
+    ListButton,
     LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
-    useTranslate,
+    TopToolbar,
+    required,
+    useTranslate
 } from 'react-admin';
-import { ArtifactTypes, getArtifactUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { BlankSchema, MetadataSchema } from '../../common/schemas';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
+import { FlatCard } from '../../components/FlatCard';
+import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
+import { ArtifactIcon } from './icon';
+import { getArtifactUiSpec } from './types';
+
+const CreateToolbar = (props: CreateActionsProps) => {
+    return (
+        <TopToolbar>
+            <ListButton />
+        </TopToolbar>
+    );
+};
+
+const nameValidation = value => {
+    if (!alphaNumericName(value)) {
+        return 'validation.wrongChar';
+    }
+    return undefined;
+};
+
+const validateName = [required(), nameValidation];
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -30,18 +54,6 @@ export const ArtifactCreate = () => {
         ...data,
         project: root || '',
     });
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-        return errors;
-    };
 
     useEffect(() => {
         if (schemaProvider) {
@@ -77,48 +89,74 @@ export const ArtifactCreate = () => {
     };
 
     return (
-        <Create transform={transform} redirect="list">
-            <SimpleForm validate={validator}>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={4}>
-                        <Labeled label={translate('resources.dataitem.name')}>
-                            <TextInput source="name" required />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.dataitem.kind')}>
-                            <SelectInput
-                                source="kind"
-                                choices={kinds}
-                                required
-                            />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-                <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-                <FormDataConsumer<{ kind: string }>>
-                    {({ formData }) => {
-                        if (formData.kind)
-                            return (
+        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+            <CreateBase transform={transform} redirect="list">
+                <>
+                    <CreatePageTitle
+                        icon={<ArtifactIcon fontSize={'large'} />}
+                    />
+
+                    <CreateView component={Box} actions={<CreateToolbar />}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm>
+                                <Typography variant="h6" gutterBottom>
+                                    {translate('fields.base')}
+                                </Typography>
+
+                                <Stack direction={'row'} spacing={3}>
+                                    <TextInput
+                                        source="name"
+                                        validate={validateName}
+                                    />
+
+                                    <SelectInput
+                                        source="kind"
+                                        choices={kinds}
+                                        validate={required()}
+                                    />
+                                </Stack>
+
                                 <JsonSchemaInput
-                                    source="spec"
-                                    schema={getArtifactSpec(formData.kind)}
-                                    uiSchema={getArtifactUiSpec(formData.kind)}
+                                    source="metadata"
+                                    schema={MetadataSchema}
+                                    label={false}
                                 />
-                            );
-                        else
-                            return (
-                                <Card sx={{ width: 1, textAlign: 'center' }}>
-                                    <CardContent>
-                                        {translate(
-                                            'resources.common.emptySpec'
-                                        )}{' '}
-                                    </CardContent>
-                                </Card>
-                            );
-                    }}
-                </FormDataConsumer>
-            </SimpleForm>
-        </Create>
+                                <FormDataConsumer<{ kind: string }>>
+                                    {({ formData }) => {
+                                        if (formData.kind)
+                                            return (
+                                                <JsonSchemaInput
+                                                    source="spec"
+                                                    schema={getArtifactSpec(
+                                                        formData.kind
+                                                    )}
+                                                    uiSchema={getArtifactUiSpec(
+                                                        formData.kind
+                                                    )}
+                                                />
+                                            );
+                                        else
+                                            return (
+                                                <Card
+                                                    sx={{
+                                                        width: 1,
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        {translate(
+                                                            'resources.common.emptySpec'
+                                                        )}{' '}
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                    }}
+                                </FormDataConsumer>
+                            </SimpleForm>
+                        </FlatCard>
+                    </CreateView>
+                </>
+            </CreateBase>
+        </Container>
     );
 };

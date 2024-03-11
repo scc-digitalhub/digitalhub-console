@@ -47,6 +47,7 @@ export const MetadataEditUiSchema = {
         'ui:widget': 'hidden',
     },
 };
+
 export const MetadataViewUiSchema = {
     project: {
         'ui:widget': 'hidden',
