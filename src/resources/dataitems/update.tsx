@@ -13,7 +13,7 @@ import {
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
-import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from './types';
+import { DataItemTypes } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
@@ -100,12 +100,12 @@ const DataItemEditForm = (props: { record: any }) => {
             </Grid>
 
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <JsonSchemaInput
+            {/* <JsonSchemaInput
                 source="spec"
                 schema={getDataItemSpec(kind)}
                 uiSchema={getDataItemUiSpec(kind)}
                 label={false}
-            />
+            /> */}
         </SimpleForm>
     );
 };

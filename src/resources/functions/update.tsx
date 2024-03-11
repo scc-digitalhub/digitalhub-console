@@ -88,12 +88,12 @@ const FunctionEditForm = (props: { record: any }) => {
             <TextInput source="name" readOnly />
             <SelectInput source="kind" choices={kinds} readOnly />
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <JsonSchemaInput
+            {/* <JsonSchemaInput
                 source="spec"
                 schema={getFunctionSpec(kind)}
                 uiSchema={getFunctionUiSpec(kind)}
                 label={false}
-            />
+            /> */}
         </SimpleForm>
     );
 };
