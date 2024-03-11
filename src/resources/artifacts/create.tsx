@@ -16,7 +16,7 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
 import { BlankSchema, MetadataSchema } from '../../common/schemas';
@@ -89,7 +89,7 @@ export const ArtifactCreate = () => {
     };
 
     return (
-        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
                 <>
                     <CreatePageTitle

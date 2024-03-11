@@ -21,7 +21,6 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
-import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -62,12 +61,12 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         schema={MetadataSchema}
                     />
 
-                    <JsonSchemaField
+                    {/* <JsonSchemaField
                         source="spec"
                         schema={DataItemSpecSchema}
                         uiSchema={DataItemSpecUiSchema}
                         label="resources.dataitems.summary.spec.title"
-                    />
+                    /> */}
                 </Grid>
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">

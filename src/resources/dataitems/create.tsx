@@ -86,7 +86,7 @@ export const DataItemCreate = () => {
         return BlankSchema;
     };
     return (
-        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
                 <>
                     <CreatePageTitle

@@ -21,7 +21,7 @@ import {
 import { alphaNumericName } from '../../common/helper';
 import {
     BlankSchema,
-    MetadataEditUiSchema,
+    MetadataCreateUiSchema,
     MetadataSchema,
 } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
@@ -93,7 +93,7 @@ export const FunctionCreate = () => {
     };
 
     return (
-        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
                 <>
                     <CreatePageTitle
@@ -122,7 +122,7 @@ export const FunctionCreate = () => {
                                 <JsonSchemaInput
                                     source="metadata"
                                     schema={MetadataSchema}
-                                    uiSchema={MetadataEditUiSchema}
+                                    uiSchema={MetadataCreateUiSchema}
                                     label={false}
                                 />
 
