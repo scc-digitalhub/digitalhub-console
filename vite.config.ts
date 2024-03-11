@@ -11,4 +11,7 @@ export default defineConfig({
         host: true,
     },
     base: './',
+    optimizeDeps: {
+        include: ['@mui/material/Tooltip'],
+      }
 });
