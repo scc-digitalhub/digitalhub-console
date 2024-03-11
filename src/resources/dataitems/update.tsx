@@ -85,14 +85,14 @@ const DataItemEditForm = (props: { record: any }) => {
                 <Grid item xs={4}>
                     <TextInput
                         source="name"
-                        label="resources.function.name"
+                        label="resources.functions.name"
                         disabled
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <SelectInput
                         source="kind"
-                        label="resources.function.kind"
+                        label="resources.functions.kind"
                         choices={kinds}
                         disabled
                     />

@@ -18,7 +18,7 @@ export const RunShowLayout = () => {
     return (
         <Grid>
             <Typography variant="h6" gutterBottom>
-                {translate('resources.run.title')}
+                {translate('resources.runs.title')}
             </Typography>
             <SimpleShowLayout>
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

@@ -71,10 +71,10 @@ export const RunList = () => {
                 startIcon={<AddIcon />}
                 onClick={handleClick}
             >
-                {translate('resources.run.create')}
+                {translate('resources.runs.create')}
             </Button>
             <p>
-                {total} {translate('resources.run.total')}
+                {total} {translate('resources.runs.total')}
             </p>
         </>
     );

@@ -56,7 +56,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     return (
         <SimpleShowLayout record={record}>
             <Typography variant="h6" gutterBottom>
-                {translate('resources.artifact.title')}
+                {translate('resources.artifacts.title')}
             </Typography>
             <Labeled>
                 <TextField source="name" />

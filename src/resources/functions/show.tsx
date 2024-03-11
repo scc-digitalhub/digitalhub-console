@@ -62,6 +62,7 @@ const ShowComponent = () => {
                     console.log('schema  for ' + record.kind, schemas);
                     return schemas?.map(s => s.kind);
                 }),
+                
                 dataProvider.getList('tasks', {
                     pagination: { page: 1, perPage: 100 },
                     sort: { field: 'kind', order: 'ASC' },

@@ -49,13 +49,13 @@ const InvalidCellContent = forwardRef<
     let label: string;
     switch (invalidityType) {
         case Type.InvalidDate:
-            label = translate('resources.dataitem.preview.invalidDate');
+            label = translate('resources.dataitems.preview.invalidDate');
             break;
         case Type.InvalidDatetime:
-            label = translate('resources.dataitem.preview.invalidDatetime');
+            label = translate('resources.dataitems.preview.invalidDatetime');
             break;
         default:
-            label = translate('resources.dataitem.preview.invalidValue');
+            label = translate('resources.dataitems.preview.invalidValue');
             break;
     }
 
@@ -105,7 +105,7 @@ const ValidCellContent = forwardRef<
                 <>
                     {formattedValue === true ? (
                         <Tooltip
-                            title={translate('resources.dataitem.preview.true')}
+                            title={translate('resources.dataitems.preview.true')}
                         >
                             <CheckIcon
                                 sx={{ color: 'rgba(0, 0, 0, 0.6)', zIndex: 2 }}
@@ -114,7 +114,7 @@ const ValidCellContent = forwardRef<
                     ) : (
                         <Tooltip
                             title={translate(
-                                'resources.dataitem.preview.false'
+                                'resources.dataitems.preview.false'
                             )}
                         >
                             <CloseIcon

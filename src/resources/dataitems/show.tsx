@@ -41,20 +41,20 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     if (!record) return <></>;
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.summary">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.summary">
                 <Grid>
                     <Typography variant="h6" gutterBottom>
-                        {translate('resources.dataitem.summary.title')}
+                        {translate('resources.dataitems.summary.title')}
                     </Typography>
 
                     <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.name">
+                            <Labeled label="resources.dataitems.name">
                                 <TextField source="name" />
                             </Labeled>
                         </Grid>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.kind">
+                            <Labeled label="resources.dataitems.kind">
                                 <TextField source="kind" />
                             </Labeled>
                         </Grid>
@@ -69,14 +69,14 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         source="spec"
                         schema={DataItemSpecSchema}
                         uiSchema={DataItemSpecUiSchema}
-                        label="resources.dataitem.summary.spec.title"
+                        label="resources.dataitems.summary.spec.title"
                     />
                 </Grid>
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.schema">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
                 <SchemaTabComponent record={props.record} />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.preview">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
                 <PreviewTabComponent record={props.record} />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
