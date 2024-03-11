@@ -1,6 +1,6 @@
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useEffect, useState } from 'react';
@@ -25,6 +25,7 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactUiSpec } from './types';
+import { FormLabel } from '../../components/FormLabel';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -99,11 +100,9 @@ export const ArtifactCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm>
-                                <Typography variant="h6" gutterBottom>
-                                    {translate('fields.base')}
-                                </Typography>
+                                <FormLabel label="fields.base" />
 
-                                <Stack direction={'row'} spacing={3}>
+                                <Stack direction={'row'} spacing={3} pt={4}>
                                     <TextInput
                                         source="name"
                                         validate={validateName}
