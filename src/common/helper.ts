@@ -1,3 +1,5 @@
+import { regex } from 'react-admin';
+
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
 };
@@ -9,3 +11,8 @@ export const arePropsEqual = (oldProps: any, newProps: any) => {
     if (!newProps.record) return true;
     return Object.is(oldProps.record, newProps.record);
 };
+
+export const isAlphaNumeric = regex(
+    /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/,
+    'validation.wrongChar'
+);

@@ -16,9 +16,9 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
-import { alphaNumericName } from '../../common/helper';
+import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
 import {
     BlankSchema,
     MetadataCreateUiSchema,
@@ -38,15 +38,6 @@ const CreateToolbar = (props: CreateActionsProps) => {
         </TopToolbar>
     );
 };
-
-const nameValidation = value => {
-    if (!alphaNumericName(value)) {
-        return 'validation.wrongChar';
-    }
-    return undefined;
-};
-
-const validateName = [required(), nameValidation];
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
@@ -93,6 +84,24 @@ export const FunctionCreate = () => {
         return BlankSchema;
     };
 
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
+
+        if (!kinds.includes(data['kind'])) {
+            errors.kind = 'messages.validation.invalid';
+        }
+
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+
+        return errors;
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
@@ -103,13 +112,16 @@ export const FunctionCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
+                            <SimpleForm validate={validator}>
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>
                                     <TextInput
                                         source="name"
-                                        validate={validateName}
+                                        validate={[
+                                            required(),
+                                            isAlphaNumeric(),
+                                        ]}
                                     />
                                     <SelectInput
                                         source="kind"

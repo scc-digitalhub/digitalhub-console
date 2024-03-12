@@ -90,7 +90,6 @@ const MyLoginPage =
 
 const theme = themeProvider();
 
-import { FunctionUpdate } from './resources/functions/update';
 import { DataItemUpdate } from './resources/dataitems/update';
 import { ArtifactUpdate } from './resources/artifacts/update';
 import { TaskEdit } from './resources/tasks';
@@ -131,12 +130,7 @@ const CoreApp = () => {
                             edit={FunctionEdit}
                             create={FunctionCreate}
                             icon={FunctionIcon}
-                        >
-                            <Route
-                                path=":id/update"
-                                element={<FunctionUpdate />}
-                            />
-                        </Resource>
+                        />
                         <Resource
                             name="dataitems"
                             list={DataItemList}

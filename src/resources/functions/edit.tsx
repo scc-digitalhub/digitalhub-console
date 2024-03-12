@@ -21,16 +21,14 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import {
-    MetadataEditUiSchema,
-    MetadataSchema
-} from '../../common/schemas';
+import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
+import { alphaNumericName } from '../../common/helper';
 
 export const FunctionEditToolbar = () => {
     const translate = useTranslate();
@@ -129,6 +127,24 @@ export const FunctionEdit = () => {
         return <LoadingIndicator />;
     }
 
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
+
+        if (!kinds.includes(data['kind'])) {
+            errors.kind = 'messages.validation.invalid';
+        }
+
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+
+        return errors;
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
@@ -141,7 +157,10 @@ export const FunctionEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm toolbar={<FunctionEditToolbar />}>
+                            <SimpleForm
+                                validate={validator}
+                                toolbar={<FunctionEditToolbar />}
+                            >
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>

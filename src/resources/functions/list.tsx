@@ -6,8 +6,6 @@ import {
     Datagrid,
     DateField,
     EditButton,
-    ExportButton,
-    ListActionsProps,
     ListBase,
     ListView,
     SelectInput,
@@ -17,10 +15,9 @@ import {
     TopToolbar,
     useDatagridContext,
     useExpanded,
-    useListContext,
     useRecordContext,
     useResourceContext,
-    useTranslate
+    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
 import { FlatCard } from '../../components/FlatCard';
