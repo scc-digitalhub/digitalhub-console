@@ -12,7 +12,7 @@ import {
     useDataProvider,
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
-import { MetadataSchema } from '../../common/types';
+import { MetadataSchema } from '../../common/schemas';
 import { FunctionTypes, getFunctionSpec, getFunctionUiSpec } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -88,12 +88,12 @@ const FunctionEditForm = (props: { record: any }) => {
             <TextInput source="name" readOnly />
             <SelectInput source="kind" choices={kinds} readOnly />
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <JsonSchemaInput
+            {/* <JsonSchemaInput
                 source="spec"
                 schema={getFunctionSpec(kind)}
                 uiSchema={getFunctionUiSpec(kind)}
                 label={false}
-            />
+            /> */}
         </SimpleForm>
     );
 };
