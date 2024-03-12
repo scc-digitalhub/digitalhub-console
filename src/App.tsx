@@ -198,6 +198,8 @@ const InitialWrapper = () => {
             selector={<ProjectSelectorList />}
         >
             <Admin
+                dashboard={Dashboard}
+                layout={MyLayout}
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 theme={theme}
