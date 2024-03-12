@@ -1,12 +1,11 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Container, Paper } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
+    CreateButton,
     Datagrid,
     DateField,
     EditButton,
-    ListActions,
-    ListActionsProps,
     ListBase,
     ListView,
     SelectInput,
@@ -14,25 +13,19 @@ import {
     TextField,
     TextInput,
     TopToolbar,
-    useListContext,
+    useDatagridContext,
+    useExpanded,
+    useRecordContext,
     useResourceContext,
     useTranslate,
-    sanitizeListRestProps,
-    ExportButton,
-    CreateButton,
-    DatagridHeader,
-    DatagridHeaderProps,
-    useDatagridContext,
-    useRecordContext,
-    useExpanded,
 } from 'react-admin';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
-import { FlatCard } from '../../components/FlatCard';
 
 const ListToolbar = () => {
     return (
@@ -105,7 +98,7 @@ export const FunctionList = () => {
           ]
         : [];
     return (
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<FunctionIcon fontSize={'large'} />} />

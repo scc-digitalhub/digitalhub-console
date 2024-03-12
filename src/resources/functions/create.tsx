@@ -1,32 +1,35 @@
+import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { Box, Container, Stack } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { useEffect, useState } from 'react';
 import {
-    Create,
     CreateActionsProps,
     CreateBase,
     CreateView,
     FormDataConsumer,
-    Labeled,
     ListButton,
     LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
     TopToolbar,
-    useDataProvider,
+    required,
     useTranslate,
 } from 'react-admin';
-import { BlankSchema, getFunctionUiSpec } from './types';
-import { MetadataEditUiSchema, MetadataSchema } from '../../common/types';
-import { alphaNumericName } from '../../common/helper';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Box, Container, Grid, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
+import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
+import {
+    BlankSchema,
+    MetadataCreateUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
+import { getFunctionUiSpec } from './types';
+import { FormLabel } from '../../components/FormLabel';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -39,7 +42,6 @@ const CreateToolbar = (props: CreateActionsProps) => {
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
-    const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
@@ -48,18 +50,6 @@ export const FunctionCreate = () => {
         ...data,
         project: root || '',
     });
-
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-        return errors;
-    };
 
     useEffect(() => {
         if (schemaProvider) {
@@ -94,8 +84,26 @@ export const FunctionCreate = () => {
         return BlankSchema;
     };
 
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
+
+        if (!kinds.includes(data['kind'])) {
+            errors.kind = 'messages.validation.invalid';
+        }
+
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+
+        return errors;
+    };
+
     return (
-        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
                 <>
                     <CreatePageTitle
@@ -105,24 +113,30 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm validate={validator}>
-                                <Typography variant="h6" gutterBottom>
-                                    {translate('fields.base')}
-                                </Typography>
-                                <Stack direction={'row'} spacing={3}>
-                                    <TextInput source="name" required />
+                                <FormLabel label="fields.base" />
+
+                                <Stack direction={'row'} spacing={3} pt={4}>
+                                    <TextInput
+                                        source="name"
+                                        validate={[
+                                            required(),
+                                            isAlphaNumeric(),
+                                        ]}
+                                    />
                                     <SelectInput
                                         source="kind"
                                         choices={kinds}
-                                        required
+                                        validate={required()}
                                     />
                                 </Stack>
 
                                 <JsonSchemaInput
                                     source="metadata"
                                     schema={MetadataSchema}
-                                    uiSchema={MetadataEditUiSchema}
+                                    uiSchema={MetadataCreateUiSchema}
                                     label={false}
                                 />
+
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
                                         if (formData.kind)

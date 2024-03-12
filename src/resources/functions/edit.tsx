@@ -1,3 +1,10 @@
+import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Box, Container, Stack } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import deepEqual from 'deep-is';
+import { useEffect, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -12,34 +19,16 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { BlankSchema, getFunctionUiSpec } from './types';
-import { MetadataSchema } from '../../common/types';
-import { alphaNumericName } from '../../common/helper';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Box, Container, Stack, Typography } from '@mui/material';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import { useNavigate } from 'react-router';
-import { EditPageTitle } from '../../components/PageTitle';
-import { FunctionIcon } from './icon';
-import { FlatCard } from '../../components/FlatCard';
 import { useWatch } from 'react-hook-form';
-import deepEqual from 'deep-is';
-
-const validator = data => {
-    const errors: any = {};
-
-    if (!('kind' in data)) {
-        errors.kind = 'messages.validation.required';
-    }
-    if (!alphaNumericName(data.name)) {
-        errors.name = 'validation.wrongChar';
-    }
-    return errors;
-};
+import { useNavigate } from 'react-router';
+import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
+import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
+import { EditPageTitle } from '../../components/PageTitle';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { FunctionIcon } from './icon';
+import { getFunctionUiSpec } from './types';
+import { alphaNumericName } from '../../common/helper';
 
 export const FunctionEditToolbar = () => {
     const translate = useTranslate();
@@ -48,7 +37,7 @@ export const FunctionEditToolbar = () => {
         navigate(-1);
     };
     return (
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
             <SaveButton />
             <Button
                 color="info"
@@ -57,7 +46,6 @@ export const FunctionEditToolbar = () => {
             >
                 <ClearIcon />
             </Button>
-            {/* <NewVersionButton /> */}
         </Toolbar>
     );
 };
@@ -114,7 +102,6 @@ const SpecInput = (props: {
 };
 
 export const FunctionEdit = () => {
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
@@ -140,25 +127,26 @@ export const FunctionEdit = () => {
         return <LoadingIndicator />;
     }
 
-    const getFunctionSpec = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
         }
 
-        if (schemas) {
-            return schemas.find(s => s.id === 'FUNCTION:' + kind)?.schema;
+        if (!kinds.includes(data['kind'])) {
+            errors.kind = 'messages.validation.invalid';
         }
 
-        return BlankSchema;
-    };
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
 
-    const onSuccessRedirect = (resource, id, data, state) => {
-        console.log(resource, id, data);
-        return 'show';
+        return errors;
     };
 
     return (
-        <Container maxWidth={false} sx={{ paddingBottom: '8px' }}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 redirect={'show'}
                 mutationMode="pessimistic"
@@ -166,16 +154,16 @@ export const FunctionEdit = () => {
             >
                 <>
                     <EditPageTitle icon={<FunctionIcon fontSize={'large'} />} />
+
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm
-                                toolbar={<FunctionEditToolbar />}
                                 validate={validator}
+                                toolbar={<FunctionEditToolbar />}
                             >
-                                <Typography variant="h6" gutterBottom>
-                                    {translate('fields.base')}
-                                </Typography>
-                                <Stack direction={'row'} spacing={3}>
+                                <FormLabel label="fields.base" />
+
+                                <Stack direction={'row'} spacing={3} pt={4}>
                                     <TextInput source="name" readOnly />
 
                                     <SelectInput
@@ -184,46 +172,17 @@ export const FunctionEdit = () => {
                                         readOnly
                                     />
                                 </Stack>
+
                                 <JsonSchemaInput
                                     source="metadata"
                                     schema={MetadataSchema}
+                                    uiSchema={MetadataEditUiSchema}
                                 />
+
                                 <SpecInput
                                     source="spec"
                                     onDirty={setIsSpecDirty}
                                 />
-                                {/* <FormDataConsumer<{ kind: string }>>
-                                    {({ formData }) => {
-                                        console.log('form data', formData);
-                                        if (formData.kind)
-                                            return (
-                                                <JsonSchemaInput
-                                                    source="spec"
-                                                    schema={getFunctionSpec(
-                                                        formData.kind
-                                                    )}
-                                                    uiSchema={getFunctionUiSpec(
-                                                        formData.kind
-                                                    )}
-                                                />
-                                            );
-                                        else
-                                            return (
-                                                <Card
-                                                    sx={{
-                                                        width: 1,
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <CardContent>
-                                                        {translate(
-                                                            'resources.common.emptySpec'
-                                                        )}{' '}
-                                                    </CardContent>
-                                                </Card>
-                                            );
-                                    }}
-                                </FormDataConsumer> */}
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
