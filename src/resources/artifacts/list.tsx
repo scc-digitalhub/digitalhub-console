@@ -56,7 +56,7 @@ export const ArtifactList = () => {
           ]
         : [];
     return (
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />

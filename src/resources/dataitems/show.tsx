@@ -15,13 +15,12 @@ import {
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
+import { MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
-import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -41,20 +40,17 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     if (!record) return <></>;
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.summary">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.summary">
                 <Grid>
-                    <Typography variant="h6" gutterBottom>
-                        {translate('resources.dataitem.summary.title')}
-                    </Typography>
 
                     <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.name">
+                            <Labeled>
                                 <TextField source="name" />
                             </Labeled>
                         </Grid>
                         <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.kind">
+                            <Labeled>
                                 <TextField source="kind" />
                             </Labeled>
                         </Grid>
@@ -65,18 +61,18 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         schema={MetadataSchema}
                     />
 
-                    <JsonSchemaField
+                    {/* <JsonSchemaField
                         source="spec"
                         schema={DataItemSpecSchema}
                         uiSchema={DataItemSpecUiSchema}
-                        label="resources.dataitem.summary.spec.title"
-                    />
+                        label="resources.dataitems.summary.spec.title"
+                    /> */}
                 </Grid>
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.schema">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
                 <SchemaTabComponent record={props.record} />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.preview">
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
                 <PreviewTabComponent record={props.record} />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
@@ -93,7 +89,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton color="primary" />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>

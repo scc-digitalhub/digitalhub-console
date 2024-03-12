@@ -1,51 +1,37 @@
-// import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { Card, CardContent, Container, Grid } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import {
+    Box,
+    Card,
+    CardContent,
+    Container,
+    Stack
+} from '@mui/material';
+import deepEqual from 'deep-is';
+import { useEffect, useState } from 'react';
 import {
     Button,
-    Edit,
     EditBase,
-    FormDataConsumer,
-    LoadingIndicator,
+    EditView,
     SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
     Toolbar,
     useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { MetadataSchema } from '../../common/types';
-import { BlankSchema, DataItemTypes } from './types';
-import { alphaNumericName } from '../../common/helper';
-import { useState, useEffect } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { getFunctionSpec } from '../functions/types';
+import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import ClearIcon from '@mui/icons-material/Clear';
-import { RecordTitle } from '../../components/RecordTitle';
-import { NewVersionButton } from '../../components/NewVersionButton';
-
-const validator = data => {
-    const errors: any = {};
-
-    if (!('kind' in data)) {
-        errors.kind = 'messages.validation.required';
-    }
-    if (!alphaNumericName(data.name)) {
-        errors.name = 'validation.wrongChar';
-    }
-    return errors;
-};
-export const DataItemEdit = props => {
-    const record = useRecordContext();
-    const translate = useTranslate();
-    return (
-        <Edit title={<RecordTitle prompt={translate('dataItemsString')} />}>
-            <DataItemEditForm {...props} />
-        </Edit>
-    );
-};
+import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
+import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
+import { EditPageTitle } from '../../components/PageTitle';
+import { Spinner } from '../../components/Spinner';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { DataItemIcon } from './icon';
+import { getDataItemUiSpec } from './types';
 
 export const DataItemEditToolbar = () => {
     const translate = useTranslate();
@@ -54,7 +40,7 @@ export const DataItemEditToolbar = () => {
         navigate(-1);
     };
     return (
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
             <SaveButton />
             <Button
                 color="info"
@@ -63,16 +49,68 @@ export const DataItemEditToolbar = () => {
             >
                 <ClearIcon />
             </Button>
-            <NewVersionButton />
         </Toolbar>
     );
 };
 
-const DataItemEditForm = () => {
+const SpecInput = (props: {
+    source: string;
+    onDirty?: (state: boolean) => void;
+}) => {
+    const { source, onDirty } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    const value = useWatch({ name: source });
+    const eq = deepEqual(record[source], value);
+
+    const schemaProvider = useSchemaProvider();
+    const [spec, setSpec] = useState<any>();
+    const kind = record?.kind || null;
+
+    useEffect(() => {
+        if (schemaProvider && record) {
+            schemaProvider.get(resource, kind).then(s => setSpec(s));
+        }
+    }, [record, schemaProvider]);
+
+    useEffect(() => {
+        if (onDirty) {
+            onDirty(!eq);
+        }
+    }, [eq]);
+
+    if (!record || !record.kind || !spec) {
+        return (
+            <Card
+                sx={{
+                    width: 1,
+                    textAlign: 'center',
+                }}
+            >
+                <CardContent>
+                    {translate('resources.common.emptySpec')}{' '}
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <JsonSchemaInput
+            source={source}
+            schema={spec.schema}
+            uiSchema={getDataItemUiSpec(record.kind)}
+        />
+    );
+};
+
+export const DataItemEdit = () => {
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('dataitems').then(res => {
@@ -90,61 +128,49 @@ const DataItemEditForm = () => {
     }, [schemaProvider, setKinds]);
 
     if (!kinds) {
-        return <LoadingIndicator />;
+        return <Spinner />;
     }
 
-    const getDataitemSpec = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
-        }
-
-        if (schemas) {
-            return schemas.find(s => s.id === 'DATAITEM:' + kind)?.schema;
-        }
-
-        return BlankSchema;
-    };
     return (
-        <SimpleForm toolbar={<DataItemEditToolbar />} validate={validator}>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={4}>
-                    <TextInput
-                        source="name"
-                        label="resources.function.name"
-                        disabled
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <SelectInput
-                        source="kind"
-                        label="resources.function.kind"
-                        choices={kinds}
-                        disabled
-                    />
-                </Grid>
-            </Grid>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <EditBase
+                redirect={'show'}
+                mutationMode="pessimistic"
+                mutationOptions={{ meta: { update: !isSpecDirty } }}
+            >
+                <>
+                    <EditPageTitle icon={<DataItemIcon fontSize={'large'} />} />
 
-            <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <FormDataConsumer<{ kind: string }>>
-                {({ formData }) => {
-                    if (formData.kind)
-                        return (
-                            <JsonSchemaInput
-                                source="spec"
-                                schema={getFunctionSpec(formData.kind)}
-                                uiSchema={getDataitemSpec(formData.kind)}
-                            />
-                        );
-                    else
-                        return (
-                            <Card sx={{ width: 1, textAlign: 'center' }}>
-                                <CardContent>
-                                    {translate('resources.common.emptySpec')}{' '}
-                                </CardContent>
-                            </Card>
-                        );
-                }}
-            </FormDataConsumer>
-        </SimpleForm>
+                    <EditView component={Box}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm toolbar={<DataItemEditToolbar />}>
+                                <FormLabel label="fields.base" />
+
+                                <Stack direction={'row'} spacing={3} pt={4}>
+                                    <TextInput source="name" readOnly />
+
+                                    <SelectInput
+                                        source="kind"
+                                        choices={kinds}
+                                        readOnly
+                                    />
+                                </Stack>
+
+                                <JsonSchemaInput
+                                    source="metadata"
+                                    schema={MetadataSchema}
+                                    uiSchema={MetadataEditUiSchema}
+                                />
+
+                                <SpecInput
+                                    source="spec"
+                                    onDirty={setIsSpecDirty}
+                                />
+                            </SimpleForm>
+                        </FlatCard>
+                    </EditView>
+                </>
+            </EditBase>
+        </Container>
     );
 };

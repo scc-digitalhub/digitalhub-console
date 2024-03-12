@@ -12,8 +12,8 @@ import {
     useDataProvider,
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
-import { MetadataSchema } from '../../common/types';
-import { DataItemTypes, getDataItemSpec, getDataItemUiSpec } from './types';
+import { MetadataSchema } from '../../common/schemas';
+import { DataItemTypes } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
@@ -85,14 +85,14 @@ const DataItemEditForm = (props: { record: any }) => {
                 <Grid item xs={4}>
                     <TextInput
                         source="name"
-                        label="resources.function.name"
+                        label="resources.functions.name"
                         disabled
                     />
                 </Grid>
                 <Grid item xs={6}>
                     <SelectInput
                         source="kind"
-                        label="resources.function.kind"
+                        label="resources.functions.kind"
                         choices={kinds}
                         disabled
                     />
@@ -100,12 +100,12 @@ const DataItemEditForm = (props: { record: any }) => {
             </Grid>
 
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            <JsonSchemaInput
+            {/* <JsonSchemaInput
                 source="spec"
                 schema={getDataItemSpec(kind)}
                 uiSchema={getDataItemUiSpec(kind)}
                 label={false}
-            />
+            /> */}
         </SimpleForm>
     );
 };

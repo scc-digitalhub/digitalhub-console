@@ -58,7 +58,7 @@ export const PreviewHeaderCell = (props: {
                         }}
                     >
                         {translate(
-                            'resources.dataitem.preview.unsupportedField'
+                            'resources.dataitems.preview.unsupportedField'
                         )}
                     </span>
                 </Box>

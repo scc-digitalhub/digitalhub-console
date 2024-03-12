@@ -1,32 +1,29 @@
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Container, Stack, Typography } from '@mui/material';
+import { memo } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
-    Show,
     ShowBase,
     ShowView,
     SimpleShowLayout,
     TextField,
     TopToolbar,
     useRecordContext,
-    useTranslate,
+    useTranslate
 } from 'react-admin';
-import { Container, Grid, Stack, Typography } from '@mui/material';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import { arePropsEqual } from '../../common/helper';
 import {
     MetadataSchema,
-    MetadataViewUiSchema,
-    createMetadataViewUiSchema,
-} from '../../common/types';
-import { getArtifactSpec, getArtifactUiSpec } from './types';
-import { memo, useEffect, useState } from 'react';
-import { arePropsEqual } from '../../common/helper';
+    createMetadataViewUiSchema
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { VersionsListWrapper } from '../../components/VersionsList';
 
 const ShowComponent = () => {
@@ -39,7 +36,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton color='primary' />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>
@@ -56,11 +53,11 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     return (
         <SimpleShowLayout record={record}>
             <Typography variant="h6" gutterBottom>
-                {translate('resources.artifact.title')}
+                {translate('resources.artifacts.fields.summary')}
             </Typography>
-            <Labeled>
-                <TextField source="name" />
-            </Labeled>
+
+            <TextField source="name" />
+
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
                     <TextField source="kind" />
@@ -71,22 +68,21 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 </Labeled>
             </Stack>
 
-            <Labeled>
-                <TextField source="key" />
-            </Labeled>
+            <TextField source="key" />
 
             <JsonSchemaField
                 source="metadata"
                 schema={MetadataSchema}
                 uiSchema={createMetadataViewUiSchema(record.metadata)}
+                label={false}
             />
 
-            <JsonSchemaField
+            {/* <JsonSchemaField
                 source="spec"
                 schema={getArtifactSpec(kind)}
                 uiSchema={getArtifactUiSpec(kind)}
                 label={false}
-            />
+            /> */}
         </SimpleShowLayout>
     );
 },
