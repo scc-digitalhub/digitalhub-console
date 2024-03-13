@@ -43,6 +43,9 @@ export const MetadataCreateUiSchema = {
     description: {
         'ui:widget': 'textarea',
     },
+    labels: {
+        'ui:widget': 'tagsChipInput',
+    },
 };
 
 export const MetadataEditUiSchema = {
@@ -54,6 +57,9 @@ export const MetadataEditUiSchema = {
     },
     description: {
         'ui:widget': 'textarea',
+    },
+    labels: {
+        'ui:widget': 'tagsChipInput',
     },
 };
 
