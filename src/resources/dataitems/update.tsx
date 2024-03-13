@@ -103,7 +103,7 @@ const DataItemEditForm = (props: { record: any }) => {
             {/* <JsonSchemaInput
                 source="spec"
                 schema={getDataItemSpec(kind)}
-                uiSchema={getDataItemUiSpec(kind)}
+                uiSchema={getDataItemSpecUiSchema(kind)}
                 label={false}
             /> */}
         </SimpleForm>

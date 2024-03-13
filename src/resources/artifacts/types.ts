@@ -2,7 +2,7 @@ export enum ArtifactTypes {
     ARTIFACT = 'artifact',
 }
 
-export const getArtifactUiSpec = (kind: string | undefined) => {
+export const getArtifactSpecUiSchema = (kind: string | undefined) => {
     if (!kind) {
         return undefined;
     }

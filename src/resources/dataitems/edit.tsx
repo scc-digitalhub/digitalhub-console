@@ -26,7 +26,7 @@ import { EditPageTitle } from '../../components/PageTitle';
 import { Spinner } from '../../components/Spinner';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
-import { getDataItemUiSpec } from './types';
+import { getDataItemSpecUiSchema } from './types';
 
 export const DataItemEditToolbar = () => {
     const translate = useTranslate();
@@ -94,7 +94,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={spec.schema}
-            uiSchema={getDataItemUiSpec(record.kind)}
+            uiSchema={getDataItemSpecUiSchema(record.kind)}
         />
     );
 };

@@ -19,13 +19,13 @@ import {
     useTranslate,
 } from 'react-admin';
 import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
-import { BlankSchema, MetadataSchema } from '../../common/schemas';
+import { BlankSchema, MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
-import { getDataItemUiSpec } from './types';
+import { getDataItemSpecUiSchema } from './types';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -73,7 +73,7 @@ export const DataItemCreate = () => {
         }
     }, [schemaProvider]);
 
-    const getDataItemSpec = (kind: string | undefined) => {
+    const getDataItemSpecSchema = (kind: string | undefined) => {
         if (!kind) {
             return BlankSchema;
         }
@@ -139,7 +139,7 @@ export const DataItemCreate = () => {
                                 <JsonSchemaInput
                                     source="metadata"
                                     schema={MetadataSchema}
-                                    label={false}
+                                    uiSchema={MetadataCreateUiSchema}
                                 />
 
                                 <FormDataConsumer<{ kind: string }>>
@@ -148,10 +148,10 @@ export const DataItemCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={getDataItemSpec(
+                                                    schema={getDataItemSpecSchema(
                                                         formData.kind
                                                     )}
-                                                    uiSchema={getDataItemUiSpec(
+                                                    uiSchema={getDataItemSpecUiSchema(
                                                         formData.kind
                                                     )}
                                                 />

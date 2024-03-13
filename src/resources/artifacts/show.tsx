@@ -27,6 +27,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { getArtifactSpecUiSchema } from './types';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -51,8 +52,8 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
-    const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
+    const kind = record?.kind || undefined;
 
     useEffect(() => {
         if (!schemaProvider) {
@@ -90,7 +91,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             <JsonSchemaField
                 source="metadata"
                 schema={MetadataSchema}
-                uiSchema={createMetadataViewUiSchema(record.metadata)}
+                uiSchema={createMetadataViewUiSchema(record?.metadata)}
                 label={false}
             />
 
@@ -98,7 +99,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 <JsonSchemaField
                     source="spec"
                     schema={spec.schema}
-                    //uiSchema={getArtifactUiSpec(kind)}
+                    uiSchema={getArtifactSpecUiSchema(kind)}
                     label={false}
                 />
             )}

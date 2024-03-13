@@ -13,7 +13,7 @@ import {
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
-import { ArtifactTypes, getArtifactUiSpec } from './types';
+import { ArtifactTypes, getArtifactSpecUiSchema } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
@@ -85,7 +85,7 @@ const ArtifactEditForm = (props: { record: any }) => {
             {/* <JsonSchemaInput
                 source="spec"
                 schema={getArtifactSpec(kind)}
-                uiSchema={getArtifactUiSpec(kind)}
+                uiSchema={getArtifactSpecUiSchema(kind)}
                 label={false}
             /> */}
         </SimpleForm>

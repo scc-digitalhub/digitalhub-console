@@ -2,7 +2,7 @@ export enum DataItemTypes {
     DATAITEM = 'dataitem',
 }
 
-export const getDataItemUiSpec = (kind: string | undefined) => {
+export const getDataItemSpecUiSchema = (kind: string | undefined) => {
     if (!kind) {
         return undefined;
     }

@@ -28,7 +28,7 @@ import { EditPageTitle } from '../../components/PageTitle';
 import { Spinner } from '../../components/Spinner';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
-import { getArtifactUiSpec } from './types';
+import { getArtifactSpecUiSchema } from './types';
 
 export const ArtifactEditToolbar = () => {
     const translate = useTranslate();
@@ -96,7 +96,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={spec.schema}
-            uiSchema={getArtifactUiSpec(record.kind)}
+            uiSchema={getArtifactSpecUiSchema(record.kind)}
         />
     );
 };

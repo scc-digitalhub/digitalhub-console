@@ -3,7 +3,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Container, Grid } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -15,16 +15,20 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    useResourceContext
+    useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { MetadataSchema } from '../../common/schemas';
+import {
+    MetadataSchema,
+    createMetadataViewUiSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
+import { getDataItemSpecUiSchema } from './types';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -49,6 +53,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
+    const kind = record?.kind || undefined;
 
     useEffect(() => {
         if (!schemaProvider) {
@@ -66,34 +71,33 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="resources.dataitems.tab.summary">
-                <Grid>
-                    <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        <Grid item xs={6}>
-                            <Labeled>
-                                <TextField source="name" />
-                            </Labeled>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Labeled>
-                                <TextField source="kind" />
-                            </Labeled>
-                        </Grid>
-                    </Grid>
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="name" />
+                    </Labeled>
 
+                    <Labeled>
+                        <TextField source="kind" />
+                    </Labeled>
+                </Stack>
+
+                <TextField source="key" />
+
+                <JsonSchemaField
+                    source="metadata"
+                    schema={MetadataSchema}
+                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
+                    label={false}
+                />
+
+                {spec && (
                     <JsonSchemaField
-                        source="metadata"
-                        schema={MetadataSchema}
+                        source="spec"
+                        schema={spec.schema}
+                        uiSchema={getDataItemSpecUiSchema(kind)}
+                        label={false}
                     />
-
-                    {spec && (
-                        <JsonSchemaField
-                            source="spec"
-                            schema={spec.schema}
-                            //uiSchema={DataItemSpecUiSchema}
-                            label={false}
-                        />
-                    )}
-                </Grid>
+                )}
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
                 <SchemaTabComponent record={props.record} />

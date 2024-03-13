@@ -19,13 +19,13 @@ import {
     useTranslate,
 } from 'react-admin';
 import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
-import { BlankSchema, MetadataSchema } from '../../common/schemas';
+import { BlankSchema, MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
-import { getArtifactUiSpec } from './types';
+import { getArtifactSpecUiSchema } from './types';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -73,7 +73,7 @@ export const ArtifactCreate = () => {
         }
     }, [schemaProvider]);
 
-    const getArtifactSpec = (kind: string | undefined) => {
+    const getArtifactSpecSchema = (kind: string | undefined) => {
         if (!kind) {
             return BlankSchema;
         }
@@ -139,18 +139,19 @@ export const ArtifactCreate = () => {
                                 <JsonSchemaInput
                                     source="metadata"
                                     schema={MetadataSchema}
-                                    label={false}
+                                    uiSchema={MetadataCreateUiSchema}
                                 />
+
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
                                         if (formData.kind)
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={getArtifactSpec(
+                                                    schema={getArtifactSpecSchema(
                                                         formData.kind
                                                     )}
-                                                    uiSchema={getArtifactUiSpec(
+                                                    uiSchema={getArtifactSpecUiSchema(
                                                         formData.kind
                                                     )}
                                                 />
