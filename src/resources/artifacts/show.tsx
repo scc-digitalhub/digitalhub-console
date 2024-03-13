@@ -3,7 +3,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -11,12 +11,11 @@ import {
     Labeled,
     ShowBase,
     ShowView,
-    SimpleShowLayout,
+    TabbedShowLayout,
     TextField,
     TopToolbar,
     useRecordContext,
-    useResourceContext,
-    useTranslate,
+    useResourceContext
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import {
@@ -49,7 +48,6 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
     const { record } = props;
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
@@ -69,41 +67,39 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 
     if (!record) return <></>;
     return (
-        <SimpleShowLayout record={record}>
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.artifacts.fields.summary')}
-            </Typography>
+        <TabbedShowLayout syncWithLocation={false} record={record}>
+            <TabbedShowLayout.Tab label="fields.summary">
+                <TextField source="name" />
 
-            <TextField source="name" />
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="kind" />
+                    </Labeled>
 
-            <Stack direction={'row'} spacing={3}>
-                <Labeled>
-                    <TextField source="kind" />
-                </Labeled>
+                    <Labeled>
+                        <TextField source="id" />
+                    </Labeled>
+                </Stack>
 
-                <Labeled>
-                    <TextField source="id" />
-                </Labeled>
-            </Stack>
+                <TextField source="key" />
 
-            <TextField source="key" />
-
-            <JsonSchemaField
-                source="metadata"
-                schema={MetadataSchema}
-                uiSchema={createMetadataViewUiSchema(record?.metadata)}
-                label={false}
-            />
-
-            {spec && (
                 <JsonSchemaField
-                    source="spec"
-                    schema={spec.schema}
-                    uiSchema={getArtifactSpecUiSchema(kind)}
+                    source="metadata"
+                    schema={MetadataSchema}
+                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
                     label={false}
                 />
-            )}
-        </SimpleShowLayout>
+
+                {spec && (
+                    <JsonSchemaField
+                        source="spec"
+                        schema={spec.schema}
+                        uiSchema={getArtifactSpecUiSchema(kind)}
+                        label={false}
+                    />
+                )}
+            </TabbedShowLayout.Tab>
+        </TabbedShowLayout>
     );
 },
 arePropsEqual);

@@ -59,7 +59,7 @@ export const ArtifactList = () => {
 
     useEffect(() => {
         if (schemaProvider) {
-            schemaProvider.kinds('dataitems').then(res => {
+            schemaProvider.kinds('artifacts').then(res => {
                 if (res) {
                     const values = res.map(s => ({
                         id: s,

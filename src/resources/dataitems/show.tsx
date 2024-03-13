@@ -70,7 +70,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     if (!record) return <></>;
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab label="resources.dataitems.tab.summary">
+            <TabbedShowLayout.Tab label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="name" />
