@@ -1,6 +1,8 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
+    CreateButton,
     Datagrid,
     EditButton,
     ListBase,
@@ -9,14 +11,46 @@ import {
     ShowButton,
     TextField,
     TextInput,
+    TopToolbar,
+    useDatagridContext,
+    useExpanded,
+    useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { ListPageTitle } from '../../components/PageTitle';
-import { ArtifactIcon } from './icon';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
 import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
+import { FlatCard } from '../../components/FlatCard';
+import { ListPageTitle } from '../../components/PageTitle';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { ArtifactIcon } from './icon';
+
+const ListToolbar = () => {
+    return (
+        <TopToolbar>
+            <CreateButton />
+        </TopToolbar>
+    );
+};
+
+const RowActions = () => {
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    const context = useDatagridContext();
+    const [expanded] = useExpanded(
+        resource,
+        record.id,
+        context && context.expandSingle
+    );
+    return (
+        <RowButtonGroup label="⋮">
+            <ShowButton disabled={expanded} />
+            <EditButton disabled={expanded} />
+            <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
+        </RowButtonGroup>
+    );
+};
 
 export const ArtifactList = () => {
     const translate = useTranslate();
@@ -36,7 +70,7 @@ export const ArtifactList = () => {
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
 
     const postFilters = kinds
         ? [
@@ -60,22 +94,28 @@ export const ArtifactList = () => {
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
-                    <ListView filters={postFilters}>
-                        <Datagrid rowClick="show" expand={VersionsList}>
-                            <TextField source="name" />
-                            <TextField source="kind" />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'end',
-                                }}
+
+                    <ListToolbar />
+
+                    <FlatCard>
+                        <ListView
+                            filters={postFilters}
+                            actions={false}
+                            component={Box}
+                        >
+                            <Datagrid
+                                rowClick="show"
+                                expand={VersionsList}
+                                expandSingle={true}
+                                bulkActionButtons={false}
                             >
-                                <ShowButton />
-                                <EditButton />
-                                <DeleteWithConfirmButtonByName />
-                            </div>
-                        </Datagrid>
-                    </ListView>
+                                <TextField source="name" />
+                                <TextField source="kind" />
+
+                                <RowActions />
+                            </Datagrid>
+                        </ListView>
+                    </FlatCard>
                 </>
             </ListBase>
         </Container>

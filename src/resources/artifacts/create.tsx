@@ -18,14 +18,14 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import { alphaNumericName } from '../../common/helper';
+import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
 import { BlankSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactUiSpec } from './types';
-import { FormLabel } from '../../components/FormLabel';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -71,11 +71,7 @@ export const ArtifactCreate = () => {
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
-
-    if (!kinds) {
-        return <LoadingIndicator />;
-    }
+    }, [schemaProvider]);
 
     const getArtifactSpec = (kind: string | undefined) => {
         if (!kind) {
@@ -88,6 +84,28 @@ export const ArtifactCreate = () => {
 
         return BlankSchema;
     };
+
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
+
+        if (!kinds?.some(k => k.id === data.kind)) {
+            errors.kind = 'messages.validation.invalid';
+        }
+
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+
+        return errors;
+    };
+
+    if (!kinds) {
+        return <LoadingIndicator />;
+    }
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -105,7 +123,10 @@ export const ArtifactCreate = () => {
                                 <Stack direction={'row'} spacing={3} pt={4}>
                                     <TextInput
                                         source="name"
-                                        validate={validateName}
+                                        validate={[
+                                            required(),
+                                            isAlphaNumeric(),
+                                        ]}
                                     />
 
                                     <SelectInput

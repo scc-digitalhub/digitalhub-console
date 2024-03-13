@@ -1,12 +1,6 @@
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import ClearIcon from '@mui/icons-material/Clear';
-import {
-    Box,
-    Card,
-    CardContent,
-    Container,
-    Stack
-} from '@mui/material';
+import { Box, Card, CardContent, Container, Stack } from '@mui/material';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
@@ -24,6 +18,7 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { alphaNumericName } from '../../common/helper';
 import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
@@ -105,27 +100,42 @@ const SpecInput = (props: {
 };
 
 export const DataItemEdit = () => {
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
-    const [schemas, setSchemas] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('dataitems').then(res => {
                 if (res) {
-                    setSchemas(res);
-
                     const values = res.map(s => ({
                         id: s.kind,
                         name: s.kind,
                     }));
+                    
                     setKinds(values);
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
+
+    const validator = data => {
+        const errors: any = {};
+
+        if (!('kind' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
+
+        if (!kinds?.some(k => k.id === data.kind)) {
+            errors.kind = 'messages.validation.invalid';
+        }
+
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+
+        return errors;
+    };
 
     if (!kinds) {
         return <Spinner />;

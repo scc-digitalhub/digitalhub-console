@@ -1,6 +1,8 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
+    CreateButton,
     Datagrid,
     EditButton,
     ListBase,
@@ -9,16 +11,46 @@ import {
     ShowButton,
     TextField,
     TextInput,
+    TopToolbar,
+    useDatagridContext,
+    useExpanded,
+    useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
+import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
-import { VersionsList } from '../../components/VersionsList';
-import { DataItemIcon } from './icon';
-import { DataItemTypes } from './types';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { VersionsList } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { DataItemIcon } from './icon';
+
+const ListToolbar = () => {
+    return (
+        <TopToolbar>
+            <CreateButton />
+        </TopToolbar>
+    );
+};
+
+const RowActions = () => {
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    const context = useDatagridContext();
+    const [expanded] = useExpanded(
+        resource,
+        record.id,
+        context && context.expandSingle
+    );
+    return (
+        <RowButtonGroup label="⋮">
+            <ShowButton disabled={expanded} />
+            <EditButton disabled={expanded} />
+            <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
+        </RowButtonGroup>
+    );
+};
 
 export const DataItemList = () => {
     const translate = useTranslate();
@@ -38,7 +70,7 @@ export const DataItemList = () => {
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
 
     const postFilters = kinds
         ? [
@@ -62,28 +94,28 @@ export const DataItemList = () => {
             <ListBase exporter={yamlExporter}>
                 <>
                     <ListPageTitle icon={<DataItemIcon fontSize={'large'} />} />
-                    <ListView filters={postFilters}>
-                        <Datagrid
-                            rowClick="show"
-                            expand={<VersionsList />}
-                            expandSingle={true}
+
+                    <ListToolbar />
+
+                    <FlatCard>
+                        <ListView
+                            filters={postFilters}
+                            actions={false}
+                            component={Box}
                         >
-                            <TextField source="name" />
-                            <TextField source="kind" />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'end',
-                                }}
+                            <Datagrid
+                                rowClick="show"
+                                expand={<VersionsList />}
+                                expandSingle={true}
+                                bulkActionButtons={false}
                             >
-                                <RowButtonGroup>
-                                    <ShowButton />
-                                    <EditButton />
-                                    <DeleteWithConfirmButtonByName />
-                                </RowButtonGroup>
-                            </div>
-                        </Datagrid>
-                    </ListView>
+                                <TextField source="name" />
+                                <TextField source="kind" />
+
+                                <RowActions />
+                            </Datagrid>
+                        </ListView>
+                    </FlatCard>
                 </>
             </ListBase>
         </Container>

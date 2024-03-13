@@ -4,7 +4,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Container, Stack, Typography } from '@mui/material';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
@@ -15,16 +15,18 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    useTranslate
+    useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import {
     MetadataSchema,
-    createMetadataViewUiSchema
+    createMetadataViewUiSchema,
 } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -36,8 +38,8 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton color='primary' />
-        <ExportRecordButton language="yaml" />
+        <InspectButton />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );
@@ -45,9 +47,24 @@ const ShowToolbar = () => (
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
-    const translate = useTranslate();
     const { record } = props;
+    const translate = useTranslate();
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
     const kind = record?.kind || undefined;
+    const [spec, setSpec] = useState<any>();
+
+    useEffect(() => {
+        if (!schemaProvider) {
+            return;
+        }
+
+        if (record) {
+            schemaProvider.get(resource, record.kind).then(s => {
+                setSpec(s);
+            });
+        }
+    }, [record, schemaProvider, resource]);
 
     if (!record) return <></>;
     return (
@@ -77,12 +94,14 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 label={false}
             />
 
-            {/* <JsonSchemaField
-                source="spec"
-                schema={getArtifactSpec(kind)}
-                uiSchema={getArtifactUiSpec(kind)}
-                label={false}
-            /> */}
+            {spec && (
+                <JsonSchemaField
+                    source="spec"
+                    schema={spec.schema}
+                    //uiSchema={getArtifactUiSpec(kind)}
+                    label={false}
+                />
+            )}
         </SimpleShowLayout>
     );
 },
