@@ -114,20 +114,23 @@ const messages = {
     },
     pages: {
         dashboard: {
-            title: 'Dashboard',
-            description: 'Project overview',
             text: 'Define, build and execute functions to manage artifacts and dataitems.',
+            created: 'Created',
+            updated: 'Updated',
+            recent: 'Recent',
+            states: {
+                completed: 'Completed',
+                running: 'Running',
+                error: 'Error',
+            },
             functions: {
                 title: 'Functions and code',
-                description: 'Define and manage functions',
             },
             dataitems: {
                 title: 'Data items',
-                description: 'Review and manage data items',
             },
             artifacts: {
                 title: 'Artifacts',
-                description: 'Review and manage artifacts',
             },
         },
         functions: {
