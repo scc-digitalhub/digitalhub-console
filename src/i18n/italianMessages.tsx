@@ -99,6 +99,28 @@ const messages = {
             },
         },
     },
+    pages: {
+        dashboard: {
+            text: 'Definisci, crea ed esegui funzioni per gestire artefatti e data items.',
+            created: 'Creazione',
+            updated: 'Aggiornamento',
+            recent: 'Recenti',
+            states: {
+                completed: 'Completati',
+                running: 'In esecuzione',
+                error: 'Errore',
+            },
+            functions: {
+                title: 'Funzioni e codice',
+            },
+            dataitems: {
+                title: 'Data items',
+            },
+            artifacts: {
+                title: 'Artefatti',
+            },
+        },
+    },
     search: {
         name: 'Nome',
         kind: 'Tipo',
