@@ -63,7 +63,7 @@ const ShowToolbar = () => (
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
         <InspectButton />
-        <ExportRecordButton language="yaml" />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );

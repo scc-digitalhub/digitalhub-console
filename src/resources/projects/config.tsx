@@ -25,8 +25,8 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton color="primary" />
-        <ExportRecordButton language="yaml" />
+        <InspectButton />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );

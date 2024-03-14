@@ -281,7 +281,8 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                     <SourceCodeBlock
                         code={code}
                         showLineNumbers={true}
-                        showCopyButton={false} maxWidth={false}
+                        showCopyButton={false}
+                        maxWidth={false}
                     />
                 </Labeled>
             </Box>
@@ -293,8 +294,8 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton color="primary" />
-        <ExportRecordButton language="yaml" />
+        <InspectButton />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );
