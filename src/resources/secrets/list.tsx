@@ -14,7 +14,7 @@ import {
 
 import { SecretIcon } from './icon';
 import { useState, useEffect } from 'react';
-import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
 import { ListPageTitle } from '../../components/PageTitle';
 
 export const SecretList = () => {
@@ -52,7 +52,7 @@ export const SecretList = () => {
                             >
                                 <ShowButton />
                                 <EditButton />
-                                <DeleteWithConfirmButtonShowingName />
+                                <DeleteWithConfirmButtonByName />
                             </div>
                         </Datagrid>
                     </ListView>

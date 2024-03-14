@@ -15,7 +15,9 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useNotify,
     useRecordContext,
+    useRedirect,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -102,6 +104,9 @@ const SpecInput = (props: {
 };
 
 export const FunctionEdit = () => {
+    const notify = useNotify();
+    const redirect = useRedirect();
+    const resource = useResourceContext();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
@@ -129,12 +134,13 @@ export const FunctionEdit = () => {
 
     const validator = data => {
         const errors: any = {};
-
+        console.log(data);
+        console.log(kinds);
         if (!('kind' in data)) {
             errors.kind = 'messages.validation.required';
         }
 
-        if (!kinds.includes(data['kind'])) {
+        if (!kinds.find(k => k.id === data.kind)) {
             errors.kind = 'messages.validation.invalid';
         }
 
@@ -145,12 +151,29 @@ export const FunctionEdit = () => {
         return errors;
     };
 
+    const onSuccess = (data, variables, context) => {
+        console.log('success', data, variables);
+    };
+    const onSettled = (data, variables, context) => {
+        console.log('settled', data, variables);
+
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        redirect('show', resource, data.id, data);
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 redirect={'show'}
-                mutationMode="pessimistic"
-                mutationOptions={{ meta: { update: !isSpecDirty } }}
+                mutationMode="optimistic"
+                mutationOptions={{
+                    meta: { update: !isSpecDirty },
+                    onSuccess: onSuccess,
+                    onSettled: onSettled,
+                }}
             >
                 <>
                     <EditPageTitle icon={<FunctionIcon fontSize={'large'} />} />

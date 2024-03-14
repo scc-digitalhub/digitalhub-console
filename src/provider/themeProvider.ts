@@ -119,6 +119,9 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
+    MuiOutlinedInput: {
+        styleOverrides: {},
+    },
     MuiTableCell: {
         styleOverrides: {
             root: {

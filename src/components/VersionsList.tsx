@@ -26,7 +26,7 @@ import {
 } from 'react-admin';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FlatCard } from './FlatCard';
 
 export type VersionListProps = {
@@ -47,14 +47,17 @@ export const VersionsList = (props: VersionListProps) => {
     } = props;
     const record = useRecordContext(rest);
     const resource = useResourceContext();
+    const filter = useMemo(() => {
+        return { name: record?.name, versions: 'all' };
+    }, [record]);
+
+    console.log('record', record);
 
     if (!record) {
         return <></>;
     }
 
     //TODO fetch latest and add label
-
-    const filter = { name: record.name, versions: 'all' };
 
     const sxProps = showActions ? { ...sx } : { ml: 2, mr: 2, ...sx };
     const rowSx = (item, index) => {
@@ -81,6 +84,7 @@ export const VersionsList = (props: VersionListProps) => {
                 )
             }
             disableSyncWithLocation
+            storeKey={false}
         >
             <SimpleList
                 linkType="show"
@@ -113,7 +117,8 @@ export const VersionsList = (props: VersionListProps) => {
 };
 
 // export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
-export const VersionsListWrapper = () => {
+export const VersionsListWrapper = (props: any) => {
+    console.log('wp', props);
     const translate = useTranslate();
 
     return (

@@ -91,7 +91,7 @@ export const FunctionCreate = () => {
             errors.kind = 'messages.validation.required';
         }
 
-        if (!kinds.includes(data['kind'])) {
+        if (!kinds.find(k => k.id === data.kind)) {
             errors.kind = 'messages.validation.invalid';
         }
 

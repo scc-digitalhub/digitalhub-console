@@ -1,5 +1,5 @@
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { Container, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -29,7 +29,7 @@ import { TaskAndRuns } from './TaskAndRuns';
 import { getFunctionUiSpec } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton, SourceCodeBlock } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 
@@ -43,6 +43,7 @@ const ShowComponent = () => {
     const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<any>([]);
+    const [sourceCode, setSourceCode] = useState<any>();
 
     // const { data, isLoading, error } = useGetList('tasks', {
     //     filter: {
@@ -53,6 +54,11 @@ const ShowComponent = () => {
         if (!schemaProvider || !dataProvider) {
             return;
         }
+
+        if (record?.spec?.source) {
+            setSourceCode(record.spec.source);
+        }
+
         if (record && tasks.length == 0) {
             schemaProvider.get(resource, record.kind).then(s => {
                 console.log('spec', s);
@@ -77,7 +83,7 @@ const ShowComponent = () => {
                     console.log('kinds', kinds);
                     console.log('list', list);
 
-                    if (!kinds || !list) {
+                    if (!kinds || !list || !list.data) {
                         return;
                     }
 
@@ -111,7 +117,10 @@ const ShowComponent = () => {
                         })
                     )
                         .then(records => {
-                            const res = list.data.concat(records);
+                            const rts = records
+                                .filter(r => r.data)
+                                .map(r => r.data);
+                            const res = list.data.concat(rts);
                             res.sort((a, b) => {
                                 return a.kind.localeCompare(b.kind);
                             });
@@ -166,6 +175,18 @@ const ShowComponent = () => {
         return <LoadingIndicator />;
     }
 
+    const getUiSpec = (kind: string) => {
+        const uiSpec = getFunctionUiSpec(kind) || {};
+        if (sourceCode) {
+            //hide source field
+            uiSpec['source'] = {
+                'ui:widget': 'hidden',
+            };
+        }
+
+        return uiSpec;
+    };
+
     console.log('tasks', tasks);
 
     return (
@@ -195,13 +216,22 @@ const ShowComponent = () => {
                     <JsonSchemaField
                         source="spec"
                         schema={spec.schema}
-                        uiSchema={getFunctionUiSpec(kind)}
+                        uiSchema={getUiSpec(kind)}
                         label={false}
                     />
                 )}
             </TabbedShowLayout.Tab>
 
-            {tasks.map(task => (
+            {sourceCode && (
+                <TabbedShowLayout.Tab
+                    label={'fields.code'}
+                    key={record.id + ':source_code'}
+                >
+                    <SourceCodeView sourceCode={sourceCode} />
+                </TabbedShowLayout.Tab>
+            )}
+
+            {tasks?.map(task => (
                 <TabbedShowLayout.Tab
                     label={'resources.tasks.kinds.' + task.kind}
                     key={task.kind}
@@ -214,6 +244,48 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             ))}
         </TabbedShowLayout>
+    );
+};
+
+const SourceCodeView = (props: { sourceCode: any }) => {
+    const { sourceCode } = props;
+    console.log('source', sourceCode);
+    const code = sourceCode.code
+        ? sourceCode.code
+        : sourceCode.base64
+        ? atob(sourceCode.base64)
+        : '';
+
+    const values = {
+        ...{ sourceCode },
+        source: sourceCode.source || '-',
+        lang: sourceCode.lang || 'unknown',
+    };
+
+    return (
+        <RecordContextProvider value={values}>
+            <TopToolbar>
+                <InspectButton showCopyButton={false} />
+            </TopToolbar>
+            <Stack direction={'row'} spacing={3} color={'gray'}>
+                <Labeled>
+                    <TextField source="lang" record={values} />
+                </Labeled>
+
+                <Labeled>
+                    <TextField source="source" record={values} />
+                </Labeled>
+            </Stack>
+            <Box sx={{ pt: 2 }}>
+                <Labeled label="fields.code">
+                    <SourceCodeBlock
+                        code={code}
+                        showLineNumbers={true}
+                        showCopyButton={false} maxWidth={false}
+                    />
+                </Labeled>
+            </Box>
+        </RecordContextProvider>
     );
 };
 

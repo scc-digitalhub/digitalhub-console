@@ -15,7 +15,7 @@ import { ListPageTitle } from '../../components/PageTitle';
 import { ArtifactIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useState, useEffect } from 'react';
-import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
 import { VersionsList } from '../../components/VersionsList';
 
 export const ArtifactList = () => {
@@ -72,7 +72,7 @@ export const ArtifactList = () => {
                             >
                                 <ShowButton />
                                 <EditButton />
-                                <DeleteWithConfirmButtonShowingName />
+                                <DeleteWithConfirmButtonByName />
                             </div>
                         </Datagrid>
                     </ListView>

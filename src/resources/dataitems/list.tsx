@@ -11,7 +11,7 @@ import {
     TextInput,
     useTranslate,
 } from 'react-admin';
-import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
 import { ListPageTitle } from '../../components/PageTitle';
 import { VersionsList } from '../../components/VersionsList';
 import { DataItemIcon } from './icon';
@@ -79,7 +79,7 @@ export const DataItemList = () => {
                                 <RowButtonGroup>
                                     <ShowButton />
                                     <EditButton />
-                                    <DeleteWithConfirmButtonShowingName />
+                                    <DeleteWithConfirmButtonByName />
                                 </RowButtonGroup>
                             </div>
                         </Datagrid>

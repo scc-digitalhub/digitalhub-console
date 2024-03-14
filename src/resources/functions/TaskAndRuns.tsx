@@ -1,9 +1,12 @@
 import { TaskEdit, TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
+    ChipField,
     Datagrid,
     DateField,
+    DeleteWithConfirmButton,
     Empty,
     EmptyClasses,
+    FunctionField,
     Labeled,
     List,
     ListNoResults,
@@ -31,6 +34,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { Inbox } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { RowButtonGroup } from '../../components/RowButtonGroup';
 
 export const TaskAndRuns = () => {
     const record = useRecordContext();
@@ -47,10 +51,10 @@ export const TaskAndRuns = () => {
                     })}
             </Typography> */}
             <TopToolbar>
-                <ShowInDialogButton fullWidth>
+                <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
                 </ShowInDialogButton>
-                <EditInDialogButton fullWidth>
+                <EditInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskEditComponent />
                 </EditInDialogButton>
                 <InspectButton />
@@ -138,6 +142,18 @@ const TaskRunList = () => {
                     <DateField source="metadata.created" />
                     <TextField source="id" />
                     <TextField source="status.state" />
+                    <FunctionField
+                        source="status.state"
+                        render={(record: any) => <ChipField />}
+                    />
+                    <RowButtonGroup label="⋮">
+                        <ShowInDialogButton>
+                            <SimpleShowLayout>
+                                <TextField source="key" />
+                            </SimpleShowLayout>
+                        </ShowInDialogButton>
+                        <DeleteWithConfirmButton redirect={false} />
+                    </RowButtonGroup>
                 </Datagrid>
             </List>
         </>

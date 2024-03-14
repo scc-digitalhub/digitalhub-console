@@ -220,7 +220,13 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}`;
+            let url = `${apiUrl}${prefix}/${resource}/${params.id}`;
+
+            if (params.meta?.deleteAll === true && params.meta?.name) {
+                url = `${apiUrl}${prefix}/${resource}?name=${params.meta.name}`;
+            }
+            console.log('meta', params.meta);
+            console.log('url', url);
 
             return httpClient(url, {
                 method: 'DELETE',
@@ -242,12 +248,11 @@ const springDataProvider = (
                 )
             ).then(responses => ({ data: responses.map(({ json }) => json) }));
         },
-        getSecretData: (params) => {
+        getSecretData: params => {
             let prefix = '';
             if (params.root) {
                 prefix = '/-/' + params.root;
                 delete params.root;
-
             }
             const url = `${apiUrl}${prefix}/secrets/data?${stringify(params)}`;
             return httpClient(url).then(({ status, json }) => {
@@ -259,20 +264,19 @@ const springDataProvider = (
                 };
             });
         },
-        createSecret: (params) => {
+        createSecret: params => {
             let prefix = '/-/' + params.project;
             let url = `${apiUrl}${prefix}/secrets`;
-                url+='/data '
-                delete params['project'];
-                // const paramsSecret=JSON.parse(JSON.stringify(params.data));
-                // const newObj = Object.assign({}, params.data);
+            url += '/data ';
+            delete params['project'];
+            // const paramsSecret=JSON.parse(JSON.stringify(params.data));
+            // const newObj = Object.assign({}, params.data);
 
-                return httpClient(url, {
-                    method: 'PUT',
-                    body: JSON.stringify(params),
-                }).then(({ json }) => ({ data: json }));
-            
-        }
+            return httpClient(url, {
+                method: 'PUT',
+                body: JSON.stringify(params),
+            }).then(({ json }) => ({ data: json }));
+        },
     };
 };
 

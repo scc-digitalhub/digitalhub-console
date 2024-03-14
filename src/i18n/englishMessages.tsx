@@ -18,6 +18,7 @@ const fields = {
     status: {
         state: 'Status',
     },
+    code: 'Code',
     base: 'Base',
     summary: 'Summary',
 };
@@ -43,10 +44,10 @@ const messages = {
                 test: 'test',
             },
         },
-        secret: {
+        secrets: {
             title: 'Secrets',
             showData: 'Show data',
-            name: 'Name',
+            name: 'Secret |||| Secrets',
             value: 'Value',
         },
         runs: {

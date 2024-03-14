@@ -19,7 +19,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { DeleteWithConfirmButtonShowingName } from '../../components/DeleteWithConfirmButtonShowingName';
+import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
@@ -59,7 +59,7 @@ const RowActions = () => {
         <RowButtonGroup label="⋮">
             <ShowButton disabled={expanded} />
             <EditButton disabled={expanded} />
-            <DeleteWithConfirmButtonShowingName disabled={expanded} />
+            <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
         </RowButtonGroup>
     );
 };
