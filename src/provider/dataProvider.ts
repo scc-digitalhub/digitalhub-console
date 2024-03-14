@@ -39,9 +39,14 @@ const springDataProvider = (
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
             const { page, perPage } = params.pagination;
-            const { field, order } = params.sort;
+            const { field: fieldParam, order } = params.sort;
+            const field =
+                fieldParam && fieldParam.startsWith('metadata.')
+                    ? fieldParam.substring(9)
+                    : fieldParam;
             const record = params.meta?.record;
             const allVersion = params.meta?.allVersion;
+
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
                 sort: field + ',' + order, //sorting
