@@ -42,7 +42,7 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
     const style = theme === 'dark' ? themeVS2015 : themeGithub;
 
     return (
-        <Container {...rest}>
+        <Container {...rest} disableGutters>
             {showCopyButton && (
                 <TopToolbar
                     variant="dense"

@@ -29,9 +29,10 @@ import { TaskAndRuns } from './TaskAndRuns';
 import { getFunctionUiSpec } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton, SourceCodeBlock } from '@dslab/ra-inspect-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { SourceCodeBlock } from '../../components/SourceCodeBlock';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -282,7 +283,7 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                         code={code}
                         showLineNumbers={true}
                         showCopyButton={false}
-                        maxWidth={false}
+                        maxWidth={'lg'}
                     />
                 </Labeled>
             </Box>
