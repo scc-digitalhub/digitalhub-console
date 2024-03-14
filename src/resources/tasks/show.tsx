@@ -15,7 +15,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useEffect, useState } from 'react';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaField } from '../../components/JsonSchema';
 import { getFunctionUiSpec } from '../functions/types';
 
 export const TaskShowComponent = () => {

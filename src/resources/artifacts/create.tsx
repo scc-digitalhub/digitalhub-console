@@ -1,4 +1,4 @@
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';

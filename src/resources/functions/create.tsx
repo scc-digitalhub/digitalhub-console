@@ -1,4 +1,4 @@
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -18,7 +18,11 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import { alphaNumericName, isAlphaNumeric, isValidKind } from '../../common/helper';
+import {
+    alphaNumericName,
+    isAlphaNumeric,
+    isValidKind,
+} from '../../common/helper';
 import {
     BlankSchema,
     MetadataCreateUiSchema,

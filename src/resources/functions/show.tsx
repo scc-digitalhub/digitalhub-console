@@ -1,4 +1,4 @@
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaField } from '../../components/JsonSchema';
 import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {

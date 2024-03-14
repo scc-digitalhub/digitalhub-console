@@ -1,4 +1,3 @@
-// import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
     Edit,
     Labeled,

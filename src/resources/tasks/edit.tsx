@@ -10,7 +10,7 @@ import {
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { JsonSchemaField, JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 import { getSchemaTask } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';

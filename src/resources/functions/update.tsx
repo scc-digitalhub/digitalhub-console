@@ -1,4 +1,4 @@
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 import {
     useTranslate,
     SimpleForm,

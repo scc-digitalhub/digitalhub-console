@@ -1,4 +1,3 @@
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -31,6 +30,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 
 export const FunctionEditToolbar = () => {
     const translate = useTranslate();

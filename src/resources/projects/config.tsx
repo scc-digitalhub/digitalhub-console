@@ -22,12 +22,12 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import {
     MetadataSchema,
     MetadataViewUiSchema,
     createMetadataViewUiSchema,
 } from '../../common/schemas';
+import { JsonSchemaField } from '../../components/JsonSchema';
 
 const ShowToolbar = () => (
     <TopToolbar>

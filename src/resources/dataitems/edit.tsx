@@ -1,4 +1,4 @@
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, CardContent, Container, Stack } from '@mui/material';
 import deepEqual from 'deep-is';
