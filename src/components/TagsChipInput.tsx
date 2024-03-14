@@ -30,29 +30,34 @@ export const TagsChipInput = function (props: WidgetProps) {
 
     return (
         <div>
-            <TextField fullWidth variant="outlined" type="text"
+            {!readonly &&
+            (<TextField fullWidth variant="outlined" type="text"
                 value={label}
-                disabled={disabled || (readonlyAsDisabled && readonly)}
+                disabled={disabled }
                 id={id}
                 name={id}
                 onBlur={!readonly ? handleBlur : undefined}
                 onFocus={!readonly ? handleFocus : undefined}
                 label="Labels"
                 onChange={handleChange}
-                onKeyDown={handleKeyDown}/>
+                onKeyDown={handleKeyDown}/>)
 
-            
+            }
             <div class="chip">
                 {list.map((item, index) => {
-                    return (
-                        <Chip
+                    return readonly?
+                        
+                        (<Chip
+                            label={item}
+                            key={item}
+                        />):
+                        (<Chip
                             label={item}
                             key={item}
                             onDelete={() => {
                                 setList(list.filter((label, i) => i != index));
                             }}
-                        />
-                    );
+                        />)
                 })}
             </div>
         </div>

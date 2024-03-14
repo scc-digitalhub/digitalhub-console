@@ -73,7 +73,9 @@ export const MetadataViewUiSchema = {
     description: {
         'ui:widget': 'text',
     },
-    labels: {},
+    labels: {
+        'ui:widget': 'tagsChipInput',
+    }
 };
 
 export const createMetadataViewUiSchema = (metadata: any) => {
