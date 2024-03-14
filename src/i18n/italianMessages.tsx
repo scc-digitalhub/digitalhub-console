@@ -100,6 +100,7 @@ const messages = {
                 unsupportedField: 'Campo non supportato',
                 true: 'Vero',
                 false: 'Falso',
+                numberOfRows: 'Numero di righe',
             },
         },
         tasks: {

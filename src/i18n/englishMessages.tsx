@@ -99,6 +99,7 @@ const messages = {
                 unsupportedField: 'Unsupported field',
                 true: 'True',
                 false: 'False',
+                numberOfRows: 'Number of rows',
             },
         },
         tasks: {
