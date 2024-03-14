@@ -119,6 +119,7 @@ const messages = {
         },
         common: {
             emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
+            labels: 'Etichette',
             version: {
                 title: 'Versioni',
                 version: 'Versione',

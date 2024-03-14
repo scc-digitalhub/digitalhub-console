@@ -1,12 +1,13 @@
 import { Chip, TextField } from '@mui/material';
 import { WidgetProps, GenericObjectType } from '@rjsf/utils';
 import { useState, FocusEvent } from 'react';
+import { useTranslate } from 'react-admin';
 
 export const TagsChipInput = function (props: WidgetProps) {
-    const { autofocus, disabled, formContext, id, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
+    const { disabled, id, onBlur, onChange, onFocus, readonly, value } = props;
     const [list, setList] = useState<string[]>(value?value:[]);
     const [label, setLabel] = useState('');
-    const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+    const translate = useTranslate();
 
     const handleChange = event => {
         setLabel(event.target.value);
@@ -38,19 +39,33 @@ export const TagsChipInput = function (props: WidgetProps) {
                 name={id}
                 onBlur={!readonly ? handleBlur : undefined}
                 onFocus={!readonly ? handleFocus : undefined}
-                label="Labels"
+                label={translate('resources.common.labels')}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}/>)
 
             }
+             { readonly &&   
+                        <div><label 
+                        style={{
+                            display:'block',
+                            color:' rgba(0, 0, 0, 0.6)',
+                            margin:'0 0 0.2em 0',
+                            fontSize:'0.8em'
+                        }}
+
+                            >{translate('resources.common.labels')}</label>
+                        </div>
+             }
             <div class="chip">
                 {list.map((item, index) => {
                     return readonly?
                         
-                        (<Chip
+                        (
+                        <Chip
                             label={item}
                             key={item}
-                        />):
+                        />
+                        ):
                         (<Chip
                             label={item}
                             key={item}
