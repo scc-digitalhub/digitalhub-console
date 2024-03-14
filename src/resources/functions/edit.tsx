@@ -1,5 +1,4 @@
 import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import {  RegistryWidgetsType } from '@rjsf/utils';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -32,7 +31,6 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
-import { TagsChipInput } from '../../components/TagsChipInput';
 
 export const FunctionEditToolbar = () => {
     const translate = useTranslate();
@@ -113,7 +111,6 @@ export const FunctionEdit = () => {
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
-    const customWidgets: RegistryWidgetsType = { tagsChipInput: TagsChipInput };
 
     useEffect(() => {
         if (schemaProvider) {
@@ -203,7 +200,6 @@ export const FunctionEdit = () => {
                                     source="metadata"
                                     schema={MetadataSchema}
                                     uiSchema={MetadataEditUiSchema}
-                                    customWidgets={customWidgets}
                                 />
 
                                 <SpecInput
