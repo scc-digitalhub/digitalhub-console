@@ -14,7 +14,9 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useNotify,
     useRecordContext,
+    useRedirect,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -105,6 +107,9 @@ export const ArtifactEdit = () => {
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const resource = useResourceContext();
+    const notify = useNotify();
+    const redirect = useRedirect();
 
     useEffect(() => {
         if (schemaProvider) {
@@ -139,6 +144,16 @@ export const ArtifactEdit = () => {
         return errors;
     };
 
+    const onSuccess = (data, variables, context) => {};
+
+    const onSettled = (data, variables, context) => {
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        redirect('show', resource, data.id, data);
+    };
+
     if (!kinds) {
         return <Spinner />;
     }
@@ -146,9 +161,12 @@ export const ArtifactEdit = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
-                redirect={'show'}
-                mutationMode="pessimistic"
-                mutationOptions={{ meta: { update: !isSpecDirty } }}
+                mutationMode="optimistic"
+                mutationOptions={{
+                    meta: { update: !isSpecDirty },
+                    onSuccess: onSuccess,
+                    onSettled: onSettled,
+                }}
             >
                 <>
                     <EditPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
