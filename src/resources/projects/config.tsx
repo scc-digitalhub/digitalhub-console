@@ -1,13 +1,15 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Container } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { useState, useEffect } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
+    Labeled,
     RecordContextProvider,
     ResourceContextProvider,
     ShowBase,
     ShowView,
+    TextField,
     TopToolbar,
     useDataProvider,
     useTranslate,
@@ -20,6 +22,12 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import {
+    MetadataSchema,
+    MetadataViewUiSchema,
+    createMetadataViewUiSchema,
+} from '../../common/schemas';
 
 const ShowToolbar = () => (
     <TopToolbar>
@@ -49,7 +57,26 @@ export const ProjectConfig = () => {
                             actions={<ShowToolbar />}
                             component={FlatCard}
                         >
-                            ciao
+                            <TextField source="name" />
+
+                            <Stack direction={'row'} spacing={3}>
+                                <Labeled>
+                                    <TextField source="kind" />
+                                </Labeled>
+
+                                <Labeled>
+                                    <TextField source="id" />
+                                </Labeled>
+                            </Stack>
+
+                            <TextField source="key" />
+
+                            <JsonSchemaField
+                                source="metadata"
+                                schema={MetadataSchema}
+                                uiSchema={MetadataViewUiSchema}
+                                label={false}
+                            />
                         </ShowView>
                     </>
                 </ShowBase>

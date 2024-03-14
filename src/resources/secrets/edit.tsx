@@ -1,18 +1,12 @@
 // import { JsonSchemaInput } from "@dslab/ra-jsonschema-input";
 import {
     Edit,
-    FormDataConsumer,
     Labeled,
     LoadingIndicator,
-    SelectInput,
     SimpleForm,
     TextInput,
     useTranslate,
 } from 'react-admin';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import { MetadataSchema } from '../../common/types';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { alphaNumericName } from '../../common/helper';
 import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';

@@ -1,7 +1,6 @@
 import {
     Button,
     Labeled,
-    Show,
     ShowBase,
     ShowView,
     SimpleShowLayout,
@@ -9,37 +8,26 @@ import {
     useRecordContext,
     useTranslate,
     useDataProvider,
-    Loading,
-    Error,
     LoadingIndicator,
     useNotify,
-    List,
     DeleteWithConfirmButton,
     EditButton,
     TopToolbar,
 } from 'react-admin';
 import {
-    Avatar,
     Container,
     Dialog,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Grid,
-    ListItem,
-    ListItemAvatar,
-    ListItemButton,
-    ListItemText,
     Typography,
 } from '@mui/material';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import { MetadataSchema } from '../../common/types';
 
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { blue } from '@mui/material/colors';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { FlatCard } from '../../components/FlatCard';
 import { BackButton } from '@dslab/ra-back-button';
