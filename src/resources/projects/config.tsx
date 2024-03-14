@@ -9,6 +9,7 @@ import {
     SimpleShowLayout,
     TextField,
     TopToolbar,
+    useRecordContext,
     useTranslate,
 } from 'react-admin';
 import { FlatCard } from '../../components/FlatCard';
@@ -22,15 +23,23 @@ import { JsonSchemaField } from '../../components/JsonSchema';
 import { ProjectMetadataSchema } from './types';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithDialogButton />
-    </TopToolbar>
-);
+const ShowToolbar = () => {
+    const record = useRecordContext();
+
+    if (!record) {
+        return <></>;
+    }
+
+    return (
+        <TopToolbar>
+            <BackButton />
+            <EditButton style={{ marginLeft: 'auto' }} />
+            <InspectButton />
+            <ExportRecordButton language="yaml" color="info" />
+            <DeleteWithDialogButton />
+        </TopToolbar>
+    );
+};
 
 export const ProjectConfig = () => {
     const translate = useTranslate();
