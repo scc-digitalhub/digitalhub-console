@@ -16,6 +16,23 @@ const fields = {
         version: 'Versione',
         labels: 'Labels',
     },
+    spec: {
+        path: 'Percorso',
+        src_path: 'Source path',
+        compiled_code: 'Codice compilato',
+        raw_code: 'Codice grezzo',
+        schema: 'Schema',
+        constraints: 'Vincoli',
+        error_report: 'Error report',
+        metrics: 'Metrics',
+        args: 'Args',
+        base_image: 'Imagine di base',
+        command: 'Comando',
+        image: 'Immagine',
+        base64: 'Base64',
+        code: 'Codice',
+        source: 'Source',
+    },
     status: {
         state: 'Stato',
     },
@@ -67,16 +84,8 @@ const messages = {
             list: 'Lista dei dati con filtri di ricerca',
             fields: { ...fields },
             tab: {
-                summary: 'Riepilogo',
                 schema: 'Schema',
                 preview: 'Anteprima',
-            },
-            summary: {
-                spec: {
-                    title: 'Spec',
-                    key: 'Key',
-                    path: 'Path',
-                },
             },
             schema: {
                 title: 'Schema',
@@ -108,7 +117,7 @@ const messages = {
             },
         },
         common: {
-            emptySpec: 'Selezionare Kind per visualizzare le specifiche',
+            emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
             version: {
                 title: 'Versioni',
                 version: 'Versione',
@@ -150,13 +159,13 @@ const messages = {
             subtitle: '%{kind} %{resource}',
         },
         create: {
-            title: 'Create a new %{resource}',
-            subtitle: 'Fill the form to create and save a new %{resource}',
+            title: 'Crea %{resource}',
+            subtitle: 'Compila il modulo per creare e salvare %{resource}',
         },
         edit: {
-            title: 'Edit %{resource} #%{name}',
+            title: 'Modifica %{resource} #%{name}',
             subtitle:
-                'Modify the %{resource} for %{kind} by updating metadata and specification',
+                'Modifica %{resource} per %{kind} aggiornando i metadati e le specifiche',
         },
         list: {
             title: '%{resource}',
@@ -168,7 +177,7 @@ const messages = {
     },
     buttons: {
         cancel: 'Annulla',
-        newVersion: ' Nuova versione',
+        newVersion: 'Nuova versione',
     },
     validation: {
         minValue: 'Il valore deve esere maggiore o uguale a %{min}',

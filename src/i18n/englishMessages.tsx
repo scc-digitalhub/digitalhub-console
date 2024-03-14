@@ -7,13 +7,30 @@ const fields = {
     key: 'Key',
     project: 'Project',
     metadata: {
-        created: 'Created',
-        updated: 'Updated',
+        created: 'Date of creation',
+        updated: 'Date of update',
         name: 'Name',
         description: 'Description',
         project: 'Project',
         version: 'Version',
         labels: 'Labels',
+    },
+    spec: {
+        path: 'Path',
+        src_path: 'Source path',
+        compiled_code: 'Compiled code',
+        raw_code: 'Raw code',
+        schema: 'Schema',
+        constraints: 'Constraints',
+        error_report: 'Error report',
+        metrics: 'Metrics',
+        args: 'Args',
+        base_image: 'Base image',
+        command: 'Command',
+        image: 'Image',
+        base64: 'Base64',
+        code: 'Code',
+        source: 'Source',
     },
     status: {
         state: 'Status',
@@ -37,7 +54,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Function |||| Functions',
-            list: 'Functions\' list with search filters',
+            list: "Functions' list with search filters",
             fields: { ...fields },
             tab: {
                 summary: 'Recap',
@@ -58,24 +75,16 @@ const messages = {
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
-            list: 'Artifacts\' list with search filters',
+            list: "Artifacts' list with search filters",
             fields: { ...fields },
         },
         dataitems: {
             name: 'Data item |||| Data items',
-            list: 'Data items\' list with search filters',
+            list: "Data items' list with search filters",
             fields: { ...fields },
             tab: {
-                summary: 'Summary',
                 schema: 'Schema',
                 preview: 'Preview',
-            },
-            summary: {
-                spec: {
-                    title: 'Spec',
-                    key: 'Key',
-                    path: 'Path',
-                },
             },
             schema: {
                 title: 'Schema',
@@ -107,17 +116,17 @@ const messages = {
             },
         },
         common: {
-            emptySpec: 'Select the Kind for spec modification',
+            emptySpec: 'Select the kind to view the specification',
             version: {
                 title: 'Versions',
                 version: 'Version',
-                created: 'Creation date',
+                created: 'Date of creation',
             },
         },
         list: {
             expandable: {
                 version: 'Version',
-                created: 'Creation Date',
+                created: 'Date of creation',
             },
         },
     },
@@ -173,7 +182,7 @@ const messages = {
     },
     buttons: {
         cancel: 'Cancel',
-        newVersion: ' New version',
+        newVersion: 'New version',
     },
     validation: {
         minValue: 'Value must be greater that or equal to %{min}',

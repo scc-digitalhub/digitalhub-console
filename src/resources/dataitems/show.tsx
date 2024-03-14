@@ -99,12 +99,16 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     />
                 )}
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
-                <SchemaTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
-                <PreviewTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
+            {/* {kind && kind === 'table' && ( */}
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
+                    <SchemaTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            {/* )}
+            {kind && kind === 'table' && ( */}
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
+                    <PreviewTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            {/* )} */}
         </TabbedShowLayout>
     );
 },
