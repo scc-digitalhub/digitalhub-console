@@ -2,7 +2,6 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
@@ -15,7 +14,7 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    useResourceContext
+    useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import {
@@ -27,6 +26,7 @@ import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getArtifactSpecUiSchema } from './types';
+import { ArtifactIcon } from './icon';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -109,9 +109,7 @@ export const ArtifactShow = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
-                    <ShowPageTitle
-                        icon={<VisibilityIcon fontSize={'large'} />}
-                    />
+                    <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{

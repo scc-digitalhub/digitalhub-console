@@ -2,7 +2,6 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
@@ -29,6 +28,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
+import { DataItemIcon } from './icon';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -100,14 +100,14 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 )}
             </TabbedShowLayout.Tab>
             {/* {kind && kind === 'table' && ( */}
-                <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
-                    <SchemaTabComponent record={props.record} />
-                </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
+                <SchemaTabComponent record={props.record} />
+            </TabbedShowLayout.Tab>
             {/* )}
             {kind && kind === 'table' && ( */}
-                <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
-                    <PreviewTabComponent record={props.record} />
-                </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
+                <PreviewTabComponent record={props.record} />
+            </TabbedShowLayout.Tab>
             {/* )} */}
         </TabbedShowLayout>
     );
@@ -119,9 +119,7 @@ export const DataItemShow = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
-                    <ShowPageTitle
-                        icon={<VisibilityIcon fontSize={'large'} />}
-                    />
+                    <ShowPageTitle icon={<DataItemIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{

@@ -38,7 +38,6 @@ import { MetadataSchema } from '../../common/types';
 import { memo, useEffect, useState } from 'react';
 import { arePropsEqual } from '../../common/helper';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { blue } from '@mui/material/colors';
 import { ShowPageTitle } from '../../components/PageTitle';
@@ -46,6 +45,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { SecretIcon } from './icon';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -179,9 +179,7 @@ export const SecretShow = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
-                    <ShowPageTitle
-                        icon={<VisibilityIcon fontSize={'large'} />}
-                    />
+                    <ShowPageTitle icon={<SecretIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{

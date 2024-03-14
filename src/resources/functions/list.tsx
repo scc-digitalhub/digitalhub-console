@@ -108,6 +108,7 @@ export const FunctionList = () => {
                             filters={postFilters}
                             actions={false}
                             component={Box}
+                            sx={{ pb: 2 }}
                         >
                             <Datagrid
                                 rowClick="show"
