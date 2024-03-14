@@ -162,52 +162,43 @@ export const Dashboard = () => {
             </div>
 
             <Grid container spacing={2}>
-                <Grid item xs={12} md={4} zeroMinWidth>
+                <Grid item xs={12} sm={6} xl={3} zeroMinWidth>
                     <Card sx={cardStyle}>
                         <CardHeader
-                            title={translate('pages.dashboard.functions.title')}
-                            avatar={<ElectricBoltIcon />}
+                            title={translate('pages.dashboard.artifacts.title')}
+                            avatar={<InsertDriveFileIcon />}
                             titleTypographyProps={{
                                 variant: 'h6',
                                 color: 'secondary.main',
                             }}
                         />
                         <CardContent>
-                            <Counter value={totalFunctions} />
-                            {!!functions && functions.length > 0 ? (
-                                <>
-                                    <RunsGrid
-                                        runs={{
-                                            completed: completed,
-                                            running: running,
-                                            error: error,
-                                        }}
-                                    />
-                                    <Recent
-                                        resource="functions"
-                                        elements={functions}
-                                    />
-                                </>
+                            <Counter value={totalArtifacts} />
+                            {!!artifacts && artifacts.length > 0 ? (
+                                <Recent
+                                    resource="artifacts"
+                                    elements={artifacts}
+                                />
                             ) : (
                                 <Typography
                                     sx={{ textAlign: 'center', p: '70px 0' }}
                                 >
                                     <CreateButton
-                                        resource="functions"
+                                        resource="artifacts"
                                         variant="contained"
                                     />
                                 </Typography>
                             )}
                         </CardContent>
                         <CardActions disableSpacing sx={{ mt: 'auto' }}>
-                            {!!functions && functions.length > 0 && (
-                                <ToListButton resource="functions" />
+                            {!!artifacts && artifacts.length > 0 && (
+                                <ToListButton resource="artifacts" />
                             )}
                         </CardActions>
                     </Card>
                 </Grid>
 
-                <Grid item xs={12} md={4} zeroMinWidth>
+                <Grid item xs={12} sm={6} xl={3} zeroMinWidth>
                     <Card sx={cardStyle}>
                         <CardHeader
                             title={translate('pages.dashboard.dataitems.title')}
@@ -243,37 +234,81 @@ export const Dashboard = () => {
                     </Card>
                 </Grid>
 
-                <Grid item xs={12} md={4} zeroMinWidth>
+                <Grid item xs={12} sm={6} xl={3} zeroMinWidth>
                     <Card sx={cardStyle}>
                         <CardHeader
-                            title={translate('pages.dashboard.artifacts.title')}
-                            avatar={<InsertDriveFileIcon />}
+                            title={translate('pages.dashboard.functions.title')}
+                            avatar={<ElectricBoltIcon />}
                             titleTypographyProps={{
                                 variant: 'h6',
                                 color: 'secondary.main',
                             }}
                         />
                         <CardContent>
-                            <Counter value={totalArtifacts} />
-                            {!!artifacts && artifacts.length > 0 ? (
+                            <Counter value={totalFunctions} />
+                            {!!functions && functions.length > 0 ? (
                                 <Recent
-                                    resource="artifacts"
-                                    elements={artifacts}
+                                    resource="functions"
+                                    elements={functions}
                                 />
                             ) : (
                                 <Typography
                                     sx={{ textAlign: 'center', p: '70px 0' }}
                                 >
                                     <CreateButton
-                                        resource="artifacts"
+                                        resource="functions"
                                         variant="contained"
                                     />
                                 </Typography>
                             )}
                         </CardContent>
                         <CardActions disableSpacing sx={{ mt: 'auto' }}>
-                            {!!artifacts && artifacts.length > 0 && (
-                                <ToListButton resource="artifacts" />
+                            {!!functions && functions.length > 0 && (
+                                <ToListButton resource="functions" />
+                            )}
+                        </CardActions>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={12} sm={6} xl={3} zeroMinWidth>
+                    <Card sx={cardStyle}>
+                        <CardHeader
+                            title={translate('pages.dashboard.functions.title')}
+                            avatar={<ElectricBoltIcon />}
+                            titleTypographyProps={{
+                                variant: 'h6',
+                                color: 'secondary.main',
+                            }}
+                        />
+                        <CardContent>
+                            {!!functions && functions.length > 0 ? (
+                                <>
+                                    <RunsGrid
+                                        runs={{
+                                            completed: completed,
+                                            running: running,
+                                            error: error,
+                                        }}
+                                    />
+                                    <Recent
+                                        resource="functions"
+                                        elements={functions}
+                                    />
+                                </>
+                            ) : (
+                                <Typography
+                                    sx={{ textAlign: 'center', p: '70px 0' }}
+                                >
+                                    <CreateButton
+                                        resource="functions"
+                                        variant="contained"
+                                    />
+                                </Typography>
+                            )}
+                        </CardContent>
+                        <CardActions disableSpacing sx={{ mt: 'auto' }}>
+                            {!!functions && functions.length > 0 && (
+                                <ToListButton resource="functions" />
                             )}
                         </CardActions>
                     </Card>
