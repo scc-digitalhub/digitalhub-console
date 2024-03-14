@@ -35,6 +35,8 @@ import { Inbox } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { JsonSchemaInput } from '../../components/JsonSchema';
+import { StateChips } from '../../components/StateChips';
 
 export const TaskAndRuns = () => {
     const record = useRecordContext();
@@ -83,31 +85,40 @@ const TaskRunList = () => {
     const [schema, setSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
-    url.protocol = record.kind;
-    const key = url.toString();
-    const runtime = 'dbt';
 
+    const runtime = url.protocol
+        ? url.protocol.substring(0, url.protocol.length - 1)
+        : '';
+    url.protocol = record.kind + ':';
+    const key = url.toString();
+    console.log('fn', fn, runtime, key);
     useEffect(() => {
+        console.log('useEffect');
         if (!schemaProvider || !record || !fn) {
             return;
         }
 
+        console.log('load e');
+
         schemaProvider
             .list('runs', runtime)
             .then(schemas => {
+                console.log('r', schemas);
                 if (schemas) {
                     setSchema(schemas.pop());
                 }
             })
             .catch(error => {
-                console.log(error);
+                console.log('error:', error);
             });
     }, [record, schemaProvider]);
 
     const partial = {
         project: record?.project,
         kind: schema ? schema.kind : 'run',
-        spec: {},
+        spec: {
+            task: key,
+        },
     };
 
     const prepare = (r: any) => {
@@ -119,6 +130,13 @@ const TaskRunList = () => {
         };
     };
 
+    const runSpecUiSchema = {
+        task: {
+            'ui:readonly': true,
+        },
+    };
+    console.log('partial', partial);
+    console.log('sch', schema);
     return (
         <>
             <CreateInDialogButton
@@ -130,6 +148,13 @@ const TaskRunList = () => {
             >
                 <SimpleForm toolbar={<CreateRunDialogToolbar />}>
                     <TextInput source="kind" readOnly />
+                    {schema?.schema && (
+                        <JsonSchemaInput
+                            source="spec"
+                            schema={schema.schema}
+                            uiSchema={runSpecUiSchema}
+                        />
+                    )}
                 </SimpleForm>
             </CreateInDialogButton>
             <List
@@ -141,11 +166,7 @@ const TaskRunList = () => {
                 <Datagrid bulkActionButtons={false}>
                     <DateField source="metadata.created" />
                     <TextField source="id" />
-                    <TextField source="status.state" />
-                    <FunctionField
-                        source="status.state"
-                        render={(record: any) => <ChipField />}
-                    />
+                    <StateChips source="status.state" />
                     <RowButtonGroup label="⋮">
                         <ShowInDialogButton>
                             <SimpleShowLayout>
