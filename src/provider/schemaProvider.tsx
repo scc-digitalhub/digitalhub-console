@@ -3,6 +3,7 @@ import {
     createContext,
     useContext,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -96,7 +97,7 @@ export const useSchemaProvider = () => {
 
 export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
     const { resource, dataProvider, children } = props;
-    const [cache, setCache] = useState<any>({});
+    const cache = useRef({});
     const definitions = useResourceDefinitions();
     const finalProvider = useMemo(() => {
         return schemaProvider(dataProvider, resource);
@@ -104,17 +105,15 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
 
     const schemaContext = useMemo(() => {
         //local cache lookup
-        //NOTE: need to explode because update via setCache is async
         //NOTE: exploding in memoization because we can't keep schemaProvider memoized
         //TODO cleanup
-        let _cache = { ...cache };
+        let _cache = cache.current;
 
         const list = async (
             resource: string,
             runtime?: string
         ): Promise<any[] | null> => {
-            const k = runtime ? resource + '.' + runtime : resource;
-
+            const k = '_' + (runtime ? resource + '.' + runtime : resource);
             if (!(resource in definitions)) {
                 return null;
             }
@@ -122,12 +121,11 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             if (!(k in _cache)) {
                 const res = await finalProvider.list(resource, runtime);
                 if (res.data) {
-                    _cache[k] = res.data;
-                    setCache(_cache);
+                    _cache[k] = [...res.data];
                 }
             }
 
-            return _cache[k] as any[];
+            return [..._cache[k]] as any[];
         };
 
         const get = async (
@@ -139,10 +137,9 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             }
 
             if (!(resource in _cache)) {
-                _cache[resource] = await list(resource);
+                await list(resource);
             }
-            console.log('from cache', _cache);
-            return _cache[resource].find(r => r.kind === kind);
+            return { ..._cache[resource].find(r => r.kind === kind) };
         };
 
         const kinds = async (resource: string): Promise<string[] | null> => {
@@ -154,7 +151,7 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
                 return null;
             }
 
-            return schemas.map(s => s.kind);
+            return [...schemas.map(s => s.kind)];
         };
         return {
             provider: finalProvider,
@@ -163,7 +160,7 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             get,
             kinds,
         };
-    }, [finalProvider, definitions, setCache]);
+    }, [finalProvider, definitions]);
 
     return (
         <SchemaProviderContext.Provider value={schemaContext}>
