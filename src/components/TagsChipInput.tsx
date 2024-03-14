@@ -4,7 +4,7 @@ import { useState, FocusEvent } from 'react';
 
 export const TagsChipInput = function (props: WidgetProps) {
     const { autofocus, disabled, formContext, id, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
-    const [list, setList] = useState<string[]>([]);
+    const [list, setList] = useState<string[]>(value?value:[]);
     const [label, setLabel] = useState('');
     const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
