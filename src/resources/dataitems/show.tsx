@@ -73,11 +73,11 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
             <TabbedShowLayout.Tab label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="name" />
+                        <TextField source="kind" />
                     </Labeled>
 
                     <Labeled>
-                        <TextField source="kind" />
+                        <TextField source="id" />
                     </Labeled>
                 </Stack>
 

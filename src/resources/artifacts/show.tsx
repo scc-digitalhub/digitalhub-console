@@ -69,8 +69,6 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="fields.summary">
-                <TextField source="name" />
-
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
