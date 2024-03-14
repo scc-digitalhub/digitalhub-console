@@ -2,6 +2,7 @@ import {
     Admin,
     AdminContext,
     AdminUI,
+    CustomRoutes,
     Resource,
     fetchUtils,
 } from 'react-admin';
@@ -99,6 +100,7 @@ import { FunctionIcon } from './resources/functions/icon';
 import { DataItemIcon } from './resources/dataitems/icon';
 import { ArtifactIcon } from './resources/artifacts/icon';
 import { SecretIcon } from './resources/secrets/icon';
+import { ProjectConfig } from './resources/projects/config';
 
 const CoreApp = () => {
     return (
@@ -178,6 +180,9 @@ const CoreApp = () => {
                             create={SecretCreate}
                             icon={SecretIcon}
                         ></Resource>
+                        <CustomRoutes>
+                            <Route path="/config" element={<ProjectConfig />} />
+                        </CustomRoutes>
                     </AdminUI>
                 </ResourceSchemaProvider>
             </AdminContext>

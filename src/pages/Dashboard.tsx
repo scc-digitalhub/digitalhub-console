@@ -132,7 +132,7 @@ export const Dashboard = () => {
             <div>
                 <PageTitle
                     text={project.metadata ? project.metadata.name : project.id}
-                    secondaryText={project.description}
+                    secondaryText={project.metadata?.description}
                     icon={<DashboardIcon fontSize={'large'} />}
                     sx={{ pl: 0, pr: 0 }}
                 />

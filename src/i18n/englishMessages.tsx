@@ -49,12 +49,13 @@ const messages = {
     },
     menu: {
         projects: 'Projects',
+        configuration: 'Configuration',
     },
     fields: fields,
     resources: {
         functions: {
             name: 'Function |||| Functions',
-            list: "List and search functions",
+            list: 'List and search functions',
             fields: { ...fields },
             tab: {
                 summary: 'Recap',
@@ -75,12 +76,12 @@ const messages = {
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
-            list: "List and search artifacts",
+            list: 'List and search artifacts',
             fields: { ...fields },
         },
         dataitems: {
             name: 'Data item |||| Data items',
-            list: "List and search data items",
+            list: 'List and search data items',
             fields: { ...fields },
             tab: {
                 schema: 'Schema',
@@ -157,6 +158,10 @@ const messages = {
                 title: 'Function #%{name}',
                 subtitle: '%{kind} function',
             },
+        },
+        config: {
+            title: 'Configuration',
+            text: 'Review and update project configuration and settings',
         },
     },
     pageTitle: {

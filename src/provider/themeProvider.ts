@@ -80,6 +80,7 @@ const componentsOverrides = (theme: Theme) => ({
         styleOverrides: {
             root: {
                 padding: 10,
+                paddingLeft: 5,
                 marginRight: 10,
                 marginLeft: 10,
                 color: theme.palette?.text?.primary,
