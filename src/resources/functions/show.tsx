@@ -193,19 +193,17 @@ const ShowComponent = () => {
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="name" />
-                    </Labeled>
-
+            <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
                     </Labeled>
+
+                    <Labeled>
+                        <TextField source="id" />
+                    </Labeled>
                 </Stack>
 
-                <Labeled>
-                    <TextField source="key" />
-                </Labeled>
+                <TextField source="key" />
 
                 <JsonSchemaField
                     source="metadata"

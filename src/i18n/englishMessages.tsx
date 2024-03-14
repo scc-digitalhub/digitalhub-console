@@ -119,6 +119,7 @@ const messages = {
         },
         common: {
             emptySpec: 'Select the kind to view the specification',
+            labels: 'Labels',
             version: {
                 title: 'Versions',
                 version: 'Version',
