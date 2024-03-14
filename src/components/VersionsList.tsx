@@ -9,6 +9,8 @@ import {
     SxProps,
     Theme,
     Typography,
+    Tab as MuiTab,
+    TabProps as MuiTabProps,
 } from '@mui/material';
 import {
     GetListParams,
@@ -117,21 +119,17 @@ export const VersionsList = (props: VersionListProps) => {
 };
 
 // export const VersionsListWrapper = memo(function VersionsListWrapper(props: {
-export const VersionsListWrapper = (props: any) => {
-    console.log('wp', props);
+export const VersionsListWrapper = () => {
     const translate = useTranslate();
 
     return (
-        <FlatCard
-        // sx={{
-        //     height: 'fit-content',
-        //     borderRadius: '10px',
-        //     order: { xs: 1, lg: 2 },
-        // }}
-        // variant="outlined"
-        >
-            <CardHeader title={translate('resources.common.version.title')} />
-
+        <FlatCard>
+            {/* <CardHeader title={translate('resources.common.version.title')} /> */}
+            <MuiTab
+                label={translate('resources.common.version.title')}
+                disableFocusRipple
+                disableRipple
+            />
             <CardContent
                 sx={{
                     padding: 0,
