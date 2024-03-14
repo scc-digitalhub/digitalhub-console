@@ -18,7 +18,7 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
+import { alphaNumericName, isAlphaNumeric, isValidKind } from '../../common/helper';
 import {
     BlankSchema,
     MetadataCreateUiSchema,
@@ -112,7 +112,7 @@ export const FunctionCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm validate={validator}>
+                            <SimpleForm>
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>
@@ -126,7 +126,10 @@ export const FunctionCreate = () => {
                                     <SelectInput
                                         source="kind"
                                         choices={kinds}
-                                        validate={required()}
+                                        validate={[
+                                            required(),
+                                            isValidKind(kinds),
+                                        ]}
                                     />
                                 </Stack>
 

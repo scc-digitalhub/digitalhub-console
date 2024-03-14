@@ -114,11 +114,6 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 },
 arePropsEqual);
 
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
-
 export const DataItemShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -142,7 +137,7 @@ export const DataItemShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

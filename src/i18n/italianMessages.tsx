@@ -8,8 +8,8 @@ const fields = {
     key: 'Chiave',
     project: 'Progetto',
     metadata: {
-        created: 'Data di creazione',
-        updated: 'Data di aggiornamento',
+        created: 'Creazione',
+        updated: 'Aggiornamento',
         name: 'Nome',
         description: 'Descrizione',
         project: 'Progetto',
@@ -185,6 +185,7 @@ const messages = {
         noSpace: 'Il valore non deve contenere spazi',
         wrongChar:
             "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
+        invalidKind: "Tipo invalido"
     },
 };
 

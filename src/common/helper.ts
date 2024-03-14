@@ -1,4 +1,4 @@
-import { regex } from 'react-admin';
+import { isEmpty, regex } from 'react-admin';
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
@@ -16,3 +16,9 @@ export const isAlphaNumeric = regex(
     /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/,
     'validation.wrongChar'
 );
+
+export const isValidKind = (kinds: any[]) => (value, values?) => {
+    return !isEmpty(value) && !kinds.find(k => k.id === value)
+        ? 'validation.invalidKind'
+        : undefined;
+};

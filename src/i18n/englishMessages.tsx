@@ -7,8 +7,8 @@ const fields = {
     key: 'Key',
     project: 'Project',
     metadata: {
-        created: 'Date of creation',
-        updated: 'Date of update',
+        created: 'Created',
+        updated: 'Updated',
         name: 'Name',
         description: 'Description',
         project: 'Project',
@@ -54,7 +54,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Function |||| Functions',
-            list: "Functions' list with search filters",
+            list: "List and search functions",
             fields: { ...fields },
             tab: {
                 summary: 'Recap',
@@ -75,12 +75,12 @@ const messages = {
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
-            list: "Artifacts' list with search filters",
+            list: "List and search artifacts",
             fields: { ...fields },
         },
         dataitems: {
             name: 'Data item |||| Data items',
-            list: "Data items' list with search filters",
+            list: "List and search data items",
             fields: { ...fields },
             tab: {
                 schema: 'Schema',
@@ -121,13 +121,13 @@ const messages = {
             version: {
                 title: 'Versions',
                 version: 'Version',
-                created: 'Date of creation',
+                created: 'Creation date',
             },
         },
         list: {
             expandable: {
                 version: 'Version',
-                created: 'Date of creation',
+                created: 'Creation date',
             },
         },
     },
@@ -190,6 +190,7 @@ const messages = {
         noSpace: 'Value must contain no space',
         wrongChar:
             'The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word',
+        invalidKind: 'Invalid kind',
     },
 };
 

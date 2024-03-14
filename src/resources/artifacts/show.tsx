@@ -104,11 +104,6 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 },
 arePropsEqual);
 
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
-
 export const ArtifactShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -132,7 +127,7 @@ export const ArtifactShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

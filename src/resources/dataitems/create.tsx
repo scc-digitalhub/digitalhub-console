@@ -18,8 +18,12 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
-import { BlankSchema, MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
+import { isAlphaNumeric, isValidKind } from '../../common/helper';
+import {
+    BlankSchema,
+    MetadataCreateUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -34,15 +38,6 @@ const CreateToolbar = (props: CreateActionsProps) => {
         </TopToolbar>
     );
 };
-
-const nameValidation = value => {
-    if (!alphaNumericName(value)) {
-        return 'validation.wrongChar';
-    }
-    return undefined;
-};
-
-const validateName = [required(), nameValidation];
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
@@ -85,24 +80,6 @@ export const DataItemCreate = () => {
         return BlankSchema;
     };
 
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!kinds?.some(k => k.id === data.kind)) {
-            errors.kind = 'messages.validation.invalid';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-
-        return errors;
-    };
-
     if (!kinds) {
         return <LoadingIndicator />;
     }
@@ -132,7 +109,10 @@ export const DataItemCreate = () => {
                                     <SelectInput
                                         source="kind"
                                         choices={kinds}
-                                        validate={required()}
+                                        validate={[
+                                            required(),
+                                            isValidKind(kinds),
+                                        ]}
                                     />
                                 </Stack>
 
