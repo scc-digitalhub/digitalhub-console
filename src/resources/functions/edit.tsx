@@ -180,10 +180,7 @@ export const FunctionEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm
-                                validate={validator}
-                                toolbar={<FunctionEditToolbar />}
-                            >
+                            <SimpleForm toolbar={<FunctionEditToolbar />}>
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>

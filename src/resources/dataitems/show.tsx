@@ -1,7 +1,10 @@
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Container, Grid, Typography } from '@mui/material';
-import { memo } from 'react';
+import { Container, Stack } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
@@ -12,19 +15,20 @@ import {
     TextField,
     TopToolbar,
     useRecordContext,
-    useTranslate,
+    useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
+import {
+    MetadataSchema,
+    createMetadataViewUiSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
-import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
+import { VersionsListWrapper } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
-import { DataItemSpecSchema, DataItemSpecUiSchema } from './types';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { getDataItemSpecUiSchema } from './types';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -32,72 +36,83 @@ const ShowComponent = () => {
     return <DataItemShowLayout record={record} />;
 };
 
-const DataItemShowLayout = memo(function DataItemShowLayout(props: {
-    record: any;
-}) {
-    const { record } = props;
-    const translate = useTranslate();
-
-    if (!record) return <></>;
-    return (
-        <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.summary">
-                <Grid>
-                    <Typography variant="h6" gutterBottom>
-                        {translate('resources.dataitem.summary.title')}
-                    </Typography>
-
-                    <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.name">
-                                <TextField source="name" />
-                            </Labeled>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Labeled label="resources.dataitem.kind">
-                                <TextField source="kind" />
-                            </Labeled>
-                        </Grid>
-                    </Grid>
-
-                    <JsonSchemaField
-                        source="metadata"
-                        schema={MetadataSchema}
-                    />
-
-                    <JsonSchemaField
-                        source="spec"
-                        schema={DataItemSpecSchema}
-                        uiSchema={DataItemSpecUiSchema}
-                        label="resources.dataitem.summary.spec.title"
-                    />
-                </Grid>
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.schema">
-                <SchemaTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="resources.dataitem.tab.preview">
-                <PreviewTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
-    );
-},
-arePropsEqual);
-
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
-
 const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
         <InspectButton />
-        <ExportRecordButton language="yaml" />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );
+
+const DataItemShowLayout = memo(function DataItemShowLayout(props: {
+    record: any;
+}) {
+    const { record } = props;
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+    const [spec, setSpec] = useState<any>();
+    const kind = record?.kind || undefined;
+
+    useEffect(() => {
+        if (!schemaProvider) {
+            return;
+        }
+
+        if (record) {
+            schemaProvider.get(resource, record.kind).then(s => {
+                setSpec(s);
+            });
+        }
+    }, [record, schemaProvider, resource]);
+
+    if (!record) return <></>;
+    return (
+        <TabbedShowLayout syncWithLocation={false} record={record}>
+            <TabbedShowLayout.Tab label="fields.summary">
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="name" />
+                    </Labeled>
+
+                    <Labeled>
+                        <TextField source="kind" />
+                    </Labeled>
+                </Stack>
+
+                <TextField source="key" />
+
+                <JsonSchemaField
+                    source="metadata"
+                    schema={MetadataSchema}
+                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
+                    label={false}
+                />
+
+                {spec && (
+                    <JsonSchemaField
+                        source="spec"
+                        schema={spec.schema}
+                        uiSchema={getDataItemSpecUiSchema(kind)}
+                        label={false}
+                    />
+                )}
+            </TabbedShowLayout.Tab>
+            {/* {kind && kind === 'table' && ( */}
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
+                    <SchemaTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            {/* )}
+            {kind && kind === 'table' && ( */}
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
+                    <PreviewTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            {/* )} */}
+        </TabbedShowLayout>
+    );
+},
+arePropsEqual);
 
 export const DataItemShow = () => {
     return (
@@ -122,7 +137,7 @@ export const DataItemShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

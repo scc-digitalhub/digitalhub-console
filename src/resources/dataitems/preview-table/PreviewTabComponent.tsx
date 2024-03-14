@@ -9,10 +9,10 @@ export const PreviewTabComponent = (props: { record: any }) => {
 
     const translate = useTranslate();
     const translations = {
-        invalidValue: translate('resources.dataitem.preview.invalidValue'),
-        invalidDate: translate('resources.dataitem.preview.invalidDate'),
+        invalidValue: translate('resources.dataitems.preview.invalidValue'),
+        invalidDate: translate('resources.dataitems.preview.invalidDate'),
         invalidDatetime: translate(
-            'resources.dataitem.preview.invalidDatetime'
+            'resources.dataitems.preview.invalidDatetime'
         ),
     };
 
@@ -30,7 +30,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
             }}
         >
             <Typography variant="h6" gutterBottom>
-                {translate('resources.dataitem.preview.title')}
+                {translate('resources.dataitems.preview.title')}
             </Typography>
 
             <DataGrid

@@ -1,33 +1,32 @@
+import { BackButton } from '@dslab/ra-back-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Container, Stack } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
-    Show,
     ShowBase,
     ShowView,
-    SimpleShowLayout,
+    TabbedShowLayout,
     TextField,
     TopToolbar,
     useRecordContext,
-    useTranslate,
+    useResourceContext
 } from 'react-admin';
-import { Container, Grid, Stack, Typography } from '@mui/material';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import { arePropsEqual } from '../../common/helper';
 import {
     MetadataSchema,
-    MetadataViewUiSchema,
     createMetadataViewUiSchema,
-} from '../../common/types';
-import { getArtifactSpec, getArtifactUiSpec } from './types';
-import { memo, useEffect, useState } from 'react';
-import { arePropsEqual } from '../../common/helper';
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { VersionsListWrapper } from '../../components/VersionsList';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { getArtifactSpecUiSchema } from './types';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -40,7 +39,7 @@ const ShowToolbar = () => (
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
         <InspectButton />
-        <ExportRecordButton language="yaml" />
+        <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
 );
@@ -48,54 +47,62 @@ const ShowToolbar = () => (
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
-    const translate = useTranslate();
     const { record } = props;
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+    const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
+
+    useEffect(() => {
+        if (!schemaProvider) {
+            return;
+        }
+
+        if (record) {
+            schemaProvider.get(resource, record.kind).then(s => {
+                setSpec(s);
+            });
+        }
+    }, [record, schemaProvider, resource]);
 
     if (!record) return <></>;
     return (
-        <SimpleShowLayout record={record}>
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.artifact.title')}
-            </Typography>
-            <Labeled>
+        <TabbedShowLayout syncWithLocation={false} record={record}>
+            <TabbedShowLayout.Tab label="fields.summary">
                 <TextField source="name" />
-            </Labeled>
-            <Stack direction={'row'} spacing={3}>
-                <Labeled>
-                    <TextField source="kind" />
-                </Labeled>
 
-                <Labeled>
-                    <TextField source="id" />
-                </Labeled>
-            </Stack>
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="kind" />
+                    </Labeled>
 
-            <Labeled>
+                    <Labeled>
+                        <TextField source="id" />
+                    </Labeled>
+                </Stack>
+
                 <TextField source="key" />
-            </Labeled>
 
-            <JsonSchemaField
-                source="metadata"
-                schema={MetadataSchema}
-                uiSchema={createMetadataViewUiSchema(record.metadata)}
-            />
+                <JsonSchemaField
+                    source="metadata"
+                    schema={MetadataSchema}
+                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
+                    label={false}
+                />
 
-            <JsonSchemaField
-                source="spec"
-                schema={getArtifactSpec(kind)}
-                uiSchema={getArtifactUiSpec(kind)}
-                label={false}
-            />
-        </SimpleShowLayout>
+                {spec && (
+                    <JsonSchemaField
+                        source="spec"
+                        schema={spec.schema}
+                        uiSchema={getArtifactSpecUiSchema(kind)}
+                        label={false}
+                    />
+                )}
+            </TabbedShowLayout.Tab>
+        </TabbedShowLayout>
     );
 },
 arePropsEqual);
-
-const Aside = () => {
-    const record = useRecordContext();
-    return <VersionsListWrapper record={record} />;
-};
 
 export const ArtifactShow = () => {
     return (
@@ -120,7 +127,7 @@ export const ArtifactShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={<Aside />}
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>

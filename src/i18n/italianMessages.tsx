@@ -8,12 +8,36 @@ const fields = {
     key: 'Chiave',
     project: 'Progetto',
     metadata: {
-        created: 'Data di creazione',
-        updated: 'Data di aggiornamento',
+        created: 'Creazione',
+        updated: 'Aggiornamento',
+        name: 'Nome',
+        description: 'Descrizione',
+        project: 'Progetto',
+        version: 'Versione',
+        labels: 'Etichette',
+    },
+    spec: {
+        path: 'Percorso',
+        src_path: 'Percorso sorgente',
+        compiled_code: 'Codice compilato',
+        raw_code: 'Codice sorgente',
+        schema: 'Schema',
+        constraints: 'Vincoli',
+        error_report: 'Report di errore',
+        metrics: 'Metriche',
+        args: 'Argomenti',
+        base_image: 'Immagine di base',
+        command: 'Comando',
+        image: 'Immagine',
+        base64: 'Base64',
+        code: 'Codice',
+        source: 'Sorgente',
     },
     status: {
         state: 'Stato',
     },
+    base: 'Base',
+    summary: 'Riepilogo',
 };
 
 const messages = {
@@ -31,6 +55,7 @@ const messages = {
     resources: {
         functions: {
             name: 'Funzione |||| Funzioni',
+            list: 'Lista delle funzioni con filtri di ricerca',
             fields: { ...fields },
             tab: {
                 summary: 'Riepilogo',
@@ -51,23 +76,16 @@ const messages = {
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',
+            list: 'Lista degli artefatti con filtri di ricerca',
             fields: { ...fields },
         },
         dataitems: {
             name: 'Dato |||| Dati',
+            list: 'Lista dei dati con filtri di ricerca',
             fields: { ...fields },
             tab: {
-                summary: 'Riepilogo',
                 schema: 'Schema',
                 preview: 'Anteprima',
-            },
-            summary: {
-                title: 'Dettagli del data item',
-                spec: {
-                    title: 'Spec',
-                    key: 'Key',
-                    path: 'Path',
-                },
             },
             schema: {
                 title: 'Schema',
@@ -82,10 +100,25 @@ const messages = {
                 unsupportedField: 'Campo non supportato',
                 true: 'Vero',
                 false: 'Falso',
+                numberOfRows: 'Numero di righe',
+            },
+        },
+        tasks: {
+            name: 'Task |||| Tasks',
+            fields: { ...fields },
+            kinds: {
+                'dbt+transform': 'Transform',
+                'nefertem+infer': 'Infer',
+                'nefertem+metric': 'Metric',
+                'nefertem+profile': 'Profile',
+                'nefertem+validate': 'Validate',
+                'container+deploy': 'Deploy',
+                'container+job': 'Job',
+                'container+serve': 'Serve',
             },
         },
         common: {
-            emptySpec: 'Selezionare Kind per visualizzare le specifiche',
+            emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
             version: {
                 title: 'Versioni',
                 version: 'Versione',
@@ -121,19 +154,38 @@ const messages = {
             },
         },
     },
+    pageTitle: {
+        show: {
+            title: '%{resource} #%{name}',
+            subtitle: '%{kind} %{resource}',
+        },
+        create: {
+            title: 'Crea %{resource}',
+            subtitle: 'Compila il modulo per creare e salvare %{resource}',
+        },
+        edit: {
+            title: 'Modifica %{resource} #%{name}',
+            subtitle:
+                'Modifica %{resource} per %{kind} aggiornando i metadati e le specifiche',
+        },
+        list: {
+            title: '%{resource}',
+        },
+    },
     search: {
         name: 'Nome',
         kind: 'Tipo',
     },
     buttons: {
         cancel: 'Annulla',
-        newVersion: ' Nuova versione',
+        newVersion: 'Nuova versione',
     },
     validation: {
         minValue: 'Il valore deve esere maggiore o uguale a %{min}',
         noSpace: 'Il valore non deve contenere spazi',
         wrongChar:
             "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
+        invalidKind: "Tipo invalido"
     },
 };
 

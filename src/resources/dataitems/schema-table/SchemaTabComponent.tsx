@@ -15,12 +15,12 @@ export const SchemaTabComponent = (props: { record: any }) => {
         const baseColumns: GridColDef[] = [
             {
                 field: 'name',
-                headerName: translate('resources.dataitem.schema.name'),
+                headerName: translate('resources.dataitems.schema.name'),
                 flex: 1,
             },
             {
                 field: 'type',
-                headerName: translate('resources.dataitem.schema.type'),
+                headerName: translate('resources.dataitems.schema.type'),
                 flex: 1,
             },
         ];
@@ -65,7 +65,7 @@ export const SchemaTabComponent = (props: { record: any }) => {
             }}
         >
             <Typography variant="h6" gutterBottom>
-                {translate('resources.dataitem.schema.title')}
+                {translate('resources.dataitems.schema.title')}
             </Typography>
 
             <DataGrid

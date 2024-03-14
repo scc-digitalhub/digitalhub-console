@@ -1,23 +1,46 @@
+import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { Box, Container, Stack } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { useEffect, useState } from 'react';
 import {
-    Create,
+    CreateActionsProps,
+    CreateBase,
+    CreateView,
     FormDataConsumer,
-    Labeled,
+    ListButton,
     LoadingIndicator,
     SelectInput,
     SimpleForm,
     TextInput,
+    TopToolbar,
+    required,
     useTranslate,
 } from 'react-admin';
-import { ArtifactTypes, BlankSchema, getArtifactUiSpec } from './types';
-import { alphaNumericName } from '../../common/helper';
-import { MetadataSchema } from '../../common/types';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
+import {
+    isAlphaNumeric,
+    isValidKind
+} from '../../common/helper';
+import {
+    BlankSchema,
+    MetadataCreateUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
+import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
+import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useState, useEffect } from 'react';
+import { ArtifactIcon } from './icon';
+import { getArtifactSpecUiSchema } from './types';
+
+const CreateToolbar = (props: CreateActionsProps) => {
+    return (
+        <TopToolbar>
+            <ListButton />
+        </TopToolbar>
+    );
+};
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -30,18 +53,6 @@ export const ArtifactCreate = () => {
         ...data,
         project: root || '',
     });
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-        return errors;
-    };
 
     useEffect(() => {
         if (schemaProvider) {
@@ -58,13 +69,9 @@ export const ArtifactCreate = () => {
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
 
-    if (!kinds) {
-        return <LoadingIndicator />;
-    }
-
-    const getArtifactSpec = (kind: string | undefined) => {
+    const getArtifactSpecSchema = (kind: string | undefined) => {
         if (!kind) {
             return BlankSchema;
         }
@@ -76,49 +83,84 @@ export const ArtifactCreate = () => {
         return BlankSchema;
     };
 
+    if (!kinds) {
+        return <LoadingIndicator />;
+    }
+
     return (
-        <Create transform={transform} redirect="list">
-            <SimpleForm validate={validator}>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={4}>
-                        <Labeled label={translate('resources.dataitem.name')}>
-                            <TextInput source="name" required />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.dataitem.kind')}>
-                            <SelectInput
-                                source="kind"
-                                choices={kinds}
-                                required
-                            />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-                <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-                <FormDataConsumer<{ kind: string }>>
-                    {({ formData }) => {
-                        if (formData.kind)
-                            return (
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <CreateBase transform={transform} redirect="list">
+                <>
+                    <CreatePageTitle
+                        icon={<ArtifactIcon fontSize={'large'} />}
+                    />
+
+                    <CreateView component={Box} actions={<CreateToolbar />}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm>
+                                <FormLabel label="fields.base" />
+
+                                <Stack direction={'row'} spacing={3} pt={4}>
+                                    <TextInput
+                                        source="name"
+                                        validate={[
+                                            required(),
+                                            isAlphaNumeric(),
+                                        ]}
+                                    />
+
+                                    <SelectInput
+                                        source="kind"
+                                        choices={kinds}
+                                        validate={[
+                                            required(),
+                                            isValidKind(kinds),
+                                        ]}
+                                    />
+                                </Stack>
+
                                 <JsonSchemaInput
-                                    source="spec"
-                                    schema={getArtifactSpec(formData.kind)}
-                                    uiSchema={getArtifactUiSpec(formData.kind)}
+                                    source="metadata"
+                                    schema={MetadataSchema}
+                                    uiSchema={MetadataCreateUiSchema}
                                 />
-                            );
-                        else
-                            return (
-                                <Card sx={{ width: 1, textAlign: 'center' }}>
-                                    <CardContent>
-                                        {translate(
-                                            'resources.common.emptySpec'
-                                        )}{' '}
-                                    </CardContent>
-                                </Card>
-                            );
-                    }}
-                </FormDataConsumer>
-            </SimpleForm>
-        </Create>
+
+                                <FormDataConsumer<{ kind: string }>>
+                                    {({ formData }) => {
+                                        if (formData.kind)
+                                            return (
+                                                <JsonSchemaInput
+                                                    source="spec"
+                                                    schema={getArtifactSpecSchema(
+                                                        formData.kind
+                                                    )}
+                                                    uiSchema={getArtifactSpecUiSchema(
+                                                        formData.kind
+                                                    )}
+                                                />
+                                            );
+                                        else
+                                            return (
+                                                <Card
+                                                    sx={{
+                                                        width: 1,
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    <CardContent>
+                                                        {translate(
+                                                            'resources.common.emptySpec'
+                                                        )}{' '}
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                    }}
+                                </FormDataConsumer>
+                            </SimpleForm>
+                        </FlatCard>
+                    </CreateView>
+                </>
+            </CreateBase>
+        </Container>
     );
 };
