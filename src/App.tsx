@@ -49,17 +49,36 @@ import {
 
 import { Dashboard } from './pages/Dashboard';
 
-const API_URL: string = process.env.REACT_APP_API_URL as string;
-const ISSUER_URI: string = process.env.REACT_APP_ISSUER_URI as string;
-const CLIENT_ID: string = process.env.REACT_APP_CLIENT_ID as string;
-const LOGIN_URL: string = process.env.REACT_APP_LOGIN_URL as string;
+//config
+const CONTEXT_PATH: string =
+    (globalThis as any).REACT_APP_CONTEXT_PATH ||
+    (process.env.REACT_APP_CONTEXT_PATH as string);
+const API_URL: string =
+    (globalThis as any).REACT_APP_API_URL ||
+    (process.env.REACT_APP_API_URL as string);
+
+// oidc login
+const ISSUER_URI: string =
+    (globalThis as any).REACT_APP_ISSUER_URI ||
+    (process.env.REACT_APP_ISSUER_URI as string);
+const CLIENT_ID: string =
+    (globalThis as any).REACT_APP_CLIENT_ID ||
+    (process.env.REACT_APP_CLIENT_ID as string);
+const SCOPE: string =
+    (globalThis as any).REACT_APP_SCOPE ||
+    (process.env.REACT_APP_SCOPE as string);
+
+//basic auth login
+const LOGIN_URL: string =
+    (globalThis as any).REACT_APP_LOGIN_URL ||
+    (process.env.REACT_APP_LOGIN_URL as string);
 
 const authProvider =
     ISSUER_URI && CLIENT_ID
         ? OidcAuthProvider({
               clientId: CLIENT_ID,
               issuer: ISSUER_URI,
-              scope: 'openid profile email user.roles.me',
+              scope: SCOPE,
               logoutTo: '/login',
           })
         : LOGIN_URL
