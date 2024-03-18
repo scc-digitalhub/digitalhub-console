@@ -27,16 +27,15 @@ import {
     useTranslate,
 } from 'react-admin';
 
+import { useRootSelector } from '@dslab/ra-root-selector';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import TableChartIcon from '@mui/icons-material/TableChart';
-import { grey } from '@mui/material/colors';
-import { PageTitle } from '../components/PageTitle';
-
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { useNavigate } from 'react-router-dom';
+import { PageTitle } from '../components/PageTitle';
+import { StateChips, StateColors } from '../components/StateChips';
 
 const convertToDate = value => {
     if (typeof value === 'string' || typeof value === 'number') {
@@ -148,7 +147,7 @@ export const Dashboard = () => {
                     icon={<DashboardIcon fontSize={'large'} />}
                     sx={{ pl: 0, pr: 0 }}
                 />
-                <Box color={grey[500]} sx={{ pt: 0, textAlign: 'left' }}>
+                <Box sx={{ pt: 0, textAlign: 'left' }}>
                     {project.metadata && (
                         <MuiList sx={{ pt: 0 }}>
                             <ListItem disableGutters sx={{ pt: 0 }}>
@@ -182,6 +181,7 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
+                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
@@ -228,6 +228,7 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
+                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
@@ -274,6 +275,7 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
+                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
@@ -320,6 +322,7 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
+                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
@@ -331,7 +334,7 @@ export const Dashboard = () => {
                                 }}
                             />
                             {isRunsArrayNotEmpty ? (
-                                <></>
+                                <Recent resource="runs" elements={runs} />
                             ) : (
                                 <Typography
                                     variant="h6"
@@ -419,6 +422,12 @@ const RunsGrid = (props: {
                     <Paper
                         variant="outlined"
                         sx={{
+                            backgroundColor: `${
+                                StateColors[k.toUpperCase()]
+                            }.main`,
+                            color: `${
+                                StateColors[k.toUpperCase()]
+                            }.contrastText`,
                             lineHeight: '100%',
                             aspectRatio: 1,
                             display: 'inline-grid',
@@ -446,78 +455,142 @@ const RunsGrid = (props: {
 };
 
 const Recent = (props: { resource: string; elements: any[] }) => {
-    const { resource, elements } = props;
+    const { resource, ...rest } = props;
     const translate = useTranslate();
+
+    return (
+        <Box sx={{ mt: 2 }}>
+            <Typography
+                variant="h6"
+                color={'secondary.light'}
+                fontWeight="bold"
+            >
+                {translate('pages.dashboard.recent') + ': '}
+            </Typography>
+            {resource === 'runs' ? (
+                <RecentRunsList {...rest} />
+            ) : (
+                <RecentList resource={resource} {...rest} />
+            )}
+        </Box>
+    );
+};
+
+const RecentList = (props: { resource: string; elements: any[] }) => {
+    const { resource, elements } = props;
     const createPath = useCreatePath();
     const navigate = useNavigate();
     const theme = useTheme();
 
     return (
-        <Box sx={{ mt: 2 }}>
-            <Typography
-                variant="body1"
-                color={'secondary.light'}
-                sx={{ fontWeight: 700 }}
-            >
-                {translate('pages.dashboard.recent') + ': '}
-            </Typography>
-            <MuiList sx={{ pt: 0 }}>
-                {elements.slice(0, 3).map(el => (
-                    <ListItem
-                        disableGutters
-                        key={el.id}
+        <MuiList sx={{ pt: 0 }}>
+            {elements.slice(0, 3).map(el => (
+                <ListItem disablePadding key={el.id}>
+                    <ListItemButton
+                        onClick={() =>
+                            navigate(
+                                createPath({
+                                    type: 'show',
+                                    resource: resource,
+                                    id: el.id,
+                                })
+                            )
+                        }
                         sx={{
-                            p: 0,
                             '&:hover': {
                                 backgroundColor:
                                     theme.palette.background.default,
                             },
+                            paddingY: 1.3,
                         }}
+                        //disableGutters
                     >
-                        <ListItemButton
-                            onClick={() =>
-                                navigate(
-                                    createPath({
-                                        type: 'show',
-                                        resource: resource,
-                                        id: el.id,
-                                    })
-                                )
-                            }
-                        >
-                            <ListItemText
-                                primary={
-                                    <Grid container spacing={0}>
-                                        <Grid item xs={6}>
-                                            <Typography color={'primary'}>
-                                                {el.metadata.name || el.name}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            xs={6}
-                                            sx={{ textAlign: 'right' }}
+                        <ListItemText
+                            disableTypography
+                            primary={
+                                <Grid container spacing={0}>
+                                    <Grid item xs={6}>
+                                        <Typography
+                                            variant="body1"
+                                            color={'primary'}
                                         >
-                                            <Typography
-                                                color={'secondary.light'}
-                                            >
-                                                {el.kind}
-                                            </Typography>
-                                        </Grid>
+                                            {el.metadata.name || el.name}
+                                        </Typography>
                                     </Grid>
-                                }
-                                secondary={
-                                    el.metadata?.updated
+                                    <Grid
+                                        item
+                                        xs={6}
+                                        sx={{ textAlign: 'right' }}
+                                    >
+                                        <Typography
+                                            variant="body1"
+                                            color={'secondary.light'}
+                                        >
+                                            {el.kind}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            }
+                            secondary={
+                                <Typography
+                                    variant="body2"
+                                    color={'secondary.light'}
+                                >
+                                    {el.metadata?.updated
                                         ? convertToDate(
                                               el.metadata.updated
                                           ).toLocaleString()
-                                        : undefined
-                                }
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </MuiList>
-        </Box>
+                                        : ''}
+                                </Typography>
+                            }
+                            sx={{ my: 0 }}
+                        />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </MuiList>
+    );
+};
+
+const RecentRunsList = (props: { elements: any[] }) => {
+    const { elements } = props;
+    const theme = useTheme();
+
+    console.error(elements);
+
+    return (
+        <MuiList sx={{ pt: 0 }}>
+            {elements.slice(0, 3).map(el => (
+                <ListItem
+                    key={el.id}
+                    sx={{
+                        justifyContent: 'space-between',
+                        '&:hover': {
+                            backgroundColor: theme.palette.background.default,
+                        },
+                        paddingY: 1.3,
+                    }}
+                >
+                    <Box display="flex" flexDirection="column">
+                        <Typography variant="body1" color={'primary'}>
+                            f1 transform
+                        </Typography>
+                        <Typography variant="body2" color={'secondary.light'}>
+                            {el.metadata?.updated
+                                ? convertToDate(
+                                      el.metadata.updated
+                                  ).toLocaleString()
+                                : ''}
+                        </Typography>
+                    </Box>
+
+                    <StateChips
+                        record={el}
+                        source="status.state"
+                        resource="artifact"
+                    />
+                </ListItem>
+            ))}
+        </MuiList>
     );
 };
