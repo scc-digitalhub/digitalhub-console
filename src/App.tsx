@@ -120,6 +120,7 @@ import { DataItemIcon } from './resources/dataitems/icon';
 import { ArtifactIcon } from './resources/artifacts/icon';
 import { SecretIcon } from './resources/secrets/icon';
 import { ProjectConfig } from './resources/projects/config';
+import { LayoutProjects } from './layout/LayoutProjects';
 
 const CoreApp = () => {
     return (
@@ -217,7 +218,7 @@ const InitialWrapper = () => {
         >
             <Admin
                 dashboard={Dashboard}
-                layout={MyLayout}
+                layout={LayoutProjects}
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 theme={theme}

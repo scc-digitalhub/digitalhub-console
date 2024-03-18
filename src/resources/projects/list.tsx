@@ -1,14 +1,17 @@
 import { RootSelectorButton, useRootSelector } from '@dslab/ra-root-selector';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 import {
-    CreateButton,
     List,
     Pagination,
-    SingleFieldList,
     TopToolbar,
     useRecordContext,
     useTranslate,
+    WithListContext,
+    Button,
+    RecordContextProvider,
+    CreateButton
 } from 'react-admin';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Card,
@@ -27,14 +30,24 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { grey } from '@mui/material/colors';
 
 export const ProjectSelectorList = props => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+
     const perPage = 8;
 
+
+    const cardStyle = {
+        height: '100%',
+        minWidth: '200px',
+        maxWidth: '200px',
+        display: 'flex',
+        flexDirection: 'column',
+    };
+
     const Toolbar = () => {
-        return (
-            <TopToolbar>
-                <CreateButton />
-            </TopToolbar>
-        );
+        return <TopToolbar> 
+            {/* <CreateButton />  */}
+            </TopToolbar>;
     };
 
     return (
@@ -45,9 +58,36 @@ export const ProjectSelectorList = props => {
             perPage={perPage}
             pagination={<Pagination rowsPerPageOptions={[perPage]} />}
         >
-            <SingleFieldList linkType={false} component={MyGrid} gap={0}>
-                <ProjectsGrid />
-            </SingleFieldList>
+            <WithListContext
+                render={({ data }) => (
+                    <Stack spacing={2} sx={{ padding: 2 }} direction={'row'}>
+                        <Grid item xs={12} md={3} zeroMinWidth key="0">
+                            <Card sx={cardStyle}>
+                                <CardActionArea sx={{ height: '100%' }}>
+                                    <CardContent sx={{ height: '100%' }}>
+                                        <Typography sx={{ mb: 2 }}>
+                                            {translate('dashboard.create')}
+                                        </Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                                <CardActions disableSpacing sx={{ mt: 'auto' }}>
+                                    <Button fullWidth={true}
+                                        style={{ marginLeft: 'auto' }}
+                                        variant="contained"
+                                        label={translate('buttons.create')}
+                                        onClick={() => navigate('projects/create')}
+                                    />
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                        {data?.map(project => (
+                            <RecordContextProvider value={project}>
+                            <ProjectsGrid key={project.id}/>
+                            </RecordContextProvider>
+                        ))}
+                    </Stack>
+                )}
+            />
         </List>
     );
 };

@@ -12,7 +12,6 @@ export const MyMenu = () => {
             sx={{
                 height: '100%',
                 pt: '18px',
-                // borderRight: '1px solid rgba(0, 0, 0, 0.12)',
             }}
         >
             <Box flex={1}>
@@ -21,9 +20,6 @@ export const MyMenu = () => {
                 <Menu.ResourceItem name="dataitems" />
                 <Menu.ResourceItem name="functions" />
                 <Menu.ResourceItem name="secrets" />
-                {/* </Box>
-
-            <Box height={'20vh'}> */}
                 <Divider />
                 <MenuItemLink
                     leftIcon={<SettingsIcon />}
