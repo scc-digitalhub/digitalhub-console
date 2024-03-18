@@ -209,6 +209,10 @@ const messages = {
         invalidDatetime: 'Invalid datetime',
         unsupportedField: 'Unsupported field',
     },
+    messages: {
+        type_and_press_enter: 'Type and press ENTER to add',
+        double_click_to_edit: 'Double click to edit',
+    },
 };
 
 export default messages;
