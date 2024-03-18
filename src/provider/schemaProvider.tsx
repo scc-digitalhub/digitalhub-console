@@ -137,9 +137,17 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             }
 
             if (!(resource in _cache)) {
-                await list(resource);
+                return list(resource).then(l => {
+                    if (!l) {
+                        return null;
+                    }
+
+                    return l.find(r => r.kind === kind);
+                });
             }
-            return { ..._cache[resource].find(r => r.kind === kind) };
+
+            const hit = (_cache[resource] || []).find(r => r.kind === kind);
+            return { ...hit };
         };
 
         const kinds = async (resource: string): Promise<string[] | null> => {

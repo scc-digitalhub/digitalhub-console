@@ -1,6 +1,6 @@
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { Box, Container, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
@@ -45,14 +45,28 @@ const ShowComponent = () => {
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<any>([]);
     const [sourceCode, setSourceCode] = useState<any>();
+    const initializing = useRef<boolean>(false);
 
-    // const { data, isLoading, error } = useGetList('tasks', {
-    //     filter: {
-    //         function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
-    //     },
-    // });
+    const isInitializing = () => {
+        return initializing.current === true;
+    };
+
+    const acquireInitializing = () => {
+        if (!initializing.current) {
+            initializing.current = true;
+            return initializing.current;
+        }
+
+        return false;
+    };
+
     useEffect(() => {
         if (!schemaProvider || !dataProvider) {
+            return;
+        }
+
+        //single loading
+        if (isInitializing() || !acquireInitializing()) {
             return;
         }
 
@@ -134,37 +148,6 @@ const ShowComponent = () => {
                 .catch(error => {
                     console.log(error);
                 });
-
-            // const mapTask = {};
-            // getTaskByFunction(record?.kind)?.forEach(async kind => {
-            //     //task=profile
-            //     //check task for function contains a task with kind of profile
-            //     let typeTask = data?.find(data => kind === data.kind);
-            //     if (!typeTask) {
-            //         //crealo con await su dataprovider
-            //         const task = await dataProvider.create('tasks', {
-            //             data: {
-            //                 project: record?.project,
-            //                 kind: kind,
-            //                 spec: {
-            //                     function: `${record?.kind}://${record?.project}/${record?.name}:${record?.id}`,
-            //                 },
-            //             },
-            //         });
-            //         //  .then(response => console.log(response))
-            //         //array locale
-            //         if (task) {
-            //             mapTask[kind] = typeTask;
-            //         }
-            //     } else {
-            //         console.log(
-            //             'kind' + kind + ' presente' + JSON.stringify(data)
-            //         );
-            //         mapTask[kind] = typeTask;
-            //     }
-            // });
-            // //setTask con array locale + task esistenti in data. Uso mappa per tipo {profile: {...}, validate: {{}}}
-            // setTasks(mapTask);
         }
     }, [record, schemaProvider, dataProvider]);
 
@@ -193,7 +176,7 @@ const ShowComponent = () => {
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
-            <Stack direction={'row'} spacing={3}>
+                <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
                     </Labeled>
