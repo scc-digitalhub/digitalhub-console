@@ -10,7 +10,7 @@ export const SchemaTabComponent = (props: { record: any }) => {
     const translate = useTranslate();
 
     useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
+        const fields = props.record?.spec?.schema?.fields || [];
 
         const baseColumns: GridColDef[] = [
             {
@@ -25,7 +25,7 @@ export const SchemaTabComponent = (props: { record: any }) => {
             },
         ];
 
-        const dynamicColumns = schema.reduce(
+        const dynamicColumns = fields.reduce(
             (acc: GridColDef[], columnDescriptor: any) => {
                 const filteredKeys = Object.keys(columnDescriptor).filter(
                     key => key !== 'name' && key !== 'type'
@@ -54,8 +54,8 @@ export const SchemaTabComponent = (props: { record: any }) => {
     }, [props.record]);
 
     useEffect(() => {
-        const schema = props.record?.spec?.schema || [];
-        setRows(schema.map((obj: any, i: number) => ({ id: i, ...obj })));
+        const fields = props.record?.spec?.schema?.fields || [];
+        setRows(fields.map((obj: any, i: number) => ({ id: i, ...obj })));
     }, [props.record]);
 
     return (
