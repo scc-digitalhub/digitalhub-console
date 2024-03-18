@@ -197,6 +197,10 @@ const messages = {
         wrongChar:
             'The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word',
         invalidKind: 'Invalid kind',
+        invalidValue: 'Invalid value',
+        invalidDate: 'Invalid date',
+        invalidDatetime: 'Invalid datetime',
+        unsupportedField: 'Unsupported field',
     },
 };
 

@@ -6,23 +6,15 @@ import { useDataGridController } from './usePreviewDataGridController';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;
-
     const translate = useTranslate();
-    const translations = {
-        invalidValue: translate('resources.dataitems.preview.invalidValue'),
-        invalidDate: translate('resources.dataitems.preview.invalidDate'),
-        invalidDatetime: translate(
-            'resources.dataitems.preview.invalidDatetime'
-        ),
-    };
 
-    const { dataGridData, isSettingUpData, isAtLeastOneColumnUnsupported } =
+    const { data, isLoading, isAtLeastOneColumnUnsupported } =
         useDataGridController({
-            record,
-            translations,
+            schema: record?.spec?.schema,
+            preview: record?.status?.preview,
         });
 
-    if (isSettingUpData) return <Spinner />;
+    if (isLoading) return <Spinner />;
     return (
         <Box
             sx={{
@@ -34,8 +26,8 @@ export const PreviewTabComponent = (props: { record: any }) => {
             </Typography>
 
             <DataGrid
-                columns={dataGridData ? dataGridData.columns : []}
-                rows={dataGridData ? dataGridData.rows : []}
+                columns={data?.columns || []}
+                rows={data?.rows || []}
                 autoHeight
                 columnHeaderHeight={isAtLeastOneColumnUnsupported ? 90 : 56}
                 hideFooter={true}

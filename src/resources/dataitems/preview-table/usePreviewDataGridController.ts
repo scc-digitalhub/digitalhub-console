@@ -2,30 +2,36 @@ import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import { useEffect, useRef, useState } from 'react';
 import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
+import { useTranslate } from 'react-admin';
 
 export const useDataGridController = (
-    props: DataGridControllerPrpos
+    props: DataGridControllerProps
 ): DataGridControllerResult => {
-    const { record, translations } = props;
-
-    const [dataGridData, setDataGridData] = useState<{
+    const { preview, schema = {} } = props;
+    const translate = useTranslate();
+    const translations = {
+        invalidValue: translate('validation.invalidValue'),
+        invalidDate: translate('validation.invalidDate'),
+        invalidDatetime: translate('validation.invalidDatetime'),
+    };
+    const [data, setData] = useState<{
         rows: GridRowsProp;
         columns: GridColDef[];
     } | null>(null);
     const [isAtLeastOneColumnUnsupported, setIsAtLeastOneColumnUnsupported] =
         useState<boolean>(false);
-    const [isSettingUpData, setIsSettingUpData] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const timer = useRef<any>(null);
 
     useEffect(() => {
         clearTimeout(timer.current);
-        setIsSettingUpData(true);
+        setIsLoading(true);
 
-        const schema = record?.spec?.schema || [];
-        const preview = record?.status?.preview?.cols || [];
+        const fields = schema?.fields || [];
+        const cols = preview?.cols || [];
 
         // columns
-        const columns = schema.map((obj: any) => {
+        const columns = fields.map((obj: any) => {
             const basicFields = PreviewHelper.getBasicFields(obj, translations);
 
             const columnFields = PreviewHelper.getColumnFields(
@@ -38,15 +44,15 @@ export const useDataGridController = (
                 : basicFields;
         });
 
-        if (schema.some((obj: any) => PreviewHelper.isUnsupportedColumn(obj))) {
+        if (fields.some((obj: any) => PreviewHelper.isUnsupportedColumn(obj))) {
             setIsAtLeastOneColumnUnsupported(true);
         }
 
         // rows
         const rows: { [key: string]: any }[] = [];
-        preview.forEach((obj: any) => {
+        cols.forEach((obj: any) => {
             const field = changeCase.camelCase(obj.name);
-            const columnDescriptor = schema.find(
+            const columnDescriptor = fields.find(
                 (s: any) => s.name === obj.name
             );
 
@@ -86,37 +92,37 @@ export const useDataGridController = (
             }
         });
 
-        setDataGridData({
+        setData({
             columns,
             rows,
         });
-    }, [record]);
+    }, [preview, schema]);
 
     useEffect(() => {
-        if (dataGridData) {
+        if (data) {
             timer.current = setTimeout(() => {
-                setIsSettingUpData(false);
+                setIsLoading(false);
             }, 350);
         }
-    }, [dataGridData]);
+    }, [data]);
 
     return {
-        dataGridData,
-        isSettingUpData,
+        data: data,
+        isLoading: isLoading,
         isAtLeastOneColumnUnsupported,
     };
 };
 
-type DataGridControllerPrpos = {
-    record: any;
-    translations: any;
+type DataGridControllerProps = {
+    preview: any;
+    schema?: any;
 };
 
 type DataGridControllerResult = {
-    dataGridData: {
+    data: {
         rows: GridRowsProp;
         columns: GridColDef[];
     } | null;
-    isSettingUpData: boolean;
+    isLoading: boolean;
     isAtLeastOneColumnUnsupported: boolean;
 };
