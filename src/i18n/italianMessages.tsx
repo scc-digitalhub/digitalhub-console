@@ -146,12 +146,19 @@ const messages = {
             },
             functions: {
                 title: 'Funzioni e codice',
+                empty: 'Ancora nessuna funzione',
             },
             dataitems: {
-                title: 'Data items',
+                title: 'Dati',
+                empty: 'Ancora nessun dato',
             },
             artifacts: {
                 title: 'Artefatti',
+                empty: 'Ancora nessun artefatto',
+            },
+            runs: {
+                title: 'Compiti ed esecuzioni',
+                empty: 'Ancora nessuna esecuzione',
             },
         },
     },
@@ -186,7 +193,7 @@ const messages = {
         noSpace: 'Il valore non deve contenere spazi',
         wrongChar:
             "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
-        invalidKind: "Tipo invalido"
+        invalidKind: 'Tipo invalido',
     },
 };
 

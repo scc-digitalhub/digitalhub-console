@@ -146,12 +146,19 @@ const messages = {
             },
             functions: {
                 title: 'Functions and code',
+                empty: 'No functions yet',
             },
             dataitems: {
                 title: 'Data items',
+                empty: 'No data items yet',
             },
             artifacts: {
                 title: 'Artifacts',
+                empty: 'No artifacts yet',
+            },
+            runs: {
+                title: 'Jobs and runs',
+                empty: 'No runs yet',
             },
         },
         functions: {
