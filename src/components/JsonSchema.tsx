@@ -5,7 +5,8 @@ import {
     JSONSchemaFormatInputProps,
 } from '@dslab/ra-jsonschema-input';
 import { TagsChipInput } from './TagsChipInput';
-const customWidgets = { tagsChipInput: TagsChipInput };
+import { MuiChipsInputWidget } from './MuiChipsInputWidget';
+const customWidgets = { tagsChipInput: MuiChipsInputWidget };
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     return <RaJsonSchemaField {...props} customWidgets={customWidgets} />;
