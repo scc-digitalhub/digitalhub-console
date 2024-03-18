@@ -194,7 +194,11 @@ const messages = {
     buttons: {
         cancel: 'Cancel',
         newVersion: 'New version',
+        create: 'Create',
     },
+    dashboard: {
+        create: 'To create a new project click on the "Create" button',  
+      },
     validation: {
         minValue: 'Value must be greater that or equal to %{min}',
         noSpace: 'Value must contain no space',
