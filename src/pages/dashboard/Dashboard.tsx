@@ -1,3 +1,9 @@
+import { useRootSelector } from '@dslab/ra-root-selector';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import {
     Box,
     Card,
@@ -8,13 +14,9 @@ import {
     Container,
     Grid,
     ListItem,
-    ListItemButton,
-    ListItemText,
     List as MuiList,
-    Paper,
     Stack,
-    Typography,
-    useTheme,
+    Typography
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
@@ -22,26 +24,25 @@ import {
     ListButton,
     LoadingIndicator,
     SortPayload,
-    useCreatePath,
     useDataProvider,
-    useTranslate,
+    useTranslate
 } from 'react-admin';
+import { PageTitle } from '../../components/PageTitle';
+import { Counter } from './Counter';
+import { Recent } from './Recent';
+import { RunsGrid } from './RunsGrid';
+import { convertToDate } from './helper';
 
-import { useRootSelector } from '@dslab/ra-root-selector';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import { useNavigate } from 'react-router-dom';
-import { PageTitle } from '../components/PageTitle';
-import { StateChips, StateColors } from '../components/StateChips';
+const DashboardCreateButton = (props: { resource: string }) => {
+    const { resource } = props;
 
-const convertToDate = value => {
-    if (typeof value === 'string' || typeof value === 'number') {
-        return new Date(value);
-    }
-    return value;
+    return <CreateButton resource={resource} variant="contained" />;
+};
+
+const ToListButton = (props: { resource: string }) => {
+    const { resource } = props;
+
+    return <ListButton resource={resource} variant="text" />;
 };
 
 export const Dashboard = () => {
@@ -352,245 +353,5 @@ export const Dashboard = () => {
                 {translate('pages.dashboard.text')}
             </Typography>
         </Container>
-    );
-};
-
-const Counter = (props: { value: number | undefined }) => {
-    const { value } = props;
-    const theme = useTheme();
-
-    return (
-        <Grid container justifyContent="center">
-            <Grid item md={4} zeroMinWidth key={1} textAlign={'center'}>
-                <Paper
-                    elevation={0}
-                    sx={{
-                        backgroundColor: theme.palette.background.default,
-                        lineHeight: '100%',
-                        aspectRatio: 1,
-                        display: 'inline-grid',
-                        placeItems: 'center',
-                        minWidth: '5em',
-                        minHeight: '5em',
-                        padding: '.5em',
-                        borderRadius: '50%',
-                        boxSizing: 'border-box',
-                    }}
-                >
-                    <Typography variant="h4" sx={{ textAlign: 'center' }}>
-                        {value}
-                    </Typography>
-                </Paper>
-            </Grid>
-        </Grid>
-    );
-};
-
-const DashboardCreateButton = (props: { resource: string }) => {
-    const { resource } = props;
-
-    return <CreateButton resource={resource} variant="contained" />;
-};
-
-const ToListButton = (props: { resource: string }) => {
-    const { resource } = props;
-
-    return <ListButton resource={resource} variant="text" />;
-};
-
-const RunsGrid = (props: {
-    runs: {
-        completed: number | undefined;
-        running: number | undefined;
-        error: number | undefined;
-    };
-}) => {
-    const { runs } = props;
-    const entries = Object.entries(runs);
-    const translate = useTranslate();
-
-    return (
-        <Grid container justifyContent="center" height="5em">
-            {entries.map(([k, v]) => (
-                <Grid
-                    item
-                    xs={true}
-                    key={k}
-                    textAlign={'center'}
-                    minWidth={'5em'}
-                >
-                    <Paper
-                        variant="outlined"
-                        sx={{
-                            backgroundColor: `${
-                                StateColors[k.toUpperCase()]
-                            }.main`,
-                            color: `${
-                                StateColors[k.toUpperCase()]
-                            }.contrastText`,
-                            lineHeight: '100%',
-                            aspectRatio: 1,
-                            display: 'inline-grid',
-                            placeItems: 'center',
-                            minWidth: '3.2em',
-                            minHeight: '3.2em',
-                            padding: '.5em',
-                            borderRadius: '50%',
-                            boxSizing: 'border-box',
-                        }}
-                    >
-                        {v}
-                    </Paper>
-                    <Typography
-                        variant="body2"
-                        sx={{ textAlign: 'center' }}
-                        pt={0.5}
-                    >
-                        {translate(`pages.dashboard.states.${k}`)}
-                    </Typography>
-                </Grid>
-            ))}
-        </Grid>
-    );
-};
-
-const Recent = (props: { resource: string; elements: any[] }) => {
-    const { resource, ...rest } = props;
-    const translate = useTranslate();
-
-    return (
-        <Box sx={{ mt: 2 }}>
-            <Typography
-                variant="h6"
-                color={'secondary.light'}
-                fontWeight="bold"
-            >
-                {translate('pages.dashboard.recent') + ': '}
-            </Typography>
-            {resource === 'runs' ? (
-                <RecentRunsList {...rest} />
-            ) : (
-                <RecentList resource={resource} {...rest} />
-            )}
-        </Box>
-    );
-};
-
-const RecentList = (props: { resource: string; elements: any[] }) => {
-    const { resource, elements } = props;
-    const createPath = useCreatePath();
-    const navigate = useNavigate();
-    const theme = useTheme();
-
-    return (
-        <MuiList sx={{ pt: 0 }}>
-            {elements.slice(0, 3).map(el => (
-                <ListItem disablePadding key={el.id}>
-                    <ListItemButton
-                        onClick={() =>
-                            navigate(
-                                createPath({
-                                    type: 'show',
-                                    resource: resource,
-                                    id: el.id,
-                                })
-                            )
-                        }
-                        sx={{
-                            '&:hover': {
-                                backgroundColor:
-                                    theme.palette.background.default,
-                            },
-                            paddingY: 1.3,
-                        }}
-                        //disableGutters
-                    >
-                        <ListItemText
-                            disableTypography
-                            primary={
-                                <Grid container spacing={0}>
-                                    <Grid item xs={6}>
-                                        <Typography
-                                            variant="body1"
-                                            color={'primary'}
-                                        >
-                                            {el.metadata.name || el.name}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={6}
-                                        sx={{ textAlign: 'right' }}
-                                    >
-                                        <Typography
-                                            variant="body1"
-                                            color={'secondary.light'}
-                                        >
-                                            {el.kind}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            }
-                            secondary={
-                                <Typography
-                                    variant="body2"
-                                    color={'secondary.light'}
-                                >
-                                    {el.metadata?.updated
-                                        ? convertToDate(
-                                              el.metadata.updated
-                                          ).toLocaleString()
-                                        : ''}
-                                </Typography>
-                            }
-                            sx={{ my: 0 }}
-                        />
-                    </ListItemButton>
-                </ListItem>
-            ))}
-        </MuiList>
-    );
-};
-
-const RecentRunsList = (props: { elements: any[] }) => {
-    const { elements } = props;
-    const theme = useTheme();
-
-    console.error(elements);
-
-    return (
-        <MuiList sx={{ pt: 0 }}>
-            {elements.slice(0, 3).map(el => (
-                <ListItem
-                    key={el.id}
-                    sx={{
-                        justifyContent: 'space-between',
-                        '&:hover': {
-                            backgroundColor: theme.palette.background.default,
-                        },
-                        paddingY: 1.3,
-                    }}
-                >
-                    <Box display="flex" flexDirection="column">
-                        <Typography variant="body1" color={'primary'}>
-                            f1 transform
-                        </Typography>
-                        <Typography variant="body2" color={'secondary.light'}>
-                            {el.metadata?.updated
-                                ? convertToDate(
-                                      el.metadata.updated
-                                  ).toLocaleString()
-                                : ''}
-                        </Typography>
-                    </Box>
-
-                    <StateChips
-                        record={el}
-                        source="status.state"
-                        resource="artifact"
-                    />
-                </ListItem>
-            ))}
-        </MuiList>
     );
 };
