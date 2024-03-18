@@ -12,6 +12,9 @@ export default defineConfig({
         host: true,
     },
     base: './',
+    build: {
+        manifest: true,
+    },
     optimizeDeps: {
         include: ['@mui/material/Tooltip'],
     },
