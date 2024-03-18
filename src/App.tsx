@@ -50,9 +50,7 @@ import {
 import { Dashboard } from './pages/Dashboard';
 
 //config
-const CONTEXT_PATH: string =
-    (globalThis as any).REACT_APP_CONTEXT_PATH ||
-    (process.env.REACT_APP_CONTEXT_PATH as string);
+const CONTEXT_PATH: string = import.meta.env.BASE_URL || '';
 const API_URL: string =
     (globalThis as any).REACT_APP_API_URL ||
     (process.env.REACT_APP_API_URL as string);
@@ -239,7 +237,7 @@ const InitialWrapper = () => {
 
 export const App = () => {
     return (
-        <BrowserRouter basename={''}>
+        <BrowserRouter basename={CONTEXT_PATH}>
             <CoreApp />
         </BrowserRouter>
     );

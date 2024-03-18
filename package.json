@@ -18,13 +18,13 @@
     "scripts": {
         "start": "env-cmd -f .env.development vite",
         "start:localhost": "env-cmd -f .env.localhost vite",
-        "start:production": "env-cmd -f .env.production vite",
+        "start:production": "env-cmd -f .env.production vite --base=/console",
         "build": "env-cmd -f .env.development vite build",
         "build:localhost": "env-cmd -f .env.localhost vite build",
-        "build:production": "env-cmd -f .env.production vite build",
+        "build:production": "env-cmd -f .env.production vite build --base=/console",
         "serve": "env-cmd -f .env.development vite preview",
         "serve:localhost": "env-cmd -f .env.localhost vite preview",
-        "serve:production": "env-cmd -f .env.production vite preview",
+        "serve:production": "env-cmd -f .env.production vite preview --base=/console",
         "type-check": "tsc --noEmit",
         "prettier": "prettier --config ./prettier.config.js --write --list-different \"src/**/*.{ts,tsx,js,html}\" ./index.html"
     },
