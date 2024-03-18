@@ -38,9 +38,9 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                                 backgroundColor:
                                     theme.palette.background.default,
                             },
-                            paddingY: 1.3,
+                            paddingY: 1.5,
                         }}
-                        //disableGutters
+                        disableGutters
                     >
                         <ListItemText
                             disableTypography
