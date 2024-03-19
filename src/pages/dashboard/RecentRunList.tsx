@@ -5,8 +5,10 @@ import {
     Typography,
     useTheme,
     ListItemButton,
+    ListItemText,
+    Badge,
 } from '@mui/material';
-import { StateChips } from '../../components/StateChips';
+import { StateColors } from '../../components/StateChips';
 import { convertToDate } from './helper';
 import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +20,7 @@ export const RecentRunsList = (props: { elements: any[] }) => {
     const theme = useTheme();
 
     return (
-        <MuiList sx={{ pt: 0 }}>
+        <MuiList sx={{ pt: 0, mt: 2 }}>
             {elements.slice(0, 3).map(el => {
                 const task = el?.spec?.task || '';
                 const url = new URL(task);
@@ -30,19 +32,16 @@ export const RecentRunsList = (props: { elements: any[] }) => {
                 const functionData = url.pathname.split('/')[3];
                 const functionName = functionData.split(':')[0];
                 const functionId = functionData.split(':')[1];
+                const link = `${createPath({
+                    type: 'show',
+                    resource: 'functions',
+                    id: functionId,
+                })}/${taskKind}`;
 
                 return (
                     <ListItem disablePadding key={el.id}>
                         <ListItemButton
-                            onClick={() =>
-                                navigate(
-                                    `${createPath({
-                                        type: 'show',
-                                        resource: 'functions',
-                                        id: functionId,
-                                    })}/${taskKind}`
-                                )
-                            }
+                            onClick={() => navigate(link)}
                             sx={{
                                 '&:hover': {
                                     backgroundColor:
@@ -53,26 +52,49 @@ export const RecentRunsList = (props: { elements: any[] }) => {
                             }}
                             disableGutters
                         >
-                            <Box display="flex" flexDirection="column">
-                                <Typography variant="body1" color={'primary'}>
-                                    {`${functionName} ${taskKind}`}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color={'secondary.light'}
-                                >
-                                    {el.metadata?.updated
-                                        ? convertToDate(
-                                              el.metadata.updated
-                                          ).toLocaleString()
-                                        : ''}
-                                </Typography>
-                            </Box>
+                            <ListItemText
+                                disableTypography
+                                primary={
+                                    <Badge
+                                        variant="dot"
+                                        color={
+                                            StateColors[el?.status?.state || '']
+                                        }
+                                        sx={{ pr: 1 }}
+                                    >
+                                        <Typography
+                                            variant="body1"
+                                            color={'primary'}
+                                        >
+                                            {functionName}
+                                        </Typography>
+                                    </Badge>
+                                }
+                                secondary={
+                                    <Box
+                                        display="flex"
+                                        justifyContent="space-between"
+                                    >
+                                        <Typography
+                                            variant="body2"
+                                            color={'gray'}
+                                        >
+                                            {el.metadata?.updated
+                                                ? convertToDate(
+                                                      el.metadata.updated
+                                                  ).toLocaleString()
+                                                : ''}
+                                        </Typography>
 
-                            <StateChips
-                                record={el}
-                                source="status.state"
-                                resource="artifact"
+                                        <Typography
+                                            variant="body2"
+                                            color={'gray'}
+                                        >
+                                            {taskKind}
+                                        </Typography>
+                                    </Box>
+                                }
+                                sx={{ my: 0 }}
                             />
                         </ListItemButton>
                     </ListItem>

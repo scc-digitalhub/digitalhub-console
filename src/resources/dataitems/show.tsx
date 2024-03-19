@@ -28,6 +28,7 @@ import { DataItemIcon } from './icon';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
+import { FlatCard } from '../../components/FlatCard';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -127,18 +128,16 @@ arePropsEqual);
  * The max-width and min-width CSS properties play a critical role in determining
  * the width of the data grids contained within the schema and preview tabs.
  */
-const FlatCard = (props: { children: ReactNode }) => {
+const StyledFlatCard = (props: { children: ReactNode }) => {
     const { children } = props;
 
     return (
-        <Paper
-            variant="elevation"
-            elevation={0}
+        <FlatCard
             // Set the max width to 70vw and min width to 100%
             sx={{ maxWidth: '70vw', minWidth: '100%' }}
         >
             {children}
-        </Paper>
+        </FlatCard>
     );
 };
 
@@ -162,7 +161,7 @@ export const DataItemShow = () => {
                                 gap: 2,
                             },
                         }}
-                        component={FlatCard}
+                        component={StyledFlatCard}
                         aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />

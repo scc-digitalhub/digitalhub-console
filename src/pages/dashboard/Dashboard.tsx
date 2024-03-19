@@ -16,7 +16,7 @@ import {
     ListItem,
     List as MuiList,
     Stack,
-    Typography
+    Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
@@ -25,13 +25,15 @@ import {
     LoadingIndicator,
     SortPayload,
     useDataProvider,
-    useTranslate
+    useGetResourceLabel,
+    useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../components/PageTitle';
 import { Counter } from './Counter';
-import { Recent } from './Recent';
 import { RunsGrid } from './RunsGrid';
 import { convertToDate } from './helper';
+import { RecentList } from './RecentList';
+import { RecentRunsList } from './RecentRunList';
 
 const DashboardCreateButton = (props: { resource: string }) => {
     const { resource } = props;
@@ -49,6 +51,7 @@ export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
 
     const [project, setProject] = useState<any>();
 
@@ -139,6 +142,12 @@ export const Dashboard = () => {
         flexDirection: 'column',
     };
 
+    const resourceName = (resource: string) =>
+        translate(`resources.${resource}.forcedCaseName`, {
+            smart_count: 0,
+            _: getResourceLabel(resource, 0),
+        });
+
     return (
         <Container maxWidth={false}>
             <div>
@@ -182,25 +191,17 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
-                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
                             <Counter value={totalArtifacts} />
                             {isArtifactsArrayNotEmpty ? (
-                                <Recent
+                                <RecentList
                                     resource="artifacts"
                                     elements={artifacts}
                                 />
                             ) : (
-                                <Typography
-                                    variant="h6"
-                                    sx={{ textAlign: 'center', p: '70px 0' }}
-                                >
-                                    {translate(
-                                        'pages.dashboard.artifacts.empty'
-                                    )}
-                                </Typography>
+                                <EmptyList resource="artifacts" />
                             )}
                         </CardContent>
                         <CardActions
@@ -229,25 +230,17 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
-                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
                             <Counter value={totalDataItems} />
                             {isDataItemsArrayNotEmpty ? (
-                                <Recent
+                                <RecentList
                                     resource="dataitems"
                                     elements={dataItems}
                                 />
                             ) : (
-                                <Typography
-                                    variant="h6"
-                                    sx={{ textAlign: 'center', p: '70px 0' }}
-                                >
-                                    {translate(
-                                        'pages.dashboard.dataitems.empty'
-                                    )}
-                                </Typography>
+                                <EmptyList resource="dataitems" />
                             )}
                         </CardContent>
                         <CardActions
@@ -276,25 +269,17 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
-                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
                             <Counter value={totalFunctions} />
                             {isFunctionsArrayNotEmpty ? (
-                                <Recent
+                                <RecentList
                                     resource="functions"
                                     elements={functions}
                                 />
                             ) : (
-                                <Typography
-                                    variant="h6"
-                                    sx={{ textAlign: 'center', p: '70px 0' }}
-                                >
-                                    {translate(
-                                        'pages.dashboard.functions.empty'
-                                    )}
-                                </Typography>
+                                <EmptyList resource="functions" />
                             )}
                         </CardContent>
                         <CardActions
@@ -323,7 +308,6 @@ export const Dashboard = () => {
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
-                                fontWeight: 'bold',
                             }}
                         />
                         <CardContent>
@@ -335,14 +319,9 @@ export const Dashboard = () => {
                                 }}
                             />
                             {isRunsArrayNotEmpty ? (
-                                <Recent resource="runs" elements={runs} />
+                                <RecentRunsList elements={runs} />
                             ) : (
-                                <Typography
-                                    variant="h6"
-                                    sx={{ textAlign: 'center', p: '70px 0' }}
-                                >
-                                    {translate('pages.dashboard.runs.empty')}
-                                </Typography>
+                                <EmptyList resource="runs" />
                             )}
                         </CardContent>
                     </Card>
@@ -353,5 +332,29 @@ export const Dashboard = () => {
                 {translate('pages.dashboard.text')}
             </Typography>
         </Container>
+    );
+};
+
+const EmptyList = (props: { resource: string }) => {
+    const { resource } = props;
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    const resourceName = (resource: string) =>
+        translate(`resources.${resource}.forcedCaseName`, {
+            smart_count: 0,
+            _: getResourceLabel(resource, 0),
+        });
+
+    return (
+        <Typography
+            variant="body1"
+            color={'gray'}
+            sx={{ textAlign: 'center', pt: 5 }}
+        >
+            {translate('ra.page.empty', {
+                name: resourceName(resource),
+            })}
+        </Typography>
     );
 };

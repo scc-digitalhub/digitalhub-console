@@ -5,7 +5,7 @@ import {
     ListItemText,
     List as MuiList,
     Typography,
-    useTheme
+    useTheme,
 } from '@mui/material';
 import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
     const theme = useTheme();
 
     return (
-        <MuiList sx={{ pt: 0 }}>
+        <MuiList sx={{ pt: 0, mt: 2 }}>
             {elements.slice(0, 3).map(el => (
                 <ListItem disablePadding key={el.id}>
                     <ListItemButton
@@ -52,10 +52,7 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                                     display="flex"
                                     justifyContent="space-between"
                                 >
-                                    <Typography
-                                        variant="body2"
-                                        color={'secondary.light'}
-                                    >
+                                    <Typography variant="body2" color={'gray'}>
                                         {el.metadata?.updated
                                             ? convertToDate(
                                                   el.metadata.updated
@@ -63,10 +60,7 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                                             : ''}
                                     </Typography>
 
-                                    <Typography
-                                        variant="body2"
-                                        color={'secondary.light'}
-                                    >
+                                    <Typography variant="body2" color={'gray'}>
                                         {el.kind}
                                     </Typography>
                                 </Box>
