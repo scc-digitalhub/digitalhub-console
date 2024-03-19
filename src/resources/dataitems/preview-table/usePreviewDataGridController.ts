@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
 import { useTranslate } from 'react-admin';
 
-export const useDataGridController = (
+export const usePreviewDataGridController = (
     props: DataGridControllerProps
 ): DataGridControllerResult => {
     const { preview, schema = {} } = props;
@@ -14,6 +14,7 @@ export const useDataGridController = (
         invalidDate: translate('validation.invalidDate'),
         invalidDatetime: translate('validation.invalidDatetime'),
     };
+    
     const [data, setData] = useState<{
         rows: GridRowsProp;
         columns: GridColDef[];
@@ -110,6 +111,7 @@ export const useDataGridController = (
         data: data,
         isLoading: isLoading,
         isAtLeastOneColumnUnsupported,
+        numberOfRows: preview?.rows || 0,
     };
 };
 
@@ -125,4 +127,5 @@ type DataGridControllerResult = {
     } | null;
     isLoading: boolean;
     isAtLeastOneColumnUnsupported: boolean;
+    numberOfRows: number;
 };
