@@ -7,11 +7,9 @@ import {
     useRecordContext,
     useTranslate,
     WithListContext,
-    Button,
     RecordContextProvider,
-    CreateButton
+    useRedirect
 } from 'react-admin';
-import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Card,
@@ -25,15 +23,18 @@ import {
     Chip,
     Stack,
     CardActionArea,
+    Container,
+    Button,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import FolderIcon from '@mui/icons-material/Folder';
 import { grey } from '@mui/material/colors';
 
 export const ProjectSelectorList = props => {
     const translate = useTranslate();
-    const navigate = useNavigate();
+    const redirect = useRedirect();
 
-    const perPage = 8;
+    const perPage = [11,22,33];
 
 
     const cardStyle = {
@@ -46,7 +47,6 @@ export const ProjectSelectorList = props => {
 
     const Toolbar = () => {
         return <TopToolbar> 
-            {/* <CreateButton />  */}
             </TopToolbar>;
     };
 
@@ -56,14 +56,22 @@ export const ProjectSelectorList = props => {
             actions={<Toolbar />}
             component={Box}
             perPage={perPage}
-            pagination={<Pagination rowsPerPageOptions={[perPage]} />}
+            pagination={<Pagination rowsPerPageOptions={[11,22]} />}
         >
+            <Grid container spacing={2}>
+
             <WithListContext
                 render={({ data }) => (
-                    <Stack spacing={2} sx={{ padding: 2 }} direction={'row'}>
-                        <Grid item xs={12} md={3} zeroMinWidth key="0">
-                            <Card sx={cardStyle}>
+                    <>
+                        <Grid item xs={6} md={3} lg={2} zeroMinWidth key="0">
+                            <Card sx={cardStyle} >
                                 <CardActionArea sx={{ height: '100%' }}>
+                                <CardHeader
+                        avatar={<FolderIcon />}
+                        titleTypographyProps={{
+                            variant: 'h6',
+                            color: 'secondary.main',
+                        }}/>
                                     <CardContent sx={{ height: '100%' }}>
                                         <Typography sx={{ mb: 2 }}>
                                             {translate('dashboard.create')}
@@ -72,11 +80,11 @@ export const ProjectSelectorList = props => {
                                 </CardActionArea>
                                 <CardActions disableSpacing sx={{ mt: 'auto' }}>
                                     <Button fullWidth={true}
+                                        startIcon={<AddIcon />}
                                         style={{ marginLeft: 'auto' }}
                                         variant="contained"
-                                        label={translate('buttons.create')}
-                                        onClick={() => navigate('projects/create')}
-                                    />
+                                        onClick={() => redirect('/projects/create')}
+                                    >{translate('buttons.create')}</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
@@ -85,9 +93,10 @@ export const ProjectSelectorList = props => {
                             <ProjectsGrid key={project.id}/>
                             </RecordContextProvider>
                         ))}
-                    </Stack>
+                    </>
                 )}
             />
+            </Grid>
         </List>
     );
 };
@@ -117,12 +126,14 @@ const ProjectsGrid = () => {
 
     const cardStyle = {
         height: '100%',
+        minWidth: '200px',
+        maxWidth: '200px',
         display: 'flex',
         flexDirection: 'column',
     };
 
     return (
-        <Grid item xs={12} md={3} zeroMinWidth>
+        <Grid item xs={6} md={3} lg={2} zeroMinWidth spacing={2}>
             <Card sx={cardStyle}>
                 <CardActionArea sx={{ height: '100%' }} onClick={handleClick}>
                     <CardHeader
