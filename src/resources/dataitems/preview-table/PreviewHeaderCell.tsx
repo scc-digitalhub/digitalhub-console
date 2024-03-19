@@ -1,6 +1,6 @@
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Box, Tooltip } from '@mui/material';
 import { useTranslate } from 'react-admin';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 export const PreviewHeaderCell = (props: {
     columnDescriptor: any;

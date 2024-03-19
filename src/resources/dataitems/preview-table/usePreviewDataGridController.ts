@@ -1,8 +1,8 @@
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import { useEffect, useRef, useState } from 'react';
-import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
 import { useTranslate } from 'react-admin';
+import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
 
 export const usePreviewDataGridController = (
     props: PreviewDataGridControllerProps

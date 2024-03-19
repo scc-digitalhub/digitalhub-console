@@ -1,9 +1,8 @@
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { JsonSchemaField } from '../../components/JsonSchema';
-import { Container, Stack } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { Container, Paper, Stack } from '@mui/material';
+import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
     EditButton,
@@ -21,14 +20,14 @@ import {
     MetadataSchema,
     createMetadataViewUiSchema,
 } from '../../common/schemas';
-import { FlatCard } from '../../components/FlatCard';
+import { JsonSchemaField } from '../../components/JsonSchema';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { DataItemIcon } from './icon';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
-import { DataItemIcon } from './icon';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -121,6 +120,27 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     );
 },
 arePropsEqual);
+
+/**
+ * This component overrides ShowView's default main area container.
+ *
+ * The max-width and min-width CSS properties play a critical role in determining
+ * the width of the data grids contained within the schema and preview tabs.
+ */
+const FlatCard = (props: { children: ReactNode }) => {
+    const { children } = props;
+
+    return (
+        <Paper
+            variant="elevation"
+            elevation={0}
+            // Set the max width to 70vw and min width to 100%
+            sx={{ maxWidth: '70vw', minWidth: '100%' }}
+        >
+            {children}
+        </Paper>
+    );
+};
 
 export const DataItemShow = () => {
     return (

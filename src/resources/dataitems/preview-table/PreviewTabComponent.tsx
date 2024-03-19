@@ -1,9 +1,9 @@
 import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
 import { usePreviewDataGridController } from './usePreviewDataGridController';
-import { useEffect, useState } from 'react';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;
