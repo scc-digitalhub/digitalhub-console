@@ -47,7 +47,7 @@ import {
     SecretShow,
 } from './resources/secrets';
 
-import { Dashboard } from './pages/Dashboard';
+import { Dashboard } from './pages/dashboard/Dashboard';
 
 //config
 const CONTEXT_PATH: string = import.meta.env.BASE_URL || '';
