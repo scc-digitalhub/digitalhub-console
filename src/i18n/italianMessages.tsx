@@ -94,13 +94,10 @@ const messages = {
             },
             preview: {
                 title: 'Anteprima',
-                invalidValue: 'Valore invalido',
-                invalidDate: 'Data non valida',
-                invalidDatetime: 'Datetime non valido',
-                unsupportedField: 'Campo non supportato',
                 true: 'Vero',
                 false: 'Falso',
                 numberOfRows: 'Numero di righe',
+                notAvailable: 'Anteprima non disponibile',
             },
         },
         tasks: {
@@ -194,6 +191,10 @@ const messages = {
         wrongChar:
             "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
         invalidKind: 'Tipo invalido',
+        invalidValue: 'Valore invalido',
+        invalidDate: 'Data non valida',
+        invalidDatetime: 'Datetime non valido',
+        unsupportedField: 'Campo non supportato',
     },
 };
 
