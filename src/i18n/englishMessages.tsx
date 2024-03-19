@@ -94,13 +94,10 @@ const messages = {
             },
             preview: {
                 title: 'Preview',
-                invalidValue: 'Invalid value',
-                invalidDate: 'Invalid date',
-                invalidDatetime: 'Invalid datetime',
-                unsupportedField: 'Unsupported field',
                 true: 'True',
                 false: 'False',
                 numberOfRows: 'Number of rows',
+                notAvailable: 'Preview not available',
             },
         },
         tasks: {
