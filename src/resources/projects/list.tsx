@@ -8,7 +8,7 @@ import {
     useTranslate,
     WithListContext,
     RecordContextProvider,
-    useRedirect
+    useRedirect,
 } from 'react-admin';
 import {
     Box,
@@ -34,20 +34,18 @@ export const ProjectSelectorList = props => {
     const translate = useTranslate();
     const redirect = useRedirect();
 
-    const perPage = [11,22,33];
-
+    const perPage = [7, 15, 23];
 
     const cardStyle = {
-        height: '100%',
-        minWidth: '200px',
-        maxWidth: '200px',
+        height: '250px',
+        width: '250px',
         display: 'flex',
         flexDirection: 'column',
+        margin: 'auto',
     };
 
     const Toolbar = () => {
-        return <TopToolbar> 
-            </TopToolbar>;
+        return <TopToolbar></TopToolbar>;
     };
 
     return (
@@ -56,46 +54,66 @@ export const ProjectSelectorList = props => {
             actions={<Toolbar />}
             component={Box}
             perPage={perPage}
-            pagination={<Pagination rowsPerPageOptions={[11,22]} />}
+            pagination={<Pagination rowsPerPageOptions={perPage} />}
         >
-            <Grid container spacing={2}>
-
-            <WithListContext
-                render={({ data }) => (
-                    <>
-                        <Grid item xs={6} md={3} lg={2} zeroMinWidth key="0">
-                            <Card sx={cardStyle} >
-                                <CardActionArea sx={{ height: '100%' }}>
-                                <CardHeader
-                        avatar={<FolderIcon />}
-                        titleTypographyProps={{
-                            variant: 'h6',
-                            color: 'secondary.main',
-                        }}/>
-                                    <CardContent sx={{ height: '100%' }}>
-                                        <Typography sx={{ mb: 2 }}>
-                                            {translate('dashboard.create')}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions disableSpacing sx={{ mt: 'auto' }}>
-                                    <Button fullWidth={true}
-                                        startIcon={<AddIcon />}
-                                        style={{ marginLeft: 'auto' }}
-                                        variant="contained"
-                                        onClick={() => redirect('/projects/create')}
-                                    >{translate('buttons.create')}</Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                        {data?.map(project => (
-                            <RecordContextProvider value={project}>
-                            <ProjectsGrid key={project.id}/>
-                            </RecordContextProvider>
-                        ))}
-                    </>
-                )}
-            />
+            <Grid
+                container
+                spacing={2}
+            >
+                <WithListContext
+                    render={({ data }) => (
+                        <>
+                            <Grid
+                                item
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                lg={3}
+                                zeroMinWidth
+                                rowSpacing={1}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                            >
+                                <Card sx={cardStyle}>
+                                    <CardActionArea sx={{ height: '100%' }}>
+                                        <CardHeader
+                                            avatar={<FolderIcon />}
+                                            titleTypographyProps={{
+                                                variant: 'h6',
+                                                color: 'secondary.main',
+                                            }}
+                                        />
+                                        <CardContent sx={{ height: '100%' }}>
+                                            <Typography sx={{ mb: 2 }}>
+                                                {translate('dashboard.create')}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                    <CardActions
+                                        disableSpacing
+                                        sx={{ mt: 'auto' }}
+                                    >
+                                        <Button
+                                            fullWidth={true}
+                                            startIcon={<AddIcon />}
+                                            style={{ marginLeft: 'auto' }}
+                                            variant="contained"
+                                            onClick={() =>
+                                                redirect('/projects/create')
+                                            }
+                                        >
+                                            {translate('buttons.create')}
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                            {data?.map(project => (
+                                <RecordContextProvider value={project}>
+                                    <ProjectsGrid key={project.id} />
+                                </RecordContextProvider>
+                            ))}
+                        </>
+                    )}
+                />
             </Grid>
         </List>
     );
@@ -125,15 +143,24 @@ const ProjectsGrid = () => {
     };
 
     const cardStyle = {
-        height: '100%',
-        minWidth: '200px',
-        maxWidth: '200px',
+        height: '250px',
+        width: '250px',
         display: 'flex',
         flexDirection: 'column',
+        margin: 'auto',
     };
 
     return (
-        <Grid item xs={6} md={3} lg={2} zeroMinWidth spacing={2}>
+        <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            zeroMinWidth
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        >
             <Card sx={cardStyle}>
                 <CardActionArea sx={{ height: '100%' }} onClick={handleClick}>
                     <CardHeader
