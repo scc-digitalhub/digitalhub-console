@@ -1,9 +1,9 @@
 import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
 import { useSchemaDataGridController } from './useSchemaDataGridController';
-import { useEffect, useState } from 'react';
 
 export const SchemaTabComponent = (props: { record: any }) => {
     const { record } = props;
