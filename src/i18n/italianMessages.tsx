@@ -36,6 +36,7 @@ const fields = {
     status: {
         state: 'Stato',
     },
+    code: 'Codice',
     base: 'Base',
     summary: 'Riepilogo',
 };
@@ -50,6 +51,7 @@ const messages = {
     },
     menu: {
         projects: 'Progetti',
+        configuration: 'Configurazione',
     },
     fields: fields,
     resources: {
@@ -161,6 +163,10 @@ const messages = {
                 empty: 'Ancora nessuna esecuzione',
             },
         },
+        config: {
+            title: 'Configurazione',
+            text: 'Controlla e aggiorna la configurazione e le importazioni del progetto',
+        }
     },
     pageTitle: {
         show: {
@@ -194,6 +200,10 @@ const messages = {
         wrongChar:
             "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
         invalidKind: 'Tipo invalido',
+    },
+    messages: {
+        type_and_press_enter: 'Digita e premi INVIO per aggiungere',
+        double_click_to_edit: 'Doppio click per modificare',
     },
 };
 
