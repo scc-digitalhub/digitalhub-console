@@ -221,7 +221,7 @@ export class PreviewHelper {
                         )
                             return translations.invalidDate;
                         //manage date properly (UTC time offsets, right locale)
-                        return params.value.toLocaleDateString('en-GB');
+                        return params.value.toLocaleDateString();
                     },
                     minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
@@ -252,9 +252,7 @@ export class PreviewHelper {
                         )
                             return translations.invalidDatetime;
                         //manage datetime properly (UTC time offsets, right locale)
-                        return params.value.toLocaleString('en-GB', {
-                            timeZone: 'UTC',
-                        });
+                        return params.value.toLocaleString();
                     },
                     minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
