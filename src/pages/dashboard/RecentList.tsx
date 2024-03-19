@@ -1,5 +1,5 @@
 import {
-    Grid,
+    Box,
     ListItem,
     ListItemButton,
     ListItemText,
@@ -7,9 +7,7 @@ import {
     Typography,
     useTheme
 } from '@mui/material';
-import {
-    useCreatePath
-} from 'react-admin';
+import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { convertToDate } from './helper';
 
@@ -45,40 +43,33 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                         <ListItemText
                             disableTypography
                             primary={
-                                <Grid container spacing={0}>
-                                    <Grid item xs={6}>
-                                        <Typography
-                                            variant="body1"
-                                            color={'primary'}
-                                        >
-                                            {el.metadata.name || el.name}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        xs={6}
-                                        sx={{ textAlign: 'right' }}
-                                    >
-                                        <Typography
-                                            variant="body1"
-                                            color={'secondary.light'}
-                                        >
-                                            {el.kind}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
+                                <Typography variant="body1" color={'primary'}>
+                                    {el.metadata.name || el.name}
+                                </Typography>
                             }
                             secondary={
-                                <Typography
-                                    variant="body2"
-                                    color={'secondary.light'}
+                                <Box
+                                    display="flex"
+                                    justifyContent="space-between"
                                 >
-                                    {el.metadata?.updated
-                                        ? convertToDate(
-                                              el.metadata.updated
-                                          ).toLocaleString()
-                                        : ''}
-                                </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color={'secondary.light'}
+                                    >
+                                        {el.metadata?.updated
+                                            ? convertToDate(
+                                                  el.metadata.updated
+                                              ).toLocaleString()
+                                            : ''}
+                                    </Typography>
+
+                                    <Typography
+                                        variant="body2"
+                                        color={'secondary.light'}
+                                    >
+                                        {el.kind}
+                                    </Typography>
+                                </Box>
                             }
                             sx={{ my: 0 }}
                         />

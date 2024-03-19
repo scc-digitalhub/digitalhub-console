@@ -36,11 +36,11 @@ export const RecentRunsList = (props: { elements: any[] }) => {
                         <ListItemButton
                             onClick={() =>
                                 navigate(
-                                    createPath({
+                                    `${createPath({
                                         type: 'show',
                                         resource: 'functions',
                                         id: functionId,
-                                    })
+                                    })}/${taskKind}`
                                 )
                             }
                             sx={{

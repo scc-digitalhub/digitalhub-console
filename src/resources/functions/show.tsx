@@ -61,7 +61,7 @@ const ShowComponent = () => {
     };
 
     useEffect(() => {
-        if (!schemaProvider || !dataProvider) {
+        if (!schemaProvider || !dataProvider || !record) {
             return;
         }
 
@@ -174,7 +174,7 @@ const ShowComponent = () => {
     console.log('tasks', tasks);
 
     return (
-        <TabbedShowLayout syncWithLocation={false} record={record}>
+        <TabbedShowLayout record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
@@ -208,6 +208,7 @@ const ShowComponent = () => {
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
+                    path="code"
                 >
                     <SourceCodeView sourceCode={sourceCode} />
                 </TabbedShowLayout.Tab>
@@ -217,6 +218,7 @@ const ShowComponent = () => {
                 <TabbedShowLayout.Tab
                     label={'resources.tasks.kinds.' + task.kind}
                     key={task.kind}
+                    path={task.kind}
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
