@@ -5,8 +5,8 @@ import { InvalidFieldInfo, PreviewHelper, Value } from './PreviewHelper';
 import { useTranslate } from 'react-admin';
 
 export const usePreviewDataGridController = (
-    props: DataGridControllerProps
-): DataGridControllerResult => {
+    props: PreviewDataGridControllerProps
+): PreviewDataGridControllerResult => {
     const { preview, schema = {} } = props;
     const translate = useTranslate();
     const translations = {
@@ -115,12 +115,12 @@ export const usePreviewDataGridController = (
     };
 };
 
-type DataGridControllerProps = {
+type PreviewDataGridControllerProps = {
     preview: any;
     schema?: any;
 };
 
-type DataGridControllerResult = {
+type PreviewDataGridControllerResult = {
     data: {
         rows: GridRowsProp;
         columns: GridColDef[];
