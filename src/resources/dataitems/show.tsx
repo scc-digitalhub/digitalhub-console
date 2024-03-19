@@ -69,7 +69,15 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 
     if (!record) return <></>;
     return (
-        <TabbedShowLayout syncWithLocation={false} record={record}>
+        <TabbedShowLayout
+            syncWithLocation={false}
+            record={record}
+            sx={{
+                '& .RaTabbedShowLayout-content': {
+                    pb: 2,
+                },
+            }}
+        >
             <TabbedShowLayout.Tab label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
@@ -99,16 +107,16 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     />
                 )}
             </TabbedShowLayout.Tab>
-            {/* {kind && kind === 'table' && ( */}
-            <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
-                <SchemaTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
-            {/* )}
-            {kind && kind === 'table' && ( */}
-            <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
-                <PreviewTabComponent record={props.record} />
-            </TabbedShowLayout.Tab>
-            {/* )} */}
+            {kind && kind === 'table' && (
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
+                    <SchemaTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            )}
+            {kind && kind === 'table' && (
+                <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
+                    <PreviewTabComponent record={props.record} />
+                </TabbedShowLayout.Tab>
+            )}
         </TabbedShowLayout>
     );
 },
