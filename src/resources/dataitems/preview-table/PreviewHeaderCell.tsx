@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import { useTranslate } from 'react-admin';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
@@ -28,7 +28,9 @@ export const PreviewHeaderCell = (props: {
                     fontWeight: 'bold',
                 }}
             >
-                {columnDescriptor.name}
+                <Tooltip title={columnDescriptor.name}>
+                    {columnDescriptor.name}
+                </Tooltip>
             </span>
             <span
                 style={{
@@ -57,9 +59,7 @@ export const PreviewHeaderCell = (props: {
                             fontWeight: 'bold',
                         }}
                     >
-                        {translate(
-                            'validation.unsupportedField'
-                        )}
+                        {translate('validation.unsupportedField')}
                     </span>
                 </Box>
             )}

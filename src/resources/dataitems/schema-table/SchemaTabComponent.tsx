@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import inflection from 'inflection';
 import { useEffect, useState } from 'react';
@@ -73,7 +73,13 @@ export const SchemaTabComponent = (props: { record: any }) => {
                 rows={rows}
                 autoHeight
                 hideFooter={rows.length > 100 ? false : true}
-                sx={{
+                sx={theme => ({
+                    '& .MuiDataGrid-columnHeader': {
+                        backgroundColor: alpha(
+                            theme.palette?.primary?.main,
+                            0.12
+                        ),
+                    },
                     '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
                         '&:not(:last-child)': {
                             borderRight: '1px solid rgba(224, 224, 224, 1)',
@@ -82,7 +88,7 @@ export const SchemaTabComponent = (props: { record: any }) => {
                     '& .MuiDataGrid-columnHeaderTitle': {
                         fontWeight: 'bold',
                     },
-                }}
+                })}
             />
         </Box>
     );
