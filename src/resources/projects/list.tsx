@@ -9,6 +9,7 @@ import {
     WithListContext,
     RecordContextProvider,
     useRedirect,
+    useTheme,
 } from 'react-admin';
 import {
     Box,
@@ -33,7 +34,7 @@ import { grey } from '@mui/material/colors';
 export const ProjectSelectorList = props => {
     const translate = useTranslate();
     const redirect = useRedirect();
-
+    const theme = useTheme();
     const perPage = [7, 15, 23];
 
     const cardStyle = {
@@ -42,6 +43,8 @@ export const ProjectSelectorList = props => {
         display: 'flex',
         flexDirection: 'column',
         margin: 'auto',
+        background:'#E0701B',
+        color:'white'
     };
 
     const Toolbar = () => {
@@ -73,8 +76,8 @@ export const ProjectSelectorList = props => {
                                 rowSpacing={1}
                                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                             >
-                                <Card sx={cardStyle}>
-                                    <CardActionArea sx={{ height: '100%' }}>
+                                <Card sx={cardStyle} color="secondary">
+                                    <CardActionArea sx={{ height: '100%' }} color="secondary">
                                         <CardHeader
                                             avatar={<FolderIcon />}
                                             titleTypographyProps={{
@@ -97,6 +100,7 @@ export const ProjectSelectorList = props => {
                                             startIcon={<AddIcon />}
                                             style={{ marginLeft: 'auto' }}
                                             variant="contained"
+                                            disableElevation
                                             onClick={() =>
                                                 redirect('/projects/create')
                                             }
