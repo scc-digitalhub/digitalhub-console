@@ -7,6 +7,7 @@ const fields = {
     kind: 'Tipo',
     key: 'Chiave',
     project: 'Progetto',
+
     metadata: {
         created: 'Creazione',
         updated: 'Aggiornamento',
@@ -50,6 +51,9 @@ const messages = {
     },
     menu: {
         projects: 'Progetti',
+    },
+    bar:{
+        backProjects:'Torna ai progetti',
     },
     fields: fields,
     resources: {
