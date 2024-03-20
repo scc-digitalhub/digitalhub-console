@@ -225,13 +225,11 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            let url = `${apiUrl}${prefix}/${resource}/${params.id}`;
+            let url = `${apiUrl}${prefix}/${resource}/${params.id}?cascade=true`;
 
             if (params.meta?.deleteAll === true && params.meta?.name) {
                 url = `${apiUrl}${prefix}/${resource}?name=${params.meta.name}`;
             }
-            console.log('meta', params.meta);
-            console.log('url', url);
 
             return httpClient(url, {
                 method: 'DELETE',
