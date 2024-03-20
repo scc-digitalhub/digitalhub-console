@@ -67,6 +67,7 @@ const messages = {
         },
         secrets: {
             title: 'Secrets',
+            list: 'List secrets',
             showData: 'Show data',
             name: 'Secret |||| Secrets',
             value: 'Value',
