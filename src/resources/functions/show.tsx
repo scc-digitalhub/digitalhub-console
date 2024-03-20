@@ -171,7 +171,12 @@ const ShowComponent = () => {
         return uiSpec;
     };
 
-    console.log('tasks', tasks);
+    const getKind =(kind: string) => {
+        if (kind.indexOf('+') > 0) {
+            return kind.split('+')[1];
+        }
+        return kind
+    }
 
     return (
         <TabbedShowLayout record={record}>
@@ -216,7 +221,7 @@ const ShowComponent = () => {
 
             {tasks?.map(task => (
                 <TabbedShowLayout.Tab
-                    label={'resources.tasks.kinds.' + task.kind}
+                    label={'resources.tasks.kinds.' + getKind(task.kind)}
                     key={task.kind}
                     path={task.kind}
                 >
