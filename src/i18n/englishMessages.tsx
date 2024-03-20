@@ -47,6 +47,9 @@ const messages = {
         title: 'Resource Manager',
         message: 'Access with AAC',
     },
+    bar:{
+        backProjects:'To projects',
+    },
     menu: {
         projects: 'Projects',
         configuration: 'Configuration',
