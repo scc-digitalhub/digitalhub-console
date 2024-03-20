@@ -57,12 +57,12 @@ export const SecretCreate = () => {
             <SimpleForm validate={validator} onSubmit={postSave}>
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
-                        <Labeled label={translate('resources.secret.name')}>
+                        <Labeled label={translate('resources.secrets.name')}>
                             <TextInput source="name" required />
                         </Labeled>
                     </Grid>
                     <Grid item xs={6}>
-                        <Labeled label={translate('resources.secret.value')}>
+                        <Labeled label={translate('resources.secrets.value')}>
                             <TextInput source="value" required />
                         </Labeled>
                     </Grid>

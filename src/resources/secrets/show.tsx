@@ -82,7 +82,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
         };
         return (
             <Dialog onClose={handleClose} open={open}>
-                <DialogTitle>{translate('resources.secret.title')}</DialogTitle>
+                <DialogTitle>{translate('resources.secrets.title')}</DialogTitle>
                 <DialogContent>
                     <DialogContentText
                         sx={{ color: 'black', fontWeight: 'bold' }}
@@ -127,7 +127,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
     return (
         <SimpleShowLayout record={record}>
             <Typography variant="h6" gutterBottom>
-                {translate('resources.secret.title')}
+                {translate('resources.secrets.title')}
             </Typography>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
@@ -137,7 +137,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
                 </Grid>
                 <Grid item xs={6}>
                     <Button
-                        label={translate('resources.secret.showData')}
+                        label={translate('resources.secrets.showData')}
                         onClick={() => showData(!value)}
                     />
                     <SimpleDialog
