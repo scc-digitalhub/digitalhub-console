@@ -200,7 +200,7 @@ const messages = {
         create: 'Create',
     },
     dashboard: {
-        create: 'To create a new project click on the "Create" button',  
+        create: 'To create a new project, press the button below',  
       },
     validation: {
         minValue: 'Value must be greater that or equal to %{min}',

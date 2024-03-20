@@ -192,7 +192,7 @@ const messages = {
 
     },
     dashboard: {
-      create: 'Per creare un nuovo progetto clicca sul tasto "Crea"',  
+      create: 'Per creare un nuovo progetto premi sul pulsante qui sotto',  
     },
     validation: {
         minValue: 'Il valore deve esere maggiore o uguale a %{min}',
