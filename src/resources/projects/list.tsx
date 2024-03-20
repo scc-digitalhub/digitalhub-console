@@ -199,11 +199,6 @@ const ProjectsGrid = () => {
                                 </MuiList>
                             )}
                         </Box>
-                        <Stack direction="row" spacing={1}>
-                            {project.metadata?.labels?.map((label: string) => (
-                                <Chip key={label} label={label} />
-                            ))}
-                        </Stack>
                     </CardContent>
                 </CardActionArea>
                 <CardActions disableSpacing sx={{ mt: 'auto' }}>
