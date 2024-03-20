@@ -69,6 +69,7 @@ const messages = {
         },
         secrets: {
             title: 'Segreti',
+            list: 'Lista dei segreti',
             showData: 'Mostra i dati',
             name: 'Segreto |||| Segreti',
             value: 'Valore',
