@@ -36,6 +36,7 @@ const fields = {
     status: {
         state: 'Stato',
     },
+    code: 'Codice sorgente',
     base: 'Base',
     summary: 'Riepilogo',
 };
@@ -48,8 +49,12 @@ const messages = {
         title: 'Resource Manager',
         message: 'Accedi con AAC',
     },
+    bar:{
+        backProjects:'Torna ai progetti',
+    },
     menu: {
         projects: 'Progetti',
+        configuration: 'Configurazione',
     },
     fields: fields,
     resources: {
@@ -62,10 +67,10 @@ const messages = {
                 test: 'test',
             },
         },
-        secret: {
+        secrets: {
             title: 'Segreti',
             showData: 'Mostra i dati',
-            name: 'Nome',
+            name: 'Segreto |||| Segreti',
             value: 'Valore',
         },
         runs: {
@@ -157,6 +162,16 @@ const messages = {
                 title: 'Compiti ed esecuzioni',
                 empty: 'Ancora nessuna esecuzione',
             },
+        },
+        functions: {
+            show: {
+                title: 'Funzione #%{name}',
+                subtitle: '%{kind} funzione',
+            },
+        },
+        config: {
+            title: 'Configurazione',
+            text: 'Riguarda e aggiorna la configurazione del progetto e le impostazioni',
         },
     },
     pageTitle: {
