@@ -33,6 +33,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { SourceCodeBlock } from '../../components/SourceCodeBlock';
+import deepEqual from 'deep-is';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -46,6 +47,7 @@ const ShowComponent = () => {
     const [tasks, setTasks] = useState<any>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
+    const cur = useRef<any>(null);
 
     const isInitializing = () => {
         return initializing.current === true;
@@ -65,6 +67,15 @@ const ShowComponent = () => {
             return;
         }
 
+        if (cur.current != null && !deepEqual(cur.current, record)) {
+            //reloading, reset
+            console.log('reloading');
+            cur.current = null;
+            if (isInitializing()) {
+                initializing.current = false;
+            }
+        }
+
         //single loading
         if (isInitializing() || !acquireInitializing()) {
             return;
@@ -74,7 +85,9 @@ const ShowComponent = () => {
             setSourceCode(record.spec.source);
         }
 
-        if (record && tasks.length == 0) {
+        if (record) {
+            cur.current = record;
+
             schemaProvider.get(resource, record.kind).then(s => {
                 console.log('spec', s);
                 setSpec(s);
@@ -171,12 +184,12 @@ const ShowComponent = () => {
         return uiSpec;
     };
 
-    const getKind =(kind: string) => {
+    const getKind = (kind: string) => {
         if (kind.indexOf('+') > 0) {
             return kind.split('+')[1];
         }
-        return kind
-    }
+        return kind;
+    };
 
     return (
         <TabbedShowLayout record={record}>

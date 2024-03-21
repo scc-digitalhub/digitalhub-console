@@ -40,11 +40,14 @@ import { StateChips } from '../../components/StateChips';
 import { PageTitle } from '../../components/PageTitle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InboxIcon from '@mui/icons-material/Inbox';
-export const TaskAndRuns = () => {
+export const TaskAndRuns = (props: { key?: string }) => {
+    const { key } = props;
+
     const record = useRecordContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('task', 1);
+
     return (
         <>
             {/* <Typography variant="h5">
@@ -86,11 +89,10 @@ const TaskRunList = () => {
     const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
-    const label = getResourceLabel("runs", 2);
+    const label = getResourceLabel('runs', 2);
     const [schema, setSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
-
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
         : '';
@@ -143,58 +145,50 @@ const TaskRunList = () => {
 
     const CreateActionButton = () => (
         <CreateInDialogButton
-                resource="runs"
-                record={partial}
-                fullWidth
-                maxWidth={'lg'}
-                transform={prepare}
-            >
-                <SimpleForm toolbar={<CreateRunDialogToolbar />}>
-                    <TextInput source="kind" readOnly />
-                    {schema?.schema && (
-                        <JsonSchemaInput
-                            source="spec"
-                            schema={schema.schema}
-                            uiSchema={runSpecUiSchema}
-                        />
-                    )}
-                </SimpleForm>
-            </CreateInDialogButton>
+            resource="runs"
+            record={partial}
+            fullWidth
+            maxWidth={'lg'}
+            transform={prepare}
+        >
+            <SimpleForm toolbar={<CreateRunDialogToolbar />}>
+                <TextInput source="kind" readOnly />
+                {schema?.schema && (
+                    <JsonSchemaInput
+                        source="spec"
+                        schema={schema.schema}
+                        uiSchema={runSpecUiSchema}
+                    />
+                )}
+            </SimpleForm>
+        </CreateInDialogButton>
     );
-    const ListActions = () => (
-       <CreateActionButton />
-    )
+    const ListActions = () => <CreateActionButton />;
     const Empty = () => (
-        <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }} >
-            <InboxIcon fontSize="large" sx={{ width: '9em',
-    height: '9em' }}/>
+        <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }}>
+            <InboxIcon fontSize="large" sx={{ width: '9em', height: '9em' }} />
             <Typography variant="h4" paragraph>
-               {translate('resources.runs.empty')}
+                {translate('resources.runs.empty')}
             </Typography>
             <Typography variant="body1">
-            {translate('resources.runs.create')}
-
+                {translate('resources.runs.create')}
             </Typography>
             <CreateActionButton />
         </Box>
     );
     return (
         <>
-           
-            <Typography
-                    variant="h4"
-                    color={'secondary.main'}
-                >
-                    {label}
-                </Typography>
-  
+            <Typography variant="h4" color={'secondary.main'}>
+                {label}
+            </Typography>
+
             <List
                 resource="runs"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
                 empty={<Empty />}
-                actions={<ListActions/>} 
+                actions={<ListActions />}
             >
                 <Datagrid bulkActionButtons={false}>
                     <DateField source="metadata.created" />
