@@ -37,7 +37,9 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
-
+import { PageTitle } from '../../components/PageTitle';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import InboxIcon from '@mui/icons-material/Inbox';
 export const TaskAndRuns = () => {
     const record = useRecordContext();
     const translate = useTranslate();
@@ -82,6 +84,9 @@ export const TaskAndRuns = () => {
 const TaskRunList = () => {
     const record = useRecordContext();
     const schemaProvider = useSchemaProvider();
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+    const label = getResourceLabel("runs", 2);
     const [schema, setSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
@@ -135,11 +140,9 @@ const TaskRunList = () => {
             'ui:readonly': true,
         },
     };
-    console.log('partial', partial);
-    console.log('sch', schema);
-    return (
-        <>
-            <CreateInDialogButton
+
+    const CreateActionButton = () => (
+        <CreateInDialogButton
                 resource="runs"
                 record={partial}
                 fullWidth
@@ -157,11 +160,41 @@ const TaskRunList = () => {
                     )}
                 </SimpleForm>
             </CreateInDialogButton>
+    );
+    const ListActions = () => (
+       <CreateActionButton />
+    )
+    const Empty = () => (
+        <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }} >
+            <InboxIcon fontSize="large" sx={{ width: '9em',
+    height: '9em' }}/>
+            <Typography variant="h4" paragraph>
+               {translate('resources.runs.empty')}
+            </Typography>
+            <Typography variant="body1">
+            {translate('resources.runs.create')}
+
+            </Typography>
+            <CreateActionButton />
+        </Box>
+    );
+    return (
+        <>
+           
+            <Typography
+                    variant="h4"
+                    color={'secondary.main'}
+                >
+                    {label}
+                </Typography>
+  
             <List
                 resource="runs"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
+                empty={<Empty />}
+                actions={<ListActions/>} 
             >
                 <Datagrid bulkActionButtons={false}>
                     <DateField source="metadata.created" />

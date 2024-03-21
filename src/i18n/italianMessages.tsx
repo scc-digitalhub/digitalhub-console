@@ -83,6 +83,8 @@ const messages = {
             fields: {
                 ...fields,
             },
+            empty: 'Nessuna esecuzione',
+            create: 'Crea una nuova esecuzione',
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',

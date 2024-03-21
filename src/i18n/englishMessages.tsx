@@ -77,6 +77,8 @@ const messages = {
             fields: {
                 ...fields,
             },
+            empty: 'No runs yet',
+            create: 'Create a new run',
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
