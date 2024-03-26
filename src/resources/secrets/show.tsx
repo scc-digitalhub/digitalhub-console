@@ -80,6 +80,9 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
         const handleClose = () => {
             onClose(selectedValue);
         };
+        const getValue = (value: Object) => {
+            return Object.values(value)[0];
+        };
         return (
             <Dialog onClose={handleClose} open={open}>
                 <DialogTitle>{translate('resources.secrets.title')}</DialogTitle>
@@ -87,7 +90,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
                     <DialogContentText
                         sx={{ color: 'black', fontWeight: 'bold' }}
                     >
-                        {value}
+                        {getValue(value)}
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
