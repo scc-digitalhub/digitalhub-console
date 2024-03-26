@@ -300,7 +300,13 @@ const springDataProvider = (
             const pageQuery= stringify(query);
             return httpClient(`${apiUrl}/solr/search/item?${[q,fq,pageQuery].filter(Boolean).join('&')}`, {
                 method: 'GET',
-            }).then(({ json }) => ({ data: json }))
+            }).then(({ json }) => {
+                //extract data from content
+                return {
+                    data: json.content,
+                    total: parseInt(json.totalElements),
+                };
+            });
         },
     };
 };
