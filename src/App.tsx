@@ -133,7 +133,7 @@ const theme = themeProvider();
 import { DataItemUpdate } from './resources/dataitems/update';
 import { ArtifactUpdate } from './resources/artifacts/update';
 import { TaskEdit } from './resources/tasks';
-import { RunShow, RunCreate, RunList } from './resources/runs';
+import { RunShow, RunCreate } from './resources/runs';
 import { ResourceSchemaProvider } from './provider/schemaProvider';
 import { FunctionIcon } from './resources/functions/icon';
 import { DataItemIcon } from './resources/dataitems/icon';
