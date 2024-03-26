@@ -17,7 +17,6 @@ import { useSearch } from '@dslab/ra-search-bar';
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { RowButtonGroup } from './RowButtonGroup';
-import Card from '@mui/material/Card';
 import { Container, Tooltip } from '@mui/material';
 
 const mapTypes = {
