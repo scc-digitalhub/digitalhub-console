@@ -68,9 +68,12 @@ const messages = {
         secrets: {
             title: 'Secrets',
             list: 'List secrets',
-            showData: 'Show data',
+            showData: 'Show the secret',
             name: 'Secret |||| Secrets',
             value: 'Value',
+            labelName:"Name",
+            path:"Path",
+            provider: 'Provider'
         },
         runs: {
             name: 'Run |||| Runs',
@@ -79,6 +82,7 @@ const messages = {
             },
             empty: 'No runs yet',
             create: 'Create a new run',
+            labelName:"Name"
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',

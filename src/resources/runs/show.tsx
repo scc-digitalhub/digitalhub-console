@@ -23,7 +23,7 @@ export const RunShowLayout = () => {
             <SimpleShowLayout>
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
-                        <Labeled label="My Label">
+                        <Labeled label={translate('resources.run.labelName')}>
                             <TextField source="name" />
                         </Labeled>
                     </Grid>

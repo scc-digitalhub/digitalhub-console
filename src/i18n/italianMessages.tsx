@@ -57,9 +57,6 @@ const messages = {
         projects: 'Progetti',
         configuration: 'Configurazione',
     },
-    bar:{
-        backProjects:'Torna ai progetti',
-    },
     fields: fields,
     resources: {
         functions: {
@@ -74,9 +71,12 @@ const messages = {
         secrets: {
             title: 'Segreti',
             list: 'Lista dei segreti',
-            showData: 'Mostra i dati',
+            showData: 'Mostra il segreto',
             name: 'Segreto |||| Segreti',
             value: 'Valore',
+            labelName:"Nome",
+            path:"Percorso",
+            provider: 'Provider'
         },
         runs: {
             name: 'Esecuzione |||| Esecuzioni',
@@ -85,6 +85,7 @@ const messages = {
             },
             empty: 'Nessuna esecuzione',
             create: 'Crea una nuova esecuzione',
+            labelName:"Nome"
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',
