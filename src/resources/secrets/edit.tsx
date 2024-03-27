@@ -1,77 +1,75 @@
+import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     Edit,
     Labeled,
-    LoadingIndicator,
     SimpleForm,
     TextInput,
+    useDataProvider,
+    useNotify,
+    useRedirect,
     useTranslate,
+    useRecordContext
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
 import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { RecordTitle } from '../../components/RecordTitle';
 
-const validator = data => {
-    const errors: any = {};
-
-    if (!('kind' in data)) {
-        errors.kind = 'messages.validation.required';
-    }
-
-    if (!alphaNumericName(data.name)) {
-        errors.name = 'validation.wrongChar';
-    }
-    return errors;
-};
-export const SecretEdit = props => {
+export const SecretEdit = () => {
+    const { root } = useRootSelector();
     const translate = useTranslate();
+    const notify = useNotify();
+    const dataProvider = useDataProvider();
+    const redirect = useRedirect();
+    const record = useRecordContext();
+    const validator = data => {
+        const errors: any = {};
 
-    return (
-        <Edit title={<RecordTitle prompt={translate('SecretString')} />}>
-            <SecretEditForm {...props} />
-        </Edit>
-    );
-};
-
-const SecretEditForm = () => {
-    const translate = useTranslate();
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-    const [schemas, setSchemas] = useState<any[]>();
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.list('artifacts').then(res => {
-                if (res) {
-                    setSchemas(res);
-
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-                    setKinds(values);
-                }
-            });
+        if (!('name' in data)) {
+            errors.kind = 'messages.validation.required';
         }
-    }, [schemaProvider, setKinds]);
+        if (!('value' in data)) {
+            errors.kind = 'messages.validation.required';
+        }
 
-    if (!kinds) {
-        return <LoadingIndicator />;
-    }
+        if (!alphaNumericName(data.name)) {
+            errors.name = 'validation.wrongChar';
+        }
+        return errors;
+    };
+    const postSave = data => {
+        const obj = { project: root || '' };
+        Object.defineProperty(obj, data.name, {
+            value: data.value,
+            writable: true,
+            configurable: true,
+            enumerable: true,
+        });
+        dataProvider
+            .createSecret(obj)
+            .then(() => {
+                redirect('list', 'secrets');
+            })
+            .catch(error => {
+                notify(`Error creating secret: ${error.message}`, {
+                    type: 'error',
+                });
+            });
+    };
     return (
-        <SimpleForm validate={validator}>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={4}>
-                    <Labeled label={translate('resources.function.name')}>
-                        <TextInput source="name" />
-                    </Labeled>
+        <Edit redirect="list">
+            <SimpleForm validate={validator} onSubmit={postSave} resetOptions={{ keepDirtyValues: false }}>
+                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid item xs={6}>
+                        <Labeled label={translate('resources.secrets.name')}>
+                            <TextInput source="name" required  readOnly/>
+                        </Labeled>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Labeled label={translate('resources.secrets.value')}>
+                            <TextInput source="value" required />
+                        </Labeled>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <Labeled label={translate('resources.function.kind')}>
-                        <TextInput source="value" />
-                    </Labeled>
-                </Grid>
-            </Grid>
-        </SimpleForm>
+            </SimpleForm>
+        </Edit>
     );
 };
