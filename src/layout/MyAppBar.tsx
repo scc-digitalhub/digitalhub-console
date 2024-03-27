@@ -118,6 +118,12 @@ export const MyAppBar = () => {
             >
                 {projectId}
             </Typography>
+            <SearchBar
+                hintText="Search"
+                to="searchresults"
+                filters={filters}
+                filterSeparator=":"
+            ></SearchBar>
             <Button
                 color="inherit"
                 onClick={() => redirect('/')}
@@ -125,13 +131,6 @@ export const MyAppBar = () => {
             >
                 {translate('bar.backProjects')}
             </Button>
-
-            <SearchBar
-                hintText="Search"
-                to="searchresults"
-                filters={filters}
-                filterSeparator=":"
-            ></SearchBar>
             <RootResourceSelectorMenu source="name" showSelected={false} />
         </AppBar>
     );
