@@ -134,7 +134,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
             </Typography>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
-                    <Labeled label="My Label">
+                    <Labeled label={translate('resources.secrets.name')}>
                         <TextField source="name" />
                     </Labeled>
                 </Grid>
@@ -150,12 +150,12 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <Labeled label="My Label">
+                    <Labeled label={translate('resources.secrets.path')}>
                         <TextField source="spec.path" />
                     </Labeled>
                 </Grid>
                 <Grid item xs={6}>
-                    <Labeled label="My Label">
+                    <Labeled label={translate('resources.secrets.provider')}>
                         <TextField source="spec.provider" />
                     </Labeled>
                 </Grid>
