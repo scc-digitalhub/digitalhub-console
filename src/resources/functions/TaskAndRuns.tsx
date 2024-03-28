@@ -24,7 +24,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -98,19 +98,14 @@ const TaskRunList = () => {
         : '';
     url.protocol = record.kind + ':';
     const key = url.toString();
-    console.log('fn', fn, runtime, key);
     useEffect(() => {
-        console.log('useEffect');
         if (!schemaProvider || !record || !fn) {
             return;
         }
 
-        console.log('load e');
-
         schemaProvider
             .list('runs', runtime)
             .then(schemas => {
-                console.log('r', schemas);
                 if (schemas) {
                     setSchema(schemas.pop());
                 }
@@ -197,9 +192,45 @@ const TaskRunList = () => {
                     <RowButtonGroup label="⋮">
                         <ShowInDialogButton>
                             <SimpleShowLayout>
-                                <TextField source="key" />
+                                <Stack direction={'row'} spacing={3}>
+                                    <Labeled>
+                                        <TextField source="name" />
+                                    </Labeled>
+
+                                    <Labeled>
+                                        <TextField source="kind" />
+                                    </Labeled>
+                                </Stack>
+                                <Labeled>
+                                    <TextField source="key" />
+                                </Labeled>
+                                <Divider />
+                                <Stack direction={'row'} spacing={3}>
+                                    <Labeled>
+                                        <DateField
+                                            source="metadata.created"
+                                            showDate
+                                            showTime
+                                        />
+                                    </Labeled>
+
+                                    <Labeled>
+                                        <DateField
+                                            source="metadata.updated"
+                                            showDate
+                                            showTime
+                                        />
+                                    </Labeled>
+                                </Stack>
+                                <Labeled>
+                                    <TextField source="spec.task" />
+                                </Labeled>
+                                <Labeled>
+                                    <StateChips source="status.state" />
+                                </Labeled>
                             </SimpleShowLayout>
                         </ShowInDialogButton>
+                        <InspectButton />
                         <DeleteWithConfirmButton redirect={false} />
                     </RowButtonGroup>
                 </Datagrid>
