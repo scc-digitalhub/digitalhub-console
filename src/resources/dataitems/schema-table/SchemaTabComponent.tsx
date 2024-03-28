@@ -1,6 +1,5 @@
 import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
 import { useSchemaDataGridController } from './useSchemaDataGridController';
@@ -9,20 +8,14 @@ export const SchemaTabComponent = (props: { record: any }) => {
     const { record } = props;
     const translate = useTranslate();
     const [locale] = useLocaleState();
-    const [localeText, setLocaleText] = useState(
-        enUS.components.MuiDataGrid.defaultProps.localeText
-    );
+    const localeText =
+        locale && locale === 'it'
+            ? itIT.components.MuiDataGrid.defaultProps.localeText
+            : enUS.components.MuiDataGrid.defaultProps.localeText;
 
     const { data, isLoading } = useSchemaDataGridController({
         schema: record?.spec?.schema,
     });
-
-    useEffect(() => {
-        if (locale && locale === 'it') {
-            setLocaleText(itIT.components.MuiDataGrid.defaultProps.localeText);
-        } else
-            setLocaleText(enUS.components.MuiDataGrid.defaultProps.localeText);
-    }, [locale]);
 
     return (
         <Box
