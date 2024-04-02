@@ -68,9 +68,11 @@ const InvalidCellContent = forwardRef<
                 width: '100%',
             }}
         >
-            <Tooltip title={label}>
-                <WarningAmberIcon sx={{ zIndex: 2 }} />
-            </Tooltip>
+            {label && (
+                <Tooltip title={label}>
+                    <WarningAmberIcon sx={{ zIndex: 2 }} />
+                </Tooltip>
+            )}
 
             <Typography
                 ref={ref}
@@ -105,7 +107,9 @@ const ValidCellContent = forwardRef<
                 <>
                     {formattedValue === true ? (
                         <Tooltip
-                            title={translate('resources.dataitems.preview.true')}
+                            title={translate(
+                                'resources.dataitems.preview.true'
+                            )}
                         >
                             <CheckIcon
                                 sx={{ color: 'rgba(0, 0, 0, 0.6)', zIndex: 2 }}

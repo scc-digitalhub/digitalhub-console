@@ -28,9 +28,11 @@ export const PreviewHeaderCell = (props: {
                     fontWeight: 'bold',
                 }}
             >
-                <Tooltip title={columnDescriptor.name}>
-                    {columnDescriptor.name}
-                </Tooltip>
+                {columnDescriptor.name && (
+                    <Tooltip title={columnDescriptor.name}>
+                        <span> {columnDescriptor.name} </span>
+                    </Tooltip>
+                )}
             </span>
             <span
                 style={{

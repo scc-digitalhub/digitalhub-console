@@ -53,8 +53,6 @@ export const VersionsList = (props: VersionListProps) => {
         return { name: record?.name, versions: 'all' };
     }, [record]);
 
-    console.log('record', record);
-
     if (!record) {
         return <></>;
     }
