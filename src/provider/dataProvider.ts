@@ -300,7 +300,16 @@ const springDataProvider = (
             const pageQuery= stringify(query);
             return httpClient(`${apiUrl}/solr/search/item?${[q,fq,pageQuery].filter(Boolean).join('&')}`, {
                 method: 'GET',
-            }).then(({ json }) => {
+            }).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                if (!json) {
+                    throw new Error('Empty response from server');
+                }
+                if (!json.content) {
+                    throw new Error('the response must match page<> model');
+                }
                 //extract data from content
                 return {
                     data: json.content,
