@@ -50,7 +50,7 @@ const mapTypes = {
     },
 };
 export const SearchList = () => {
-    const { params: searchParams, setParams, provider } = useSearch();
+    const { params: searchParams, provider } = useSearch();
     console.log('context', searchParams);
     const [total, setTotal] = useState(1000);
     const [results, setResults] = useState<any[]>([]);
@@ -106,7 +106,7 @@ export const SearchList = () => {
     }, [provider, searchParams, root, page, perPage, sort, order]);
 
     if (loading) return <Loading />;
-    if (error) return <Error />;
+    if (error) return <Error error={error} resetErrorBoundary={() => {}} />;
     if (!results) return null;
     if (results.length === 0) return <NoResults />;
 

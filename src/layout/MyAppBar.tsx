@@ -13,6 +13,20 @@ import { Button, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
 import { SearchBar } from '@dslab/ra-search-bar';
+import { DateIntervalInput } from '../components/DateIntervalInput';
+
+const convertToDateString = (date: Date) => {
+    let day: string | number = date.getDate();
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    let month: string | number = date.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    let year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+};
 
 const filters = [
     <CheckboxGroupInput
@@ -67,24 +81,10 @@ const filters = [
         format={v => v.split(':')[1].split('"')[0]}
     />,
     <TextInput
-        label="Version"
-        source="metadata.version"
-        alwaysOn
-        key={4}
-        defaultValue=""
-        parse={v => {
-            if (!(v.startsWith('"') && v.endsWith('"'))) {
-                v = `"${v}"`;
-            }
-            return 'metadata.version:' + v;
-        }}
-        format={v => v.split(':')[1].split('"')[0]}
-    />,
-    <TextInput
         label="Labels"
         source="metadata.labels"
         alwaysOn
-        key={5}
+        key={4}
         defaultValue=""
         parse={v => {
             return `metadata.labels:(${v.split(',').join(' AND ')})`;
@@ -96,6 +96,53 @@ const filters = [
                 .substring(startIndex + 1, endIndex)
                 .split(' AND ')
                 .join(',');
+        }}
+    />,
+    <DateIntervalInput
+        source="metadata.updated"
+        alwaysOn
+        key={5}
+        parse={v => {
+            let from = '*';
+            const dates = v.split(',');
+            if (dates[0]?.length > 0) {
+                const fromDate = new Date(`${dates[0]}T00:00:00.000`);
+                from = `"${fromDate.toISOString()}"`;
+            }
+            let to = '*';
+            if (dates[1]?.length > 1) {
+                const toDate = new Date(`${dates[1]}T00:00:00.000`);
+                to = `"${toDate.toISOString()}"`;
+            }
+            return `metadata.updated:[${from} TO ${to}]`;
+        }}
+        format={v => {
+            let dateList: string[] = [];
+            let startIndex = v.indexOf('metadata.updated:[');
+            let endIndex = v.indexOf(' TO');
+            const from = v.substring(startIndex + 1, endIndex);
+            if (from !== '*') {
+                //remove quotes and add to list
+                dateList.push(
+                    convertToDateString(
+                        new Date(from.substring(1, from.length - 1))
+                    )
+                );
+            }
+
+            startIndex = v.indexOf('TO ');
+            endIndex = v.indexOf(']');
+            const to = v.substring(startIndex + 1, endIndex);
+            if (to !== '*') {
+                //remove quotes and add to list
+                dateList.push(
+                    convertToDateString(
+                        new Date(to.substring(1, to.length - 1))
+                    )
+                );
+            }
+
+            return dateList.join(',');
         }}
     />,
 ];
