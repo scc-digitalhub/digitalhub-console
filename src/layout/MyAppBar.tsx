@@ -13,7 +13,7 @@ import { Button, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 
 import { SearchBar } from '@dslab/ra-search-bar';
-import { DateIntervalInput } from '../components/DateIntervalInput';
+import { DateIntervalInput } from '../search/DateIntervalInput';
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
