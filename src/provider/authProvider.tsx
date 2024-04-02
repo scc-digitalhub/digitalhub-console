@@ -47,7 +47,7 @@ export const BasicAuthProvider = (props: {
 
                 //try call to validate authorization
                 const request = new Request(loginUrl, {
-                    method: 'GET',
+                    method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',
                         Authorization: 'Basic ' + user.authorization,

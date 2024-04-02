@@ -54,6 +54,9 @@ const CONTEXT_PATH: string = import.meta.env.BASE_URL || '';
 const API_URL: string =
     (globalThis as any).REACT_APP_API_URL ||
     (process.env.REACT_APP_API_URL as string);
+const AUTH_URL: string =
+    (globalThis as any).REACT_APP_AUTH_URL ||
+    (process.env.REACT_APP_AUTH_URL as string);
 
 // oidc login
 const ISSUER_URI: string =
@@ -81,7 +84,7 @@ const authProvider =
           })
         : LOGIN_URL
         ? BasicAuthProvider({
-              loginUrl: API_URL + LOGIN_URL,
+              loginUrl: AUTH_URL + LOGIN_URL,
               logoutTo: '/login',
           })
         : undefined;
