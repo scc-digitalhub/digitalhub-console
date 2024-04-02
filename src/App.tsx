@@ -142,7 +142,7 @@ import { SecretIcon } from './resources/secrets/icon';
 import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
-import { SearchList } from './components/SearchList';
+import { SearchList } from './search/SearchList';
 import {
     Search,
 } from '@dslab/ra-search-bar';

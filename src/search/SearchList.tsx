@@ -18,10 +18,10 @@ import Inbox from '@mui/icons-material/Inbox';
 import { useSearch } from '@dslab/ra-search-bar';
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { RowButtonGroup } from './RowButtonGroup';
+import { RowButtonGroup } from '../components/RowButtonGroup';
 import { Container, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FlatCard } from './FlatCard';
+import { FlatCard } from '../components/FlatCard';
 
 const mapTypes = {
     function: {
