@@ -102,6 +102,7 @@ const filters = [
         source="metadata.updated"
         alwaysOn
         key={5}
+        defaultValue={','}
         parse={v => {
             let from = '*';
             const dates = v.split(',');
