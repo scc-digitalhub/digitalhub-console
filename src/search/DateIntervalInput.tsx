@@ -57,13 +57,20 @@ export const DateIntervalInput = (props: DateIntervalInputProps) => {
         ...fieldRest
     } = field;
     const { error, invalid, isTouched } = fieldState;
-    const { isSubmitted } = formState;
+    const { isSubmitted, isDirty } = formState;
     const renderHelperText =
         helperText !== false || ((isTouched || isSubmitted) && invalid);
 
     const [range, setRange] = useState<string>(valueUseInput);
 
     useEffect(() => {
+        if (!isDirty && range !== valueUseInput) {
+            setRange(valueUseInput);
+        }
+    }, [isDirty]);
+
+    useEffect(() => {
+        //TODO controllare se range diverso da valueUseInput?
         onchangeUseInput(range);
     }, [range, onchangeUseInput]);
 
