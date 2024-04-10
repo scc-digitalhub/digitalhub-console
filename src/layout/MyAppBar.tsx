@@ -11,9 +11,8 @@ import {
 } from 'react-admin';
 import { Button, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-
-import { SearchBar } from '@dslab/ra-search-bar';
 import { DateIntervalInput } from '../search/DateIntervalInput';
+import SearchBar from '../search/searchbar/SearchBar';
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
@@ -112,7 +111,7 @@ const filters = [
             }
             let to = '*';
             if (dates[1]?.length > 1) {
-                const toDate = new Date(`${dates[1]}T00:00:00.000`);
+                const toDate = new Date(`${dates[1]}T23:59:59.000`);
                 to = `"${toDate.toISOString()}"`;
             }
             return `metadata.updated:[${from} TO ${to}]`;

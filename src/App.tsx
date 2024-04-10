@@ -143,9 +143,7 @@ import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { SearchList } from './search/SearchList';
-import {
-    Search,
-} from '@dslab/ra-search-bar';
+import { Search } from './search/searchbar/SearchContextProvider';
 const CoreApp = () => {
     return (
         <Search searchProvider={dataProvider}>
@@ -237,8 +235,8 @@ const CoreApp = () => {
                             <Route path="/config" element={<ProjectConfig />} />
                         </CustomRoutes>
                         <CustomRoutes>
-                        <Route path="/searchresults" element={<SearchList />} />
-                    </CustomRoutes>
+                            <Route path="/searchresults" element={<SearchList />} />
+                        </CustomRoutes>
                     </AdminUI>
                 </ResourceSchemaProvider>
             </AdminContext>

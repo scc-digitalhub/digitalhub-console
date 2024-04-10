@@ -1,12 +1,13 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-import {
-    SearchProvider,
-    SearchParams,
-    SearchFilter,
-    SearchResults
-} from '@dslab/ra-search-bar';
 import { GetListParams } from 'react-admin';
+import {
+    SearchFilter,
+    SearchParams,
+    SearchProvider,
+    SearchResults,
+} from '../search/searchbar/SearchProvider';
+
 /**
  * Data Provider for Spring REST with Pageable support.
  * List/ManyReference expects a page in return, and will send paging/sorting parameters,
@@ -286,7 +287,10 @@ const springDataProvider = (
                 body: JSON.stringify(params),
             }).then(({ json }) => ({ data: json }));
         },
-        search: (searchParams: SearchParams, params: GetListParams): Promise<SearchResults> => {
+        search: (
+            searchParams: SearchParams,
+            params: GetListParams
+        ): Promise<SearchResults> => {
             const { page, perPage } = params.pagination;
             const { field, order } = params.sort;
             const query = {
@@ -295,12 +299,24 @@ const springDataProvider = (
                 page: page - 1, //page starts from zero
                 size: perPage,
             };
-            const q = searchParams.q ? `q=${encodeURIComponent(searchParams.q)}` : '';
-            const fq = searchParams.fq?.map((filter: SearchFilter) => `fq=${encodeURIComponent(filter.filter)}`).join('&');
-            const pageQuery= stringify(query);
-            return httpClient(`${apiUrl}/solr/search/item?${[q,fq,pageQuery].filter(Boolean).join('&')}`, {
-                method: 'GET',
-            }).then(({ status, json }) => {
+            const q = searchParams.q
+                ? `q=${encodeURIComponent(searchParams.q)}`
+                : '';
+            const fq = searchParams.fq
+                ?.map(
+                    (filter: SearchFilter) =>
+                        `fq=${encodeURIComponent(filter.filter)}`
+                )
+                .join('&');
+            const pageQuery = stringify(query);
+            return httpClient(
+                `${apiUrl}/solr/search/item?${[q, fq, pageQuery]
+                    .filter(Boolean)
+                    .join('&')}`,
+                {
+                    method: 'GET',
+                }
+            ).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
