@@ -1,0 +1,265 @@
+import { useCallback, useState } from 'react';
+import { Box, borderColor } from '@mui/system';
+
+import {
+    ReactFlow,
+    Background,
+    BackgroundVariant,
+    Controls,
+    applyEdgeChanges, applyNodeChanges,
+    MarkerType,
+    ReactFlowInstance
+} from 'reactflow';
+
+import { 
+    Labeled,
+    TextField,
+    DateField,
+    ChipField,
+    ReferenceField,
+    RecordContextProvider,
+    useTranslate, 
+    useRecordContext,
+    Link,
+    useCreatePath,
+    Datagrid
+} from 'react-admin';
+import { Grid, Typography, Divider } from '@mui/material';
+
+import { StateChips } from './StateChips';
+
+import 'reactflow/dist/style.css';
+
+import dagre from 'dagre';
+import { stat } from 'fs';
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const nodeWidth = 172;
+const nodeHeight = 36;
+
+const getLayoutedElements = (nodes, edges) => {
+    dagreGraph.setGraph({ rankdir: 'TB' });
+  
+    nodes.forEach((node) => {
+      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+  
+    edges.forEach((edge) => {
+      dagreGraph.setEdge(edge.source, edge.target);
+    });
+  
+    dagre.layout(dagreGraph);
+  
+    nodes.forEach((node) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+      node.targetPosition = 'top';
+      node.sourcePosition = 'bottom';
+  
+      // We are shifting the dagre node position (anchor=center center) to the top left
+      // so it matches the React Flow node anchor point (top left).
+      node.position = {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      };
+  
+      return node;
+    });
+  
+    return { nodes, edges };
+  };
+export const WorkflowView = () => {
+    const translate = useTranslate();
+    const record = useRecordContext();
+    const createPath = useCreatePath();
+
+    if (!record.status || !record.status.results || !record.status.results.status || !record.status.results.status.graph) {
+        return <></>;
+    }
+    const graph = record.status.results.status.graph;
+    // const graph = [
+    //     {type:'DAG', id: 'root', display_name: 'root', children: ['1'], state: 'Error'},
+    //     {type:'TASK', id: '1', display_name: '1', children: ['2', '3'], state: 'Succeeded'},
+    //     {type:'TASK', id: '2', display_name: '2', children: ['4'], state : 'Failed'},
+    //     {type:'TASK', id: '3', display_name: '3', children: ['4'], state : 'Ready'},
+    //     {type:'TASK', id: '4', display_name: '4'},
+    // ];
+    const { nodes, edges} = computeGraph(graph);
+    console.log('nodes', nodes, 'edges', edges);
+
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges);
+    const [gnodes, setNodes] = useState(layoutedNodes);
+    const [gedges, setEdges] = useState(layoutedEdges);
+    const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
+    const onEdgesChange = useCallback((changes) => setEdges((eds) => [applyEdgeChanges(changes, eds)]), [setEdges]);
+    const [activeNode, setActiveNode] = useState();
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+        
+    const onNodeClick = (event, node) => {
+        setActiveNode(node.data);
+        console.log(node);
+        setTimeout(() => reactFlowInstance?.fitView());
+    }
+
+    const onInit = (instance: ReactFlowInstance) => setReactFlowInstance(instance);
+    return (
+        <Grid container spacing={2}  sx={{width: '100%' }}>
+            <Grid item xs>
+                <Box sx={{ mt: '9px', mb: '7px', width: '100%', height: '400px' }}>
+                <ReactFlow nodes={gnodes} edges={gedges} 
+                        fitView={true} nodesConnectable={false} nodesDraggable={true} zoomOnScroll={false}
+                        onNodeClick={onNodeClick}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onInit={onInit}>
+                    <Controls showInteractive={false} />
+                    <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                </ReactFlow>
+                </Box>        
+            </Grid>
+            <>
+            { activeNode && (
+                    <Grid item xs >
+                        <RecordContextProvider value={activeNode}>
+                            <Grid container spacing={2}  sx={{width: '100%' }}>
+                                <Grid item xs={5}>
+                                    <Labeled label="resources.workflows.fields.function">
+                                    <TextField source="function" />
+                                    </Labeled>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Labeled label="resources.workflows.fields.action">
+                                    <TextField source="action" />
+                                    </Labeled>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <ChipField record={activeNode} source="state" color={getColor(activeNode)} />
+                                </Grid>
+                            </Grid>
+
+                            <Labeled label="resources.workflows.fields.run_id">
+                                <Link to={createPath({type: 'show', resource: 'functions', id: activeNode.function_id, })}><TextField source="run_id"/></Link>
+                            </Labeled>
+
+                            <Grid container spacing={2}  sx={{width: '100%' }}>
+                                <Grid item xs>
+                                    <Labeled label="resources.workflows.fields.start_time">
+                                    <DateField
+                                            source="start_time"
+                                            showDate
+                                            showTime/>
+                                    </Labeled>
+                                </Grid>
+                                <Grid item xs>
+                                    <Labeled label="resources.workflows.fields.end_time">
+                                    <DateField
+                                            source="end_time"
+                                            showDate
+                                            showTime/>
+                                    </Labeled>
+                                </Grid>
+                            </Grid>   
+                            <>
+                            { activeNode.inputs && activeNode.inputs.length > 0 && (
+                                <>
+                                <br/>                                
+                                <Divider />
+                                <Labeled label="resources.workflows.inputs">
+                                <Datagrid header={<div style={{display:'none'}}></div>} data={activeNode.inputs} bulkActionButtons={false}>
+                                    <TextField source="name" />
+                                    <TextField source="value" />
+                                </Datagrid>
+                                </Labeled>
+                                </>
+                            )}
+                            </>
+                            <>
+                            { activeNode.outputs && activeNode.outputs.length > 0 && (
+                                <>
+                                <br/>                                
+                                <Divider />
+                                <Labeled label="resources.workflows.outputs">
+                                <Datagrid header={<div style={{display:'none'}}></div>} data={activeNode.outputs} bulkActionButtons={false}>
+                                    <TextField source="name" />
+                                    <TextField source="value" />
+                                </Datagrid>
+                                </Labeled>
+                                </>
+                            )}
+                            </>
+                        </RecordContextProvider>
+                    </Grid>
+                )}
+            </>
+
+        </Grid>
+    );
+};
+
+function computeGraph(graph) {
+    let nodes: any[] = [];
+    let edges: any[] = [];
+    let y = 0;
+    let nodeMap = {};
+    let root: any = null;
+
+    graph.forEach(n => {
+        nodeMap[n.id]= n;
+        if (n.type === 'DAG') root = n;
+    });
+    if (!root || ! root.children || root.children.length == 0) return {nodes, edges};
+
+    let list: any[] = root.children.map(id => nodeMap[id]);
+    processChildren(nodeMap, list, 0, nodes, edges); 
+
+    return {nodes, edges};
+}
+
+function processChildren(nodeMap, list, level, nodes, edges) {
+    if (list.length > 0) {
+        let node = list.shift();
+        nodes.push({id: node.id, position: { x: 0, y: 0}, data: {label: node.display_name, ...node}, style: getNodeStyle(node), deletable: false, connectable: false});
+        if (node.children && node.children.length > 0) {
+            node.children.forEach(c => {
+                edges.push({id: node.id + '-' + c, source: node.id, target: c, markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                    width: 10,
+                    height: 10,
+                    color: 'rgba(0, 0, 0, 0.6)',
+                  },
+                  style: {
+                    stroke: 'rgba(0, 0, 0, 0.6)',
+                  },
+                  type: 'smoothstep',
+                  deletable: false, updatable: false, focusable: false
+                });
+                nodeMap[c].level = level + 1;
+                list.push(nodeMap[c]);
+            });
+        }
+        processChildren(nodeMap, list, level + 1, nodes, edges);
+    }
+}
+
+function getNodeStyle(node) {
+    const color = 
+          node.state === 'Succeeded' ? '#2e7d32'
+        : node.state === 'Failed' ? '#d32f2f'
+        : node.state === 'Error' ? '#d32f2f'
+        : '#E0701B';
+    return {
+        color: color,
+        borderColor: color,
+        backgroundColor: '#fafafa',
+    };
+  }
+
+ function getColor(node) {
+     const color = 
+           node.state === 'Succeeded' ? 'success'
+         : node.state === 'Failed' ? 'error'
+         : node.state === 'Error' ? 'error'
+         : 'warning';
+     return color;
+ } 

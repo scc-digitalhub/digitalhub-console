@@ -32,6 +32,9 @@ function mapType(resource) {
     if (resource === 'runs') {
         return 'RUN';
     }
+    if (resource === 'workflows') {
+        return 'WORKFLOW';
+    }
     return null;
 }
 

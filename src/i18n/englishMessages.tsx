@@ -122,7 +122,27 @@ const messages = {
                 'deploy': 'Deploy',
                 'job': 'Job',
                 'serve': 'Serve',
+                'pipeline': 'Pipeline'
             },
+        },
+        workflows: {
+            name: 'Workflow |||| Workflows',
+            list: 'List and search workflows',
+            fields: { ...fields,
+                run_id: 'Run ID',
+                action: 'Action',                
+                function: 'Function',
+                start_time: 'Start',
+                end_time: 'End',
+            },
+            tab: {
+                summary: 'Recap',
+                test: 'test',
+                runs: 'Runs'
+            },
+            inputs: 'Inputs',
+            outputs: 'Outputs',
+
         },
         common: {
             emptySpec: 'Select the kind to view the specification',

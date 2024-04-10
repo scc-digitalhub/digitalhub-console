@@ -41,6 +41,12 @@ import {
     FunctionShow,
 } from './resources/functions';
 import {
+    WorkflowList,
+    WorkflowEdit,
+    WorkflowCreate,
+    WorkflowShow,
+} from './resources/workflows';
+import {
     SecretCreate,
     SecretEdit,
     SecretList,
@@ -120,6 +126,7 @@ import { FunctionIcon } from './resources/functions/icon';
 import { DataItemIcon } from './resources/dataitems/icon';
 import { ArtifactIcon } from './resources/artifacts/icon';
 import { SecretIcon } from './resources/secrets/icon';
+import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
 
@@ -153,6 +160,14 @@ const CoreApp = () => {
                             edit={FunctionEdit}
                             create={FunctionCreate}
                             icon={FunctionIcon}
+                        />
+                        <Resource
+                            name="workflows"
+                            list={WorkflowList}
+                            show={WorkflowShow}
+                            edit={WorkflowEdit}
+                            create={WorkflowCreate}
+                            icon={WorkflowIcon}
                         />
                         <Resource
                             name="dataitems"

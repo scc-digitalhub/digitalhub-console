@@ -125,7 +125,26 @@ const messages = {
                 'deploy': 'Deploy',
                 'job': 'Job',
                 'serve': 'Serve',
+                'pipeline': 'Pipeline'
             },
+        },
+        workflows: {
+            name: 'Workflow |||| Workflow',
+            list: 'List and search workflows',
+            fields: { ...fields,
+                run_id: 'ID Esecuzione',
+                action: 'Task',                
+                function: 'Funzione',
+                start_time: 'Inizio',
+                end_time: 'Fine',
+            },
+            tab: {
+                summary: 'Recap',
+                test: 'test',
+                runs: 'Esecuzioni'
+            },
+            inputs: 'Parametri di Input',
+            outputs: 'Parametri di Output',
         },
         common: {
             emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
