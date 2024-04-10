@@ -19,7 +19,7 @@ import { Box, Chip, Container, Tooltip, Typography } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
 import { useSearchController } from './useSearchController';
-import { useSearch } from '@dslab/ra-search-bar';
+import { useSearch } from './searchbar/SearchContext';
 
 const mapTypes = {
     function: {
@@ -50,13 +50,13 @@ const mapTypes = {
 
 export const SearchList = () => {
     const theme = useTheme();
-    const { error, isLoading, listContext } = useSearchController({
-        sortField: 'updated',
+    const { listContext } = useSearchController({
+        sortField: 'metadata.updated',
         sortOrder: 'DESC',
     });
 
-    if (isLoading) return <Loading />;
-    if (error) return <Error error={error} resetErrorBoundary={() => {}} />;
+    if (listContext.isLoading) return <Loading />;
+    if (listContext.error) return <Error error={listContext.error} resetErrorBoundary={() => {}} />;
     if (!listContext.data) return null;
     if (listContext.data.length === 0) return <NoResults />;
 
@@ -148,11 +148,7 @@ const ResultsHeader = () => {
     let current: string[] = [];
 
     searchParams.fq?.forEach(sf => {
-        if (sf.field && sf.value) {
-            current.push(`${sf.field}:${sf.value}`);
-        } else {
-            current.push(sf.filter);
-        }
+        current.push(sf.filter);
     });
 
     return (
@@ -168,8 +164,6 @@ const ResultsHeader = () => {
                         label={s}
                         key={i}
                         sx={{ marginLeft: 1 }}
-                        //color="info"
-                        //variant="outlined"
                     />
                 ))}
             </Box>

@@ -1,7 +1,12 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { useSearch } from '@dslab/ra-search-bar';
-import { useEffect, useState } from 'react';
-import { ListControllerResult, SortPayload, useListParams } from 'react-admin';
+import { useEffect, useRef, useState } from 'react';
+import {
+    GetListParams,
+    ListControllerResult,
+    SortPayload,
+    useListParams,
+} from 'react-admin';
+import { useSearch } from './searchbar/SearchContext';
 
 export const useSearchController = ({
     resultsPerPage = 5,
@@ -10,10 +15,11 @@ export const useSearchController = ({
 }: SearchControllerProps = {}): SearchcontrollerResult => {
     const { params: searchParams, provider } = useSearch();
     const { root } = useRootSelector();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState();
-    const [total, setTotal] = useState(0);
-    const [results, setResults] = useState<any[]>([]);
+    const isLoading = useRef(true);
+    const [response, setResponse] = useState<Response>({
+        total: 0,
+        results: [],
+    });
 
     console.log('context', searchParams);
 
@@ -21,6 +27,7 @@ export const useSearchController = ({
         perPage: resultsPerPage,
         sort: { field: sortField, order: sortOrder } as SortPayload,
         resource: '',
+        storeKey: false,
     });
 
     const {
@@ -37,44 +44,48 @@ export const useSearchController = ({
         queryModifiers;
 
     useEffect(() => {
-        let newSearch = JSON.parse(
+        if (!provider) {
+            return;
+        }
+
+        let copyOfSearchParams = JSON.parse(
             JSON.stringify(searchParams)
         ) as typeof searchParams;
-        const params = {
+
+        const params: GetListParams = {
             pagination: { page, perPage },
             sort: { field: sort, order: order } as SortPayload,
             filter: {},
         };
-        if (!newSearch.fq) {
-            newSearch.fq = [];
+
+        if (!copyOfSearchParams.fq) {
+            copyOfSearchParams.fq = [];
         }
-        newSearch.fq.push({ filter: `project:${root}` });
+        //add filter on current project
+        copyOfSearchParams.fq.push({ filter: `project:${root}` }); //TODO aggiungere filtro nel provider (vedi altri metodi)
         provider
-            .search(newSearch, params)
+            .search(copyOfSearchParams, params)
             .then(({ data, total }) => {
-                setResults(data);
-                if (total) {
-                    setTotal(total);
-                }
-                setIsLoading(false);
+                setResponse({ total: total || 0, results: data });
+                isLoading.current = false;
             })
             .catch(error => {
-                setError(error);
-                setIsLoading(false);
+                setResponse({ total: 0, results: [], error });
+                isLoading.current = false;
             });
-    }, [provider, searchParams, root, page, perPage, sort, order]);
+    }, [searchParams, root, page, perPage, sort, order]);
 
     //create Listcontext for pagination handling
     const listContext: ListControllerResult = {
         sort: { field: sort, order: order } as SortPayload,
-        data: results,
+        data: response.results,
         displayedFilters: displayedFilters,
-        error,
+        error: response.error,
         filter,
         filterValues: filterValues,
         hideFilter: hideFilter,
-        isFetching: isLoading, //TODO ?
-        isLoading: isLoading,
+        isFetching: isLoading.current, //TODO ?
+        isLoading: isLoading.current,
         onSelect: () => {},
         onToggleItem: () => {},
         onUnselectItems: () => {},
@@ -88,16 +99,20 @@ export const useSearchController = ({
         setPerPage: setPerPage,
         setSort: setSort,
         showFilter: showFilter,
-        total: total,
-        hasNextPage: page * perPage < total,
+        total: response.total,
+        hasNextPage: page * perPage < response.total,
         hasPreviousPage: page > 1,
     };
 
     return {
-        error,
-        isLoading,
         listContext,
     };
+};
+
+type Response = {
+    error?: any;
+    total: number;
+    results: any[];
 };
 
 export type SearchControllerProps = {
@@ -107,7 +122,5 @@ export type SearchControllerProps = {
 };
 
 export type SearchcontrollerResult = {
-    error?: any;
-    isLoading: boolean;
     listContext: ListControllerResult;
 };
