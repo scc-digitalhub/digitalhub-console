@@ -299,15 +299,22 @@ const springDataProvider = (
                 page: page - 1, //page starts from zero
                 size: perPage,
             };
+
             const q = searchParams.q
                 ? `q=${encodeURIComponent(searchParams.q)}`
                 : '';
-            const fq = searchParams.fq
-                ?.map(
+
+            const fqArray = searchParams.fq || [];
+            if (params.meta?.root) {
+                fqArray.push({ filter: `project:${params.meta.root}` });
+            }
+            const fq = fqArray
+                .map(
                     (filter: SearchFilter) =>
                         `fq=${encodeURIComponent(filter.filter)}`
                 )
                 .join('&');
+
             const pageQuery = stringify(query);
             return httpClient(
                 `${apiUrl}/solr/search/item?${[q, fq, pageQuery]

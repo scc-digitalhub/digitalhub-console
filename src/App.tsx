@@ -143,10 +143,9 @@ import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { SearchList } from './search/SearchList';
-import { Search } from './search/searchbar/SearchContextProvider';
+import { SearchContextProvider } from './search/searchbar/SearchContextProvider';
 const CoreApp = () => {
     return (
-        <Search searchProvider={dataProvider}>
         <RootSelectorContextProvider
             resource="projects"
             initialApp={<InitialWrapper />}
@@ -158,6 +157,7 @@ const CoreApp = () => {
                 theme={theme}
                 authProvider={authProvider}
             >
+                <SearchContextProvider searchProvider={dataProvider}>
                 <ResourceSchemaProvider
                     dataProvider={dataProvider}
                     resource="schemas"
@@ -231,6 +231,7 @@ const CoreApp = () => {
                             create={SecretCreate}
                             icon={SecretIcon}
                         ></Resource>
+                        <Resource name="labels" />
                         <CustomRoutes>
                             <Route path="/config" element={<ProjectConfig />} />
                         </CustomRoutes>
@@ -239,9 +240,9 @@ const CoreApp = () => {
                         </CustomRoutes>
                     </AdminUI>
                 </ResourceSchemaProvider>
+                </SearchContextProvider>
             </AdminContext>
         </RootSelectorContextProvider>
-        </Search>
 
     );
 };
