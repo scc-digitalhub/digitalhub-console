@@ -1,4 +1,3 @@
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { useEffect, useRef, useState } from 'react';
 import {
     GetListParams,
@@ -14,7 +13,6 @@ export const useSearchController = ({
     sortOrder = 'ASC',
 }: SearchControllerProps = {}): SearchcontrollerResult => {
     const { params: searchParams, provider } = useSearch();
-    const { root } = useRootSelector();
     const isLoading = useRef(true);
     const [response, setResponse] = useState<Response>({
         total: 0,
@@ -58,11 +56,6 @@ export const useSearchController = ({
             filter: {},
         };
 
-        if (!copyOfSearchParams.fq) {
-            copyOfSearchParams.fq = [];
-        }
-        //add filter on current project
-        copyOfSearchParams.fq.push({ filter: `project:${root}` }); //TODO aggiungere filtro nel provider (vedi altri metodi)
         provider
             .search(copyOfSearchParams, params)
             .then(({ data, total }) => {
@@ -73,7 +66,7 @@ export const useSearchController = ({
                 setResponse({ total: 0, results: [], error });
                 isLoading.current = false;
             });
-    }, [searchParams, root, page, perPage, sort, order]);
+    }, [searchParams, page, perPage, sort, order]);
 
     //create Listcontext for pagination handling
     const listContext: ListControllerResult = {

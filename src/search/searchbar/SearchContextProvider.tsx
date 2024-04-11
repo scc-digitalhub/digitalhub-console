@@ -1,11 +1,14 @@
 import { ReactElement, useMemo, useState } from 'react';
 import { SearchContext } from './SearchContext';
 import { SearchParams, SearchProvider } from './SearchProvider';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { withRootSelector } from './utils';
 
 // creates a SearchContext
-export const Search = (props: SearchContextProviderParams) => {
+export const SearchContextProvider = (props: SearchContextProviderParams) => {
     const { searchProvider, children } = props;
     const [currentSearch, setCurrentSearch] = useState<SearchParams>({});
+    const { root } = useRootSelector();
 
     //memoized function to handle changes in search
     const searchContext = useMemo(() => {
@@ -13,12 +16,18 @@ export const Search = (props: SearchContextProviderParams) => {
             setCurrentSearch(search);
         };
 
+        //wrap search provider with root selector in meta
+        const providerWithRootSelector = withRootSelector(
+            searchProvider,
+            root
+        );
+
         return {
             params: currentSearch, //can contain q, fq
             setParams: handleSearch,
-            provider: searchProvider,
+            provider: providerWithRootSelector,
         };
-    }, [currentSearch, searchProvider]);
+    }, [currentSearch, root, searchProvider]);
 
     return (
         <SearchContext.Provider value={searchContext}>

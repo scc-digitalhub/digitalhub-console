@@ -4,7 +4,9 @@ import {
 } from '@dslab/ra-root-selector';
 import {
     AppBar,
+    AutocompleteArrayInput,
     CheckboxGroupInput,
+    ReferenceArrayInput,
     TextInput,
     useRedirect,
     useTranslate,
@@ -79,24 +81,30 @@ const filters = [
         }}
         format={v => v.split(':')[1].split('"')[0]}
     />,
-    <TextInput
-        label="Labels"
+    <ReferenceArrayInput
         source="metadata.labels"
-        alwaysOn
+        reference="labels"
         key={4}
-        defaultValue=""
+        defaultValue={[]}
         parse={v => {
-            return `metadata.labels:(${v.split(',').join(' AND ')})`;
+            return `metadata.labels:(${v.join(' AND ')})`;
         }}
         format={v => {
             const startIndex = v.indexOf('(');
             const endIndex = v.indexOf(')');
             return v
                 .substring(startIndex + 1, endIndex)
-                .split(' AND ')
-                .join(',');
+                .split(' AND ');
         }}
-    />,
+    >
+        <AutocompleteArrayInput
+            label="Labels"
+            filterToQuery={searchText => ({ label: searchText })}
+            optionText="label"
+            optionValue="label"
+            disablePortal={true}
+        />
+    </ReferenceArrayInput>,
     <DateIntervalInput
         source="metadata.updated"
         alwaysOn
