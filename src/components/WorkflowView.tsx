@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import { Box, borderColor } from '@mui/system';
 
 import {
+    Node,
+    Edge,
     ReactFlow,
     Background,
     BackgroundVariant,
@@ -20,6 +22,7 @@ import {
     RecordContextProvider,
     useTranslate, 
     useRecordContext,
+    useDataProvider,
     Link,
     useCreatePath,
     Datagrid
@@ -39,6 +42,9 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
 
+export type WorkflowViewProps = {
+    record?: any;
+};
 const getLayoutedElements = (nodes, edges) => {
     dagreGraph.setGraph({ rankdir: 'TB' });
   
@@ -69,40 +75,63 @@ const getLayoutedElements = (nodes, edges) => {
   
     return { nodes, edges };
   };
-export const WorkflowView = () => {
+export const WorkflowView = (props: WorkflowViewProps) => {
     const translate = useTranslate();
     const record = useRecordContext();
     const createPath = useCreatePath();
+    const dataProvider = useDataProvider();
+    
+    let interval: any = null;
 
-    if (!record.status || !record.status.results || !record.status.results.status || !record.status.results.status.graph) {
-        return <></>;
+    const [gnodes, setNodes] = useState<Node<any>[]>();
+    const [gedges, setEdges] = useState<Edge<any>[]>();
+
+    const buildGraph = (run) => {
+        const graph = (run && run.status && run.status.results && run.status.results.status) ? run.status.results.status.graph : [];
+        // const graph = [
+        //     {type:'DAG', id: 'root', display_name: 'root', children: ['1'], state: 'Error'},
+        //     {type:'TASK', id: '1', display_name: '1', children: ['2', '3'], state: 'Succeeded'},
+        //     {type:'TASK', id: '2', display_name: '2', children: ['4'], state : 'Failed'},
+        //     {type:'TASK', id: '3', display_name: '3', children: ['4'], state : 'Ready'},
+        //     {type:'TASK', id: '4', display_name: '4'},
+        // ];
+        const {nodes, edges} = computeGraph(graph);
+        const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges);
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
     }
-    const graph = record.status.results.status.graph;
-    // const graph = [
-    //     {type:'DAG', id: 'root', display_name: 'root', children: ['1'], state: 'Error'},
-    //     {type:'TASK', id: '1', display_name: '1', children: ['2', '3'], state: 'Succeeded'},
-    //     {type:'TASK', id: '2', display_name: '2', children: ['4'], state : 'Failed'},
-    //     {type:'TASK', id: '3', display_name: '3', children: ['4'], state : 'Ready'},
-    //     {type:'TASK', id: '4', display_name: '4'},
-    // ];
-    const { nodes, edges} = computeGraph(graph);
-    console.log('nodes', nodes, 'edges', edges);
 
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges);
-    const [gnodes, setNodes] = useState(layoutedNodes);
-    const [gedges, setEdges] = useState(layoutedEdges);
-    const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
-    const onEdgesChange = useCallback((changes) => setEdges((eds) => [applyEdgeChanges(changes, eds)]), [setEdges]);
+    const workflowFinished = (run) => {
+        const state = run && run.status && run.status.state && run.status.state && run.status.state;
+        return state === 'COMPLETED' || state === 'ERROR';
+    }
+
+    const onInit = (instance: ReactFlowInstance) => {
+        setReactFlowInstance(instance);
+        buildGraph(record);
+        if (!workflowFinished(record)) {
+            interval = setInterval(() => {
+                dataProvider.getOne('runs', {id: record.id}).then(data => {
+                    buildGraph(data.data);
+                    if (workflowFinished(data.data)) {
+                        clearInterval(interval);
+                    }
+                })
+            }, 5000);    
+        }
+    }
+
+    
+    const onNodesChange = useCallback((changes) => setNodes((nds: any) => applyNodeChanges(changes, nds)), [setNodes]);
+    const onEdgesChange = useCallback((changes) => setEdges((eds: any) => applyEdgeChanges(changes, eds)), [setEdges]);
     const [activeNode, setActiveNode] = useState();
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
         
     const onNodeClick = (event, node) => {
         setActiveNode(node.data);
-        console.log(node);
         setTimeout(() => reactFlowInstance?.fitView());
     }
 
-    const onInit = (instance: ReactFlowInstance) => setReactFlowInstance(instance);
     return (
         <Grid container spacing={2}  sx={{width: '100%' }}>
             <Grid item xs>
