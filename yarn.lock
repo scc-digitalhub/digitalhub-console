@@ -273,10 +273,10 @@
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-1.1.1.tgz#d2cbadc6c1f1334f10f2d0f2f6a629653b66d6b2"
-  integrity sha512-1I9J2vCi3e2CjisiFE72wCA5H3R04rYUnF5U0eoTwB+VaA6OZdrFDAWJGTcVhKQtRyuvYbaZZsQf0FJp9akHMw==
+"@dslab/ra-jsonschema-input@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-1.2.0.tgz#79f1f111f9bc1d16da7dd83d8a4f3979e2a1d0de"
+  integrity sha512-2m3Ch/yhvfPk1PyOBQjm6GttDrjfwVtka2pYoz7XUEm+gO9HJ12d37nfesjQFcrWtz04+jp1mHZ3NV7/0/A98Q==
   dependencies:
     "@rjsf/core" "^5.13.0"
     "@rjsf/mui" "^5.13.0"
@@ -829,9 +829,9 @@
   integrity sha512-+Rnav+CaoTE5QJc4Jcwh5toUpnVLKYbpU6Ys0zqbakqbaLQHeglLVHPfxOiQqdNmUy5C2lXz5dwC6tQNX2JW2Q==
 
 "@rjsf/core@^5.13.0":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.17.1.tgz#747e82bc68347fc8b786fd817d380c7d8c36f766"
-  integrity sha512-COZSuumwHskWN8Pz3RxdxvuQUP6M/qBMXAkIi+TSWLFLaF6SUugpLiceMT1jGemDCr7fOSTiPxjkToSsgpvueQ==
+  version "5.18.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-5.18.1.tgz#018cfe8fdc8a91bc07e1cbf820f80898c05a4722"
+  integrity sha512-325fOPqupCkEkH4/ufeAbaezyknCTRQx8XeK9PhtWBSwpVggJg003C2RFL7g7HdFkz546KjEBGKeJ74HXC/kVg==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"
@@ -840,14 +840,14 @@
     prop-types "^15.8.1"
 
 "@rjsf/mui@^5.13.0":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/mui/-/mui-5.17.1.tgz#e3aa1cd5b5217b37985958abcab8c11621af52b6"
-  integrity sha512-SToKW8i8dVbYEFo6BDG1oTolfw7ywbrYcvKoFPPIOvoOUv+VJi1cVaWGQ3q0gJQjyXdYYmt5YsLiC4L388LRiA==
+  version "5.18.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/mui/-/mui-5.18.1.tgz#c606a90c78d8f456db83078184c8bae5a9298f26"
+  integrity sha512-QVu62jWmFLJD/16F11frSAIp6JpR5TGLsNbpgYp8r7d+SxnIfUPzzhlIplNBcVXqzBujWYkSd+cGQH8bevw/MA==
 
 "@rjsf/utils@^5.13.0":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.17.1.tgz#ad85d503dd15cc9fc49b5d6870534fa2ed8103b0"
-  integrity sha512-q1Igz/cuM2hi+jiXFkoaXqdRTUFB+a0jfVKNmZlHmvPmfYeeJfcfyOTzO8dQ41fHNHUFb15ryxa/TblDQimwkA==
+  version "5.18.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-5.18.1.tgz#0f4510fabde856482b629666bfed9cc03b61412f"
+  integrity sha512-BxXd5C8gxOSDCSgfDT+XZHpBZtu4F0jJZsnMQstWJ+9QKpmTiuvbkjk3c1J4zZ3CRNgGghVH5otU5gvzVWIxpQ==
   dependencies:
     json-schema-merge-allof "^0.8.1"
     jsonpointer "^5.0.1"
@@ -856,9 +856,9 @@
     react-is "^18.2.0"
 
 "@rjsf/validator-ajv8@^5.13.0":
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.17.1.tgz#9b5e4b22f3ab47316c7a19da22639812e4a91193"
-  integrity sha512-KdvHsjDQ60b04fqnoqhfkiCv7E4n4NIHli8QU8dtpuUAVS/TOqDuOtDJVz6bv/rd/QNROGpxlO/OCccE0rmxLQ==
+  version "5.18.1"
+  resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-5.18.1.tgz#68093d2c794e570beec5eccba4a5e173fa070dab"
+  integrity sha512-Cb4++kru+XL8q5FJDWMpongtY7zLUoNqZaHDbYdkPWLl0Q7duGMfYOIRAhPpWhaI9KAjj19kCpAjQicA8gEgaw==
   dependencies:
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
@@ -2990,9 +2990,9 @@ lru-cache@^6.0.0:
     yallist "^4.0.0"
 
 markdown-to-jsx@^7.4.1:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.4.1.tgz#1ed6a60f8f9cd944bec39d9923fbbc8d3d60dcb9"
-  integrity sha512-GbrbkTnHp9u6+HqbPRFJbObi369AgJNXi/sGqq5HRsoZW063xR1XDCaConqq+whfEIAlzB1YPnOgsPc7B7bc/A==
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.4.6.tgz#1ea0018c549bf00c9ce35e8f4ea57e48028d9cf7"
+  integrity sha512-3cyNxI/PwotvYkjg6KmFaN1uyN/7NqETteD2DobBB8ro/FR9jsHIh4Fi7ywAz0s9QHRKCmGlOUggs5GxSWACKA==
 
 match-sorter@^6.0.2:
   version "6.3.4"
