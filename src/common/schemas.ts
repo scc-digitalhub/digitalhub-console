@@ -46,6 +46,7 @@ export const MetadataCreateUiSchema = {
     labels: {
         'ui:widget': 'tagsChipInput',
     },
+
 };
 
 export const MetadataEditUiSchema = {
