@@ -29,7 +29,19 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
-
+import { WorkflowView } from '../../components/WorkflowView';
+import {
+    getTemplate,
+    getUiOptions,
+    titleId,
+    StrictRJSFSchema,
+    RJSFSchema,
+    FormContextType,
+    ObjectFieldTemplateProps,
+    ObjectFieldTemplatePropertyType,
+} from '@rjsf/utils';
+import { CoreResourceField } from '../../components/resourceInput/CoreResourceField';
+import React from 'react';
 
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
@@ -119,6 +131,7 @@ const TaskRunList = () => {
             ...r,
             spec: {
                 task: key,
+                ...r.spec,
             },
         };
     };
@@ -127,7 +140,134 @@ const TaskRunList = () => {
         task: {
             'ui:readonly': true,
         },
+        function_spec: {
+            source: {
+                'ui:widget': 'hidden',
+            },
+        },
+        transform_spec: {
+            k8s: {
+                affinity: {
+                    'ui:widget': 'hidden',
+                },
+                resources: {
+                    cpu: {
+                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:order': [ 'requests','limits'],
+
+                        limits: {
+                            'ui:widget': 'coreResourceCpuWidget',
+                            'ui:options': {
+                                'ui:title': 'Limits',
+                            },
+                        },
+                        requests: {
+                            'ui:widget': 'coreResourceCpuWidget',
+                            'ui:options': {
+                                'ui:title': 'Request',
+                            },
+                        },
+                    },
+                    gpu: {
+                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:order': [ 'requests','limits'],
+
+                        limits: {
+                            'ui:widget': 'hidden',
+                        },
+                        requests: {
+                            'ui:widget': 'coreResourceGpuWidget',
+                            'ui:options': {
+                                'ui:title': 'Request',
+                            },
+                        },
+                    },
+                    mem: {
+                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:order': [ 'requests','limits'],
+                        limits: {
+                            'ui:widget': 'coreResourceMemWidget',
+                            'ui:options': {
+                                'ui:title': 'Limits',
+                            },
+                        },
+                        requests: {
+                            'ui:widget': 'coreResourceMemWidget',
+                            'ui:options': {
+                                'ui:title': 'Request',
+                            },
+                        },
+                    },
+
+                    // items:
+                    // {
+                    //     'ui:order': ['resource_type', 'requests','limits'],
+                    //     limits:{
+                    //         'ui:widget': 'limitsInput',
+                    //     },
+                    //     requests:{
+                    //         'ui:widget': 'requestInput'
+                    //     },
+                    //     resource_type: {
+                    //         'ui:widget': 'typeInput'
+                    //     }
+                    // }
+                },
+                envs: {
+                    items: {
+                        'ui:widget': 'mapListInput',
+                    },
+                },
+            },
+        },
     };
+    function ObjectFieldTemplate<
+        T = any,
+        S extends StrictRJSFSchema = RJSFSchema,
+        F extends FormContextType = any
+    >(props: ObjectFieldTemplateProps<T, S, F>) {
+        const {
+            registry,
+            properties,
+            title,
+            description,
+            uiSchema,
+            required,
+            schema,
+            idSchema,
+        } = props;
+        const options = getUiOptions<T, S, F>(uiSchema);
+        const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+            'TitleFieldTemplate',
+            registry,
+            options
+        );
+        return (
+            <div>
+                {title && (
+                    <TitleFieldTemplate
+                        id={titleId<T>(idSchema)}
+                        title={title}
+                        required={required}
+                        schema={schema}
+                        uiSchema={uiSchema}
+                        registry={registry}
+                    />
+                )}{' '}
+                {description}
+                <div className="row">
+                    {properties.map((prop: ObjectFieldTemplatePropertyType) => (
+                        <div
+                            className="col-lg-1 col-md-2 col-sm-4 col-xs-6"
+                            key={prop.content.key}
+                        >
+                            {prop.content}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     const CreateActionButton = () => (
         <CreateInDialogButton
