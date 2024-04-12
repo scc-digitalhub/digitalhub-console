@@ -276,6 +276,7 @@ function getNodeStyle(node) {
           node.state === 'Succeeded' ? '#2e7d32'
         : node.state === 'Failed' ? '#d32f2f'
         : node.state === 'Error' ? '#d32f2f'
+        : node.state === 'Ready' || node.state === 'Omitted' ? 'rgba(0, 0, 0, 0.6)'
         : '#E0701B';
     return {
         color: color,
@@ -289,6 +290,7 @@ function getNodeStyle(node) {
            node.state === 'Succeeded' ? 'success'
          : node.state === 'Failed' ? 'error'
          : node.state === 'Error' ? 'error'
+         : node.state === 'Ready' || node.state === 'Omitted' ? 'secondary'
          : 'warning';
      return color;
  } 
