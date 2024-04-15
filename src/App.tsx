@@ -81,7 +81,8 @@ const LOGIN_URL: string =
     (process.env.REACT_APP_LOGIN_URL as string);
 
 const applicationUrl =
-    APPLICATION_URL || `${window.location.origin}${CONTEXT_PATH}`;
+    `${APPLICATION_URL}${CONTEXT_PATH}` ||
+    `${window.location.origin}${CONTEXT_PATH}`;
 
 const authProvider =
     ISSUER_URI && CLIENT_ID
