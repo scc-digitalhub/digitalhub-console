@@ -13,7 +13,7 @@ import { useTranslate } from 'react-admin';
 export const CoreResourceCpuWidget = function (props: WidgetProps) {
     const {
         id,
-        value, 
+        value,
         disabled,
         readonly,
         options,
@@ -21,22 +21,22 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
         onChange,
         onFocus,
     } = props;
-    const [stringValue, setStringValue] = useState<string>(value?value:"");
-    const [inputValue, setInputValue] = useState<number>(value?parseInt(value):0);
-    const [inputUnit, setInputUnit] = useState<string>(
-        RequestTypes[0].value
+    const [stringValue, setStringValue] = useState<string>(value ? value : '');
+    const [inputValue, setInputValue] = useState<number>(
+        value ? parseInt(value) : 0
     );
+    const [inputUnit, setInputUnit] = useState<string>(RequestTypes[0].value);
     const translate = useTranslate();
 
     const handleInputChange = event => {
         setInputValue(event.target.value);
-        setStringValue(event.target.value+inputUnit);
-        onChange(event.target.value+inputUnit);
+        setStringValue(event.target.value + inputUnit);
+        onChange(event.target.value + inputUnit);
     };
     const handleUnitChange = event => {
         setInputUnit(event.target.value);
-        setStringValue(inputValue+event.target.value);
-        onChange(inputValue+event.target.value);
+        setStringValue(inputValue + event.target.value);
+        onChange(inputValue + event.target.value);
     };
     const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
         onBlur(id, target.value);
@@ -45,16 +45,30 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
     return (
         <div>
             {!readonly && (
-                <Grid item xs={12} sm={6} md={6}>
+                <Grid item xs={12} sm={12} md={12}>
                     <Grid container spacing={2}>
-                    <Grid item xs={12} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center',direction: 'rtl'}}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={4}
+                            md={4}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                direction: 'rtl',
+                            }}
+                        >
                             <Typography variant="h6" color={'secondary.main'}>
                                 {options['ui:title'] as string}
                             </Typography>
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center'}}>
+                        <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                        >
                             <TextField
                                 fullWidth
                                 variant="outlined"
@@ -67,8 +81,13 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                                 onChange={handleInputChange}
                             />
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center'}}>
+                        <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                        >
                             <Select
                                 labelId="type-select-label"
                                 id="type-select"
@@ -100,9 +119,8 @@ interface RequestType {
     label: string;
 }
 const RequestTypes = [
-
     {
         value: 'm',
-        label: 'm',
+        label: 'millicpu',
     },
 ];

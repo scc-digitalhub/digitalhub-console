@@ -8,9 +8,11 @@ import { MuiChipsInputWidget } from './MuiChipsInputWidget';
 import { CoreResourceMemWidget } from './resourceInput/CoreResourceMemWidget';
 import { CoreResourceGpuWidget } from './resourceInput/CoreResourceGpuWidget';
 import { CoreResourceCpuWidget } from './resourceInput/CoreResourceCpuWidget';
-import { CoreResourceField } from './resourceInput/CoreResourceField';
+import { CoreResourceFieldWidget } from './resourceInput/CoreResourceFieldWidget';
+import { KeyValueFieldWidget } from './resourceInput/KeyValueFieldWidget';
+import { VolumeResourceFieldWidget } from './resourceInput/VolumeResourceFieldWidget';
 const customWidgets = { tagsChipInput: MuiChipsInputWidget, coreResourceCpuWidget:CoreResourceCpuWidget,coreResourceGpuWidget:CoreResourceGpuWidget,coreResourceMemWidget:CoreResourceMemWidget};
-const customFields = { CoreResourceField};
+const customFields = { CoreResourceFieldWidget,KeyValueFieldWidget,VolumeResourceFieldWidget};
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     return <RaJsonSchemaField {...props} customWidgets={customWidgets} />;
