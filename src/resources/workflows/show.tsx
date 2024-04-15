@@ -34,7 +34,7 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { TaskAndRuns } from './TaskAndRuns';
+import { TaskAndRuns } from '../functions/TaskAndRuns';
 import { getWorkflowUiSpec } from './types';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
@@ -67,7 +67,6 @@ const ShowComponent = () => {
 
     const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
-    const [func, setFunc] = useState<any>();
     const [tasks, setTasks] = useState<any>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
@@ -117,78 +116,74 @@ const ShowComponent = () => {
                 setSpec(s);
             });
 
-            dataProvider.getOne('functions', {id: 'fn-' + record.id}).then((data) => {
-                const f = data.data;
-                setFunc(f);
-                Promise.all([
-                    schemaProvider.list('tasks', f.kind).then(schemas => {
-                        console.log('schema  for ' + f.kind, schemas);
-                        return schemas?.map(s => s.kind);
-                    }),
-    
-                    dataProvider.getList('tasks', {
-                        pagination: { page: 1, perPage: 100 },
-                        sort: { field: 'kind', order: 'ASC' },
-                        filter: {
-                            function: `${f.kind}://${f.project}/${f.name}:${f.id}`,
-                        },
-                    }),
-                ])
-                    .then(([kinds, list]) => {
-                        console.log('kinds', kinds);
-                        console.log('list', list);
-    
-                        if (!kinds || !list || !list.data) {
-                            return;
-                        }
-    
-                        //check if some tasks are still missing
-                        const missing = kinds.filter(
-                            k => !list.data.find(t => t.kind == k)
-                        );
-                        console.log('missing', missing);
-                        if (missing.length == 0) {
-                            //all tasks defined
-                            list.data.sort((a, b) => {
+            Promise.all([
+                schemaProvider.list('tasks', record.kind).then(schemas => {
+                    console.log('schema  for ' + record.kind, schemas);
+                    return schemas?.map(s => s.kind);
+                }),
+
+                dataProvider.getList('tasks', {
+                    pagination: { page: 1, perPage: 100 },
+                    sort: { field: 'kind', order: 'ASC' },
+                    filter: {
+                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                    },
+                }),
+            ])
+                .then(([kinds, list]) => {
+                    console.log('kinds', kinds);
+                    console.log('list', list);
+
+                    if (!kinds || !list || !list.data) {
+                        return;
+                    }
+
+                    //check if some tasks are still missing
+                    const missing = kinds.filter(
+                        k => !list.data.find(t => t.kind == k)
+                    );
+                    console.log('missing', missing);
+                    if (missing.length == 0) {
+                        //all tasks defined
+                        list.data.sort((a, b) => {
+                            return a.kind.localeCompare(b.kind);
+                        });
+
+                        setTasks(list.data);
+                        return;
+                    }
+
+                    //create missing tasks
+                    Promise.all(
+                        missing.map(async k => {
+                            return await dataProvider.create('tasks', {
+                                data: {
+                                    project: record.project,
+                                    kind: k,
+                                    spec: {
+                                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                                    },
+                                },
+                            });
+                        })
+                    )
+                        .then(records => {
+                            const rts = records
+                                .filter(r => r.data)
+                                .map(r => r.data);
+                            const res = list.data.concat(rts);
+                            res.sort((a, b) => {
                                 return a.kind.localeCompare(b.kind);
                             });
-    
-                            setTasks(list.data);
-                            return;
-                        }
-    
-                        //create missing tasks
-                        Promise.all(
-                            missing.map(async k => {
-                                return await dataProvider.create('tasks', {
-                                    data: {
-                                        project: f.project,
-                                        kind: k,
-                                        spec: {
-                                            function: `${f.kind}://${f.project}/${f.name}:${f.id}`,
-                                        },
-                                    },
-                                });
-                            })
-                        )
-                            .then(records => {
-                                const rts = records
-                                    .filter(r => r.data)
-                                    .map(r => r.data);
-                                const res = list.data.concat(rts);
-                                res.sort((a, b) => {
-                                    return a.kind.localeCompare(b.kind);
-                                });
-                                setTasks(res);
-                            })
-                            .catch(e => {
-                                throw e;
-                            });
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            })
+                            setTasks(res);
+                        })
+                        .catch(e => {
+                            throw e;
+                        });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     }, [record, schemaProvider, dataProvider]);
 
@@ -261,17 +256,28 @@ const ShowComponent = () => {
             )}
 
             {tasks?.map(task => (
+                // <TabbedShowLayout.Tab
+                //     label={'resources.workflows.tab.runs'}
+                //     key={'runs'}
+                //     path={'runs'}
+                // >
+                //     <ResourceContextProvider value="tasks">
+                //         <RecordContextProvider value={task}>
+                //             <WorkflowRunList key={task.id} />
+                //         </RecordContextProvider>
+                //     </ResourceContextProvider>
+                // </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab
-                    label={'resources.workflows.tab.runs'}
-                    key={'runs'}
-                    path={'runs'}
+                    label={'resources.tasks.kinds.' + getKind(task.kind)}
+                    key={task.kind}
+                    path={task.kind}
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <WorkflowRunList key={task.id} />
+                            <TaskAndRuns key={task.id} />
                         </RecordContextProvider>
                     </ResourceContextProvider>
-                </TabbedShowLayout.Tab>
+                </TabbedShowLayout.Tab>                
             ))}
         </TabbedShowLayout>
     );
