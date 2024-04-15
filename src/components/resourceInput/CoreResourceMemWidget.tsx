@@ -46,7 +46,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
     return (
         <div>
             {!readonly && (
-                <Grid item xs={12} sm={6} md={6} >
+                <Grid item xs={12} sm={12} md={12} >
                     <Grid container spacing={2} justifyContent="center">
                         <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
     alignItems: 'center',direction: 'rtl'}}>
@@ -102,27 +102,28 @@ interface RequestType {
 }
 const RequestTypes = [
     {
+        value: 'Ki',
+        label: 'Kibibyte',
+    },
+    {
         value: 'Mi',
-        label: 'Mi',
+        label: 'Mebibyte',
     },
     {
         value: 'Gi',
-        label: 'Gi',
-    },
-    {
-        value: 'Ki',
-        label: 'Ki',
-    },
-    {
-        value: 'M',
-        label: 'M',
-    },
-    {
-        value: 'G',
-        label: 'G',
+        label: 'Gibibyte',
     },
     {
         value: 'k',
-        label: 'k',
+        label: 'Kilobyte',
     },
+    {
+        value: 'M',
+        label: 'Megabyte',
+    },
+    {
+        value: 'G',
+        label: 'Gigabyte',
+    },
+
 ]; 
