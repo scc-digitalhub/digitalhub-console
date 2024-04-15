@@ -50,7 +50,13 @@ import {
 import { Dashboard } from './pages/dashboard/Dashboard';
 
 //config
-const CONTEXT_PATH: string = import.meta.env.BASE_URL || '';
+const CONTEXT_PATH: string =
+    import.meta.env.BASE_URL ||
+    (globalThis as any).REACT_APP_CONTEXT_PATH ||
+    (process.env.REACT_APP_CONTEXT_PATH as string);
+const APPLICATION_URL: string =
+    (globalThis as any).REACT_APP_APPLICATION_URL ||
+    (process.env.REACT_APP_APPLICATION_URL as string);
 const API_URL: string =
     (globalThis as any).REACT_APP_API_URL ||
     (process.env.REACT_APP_API_URL as string);
@@ -74,6 +80,9 @@ const LOGIN_URL: string =
     (globalThis as any).REACT_APP_LOGIN_URL ||
     (process.env.REACT_APP_LOGIN_URL as string);
 
+const applicationUrl =
+    APPLICATION_URL || `${window.location.origin}${CONTEXT_PATH}`;
+
 const authProvider =
     ISSUER_URI && CLIENT_ID
         ? OidcAuthProvider({
@@ -81,6 +90,9 @@ const authProvider =
               issuer: ISSUER_URI,
               scope: SCOPE,
               logoutTo: '/login',
+              redirectUrl: applicationUrl.endsWith('/')
+                  ? `${applicationUrl}auth-callback`
+                  : `${applicationUrl}/auth-callback`,
           })
         : LOGIN_URL
         ? BasicAuthProvider({

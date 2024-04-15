@@ -18,6 +18,7 @@
     "scripts": {
         "start": "env-cmd -f .env.development vite",
         "start:localhost": "env-cmd -f .env.localhost vite",
+        "start:development": "env-cmd -f .env.development vite",
         "start:production": "env-cmd -f .env.production vite --base=/console",
         "build": "env-cmd -f .env.development vite build",
         "build:localhost": "env-cmd -f .env.localhost vite build",
