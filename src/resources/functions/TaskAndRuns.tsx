@@ -40,7 +40,9 @@ import {
     ObjectFieldTemplateProps,
     ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
-import { CoreResourceField } from '../../components/resourceInput/CoreResourceField';
+import { CoreResourceFieldWidget } from '../../components/resourceInput/CoreResourceFieldWidget';
+import { KeyValueFieldWidget } from '../../components/resourceInput/KeyValueFieldWidget';
+import { VolumeResourceFieldWidget } from '../../components/resourceInput/VolumeResourceFieldWidget';
 import React from 'react';
 
 export const TaskAndRuns = (props: { key?: string }) => {
@@ -152,7 +154,8 @@ const TaskRunList = () => {
                 },
                 resources: {
                     cpu: {
-                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                        'ui:title': 'Cpu',
                         'ui:order': [ 'requests','limits'],
 
                         limits: {
@@ -169,7 +172,8 @@ const TaskRunList = () => {
                         },
                     },
                     gpu: {
-                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                        'ui:title': 'Gpu',
                         'ui:order': [ 'requests','limits'],
 
                         limits: {
@@ -183,7 +187,8 @@ const TaskRunList = () => {
                         },
                     },
                     mem: {
-                        'ui:ObjectFieldTemplate':CoreResourceField,
+                        'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                        'ui:title': 'Memory',
                         'ui:order': [ 'requests','limits'],
                         limits: {
                             'ui:widget': 'coreResourceMemWidget',
@@ -198,25 +203,29 @@ const TaskRunList = () => {
                             },
                         },
                     },
-
-                    // items:
-                    // {
-                    //     'ui:order': ['resource_type', 'requests','limits'],
-                    //     limits:{
-                    //         'ui:widget': 'limitsInput',
-                    //     },
-                    //     requests:{
-                    //         'ui:widget': 'requestInput'
-                    //     },
-                    //     resource_type: {
-                    //         'ui:widget': 'typeInput'
-                    //     }
-                    // }
                 },
+
                 envs: {
                     items: {
-                        'ui:widget': 'mapListInput',
+                        'ui:ObjectFieldTemplate':KeyValueFieldWidget,
                     },
+                },
+                node_selector: {
+                    items: {
+                        'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+                    },
+                },
+                labels: {
+                    items: {
+                        'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+                    },
+                },
+                volumes:{
+                    items: {
+                        'ui:ObjectFieldTemplate':VolumeResourceFieldWidget,
+                        'ui:order': [ 'mount_path','name','volume_type','spec'],
+
+                    }
                 },
             },
         },
