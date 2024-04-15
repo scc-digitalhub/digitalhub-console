@@ -12,8 +12,10 @@ import {
     InputAdornment,
     Stack,
     TextField as MuiTextField,
+    Menu,
+    MenuItem,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
@@ -61,29 +63,12 @@ export type SearchBarParams = {
 export const SearchBar = (props: SearchBarParams) => {
     const { hintText = 'Search', to, filters, filterSeparator = ':' } = props;
     const { setParams } = useSearch();
-    const [showFilters, setShowFilters] = useState(false);
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
-    const boxRef = useRef(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
-    const handleClickShowFilters = () => setShowFilters(show => !show);
-
-    const handleOutsideClick = (event: MouseEvent) => {
-        if (
-            showFilters &&
-            boxRef.current &&
-            !boxRef.current.contains(event.target)
-        ) {
-            setShowFilters(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener('click', handleOutsideClick);
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-        };
-    });
+    const handleClickShowFilters = event => setAnchorEl(event.currentTarget);
+    const handleCloseFilters = useCallback(() => setAnchorEl(null), []);
 
     let conversionMap = {}; //{"metadata.name": {parse: f, format: f}}
     let defaultValues = {}; //{metadata: {name: "", description: ""}, type: ""}
@@ -156,20 +141,17 @@ export const SearchBar = (props: SearchBarParams) => {
                 .filter(value => value !== null);
         }
 
-        //update searchbar value
-        //setInputValue(parseInput(inputValue, fq, filterSeparator));
-
         //write input values into context
         setParams({ q: extractQ(q, filterSeparator), fq: fq });
         //close filter box
-        setShowFilters(false);
+        handleCloseFilters();
         if (to) {
             navigate(to);
         }
     };
 
     return (
-        <Box sx={{ marginRight: '50px' }} ref={boxRef}>
+        <Box sx={{ marginRight: '50px' }}>
             <RecordContextProvider value={record}>
                 <Stack>
                     <Form defaultValues={defaultValues}>
@@ -178,11 +160,13 @@ export const SearchBar = (props: SearchBarParams) => {
                                 hintText={hintText}
                                 handleEnter={handleClickSearch}
                                 handleClickShowFilters={handleClickShowFilters}
+                                showFiltersIcon={!!filters}
                             />
                             <FilterBox
-                                showFilters={showFilters}
                                 filters={newFilters}
                                 handleClickSearch={handleClickSearch}
+                                anchorElement={anchorEl}
+                                handleCloseFilters={handleCloseFilters}
                             />
                         </div>
                     </Form>
@@ -193,7 +177,8 @@ export const SearchBar = (props: SearchBarParams) => {
 };
 
 const ActualSearchBar = (props: any) => {
-    const { hintText, handleEnter, handleClickShowFilters } = props;
+    const { hintText, handleEnter, handleClickShowFilters, showFiltersIcon } =
+        props;
     const { field } = useController({ name: 'q', defaultValue: '' });
 
     const formContext = useFormContext();
@@ -235,13 +220,15 @@ const ActualSearchBar = (props: any) => {
                         >
                             <ClearIcon />
                         </IconButton>
-                        <IconButton
-                            aria-label="toggle filters visibility"
-                            onClick={handleClickShowFilters}
-                            edge="end"
-                        >
-                            <TuneIcon />
-                        </IconButton>
+                        {showFiltersIcon && (
+                            <IconButton
+                                aria-label="toggle filters visibility"
+                                onClick={handleClickShowFilters}
+                                edge="end"
+                            >
+                                <TuneIcon />
+                            </IconButton>
+                        )}
                     </InputAdornment>
                 ),
             }}
@@ -250,10 +237,12 @@ const ActualSearchBar = (props: any) => {
 };
 
 const FilterBox = (props: any) => {
-    const { showFilters, filters, handleClickSearch } = props;
+    const { filters, handleClickSearch, anchorElement, handleCloseFilters } =
+        props;
     const [disabled, setDisabled] = useState(true);
     const formContext = useFormContext();
     const { isDirty } = useFormState();
+    const open = Boolean(anchorElement);
 
     useEffect(() => {
         if (isDirty) {
@@ -263,35 +252,52 @@ const FilterBox = (props: any) => {
         }
     }, [isDirty]);
 
+    if (!filters || (Array.isArray(filters) && filters.length === 0)) {
+        return null;
+    }
+
     return (
-        <Box>
-            {showFilters && (
-                <Stack
-                    sx={{
-                        backgroundColor: 'white',
-                        color: 'black',
-                        position: 'absolute',
-                        width: '100%',
-                        padding: '8px',
-                        borderRadius: '4px',
-                        border: '1px solid darkgray',
-                    }}
+        <Menu
+            id="search-filters"
+            anchorEl={anchorElement}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            open={open}
+            onClose={handleCloseFilters}
+            sx={{
+                '& .MuiMenuItem-root:hover': {
+                    backgroundColor: 'inherit',
+                    cursor: 'default',
+                },
+            }}
+        >
+            {filters.map((f, i) => (
+                <MenuItem
+                    disableTouchRipple
+                    onKeyDown={e => e.stopPropagation()}
+                    key={i}
                 >
-                    {filters}
-                    <Button
-                        variant="text"
-                        aria-controls="search-button"
-                        aria-label=""
-                        disabled={disabled}
-                        onClick={() =>
-                            handleClickSearch(formContext.getValues())
-                        }
-                    >
-                        Search
-                    </Button>
-                </Stack>
-            )}
-        </Box>
+                    {f}
+                </MenuItem>
+            ))}
+            <MenuItem disableTouchRipple sx={{ justifyContent: 'center' }}>
+                <Button
+                    variant="text"
+                    aria-controls="search-button"
+                    aria-label="search"
+                    disabled={disabled}
+                    onClick={() => handleClickSearch(formContext.getValues())}
+                >
+                    Search
+                </Button>
+            </MenuItem>
+        </Menu>
     );
 };
 

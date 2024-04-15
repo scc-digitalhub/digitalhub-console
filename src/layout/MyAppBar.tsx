@@ -39,6 +39,7 @@ const filters = [
         ]}
         label="Type"
         key={1}
+        helperText={false}
         defaultValue={[]}
         parse={v => {
             //v=['function', 'dataitem']
@@ -57,7 +58,9 @@ const filters = [
         label="Name"
         source="metadata.name"
         alwaysOn
+        fullWidth
         key={2}
+        helperText={false}
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
@@ -71,7 +74,9 @@ const filters = [
         label="Description"
         source="metadata.description"
         alwaysOn
+        fullWidth
         key={3}
+        helperText={false}
         defaultValue=""
         parse={v => {
             if (!(v.startsWith('"') && v.endsWith('"'))) {
@@ -103,12 +108,15 @@ const filters = [
             optionText="label"
             optionValue="label"
             disablePortal={true}
+            fullWidth
+            helperText={false}
         />
     </ReferenceArrayInput>,
     <DateIntervalInput
         source="metadata.updated"
         alwaysOn
         key={5}
+        helperText={false}
         defaultValue={','}
         parse={v => {
             let from = '*';
