@@ -221,6 +221,9 @@ export const taskSpecUiSchema = {
             affinity: {
                 'ui:widget': 'hidden',
             },
+            tolerations:{
+                'ui:widget': 'hidden',
+            },
             resources: {
                 cpu: {
                     'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
@@ -276,21 +279,26 @@ export const taskSpecUiSchema = {
 
             envs: {
                 items: {
+                    'ui:title':'',
                     'ui:ObjectFieldTemplate':KeyValueFieldWidget,
                 },
             },
             node_selector: {
                 items: {
+                    'ui:title':'',
                     'ui:ObjectFieldTemplate':KeyValueFieldWidget,
                 },
             },
             labels: {
+                'ui:widget': 'hidden',
                 items: {
+                    'ui:title':'',
                     'ui:ObjectFieldTemplate':KeyValueFieldWidget,
                 },
             },
             volumes:{
                 items: {
+                    'ui:title':'',
                     'ui:ObjectFieldTemplate':VolumeResourceFieldWidget,
                     'ui:order': [ 'mount_path','name','volume_type','spec'],
 
