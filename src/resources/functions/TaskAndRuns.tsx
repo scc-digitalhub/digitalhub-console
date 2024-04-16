@@ -44,6 +44,9 @@ import { CoreResourceFieldWidget } from '../../components/resourceInput/CoreReso
 import { KeyValueFieldWidget } from '../../components/resourceInput/KeyValueFieldWidget';
 import { VolumeResourceFieldWidget } from '../../components/resourceInput/VolumeResourceFieldWidget';
 import React from 'react';
+import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
+import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
@@ -55,13 +58,6 @@ export const TaskAndRuns = (props: { key?: string }) => {
 
     return (
         <>
-            {/* <Typography variant="h5">
-                {record &&
-                    translate('pageTitle.show.title', {
-                        resource: label,
-                        name: record.kind,
-                    })}
-            </Typography> */}
             <TopToolbar>
                 <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
@@ -277,7 +273,31 @@ const TaskRunList = () => {
             </div>
         );
     }
+    
 
+    const getExpandArea = () => {
+        return record.kind === 'kfp+pipeline' 
+        ? <WorkflowView/> 
+        : <></>;
+    }
+    const canExpand = () => {
+        return record.kind === 'kfp+pipeline';
+    }
+
+
+    function customValidate(formData, errors) {
+        if (checkCpuRequestError(formData)) {
+            errors.transform_spec.k8s.resources.cpu.addError(translate('resources.runs.errors.requestMinorLimits'));
+        }
+        if (checkMemRequestError(formData)) {
+            errors.transform_spec.k8s.resources.mem.addError("Request must be minor than Limits");
+        }
+        if (checkGpuRequestError(formData)) {
+            errors.transform_spec.k8s.resources.gpu.addError("Request must be minor than Limits");
+        }
+        return errors;
+      }
+      
     const CreateActionButton = () => (
         <CreateInDialogButton
             resource="runs"
@@ -293,6 +313,7 @@ const TaskRunList = () => {
                         source="spec"
                         schema={schema.schema}
                         uiSchema={runSpecUiSchema}
+                        customValidate={customValidate}
                     />
                 )}
             </SimpleForm>

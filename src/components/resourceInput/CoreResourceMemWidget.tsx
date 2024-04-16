@@ -127,3 +127,26 @@ const RequestTypes = [
     },
 
 ]; 
+function getValueMem(value: string) {
+    if (!value) return 0;
+    const converter = {
+        "Ki": 1,
+        "Mi": 1024,
+        "Gi": 1048576,
+        "k":1,
+        "M":1000,
+        "G":1000000
+    }
+    const units = Object.keys(converter);
+    const numberPart = value.match(/\d+/);
+    const stringPart =  value.replace(/[0-9]/g, '');
+    return Number(numberPart) * converter[stringPart]/converter[units[units.length - 1]];
+
+}
+export function checkMemRequestError(formData: any) {
+    if (formData.transform_spec.k8s.resources.mem.requests && formData.transform_spec.k8s.resources.mem.limits ===undefined) 
+        return true
+    if (getValueMem(formData.transform_spec.k8s.resources.mem.requests) > getValueMem(formData.transform_spec.k8s.resources.mem.limits))
+        return true
+   return false;
+}
