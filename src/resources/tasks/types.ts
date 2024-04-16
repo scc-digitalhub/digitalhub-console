@@ -1,3 +1,7 @@
+import { CoreResourceFieldWidget } from "../../components/resourceInput/CoreResourceFieldWidget";
+import { KeyValueFieldWidget } from "../../components/resourceInput/KeyValueFieldWidget";
+import { VolumeResourceFieldWidget } from "../../components/resourceInput/VolumeResourceFieldWidget";
+
 export enum TaskTypes {
     PROFILE = 'profile',
     VALIDATE = 'validate',
@@ -203,4 +207,94 @@ export const getSchemaTask = (kind: string | undefined) => {
         default:
             return BlankSchema;
     }
+};
+export const taskSpecUiSchema = {
+    task: {
+        'ui:readonly': true,
+    },
+    function_spec: {
+        source: {
+            'ui:widget': 'hidden',
+        },
+    },
+        k8s: {
+            affinity: {
+                'ui:widget': 'hidden',
+            },
+            resources: {
+                cpu: {
+                    'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                    'ui:title': 'Cpu',
+                    'ui:order': [ 'requests','limits'],
+
+                    limits: {
+                        'ui:widget': 'coreResourceCpuWidget',
+                        'ui:options': {
+                            'ui:title': 'Limits',
+                        },
+                    },
+                    requests: {
+                        'ui:widget': 'coreResourceCpuWidget',
+                        'ui:options': {
+                            'ui:title': 'Request',
+                        },
+                    },
+                },
+                gpu: {
+                    'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                    'ui:title': 'Gpu',
+                    'ui:order': [ 'requests','limits'],
+
+                    limits: {
+                        'ui:widget': 'hidden',
+                    },
+                    requests: {
+                        'ui:widget': 'coreResourceGpuWidget',
+                        'ui:options': {
+                            'ui:title': 'Request',
+                        },
+                    },
+                },
+                mem: {
+                    'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+                    'ui:title': 'Memory',
+                    'ui:order': [ 'requests','limits'],
+                    limits: {
+                        'ui:widget': 'coreResourceMemWidget',
+                        'ui:options': {
+                            'ui:title': 'Limits',
+                        },
+                    },
+                    requests: {
+                        'ui:widget': 'coreResourceMemWidget',
+                        'ui:options': {
+                            'ui:title': 'Request',
+                        },
+                    },
+                },
+            },
+
+            envs: {
+                items: {
+                    'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+                },
+            },
+            node_selector: {
+                items: {
+                    'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+                },
+            },
+            labels: {
+                items: {
+                    'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+                },
+            },
+            volumes:{
+                items: {
+                    'ui:ObjectFieldTemplate':VolumeResourceFieldWidget,
+                    'ui:order': [ 'mount_path','name','volume_type','spec'],
+
+                }
+            },
+        },
 };

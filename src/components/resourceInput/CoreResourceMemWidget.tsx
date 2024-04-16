@@ -45,31 +45,49 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
         onFocus(id, target.value);
     return (
         <div>
-            {!readonly && (
-                <Grid item xs={12} sm={12} md={12} >
+                <Grid item xs={12} sm={12} md={12}>
                     <Grid container spacing={2} justifyContent="center">
-                        <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center',direction: 'rtl'}}>
+                        <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                direction: 'rtl',
+                            }}
+                        >
                             <Typography variant="h6" color={'secondary.main'}>
                                 {options['ui:title'] as string}
                             </Typography>
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center'}}>
+                        <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                        >
                             <TextField
                                 fullWidth
                                 variant="outlined"
                                 type="number"
                                 inputProps={{ min: 0, step: 1 }}
-                                disabled={disabled}
+                                disabled={readonly}
                                 id={id}
                                 name={id}
                                 value={inputValue}
                                 onChange={handleInputChange}
                             />
                         </Grid>
-                        <Grid item xs={4} sm={4} md={4} sx={{    display: 'flex',
-    alignItems: 'center'}}>
+                        <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            sx={{ display: 'flex', alignItems: 'center' }}
+                        >
                             <Select
                                 labelId="type-select-label"
                                 id="type-select"
@@ -77,6 +95,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                                 type="outlined"
                                 onChange={handleUnitChange}
                                 defaultValue={RequestTypes[0].value}
+                                disabled={readonly}
                             >
                                 {RequestTypes.map(option => {
                                     return (
@@ -92,7 +111,6 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                         </Grid>
                     </Grid>
                 </Grid>
-            )}
         </div>
     );
 };
@@ -125,28 +143,35 @@ const RequestTypes = [
         value: 'G',
         label: 'Gigabyte',
     },
-
-]; 
+];
 function getValueMem(value: string) {
     if (!value) return 0;
     const converter = {
-        "Ki": 1,
-        "Mi": 1024,
-        "Gi": 1048576,
-        "k":1,
-        "M":1000,
-        "G":1000000
-    }
+        Ki: 1,
+        Mi: 1024,
+        Gi: 1048576,
+        k: 1,
+        M: 1000,
+        G: 1000000,
+    };
     const units = Object.keys(converter);
     const numberPart = value.match(/\d+/);
-    const stringPart =  value.replace(/[0-9]/g, '');
-    return Number(numberPart) * converter[stringPart]/converter[units[units.length - 1]];
-
+    const stringPart = value.replace(/[0-9]/g, '');
+    return (
+        (Number(numberPart) * converter[stringPart]) /
+        converter[units[units.length - 1]]
+    );
 }
 export function checkMemRequestError(formData: any) {
-    if (formData.transform_spec.k8s.resources.mem.requests && formData.transform_spec.k8s.resources.mem.limits ===undefined) 
-        return true
-    if (getValueMem(formData.transform_spec.k8s.resources.mem.requests) > getValueMem(formData.transform_spec.k8s.resources.mem.limits))
-        return true
-   return false;
+    if (
+        formData.k8s.resources.mem.requests &&
+        formData.k8s.resources.mem.limits === undefined
+    )
+        return true;
+    if (
+        getValueMem(formData.k8s.resources.mem.requests) >
+        getValueMem(formData.k8s.resources.mem.limits)
+    )
+        return true;
+    return false;
 }
