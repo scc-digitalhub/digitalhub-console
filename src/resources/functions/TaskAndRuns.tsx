@@ -1,17 +1,10 @@
-import { TaskEdit, TaskEditComponent, TaskShowComponent } from '../tasks';
+import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
-    ChipField,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
-    Empty,
-    EmptyClasses,
-    FunctionField,
     Labeled,
     List,
-    ListNoResults,
-    RecordContextProvider,
-    ResourceContextProvider,
     SaveButton,
     SimpleForm,
     SimpleShowLayout,
@@ -21,7 +14,6 @@ import {
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Divider, Stack, Typography } from '@mui/material';
@@ -31,14 +23,11 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { Inbox } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
-import { PageTitle } from '../../components/PageTitle';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import InboxIcon from '@mui/icons-material/Inbox';
 import { WorkflowView } from '../../components/WorkflowView';
 import {
@@ -54,6 +43,9 @@ import {
 import { CoreResourceFieldWidget } from '../../components/resourceInput/CoreResourceFieldWidget';
 import { KeyValueFieldWidget } from '../../components/resourceInput/KeyValueFieldWidget';
 import { VolumeResourceFieldWidget } from '../../components/resourceInput/VolumeResourceFieldWidget';
+import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
+import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
@@ -65,13 +57,6 @@ export const TaskAndRuns = (props: { key?: string }) => {
 
     return (
         <>
-            {/* <Typography variant="h5">
-                {record &&
-                    translate('pageTitle.show.title', {
-                        resource: label,
-                        name: record.kind,
-                    })}
-            </Typography> */}
             <TopToolbar>
                 <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
@@ -287,6 +272,7 @@ const TaskRunList = () => {
             </div>
         );
     }
+    
 
     const getExpandArea = () => {
         return record.kind === 'kfp+pipeline' 
@@ -297,6 +283,20 @@ const TaskRunList = () => {
         return record.kind === 'kfp+pipeline';
     }
 
+
+    function customValidate(formData, errors) {
+        if (checkCpuRequestError(formData)) {
+            errors.transform_spec.k8s.resources.cpu.addError(translate('resources.runs.errors.requestMinorLimits'));
+        }
+        if (checkMemRequestError(formData)) {
+            errors.transform_spec.k8s.resources.mem.addError("Request must be minor than Limits");
+        }
+        if (checkGpuRequestError(formData)) {
+            errors.transform_spec.k8s.resources.gpu.addError("Request must be minor than Limits");
+        }
+        return errors;
+      }
+      
     const CreateActionButton = () => (
         <CreateInDialogButton
             resource="runs"
@@ -312,6 +312,7 @@ const TaskRunList = () => {
                         source="spec"
                         schema={schema.schema}
                         uiSchema={runSpecUiSchema}
+                        customValidate={customValidate}
                     />
                 )}
             </SimpleForm>

@@ -124,3 +124,16 @@ const RequestTypes = [
         label: 'millicpu',
     },
 ];
+function getValueCpu(value: string) {
+    const converter = {
+        "m": 1
+    }
+}
+
+export function checkCpuRequestError(formData: any) {
+    if (formData.transform_spec.k8s.resources.cpu.requests && formData.transform_spec.k8s.resources.cpu.limits ===undefined) 
+        return true
+    if (getValueCpu(formData.transform_spec.k8s.resources.cpu.requests) > getValueCpu(formData.transform_spec.k8s.resources.cpu.limits))
+        return true
+   return false;
+}
