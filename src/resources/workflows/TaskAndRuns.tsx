@@ -40,9 +40,6 @@ import { StateChips } from '../../components/StateChips';
 import { PageTitle } from '../../components/PageTitle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InboxIcon from '@mui/icons-material/Inbox';
-
-import { WorkflowView } from '../../components/WorkflowView';
-
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
 
@@ -141,15 +138,6 @@ const TaskRunList = () => {
         },
     };
 
-    const getExpandArea = () => {
-        return record.kind === 'kfp+pipeline' 
-        ? <WorkflowView/> 
-        : <></>;
-    }
-    const canExpand = () => {
-        return record.kind === 'kfp+pipeline';
-    }
-
     const CreateActionButton = () => (
         <CreateInDialogButton
             resource="runs"
@@ -197,10 +185,7 @@ const TaskRunList = () => {
                 empty={<Empty />}
                 actions={<ListActions />}
             >
-                <Datagrid 
-                    expand={ getExpandArea() }
-                    expandSingle={ canExpand() }
-                    bulkActionButtons={false}>
+                <Datagrid bulkActionButtons={false}>
                     <DateField source="metadata.created" />
                     <TextField source="id" />
                     <StateChips source="status.state" />
