@@ -17,6 +17,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useEffect, useState } from 'react';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { getFunctionUiSpec } from '../functions/types';
+import { taskSpecUiSchema } from './types';
 
 export const TaskShowComponent = () => {
     const resource = useResourceContext();
@@ -49,7 +50,7 @@ export const TaskShowComponent = () => {
                 <JsonSchemaField
                     source="spec"
                     schema={spec.schema}
-                    uiSchema={getFunctionUiSpec(kind)}
+                    uiSchema={taskSpecUiSchema}
                     label={false}
                 />
             )}

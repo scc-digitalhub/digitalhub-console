@@ -85,7 +85,7 @@ const messages = {
             },
             empty: 'Nessuna esecuzione',
             create: 'Crea una nuova esecuzione',
-            labelName:"Nome"
+            labelName:"Nome",
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',
@@ -127,6 +127,9 @@ const messages = {
                 'serve': 'Serve',
                 'pipeline': 'Pipeline'
             },
+            errors: {
+                requestMinorLimits:"Request deve essere minore di Limits"
+            }
         },
         workflows: {
             name: 'Workflow |||| Workflow',
