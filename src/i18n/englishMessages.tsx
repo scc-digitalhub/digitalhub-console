@@ -124,6 +124,9 @@ const messages = {
                 'serve': 'Serve',
                 'pipeline': 'Pipeline'
             },
+            errors: {
+                requestMinorLimits:"Request must be minor than Limits"
+            }
         },
         workflows: {
             name: 'Workflow |||| Workflows',

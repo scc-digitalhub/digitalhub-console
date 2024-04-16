@@ -38,7 +38,6 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
         onFocus(id, target.value);
     return (
         <div>
-            {!readonly && (
                 <Grid item xs={12} sm={12} md={12}>
                     <Grid container spacing={2} justifyContent="center">
                         <Grid
@@ -68,7 +67,7 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                                 variant="outlined"
                                 type="number"
                                 inputProps={{ min: 0, step: 1 }}
-                                disabled={disabled}
+                                disabled={readonly}
                                 id={id}
                                 name={id}
                                 value={inputValue}
@@ -77,7 +76,6 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                         </Grid>
                     </Grid>
                 </Grid>
-            )}
         </div>
     );
 };

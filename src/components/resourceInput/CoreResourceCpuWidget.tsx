@@ -44,7 +44,6 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
         onFocus(id, target.value);
     return (
         <div>
-            {!readonly && (
                 <Grid item xs={12} sm={12} md={12}>
                     <Grid container spacing={2}>
                         <Grid
@@ -73,7 +72,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                                 fullWidth
                                 variant="outlined"
                                 type="number"
-                                disabled={disabled}
+                                disabled={readonly}
                                 inputProps={{ min: 0, step: 1 }}
                                 id={id}
                                 name={id}
@@ -92,6 +91,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                                 labelId="type-select-label"
                                 id="type-select"
                                 value={inputUnit}
+                                disabled={readonly}
                                 type="outlined"
                                 onChange={handleUnitChange}
                                 defaultValue={RequestTypes[0].value}
@@ -110,7 +110,6 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                         </Grid>
                     </Grid>
                 </Grid>
-            )}
         </div>
     );
 };
@@ -131,9 +130,9 @@ function getValueCpu(value: string) {
 }
 
 export function checkCpuRequestError(formData: any) {
-    if (formData.transform_spec.k8s.resources.cpu.requests && formData.transform_spec.k8s.resources.cpu.limits ===undefined) 
+    if (formData.k8s.resources.cpu.requests && formData.k8s.resources.cpu.limits ===undefined) 
         return true
-    if (getValueCpu(formData.transform_spec.k8s.resources.cpu.requests) > getValueCpu(formData.transform_spec.k8s.resources.cpu.limits))
+    if (getValueCpu(formData.k8s.resources.cpu.requests) > getValueCpu(formData.k8s.resources.cpu.limits))
         return true
    return false;
 }
