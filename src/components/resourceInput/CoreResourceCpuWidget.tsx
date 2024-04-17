@@ -54,7 +54,6 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                direction: 'rtl',
                             }}
                         >
                             <Typography variant="h6" color={'secondary.main'}>

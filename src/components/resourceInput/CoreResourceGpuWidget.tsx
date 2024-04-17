@@ -39,16 +39,16 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
     return (
         <div>
                 <Grid item xs={12} sm={12} md={12}>
-                    <Grid container spacing={2} justifyContent="center">
+                    <Grid container spacing={2} >
                         <Grid
                             item
-                            xs={6}
-                            sm={6}
-                            md={6}
+                            xs={12}
+                            sm={4}
+                            md={4}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                direction: 'rtl',
+                                // direction: 'rtl',
                             }}
                         >
                             <Typography variant="h6" color={'secondary.main'}>
@@ -57,9 +57,9 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                         </Grid>
                         <Grid
                             item
-                            xs={6}
-                            sm={6}
-                            md={6}
+                            xs={4}
+                            sm={4}
+                            md={4}
                             sx={{ display: 'flex', alignItems: 'center' }}
                         >
                             <TextField
