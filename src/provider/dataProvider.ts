@@ -304,22 +304,23 @@ const springDataProvider = (
                 ? `q=${encodeURIComponent(searchParams.q)}`
                 : '';
 
-            const fqArray = searchParams.fq || [];
-            if (params.meta?.root) {
-                fqArray.push({ filter: `project:${params.meta.root}` });
-            }
-            const fq = fqArray
-                .map(
+            const fq = searchParams.fq
+                ?.map(
                     (filter: SearchFilter) =>
                         `fq=${encodeURIComponent(filter.filter)}`
                 )
                 .join('&');
 
             const pageQuery = stringify(query);
+
+            let prefix = '';
+            if (params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/solr/search/item?`;
+
             return httpClient(
-                `${apiUrl}/solr/search/item?${[q, fq, pageQuery]
-                    .filter(Boolean)
-                    .join('&')}`,
+                `${url}${[q, fq, pageQuery].filter(Boolean).join('&')}`,
                 {
                     method: 'GET',
                 }

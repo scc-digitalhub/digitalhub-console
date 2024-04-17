@@ -15,6 +15,8 @@ import { Button, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
+import { useContext } from 'react';
+import { SearchEnabledContext } from '../App';
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
@@ -36,6 +38,7 @@ const filters = [
             { id: 'function', name: 'Function' },
             { id: 'dataitem', name: 'DataItem' },
             { id: 'artifact', name: 'Artifact' },
+            { id: 'workflow', name: 'Workflow' },
         ]}
         label="Type"
         key={1}
@@ -97,9 +100,7 @@ const filters = [
         format={v => {
             const startIndex = v.indexOf('(');
             const endIndex = v.indexOf(')');
-            return v
-                .substring(startIndex + 1, endIndex)
-                .split(' AND ');
+            return v.substring(startIndex + 1, endIndex).split(' AND ');
         }}
     >
         <AutocompleteArrayInput
@@ -169,6 +170,8 @@ export const MyAppBar = () => {
 
     const translate = useTranslate();
 
+    const enableSearch = useContext(SearchEnabledContext);
+
     return (
         <AppBar color="primary" elevation={0}>
             <Typography
@@ -181,12 +184,14 @@ export const MyAppBar = () => {
             >
                 {projectId}
             </Typography>
-            <SearchBar
-                hintText="Search"
-                to="searchresults"
-                filters={filters}
-                filterSeparator=":"
-            ></SearchBar>
+            {enableSearch && (
+                <SearchBar
+                    hintText="Search"
+                    to="searchresults"
+                    filters={filters}
+                    filterSeparator=":"
+                />
+            )}
             <Button
                 color="inherit"
                 onClick={() => redirect('/')}

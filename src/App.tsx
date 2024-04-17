@@ -130,6 +130,10 @@ const MyLoginPage =
 
 const theme = themeProvider();
 
+const enableSearch: boolean =
+    (globalThis as any).REACT_APP_ENABLE_SOLR === 'true' ||
+    (process.env.REACT_APP_ENABLE_SOLR as string === 'true');
+
 import { DataItemUpdate } from './resources/dataitems/update';
 import { ArtifactUpdate } from './resources/artifacts/update';
 import { TaskEdit } from './resources/tasks';
@@ -144,6 +148,19 @@ import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { SearchList } from './search/SearchList';
 import { SearchContextProvider } from './search/searchbar/SearchContextProvider';
+import { createContext } from 'react';
+
+export const SearchEnabledContext = createContext(false);
+
+const WrappedLayout = (props: any) => {
+    return (
+        <SearchEnabledContext.Provider value={enableSearch} >
+            <MyLayout {...props} />
+        </SearchEnabledContext.Provider>
+        
+    );
+};
+
 const CoreApp = () => {
     return (
         <RootSelectorContextProvider
@@ -164,7 +181,7 @@ const CoreApp = () => {
                 >
                     <AdminUI
                         dashboard={Dashboard}
-                        layout={MyLayout}
+                        layout={WrappedLayout}
                         loginPage={MyLoginPage}
                         requireAuth={!!authProvider}
                     >
@@ -235,9 +252,9 @@ const CoreApp = () => {
                         <CustomRoutes>
                             <Route path="/config" element={<ProjectConfig />} />
                         </CustomRoutes>
-                        <CustomRoutes>
+                        {enableSearch && (<CustomRoutes>
                             <Route path="/searchresults" element={<SearchList />} />
-                        </CustomRoutes>
+                        </CustomRoutes>)}
                     </AdminUI>
                 </ResourceSchemaProvider>
                 </SearchContextProvider>

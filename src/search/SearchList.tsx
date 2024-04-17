@@ -58,7 +58,6 @@ export const SearchList = () => {
     if (listContext.isLoading) return <Loading />;
     if (listContext.error) return <Error error={listContext.error} resetErrorBoundary={() => {}} />;
     if (!listContext.data) return null;
-    if (listContext.data.length === 0) return <NoResults />;
 
     console.log('results', listContext.total, listContext.data);
     listContext.data.forEach(res => {
@@ -75,7 +74,7 @@ export const SearchList = () => {
             <Container maxWidth={false} sx={{ paddingTop: '18px', marginX: 0 }}>
                 <ResultsHeader />
                 <FlatCard sx={{ paddingY: '18px' }}>
-                    <Datagrid bulkActionButtons={false}>
+                    <Datagrid bulkActionButtons={false} empty={<NoResults />}>
                         <IconResource />
                         <RichTextField
                             source="metadata.name"
