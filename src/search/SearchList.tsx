@@ -13,6 +13,7 @@ import {
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import AccountTree from '@mui/icons-material/AccountTree';
 import Inbox from '@mui/icons-material/Inbox';
 import { RowButtonGroup } from '../components/RowButtonGroup';
 import { Box, Chip, Container, Tooltip, Typography } from '@mui/material';
@@ -43,6 +44,14 @@ const mapTypes = {
         icon: (
             <Tooltip title="dataitem">
                 <InsertDriveFileIcon />
+            </Tooltip>
+        ),
+    },
+    workflow: {
+        plural: 'workflows',
+        icon: (
+            <Tooltip title="workflow">
+                <AccountTree />
             </Tooltip>
         ),
     },
