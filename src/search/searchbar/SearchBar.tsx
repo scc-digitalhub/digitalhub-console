@@ -288,7 +288,7 @@ const FilterBox = (props: any) => {
             ))}
             <MenuItem disableTouchRipple sx={{ justifyContent: 'center' }}>
                 <Button
-                    variant="text"
+                    variant="contained"
                     aria-controls="search-button"
                     aria-label="search"
                     disabled={disabled}
