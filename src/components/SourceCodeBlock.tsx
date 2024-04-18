@@ -57,14 +57,14 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
                 </TopToolbar>
             )}
             <Editor
-                options={{ fontSize: '20px' }}
+                options={{ fontSize: '20px',readOnly:true }}
                 defaultLanguage={language}
                 width={'50vw'}
                 height={'90vh'}
                 defaultValue={code}
                 theme={style}
             />
-            ;
+            
         </Container>
     );
 };
