@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, ContainerOwnProps } from '@mui/material';
+import { Box, Container, ContainerOwnProps } from '@mui/material';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import hlJson from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
 import hlYaml from 'react-syntax-highlighter/dist/esm/languages/hljs/yaml';
@@ -11,6 +11,7 @@ import hlJavascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javas
 import hlTypescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
 import hlShell from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
 import hlBash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash';
+import Editor from '@monaco-editor/react';
 
 import themeVS2015 from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 import themeGithub from 'react-syntax-highlighter/dist/esm/styles/hljs/github';
@@ -39,7 +40,7 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
         ...rest
     } = props;
 
-    const style = theme === 'dark' ? themeVS2015 : themeGithub;
+    const style = theme === 'dark' ? 'vs-dark' : 'light';
 
     return (
         <Container {...rest} disableGutters>
@@ -54,14 +55,7 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
                     />
                 </TopToolbar>
             )}
-            <SyntaxHighlighter
-                language={language}
-                style={style}
-                showLineNumbers={showLineNumbers}
-                wrapLongLines
-            >
-                {code}
-            </SyntaxHighlighter>
+                <Editor defaultLanguage={language} width={'50vw'} height={'90vh'} defaultValue= {code} theme={style}/>;
         </Container>
     );
 };
