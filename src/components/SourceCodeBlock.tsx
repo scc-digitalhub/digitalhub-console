@@ -17,6 +17,7 @@ import themeVS2015 from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 import themeGithub from 'react-syntax-highlighter/dist/esm/styles/hljs/github';
 import { TopToolbar } from 'react-admin';
 import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
+import { fontSize } from '@mui/system';
 
 SyntaxHighlighter.registerLanguage('json', hlJson);
 SyntaxHighlighter.registerLanguage('yaml', hlYaml);
@@ -55,7 +56,15 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
                     />
                 </TopToolbar>
             )}
-                <Editor defaultLanguage={language} width={'50vw'} height={'90vh'} defaultValue= {code} theme={style}/>;
+            <Editor
+                options={{ fontSize: '20px' }}
+                defaultLanguage={language}
+                width={'50vw'}
+                height={'90vh'}
+                defaultValue={code}
+                theme={style}
+            />
+            ;
         </Container>
     );
 };
