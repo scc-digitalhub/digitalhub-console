@@ -17,5 +17,7 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ['@mui/material/Tooltip'],
+        exclude: ['js-big-decimal']
+
     },
 });
