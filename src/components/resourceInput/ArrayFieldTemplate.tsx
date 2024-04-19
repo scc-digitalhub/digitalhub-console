@@ -42,7 +42,7 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-      <Box p={2}>
+      <Box p={1}>
         <ArrayFieldTitleTemplate
           idSchema={idSchema}
           title={uiOptions.title || title}

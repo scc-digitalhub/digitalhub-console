@@ -1,8 +1,7 @@
 import React from 'react';
-import { InputProps, useRecordContext } from 'react-admin';
+import {  InputProps, useRecordContext } from 'react-admin';
 import validator from '@rjsf/validator-ajv8';
-import { RJSFSchema, RegistryFieldsType, RegistryWidgetsType, UiSchema,
-    StrictRJSFSchema, FormContextType} from '@rjsf/utils';
+import { CustomValidator, RJSFSchema, RegistryFieldsType, RegistryWidgetsType, UiSchema } from '@rjsf/utils';
 import { Form } from '@rjsf/mui';
 import { get, useController } from 'react-hook-form';
 import { useRJSchema } from '@dslab/ra-jsonschema-input';
@@ -13,9 +12,10 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         uiSchema = {},
         label,
         helperText,
-        resource:resourceFromProps,
+        resource,
         source,
         customWidgets,
+        customValidate,
         templates,
         fields
     } = props;
@@ -34,7 +34,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             field.onChange(data);
         }
     };
-    const resource = resourceFromProps || "";
+
     const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
         resource,
         source,
@@ -63,19 +63,20 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             liveValidate={true}
             showErrorList={false}
             widgets={customWidgets}
+            customValidate={customValidate}
         >
             <></>
         </Form>
     );
 };
 
-export type JSONSchemaFormatInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Omit<InputProps,'resource'> & {
+export type JSONSchemaFormatInputProps = InputProps & {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
-    templates?: any;
-    resource?:string;
-    fields?: RegistryFieldsType<T, S, F>;
+    templates?: object;
+    fields?: RegistryFieldsType;
     customWidgets?: RegistryWidgetsType;
+    customValidate?:CustomValidator;
 };
 
 export default JsonSchemaInput;
