@@ -40,8 +40,8 @@ export default function ArrayFieldItemTemplate<
   return (
     <Grid container={true} alignItems='center'>
       <Grid item={true} xs style={{ overflow: 'auto' }}>
-        <Box mb={2}>
-            <Box p={2}>{children}</Box>
+        <Box mb={1}>
+            <Box p={1}>{children}</Box>
         </Box>
       </Grid>
       {hasToolbar && (
