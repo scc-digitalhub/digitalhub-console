@@ -11,6 +11,8 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import {  ErrorListProps } from "@rjsf/utils";
+
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 import { getSchemaTask, taskSpecUiSchema } from './types';
 import { Stack } from '@mui/system';
@@ -43,27 +45,43 @@ export const TaskEditComponent = () => {
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || null;
     const translate = useTranslate();
-
-    function customValidate(formData, errors) {
+    
+      
+    function customValidate(formData, errors,uiSchema) {
         if (checkCpuRequestError(formData)) {
-            errors.k8s.resources.cpu.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.cpu.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
         }
         if (checkMemRequestError(formData)) {
-            errors.k8s.resources.mem.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.mem.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
         }
         if (checkGpuRequestError(formData)) {
-            errors.k8s.resources.gpu.addError("");
+            errors.k8s.resources.gpu.requests.addError("");
         }
         return errors;
       }
+
     useEffect(() => {
         if (schemaProvider && record) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
     }, [record, schemaProvider]);
-
+    function ErrorListTemplate(props: ErrorListProps) {
+        const { errors } = props;
+        return (
+          <div>
+            <h2>Custom error list</h2>
+            <ul>
+              {errors.map(error => (
+                  <li key={error.stack}>
+                    {error.stack}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        );
+      }
     return (
-        <SimpleForm toolbar={<TaskToolbar />}>
+        <SimpleForm toolbar={<TaskToolbar />} >
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
                     <TextField source="name" />
@@ -82,6 +100,7 @@ export const TaskEditComponent = () => {
                     schema={spec.schema}
                     label={false}
                     uiSchema={taskSpecUiSchema}
+                    templates={{ ErrorListTemplate }}
                     customValidate={customValidate} 
                 />
             )}
