@@ -18,6 +18,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
         disabled,
         readonly,
         onBlur,
+        rawErrors,
         onChange,
         onFocus,
         options,
@@ -26,7 +27,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
     );
-    const [inputUnit, setInputUnit] = useState<string>(RequestTypes[0].value);
+    const [inputUnit, setInputUnit] = useState<string>(value ? value.replace(/[0-9]/g, ''):RequestTypes[0].value);
     const translate = useTranslate();
 
     const handleInputChange = event => {

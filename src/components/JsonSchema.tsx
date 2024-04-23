@@ -1,11 +1,11 @@
 import {
     JsonSchemaField as RaJsonSchemaField,
     JsonSchemaFieldProps,
-    JSONSchemaFormatInputProps,
-    JsonSchemaInput as RaJsonSchemaInput,
+    // JSONSchemaFormatInputProps,
+    // JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
 
-// import { JsonSchemaInput as RaJsonSchemaInput} from './JsonSchemaInput';
+import { JsonSchemaInput as RaJsonSchemaInput,JSONSchemaFormatInputProps} from './JsonSchemaInput';
 import { MuiChipsInputWidget } from './MuiChipsInputWidget';
 import { CoreResourceMemWidget } from './resourceInput/CoreResourceMemWidget';
 import { CoreResourceGpuWidget } from './resourceInput/CoreResourceGpuWidget';
@@ -22,5 +22,5 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     return <RaJsonSchemaField {...props} customWidgets={customWidgets} />;
 };
 export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
-    return <RaJsonSchemaInput {...props} customWidgets={customWidgets} templates={customFields} />;
+    return <RaJsonSchemaInput {...props} customWidgets={customWidgets} templates={{...customFields,...props.templates}} />;
 };

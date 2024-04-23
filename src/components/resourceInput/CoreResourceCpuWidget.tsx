@@ -123,13 +123,21 @@ const RequestTypes = [
     },
 ];
 function getValueCpu(value: string) {
+    if (!value) return 0;
     const converter = {
-        "m": 1
-    }
+        m: 1
+    };
+    const units = Object.keys(converter);
+    const numberPart = value.match(/\d+/);
+    const stringPart = value.replace(/[0-9]/g, '');
+    return (
+        (Number(numberPart) * converter[stringPart]) /
+        converter[units[units.length - 1]]
+    );
 }
 
 export function checkCpuRequestError(formData: any) {
-    if (formData.k8s.resources.cpu.requests && formData.k8s.resources.cpu.limits ===undefined) 
+    if (formData.k8s.resources.cpu.requests && getValueCpu(formData.k8s.resources.cpu.requests)!=0 && formData.k8s.resources.cpu.limits ===undefined) 
         return true
     if (getValueCpu(formData.k8s.resources.cpu.requests) > getValueCpu(formData.k8s.resources.cpu.limits))
         return true
