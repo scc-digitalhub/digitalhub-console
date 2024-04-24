@@ -4,6 +4,8 @@ export enum TaskTypes {
     INFER = 'infer',
     METRIC = 'metric',
     TRANSFORM = 'transform',
+    PIPELINE = 'pipeline',
+    MLRUN = 'mlrun'
 }
 export const TaskDbtSchema = {
     title: 'TaskParams',

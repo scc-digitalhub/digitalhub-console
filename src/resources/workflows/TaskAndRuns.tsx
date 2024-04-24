@@ -1,17 +1,10 @@
-import { TaskEdit, TaskEditComponent, TaskShowComponent } from '../tasks';
+import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
-    ChipField,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
-    Empty,
-    EmptyClasses,
-    FunctionField,
     Labeled,
     List,
-    ListNoResults,
-    RecordContextProvider,
-    ResourceContextProvider,
     SaveButton,
     SimpleForm,
     SimpleShowLayout,
@@ -21,7 +14,6 @@ import {
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Divider, Stack, Typography } from '@mui/material';
@@ -31,15 +23,15 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { Inbox } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
-import { PageTitle } from '../../components/PageTitle';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import InboxIcon from '@mui/icons-material/Inbox';
+
+import { WorkflowView } from '../../components/WorkflowView';
+
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
 
@@ -138,6 +130,15 @@ const TaskRunList = () => {
         },
     };
 
+    const getExpandArea = () => {
+        return record.kind === 'kfp+pipeline' 
+        ? <WorkflowView/> 
+        : <></>;
+    }
+    const canExpand = () => {
+        return record.kind === 'kfp+pipeline';
+    }
+
     const CreateActionButton = () => (
         <CreateInDialogButton
             resource="runs"
@@ -185,7 +186,10 @@ const TaskRunList = () => {
                 empty={<Empty />}
                 actions={<ListActions />}
             >
-                <Datagrid bulkActionButtons={false}>
+                <Datagrid 
+                    expand={ getExpandArea() }
+                    expandSingle={ canExpand() }
+                    bulkActionButtons={false}>
                     <DateField source="metadata.created" />
                     <TextField source="id" />
                     <StateChips source="status.state" />

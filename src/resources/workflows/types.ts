@@ -1,8 +1,12 @@
 export enum WorkflowTypes {
-    DBT = 'dbt',
-    NEFERTEM = 'nefertem',
-    JOB = 'job',
+    KFP = 'kfp',
 }
+export const TaskMap = {
+    kfp: ['pipeline'],
+};
+export const getTaskByFunction = kind => {
+    return TaskMap[kind];
+};
 export const BlankSchema = {
     $schema: 'http://json-schema.org/draft-07/schema',
     type: 'object',
