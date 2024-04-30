@@ -1,3 +1,5 @@
+import {MonacoEditorInput} from '@dslab/ra-monaco-editor';
+
 export enum FunctionTypes {
     DBT = 'dbt',
     NEFERTEM = 'nefertem',
@@ -26,9 +28,15 @@ export const getFunctionSpec = (kind: string | undefined) => {
 };
 
 export const getFunctionUiSpec = (kind: string | undefined) => {
-    if (!kind) {
-        return undefined;
-    }
+    // if (!kind) {
+    //     return undefined;
+    // }
 
-    return undefined;
+    return {
+        source: {
+            code:{
+            'ui:widget': MonacoEditorInput
+            }
+        },
+    };
 };

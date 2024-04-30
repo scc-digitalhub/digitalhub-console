@@ -39,6 +39,7 @@
         "@dslab/ra-inspect-button": "^1.0.0",
         "@dslab/ra-jsonschema-input": "^1.1.1",
         "@dslab/ra-language-italian": "^1.0.0",
+        "@dslab/ra-monaco-editor": "/Users/smartcommunitylab/Desktop/newWork/react-admin-packages/packages/ra-monaco-editor/",
         "@dslab/ra-root-selector": "^1.0.1",
         "@emotion/react": "^11.11.3",
         "@emotion/styled": "^11.11.0",

@@ -18,17 +18,8 @@ import themeGithub from 'react-syntax-highlighter/dist/esm/styles/hljs/github';
 import { TopToolbar } from 'react-admin';
 import { CopyToClipboardButton } from '@dslab/ra-inspect-button';
 import { fontSize } from '@mui/system';
+import {MonacoEditorField} from '@dslab/ra-monaco-editor';
 
-SyntaxHighlighter.registerLanguage('json', hlJson);
-SyntaxHighlighter.registerLanguage('yaml', hlYaml);
-SyntaxHighlighter.registerLanguage('python', hlPython);
-SyntaxHighlighter.registerLanguage('python-repl', hlPythonRepl);
-SyntaxHighlighter.registerLanguage('sql', hlSql);
-SyntaxHighlighter.registerLanguage('java', hlJava);
-SyntaxHighlighter.registerLanguage('javascript', hlJavascript);
-SyntaxHighlighter.registerLanguage('typescript', hlTypescript);
-SyntaxHighlighter.registerLanguage('shell', hlShell);
-SyntaxHighlighter.registerLanguage('bash', hlBash);
 
 export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
     const {
@@ -56,7 +47,7 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
                     />
                 </TopToolbar>
             )}
-            <Editor
+            <MonacoEditorField
                 options={{ fontSize: '20px',readOnly:true }}
                 defaultLanguage={language}
                 width={'50vw'}

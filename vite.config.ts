@@ -17,5 +17,10 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ['@mui/material/Tooltip'],
+        esbuildOptions: {
+            loader: {
+                ".js": "text",
+            },
+        },
     },
 });
