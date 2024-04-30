@@ -1,5 +1,6 @@
 {
     "name": "platformadmin",
+    "version": "0.4.0",
     "private": true,
     "author": {
         "name": "Matteo Chini",
