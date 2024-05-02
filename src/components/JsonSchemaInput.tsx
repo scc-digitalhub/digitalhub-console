@@ -1,10 +1,24 @@
 import React, { useRef } from 'react';
-import {  InputProps, useRecordContext } from 'react-admin';
-import validator from '@rjsf/validator-ajv8';
-import { CustomValidator, RJSFSchema, RegistryFieldsType, RegistryWidgetsType, UiSchema,ErrorTransformer,ErrorSchema } from '@rjsf/utils';
-import { Form } from '@rjsf/mui';
-import { get, useController,useForm } from 'react-hook-form';
+import { InputProps, useInput } from 'react-admin';
+import {
+    CustomValidator,
+    RJSFSchema,
+    RJSFValidationError,
+    RegistryFieldsType,
+    RegistryWidgetsType,
+    UiSchema,
+} from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import Ajv2020 from 'ajv/dist/2020';
+
+import Form from '@rjsf/core';
+import { withTheme } from '@rjsf/core';
+import { Theme } from '@rjsf/mui';
 import { useRJSchema } from '@dslab/ra-jsonschema-input';
+
+//build styled form
+const MuiForm = withTheme(Theme);
+const validator = customizeValidator({ AjvClass: Ajv2020 });
 
 export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const {
@@ -18,32 +32,58 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         customValidate,
         templates,
         fields,
-        extraErrors,
-        transformErrors
+        noHtml5Validate = false,
     } = props;
-    const record = useRecordContext();
+    const errors = useRef<any[]>(new Array());
+
+    const validate = (value: any) => {
+        if (errors && errors.current.length > 0) {
+            //expose first error
+            const e: any = errors.current.find(i => true);
+            return typeof e === 'string' ? e : e.stack;
+        }
+
+        //no errors
+        return undefined;
+    };
 
     const {
         field,
-        fieldState,
         formState: { isLoading },
-    } = useController({
-        name: source,
-        defaultValue: get(record, source, {}),
+    } = useInput({
+        defaultValue: {},
+        resource,
+        source,
+        validate,
     });
-    const { register, handleSubmit, formState: { errors },setError } = useForm();
-
-    const onError = (error:any) => {
-        console.log(error);
-    } 
-    const update = (data: any) => {
-        if (!isLoading) {
-            field.onChange(data);
-            if (formRef.current)
-            {
-                formRef?.current?.validateForm();
+    const data= field.value;
+    const onChange = (e: any, id?:string) => {
+        if (isLoading != undefined && !isLoading && id) {
+            //validate first
+            if (formRef.current) {
                 
+                const isValid = formRef?.current?.validateForm();
+                if (isValid) {
+                    //clear errors
+                    errors.current = new Array();
+                }
             }
+
+            //update data
+            console.log('called',e);
+            console.log('id',id);
+            if (e.formData){
+                  field.onChange(e.formData);
+            }
+        }
+    };
+
+    const onError = (values: RJSFValidationError[]) => {
+        //always reset errors
+        errors.current = new Array();
+        if (values && values.length > 0) {
+            //push errors to be consumed by validator
+            values.forEach(e => errors.current.push(e));
         }
     };
 
@@ -59,44 +99,39 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
                 : undefined,
     });
 
-    console.log('uiSchema', ruiSchema);
-    const formRef = useRef(null);
+    const formRef = useRef<Form>();
     return (
-        <Form
+        <MuiForm
+            ref={formRef}
             tagName={'div'}
             schema={rjsSchema}
             uiSchema={ruiSchema}
             templates={templates}
-            fields={ fields }
-            formData={field.value}
+            fields={fields}
+            formData={data}
             validator={validator}
+            onChange={onChange}
             onError={onError}
-            onChange={(e: any) => update(e.formData)}
             omitExtraData={true}
             liveValidate={true}
-            // showErrorList={false}
+            showErrorList={false}
             widgets={customWidgets}
             customValidate={customValidate}
-            transformErrors={transformErrors}
-            extraErrors={extraErrors}
-            showErrorList={'bottom'}
-            ref={formRef}
+            noHtml5Validate={noHtml5Validate}
         >
             <></>
-        </Form>
+        </MuiForm>
     );
 };
 
-export type JSONSchemaFormatInputProps = InputProps & {
+export type JSONSchemaFormatInputProps = Omit<InputProps, 'validate'> & {
     schema: RJSFSchema | object | string;
     uiSchema?: UiSchema | object | string;
     templates?: object;
     fields?: RegistryFieldsType;
     customWidgets?: RegistryWidgetsType;
-    customValidate?:CustomValidator;
-    transformErrors?:ErrorTransformer;
-    extraErrors?:ErrorSchema;
-    showErrorList?:false | 'top' | 'bottom';
+    customValidate?: CustomValidator;
+    noHtml5Validate?: boolean;
 };
 
 export default JsonSchemaInput;
