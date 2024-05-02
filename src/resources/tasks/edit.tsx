@@ -11,8 +11,6 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import {  ErrorListProps } from "@rjsf/utils";
-
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 import { getSchemaTask, taskSpecUiSchema } from './types';
 import { Stack } from '@mui/system';
@@ -59,29 +57,14 @@ export const TaskEditComponent = () => {
         }
         return errors;
       }
-
     useEffect(() => {
         if (schemaProvider && record) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
     }, [record, schemaProvider]);
-    function ErrorListTemplate(props: ErrorListProps) {
-        const { errors } = props;
-        return (
-          <div>
-            <h2>Custom error list</h2>
-            <ul>
-              {errors.map(error => (
-                  <li key={error.stack}>
-                    {error.stack}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        );
-      }
+
     return (
-        <SimpleForm toolbar={<TaskToolbar />} >
+        <SimpleForm toolbar={<TaskToolbar />}>
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
                     <TextField source="name" />
@@ -100,7 +83,6 @@ export const TaskEditComponent = () => {
                     schema={spec.schema}
                     label={false}
                     uiSchema={taskSpecUiSchema}
-                    templates={{ ErrorListTemplate }}
                     customValidate={customValidate} 
                 />
             )}
