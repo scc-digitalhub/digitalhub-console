@@ -31,7 +31,6 @@
         "prettier": "prettier --config ./prettier.config.js --write --list-different \"src/**/*.{ts,tsx,js,html}\" ./index.html"
     },
     "dependencies": {
-        "@dslab/ra-ace-editor": "^1.0.3",
         "@dslab/ra-auth-oidc": "^1.0.1",
         "@dslab/ra-back-button": "^1.0.0",
         "@dslab/ra-delete-dialog-button": "^1.0.0",

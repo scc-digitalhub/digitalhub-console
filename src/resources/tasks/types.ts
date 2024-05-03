@@ -213,6 +213,7 @@ export const taskSpecUiSchema = {
         'ui:readonly': true,
     },
     function_spec: {
+
         source: {
             'ui:widget': 'hidden',
         },
