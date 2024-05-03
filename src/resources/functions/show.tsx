@@ -32,9 +32,8 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { SourceCodeBlock } from '../../components/SourceCodeBlock';
 import deepEqual from 'deep-is';
-import { AceEditorField } from '../../components/AceEditorShow';
+import { AceEditorField } from '../../components/AceEditorField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -165,9 +164,6 @@ const ShowComponent = () => {
         }
     }, [record, schemaProvider, dataProvider]);
 
-    // if (isLoading) {
-    //   return <></>;
-    // }
 
     if (!record) {
         return <LoadingIndicator />;

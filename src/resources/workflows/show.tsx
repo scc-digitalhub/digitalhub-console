@@ -57,7 +57,7 @@ import {
     EditInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
-import { AceEditorField } from '../../components/AceEditorShow';
+import { AceEditorField } from '../../components/AceEditorField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();

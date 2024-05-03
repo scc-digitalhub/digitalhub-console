@@ -67,9 +67,6 @@ const SpecInput = (props: {
         }
     }, [eq]);
     
-    const onChange = (e) => {
-
-    }
     if (!record || !record.kind || !spec) {
         return (
             <Card
@@ -92,7 +89,10 @@ const SpecInput = (props: {
             schema={spec.schema}
             uiSchema={getFunctionUiSpec(record.kind)}
         />
+        {
+            spec?.schema?.properties?.source &&
         <Editor mode={lang} source="spec.source" theme="monokai"/>
+}
         </>
     );
 };
