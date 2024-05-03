@@ -34,6 +34,7 @@ import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { SourceCodeBlock } from '../../components/SourceCodeBlock';
 import deepEqual from 'deep-is';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -280,12 +281,14 @@ const SourceCodeView = (props: { sourceCode: any }) => {
             </Stack>
             <Box sx={{ pt: 2 }}>
                 <Labeled label="fields.code">
-                    <SourceCodeBlock
+                <AceEditorField mode={sourceCode.lang} source="sourceCode.code" theme="monokai"  />
+
+                    {/* <SourceCodeBlock
                         code={code}
                         showLineNumbers={true}
                         showCopyButton={false}
                         maxWidth={'lg'}
-                    />
+                    /> */}
                 </Labeled>
             </Box>
         </RecordContextProvider>

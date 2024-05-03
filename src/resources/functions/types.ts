@@ -26,9 +26,11 @@ export const getFunctionSpec = (kind: string | undefined) => {
 };
 
 export const getFunctionUiSpec = (kind: string | undefined) => {
-    if (!kind) {
-        return undefined;
+    return {
+        source: {
+            code:{
+            'ui:widget': 'hidden'
+            }
+        },
     }
-
-    return undefined;
 };

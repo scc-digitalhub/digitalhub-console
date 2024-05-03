@@ -11,7 +11,7 @@ import hlJavascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javas
 import hlTypescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
 import hlShell from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
 import hlBash from 'react-syntax-highlighter/dist/esm/languages/hljs/bash';
-
+import { AceEditorField } from '@dslab/ra-ace-editor';
 import themeVS2015 from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 import themeGithub from 'react-syntax-highlighter/dist/esm/styles/hljs/github';
 import { TopToolbar } from 'react-admin';
@@ -54,14 +54,17 @@ export const SourceCodeBlock = (props: SourceCodeBlockProps) => {
                     />
                 </TopToolbar>
             )}
-            <SyntaxHighlighter
+
+            <AceEditorField mode={language} source="code" theme="monokai" />
+
+            {/* <SyntaxHighlighter
                 language={language}
                 style={style}
                 showLineNumbers={showLineNumbers}
                 wrapLongLines
             >
                 {code}
-            </SyntaxHighlighter>
+            </SyntaxHighlighter> */}
         </Container>
     );
 };
@@ -74,7 +77,19 @@ export type SourceCodeBlockProps = ContainerOwnProps & {
     /**
      * (Optional) language for syntax highlighter
      */
-    language?: string;
+    language?: 
+    | 'java'
+    | 'javascript'
+    | 'markdown'
+    | 'drools'
+    | 'html'
+    | 'python'
+    | 'json'
+    | 'sql'
+    | 'typescript'
+    | 'css'
+    | 'yaml'
+    | 'text';
     /**
      * Theme. Defaults to `dark`
      */
