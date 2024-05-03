@@ -57,6 +57,7 @@ import {
     EditInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
+import { AceEditorField } from '../../components/AceEditorShow';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -313,14 +314,11 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                 </Labeled>
             </Stack>
             <Box sx={{ pt: 2 }}>
+            <Box sx={{ pt: 2 }}>
                 <Labeled label="fields.code">
-                    <SourceCodeBlock
-                        code={code}
-                        showLineNumbers={true}
-                        showCopyButton={false}
-                        maxWidth={'lg'}
-                    />
+                    <AceEditorField mode={sourceCode.lang} source="sourceCode.base64" theme="monokai"  />
                 </Labeled>
+            </Box>
             </Box>
         </RecordContextProvider>
     );

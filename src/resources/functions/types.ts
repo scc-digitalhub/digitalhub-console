@@ -28,6 +28,9 @@ export const getFunctionSpec = (kind: string | undefined) => {
 export const getFunctionUiSpec = (kind: string | undefined) => {
     return {
         source: {
+            base64: {
+                'ui:widget': 'hidden',
+            },
             code:{
             'ui:widget': 'hidden'
             }
