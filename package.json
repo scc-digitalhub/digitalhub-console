@@ -52,6 +52,7 @@
         "env-cmd": "^10.1.0",
         "mui-chips-input": "^2.1.4",
         "react": "^18.2.0",
+        "react-ace": "^11.0.1",
         "react-admin": "4.16.12",
         "react-dom": "^18.2.0",
         "react-is": "^18.2.0",

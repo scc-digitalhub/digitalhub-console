@@ -32,7 +32,7 @@ export const AceEditorField = (props: AceFieldProps) => {
     } = props;
 
     const record = useRecordContext(props);
-    const value = atob(get(record, source));
+    const value = atob(get(record, source)|| '');
 
     const aceOptions = {
         readOnly: true,
