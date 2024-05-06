@@ -16,6 +16,8 @@ import {
     TextInput,
     TopToolbar,
     required,
+    useRecordContext,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import {
@@ -34,6 +36,9 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
+import deepEqual from 'deep-is';
+import { Editor } from '../../components/AceEditorInput';
+import { useWatch } from 'react-hook-form';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -42,7 +47,55 @@ const CreateToolbar = (props: CreateActionsProps) => {
         </TopToolbar>
     );
 };
+const SpecInput = (props: {
+    source: string;
+    onDirty?: (state: boolean) => void;
+}) => {
+    const { source, onDirty } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const value = useWatch({ name: source });
+    const lang = useWatch({ name: 'spec.source.lang' });
+    const kind = useWatch({ name: 'kind' });
+    const schemaProvider = useSchemaProvider();
+    const [spec, setSpec] = useState<any>();
 
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.get(resource, kind).then(s => setSpec(s));
+        }
+    }, [ schemaProvider]);
+
+    
+    if ( !spec) {
+        return (
+            <Card
+                sx={{
+                    width: 1,
+                    textAlign: 'center',
+                }}
+            >
+                <CardContent>
+                    {translate('resources.common.emptySpec')}{' '}
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <>
+        <JsonSchemaInput
+            source={source}
+            schema={spec.schema}
+            uiSchema={getFunctionUiSpec(kind)}
+        />
+        {
+            spec?.schema?.properties?.source &&
+        <Editor mode={lang} source="spec.source" theme="monokai"/>
+}
+        </>
+    );
+};
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
@@ -76,35 +129,6 @@ export const FunctionCreate = () => {
         return <LoadingIndicator />;
     }
 
-    const getFunctionSpec = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
-        }
-
-        if (schemas) {
-            return schemas.find(s => s.id === 'FUNCTION:' + kind)?.schema;
-        }
-
-        return BlankSchema;
-    };
-
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!kinds.find(k => k.id === data.kind)) {
-            errors.kind = 'messages.validation.invalid';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-
-        return errors;
-    };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -148,15 +172,10 @@ export const FunctionCreate = () => {
                                     {({ formData }) => {
                                         if (formData.kind)
                                             return (
-                                                <JsonSchemaInput
-                                                    source="spec"
-                                                    schema={getFunctionSpec(
-                                                        formData.kind
-                                                    )}
-                                                    uiSchema={getFunctionUiSpec(
-                                                        formData.kind
-                                                    )}
-                                                />
+                                                <SpecInput
+                                                source="spec"
+                                            />
+                                                
                                             );
                                         else
                                             return (
