@@ -20,7 +20,6 @@ import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import { Fragment } from 'react';
 import { get } from 'lodash';
-import React from 'react';
 
 export const AceEditorField = (props: AceFieldProps) => {
     const {
