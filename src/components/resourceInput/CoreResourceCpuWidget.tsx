@@ -137,9 +137,9 @@ function getValueCpu(value: string) {
 }
 
 export function checkCpuRequestError(formData: any) {
-    if (formData.k8s.resources.cpu.requests && getValueCpu(formData.k8s.resources.cpu.requests)!=0 && formData.k8s.resources.cpu.limits ===undefined) 
+    if (formData?.k8s?.resources?.cpu?.requests && getValueCpu(formData?.k8s?.resources?.cpu?.requests)!=0 && formData?.k8s?.resources?.cpu?.limits ===undefined) 
         return true
-    if (getValueCpu(formData.k8s.resources.cpu.requests) > getValueCpu(formData.k8s.resources.cpu.limits))
+    if (getValueCpu(formData?.k8s?.resources?.cpu?.requests) > getValueCpu(formData?.k8s?.resources?.cpu?.limits))
         return true
    return false;
 }

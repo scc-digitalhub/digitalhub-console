@@ -2,7 +2,7 @@ import {
     ObjectFieldTemplateProps,
   } from '@rjsf/utils';
   
-  export const  KeyValueFieldWidget = (props: ObjectFieldTemplateProps) => {
+  export const  KeyValueFieldTemplate = (props: ObjectFieldTemplateProps) => {
       return (
           <> 
           {props.title &&

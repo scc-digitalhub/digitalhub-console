@@ -1,7 +1,8 @@
 import { MetadataTemplate } from "../components/MetadataTemplate";
-import { CoreResourceFieldWidget } from "../components/resourceInput/CoreResourceFieldWidget";
-import { KeyValueFieldWidget } from "../components/resourceInput/KeyValueFieldWidget";
-import { VolumeResourceFieldWidget } from "../components/resourceInput/VolumeResourceFieldWidget";
+import { CoreResourceFieldTemplate } from "../components/resourceInput/CoreResourceFieldTemplate";
+import { K8FieldTemplate } from "../components/resourceInput/K8FieldTemplate";
+import { KeyValueFieldTemplate } from "../components/resourceInput/KeyValueFieldTemplate";
+import { VolumeResourceFieldTemplate } from "../components/resourceInput/VolumeResourceFieldTemplate";
 
 export const MetadataSchema = {
     $schema: 'http://json-schema.org/draft-07/schema',
@@ -106,6 +107,7 @@ export const BlankSchema = {
 
 
 export  const k8sSpec = {
+        'ui:ObjectFieldTemplate': K8FieldTemplate,
     affinity: {
         'ui:widget': 'hidden',
     },
@@ -114,7 +116,7 @@ export  const k8sSpec = {
     },
     resources: {
         cpu: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldWidget,
+            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
             'ui:title': 'Cpu',
             'ui:order': [ 'requests','limits'],
 
@@ -132,7 +134,7 @@ export  const k8sSpec = {
             },
         },
         gpu: {
-            'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+            'ui:ObjectFieldTemplate':CoreResourceFieldTemplate,
             'ui:title': 'Gpu',
             'ui:order': [ 'requests','limits'],
 
@@ -147,7 +149,7 @@ export  const k8sSpec = {
             },
         },
         mem: {
-            'ui:ObjectFieldTemplate':CoreResourceFieldWidget,
+            'ui:ObjectFieldTemplate':CoreResourceFieldTemplate,
             'ui:title': 'Memory',
             'ui:order': [ 'requests','limits'],
             limits: {
@@ -168,7 +170,7 @@ export  const k8sSpec = {
     envs: {
         items: {
             'ui:title':'',
-            'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+            'ui:ObjectFieldTemplate':KeyValueFieldTemplate,
         },
     },
     secrets: {
@@ -179,20 +181,20 @@ export  const k8sSpec = {
     node_selector: {
         items: {
             'ui:title':'',
-            'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+            'ui:ObjectFieldTemplate':KeyValueFieldTemplate,
         },
     },
     labels: {
         'ui:widget': 'hidden',
         items: {
             'ui:title':'',
-            'ui:ObjectFieldTemplate':KeyValueFieldWidget,
+            'ui:ObjectFieldTemplate':KeyValueFieldTemplate,
         },
     },
     volumes:{
         items: {
             'ui:title':'',
-            'ui:ObjectFieldTemplate':VolumeResourceFieldWidget,
+            'ui:ObjectFieldTemplate':VolumeResourceFieldTemplate,
             'ui:order': [ 'mount_path','name','volume_type','spec'],
 
         }

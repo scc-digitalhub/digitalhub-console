@@ -85,9 +85,4 @@ interface RequestType {
 }
     export function checkGpuRequestError(formData: any) {
         return false
-    //     if (formData.transform_spec.k8s.resources.gpu.requests && formData.transform_spec.k8s.resources.gpu.limits ===undefined) 
-    //         return true
-    //     if (formData.transform_spec.k8s.resources.gpu.requests > formData.transform_spec.k8s.resources.gpu.limits)
-    //         return true
-    //    return false;
     }
