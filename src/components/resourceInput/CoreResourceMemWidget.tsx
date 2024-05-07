@@ -164,13 +164,13 @@ function getValueMem(value: string) {
 }
 export function checkMemRequestError(formData: any) {
     if (
-        formData.k8s.resources.mem.requests &&
-        formData.k8s.resources.mem.limits === undefined
+        formData?.k8s?.resources?.mem?.requests &&
+        formData?.k8s?.resources?.mem?.limits === undefined
     )
         return true;
     if (
-        getValueMem(formData.k8s.resources.mem.requests) >
-        getValueMem(formData.k8s.resources.mem.limits)
+        getValueMem(formData?.k8s?.resources?.mem?.requests) >
+        getValueMem(formData?.k8s?.resources?.mem?.limits)
     )
         return true;
     return false;
