@@ -168,6 +168,11 @@ export  const k8sSpec = {
             'ui:ObjectFieldTemplate':KeyValueFieldWidget,
         },
     },
+    secrets: {
+        items: {
+            'ui:title':'',
+        },
+    },
     node_selector: {
         items: {
             'ui:title':'',
