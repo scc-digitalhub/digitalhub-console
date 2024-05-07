@@ -1,28 +1,21 @@
 import {
-    Edit,
     Labeled,
-    RecordContextProvider,
     SaveButton,
     SimpleForm,
-    SimpleShowLayout,
     TextField,
     Toolbar,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
-import { getSchemaTask, taskSpecUiSchema } from './types';
+import { JsonSchemaInput } from '../../components/JsonSchema';
+import { taskSpecUiSchema } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { getFunctionUiSpec } from '../functions/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
-import { CoreResourceFieldWidget } from '../../components/resourceInput/CoreResourceFieldWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
-import { KeyValueFieldWidget } from '../../components/resourceInput/KeyValueFieldWidget';
-import { VolumeResourceFieldWidget } from '../../components/resourceInput/VolumeResourceFieldWidget';
 
 export interface TaskProp {
     record?: any;

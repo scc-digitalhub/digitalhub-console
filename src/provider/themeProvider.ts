@@ -11,6 +11,16 @@ import { alpha } from '@mui/material';
 
 const componentsOverrides = (theme: Theme) => ({
     ...theme.components,
+    MuiTextField: {
+        defaultProps: {
+            size: 'small',
+        },
+    },
+    MuiSelect: {
+        defaultProps: {
+            size: 'small',
+        }
+    },
     // MuiCssBaseline: {
     //     styleOverrides: {
     //         '*': {

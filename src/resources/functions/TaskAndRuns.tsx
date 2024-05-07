@@ -30,6 +30,11 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 import { WorkflowView } from '../../components/WorkflowView';
+import { runSpecUiSchemaFactory } from '../runs/types';
+import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
+import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
+import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+
 
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
@@ -135,6 +140,18 @@ const TaskRunList = () => {
     }
 
 
+    function customValidate(formData, errors,uiSchema) {
+        if (checkCpuRequestError(formData)) {
+            errors.k8s.resources.cpu.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+        }
+        if (checkMemRequestError(formData)) {
+            errors.k8s.resources.mem.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+        }
+        if (checkGpuRequestError(formData)) {
+            errors.k8s.resources.gpu.requests.addError("");
+        }
+        return errors;
+      }
     
       
     const CreateActionButton = () => (
@@ -151,6 +168,8 @@ const TaskRunList = () => {
                     <JsonSchemaInput
                         source="spec"
                         schema={schema.schema}
+                        uiSchema={runSpecUiSchemaFactory(record.kind)}
+                        customValidate={customValidate}
 
                     />
                 )}

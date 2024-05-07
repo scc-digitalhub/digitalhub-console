@@ -6,6 +6,9 @@ export enum FunctionTypes {
 export const TaskMap = {
     dbt: ['transform'],
     nefertem: ['profile', 'validate', 'metric', 'infer'],
+    container: ['job', 'serve', 'deploy', 'build'],
+    mlrun: ['job', 'build', 'serve'],
+    kfp: ['pipeline']
 };
 export const getTaskByFunction = kind => {
     return TaskMap[kind];

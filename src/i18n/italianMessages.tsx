@@ -33,6 +33,8 @@ const fields = {
         base64: 'Base64',
         code: 'Codice',
         source: 'Sorgente',
+        function: 'Funzione',
+        k8s: 'Risorse K8S',
     },
     status: {
         state: 'Stato',
@@ -125,7 +127,8 @@ const messages = {
                 'deploy': 'Deploy',
                 'job': 'Job',
                 'serve': 'Serve',
-                'pipeline': 'Pipeline'
+                'pipeline': 'Pipeline',
+                'build': 'Build',
             },
             errors: {
                 requestMinorLimits:"Request deve essere minore di Limits"
