@@ -49,7 +49,6 @@ const SpecInput = (props: {
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const lang = useWatch({ name: 'spec.source.lang' });
     const eq = deepEqual(record[source], value);
     const schemaProvider = useSchemaProvider();
     const [spec, setSpec] = useState<any>();
@@ -89,10 +88,6 @@ const SpecInput = (props: {
             schema={spec.schema}
             uiSchema={getFunctionUiSpec(record.kind)}
         />
-        {
-            spec?.schema?.properties?.source &&
-        <Editor mode={lang} source="spec.source" theme="monokai"/>
-}
         </>
     );
 };

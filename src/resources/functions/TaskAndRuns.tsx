@@ -29,7 +29,7 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
-import { WorkflowView } from '../../components/WorkflowView';
+
 import { runSpecUiSchemaFactory } from '../runs/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
@@ -114,6 +114,7 @@ const TaskRunList = () => {
         kind: schema ? schema.kind : 'run',
         spec: {
             task: key,
+            local_execution: false,
         },
     };
 
@@ -126,19 +127,6 @@ const TaskRunList = () => {
             },
         };
     };
-
-    
-    
-
-    const getExpandArea = () => {
-        return record.kind === 'kfp+pipeline' 
-        ? <WorkflowView/> 
-        : <></>;
-    }
-    const canExpand = () => {
-        return record.kind === 'kfp+pipeline';
-    }
-
 
     function customValidate(formData, errors,uiSchema) {
         if (checkCpuRequestError(formData)) {

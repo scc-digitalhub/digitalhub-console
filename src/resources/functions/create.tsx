@@ -55,7 +55,6 @@ const SpecInput = (props: {
     const translate = useTranslate();
     const resource = useResourceContext();
     const value = useWatch({ name: source });
-    const lang = useWatch({ name: 'spec.source.lang' });
     const kind = useWatch({ name: 'kind' });
     const schemaProvider = useSchemaProvider();
     const [spec, setSpec] = useState<any>();
@@ -89,10 +88,6 @@ const SpecInput = (props: {
             schema={spec.schema}
             uiSchema={getFunctionUiSpec(kind)}
         />
-        {
-            spec?.schema?.properties?.source &&
-        <Editor mode={lang} source="spec.source" theme="monokai"/>
-}
         </>
     );
 };

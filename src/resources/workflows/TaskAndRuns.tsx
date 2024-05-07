@@ -30,6 +30,8 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
+import { runSpecUiSchemaFactory } from '../runs/types';
+
 import { WorkflowView } from '../../components/WorkflowView';
 
 export const TaskAndRuns = (props: { key?: string }) => {
@@ -40,20 +42,23 @@ export const TaskAndRuns = (props: { key?: string }) => {
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('task', 1);
 
+    const prepare = (r: any) => {
+        return {
+            ...r,
+            spec: {
+                task: key,
+                ...r.spec,
+            },
+        };
+    };
+
     return (
         <>
-            {/* <Typography variant="h5">
-                {record &&
-                    translate('pageTitle.show.title', {
-                        resource: label,
-                        name: record.kind,
-                    })}
-            </Typography> */}
             <TopToolbar>
                 <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
                 </ShowInDialogButton>
-                <EditInDialogButton fullWidth maxWidth={'lg'}>
+                <EditInDialogButton fullWidth maxWidth={'lg'} transform={prepare}>
                     <TaskEditComponent />
                 </EditInDialogButton>
                 <InspectButton />
@@ -120,10 +125,12 @@ const TaskRunList = () => {
             ...r,
             spec: {
                 task: key,
+                local_execution: false,
             },
         };
     };
 
+    
     const runSpecUiSchema = {
         task: {
             'ui:readonly': true,
@@ -153,7 +160,7 @@ const TaskRunList = () => {
                     <JsonSchemaInput
                         source="spec"
                         schema={schema.schema}
-                        uiSchema={runSpecUiSchema}
+                        uiSchema={runSpecUiSchemaFactory(record.kind)}
                     />
                 )}
             </SimpleForm>

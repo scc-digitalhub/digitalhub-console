@@ -11,6 +11,9 @@ export const runSpecUiSchemaFactory = (kind: string) => {
         task: {
             'ui:widget': 'hidden',
         },
+        local_execution: {
+            'ui:widget': 'hidden',
+        },
         function_spec: {
             'ui:widget': 'hidden',
         },    

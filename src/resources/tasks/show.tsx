@@ -1,22 +1,14 @@
 import {
-    DeleteWithConfirmButton,
     Labeled,
-    Show,
     SimpleShowLayout,
     TextField,
-    TopToolbar,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
-import { Grid, Stack, Typography } from '@mui/material';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { Stack } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useEffect, useState } from 'react';
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { getFunctionUiSpec } from '../functions/types';
 import { taskSpecUiSchema } from './types';
 
 export const TaskShowComponent = () => {

@@ -1,3 +1,5 @@
+import { SourceCodeTemplate } from "../../components/SourceCodeTemplate";
+
 export enum FunctionTypes {
     DBT = 'dbt',
     NEFERTEM = 'nefertem',
@@ -31,7 +33,7 @@ export const getFunctionSpec = (kind: string | undefined) => {
 export const getFunctionUiSpec = (kind: string | undefined) => {
     return {
         source: {
-             
+            'ui:ObjectFieldTemplate': SourceCodeTemplate,             
             base64: {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
