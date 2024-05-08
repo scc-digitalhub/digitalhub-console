@@ -42,7 +42,7 @@ export default function ArrayFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-      <Box p={1}>
+      <Box>
         <ArrayFieldTitleTemplate
           idSchema={idSchema}
           title={uiOptions.title || title}
@@ -63,9 +63,9 @@ export default function ArrayFieldTemplate<
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
         {canAdd && (
-          <Grid container justifyContent='center'>
+          <Grid container justifyContent='left'>
             <Grid item={true}>
-              <Box mt={2}>
+              <Box>
                 <AddButton
                   className='array-item-add'
                   onClick={onAddClick}
