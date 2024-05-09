@@ -115,6 +115,8 @@ export  const k8sSpec = {
         'ui:widget': 'hidden',
     },
     resources: {
+        'ui:order': [ 'cpu','mem','gpu'],
+
         cpu: {
             'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
             'ui:title': 'Cpu',
@@ -133,21 +135,6 @@ export  const k8sSpec = {
                 },
             },
         },
-        gpu: {
-            'ui:ObjectFieldTemplate':CoreResourceFieldTemplate,
-            'ui:title': 'Gpu',
-            'ui:order': [ 'requests','limits'],
-
-            limits: {
-                'ui:widget': 'hidden',
-            },
-            requests: {
-                'ui:widget': 'coreResourceGpuWidget',
-                'ui:options': {
-                    'ui:title': 'Request',
-                },
-            },
-        },
         mem: {
             'ui:ObjectFieldTemplate':CoreResourceFieldTemplate,
             'ui:title': 'Memory',
@@ -160,6 +147,21 @@ export  const k8sSpec = {
             },
             requests: {
                 'ui:widget': 'coreResourceMemWidget',
+                'ui:options': {
+                    'ui:title': 'Request',
+                },
+            },
+        },
+        gpu: {
+            'ui:ObjectFieldTemplate':CoreResourceFieldTemplate,
+            'ui:title': 'Gpu',
+            'ui:order': [ 'requests','limits'],
+
+            limits: {
+                'ui:widget': 'hidden',
+            },
+            requests: {
+                'ui:widget': 'coreResourceGpuWidget',
                 'ui:options': {
                     'ui:title': 'Request',
                 },

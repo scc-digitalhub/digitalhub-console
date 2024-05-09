@@ -27,7 +27,9 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
     );
-    const [inputUnit, setInputUnit] = useState<string>(value ? value.replace(/[0-9]/g, ''):RequestTypes[0].value);
+    const [inputUnit, setInputUnit] = useState<string>(
+        value ? value.replace(/[0-9]/g, '') : RequestTypes[0].value
+    );
     const translate = useTranslate();
 
     const handleInputChange = event => {
@@ -46,71 +48,77 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
         onFocus(id, target.value);
     return (
         <div>
-                <Grid item xs={12} sm={12} md={12}>
-                    <Grid container spacing={2} >
-                        <Grid
-                            item
-                            xs={12}
-                            sm={4}
-                            md={4}
+            <Grid item xs={12} sm={12} md={12}>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={4}
+                        sm={4}
+                        md={4}
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                        <Typography
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                color: 'grey',
                             }}
+                            color={'secondary.main'}
                         >
-                            <Typography variant="h6" color={'secondary.main'}>
-                                {options['ui:title'] as string}
-                            </Typography>
-                        </Grid>
-                        <Grid
-                            item
-                            xs={4}
-                            sm={4}
-                            md={4}
-                            sx={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                type="number"
-                                inputProps={{ min: 0, step: 1 }}
-                                disabled={readonly}
-                                id={id}
-                                name={id}
-                                value={inputValue}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
-                        <Grid
-                            item
-                            xs={4}
-                            sm={4}
-                            md={4}
-                            sx={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            <Select
-                                labelId="type-select-label"
-                                id="type-select"
-                                value={inputUnit}
-                                type="outlined"
-                                onChange={handleUnitChange}
-                                defaultValue={RequestTypes[0].value}
-                                disabled={readonly}
-                            >
-                                {RequestTypes.map(option => {
-                                    return (
-                                        <MenuItem
-                                            key={option.value}
-                                            value={option.value}
-                                        >
-                                            {option.label}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Select>
-                        </Grid>
+                            {options['ui:title'] as string}
+                        </Typography>
                     </Grid>
                 </Grid>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={4}
+                        sm={4}
+                        md={4}
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            type="number"
+                            inputProps={{ min: 0, step: 1 }}
+                            disabled={readonly}
+                            id={id}
+                            name={id}
+                            value={inputValue}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid
+                        item
+                        xs={4}
+                        sm={4}
+                        md={4}
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                        <Select
+                            labelId="type-select-label"
+                            id="type-select"
+                            value={inputUnit}
+                            type="outlined"
+                            onChange={handleUnitChange}
+                            defaultValue={RequestTypes[0].value}
+                            disabled={readonly}
+                        >
+                            {RequestTypes.map(option => {
+                                return (
+                                    <MenuItem
+                                        key={option.value}
+                                        value={option.value}
+                                    >
+                                        {option.label}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     );
 };

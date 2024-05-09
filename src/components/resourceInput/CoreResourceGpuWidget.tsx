@@ -42,6 +42,7 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                     <Grid container spacing={2} >
                         <Grid
                             item
+                            
                             xs={12}
                             sm={4}
                             md={4}
@@ -51,15 +52,18 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                                 // direction: 'rtl',
                             }}
                         >
-                            <Typography variant="h6" color={'secondary.main'}>
+                            <Typography sx={{fontSize: '12px', fontWeight: 'bold', color:'grey'}} color={'secondary.main'}>
                                 {options['ui:title'] as string}
                             </Typography>
                         </Grid>
+                        </Grid>
+                        <Grid container spacing={2}>
+
                         <Grid
                             item
-                            xs={4}
-                            sm={4}
-                            md={4}
+                            xs={12}
+                            sm={6}
+                            md={6}
                             sx={{ display: 'flex', alignItems: 'center' }}
                         >
                             <TextField
@@ -85,4 +89,9 @@ interface RequestType {
 }
     export function checkGpuRequestError(formData: any) {
         return false
+    //     if (formData.transform_spec.k8s.resources.gpu.requests && formData.transform_spec.k8s.resources.gpu.limits ===undefined) 
+    //         return true
+    //     if (formData.transform_spec.k8s.resources.gpu.requests > formData.transform_spec.k8s.resources.gpu.limits)
+    //         return true
+    //    return false;
     }

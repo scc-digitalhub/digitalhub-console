@@ -4,7 +4,7 @@ import {
     JSONSchemaFormatInputProps,
     JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
-// import { JsonSchemaFieldProps,JsonSchemaField as RaJsonSchemaField} from '../../../ReactAdminPackages2/react-admin-packages/packages/ra-jsonschema-input'
+// import { JsonSchemaFieldProps,JsonSchemaField as RaJsonSchemaField} from './JsonSchemaField';
 //  import { JsonSchemaInput as RaJsonSchemaInput,JSONSchemaFormatInputProps} from './JsonSchemaInput';
 import { MuiChipsInputWidget } from './MuiChipsInputWidget';
 import { CoreResourceMemWidget } from './resourceInput/CoreResourceMemWidget';

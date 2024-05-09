@@ -63,7 +63,7 @@ export default function ArrayFieldTemplate<
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
         {canAdd && (
-          <Grid container justifyContent='left'>
+          <Grid container justifyContent='right'>
             <Grid item={true}>
               <Box>
                 <AddButton
