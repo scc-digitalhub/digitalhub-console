@@ -6,6 +6,7 @@ const fields = {
     kind: 'Kind',
     key: 'Key',
     project: 'Project',
+
     metadata: {
         created: 'Created',
         updated: 'Updated',
@@ -33,6 +34,8 @@ const fields = {
         source: 'Source',
         function: 'Function',
         k8s: 'K8S Resources',
+        'service_ports': 'Service ports',
+        'service_type': 'Service type',
     },
     status: {
         state: 'Status',

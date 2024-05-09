@@ -35,6 +35,8 @@ const fields = {
         source: 'Sorgente',
         function: 'Funzione',
         k8s: 'Risorse K8S',
+        'service_ports': 'Porte',
+        'service_type': 'Tipo servizio',
     },
     status: {
         state: 'Stato',
