@@ -54,7 +54,12 @@ const schemaProvider = (
                 return Promise.reject(new Error('invalid type ' + resource));
             }
             const key = prefix ? prefix + '/' + type : type;
-            return dataProvider.getList(key, params);
+            return dataProvider.getList(key, params).then(res => {
+                if (res.data) {
+                    res.data.forEach((schema) => preprocessSchema(schema));
+                }
+                return res
+            });
         },
 
         get: (resource, kind) => {
@@ -64,7 +69,12 @@ const schemaProvider = (
                 return Promise.reject(new Error('invalid type ' + resource));
             }
             const key = prefix ? prefix + '/' + type : type;
-            return dataProvider.getOne(key, params);
+            return dataProvider.getOne(key, params).then(res => {
+                if (res.data) {
+                    preprocessSchema(res.data);
+                }
+                return res;
+            });
         },
     };
 };
@@ -97,6 +107,19 @@ export const useSchemaProvider = () => {
     }
     return value;
 };
+
+const preprocessSchema = (schema) => {
+    if (schema && schema.schema) {
+        if (schema.schema['$defs']) {
+            const defs = schema.schema['$defs'];
+            ['Map_String.Serializable_', 'Serializable', 'Entry_String.Serializable_'].forEach(k => {
+                if (k in defs) {
+                    defs[k].additionalProperties = {type: 'string'};
+                }
+            })                
+        }
+    }
+}
 
 export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
     const { resource, dataProvider, children } = props;
