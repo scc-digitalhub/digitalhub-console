@@ -38,48 +38,57 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
         onFocus(id, target.value);
     return (
         <div>
-                <Grid item xs={12} sm={12} md={12}>
-                    <Grid container spacing={2} >
-                        <Grid
-                            item
-                            
-                            xs={12}
-                            sm={4}
-                            md={4}
+            <Grid item xs={12} sm={12} md={12}>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={4}
+                        md={4}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            paddingTop: readonly ? '10px' : '0px',
+                            paddingBottom: readonly ? '10px' : '0px',
+                            // direction: 'rtl',
+                        }}
+                    >
+                        <Typography
                             sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                // direction: 'rtl',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                color: 'grey',
+                                paddingTop: readonly ? '18px' : '0px',
+                                paddingBottom: readonly ? '16px' : '0px',
                             }}
+                            color={'secondary.main'}
                         >
-                            <Typography sx={{fontSize: '12px', fontWeight: 'bold', color:'grey'}} color={'secondary.main'}>
-                                {options['ui:title'] as string}
-                            </Typography>
-                        </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={6}
-                            sx={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                type="number"
-                                inputProps={{ min: 0, step: 1 }}
-                                disabled={readonly}
-                                id={id}
-                                name={id}
-                                value={inputValue}
-                                onChange={handleInputChange}
-                            />
-                        </Grid>
+                            {options['ui:title'] as string}
+                        </Typography>
                     </Grid>
                 </Grid>
+                <Grid container spacing={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={6}
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            type="number"
+                            inputProps={{ min: 0, step: 1 }}
+                            disabled={readonly}
+                            id={id}
+                            name={id}
+                            value={inputValue}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     );
 };
@@ -87,11 +96,11 @@ interface RequestType {
     value: string;
     label: string;
 }
-    export function checkGpuRequestError(formData: any) {
-        return false
-    //     if (formData.transform_spec.k8s.resources.gpu.requests && formData.transform_spec.k8s.resources.gpu.limits ===undefined) 
+export function checkGpuRequestError(formData: any) {
+    return false;
+    //     if (formData.transform_spec.k8s.resources.gpu.requests && formData.transform_spec.k8s.resources.gpu.limits ===undefined)
     //         return true
     //     if (formData.transform_spec.k8s.resources.gpu.requests > formData.transform_spec.k8s.resources.gpu.limits)
     //         return true
     //    return false;
-    }
+}

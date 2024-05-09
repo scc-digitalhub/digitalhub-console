@@ -55,13 +55,14 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                         xs={4}
                         sm={4}
                         md={4}
-                        sx={{ display: 'flex', alignItems: 'center' }}
+                        sx={{ display: 'flex', alignItems: 'center', paddingTop: readonly?'10px':'0px' ,paddingBottom: readonly?'10px':'0px' }}
                     >
                         <Typography
                             sx={{
                                 fontSize: '12px',
                                 fontWeight: 'bold',
                                 color: 'grey',
+                                paddingTop: readonly?'18px':'0px', paddingBottom: readonly?'16px':'0px'
                             }}
                             color={'secondary.main'}
                         >
