@@ -63,7 +63,7 @@ const SpecInput = (props: {
         if (schemaProvider) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
-    }, [ schemaProvider]);
+    }, [ schemaProvider, kind]);
 
     
     if ( !spec) {
