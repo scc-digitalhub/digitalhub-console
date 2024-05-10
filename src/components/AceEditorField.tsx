@@ -1,4 +1,4 @@
-import { useRecordContext, FieldProps } from 'react-admin';
+import { useRecordContext, FieldProps, useNotify } from 'react-admin';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';
@@ -31,8 +31,14 @@ export const AceEditorField = (props: AceFieldProps) => {
     } = props;
 
     const record = useRecordContext(props);
-    const value = atob(get(record, source)|| '');
-
+    const notify = useNotify();
+    let value =''
+    try {
+        value = atob(get(record, source)|| '');
+    } catch (e:any) {
+        notify(`exception.code_invalid`, {  type: 'error',} ,  
+        );
+    }
     const aceOptions = {
         readOnly: true,
         useWorker: false,

@@ -7,7 +7,6 @@ const fields = {
     kind: 'Tipo',
     key: 'Chiave',
     project: 'Progetto',
-
     metadata: {
         created: 'Creazione',
         updated: 'Aggiornamento',
@@ -60,6 +59,9 @@ const messages = {
     menu: {
         projects: 'Progetti',
         configuration: 'Configurazione',
+    },
+    exception: {
+        code_invalid: 'Codice non valido: impossibile visualizzare il codice sorgente. Errore di conversione'
     },
     fields: fields,
     resources: {

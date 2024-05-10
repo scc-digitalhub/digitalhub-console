@@ -59,6 +59,9 @@ const messages = {
         projects: 'Projects',
         configuration: 'Configuration',
     },
+    exception: {
+        code_invalid: 'Code invalid: imppossible to show the source code. Conversion error'
+    },
     fields: fields,
     resources: {
         functions: {
