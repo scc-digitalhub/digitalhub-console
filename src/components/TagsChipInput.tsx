@@ -5,17 +5,18 @@ import { useTranslate } from 'react-admin';
 
 export const TagsChipInput = function (props: WidgetProps) {
     const { disabled, id, onBlur, onChange, onFocus, readonly, value } = props;
-    const [list, setList] = useState<string[]>(value?value:[]);
+    const [list, setList] = useState<string[]>(value ? value : []);
     const [label, setLabel] = useState('');
     const translate = useTranslate();
 
     const handleChange = event => {
         setLabel(event.target.value);
-        
     };
-    const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target.value);
-    const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target.value);
-  
+    const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
+        onBlur(id, target.value);
+    const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
+        onFocus(id, target.value);
+
     const handleKeyDown = event => {
         if (event.key === 'Enter') {
             handleAdd();
@@ -31,48 +32,49 @@ export const TagsChipInput = function (props: WidgetProps) {
 
     return (
         <div>
-            {!readonly &&
-            (<TextField fullWidth variant="outlined" type="text"
-                value={label}
-                disabled={disabled }
-                id={id}
-                name={id}
-                onBlur={!readonly ? handleBlur : undefined}
-                onFocus={!readonly ? handleFocus : undefined}
-                label={translate('resources.common.labels')}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}/>)
-
-            }
-             { readonly &&   
-                        <div><label 
+            {!readonly && (
+                <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    value={label}
+                    disabled={disabled}
+                    id={id}
+                    name={id}
+                    onBlur={!readonly ? handleBlur : undefined}
+                    onFocus={!readonly ? handleFocus : undefined}
+                    label={translate('resources.common.labels')}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
+                />
+            )}
+            {readonly && (
+                <div>
+                    <label
                         style={{
-                            display:'block',
-                            color:' rgba(0, 0, 0, 0.6)',
-                            margin:'0 0 0.2em 0',
-                            fontSize:'0.8em'
+                            display: 'block',
+                            color: ' rgba(0, 0, 0, 0.6)',
+                            margin: '0 0 0.2em 0',
+                            fontSize: '0.8em',
                         }}
-
-                            >{translate('resources.common.labels')}</label>
-                        </div>
-             }
+                    >
+                        {translate('resources.common.labels')}
+                    </label>
+                </div>
+            )}
             <div class="chip">
                 {list.map((item, index) => {
-                    return readonly?
-                        
-                        (
+                    return readonly ? (
+                        <Chip label={item} key={item} />
+                    ) : (
                         <Chip
-                            label={item}
-                            key={item}
-                        />
-                        ):
-                        (<Chip
                             label={item}
                             key={item}
                             onDelete={() => {
                                 setList(list.filter((label, i) => i != index));
                             }}
-                        />)
+                        />
+                    );
                 })}
             </div>
         </div>

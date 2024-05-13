@@ -8,7 +8,7 @@ import {
     useNotify,
     useRedirect,
     useTranslate,
-    useRecordContext
+    useRecordContext,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
 import { Grid } from '@mui/material';
@@ -56,11 +56,15 @@ export const SecretEdit = () => {
     };
     return (
         <Edit redirect="list">
-            <SimpleForm validate={validator} onSubmit={postSave} resetOptions={{ keepDirtyValues: false }}>
+            <SimpleForm
+                validate={validator}
+                onSubmit={postSave}
+                resetOptions={{ keepDirtyValues: false }}
+            >
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
                         <Labeled label={translate('resources.secrets.name')}>
-                            <TextInput source="name" required  readOnly/>
+                            <TextInput source="name" required readOnly />
                         </Labeled>
                     </Grid>
                     <Grid item xs={6}>

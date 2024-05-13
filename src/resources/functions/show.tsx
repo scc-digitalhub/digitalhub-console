@@ -164,7 +164,6 @@ const ShowComponent = () => {
         }
     }, [record, schemaProvider, dataProvider]);
 
-
     if (!record) {
         return <LoadingIndicator />;
     }
@@ -277,7 +276,11 @@ const SourceCodeView = (props: { sourceCode: any }) => {
             </Stack>
             <Box sx={{ pt: 2 }}>
                 <Labeled label="fields.code">
-                    <AceEditorField mode={sourceCode.lang} source="sourceCode.base64" theme="monokai"  />
+                    <AceEditorField
+                        mode={sourceCode.lang}
+                        source="sourceCode.base64"
+                        theme="monokai"
+                    />
                 </Labeled>
             </Box>
         </RecordContextProvider>

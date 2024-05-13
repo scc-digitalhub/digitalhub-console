@@ -1,5 +1,4 @@
 import italianMessages from '@dslab/ra-language-italian';
-import { importLibraryItalianMessages } from './importLibraryItalianMessages';
 
 const fields = {
     id: 'Id',
@@ -34,8 +33,8 @@ const fields = {
         source: 'Sorgente',
         function: 'Funzione',
         k8s: 'Risorse K8S',
-        'service_ports': 'Porte',
-        'service_type': 'Tipo servizio',
+        service_ports: 'Porte',
+        service_type: 'Tipo servizio',
     },
     status: {
         state: 'Stato',
@@ -47,21 +46,21 @@ const fields = {
 
 const messages = {
     ...italianMessages,
-    ...importLibraryItalianMessages,
     login: {
         basicMessage: 'Autenticarsi per continuare',
         title: 'Resource Manager',
         message: 'Accedi con AAC',
     },
-    bar:{
-        backProjects:'Torna ai progetti',
+    bar: {
+        backProjects: 'Torna ai progetti',
     },
     menu: {
         projects: 'Progetti',
         configuration: 'Configurazione',
     },
     exception: {
-        code_invalid: 'Codice non valido: impossibile visualizzare il codice sorgente. Errore di conversione'
+        code_invalid:
+            'Codice non valido: impossibile visualizzare il codice sorgente. Errore di conversione',
     },
     fields: fields,
     resources: {
@@ -80,9 +79,9 @@ const messages = {
             showData: 'Mostra il segreto',
             name: 'Segreto |||| Segreti',
             value: 'Valore',
-            labelName:"Nome",
-            path:"Percorso",
-            provider: 'Provider'
+            labelName: 'Nome',
+            path: 'Percorso',
+            provider: 'Provider',
         },
         runs: {
             name: 'Esecuzione |||| Esecuzioni',
@@ -91,7 +90,7 @@ const messages = {
             },
             empty: 'Nessuna esecuzione',
             create: 'Crea una nuova esecuzione',
-            labelName:"Nome",
+            labelName: 'Nome',
         },
         artifacts: {
             name: 'Artefatto |||| Artefatti',
@@ -123,27 +122,28 @@ const messages = {
             name: 'Task |||| Tasks',
             fields: { ...fields },
             kinds: {
-                'transform': 'Transform',
-                'infer': 'Infer',
-                'metric': 'Metric',
-                'profile': 'Profile',
-                'validate': 'Validate',
-                'deploy': 'Deploy',
-                'job': 'Job',
-                'serve': 'Serve',
-                'pipeline': 'Pipeline',
-                'build': 'Build',
+                transform: 'Transform',
+                infer: 'Infer',
+                metric: 'Metric',
+                profile: 'Profile',
+                validate: 'Validate',
+                deploy: 'Deploy',
+                job: 'Job',
+                serve: 'Serve',
+                pipeline: 'Pipeline',
+                build: 'Build',
             },
             errors: {
-                requestMinorLimits:"Request deve essere minore di Limits"
-            }
+                requestMinorLimits: 'Request deve essere minore di Limits',
+            },
         },
         workflows: {
             name: 'Workflow |||| Workflow',
             list: 'List and search workflows',
-            fields: { ...fields,
+            fields: {
+                ...fields,
                 run_id: 'ID Esecuzione',
-                action: 'Task',                
+                action: 'Task',
                 function: 'Funzione',
                 start_time: 'Inizio',
                 end_time: 'Fine',
@@ -151,7 +151,7 @@ const messages = {
             tab: {
                 summary: 'Recap',
                 test: 'test',
-                runs: 'Esecuzioni'
+                runs: 'Esecuzioni',
             },
             inputs: 'Parametri di Input',
             outputs: 'Parametri di Output',
@@ -237,10 +237,9 @@ const messages = {
         cancel: 'Annulla',
         newVersion: 'Nuova versione',
         create: 'Create',
-
     },
     dashboard: {
-      create: 'Per creare un nuovo progetto premi sul pulsante qui sotto',  
+        create: 'Per creare un nuovo progetto premi sul pulsante qui sotto',
     },
     validation: {
         minValue: 'Il valore deve esere maggiore o uguale a %{min}',
@@ -252,6 +251,48 @@ const messages = {
         invalidDate: 'Data non valida',
         invalidDatetime: 'Datetime non valido',
         unsupportedField: 'Campo non supportato',
+    },
+    csv: {
+        buttonMain: {
+            label: 'Importa',
+            tooltip: "Deve essere un file '.csv' o '.tsv'",
+            emptyResource:
+                "La proprietà 'resource' era vuota, hai passato {...props} al pulsante di importazione?",
+        },
+        parsing: {
+            collidingIds: 'Trovati record con ID che collidono',
+            failedValidateRow:
+                'Il CSV non ha superato i requisiti di validazione',
+            invalidCsv:
+                'Il documento non può essere analizzato come file "csv"',
+        },
+        dialogCommon: {
+            subtitle:
+                'Importazione di %{count} elementi dal file %{fileName} a "%{resource}"',
+            conflictCount:
+                'La risorsa "%{resource}" presenta <strong>%{conflictingCount}</strong> record con ID collidente/i',
+            buttons: {
+                cancel: 'Annulla',
+            },
+        },
+        dialogImport: {
+            alertClose: '%{fname} importato',
+            title: 'Importazione in "%{resource}"',
+            buttons: {
+                replaceAllConflicts: 'Sostituisci le righe',
+                skipAllConflicts: 'Salta queste righe',
+                letmeDecide: 'Lascia che decida per ogni riga',
+            },
+        },
+        dialogDecide: {
+            title: 'Importazione in "%{resource}" dell\'elemento con ID %{id}',
+            buttons: {
+                replaceRow: 'Sostituisci la riga con ID %{id}',
+                addAsNewRow: 'Aggiungi come nuova riga (non sostituire)',
+                skipDontReplace: 'Salta questa riga (non sostituire)',
+            },
+        },
+        loading: 'Caricamento...',
     },
 };
 

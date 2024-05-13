@@ -9,5 +9,3 @@ export const getDataItemSpecUiSchema = (kind: string | undefined) => {
 
     return undefined;
 };
-
-

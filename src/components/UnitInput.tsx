@@ -11,20 +11,7 @@ import { useState, FocusEvent } from 'react';
 import { useTranslate } from 'react-admin';
 
 export const UnitInput = function (props: WidgetProps) {
-    const {
-        id,
-        value, 
-        disabled,
-        readonly,
-        onBlur,
-        onChange,
-        onFocus,
-    } = props;
+    const { id, value, disabled, readonly, onBlur, onChange, onFocus } = props;
 
-    return (
-        <div>
-            {id}
-        </div>
-    );
+    return <div>{id}</div>;
 };
-

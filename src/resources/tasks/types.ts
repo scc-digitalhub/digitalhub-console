@@ -1,4 +1,4 @@
-import { k8sSpec } from "../../common/schemas";
+import { k8sSpec } from '../../common/schemas';
 
 // export enum TaskTypes {
 //     PROFILE = 'profile',
@@ -215,31 +215,31 @@ export const getTaskSpec = (kind: any | undefined) => {
     return taskSpecUiSchemaInternal;
 };
 
-    export const taskSpecUiSchemaExternal = {
-        task: {
-            'ui:readonly': true,
-        },
-        function: {
+export const taskSpecUiSchemaExternal = {
+    task: {
+        'ui:readonly': true,
+    },
+    function: {
+        'ui:widget': 'hidden',
+    },
+    function_spec: {
+        source: {
             'ui:widget': 'hidden',
         },
-        function_spec: {
-            source: {
-                'ui:widget': 'hidden',
-            },
-        },
-        k8s: k8sSpec
-    };
-    export const taskSpecUiSchemaInternal = {
-        task: {
-            'ui:readonly': true,
-        },
-        function: {
+    },
+    k8s: k8sSpec,
+};
+export const taskSpecUiSchemaInternal = {
+    task: {
+        'ui:readonly': true,
+    },
+    function: {
+        'ui:widget': 'hidden',
+    },
+    function_spec: {
+        source: {
             'ui:widget': 'hidden',
         },
-        function_spec: {
-            source: {
-                'ui:widget': 'hidden',
-            },
-        },
-         ... k8sSpec
-    };
+    },
+    ...k8sSpec,
+};

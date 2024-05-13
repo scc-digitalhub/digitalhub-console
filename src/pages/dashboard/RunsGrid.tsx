@@ -1,11 +1,5 @@
-import {
-    Grid,
-    Paper,
-    Typography
-} from '@mui/material';
-import {
-    useTranslate
-} from 'react-admin';
+import { Grid, Paper, Typography } from '@mui/material';
+import { useTranslate } from 'react-admin';
 import { StateColors } from '../../components/StateChips';
 
 export const RunsGrid = (props: {

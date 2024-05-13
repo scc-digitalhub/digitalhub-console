@@ -63,10 +63,9 @@ const SpecInput = (props: {
         if (schemaProvider) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
-    }, [ schemaProvider, kind]);
+    }, [schemaProvider, kind]);
 
-    
-    if ( !spec) {
+    if (!spec) {
         return (
             <Card
                 sx={{
@@ -83,11 +82,11 @@ const SpecInput = (props: {
 
     return (
         <>
-        <JsonSchemaInput
-            source={source}
-            schema={spec.schema}
-            uiSchema={getFunctionUiSpec(kind)}
-        />
+            <JsonSchemaInput
+                source={source}
+                schema={spec.schema}
+                uiSchema={getFunctionUiSpec(kind)}
+            />
         </>
     );
 };
@@ -123,7 +122,6 @@ export const FunctionCreate = () => {
     if (!kinds) {
         return <LoadingIndicator />;
     }
-
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -166,12 +164,7 @@ export const FunctionCreate = () => {
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
                                         if (formData.kind)
-                                            return (
-                                                <SpecInput
-                                                source="spec"
-                                            />
-                                                
-                                            );
+                                            return <SpecInput source="spec" />;
                                         else
                                             return (
                                                 <Card

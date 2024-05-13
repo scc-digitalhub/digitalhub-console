@@ -55,8 +55,15 @@ function ReadOnlyBaseFieldTemplate<
 //TODO add additional widgets for select,radio,checkbox...
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
-    const { schema, uiSchema = {}, label, resource, source, customWidgets,templates
-} = props;
+    const {
+        schema,
+        uiSchema = {},
+        label,
+        resource,
+        source,
+        customWidgets,
+        templates,
+    } = props;
 
     const record = useRecordContext(props);
     const value = get(record, source);
@@ -88,7 +95,7 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
             readonly
             templates={{
                 BaseInputTemplate: ReadOnlyBaseFieldTemplate,
-                ...templates
+                ...templates,
             }}
             className="RaJsonSchemaField-Form"
         >

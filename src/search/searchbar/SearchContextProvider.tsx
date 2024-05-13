@@ -17,10 +17,7 @@ export const SearchContextProvider = (props: SearchContextProviderParams) => {
         };
 
         //wrap search provider with root selector in meta
-        const providerWithRootSelector = withRootSelector(
-            searchProvider,
-            root
-        );
+        const providerWithRootSelector = withRootSelector(searchProvider, root);
 
         return {
             params: currentSearch, //can contain q, fq

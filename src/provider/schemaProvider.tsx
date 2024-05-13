@@ -56,9 +56,9 @@ const schemaProvider = (
             const key = prefix ? prefix + '/' + type : type;
             return dataProvider.getList(key, params).then(res => {
                 if (res.data) {
-                    res.data.forEach((schema) => preprocessSchema(schema));
+                    res.data.forEach(schema => preprocessSchema(schema));
                 }
-                return res
+                return res;
             });
         },
 
@@ -108,18 +108,22 @@ export const useSchemaProvider = () => {
     return value;
 };
 
-const preprocessSchema = (schema) => {
+const preprocessSchema = schema => {
     if (schema && schema.schema) {
         if (schema.schema['$defs']) {
             const defs = schema.schema['$defs'];
-            ['Map_String.Serializable_', 'Serializable', 'Entry_String.Serializable_'].forEach(k => {
+            [
+                'Map_String.Serializable_',
+                'Serializable',
+                'Entry_String.Serializable_',
+            ].forEach(k => {
                 if (k in defs) {
-                    defs[k].additionalProperties = {type: 'string'};
+                    defs[k].additionalProperties = { type: 'string' };
                 }
-            })                
+            });
         }
     }
-}
+};
 
 export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
     const { resource, dataProvider, children } = props;

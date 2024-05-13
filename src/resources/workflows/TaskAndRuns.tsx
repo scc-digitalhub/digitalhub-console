@@ -58,7 +58,11 @@ export const TaskAndRuns = (props: { key?: string }) => {
                 <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
                 </ShowInDialogButton>
-                <EditInDialogButton fullWidth maxWidth={'lg'} transform={prepare}>
+                <EditInDialogButton
+                    fullWidth
+                    maxWidth={'lg'}
+                    transform={prepare}
+                >
                     <TaskEditComponent />
                 </EditInDialogButton>
                 <InspectButton />
@@ -130,7 +134,6 @@ const TaskRunList = () => {
         };
     };
 
-    
     const runSpecUiSchema = {
         task: {
             'ui:readonly': true,
@@ -138,13 +141,11 @@ const TaskRunList = () => {
     };
 
     const getExpandArea = () => {
-        return record.kind === 'kfp+pipeline' 
-        ? <WorkflowView/> 
-        : <></>;
-    }
+        return record.kind === 'kfp+pipeline' ? <WorkflowView /> : <></>;
+    };
     const canExpand = () => {
         return record.kind === 'kfp+pipeline';
-    }
+    };
 
     const CreateActionButton = () => (
         <CreateInDialogButton
@@ -193,10 +194,11 @@ const TaskRunList = () => {
                 empty={<Empty />}
                 actions={<ListActions />}
             >
-                <Datagrid 
-                    expand={ getExpandArea() }
-                    expandSingle={ canExpand() }
-                    bulkActionButtons={false}>
+                <Datagrid
+                    expand={getExpandArea()}
+                    expandSingle={canExpand()}
+                    bulkActionButtons={false}
+                >
                     <DateField source="metadata.created" />
                     <TextField source="id" />
                     <StateChips source="status.state" />

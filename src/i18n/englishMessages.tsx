@@ -34,8 +34,8 @@ const fields = {
         source: 'Source',
         function: 'Function',
         k8s: 'K8S Resources',
-        'service_ports': 'Service ports',
-        'service_type': 'Service type',
+        service_ports: 'Service ports',
+        service_type: 'Service type',
     },
     status: {
         state: 'Status',
@@ -52,15 +52,16 @@ const messages = {
         title: 'Resource Manager',
         message: 'Access with AAC',
     },
-    bar:{
-        backProjects:'To projects',
+    bar: {
+        backProjects: 'To projects',
     },
     menu: {
         projects: 'Projects',
         configuration: 'Configuration',
     },
     exception: {
-        code_invalid: 'Code invalid: imppossible to show the source code. Conversion error'
+        code_invalid:
+            'Code invalid: imppossible to show the source code. Conversion error',
     },
     fields: fields,
     resources: {
@@ -79,9 +80,9 @@ const messages = {
             showData: 'Show the secret',
             name: 'Secret |||| Secrets',
             value: 'Value',
-            labelName:"Name",
-            path:"Path",
-            provider: 'Provider'
+            labelName: 'Name',
+            path: 'Path',
+            provider: 'Provider',
         },
         runs: {
             name: 'Run |||| Runs',
@@ -90,7 +91,7 @@ const messages = {
             },
             empty: 'No runs yet',
             create: 'Create a new run',
-            labelName:"Name"
+            labelName: 'Name',
         },
         artifacts: {
             name: 'Artifact |||| Artifacts',
@@ -122,27 +123,28 @@ const messages = {
             name: 'Task |||| Tasks',
             fields: { ...fields },
             kinds: {
-                'transform': 'Transform',
-                'infer': 'Infer',
-                'metric': 'Metric',
-                'profile': 'Profile',
-                'validate': 'Validate',
-                'deploy': 'Deploy',
-                'job': 'Job',
-                'serve': 'Serve',
-                'pipeline': 'Pipeline',
-                'build': 'Build',
+                transform: 'Transform',
+                infer: 'Infer',
+                metric: 'Metric',
+                profile: 'Profile',
+                validate: 'Validate',
+                deploy: 'Deploy',
+                job: 'Job',
+                serve: 'Serve',
+                pipeline: 'Pipeline',
+                build: 'Build',
             },
             errors: {
-                requestMinorLimits:"Request must be minor than Limits"
-            }
+                requestMinorLimits: 'Request must be minor than Limits',
+            },
         },
         workflows: {
             name: 'Workflow |||| Workflows',
             list: 'List and search workflows',
-            fields: { ...fields,
+            fields: {
+                ...fields,
                 run_id: 'Run ID',
-                action: 'Action',                
+                action: 'Action',
                 function: 'Function',
                 start_time: 'Start',
                 end_time: 'End',
@@ -150,11 +152,10 @@ const messages = {
             tab: {
                 summary: 'Recap',
                 test: 'test',
-                runs: 'Runs'
+                runs: 'Runs',
             },
             inputs: 'Inputs',
             outputs: 'Outputs',
-
         },
         common: {
             emptySpec: 'Select the kind to view the specification',
@@ -239,8 +240,8 @@ const messages = {
         create: 'Create',
     },
     dashboard: {
-        create: 'To create a new project, press the button below',  
-      },
+        create: 'To create a new project, press the button below',
+    },
     validation: {
         minValue: 'Value must be greater that or equal to %{min}',
         noSpace: 'Value must contain no space',

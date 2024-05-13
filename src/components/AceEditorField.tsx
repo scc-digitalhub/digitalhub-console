@@ -32,12 +32,11 @@ export const AceEditorField = (props: AceFieldProps) => {
 
     const record = useRecordContext(props);
     const notify = useNotify();
-    let value =''
+    let value = '';
     try {
-        value = atob(get(record, source)|| '');
-    } catch (e:any) {
-        notify(`exception.code_invalid`, {  type: 'error',} ,  
-        );
+        value = atob(get(record, source) || '');
+    } catch (e: any) {
+        notify(`exception.code_invalid`, { type: 'error' });
     }
     const aceOptions = {
         readOnly: true,

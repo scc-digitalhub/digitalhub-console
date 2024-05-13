@@ -56,12 +56,11 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         source,
         validate,
     });
-    const data= field.value;
-    const onChange = (e: any, id?:string) => {
+    const data = field.value;
+    const onChange = (e: any, id?: string) => {
         if (isLoading != undefined && !isLoading && id) {
             //validate first
             if (formRef.current) {
-                
                 const isValid = formRef?.current?.validateForm();
                 if (isValid) {
                     //clear errors
@@ -70,10 +69,10 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             }
 
             //update data
-            console.log('called',e);
-            console.log('id',id);
-            if (e.formData){
-                  field.onChange(e.formData);
+            console.log('called', e);
+            console.log('id', id);
+            if (e.formData) {
+                field.onChange(e.formData);
             }
         }
     };

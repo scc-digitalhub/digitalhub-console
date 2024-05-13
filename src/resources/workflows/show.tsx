@@ -24,8 +24,7 @@ import {
     SimpleShowLayout,
     List,
     Toolbar,
-    SaveButton
-    
+    SaveButton,
 } from 'react-admin';
 import {
     MetadataSchema,
@@ -278,7 +277,7 @@ const ShowComponent = () => {
                             <TaskAndRuns key={task.id} />
                         </RecordContextProvider>
                     </ResourceContextProvider>
-                </TabbedShowLayout.Tab>                
+                </TabbedShowLayout.Tab>
             ))}
         </TabbedShowLayout>
     );
@@ -314,11 +313,15 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                 </Labeled>
             </Stack>
             <Box sx={{ pt: 2 }}>
-            <Box sx={{ pt: 2 }}>
-                <Labeled label="fields.code">
-                    <AceEditorField mode={sourceCode.lang} source="sourceCode.base64" theme="monokai"  />
-                </Labeled>
-            </Box>
+                <Box sx={{ pt: 2 }}>
+                    <Labeled label="fields.code">
+                        <AceEditorField
+                            mode={sourceCode.lang}
+                            source="sourceCode.base64"
+                            theme="monokai"
+                        />
+                    </Labeled>
+                </Box>
             </Box>
         </RecordContextProvider>
     );
@@ -364,7 +367,6 @@ export const WorkflowShow = () => {
         </Container>
     );
 };
-
 
 const WorkflowRunList = () => {
     const record = useRecordContext();
@@ -451,9 +453,7 @@ const WorkflowRunList = () => {
             <CreateActionButton />
         </Box>
     );
-    const WorkflowViewWrapper = () => (
-        <WorkflowView record={record} />
-    );
+    const WorkflowViewWrapper = () => <WorkflowView record={record} />;
 
     return (
         <>
@@ -465,10 +465,11 @@ const WorkflowRunList = () => {
                 empty={<Empty />}
                 actions={<ListActions />}
             >
-                <Datagrid 
-                        expand={ WorkflowViewWrapper }
-                        expandSingle={true}
-                        bulkActionButtons={false}>
+                <Datagrid
+                    expand={WorkflowViewWrapper}
+                    expandSingle={true}
+                    bulkActionButtons={false}
+                >
                     <DateField source="metadata.created" />
                     <TextField source="id" />
                     <StateChips source="status.state" />

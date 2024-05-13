@@ -17,7 +17,9 @@ export const SearchContext = createContext<SearchContextValue | undefined>(
 export const useSearch = () => {
     const search = useContext(SearchContext);
     if (search === undefined) {
-        throw new Error('useSearchProvider must be used inside a SearchContext');
+        throw new Error(
+            'useSearchProvider must be used inside a SearchContext'
+        );
     }
     return search;
 };
@@ -25,7 +27,9 @@ export const useSearch = () => {
 export const useSearchProvider = () => {
     const searchContextValue = useSearch();
     if (searchContextValue === undefined) {
-        throw new Error('useSearchProvider must be used inside a SearchContext');
+        throw new Error(
+            'useSearchProvider must be used inside a SearchContext'
+        );
     }
     return searchContextValue.provider;
 };

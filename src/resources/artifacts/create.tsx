@@ -18,10 +18,7 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import {
-    isAlphaNumeric,
-    isValidKind
-} from '../../common/helper';
+import { isAlphaNumeric, isValidKind } from '../../common/helper';
 import {
     BlankSchema,
     MetadataCreateUiSchema,

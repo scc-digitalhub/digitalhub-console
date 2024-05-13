@@ -1,4 +1,4 @@
-import { SearchProvider } from "./SearchProvider";
+import { SearchProvider } from './SearchProvider';
 
 export const withRootSelector = (
     searchProvider: SearchProvider,
@@ -14,10 +14,7 @@ export const withRootSelector = (
     }
 
     //explode and patch methods
-    const {
-        search,
-        ...rest
-    } = searchProvider;
+    const { search, ...rest } = searchProvider;
 
     return {
         search: (searchParams, params) => {

@@ -1,4 +1,4 @@
-import { SourceCodeTemplate } from "../../components/SourceCodeTemplate";
+import { SourceCodeTemplate } from '../../components/SourceCodeTemplate';
 
 export enum FunctionTypes {
     DBT = 'dbt',
@@ -10,7 +10,7 @@ export const TaskMap = {
     nefertem: ['profile', 'validate', 'metric', 'infer'],
     container: ['job', 'serve', 'deploy', 'build'],
     mlrun: ['job', 'build', 'serve'],
-    kfp: ['pipeline']
+    kfp: ['pipeline'],
 };
 export const getTaskByFunction = kind => {
     return TaskMap[kind];
@@ -33,15 +33,15 @@ export const getFunctionSpec = (kind: string | undefined) => {
 export const getFunctionUiSpec = (kind: string | undefined) => {
     return {
         source: {
-            'ui:ObjectFieldTemplate': SourceCodeTemplate,             
+            'ui:ObjectFieldTemplate': SourceCodeTemplate,
             base64: {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
             },
-            code:{
+            code: {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
-            }
+            },
         },
-    }
+    };
 };

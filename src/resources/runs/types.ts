@@ -1,5 +1,5 @@
-import { getTaskByFunction } from "../functions/types";
-import { taskSpecUiSchema } from "../tasks/types";
+import { getTaskByFunction } from '../functions/types';
+import { taskSpecUiSchema } from '../tasks/types';
 
 export enum RunTypes {
     COMPLETED = 'CREATED',
@@ -16,19 +16,19 @@ export const runSpecUiSchemaFactory = (kind: string) => {
         },
         function_spec: {
             'ui:widget': 'hidden',
-        },    
+        },
         workflow_spec: {
             'ui:widget': 'hidden',
-        },    
-    }
+        },
+    };
     // expect to have runtime+task
     const split = kind.split('+');
     const runtime = split[0];
     const task = split[1];
     const tasks = getTaskByFunction(runtime) || [];
     tasks.forEach(t => {
-        schema[t + '_spec'] = {'ui:widget': 'hidden'};
+        schema[t + '_spec'] = { 'ui:widget': 'hidden' };
     });
 
-    return schema
-}
+    return schema;
+};

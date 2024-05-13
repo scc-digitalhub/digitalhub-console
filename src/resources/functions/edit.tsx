@@ -38,8 +38,6 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { Editor } from '../../components/AceEditorInput';
 import ClearIcon from '@mui/icons-material/Clear';
 
-
-
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
@@ -65,7 +63,7 @@ const SpecInput = (props: {
             onDirty(!eq);
         }
     }, [eq]);
-    
+
     if (!record || !record.kind || !spec) {
         return (
             <Card
@@ -83,11 +81,11 @@ const SpecInput = (props: {
 
     return (
         <>
-        <JsonSchemaInput
-            source={source}
-            schema={spec.schema}
-            uiSchema={getFunctionUiSpec(record.kind)}
-        />
+            <JsonSchemaInput
+                source={source}
+                schema={spec.schema}
+                uiSchema={getFunctionUiSpec(record.kind)}
+            />
         </>
     );
 };
@@ -170,10 +168,9 @@ export const FunctionEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
-    const onChange = (e: any, id?:string) => {
-        console.log('called',e);
-        console.log('id',id);
-
+    const onChange = (e: any, id?: string) => {
+        console.log('called', e);
+        console.log('id', id);
     };
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -214,7 +211,6 @@ export const FunctionEdit = () => {
                                     source="spec"
                                     onDirty={setIsSpecDirty}
                                 />
-     
                             </SimpleForm>
                         </FlatCard>
                     </EditView>

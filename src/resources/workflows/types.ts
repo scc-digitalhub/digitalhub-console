@@ -1,4 +1,4 @@
-import { SourceCodeTemplate } from "../../components/SourceCodeTemplate";
+import { SourceCodeTemplate } from '../../components/SourceCodeTemplate';
 
 export enum WorkflowTypes {
     KFP = 'kfp',
@@ -26,15 +26,15 @@ export const getWorkflowSpec = (kind: string | undefined) => {
 export const getWorkflowUiSpec = (kind: string | undefined) => {
     return {
         source: {
-            'ui:ObjectFieldTemplate': SourceCodeTemplate,             
+            'ui:ObjectFieldTemplate': SourceCodeTemplate,
             base64: {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
             },
-            code:{
+            code: {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
-            }
+            },
         },
-    }
+    };
 };

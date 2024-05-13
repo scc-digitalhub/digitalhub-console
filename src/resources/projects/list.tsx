@@ -43,8 +43,8 @@ export const ProjectSelectorList = props => {
         display: 'flex',
         flexDirection: 'column',
         margin: 'auto',
-        background:'#E0701B',
-        color:'white'
+        background: '#E0701B',
+        color: 'white',
     };
 
     const Toolbar = () => {
@@ -59,10 +59,7 @@ export const ProjectSelectorList = props => {
             perPage={perPage}
             pagination={<Pagination rowsPerPageOptions={perPage} />}
         >
-            <Grid
-                container
-                spacing={2}
-            >
+            <Grid container spacing={2}>
                 <WithListContext
                     render={({ data }) => (
                         <>
@@ -77,7 +74,10 @@ export const ProjectSelectorList = props => {
                                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                             >
                                 <Card sx={cardStyle} color="secondary">
-                                    <CardActionArea sx={{ height: '100%' }} color="secondary">
+                                    <CardActionArea
+                                        sx={{ height: '100%' }}
+                                        color="secondary"
+                                    >
                                         <CardHeader
                                             avatar={<FolderIcon />}
                                             titleTypographyProps={{

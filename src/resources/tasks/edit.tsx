@@ -36,20 +36,23 @@ export const TaskEditComponent = () => {
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || null;
     const translate = useTranslate();
-    
-      
-    function customValidate(formData, errors,uiSchema) {
+
+    function customValidate(formData, errors, uiSchema) {
         if (checkCpuRequestError(formData)) {
-            errors.k8s.resources.cpu.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.cpu.requests.addError(
+                translate('resources.tasks.errors.requestMinorLimits')
+            );
         }
         if (checkMemRequestError(formData)) {
-            errors.k8s.resources.mem.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.mem.requests.addError(
+                translate('resources.tasks.errors.requestMinorLimits')
+            );
         }
         if (checkGpuRequestError(formData)) {
-            errors.k8s.resources.gpu.requests.addError("");
+            errors.k8s.resources.gpu.requests.addError('');
         }
         return errors;
-      }
+    }
     useEffect(() => {
         if (schemaProvider && record) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
@@ -76,7 +79,7 @@ export const TaskEditComponent = () => {
                     schema={spec.schema}
                     label={false}
                     uiSchema={getTaskSpec(spec.schema)}
-                    customValidate={customValidate} 
+                    customValidate={customValidate}
                 />
             )}
         </SimpleForm>

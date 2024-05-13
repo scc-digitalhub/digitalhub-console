@@ -20,7 +20,9 @@ export const StateChips = (props: {
         return <></>;
     }
 
-    return <ChipField record={record} source={source} color={StateColors[value]} />;
+    return (
+        <ChipField record={record} source={source} color={StateColors[value]} />
+    );
 };
 
 export enum StateColors {

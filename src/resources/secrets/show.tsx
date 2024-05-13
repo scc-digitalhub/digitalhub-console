@@ -85,7 +85,9 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
         };
         return (
             <Dialog onClose={handleClose} open={open}>
-                <DialogTitle>{translate('resources.secrets.title')}</DialogTitle>
+                <DialogTitle>
+                    {translate('resources.secrets.title')}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText
                         sx={{ color: 'black', fontWeight: 'bold' }}

@@ -17,10 +17,17 @@ import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import React, { Fragment } from 'react';
-import { useTranslate, Toolbar, SaveButton, Button, useInput, Labeled, InputHelperText, InputProps } from 'react-admin';
+import {
+    useTranslate,
+    Toolbar,
+    SaveButton,
+    Button,
+    useInput,
+    Labeled,
+    InputHelperText,
+    InputProps,
+} from 'react-admin';
 import { useNavigate } from 'react-router';
-
-
 
 export const Editor = (props: AceInputProps) => {
     const {
@@ -66,18 +73,18 @@ export const Editor = (props: AceInputProps) => {
         useWorker: useWorker,
         showPrintMargin: false,
     };
-    const onCodeChange =(data:string) => {
+    const onCodeChange = (data: string) => {
         const encodedValue = btoa(data);
-        field.onChange({...field.value,base64:encodedValue});
-    }
+        field.onChange({ ...field.value, base64: encodedValue });
+    };
     // import workers (disabled by default)
     // NOTE: this should match *exactly* the included ace version
     // ace.config.set('basePath', basePath + ace.version + '/src-noconflict/');
 
     return (
         <Fragment>
-            <Labeled {...labelProps} id={id}> 
-                 <AceEditor
+            <Labeled {...labelProps} id={id}>
+                <AceEditor
                     // {...field}
                     mode={mode}
                     theme={theme}
@@ -86,7 +93,7 @@ export const Editor = (props: AceInputProps) => {
                     setOptions={aceOptions}
                     value={valueCode}
                     onChange={onCodeChange}
-                /> 
+                />
             </Labeled>
             <InputHelperText
                 touched={isTouched || isSubmitted}

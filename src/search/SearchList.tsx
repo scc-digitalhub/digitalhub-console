@@ -65,7 +65,10 @@ export const SearchList = () => {
     });
 
     if (listContext.isLoading) return <Loading />;
-    if (listContext.error) return <Error error={listContext.error} resetErrorBoundary={() => {}} />;
+    if (listContext.error)
+        return (
+            <Error error={listContext.error} resetErrorBoundary={() => {}} />
+        );
     if (!listContext.data) return null;
 
     console.log('results', listContext.total, listContext.data);
@@ -168,11 +171,7 @@ const ResultsHeader = () => {
             </Box>
             <Box>
                 {current.map((s, i) => (
-                    <Chip
-                        label={s}
-                        key={i}
-                        sx={{ marginLeft: 1 }}
-                    />
+                    <Chip label={s} key={i} sx={{ marginLeft: 1 }} />
                 ))}
             </Box>
         </Box>

@@ -19,7 +19,7 @@ const componentsOverrides = (theme: Theme) => ({
     MuiSelect: {
         defaultProps: {
             size: 'small',
-        }
+        },
     },
     // MuiCssBaseline: {
     //     styleOverrides: {

@@ -10,11 +10,10 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     let lang = '';
     const readonly = props.readonly;
     if (readonly) {
-        lang = record?.spec?.source?.lang||'';
+        lang = record?.spec?.source?.lang || '';
+    } else {
+        lang = useWatch({ name: 'spec.source.lang' });
     }
-    else {
-        lang = useWatch({ name: 'spec.source.lang' })
-     }
     const language: any = props.properties.find(
         element => element.name == 'lang'
     );

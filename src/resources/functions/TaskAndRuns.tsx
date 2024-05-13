@@ -35,7 +35,6 @@ import { checkCpuRequestError } from '../../components/resourceInput/CoreResourc
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 
-
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;
 
@@ -55,7 +54,11 @@ export const TaskAndRuns = (props: { key?: string }) => {
                 <ShowInDialogButton fullWidth maxWidth={'lg'}>
                     <TaskShowComponent />
                 </ShowInDialogButton>
-                <EditInDialogButton fullWidth maxWidth={'lg'} transform={prepare}>
+                <EditInDialogButton
+                    fullWidth
+                    maxWidth={'lg'}
+                    transform={prepare}
+                >
                     <TaskEditComponent />
                 </EditInDialogButton>
                 <InspectButton />
@@ -128,20 +131,23 @@ const TaskRunList = () => {
         };
     };
 
-    function customValidate(formData, errors,uiSchema) {
+    function customValidate(formData, errors, uiSchema) {
         if (checkCpuRequestError(formData)) {
-            errors.k8s.resources.cpu.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.cpu.requests.addError(
+                translate('resources.tasks.errors.requestMinorLimits')
+            );
         }
         if (checkMemRequestError(formData)) {
-            errors.k8s.resources.mem.requests.addError(translate('resources.tasks.errors.requestMinorLimits'));
+            errors.k8s.resources.mem.requests.addError(
+                translate('resources.tasks.errors.requestMinorLimits')
+            );
         }
         if (checkGpuRequestError(formData)) {
-            errors.k8s.resources.gpu.requests.addError("");
+            errors.k8s.resources.gpu.requests.addError('');
         }
         return errors;
-      }
-    
-      
+    }
+
     const CreateActionButton = () => (
         <CreateInDialogButton
             resource="runs"
@@ -158,7 +164,6 @@ const TaskRunList = () => {
                         schema={schema.schema}
                         uiSchema={runSpecUiSchemaFactory(record.kind)}
                         customValidate={customValidate}
-
                     />
                 )}
             </SimpleForm>
