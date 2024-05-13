@@ -1,4 +1,7 @@
-import { SourceCodeTemplate } from '../../components/SourceCodeTemplate';
+import {
+    SourceCodeTemplate,
+    SourceCodeEditorWidget,
+} from '../../components/SourceCodeTemplate';
 
 export enum FunctionTypes {
     DBT = 'dbt',
@@ -35,7 +38,7 @@ export const getFunctionUiSpec = (kind: string | undefined) => {
         source: {
             'ui:ObjectFieldTemplate': SourceCodeTemplate,
             base64: {
-                'ui:widget': 'hidden',
+                'ui:widget': SourceCodeEditorWidget,
                 'ui:disabled': 'true',
             },
             code: {
