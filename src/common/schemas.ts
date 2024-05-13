@@ -1,4 +1,4 @@
-import { MetadataTemplate } from '../components/MetadataTemplate';
+// import { MetadataTemplate } from '../components/MetadataTemplate';
 import { CoreResourceFieldTemplate } from '../components/resourceInput/CoreResourceFieldTemplate';
 import { K8FieldTemplate } from '../components/resourceInput/K8FieldTemplate';
 import { KeyValueFieldTemplate } from '../components/resourceInput/KeyValueFieldTemplate';
@@ -40,7 +40,7 @@ export const MetadataSchema = {
 };
 
 export const MetadataCreateUiSchema = {
-    'ui:ObjectFieldTemplate': MetadataTemplate,
+    // 'ui:ObjectFieldTemplate': MetadataTemplate,
     project: {
         'ui:widget': 'hidden',
     },
@@ -56,7 +56,7 @@ export const MetadataCreateUiSchema = {
 };
 
 export const MetadataEditUiSchema = {
-    'ui:ObjectFieldTemplate': MetadataTemplate,
+    // 'ui:ObjectFieldTemplate': MetadataTemplate,
     project: {
         'ui:widget': 'hidden',
     },

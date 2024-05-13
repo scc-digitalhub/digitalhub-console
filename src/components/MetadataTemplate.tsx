@@ -2,6 +2,7 @@ import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import { FormLabel } from './FormLabel';
 import { Grid } from '@mui/material';
 
+//DISABLED, breaks when missing .content on fields, breaks labels
 export const MetadataTemplate = (props: ObjectFieldTemplateProps) => {
     const name: any = props.properties.find(element => element.name == 'name');
     const version: any = props.properties.find(
