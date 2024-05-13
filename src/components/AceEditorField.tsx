@@ -1,4 +1,4 @@
-import { useRecordContext, FieldProps, useNotify } from 'react-admin';
+import { useRecordContext, FieldProps, useTranslate } from 'react-admin';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';
@@ -20,6 +20,7 @@ import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import { Fragment } from 'react';
 import { get } from 'lodash';
+import { Alert } from '@mui/material';
 
 export const AceEditorField = (props: AceFieldProps) => {
     const {
@@ -29,14 +30,17 @@ export const AceEditorField = (props: AceFieldProps) => {
         width = '50vw',
         source,
     } = props;
-
+    const translate = useTranslate();
     const record = useRecordContext(props);
-    const notify = useNotify();
     let value = '';
     try {
         value = atob(get(record, source) || '');
     } catch (e: any) {
-        notify(`exception.code_invalid`, { type: 'error' });
+        return (
+            <Alert severity="error">
+                {translate('validation.invalidValue')}
+            </Alert>
+        );
     }
     const aceOptions = {
         readOnly: true,
