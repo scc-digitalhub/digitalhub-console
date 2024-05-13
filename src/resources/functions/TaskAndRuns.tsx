@@ -35,15 +35,15 @@ import { checkCpuRequestError } from '../../components/resourceInput/CoreResourc
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 
-export const TaskAndRuns = (props: { key?: string }) => {
-    const { key } = props;
+export const TaskAndRuns = (props: { task?: string }) => {
+    const { task } = props;
 
     const getResourceLabel = useGetResourceLabel();
     const prepare = (r: any) => {
         return {
             ...r,
             spec: {
-                task: key,
+                task,
                 ...r.spec,
             },
         };

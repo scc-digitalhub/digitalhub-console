@@ -236,7 +236,7 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns key={task.id} />
+                            <TaskAndRuns task={task.id} />
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
