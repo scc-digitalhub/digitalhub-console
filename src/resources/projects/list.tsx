@@ -32,6 +32,7 @@ import { ProjectCreateForm } from './create';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import React from 'react';
+import purify from 'dompurify';
 
 export const ProjectSelectorList = props => {
     const translate = useTranslate();
@@ -92,13 +93,18 @@ const ProjectsGridItem = (props: any) => {
     const translate = useTranslate();
     const project = useRecordContext(props);
     const { selectRoot } = useRootSelector();
-
     const handleClick = e => {
         if (project) {
             selectRoot(project);
         }
         e.stopPropagation();
     };
+
+    const metadataDescription = purify.sanitize(project.metadata?.description);
+    const description =
+        metadataDescription?.length > 40
+            ? metadataDescription.substr(0, 50) + '...'
+            : metadataDescription;
 
     return (
         <Card sx={cardStyle}>
@@ -120,8 +126,16 @@ const ProjectsGridItem = (props: any) => {
                 />
 
                 <CardContent sx={{ height: '100%' }}>
-                    <Typography sx={{ mb: 2 }}>
-                        {project.description}
+                    <Typography
+                        sx={{
+                            mb: 2,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '100%',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {description}
                     </Typography>
                     <Box color={grey[500]} sx={{ mb: 2 }}>
                         {project.metadata && (
