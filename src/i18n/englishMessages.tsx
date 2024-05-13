@@ -65,6 +65,10 @@ const messages = {
     },
     fields: fields,
     resources: {
+        projects: {
+            name: 'Project |||| Projects',
+            fields: { ...fields },
+        },
         functions: {
             name: 'Function |||| Functions',
             list: 'List and search functions',

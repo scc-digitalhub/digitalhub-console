@@ -241,10 +241,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-dialog-crud@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-1.0.0.tgz#a2a08ad00bf641495a2fca133bd4c0c7e2b409a0"
-  integrity sha512-Lj5PLrxP/aMbSP1kkM+CmxjrDtab5Z3d8/yuvvLv9RwIzSpwv8jlZ0te/wNCM7wJlvfaDXawy4rSHkkrVUXo2A==
+"@dslab/ra-dialog-crud@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-1.0.1.tgz#da28f87bc4ca944a5d0aa7de07c7253f20cd59e9"
+  integrity sha512-WVvG5MILpdsJR9IdONTv6YcM1biJSwu18K4YldSYtFLjlGuuj8lxl38LYHB7aG0+0EJu46l3HS7ViXg+AhG+Jw==
   dependencies:
     ra-core "^4.11.0"
 

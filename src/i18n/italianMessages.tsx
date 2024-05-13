@@ -64,6 +64,10 @@ const messages = {
     },
     fields: fields,
     resources: {
+        projects: {
+            name: 'Progetto |||| Progetti',
+            fields: { ...fields },
+        },
         functions: {
             name: 'Funzione |||| Funzioni',
             list: 'Lista delle funzioni con filtri di ricerca',

@@ -1,5 +1,5 @@
 import { Create, SimpleForm, TextInput, required } from 'react-admin';
-import { alphaNumericName } from '../../common/helper';
+import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
 import {
     BlankSchema,
     MetadataCreateUiSchema,
@@ -25,26 +25,27 @@ export const ProjectCreate = () => {
     };
     return (
         <Create transform={transform} redirect="list">
-            <SimpleForm validate={validator}>
-                <FormLabel label="fields.base" />
-
-                <Stack direction={'row'} spacing={3} pt={4}>
-                    <TextInput source="name" validate={required()} />
-                    <TextInput
-                        source="description"
-                        resettable
-                        multiline
-                        validate={required()}
-                    />
-                </Stack>
-
-                <JsonSchemaInput
-                    source="metadata"
-                    schema={MetadataSchema}
-                    uiSchema={MetadataCreateUiSchema}
-                />
-            </SimpleForm>
+            <ProjectCreateForm />
         </Create>
+    );
+};
+
+export const ProjectCreateForm = () => {
+    return (
+        <SimpleForm>
+            <FormLabel label="fields.base" />
+
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+
+            <JsonSchemaInput
+                source="metadata"
+                schema={MetadataSchema}
+                uiSchema={MetadataCreateUiSchema}
+            />
+        </SimpleForm>
     );
 };
 //minimo name e kind, opt desc
