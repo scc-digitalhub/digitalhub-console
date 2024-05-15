@@ -52,7 +52,7 @@ export default function ArrayFieldItemTemplate<
                     <Box>{children}</Box>
                 </Box>
             </Grid>
-            {hasToolbar && (
+            {hasToolbar && !readonly && (
                 <Grid item={true}>
                     {(hasMoveUp || hasMoveDown) && (
                         <MoveUpButton
