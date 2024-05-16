@@ -15,6 +15,8 @@ import { KeyValueFieldTemplate } from './resourceInput/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from './resourceInput/VolumeResourceFieldTemplate';
 import ArrayFieldTemplate from './resourceInput/ArrayFieldTemplate';
 import ArrayFieldItemTemplate from './resourceInput/ArrayFieldItemTemplate';
+import ObjectFieldTemplate from './resourceInput/ObjectFieldTemplate';
+import WrapIfAdditionalTemplate from './resourceInput/WrapIfAdditionalTemplate';
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
     coreResourceCpuWidget: CoreResourceCpuWidget,
@@ -27,6 +29,8 @@ const customTemplates = {
     VolumeResourceFieldTemplate,
     ArrayFieldTemplate,
     ArrayFieldItemTemplate,
+    ObjectFieldTemplate,
+    WrapIfAdditionalTemplate,
 };
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
