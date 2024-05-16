@@ -27,6 +27,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
+import { MetricsTabComponent } from './metrics-table/MetricsTabComponent';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -43,7 +44,15 @@ const ShowToolbar = () => (
         <DeleteWithConfirmButton />
     </TopToolbar>
 );
+const getUiSpec = (kind: string) => {
+    const uiSpec = getModelSpecUiSchema(kind) || {};
+        //hide metrics field
+        uiSpec['metrics'] = {
+            'ui:widget': 'hidden',
+    }
 
+    return uiSpec;
+};
 const ModelShowLayout = memo(function ModelShowLayout(props: {
     record: any;
 }) {
@@ -100,14 +109,14 @@ const ModelShowLayout = memo(function ModelShowLayout(props: {
                     <JsonSchemaField
                         source="spec"
                         schema={spec.schema}
-                        uiSchema={getModelSpecUiSchema(kind)}
+                        uiSchema={getUiSpec(kind)}
                         label={false}
                     />
                 )}
             </TabbedShowLayout.Tab>
             {kind && kind === 'model' && (
                 <TabbedShowLayout.Tab label="resources.models.tab.metrics">
-                    {/* <SchemaTabComponent record={props.record} /> */}
+                    <MetricsTabComponent record={record} />
                 </TabbedShowLayout.Tab>
             )}
         </TabbedShowLayout>

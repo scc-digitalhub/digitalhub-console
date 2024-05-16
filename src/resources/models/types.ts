@@ -4,8 +4,8 @@ export enum ModelTypes {
 
 export const getModelSpecUiSchema = (kind: string | undefined) => {
     if (!kind) {
-        return undefined;
+        return {};
     }
 
-    return undefined;
+    return {};
 };

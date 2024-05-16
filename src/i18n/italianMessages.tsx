@@ -130,6 +130,11 @@ const messages = {
                 metrics: 'Metriche',
                 preview: 'Anteprima',
             },
+            metrics: {
+                title: 'Metriche',
+                key: 'Nome',       
+                value: 'Valore',
+            }
         },
         tasks: {
             name: 'Task |||| Tasks',
