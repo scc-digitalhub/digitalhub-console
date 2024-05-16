@@ -131,6 +131,11 @@ const messages = {
                 metrics: 'Metrics',
                 preview: 'Preview',
             },
+            metrics: {
+                title: 'Metrics',
+                key: 'Name',       
+                value: 'Value',
+            }
         },
         tasks: {
             name: 'Task |||| Tasks',
