@@ -123,6 +123,15 @@ const messages = {
                 notAvailable: 'Preview not available',
             },
         },
+        models: {
+            name: 'Model |||| Models',
+            list: 'List of models with search filters',
+            fields: { ...fields },
+            tab: {
+                metrics: 'Metrics',
+                preview: 'Preview',
+            },
+        },
         tasks: {
             name: 'Task |||| Tasks',
             fields: { ...fields },
