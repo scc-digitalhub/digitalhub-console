@@ -122,6 +122,15 @@ const messages = {
                 notAvailable: 'Anteprima non disponibile',
             },
         },
+        models: {
+            name: 'Modello |||| Modelli',
+            list: 'Lista dei modelli con filtri di ricerca',
+            fields: { ...fields },
+            tab: {
+                metrics: 'Metriche',
+                preview: 'Anteprima',
+            },
+        },
         tasks: {
             name: 'Task |||| Tasks',
             fields: { ...fields },

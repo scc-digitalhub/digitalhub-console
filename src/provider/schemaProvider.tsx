@@ -26,6 +26,9 @@ function mapType(resource) {
     if (resource === 'dataitems') {
         return 'DATAITEM';
     }
+    if (resource === 'models') {
+        return 'MODEL';
+    }
     if (resource === 'tasks') {
         return 'TASK';
     }

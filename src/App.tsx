@@ -148,6 +148,8 @@ import { LayoutProjects } from './layout/LayoutProjects';
 import { SearchList } from './search/SearchList';
 import { SearchContextProvider } from './search/searchbar/SearchContextProvider';
 import { createContext } from 'react';
+import { ModelCreate, ModelEdit, ModelList, ModelShow, ModelUpdate } from './resources/models';
+import { ModelIcon } from './resources/models/icon';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -210,6 +212,19 @@ const CoreApp = () => {
                                 <Route
                                     path=":id/update"
                                     element={<DataItemUpdate />}
+                                />
+                            </Resource>
+                            <Resource
+                                name="models"
+                                list={ModelList}
+                                show={ModelShow}
+                                edit={ModelEdit}
+                                create={ModelCreate}
+                                icon={ModelIcon}
+                            >
+                                <Route
+                                    path=":id/update"
+                                    element={<ModelUpdate />}
                                 />
                             </Resource>
                             <Resource
