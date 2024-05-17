@@ -1,10 +1,8 @@
 import {
     Button,
-    Edit,
     EditBase,
     EditView,
     SaveButton,
-    SelectInput,
     SimpleForm,
     TextInput,
     Toolbar,
@@ -18,14 +16,13 @@ import {
 import { useNavigate } from 'react-router';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Container, Box, Stack } from '@mui/system';
-import { MetadataSchema, MetadataEditUiSchema, ProjectMetadataSchema } from '../../common/schemas';
+import { MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { EditPageTitle } from '../../components/PageTitle';
-import { ArtifactEditToolbar } from '../artifacts';
-import { ArtifactIcon } from '../artifacts/icon';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
+import { ProjectMetadataEditUiSchema } from './types';
 
 export const EditToolbar = () => {
     const translate = useTranslate();
@@ -82,8 +79,8 @@ export const ProjectEdit = () => {
 
                                 <JsonSchemaInput
                                     source="metadata"
-                                    schema={ProjectMetadataSchema}
-                                    uiSchema={MetadataEditUiSchema}
+                                    schema={MetadataSchema}
+                                    uiSchema={ProjectMetadataEditUiSchema}
                                 />
                             </SimpleForm>
                         </FlatCard>
