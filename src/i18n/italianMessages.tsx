@@ -40,6 +40,7 @@ const fields = {
         state: 'Stato',
     },
     code: 'Codice sorgente',
+    logs: 'Logs',
     base: 'Base',
     summary: 'Riepilogo',
 };
@@ -173,6 +174,14 @@ const messages = {
             },
             inputs: 'Parametri di Input',
             outputs: 'Parametri di Output',
+        },
+        logs: {
+            name: 'Log |||| Log',
+            list: 'Elenco log',
+            fields: {
+                ...fields,
+                run_id: 'Run ID',
+            },
         },
         common: {
             emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
