@@ -1,3 +1,4 @@
+import { BlankSchema } from '../../common/schemas';
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
@@ -17,12 +18,6 @@ export const TaskMap = {
 };
 export const getTaskByFunction = kind => {
     return TaskMap[kind];
-};
-
-export const BlankSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
-    type: 'object',
-    properties: {},
 };
 
 export const getFunctionSpec = (kind: string | undefined) => {

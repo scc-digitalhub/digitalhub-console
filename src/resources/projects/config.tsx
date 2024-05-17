@@ -18,9 +18,8 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { MetadataViewUiSchema } from '../../common/schemas';
+import { MetadataViewUiSchema, ProjectMetadataSchema } from '../../common/schemas';
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { ProjectMetadataSchema } from './types';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 
 const ShowToolbar = () => {
