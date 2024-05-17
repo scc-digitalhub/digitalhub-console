@@ -1,13 +1,11 @@
 import { Create, SimpleForm, TextInput, required } from 'react-admin';
 import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
 import {
-    BlankSchema,
-    MetadataCreateUiSchema,
     MetadataSchema,
 } from '../../common/schemas';
-import { Stack } from '@mui/material';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
+import { ProjectMetadataEditUiSchema } from './types';
 
 export const ProjectCreate = () => {
     const transform = data => ({
@@ -43,7 +41,7 @@ export const ProjectCreateForm = () => {
             <JsonSchemaInput
                 source="metadata"
                 schema={MetadataSchema}
-                uiSchema={MetadataCreateUiSchema}
+                uiSchema={ProjectMetadataEditUiSchema}
             />
         </SimpleForm>
     );
