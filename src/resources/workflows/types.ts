@@ -1,3 +1,4 @@
+import { BlankSchema } from '../../common/schemas';
 import { SourceCodeTemplate } from '../../components/SourceCodeTemplate';
 
 export enum WorkflowTypes {
@@ -8,11 +9,6 @@ export const TaskMap = {
 };
 export const getTaskByFunction = kind => {
     return TaskMap[kind];
-};
-export const BlankSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
-    type: 'object',
-    properties: {},
 };
 
 export const getWorkflowSpec = (kind: string | undefined) => {

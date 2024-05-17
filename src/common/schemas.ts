@@ -5,7 +5,7 @@ import { KeyValueFieldTemplate } from '../components/resourceInput/KeyValueField
 import { VolumeResourceFieldTemplate } from '../components/resourceInput/VolumeResourceFieldTemplate';
 
 export const MetadataSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
     type: 'object',
     title: 'Metadata',
     required: [],
@@ -99,7 +99,7 @@ export const createMetadataViewUiSchema = (metadata: any) => {
 };
 
 export const BlankSchema = {
-    $schema: 'http://json-schema.org/draft-07/schema',
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
     type: 'object',
     properties: {},
 };
@@ -207,5 +207,34 @@ export const k8sSpec = {
     },
     replicas: {
         'ui:widget': 'hidden',
+    },
+};
+
+export const ProjectMetadataSchema = {
+    $schema: 'https://json-schema.org/draft/2020-12/schema',
+    type: 'object',
+    title: 'Metadata',
+    required: [],
+    properties: {
+        name: {
+            type: 'string',
+        },
+        description: {
+            type: 'string',
+        },
+        created: {
+            type: 'string',
+            format: 'date-time',
+        },
+        updated: {
+            type: 'string',
+            format: 'date-time',
+        },
+        labels: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
 };
