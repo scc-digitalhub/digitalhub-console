@@ -41,6 +41,7 @@ const fields = {
         state: 'Status',
     },
     code: 'Code',
+    logs: 'Logs',
     base: 'Base',
     summary: 'Summary',
 };
@@ -174,6 +175,14 @@ const messages = {
             },
             inputs: 'Inputs',
             outputs: 'Outputs',
+        },
+        logs: {
+            name: 'Log |||| Logs',
+            list: 'List logs',
+            fields: {
+                ...fields,
+                run_id: 'Run ID',
+            },
         },
         common: {
             emptySpec: 'Select the kind to view the specification',

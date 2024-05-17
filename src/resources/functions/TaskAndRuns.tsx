@@ -34,6 +34,7 @@ import { runSpecUiSchemaFactory } from '../runs/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+import { LogsButton } from '../../components/LogsButton';
 
 export const TaskAndRuns = (props: { task?: string }) => {
     const { task } = props;
@@ -241,6 +242,7 @@ const TaskRunList = () => {
                                 </Labeled>
                             </SimpleShowLayout>
                         </ShowInDialogButton>
+                        <LogsButton />
                         <InspectButton />
                         <DeleteWithConfirmButton redirect={false} />
                     </RowButtonGroup>

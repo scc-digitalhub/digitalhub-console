@@ -253,6 +253,7 @@ const CoreApp = () => {
                                 create={ProjectCreate}
                             />
                             <Resource name="schemas" />
+                            <Resource name="logs" />
                             <Resource
                                 name="secrets"
                                 list={SecretList}
