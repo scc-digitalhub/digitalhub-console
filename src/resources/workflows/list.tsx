@@ -1,11 +1,12 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Container } from '@mui/material';
+import { Box, Chip, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     CreateButton,
     Datagrid,
     DateField,
     EditButton,
+    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -122,6 +123,18 @@ export const WorkflowList = () => {
                                     source="metadata.updated"
                                     showDate={true}
                                     showTime={true}
+                                />
+                                <FunctionField
+                                    source="metadata.labels"
+                                    render={record =>
+                                        record.metadata.labels?.map(label => (
+                                            <Chip
+                                                key={label}
+                                                label={label}
+                                                sx={{ mr: '5px' }}
+                                            ></Chip>
+                                        ))
+                                    }
                                 />
                                 {/* <div style={{ display: 'flex', justifyContent: 'end' }}> */}
                                 <RowActions />

@@ -1,10 +1,11 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Container } from '@mui/material';
+import { Box, Chip, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     CreateButton,
     Datagrid,
     EditButton,
+    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -112,6 +113,18 @@ export const ArtifactList = () => {
                             >
                                 <TextField source="name" />
                                 <TextField source="kind" />
+                                <FunctionField
+                                    source="metadata.labels"
+                                    render={record =>
+                                        record.metadata.labels?.map(label => (
+                                            <Chip
+                                                key={label}
+                                                label={label}
+                                                sx={{ mr: '5px' }}
+                                            ></Chip>
+                                        ))
+                                    }
+                                />
 
                                 <RowActions />
                             </Datagrid>
