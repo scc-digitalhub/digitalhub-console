@@ -21,6 +21,7 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
 import { useSearchController } from './useSearchController';
 import { useSearch } from './searchbar/SearchContext';
+import ModelTraining from '@mui/icons-material/ModelTraining';
 
 const mapTypes = {
     function: {
@@ -52,6 +53,14 @@ const mapTypes = {
         icon: (
             <Tooltip title="workflow">
                 <AccountTree />
+            </Tooltip>
+        ),
+    },
+    model: {
+        plural: 'models',
+        icon: (
+            <Tooltip title="model">
+                <ModelTraining />
             </Tooltip>
         ),
     },

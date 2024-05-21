@@ -39,6 +39,7 @@ const filters = [
             { id: 'dataitem', name: 'DataItem' },
             { id: 'artifact', name: 'Artifact' },
             { id: 'workflow', name: 'Workflow' },
+            { id: 'model', name: 'Model' },
         ]}
         label="Type"
         key={1}
