@@ -158,7 +158,8 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
                 }
             }
 
-            return [..._cache[k]] as any[];
+            // deep copy via stringify because we risk users altering the spec
+            return _cache[k].map(a => JSON.parse(JSON.stringify(a)));   
         };
 
         const get = async (
@@ -180,7 +181,8 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             }
 
             const hit = (_cache[resource] || []).find(r => r.kind === kind);
-            return { ...hit };
+            // deep copy via stringify because we risk users altering the spec
+            return JSON.parse(JSON.stringify(hit));
         };
 
         const kinds = async (resource: string): Promise<string[] | null> => {
