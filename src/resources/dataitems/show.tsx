@@ -101,7 +101,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={spec.schema}
+                        schema={{...spec.schema, title:'Spec'}}
                         uiSchema={getDataItemSpecUiSchema(kind)}
                         label={false}
                     />

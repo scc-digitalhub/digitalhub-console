@@ -76,7 +76,7 @@ export const TaskEditComponent = () => {
             {spec && (
                 <JsonSchemaInput
                     source="spec"
-                    schema={spec.schema}
+                    schema={{...spec.schema, title:'Spec'}}
                     label={false}
                     uiSchema={getTaskSpec(spec.schema)}
                     customValidate={customValidate}

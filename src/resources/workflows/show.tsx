@@ -40,7 +40,6 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { WorkflowIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { SourceCodeBlock } from '../../components/SourceCodeBlock';
 import { WorkflowView } from '../../components/WorkflowView';
 
 import { RowButtonGroup } from '../../components/RowButtonGroup';
@@ -53,7 +52,6 @@ import deepEqual from 'deep-is';
 
 import {
     CreateInDialogButton,
-    EditInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { AceEditorField } from '../../components/AceEditorField';
@@ -238,7 +236,7 @@ const ShowComponent = () => {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={spec.schema}
+                        schema={{...spec.schema, title:'Spec'}}
                         uiSchema={getUiSpec(kind)}
                         label={false}
                     />
