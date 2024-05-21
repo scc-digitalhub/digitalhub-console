@@ -128,9 +128,9 @@ export const ArtifactCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={getArtifactSpecSchema(
+                                                    schema={{...getArtifactSpecSchema(
                                                         formData.kind
-                                                    )}
+                                                    ), title:'Spec'}}
                                                     uiSchema={getArtifactSpecUiSchema(
                                                         formData.kind
                                                     )}

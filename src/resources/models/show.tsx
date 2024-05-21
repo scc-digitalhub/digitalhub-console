@@ -108,7 +108,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={spec.schema}
+                        schema={{...spec.schema, title:'Spec'}}
                         uiSchema={getUiSpec(kind)}
                         label={false}
                     />

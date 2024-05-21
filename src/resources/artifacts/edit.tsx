@@ -96,7 +96,7 @@ const SpecInput = (props: {
     return (
         <JsonSchemaInput
             source={source}
-            schema={spec.schema}
+            schema={{...spec.schema, title:'Spec'}}
             uiSchema={getArtifactSpecUiSchema(record.kind)}
         />
     );

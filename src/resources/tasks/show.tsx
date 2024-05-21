@@ -41,7 +41,7 @@ export const TaskShowComponent = () => {
             {spec && (
                 <JsonSchemaField
                     source="spec"
-                    schema={spec.schema}
+                    schema={{...spec.schema, title:'Spec'}}
                     uiSchema={getTaskSpec(spec.schema)}
                     label={false}
                 />

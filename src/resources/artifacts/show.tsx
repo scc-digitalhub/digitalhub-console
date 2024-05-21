@@ -91,7 +91,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={spec.schema}
+                        schema={{...spec.schema, title:'Spec'}}
                         uiSchema={getArtifactSpecUiSchema(kind)}
                         label={false}
                     />

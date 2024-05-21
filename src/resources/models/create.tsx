@@ -128,9 +128,9 @@ export const ModelCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={getModelSpecSchema(
+                                                    schema={{...getModelSpecSchema(
                                                         formData.kind
-                                                    )}
+                                                    ),title:'Spec'}}
                                                     uiSchema={getModelSpecUiSchema(
                                                         formData.kind
                                                     )}
