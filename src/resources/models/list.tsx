@@ -60,7 +60,7 @@ export const ModelList = () => {
 
     useEffect(() => {
         if (schemaProvider) {
-            schemaProvider.kinds('Models').then(res => {
+            schemaProvider.kinds('models').then(res => {
                 if (res) {
                     const values = res.map(s => ({
                         id: s,
