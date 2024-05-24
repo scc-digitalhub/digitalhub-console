@@ -1,5 +1,6 @@
 import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
+    Button,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
@@ -30,11 +31,23 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import { runSpecUiSchemaFactory } from '../runs/types';
+import {
+    getRunSchemaUI,
+    getTaskSchemaUI,
+    runSpecUiSchemaFactory,
+} from '../runs/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
+import {
+    BackButton,
+    NextButton,
+    Step,
+    StepperForm,
+} from '../../components/stepperComponent/StepperForm';
+import { MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
+import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 
 export const TaskAndRuns = (props: { task?: string }) => {
     const { task } = props;
@@ -157,19 +170,55 @@ const TaskRunList = () => {
             maxWidth={'lg'}
             transform={prepare}
         >
-            <SimpleForm toolbar={<CreateRunDialogToolbar />}>
-                <TextInput source="kind" readOnly />
-                {schema?.schema && (
-                    <JsonSchemaInput
-                        source="spec"
-                        schema={schema.schema}
-                        uiSchema={runSpecUiSchemaFactory(record.kind)}
-                        customValidate={customValidate}
-                    />
-                )}
-            </SimpleForm>
+            {schema?.schema && (
+                <StepperForm toolbar={<MyToolBar />}>
+                    <Step label="Metadata">
+                        <JsonSchemaInput
+                            source="metadata"
+                            schema={MetadataSchema}
+                            uiSchema={MetadataCreateUiSchema}
+                        />
+                    </Step>
+                    <Step label="Spec" >
+                        <JsonSchemaInput
+                            source="spec"
+                            schema={schema.schema}
+                            uiSchema={getTaskSchemaUI(schema.schema, record)}
+                            customValidate={customValidate}
+                        />
+                    </Step>
+                    <Step label="Recap" >
+                        
+                        <JsonSchemaField
+                            source="spec"
+                            schema={schema.schema}
+                            uiSchema={getTaskSchemaUI(schema.schema, record)}
+                        />
+                    </Step>
+                </StepperForm>
+            )}
         </CreateInDialogButton>
     );
+    const MyToolBar = () => {
+        return (
+            <Toolbar>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    pt: 2,
+                }}
+            >
+                                <NextButton/>
+                                <Button>Ciao</Button>
+                                <SaveButton />
+
+                <BackButton/>
+                <Box sx={{ flex: '1 1 auto' }} />
+            </Box>
+        </Toolbar>
+        )
+    }
     const ListActions = () => <CreateActionButton />;
     const Empty = () => (
         <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }}>
