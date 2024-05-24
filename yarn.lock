@@ -306,6 +306,13 @@
   dependencies:
     ra-core "^4.11.0"
 
+"@dslab/ra-stepper@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.0.2.tgz#f740e852b615534fbae3b26240badbf589b0716c"
+  integrity sha512-zvsuBAgEnY1npur1c1V4aCkESGcNWNv/E9VcDT044gNJG1M9GHGdGeOz6JlhvCwc6vxsgcVdQe+xvXRCC9pbkw==
+  dependencies:
+    ra-core "^4.11.0"
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"

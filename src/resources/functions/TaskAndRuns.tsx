@@ -40,14 +40,9 @@ import { checkCpuRequestError } from '../../components/resourceInput/CoreResourc
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
-import {
-    BackButton,
-    NextButton,
-    Step,
-    StepperForm,
-} from '../../components/stepperComponent/StepperForm';
 import { MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
+import { StepperForm, StepContent } from '@dslab/ra-stepper';
 
 export const TaskAndRuns = (props: { task?: string }) => {
     const { task } = props;
@@ -171,54 +166,35 @@ const TaskRunList = () => {
             transform={prepare}
         >
             {schema?.schema && (
-                <StepperForm toolbar={<MyToolBar />}>
-                    <Step label="Metadata">
+                <StepperForm >
+                    <StepContent label="Metadata">
                         <JsonSchemaInput
                             source="metadata"
                             schema={MetadataSchema}
                             uiSchema={MetadataCreateUiSchema}
                         />
-                    </Step>
-                    <Step label="Spec" >
+                    </StepContent>
+                    <StepContent label="Spec" >
                         <JsonSchemaInput
                             source="spec"
                             schema={schema.schema}
                             uiSchema={getTaskSchemaUI(schema.schema, record)}
                             customValidate={customValidate}
                         />
-                    </Step>
-                    <Step label="Recap" >
+                    </StepContent>
+                    <StepContent label="Recap" >
                         
                         <JsonSchemaField
                             source="spec"
                             schema={schema.schema}
                             uiSchema={getTaskSchemaUI(schema.schema, record)}
                         />
-                    </Step>
+                    </StepContent>
                 </StepperForm>
             )}
         </CreateInDialogButton>
     );
-    const MyToolBar = () => {
-        return (
-            <Toolbar>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    pt: 2,
-                }}
-            >
-                                <NextButton/>
-                                <Button>Ciao</Button>
-                                <SaveButton />
 
-                <BackButton/>
-                <Box sx={{ flex: '1 1 auto' }} />
-            </Box>
-        </Toolbar>
-        )
-    }
     const ListActions = () => <CreateActionButton />;
     const Empty = () => (
         <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }}>
