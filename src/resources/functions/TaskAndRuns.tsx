@@ -40,7 +40,11 @@ import { checkCpuRequestError } from '../../components/resourceInput/CoreResourc
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
-import { MetadataCreateUiSchema, MetadataSchema } from '../../common/schemas';
+import {
+    MetadataCreateUiSchema,
+    MetadataSchema,
+    createMetadataViewUiSchema,
+} from '../../common/schemas';
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { StepperForm, StepContent } from '@dslab/ra-stepper';
 
@@ -96,7 +100,8 @@ const TaskRunList = () => {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [schema, setSchema] = useState<any>();
+    const [runSchema, setRunSchema] = useState<any>();
+    const [taskSchema, setTaskSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
     const runtime = url.protocol
@@ -109,21 +114,74 @@ const TaskRunList = () => {
             return;
         }
 
-        schemaProvider
-            .list('runs', runtime)
-            .then(schemas => {
-                if (schemas) {
-                    setSchema(schemas.pop());
-                }
-            })
-            .catch(error => {
+        Promise.all([
+            schemaProvider.list('runs', runtime),
+            schemaProvider.list('tasks', runtime),
+            schemaProvider.list('functions', runtime),
+        ]).then(([rSchemas, tSchemas,fSchemas]) => {
+            console.log("rschema",rSchemas);
+            console.log("tschema",tSchemas);
+            console.log("fschema",fSchemas);
+            //get schemas for task run and function of runtime
+            if (tSchemas && rSchemas&& fSchemas) {
+                // get the right schema based on kind ( run and function have single schema)
+                const schemaTask = tSchemas.find(schema => schema.kind === record.kind)
+                const schemaRun = rSchemas.pop();
+                const schemaFunction = fSchemas.pop();
+                if (schemaTask)
+                    {
+                    let rProp = schemaRun?.schema?.properties;
+                    let tProp={};
+                    //save task properties (all kind of tasks) and remove them from run schema
+                    tSchemas.forEach(element => {
+                        Object.entries(element?.schema?.properties).forEach(([key, value], index) => {
+                            if (rProp[key])
+                            {
+                             if (element.kind===record.kind)
+                                 tProp[key]=value;
+                             delete rProp[key];
+                            }
+                        }) 
+                    }); 
+                    Object.entries(schemaFunction?.schema?.properties).forEach(([key, value], index) => {
+                        if (rProp[key])
+                        {
+                         delete rProp[key];
+                        }
+                    })
+                    schemaTask.schema.properties=tProp;
+                    setTaskSchema(schemaTask);
+                    console.log("tschema",schemaTask);
+                    schemaRun.schema.properties=rProp;
+                    setRunSchema(schemaRun);
+                    console.log("rschema",schemaRun);
+            }
+            }                
+        }).catch(error => {
                 console.log('error:', error);
             });
+        // schemaProvider
+        // .list('runs', runtime)
+        // .then(schemas => {
+        //     if (schemas) {
+        //         setSchema(schemas.pop());
+        //     }
+        // }).then(()=>{
+        //     schemaProvider
+        // .list('tasks', runtime)
+        // .then(schemas => {
+        //     if (schemas) {
+        //         setSchema(schemas.pop());
+        //     }
+        // })
+        // .catch(error => {
+        //     console.log('error:', error);
+        // });
     }, [record, schemaProvider]);
 
     const partial = {
         project: record?.project,
-        kind: schema ? schema.kind : 'run',
+        kind: runSchema ? runSchema.kind : 'run',
         spec: {
             task: key,
             local_execution: false,
@@ -165,29 +223,35 @@ const TaskRunList = () => {
             maxWidth={'lg'}
             transform={prepare}
         >
-            {schema?.schema && (
-                <StepperForm >
-                    <StepContent label="Metadata">
+            {runSchema?.schema && (
+                <StepperForm>
+                    <StepContent label="TaskSchema">
                         <JsonSchemaInput
+                            source="spec.task"
+                            schema={taskSchema.schema}
+                            // uiSchema={getTaskSchemaUI(taskSchema.schema, record)}
+                            // customValidate={customValidate}
+                        />
+                    </StepContent>
+                    <StepContent label="Spec">
+                        <JsonSchemaInput
+                            source="spec.run"
+                            schema={runSchema.schema}
+                        />
+                    </StepContent>
+                    <StepContent label="Recap">
+                        <JsonSchemaField
                             source="metadata"
                             schema={MetadataSchema}
-                            uiSchema={MetadataCreateUiSchema}
+                            uiSchema={createMetadataViewUiSchema(
+                                record?.metadata
+                            )}
+                            label={false}
                         />
-                    </StepContent>
-                    <StepContent label="Spec" >
-                        <JsonSchemaInput
-                            source="spec"
-                            schema={schema.schema}
-                            uiSchema={getTaskSchemaUI(schema.schema, record)}
-                            customValidate={customValidate}
-                        />
-                    </StepContent>
-                    <StepContent label="Recap" >
-                        
                         <JsonSchemaField
                             source="spec"
-                            schema={schema.schema}
-                            uiSchema={getTaskSchemaUI(schema.schema, record)}
+                            schema={runSchema.schema}
+                            uiSchema={getTaskSchemaUI(runSchema.schema, record)}
                         />
                     </StepContent>
                 </StepperForm>

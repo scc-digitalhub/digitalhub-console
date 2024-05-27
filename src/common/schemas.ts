@@ -90,6 +90,7 @@ export const createMetadataViewUiSchema = (metadata: any) => {
     const schema = Object.assign({}, MetadataViewUiSchema);
     for (const f in schema) {
         //replace missing values with hidden field
+        if (metadata)
         if (!(f in metadata)) {
             schema[f]['ui:widget'] = 'hidden';
         }
