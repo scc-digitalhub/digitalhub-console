@@ -48,9 +48,8 @@ import {
 import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { StepperForm, StepContent } from '@dslab/ra-stepper';
 
-export const TaskAndRuns = (props: { task?: string }) => {
-    const { task } = props;
-
+export const TaskAndRuns = (props: { task?: string, onEdit:(id:string,data:any)=>void }) => {
+    const { task, onEdit } = props;
     const getResourceLabel = useGetResourceLabel();
     const prepare = (r: any) => {
         return {
@@ -71,6 +70,12 @@ export const TaskAndRuns = (props: { task?: string }) => {
                     fullWidth
                     maxWidth={'lg'}
                     transform={prepare}
+                    mutationOptions={{onSuccess: (data, variables, context) => {
+                        //data is updated
+                        if (task && data)
+                            onEdit(task,data)
+                    }}
+                }
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
@@ -132,23 +137,35 @@ const TaskRunList = () => {
                     {
                     let rProp = schemaRun?.schema?.properties;
                     let tProp={};
-                    //save task properties (all kind of tasks) and remove them from run schema
+                    //save task properties (all kind of tasks) 
                     tSchemas.forEach(element => {
+                        if (element.kind===record.kind)
                         Object.entries(element?.schema?.properties).forEach(([key, value], index) => {
                             if (rProp[key])
                             {
-                             if (element.kind===record.kind)
                                  tProp[key]=value;
-                             delete rProp[key];
+                                 delete rProp[key];
                             }
                         }) 
-                    }); 
+                    });
+                    //and remove function
                     Object.entries(schemaFunction?.schema?.properties).forEach(([key, value], index) => {
                         if (rProp[key])
                         {
                          delete rProp[key];
                         }
                     })
+                    //and remove them from run schema
+                    tSchemas.forEach(element => {
+                        if (element.kind!==record.kind)
+                        Object.entries(element?.schema?.properties).forEach(([key, value], index) => {
+                            if (rProp[key])
+                            {
+                             delete rProp[key];
+                            }
+                        }) 
+                    });
+                   
                     schemaTask.schema.properties=tProp;
                     setTaskSchema(schemaTask);
                     console.log("tschema",schemaTask);
@@ -185,6 +202,8 @@ const TaskRunList = () => {
         spec: {
             task: key,
             local_execution: false,
+            //copy the taask spec  (using record)
+            ...record?.spec
         },
     };
 
@@ -225,33 +244,29 @@ const TaskRunList = () => {
         >
             {runSchema?.schema && (
                 <StepperForm>
-                    <StepContent label="TaskSchema">
+                    <StepContent label="Task">
                         <JsonSchemaInput
-                            source="spec.task"
+                            source="spec"
                             schema={taskSchema.schema}
-                            // uiSchema={getTaskSchemaUI(taskSchema.schema, record)}
-                            // customValidate={customValidate}
+
                         />
                     </StepContent>
-                    <StepContent label="Spec">
+                    <StepContent label="Run">
                         <JsonSchemaInput
-                            source="spec.run"
+                            source="spec"
                             schema={runSchema.schema}
+
                         />
                     </StepContent>
                     <StepContent label="Recap">
-                        <JsonSchemaField
-                            source="metadata"
-                            schema={MetadataSchema}
-                            uiSchema={createMetadataViewUiSchema(
-                                record?.metadata
-                            )}
-                            label={false}
-                        />
+
                         <JsonSchemaField
                             source="spec"
+                            schema={taskSchema.schema}
+                        />
+                         <JsonSchemaField
+                            source="spec"
                             schema={runSchema.schema}
-                            uiSchema={getTaskSchemaUI(runSchema.schema, record)}
                         />
                     </StepContent>
                 </StepperForm>

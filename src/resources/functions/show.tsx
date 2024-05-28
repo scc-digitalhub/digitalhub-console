@@ -186,7 +186,11 @@ const ShowComponent = () => {
         }
         return kind;
     };
-
+    const editTask = (id: string, taskUpdated:any) => {
+        setTasks(tasks => {
+            return tasks.map(task => task.id ===id ? taskUpdated: task)
+        })
+    }
     return (
         <TabbedShowLayout record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
@@ -236,7 +240,7 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns task={task.id} />
+                            <TaskAndRuns task={task.id} onEdit={editTask}/>
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
