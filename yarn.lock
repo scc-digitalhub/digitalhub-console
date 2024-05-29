@@ -280,10 +280,10 @@
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@^1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-1.3.4.tgz#20c0d91efafdef3dac5aa11ba82076e988d52efe"
-  integrity sha512-U9OzRiIdViCKdqYj65xaezHSlfrsmpMJIGs12R8qATXFKzy0VbuxNabmLjlMSdCkpj5bdm3ZzfrD95da0BXRZg==
+"@dslab/ra-jsonschema-input@^1.3.6":
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-1.3.6.tgz#1abb1a27b31edf80e55cd994f8ab2cb7b2c6b400"
+  integrity sha512-k8auykjw4gk6SHk91p4i+/aRFaaol9xoOtBHrjC6MvqHTH9LVaOzJhIGYBT7aSWGEtTkAxMhOqI0xvQgactAQA==
   dependencies:
     "@rjsf/core" "^5.18.2"
     "@rjsf/mui" "^5.18.2"
@@ -306,10 +306,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-stepper@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.0.3.tgz#b0dcc6d3630fc8189d3bc191c3d21cf15e24b662"
-  integrity sha512-R+if4Sdalq8XG0Q0puGfqLy3SZ6JW96RJMz0iqccQ4LbLjVPPCQqG6OBqNTicl1JWslxDoJkW3unCyXwM2CVdA==
+"@dslab/ra-stepper@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.0.4.tgz#d98a784b6011c31ba7b0b13793b74fca10606a7b"
+  integrity sha512-ABsHlAl6CQMuYNYjOk+Q5CRnvQBjTORwR1P9pVttY0zVuu+I7szmV73+zcsKKX4S+z+TR7uPGNI1f9CVvSoULQ==
   dependencies:
     ra-core "^4.11.0"
 

@@ -284,6 +284,37 @@ const messages = {
         type_and_press_enter: 'Type and press ENTER to add',
         double_click_to_edit: 'Double click to edit',
     },
+    k8s: {
+        envs:{
+            title: "Environments",
+            description:"Environments definition" 
+        },
+        node_selector:{
+            title: "Node selector",
+            description:"Node selector definition" 
+        },
+        secrets:{
+            title: "Secrets",
+            description:"Secrets definition" 
+        },
+        volumes:{
+            title: "Volumes",
+            description:"Volumes definition" 
+        },
+        resources: {
+            title: "Resources",
+            description:"K8s resources",
+            cpu:{
+                title:"Cpu"
+            },
+            memory:{
+                title:"Memory"
+            },
+            gpu:{
+                title:"Gpu"
+            }
+        }
+    }
 };
 
 export default messages;

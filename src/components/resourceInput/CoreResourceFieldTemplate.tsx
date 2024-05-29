@@ -1,7 +1,8 @@
 import { Grid } from '@mui/material';
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
-
+import { useTranslate } from 'react-admin';
 export const CoreResourceFieldTemplate = (props: ObjectFieldTemplateProps) => {
+    const translate = useTranslate();
     return (
         <>
             <div style={{ display: 'flex', width: '100%' }}>
@@ -12,7 +13,7 @@ export const CoreResourceFieldTemplate = (props: ObjectFieldTemplateProps) => {
                         margin: '4px 0px',
                     }}
                 >
-                    {props.title}
+                    {translate(props.title)}
                 </h3>
             </div>
             <div style={{ display: 'flex', width: '100%' }}>

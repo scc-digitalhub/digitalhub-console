@@ -1,16 +1,13 @@
 import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
-    Button,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
     Labeled,
     List,
     SaveButton,
-    SimpleForm,
     SimpleShowLayout,
     TextField,
-    TextInput,
     Toolbar,
     TopToolbar,
     useGetResourceLabel,
@@ -27,26 +24,16 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import {
-    getRunSchemaUI,
-    getTaskSchemaUI,
-    runSpecUiSchemaFactory,
-} from '../runs/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
-import {
-    MetadataCreateUiSchema,
-    MetadataSchema,
-    createMetadataViewUiSchema,
-} from '../../common/schemas';
-import { JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { StepperForm, StepContent } from '@dslab/ra-stepper';
+import { getTaskSpec } from '../tasks/types';
+import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 
 export const TaskAndRuns = (props: { task?: string, onEdit:(id:string,data:any)=>void }) => {
     const { task, onEdit } = props;
@@ -177,23 +164,6 @@ const TaskRunList = () => {
         }).catch(error => {
                 console.log('error:', error);
             });
-        // schemaProvider
-        // .list('runs', runtime)
-        // .then(schemas => {
-        //     if (schemas) {
-        //         setSchema(schemas.pop());
-        //     }
-        // }).then(()=>{
-        //     schemaProvider
-        // .list('tasks', runtime)
-        // .then(schemas => {
-        //     if (schemas) {
-        //         setSchema(schemas.pop());
-        //     }
-        // })
-        // .catch(error => {
-        //     console.log('error:', error);
-        // });
     }, [record, schemaProvider]);
 
     const partial = {
@@ -248,6 +218,8 @@ const TaskRunList = () => {
                         <JsonSchemaInput
                             source="spec"
                             schema={taskSchema.schema}
+                            uiSchema={getTaskSpec(taskSchema.schema)}
+                            customValidate={customValidate}
 
                         />
                     </StepContent>
@@ -259,15 +231,20 @@ const TaskRunList = () => {
                         />
                     </StepContent>
                     <StepContent label="Recap">
-
+                {taskSchema &&
                         <JsonSchemaField
                             source="spec"
-                            schema={taskSchema.schema}
+                            uiSchema={getTaskSpec(taskSchema.schema)}
+                            schema={{...taskSchema.schema, title:'Spec'}}
+                            label={false}
                         />
+                } {taskSchema &&
                          <JsonSchemaField
                             source="spec"
                             schema={runSchema.schema}
+
                         />
+                 }
                     </StepContent>
                 </StepperForm>
             )}
