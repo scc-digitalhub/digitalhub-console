@@ -3,8 +3,10 @@ import {
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
+    FormDataConsumer,
     Labeled,
     List,
+    RecordContextProvider,
     SaveButton,
     SimpleShowLayout,
     TextField,
@@ -35,7 +37,10 @@ import { StepperForm, StepContent } from '@dslab/ra-stepper';
 import { getTaskSpec } from '../tasks/types';
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 
-export const TaskAndRuns = (props: { task?: string, onEdit:(id:string,data:any)=>void }) => {
+export const TaskAndRuns = (props: {
+    task?: string;
+    onEdit: (id: string, data: any) => void;
+}) => {
     const { task, onEdit } = props;
     const getResourceLabel = useGetResourceLabel();
     const prepare = (r: any) => {
@@ -57,12 +62,12 @@ export const TaskAndRuns = (props: { task?: string, onEdit:(id:string,data:any)=
                     fullWidth
                     maxWidth={'lg'}
                     transform={prepare}
-                    mutationOptions={{onSuccess: (data, variables, context) => {
-                        //data is updated
-                        if (task && data)
-                            onEdit(task,data)
+                    mutationOptions={{
+                        onSuccess: (data, variables, context) => {
+                            //data is updated
+                            if (task && data) onEdit(task, data);
+                        },
                     }}
-                }
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
@@ -110,58 +115,64 @@ const TaskRunList = () => {
             schemaProvider.list('runs', runtime),
             schemaProvider.list('tasks', runtime),
             schemaProvider.list('functions', runtime),
-        ]).then(([rSchemas, tSchemas,fSchemas]) => {
-            console.log("rschema",rSchemas);
-            console.log("tschema",tSchemas);
-            console.log("fschema",fSchemas);
-            //get schemas for task run and function of runtime
-            if (tSchemas && rSchemas&& fSchemas) {
-                // get the right schema based on kind ( run and function have single schema)
-                const schemaTask = tSchemas.find(schema => schema.kind === record.kind)
-                const schemaRun = rSchemas.pop();
-                const schemaFunction = fSchemas.pop();
-                if (schemaTask)
-                    {
-                    let rProp = schemaRun?.schema?.properties;
-                    let tProp={};
-                    //save task properties (all kind of tasks) 
-                    tSchemas.forEach(element => {
-                        if (element.kind===record.kind)
-                        Object.entries(element?.schema?.properties).forEach(([key, value], index) => {
-                            if (rProp[key])
-                            {
-                                 tProp[key]=value;
-                                 delete rProp[key];
+        ])
+            .then(([rSchemas, tSchemas, fSchemas]) => {
+                console.log('rschema', rSchemas);
+                console.log('tschema', tSchemas);
+                console.log('fschema', fSchemas);
+                //get schemas for task run and function of runtime
+                if (tSchemas && rSchemas && fSchemas) {
+                    // get the right schema based on kind ( run and function have single schema)
+                    const schemaTask = tSchemas.find(
+                        schema => schema.kind === record.kind
+                    );
+                    const schemaRun = rSchemas.pop();
+                    const schemaFunction = fSchemas.pop();
+                    if (schemaTask) {
+                        let rProp = schemaRun?.schema?.properties;
+                        let tProp = {};
+                        //save task properties (all kind of tasks)
+                        tSchemas.forEach(element => {
+                            if (element.kind === record.kind)
+                                Object.entries(
+                                    element?.schema?.properties
+                                ).forEach(([key, value], index) => {
+                                    if (rProp[key]) {
+                                        tProp[key] = value;
+                                        delete rProp[key];
+                                    }
+                                });
+                        });
+                        //and remove function
+                        Object.entries(
+                            schemaFunction?.schema?.properties
+                        ).forEach(([key, value], index) => {
+                            if (rProp[key]) {
+                                delete rProp[key];
                             }
-                        }) 
-                    });
-                    //and remove function
-                    Object.entries(schemaFunction?.schema?.properties).forEach(([key, value], index) => {
-                        if (rProp[key])
-                        {
-                         delete rProp[key];
-                        }
-                    })
-                    //and remove them from run schema
-                    tSchemas.forEach(element => {
-                        if (element.kind!==record.kind)
-                        Object.entries(element?.schema?.properties).forEach(([key, value], index) => {
-                            if (rProp[key])
-                            {
-                             delete rProp[key];
-                            }
-                        }) 
-                    });
-                   
-                    schemaTask.schema.properties=tProp;
-                    setTaskSchema(schemaTask);
-                    console.log("tschema",schemaTask);
-                    schemaRun.schema.properties=rProp;
-                    setRunSchema(schemaRun);
-                    console.log("rschema",schemaRun);
-            }
-            }                
-        }).catch(error => {
+                        });
+                        //and remove them from run schema
+                        tSchemas.forEach(element => {
+                            if (element.kind !== record.kind)
+                                Object.entries(
+                                    element?.schema?.properties
+                                ).forEach(([key, value], index) => {
+                                    if (rProp[key]) {
+                                        delete rProp[key];
+                                    }
+                                });
+                        });
+
+                        schemaTask.schema.properties = tProp;
+                        setTaskSchema(schemaTask);
+                        console.log('tschema', schemaTask);
+                        schemaRun.schema.properties = rProp;
+                        setRunSchema(schemaRun);
+                        console.log('rschema', schemaRun);
+                    }
+                }
+            })
+            .catch(error => {
                 console.log('error:', error);
             });
     }, [record, schemaProvider]);
@@ -173,7 +184,7 @@ const TaskRunList = () => {
             task: key,
             local_execution: false,
             //copy the taask spec  (using record)
-            ...record?.spec
+            ...record?.spec,
         },
     };
 
@@ -220,31 +231,42 @@ const TaskRunList = () => {
                             schema={taskSchema.schema}
                             uiSchema={getTaskSpec(taskSchema.schema)}
                             customValidate={customValidate}
-
                         />
                     </StepContent>
                     <StepContent label="Run">
                         <JsonSchemaInput
                             source="spec"
                             schema={runSchema.schema}
-
                         />
                     </StepContent>
                     <StepContent label="Recap">
-                {taskSchema &&
-                        <JsonSchemaField
-                            source="spec"
-                            uiSchema={getTaskSpec(taskSchema.schema)}
-                            schema={{...taskSchema.schema, title:'Spec'}}
-                            label={false}
-                        />
-                } {taskSchema &&
-                         <JsonSchemaField
-                            source="spec"
-                            schema={runSchema.schema}
-
-                        />
-                 }
+                        <FormDataConsumer>
+                            {({ formData }) => (
+                                <>
+                                    {taskSchema && (
+                                            <JsonSchemaField
+                                                source="spec"
+                                                record={formData}
+                                                uiSchema={getTaskSpec(
+                                                    taskSchema.schema
+                                                )}
+                                                schema={{
+                                                    ...taskSchema.schema,
+                                                    title: 'Spec',
+                                                }}
+                                                label={false}
+                                            />
+                                    )}
+                                    {taskSchema && (
+                                            <JsonSchemaField
+                                                source="spec"
+                                                record={formData}
+                                                schema={runSchema.schema}
+                                            />
+                                    )}
+                                </>
+                            )}
+                        </FormDataConsumer>
                     </StepContent>
                 </StepperForm>
             )}
