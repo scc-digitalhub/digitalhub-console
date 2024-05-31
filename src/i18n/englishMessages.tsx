@@ -11,6 +11,14 @@ const fields = {
             description:"Instructions definition"
         }
     },
+    execArgs: {
+        title: 'Execution arguments',
+        description: 'Execution arguments definition',
+    },
+    schedule: {
+        title: 'Schedule',
+        description: 'Schedule definition',
+    },
     backoffLimit:{
         title: 'Backoff Limit',
         description: 'Backoff Limit definition',
