@@ -261,7 +261,13 @@ const TaskRunList = () => {
                                             <JsonSchemaField
                                                 source="spec"
                                                 record={formData}
-                                                schema={runSchema.schema}
+                                                uiSchema={getTaskSpec(
+                                                    runSchema.schema
+                                                )}
+                                                schema={{
+                                                    ...runSchema.schema,
+                                                    title: 'Spec',
+                                                }}
                                             />
                                     )}
                                 </>

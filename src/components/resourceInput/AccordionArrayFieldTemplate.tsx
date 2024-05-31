@@ -73,6 +73,8 @@ export default function AccordionArrayFieldTemplate<
     const {
         ButtonTemplates: { AddButton },
     } = registry.templates;
+    const titleText = uiOptions.title|| title || "";
+    const descriptionText = uiOptions.description|| schema.description || "";
     return (
         <Accordion  elevation={0} square disableGutters>
             <AccordionSummary
@@ -81,8 +83,8 @@ export default function AccordionArrayFieldTemplate<
                 id="panel1-header"
             >
                 {uiOptions.title &&
-                <Typography variant='h6'>
-                    {translate(uiOptions.title) || translate(title)}
+                <Typography variant='h5'>
+                    {translate(titleText)}
                 </Typography>
                 }
             </AccordionSummary>
@@ -90,7 +92,7 @@ export default function AccordionArrayFieldTemplate<
                 {uiOptions.description &&
                 <ArrayFieldDescriptionTemplate
                     idSchema={idSchema}
-                    description={translate(uiOptions.description) || schema.description}
+                    description={descriptionText}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}

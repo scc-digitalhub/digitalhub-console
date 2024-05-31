@@ -9,7 +9,7 @@ import {
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
-
+import { useTranslate } from 'react-admin';
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
@@ -32,6 +32,7 @@ export default function ArrayFieldTemplate<
         schema,
         title,
     } = props;
+    const translate = useTranslate();
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const ArrayFieldDescriptionTemplate = getTemplate<
         'ArrayFieldDescriptionTemplate',
@@ -55,11 +56,13 @@ export default function ArrayFieldTemplate<
     const {
         ButtonTemplates: { AddButton },
     } = registry.templates;
+    const titleText = uiOptions.title || title || '';
+    const descriptionText = uiOptions.description || schema.description || '';
     return (
         <Box>
             <ArrayFieldTitleTemplate
                 idSchema={idSchema}
-                title={uiOptions.title || title}
+                title={translate(titleText)}
                 schema={schema}
                 uiSchema={uiSchema}
                 required={required}
@@ -67,7 +70,7 @@ export default function ArrayFieldTemplate<
             />
             <ArrayFieldDescriptionTemplate
                 idSchema={idSchema}
-                description={uiOptions.description || schema.description}
+                description={translate(descriptionText)}
                 schema={schema}
                 uiSchema={uiSchema}
                 registry={registry}
