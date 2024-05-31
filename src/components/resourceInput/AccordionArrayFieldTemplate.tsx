@@ -25,6 +25,9 @@ const Accordion = styled((props: AccordionProps) => (
     '&::before': {
       display: 'none',
     },
+    "& .MuiAccordionSummary-expandIconWrapper": {
+        color: "#E0701B"
+      }
   }));
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
