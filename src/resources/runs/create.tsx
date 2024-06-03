@@ -1,24 +1,104 @@
+import { JsonSchemaInput, JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Create, SimpleForm } from 'react-admin';
+import { StepperForm, useStepper } from '@dslab/ra-stepper';
+import {
+    Create,
+    FormDataConsumer,
+    LoadingIndicator,
+    SaveButton,
+    SimpleForm,
+    Toolbar,
+    useGetOne,
+    useGetResourceLabel,
+    useTranslate,
+} from 'react-admin';
+import { getTaskSpec } from '../tasks/types';
+import { useState } from 'react';
+import { Box } from '@mui/system';
 
-export const RunCreate = () => {
-    const { root } = useRootSelector();
+const RunCreate = (props: { taskId: string }) => {
+    const { taskId } = props;
+    //data
+    const [runSchema, setRunSchema] = useState<any>();
+    const [taskSchema, setTaskSchema] = useState<any>();
 
-    const transform = data => ({
-        ...data,
-        project: root || '',
-    });
+    //fetch task
+    const { data: task, isLoading, error } = useGetOne('tasks', { id: taskId });
 
-    const validator = () => {
-        const errors: any = {};
-        return errors;
+    //rebuild spec
+    const fn = task?.spec?.function || '';
+    const url = new URL(fn);
+    const runtime = url.protocol
+        ? url.protocol.substring(0, url.protocol.length - 1)
+        : '';
+    url.protocol = task.kind + ':';
+    const key = url.toString();
+
+    const partial = {
+        project: task?.project,
+        kind: runSchema ? runSchema.kind : runtime + '+run',
+        spec: {
+            task: key,
+            local_execution: false,
+            //spread task details to init
+            ...task?.spec,
+        },
     };
 
+    if (isLoading || error) {
+        return <LoadingIndicator />;
+    }
+
+    return <></>;
+};
+
+export const RunCreateComponent = (props: {
+    runSchema: any;
+    taskSchema: any;
+}) => {
+    const { runSchema, taskSchema } = props;
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    console.log('schemas', runSchema, taskSchema);
     return (
-        <Create transform={transform} redirect="list">
-            <SimpleForm validate={validator}>
-                <div>create Run</div>
-            </SimpleForm>
-        </Create>
+        <StepperForm toolbar={<StepperToolbar />}>
+            <StepperForm.Step label={getResourceLabel('tasks', 1)}>
+                <JsonSchemaInput
+                    source="spec"
+                    schema={taskSchema}
+                    uiSchema={getTaskSpec(taskSchema)}
+                />
+            </StepperForm.Step>
+            <StepperForm.Step label={getResourceLabel('runs', 1)}>
+                <JsonSchemaInput source="spec" schema={runSchema} />
+            </StepperForm.Step>
+            <StepperForm.Step label={translate('recap')} optional>
+                <FormDataConsumer>
+                    {({ formData }) => (
+                        <pre>{JSON.stringify(formData?.spec, 2)}</pre>
+                    )}
+                </FormDataConsumer>
+            </StepperForm.Step>
+        </StepperForm>
+    );
+};
+
+const StepperToolbar = () => {
+    const { steps, currentStep } = useStepper();
+
+    return (
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Box>
+                <StepperForm.PreviousButton
+                    variant={'text'}
+                    color="secondary"
+                />
+            </Box>
+            <Box>
+                <StepperForm.NextButton />
+                {steps && currentStep === steps.length - 1 && <SaveButton />}
+            </Box>
+        </Toolbar>
     );
 };

@@ -306,10 +306,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-stepper@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.0.4.tgz#d98a784b6011c31ba7b0b13793b74fca10606a7b"
-  integrity sha512-ABsHlAl6CQMuYNYjOk+Q5CRnvQBjTORwR1P9pVttY0zVuu+I7szmV73+zcsKKX4S+z+TR7uPGNI1f9CVvSoULQ==
+"@dslab/ra-stepper@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.1.1.tgz#d9404eebe8a192cb37a1839f92332611bf92673d"
+  integrity sha512-CrgbzioCvemqHLcku0Jy/SOLZd/l5dHtXh8iEekGpY8eOsPZ+coPBWSoXYz8lzdATpe48RVFTYQIMviio6J95w==
   dependencies:
     ra-core "^4.11.0"
 

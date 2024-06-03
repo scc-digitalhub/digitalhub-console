@@ -136,7 +136,6 @@ const enableSearch: boolean =
 
 import { DataItemUpdate } from './resources/dataitems/update';
 import { ArtifactUpdate } from './resources/artifacts/update';
-import { RunShow, RunCreate } from './resources/runs';
 import { ResourceSchemaProvider } from './provider/schemaProvider';
 import { FunctionIcon } from './resources/functions/icon';
 import { DataItemIcon } from './resources/dataitems/icon';
@@ -246,12 +245,8 @@ const CoreApp = () => {
                                     element={<ArtifactUpdate />}
                                 />
                             </Resource>
-                            <Resource name="tasks"></Resource>
-                            <Resource
-                                name="runs"
-                                show={RunShow}
-                                create={RunCreate}
-                            ></Resource>
+                            <Resource name="tasks" />
+                            <Resource name="runs" />
                             <Resource
                                 name="projects"
                                 list={ProjectSelectorList}
