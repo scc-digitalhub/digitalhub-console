@@ -2,11 +2,99 @@ import englishMessages from 'ra-language-english';
 
 const fields = {
     id: 'Id',
-    name: 'Name',
+    // name: 'Name',
     kind: 'Kind',
-    key: 'Key',
+    // key: 'Key',
     project: 'Project',
-
+    container:{
+        instructions:{
+            description:"Instructions definition"
+        }
+    },
+    execArgs: {
+        title: 'Execution arguments',
+        description: 'Execution arguments definition',
+    },
+    schedule: {
+        title: 'Schedule',
+        description: 'Schedule definition',
+    },
+    backoffLimit:{
+        title: 'Backoff Limit',
+        description: 'Backoff Limit definition',
+    },
+    requests:{
+        title: 'Request',
+        description: 'Request definition',
+    },
+    limits:{
+        title: 'Limits',
+        description: 'Limits definition',
+    },
+    base64: {
+        title: 'Base 64',
+        description: 'Base 64 definition',
+    },
+    mountPath: {
+        title: 'Mounth Path',
+        description: 'Mounth Path definition ',
+    },
+    volumeType: {
+        title: 'Volume Type',
+        description: 'Volume Type definition',
+    },
+    name: {
+        title: 'Name',
+        description: '',
+    },
+    key: {
+        title: 'Key',
+        description: '',
+    },
+    value: {
+        title: 'Value',
+        description: '',
+    },
+    protocol: {
+        title: 'Protocol',
+        description: 'Protocol definition',
+    },
+    source: {
+        title: 'Source',
+        description: 'Source definition',
+    },
+    replicas: {
+        title: 'Replicas',
+        description: 'Replicas definition',
+    },
+    contextSources:{
+        title: 'Context sources',
+        description: 'Context sources definition',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    secrets: {
+        title: 'Secrets',
+        description: 'Secrets definition',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    instructions: {
+        title: 'Instructions',
+        description: 'Instructions definition',
+        item: {
+            title: 'Title',
+            description: '',
+        },
+    },
+    destination: {
+        title: 'Destination',
+        description: 'Destination definition',
+    },
     metadata: {
         created: 'Created',
         updated: 'Updated',
@@ -16,7 +104,18 @@ const fields = {
         version: 'Version',
         labels: 'Labels',
     },
+    k8s:{
+        envs:{
+            description:'Environment definition'
+        },
+        description:'K8S Resources definition',
+    },
+    framework:{
+        description:'framework definition'
+    },
     spec: {
+        title: 'Spec',
+        description: 'Spec description',
         path: 'Path',
         src_path: 'Source path',
         compiled_code: 'Compiled code',
@@ -40,6 +139,7 @@ const fields = {
     status: {
         state: 'Status',
     },
+
     code: 'Code',
     logs: 'Logs',
     base: 'Base',
@@ -134,9 +234,9 @@ const messages = {
             },
             metrics: {
                 title: 'Metrics',
-                key: 'Name',       
+                key: 'Name',
                 value: 'Value',
-            }
+            },
         },
         tasks: {
             name: 'Task |||| Tasks',
@@ -283,6 +383,38 @@ const messages = {
     messages: {
         type_and_press_enter: 'Type and press ENTER to add',
         double_click_to_edit: 'Double click to edit',
+    },
+    k8s: {
+        envs: {
+            title: 'Environments',
+            description: 'Environments definition',
+        },
+        node_selector: {
+            title: 'Node selector',
+            description: 'Node selector definition',
+        },
+        secrets: {
+            title: 'Secrets',
+            description: 'Secrets definition',
+        },
+        volumes: {
+            title: 'Volumes',
+            description: 'Volumes definition',
+        },
+
+        resources: {
+            title: 'Resources',
+            description: 'K8s resources',
+            cpu: {
+                title: 'Cpu',
+            },
+            memory: {
+                title: 'Memory',
+            },
+            gpu: {
+                title: 'Gpu',
+            },
+        },
     },
 };
 

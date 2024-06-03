@@ -56,7 +56,6 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                             }}
                             color={'secondary.main'}
                         >
-                            {/* {"ciao"} */}
                             {options['ui:title'] as string}
                         </Typography>
                     </Grid>

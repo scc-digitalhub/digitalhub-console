@@ -321,6 +321,37 @@ const messages = {
         },
         loading: 'Caricamento...',
     },
+    k8s: {
+        envs:{
+            title: "Ambienti",
+            description:"Definizione di ambienti" 
+        },
+        node_selector:{
+            title: "Selettore di nodo",
+            description:"Definizione di Selettore di nodo"
+        },
+        secrets:{
+            title: "Segreti",
+            description:"Definizione di segreti" 
+        },
+        volumes:{
+            title: "Volumi",
+            description:"Definizione di volumi" 
+        },
+        resources: {
+            title: "Risorse",
+            description:"Definizione di risorse",
+            cpu:{
+                title:"Cpu"
+            },
+            memory:{
+                title:"Memoria"
+            },
+            gpu:{
+                title:"Gpu"
+            }
+        }
+    }
 };
 
 export default messages;

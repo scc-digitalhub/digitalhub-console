@@ -3,13 +3,13 @@ import {
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
+    FormDataConsumer,
     Labeled,
     List,
+    RecordContextProvider,
     SaveButton,
-    SimpleForm,
     SimpleShowLayout,
     TextField,
-    TextInput,
     Toolbar,
     TopToolbar,
     useGetResourceLabel,
@@ -26,19 +26,22 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import { runSpecUiSchemaFactory } from '../runs/types';
 import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
 import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
+import { StepperForm, StepContent } from '@dslab/ra-stepper';
+import { getTaskSpec } from '../tasks/types';
+import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 
-export const TaskAndRuns = (props: { task?: string }) => {
-    const { task } = props;
-
+export const TaskAndRuns = (props: {
+    task?: string;
+    onEdit: (id: string, data: any) => void;
+}) => {
+    const { task, onEdit } = props;
     const getResourceLabel = useGetResourceLabel();
     const prepare = (r: any) => {
         return {
@@ -59,6 +62,12 @@ export const TaskAndRuns = (props: { task?: string }) => {
                     fullWidth
                     maxWidth={'lg'}
                     transform={prepare}
+                    mutationOptions={{
+                        onSuccess: (data, variables, context) => {
+                            //data is updated
+                            if (task && data) onEdit(task, data);
+                        },
+                    }}
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
@@ -88,7 +97,8 @@ const TaskRunList = () => {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [schema, setSchema] = useState<any>();
+    const [runSchema, setRunSchema] = useState<any>();
+    const [taskSchema, setTaskSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
     const runtime = url.protocol
@@ -101,11 +111,65 @@ const TaskRunList = () => {
             return;
         }
 
-        schemaProvider
-            .list('runs', runtime)
-            .then(schemas => {
-                if (schemas) {
-                    setSchema(schemas.pop());
+        Promise.all([
+            schemaProvider.list('runs', runtime),
+            schemaProvider.list('tasks', runtime),
+            schemaProvider.list('functions', runtime),
+        ])
+            .then(([rSchemas, tSchemas, fSchemas]) => {
+                console.log('rschema', rSchemas);
+                console.log('tschema', tSchemas);
+                console.log('fschema', fSchemas);
+                //get schemas for task run and function of runtime
+                if (tSchemas && rSchemas && fSchemas) {
+                    // get the right schema based on kind ( run and function have single schema)
+                    const schemaTask = tSchemas.find(
+                        schema => schema.kind === record.kind
+                    );
+                    const schemaRun = rSchemas.pop();
+                    const schemaFunction = fSchemas.pop();
+                    if (schemaTask) {
+                        let rProp = schemaRun?.schema?.properties;
+                        let tProp = {};
+                        //save task properties (all kind of tasks)
+                        tSchemas.forEach(element => {
+                            if (element.kind === record.kind)
+                                Object.entries(
+                                    element?.schema?.properties
+                                ).forEach(([key, value], index) => {
+                                    if (rProp[key]) {
+                                        tProp[key] = value;
+                                        delete rProp[key];
+                                    }
+                                });
+                        });
+                        //and remove function
+                        Object.entries(
+                            schemaFunction?.schema?.properties
+                        ).forEach(([key, value], index) => {
+                            if (rProp[key]) {
+                                delete rProp[key];
+                            }
+                        });
+                        //and remove them from run schema
+                        tSchemas.forEach(element => {
+                            if (element.kind !== record.kind)
+                                Object.entries(
+                                    element?.schema?.properties
+                                ).forEach(([key, value], index) => {
+                                    if (rProp[key]) {
+                                        delete rProp[key];
+                                    }
+                                });
+                        });
+
+                        schemaTask.schema.properties = tProp;
+                        setTaskSchema(schemaTask);
+                        console.log('tschema', schemaTask);
+                        schemaRun.schema.properties = rProp;
+                        setRunSchema(schemaRun);
+                        console.log('rschema', schemaRun);
+                    }
                 }
             })
             .catch(error => {
@@ -115,10 +179,12 @@ const TaskRunList = () => {
 
     const partial = {
         project: record?.project,
-        kind: schema ? schema.kind : 'run',
+        kind: runSchema ? runSchema.kind : 'run',
         spec: {
             task: key,
             local_execution: false,
+            //copy the taask spec  (using record)
+            ...record?.spec,
         },
     };
 
@@ -157,19 +223,62 @@ const TaskRunList = () => {
             maxWidth={'lg'}
             transform={prepare}
         >
-            <SimpleForm toolbar={<CreateRunDialogToolbar />}>
-                <TextInput source="kind" readOnly />
-                {schema?.schema && (
-                    <JsonSchemaInput
-                        source="spec"
-                        schema={schema.schema}
-                        uiSchema={runSpecUiSchemaFactory(record.kind)}
-                        customValidate={customValidate}
-                    />
-                )}
-            </SimpleForm>
+            {runSchema?.schema && (
+                <StepperForm>
+                    <StepContent label="Task">
+                        <JsonSchemaInput
+                            source="spec"
+                            schema={taskSchema.schema}
+                            uiSchema={getTaskSpec(taskSchema.schema)}
+                            customValidate={customValidate}
+                        />
+                    </StepContent>
+                    <StepContent label="Run">
+                        <JsonSchemaInput
+                            source="spec"
+                            schema={runSchema.schema}
+                        />
+                    </StepContent>
+                    <StepContent label="Recap">
+                        <FormDataConsumer>
+                            {({ formData }) => (
+                                <>
+                                    {taskSchema && (
+                                            <JsonSchemaField
+                                                source="spec"
+                                                record={formData}
+                                                uiSchema={getTaskSpec(
+                                                    taskSchema.schema
+                                                )}
+                                                schema={{
+                                                    ...taskSchema.schema,
+                                                    title: 'Spec',
+                                                }}
+                                                label={false}
+                                            />
+                                    )}
+                                    {taskSchema && (
+                                            <JsonSchemaField
+                                                source="spec"
+                                                record={formData}
+                                                uiSchema={getTaskSpec(
+                                                    runSchema.schema
+                                                )}
+                                                schema={{
+                                                    ...runSchema.schema,
+                                                    title: 'Spec',
+                                                }}
+                                            />
+                                    )}
+                                </>
+                            )}
+                        </FormDataConsumer>
+                    </StepContent>
+                </StepperForm>
+            )}
         </CreateInDialogButton>
     );
+
     const ListActions = () => <CreateActionButton />;
     const Empty = () => (
         <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }}>

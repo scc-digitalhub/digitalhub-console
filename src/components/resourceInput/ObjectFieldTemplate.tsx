@@ -10,6 +10,8 @@ import {
     getUiOptions,
     titleId,
 } from '@rjsf/utils';
+import { ReactElement, JSXElementConstructor } from 'react';
+import { useTranslate } from 'react-admin';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -36,6 +38,7 @@ export default function ObjectFieldTemplate<
         onAddClick,
         registry,
     } = props;
+    const translate = useTranslate();
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
         'TitleFieldTemplate',
@@ -52,12 +55,21 @@ export default function ObjectFieldTemplate<
     const {
         ButtonTemplates: { AddButton },
     } = registry.templates;
+    const titleText = title || '';
+    const descriptionText = description || '';
+    function childrenTranslated(children: ReactElement<any, string | JSXElementConstructor<any>>): import("react").ReactNode {
+        const title= children.props.schema.title||""
+        const description= children.props.schema.description||""
+        children.props.schema.title=translate(title);
+        children.props.schema.description=translate(description);
+        return children;
+    }
     return (
         <>
             {title && (
                 <TitleFieldTemplate
                     id={titleId<T>(idSchema)}
-                    title={title}
+                    title={translate(titleText)}
                     required={required}
                     schema={schema}
                     uiSchema={uiSchema}
@@ -67,7 +79,7 @@ export default function ObjectFieldTemplate<
             {description && (
                 <DescriptionFieldTemplate
                     id={descriptionId<T>(idSchema)}
-                    description={description}
+                    description={translate(descriptionText)}
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
@@ -86,7 +98,7 @@ export default function ObjectFieldTemplate<
                             key={index}
                             style={{ marginBottom: '10px' }}
                         >
-                            {element.content}
+                            {childrenTranslated(element.content)}
                         </Grid>
                     )
                 )}
