@@ -1,4 +1,4 @@
-import {  AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import { AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import {
@@ -17,18 +17,18 @@ import { styled } from '@mui/material/styles';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
-  ))(({ theme }) => ({
+))(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     '&:not(:last-child)': {
-      borderBottom: 0,
+        borderBottom: 0,
     },
     '&::before': {
-      display: 'none',
+        display: 'none',
     },
-    "& .MuiAccordionSummary-expandIconWrapper": {
-        color: "#E0701B"
-      }
-  }));
+    '& .MuiAccordionSummary-expandIconWrapper': {
+        color: '#E0701B',
+    },
+}));
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateItemType` props for the component
@@ -76,31 +76,29 @@ export default function AccordionArrayFieldTemplate<
     const {
         ButtonTemplates: { AddButton },
     } = registry.templates;
-    const titleText = uiOptions.title|| title || "";
-    const descriptionText = uiOptions.description|| schema.description || "";
+    const titleText = uiOptions.title || title || '';
+    const descriptionText = uiOptions.description || schema.description || '';
     return (
-        <Accordion  elevation={0} square disableGutters>
+        <Accordion elevation={0} square disableGutters>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1-content"
                 id="panel1-header"
             >
-                {uiOptions.title &&
-                <Typography variant='h5'>
-                    {translate(titleText)}
-                </Typography>
-                }
+                {uiOptions.title && (
+                    <Typography variant="h5">{translate(titleText)}</Typography>
+                )}
             </AccordionSummary>
             <AccordionDetails>
-                {uiOptions.description &&
-                <ArrayFieldDescriptionTemplate
-                    idSchema={idSchema}
-                    description={descriptionText}
-                    schema={schema}
-                    uiSchema={uiSchema}
-                    registry={registry}
-                />
-            }
+                {uiOptions.description && (
+                    <ArrayFieldDescriptionTemplate
+                        idSchema={idSchema}
+                        description={descriptionText}
+                        schema={schema}
+                        uiSchema={uiSchema}
+                        registry={registry}
+                    />
+                )}
                 {items &&
                     items.map(
                         ({

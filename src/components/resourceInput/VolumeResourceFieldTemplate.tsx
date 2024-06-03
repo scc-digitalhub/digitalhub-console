@@ -5,15 +5,17 @@ import { useTranslate } from 'react-admin';
 export const VolumeResourceFieldTemplate = (
     props: ObjectFieldTemplateProps
 ) => {
-    function childrenTranslated(children: ReactElement<any, string | JSXElementConstructor<any>>): import("react").ReactNode {
-        const title= children.props.schema.title||""
-        const description= children.props.schema.description||""
-        children.props.schema.title=translate(title);
-        children.props.schema.description=translate(description);
+    function childrenTranslated(
+        children: ReactElement<any, string | JSXElementConstructor<any>>
+    ): import('react').ReactNode {
+        const title = children.props.schema.title || '';
+        const description = children.props.schema.description || '';
+        children.props.schema.title = translate(title);
+        children.props.schema.description = translate(description);
         return children;
     }
     const translate = useTranslate();
-    const titleText = props.title|| "";
+    const titleText = props.title || '';
     return (
         <>
             <div style={{ display: 'flex', width: '100%' }}>

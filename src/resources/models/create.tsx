@@ -88,9 +88,7 @@ export const ModelCreate = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase transform={transform} redirect="list">
                 <>
-                    <CreatePageTitle
-                        icon={<ModelIcon fontSize={'large'} />}
-                    />
+                    <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
@@ -128,9 +126,12 @@ export const ModelCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={{...getModelSpecSchema(
-                                                        formData.kind
-                                                    ),title:'Spec'}}
+                                                    schema={{
+                                                        ...getModelSpecSchema(
+                                                            formData.kind
+                                                        ),
+                                                        title: 'Spec',
+                                                    }}
                                                     uiSchema={getModelSpecUiSchema(
                                                         formData.kind
                                                     )}

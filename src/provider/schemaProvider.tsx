@@ -159,7 +159,7 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             }
 
             // deep copy via stringify because we risk users altering the spec
-            return _cache[k].map(a => JSON.parse(JSON.stringify(a)));   
+            return _cache[k].map(a => JSON.parse(JSON.stringify(a)));
         };
 
         const get = async (

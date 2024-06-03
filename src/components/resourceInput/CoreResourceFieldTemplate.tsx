@@ -4,11 +4,13 @@ import { ReactElement, JSXElementConstructor } from 'react';
 import { useTranslate } from 'react-admin';
 export const CoreResourceFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const translate = useTranslate();
-    function childrenTranslated(children: ReactElement<any, string | JSXElementConstructor<any>>): import("react").ReactNode {
-        const title= children.props.schema.title||""
-        const description= children.props.schema.description||""
-        children.props.schema.title=translate(title);
-        children.props.schema.description=translate(description);
+    function childrenTranslated(
+        children: ReactElement<any, string | JSXElementConstructor<any>>
+    ): import('react').ReactNode {
+        const title = children.props.schema.title || '';
+        const description = children.props.schema.description || '';
+        children.props.schema.title = translate(title);
+        children.props.schema.description = translate(description);
         return children;
     }
     return (

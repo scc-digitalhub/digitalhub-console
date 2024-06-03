@@ -6,10 +6,10 @@ const fields = {
     kind: 'Kind',
     // key: 'Key',
     project: 'Project',
-    container:{
-        instructions:{
-            description:"Instructions definition"
-        }
+    container: {
+        instructions: {
+            description: 'Instructions definition',
+        },
     },
     execArgs: {
         title: 'Execution arguments',
@@ -19,15 +19,15 @@ const fields = {
         title: 'Schedule',
         description: 'Schedule definition',
     },
-    backoffLimit:{
+    backoffLimit: {
         title: 'Backoff Limit',
         description: 'Backoff Limit definition',
     },
-    requests:{
+    requests: {
         title: 'Request',
         description: 'Request definition',
     },
-    limits:{
+    limits: {
         title: 'Limits',
         description: 'Limits definition',
     },
@@ -67,7 +67,7 @@ const fields = {
         title: 'Replicas',
         description: 'Replicas definition',
     },
-    contextSources:{
+    contextSources: {
         title: 'Context sources',
         description: 'Context sources definition',
         item: {
@@ -104,14 +104,14 @@ const fields = {
         version: 'Version',
         labels: 'Labels',
     },
-    k8s:{
-        envs:{
-            description:'Environment definition'
+    k8s: {
+        envs: {
+            description: 'Environment definition',
         },
-        description:'K8S Resources definition',
+        description: 'K8S Resources definition',
     },
-    framework:{
-        description:'framework definition'
+    framework: {
+        description: 'framework definition',
     },
     spec: {
         title: 'Spec',

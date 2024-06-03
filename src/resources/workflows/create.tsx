@@ -150,9 +150,12 @@ export const WorkflowCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    schema={{...getWorkflowSpec(
-                                                        formData.kind
-                                                    ),title:'Spec'}}
+                                                    schema={{
+                                                        ...getWorkflowSpec(
+                                                            formData.kind
+                                                        ),
+                                                        title: 'Spec',
+                                                    }}
                                                     uiSchema={getWorkflowUiSpec(
                                                         formData.kind
                                                     )}

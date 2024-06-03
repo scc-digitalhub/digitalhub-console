@@ -186,11 +186,11 @@ const ShowComponent = () => {
         }
         return kind;
     };
-    const editTask = (id: string, taskUpdated:any) => {
+    const editTask = (id: string, taskUpdated: any) => {
         setTasks(tasks => {
-            return tasks.map(task => task.id ===id ? taskUpdated: task)
-        })
-    }
+            return tasks.map(task => (task.id === id ? taskUpdated : task));
+        });
+    };
     return (
         <TabbedShowLayout record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
@@ -215,7 +215,7 @@ const ShowComponent = () => {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={{...spec.schema, title:'Spec'}}
+                        schema={{ ...spec.schema, title: 'Spec' }}
                         uiSchema={getUiSpec(kind)}
                         label={false}
                     />
@@ -240,7 +240,7 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns task={task.id} onEdit={editTask}/>
+                            <TaskAndRuns task={task.id} onEdit={editTask} />
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>

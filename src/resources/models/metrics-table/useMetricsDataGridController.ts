@@ -6,7 +6,7 @@ import { useTranslate } from 'react-admin';
 export const useMetricsDataGridController = (props: {
     metrics: any;
 }): MetricsDataGridControllerResult => {
-    const { metrics={} } = props;
+    const { metrics = {} } = props;
     const translate = useTranslate();
 
     const [data, setData] = useState<{
@@ -36,15 +36,15 @@ export const useMetricsDataGridController = (props: {
 
             //rows
             const rows: any = [];
-            let index=0;
+            let index = 0;
             for (const [key, value] of Object.entries(metrics)) {
                 rows.push({
                     id: index,
                     key,
-                    value
-                })
+                    value,
+                });
                 index++;
-              }
+            }
 
             setData({
                 rows,

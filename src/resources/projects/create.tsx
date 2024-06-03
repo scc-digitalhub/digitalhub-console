@@ -1,8 +1,6 @@
 import { Create, SimpleForm, TextInput, required } from 'react-admin';
 import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
-import {
-    MetadataSchema,
-} from '../../common/schemas';
+import { MetadataSchema } from '../../common/schemas';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';

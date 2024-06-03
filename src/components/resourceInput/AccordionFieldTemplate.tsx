@@ -21,9 +21,9 @@ const Accordion = styled((props: AccordionProps) => (
     '&::before': {
         display: 'none',
     },
-    "& .MuiAccordionSummary-expandIconWrapper": {
-        color: "#E0701B"
-      }
+    '& .MuiAccordionSummary-expandIconWrapper': {
+        color: '#E0701B',
+    },
 }));
 
 export const AccordionFieldTemplate = (props: ObjectFieldTemplateProps) => {

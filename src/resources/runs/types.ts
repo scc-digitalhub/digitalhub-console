@@ -79,7 +79,6 @@ export const getTaskSchemaUI = (schema: any, record) => {
     const runtime = split[0];
     const task = split[1];
     const tasks = getTaskByFunction(runtime) || [];
-    const taskSchema = schema?.properties[task+ '_spec'];
+    const taskSchema = schema?.properties[task + '_spec'];
     return taskSchema;
-
 };

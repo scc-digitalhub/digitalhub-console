@@ -236,7 +236,7 @@ const ShowComponent = () => {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={{...spec.schema, title:'Spec'}}
+                        schema={{ ...spec.schema, title: 'Spec' }}
                         uiSchema={getUiSpec(kind)}
                         label={false}
                     />

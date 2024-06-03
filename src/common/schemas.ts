@@ -93,9 +93,9 @@ export const createMetadataViewUiSchema = (metadata: any) => {
     for (const f in schema) {
         //replace missing values with hidden field
         if (metadata)
-        if (!(f in metadata)) {
-            schema[f]['ui:widget'] = 'hidden';
-        }
+            if (!(f in metadata)) {
+                schema[f]['ui:widget'] = 'hidden';
+            }
     }
 
     return schema;
@@ -168,7 +168,6 @@ export const k8sSpec = {
             limits: {
                 'ui:widget': 'hidden',
                 'ui:title': 'k8s.resources.gpu.limits.title',
-
             },
             requests: {
                 'ui:widget': 'coreResourceGpuWidget',

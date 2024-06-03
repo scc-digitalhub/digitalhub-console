@@ -133,9 +133,9 @@ const messages = {
             },
             metrics: {
                 title: 'Metriche',
-                key: 'Nome',       
+                key: 'Nome',
                 value: 'Valore',
-            }
+            },
         },
         tasks: {
             name: 'Task |||| Tasks',
@@ -322,36 +322,36 @@ const messages = {
         loading: 'Caricamento...',
     },
     k8s: {
-        envs:{
-            title: "Ambienti",
-            description:"Definizione di ambienti" 
+        envs: {
+            title: 'Ambienti',
+            description: 'Definizione di ambienti',
         },
-        node_selector:{
-            title: "Selettore di nodo",
-            description:"Definizione di Selettore di nodo"
+        node_selector: {
+            title: 'Selettore di nodo',
+            description: 'Definizione di Selettore di nodo',
         },
-        secrets:{
-            title: "Segreti",
-            description:"Definizione di segreti" 
+        secrets: {
+            title: 'Segreti',
+            description: 'Definizione di segreti',
         },
-        volumes:{
-            title: "Volumi",
-            description:"Definizione di volumi" 
+        volumes: {
+            title: 'Volumi',
+            description: 'Definizione di volumi',
         },
         resources: {
-            title: "Risorse",
-            description:"Definizione di risorse",
-            cpu:{
-                title:"Cpu"
+            title: 'Risorse',
+            description: 'Definizione di risorse',
+            cpu: {
+                title: 'Cpu',
             },
-            memory:{
-                title:"Memoria"
+            memory: {
+                title: 'Memoria',
             },
-            gpu:{
-                title:"Gpu"
-            }
-        }
-    }
+            gpu: {
+                title: 'Gpu',
+            },
+        },
+    },
 };
 
 export default messages;

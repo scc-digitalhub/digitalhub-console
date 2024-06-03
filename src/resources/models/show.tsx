@@ -46,16 +46,14 @@ const ShowToolbar = () => (
 );
 const getUiSpec = (kind: string) => {
     const uiSpec = getModelSpecUiSchema(kind) || {};
-        //hide metrics field
-        uiSpec['metrics'] = {
-            'ui:widget': 'hidden',
-    }
+    //hide metrics field
+    uiSpec['metrics'] = {
+        'ui:widget': 'hidden',
+    };
 
     return uiSpec;
 };
-const ModelShowLayout = memo(function ModelShowLayout(props: {
-    record: any;
-}) {
+const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
@@ -108,7 +106,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: {
                 {spec && (
                     <JsonSchemaField
                         source="spec"
-                        schema={{...spec.schema, title:'Spec'}}
+                        schema={{ ...spec.schema, title: 'Spec' }}
                         uiSchema={getUiSpec(kind)}
                         label={false}
                     />
@@ -121,8 +119,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: {
             )}
         </TabbedShowLayout>
     );
-},
-arePropsEqual);
+}, arePropsEqual);
 
 /**
  * This component overrides ShowView's default main area container.

@@ -83,7 +83,7 @@ const SpecInput = (props: {
         <>
             <JsonSchemaInput
                 source={source}
-                schema={{...spec.schema, title:'Spec'}}
+                schema={{ ...spec.schema, title: 'Spec' }}
                 uiSchema={getFunctionUiSpec(record.kind)}
             />
         </>

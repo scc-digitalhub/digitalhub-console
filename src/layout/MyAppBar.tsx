@@ -175,7 +175,6 @@ export const MyAppBar = () => {
 
     return (
         <AppBar color="primary" elevation={0}>
-           
             <Typography
                 flex="1"
                 textOverflow="ellipsis"
@@ -185,7 +184,11 @@ export const MyAppBar = () => {
                 color="inherit"
             >
                 {/* {projectId} */}
-                <RootResourceSelectorMenu source="name" showSelected={true} icon={false} />
+                <RootResourceSelectorMenu
+                    source="name"
+                    showSelected={true}
+                    icon={false}
+                />
             </Typography>
             {enableSearch && (
                 <SearchBar
@@ -202,7 +205,6 @@ export const MyAppBar = () => {
             >
                 {translate('bar.backProjects')}
             </Button>
-            
         </AppBar>
     );
 };

@@ -128,10 +128,12 @@ export const DataItemCreate = () => {
                                             return (
                                                 <JsonSchemaInput
                                                     source="spec"
-                                                    
-                                                    schema={{...getDataItemSpecSchema(
-                                                        formData.kind
-                                                    ),title:'Spec'}}
+                                                    schema={{
+                                                        ...getDataItemSpecSchema(
+                                                            formData.kind
+                                                        ),
+                                                        title: 'Spec',
+                                                    }}
                                                     uiSchema={getDataItemSpecUiSchema(
                                                         formData.kind
                                                     )}

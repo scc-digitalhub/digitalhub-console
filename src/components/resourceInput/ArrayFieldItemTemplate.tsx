@@ -48,11 +48,13 @@ export default function ArrayFieldItemTemplate<
         marginTop: 16,
         minHeight: 40,
     };
-    function childrenTranslated(children: ReactElement<any, string | JSXElementConstructor<any>>): import("react").ReactNode {
-        const title= children.props.schema.title||""
-        const description= children.props.schema.description||""
-        children.props.schema.title=translate(title);
-        children.props.schema.description=translate(description);
+    function childrenTranslated(
+        children: ReactElement<any, string | JSXElementConstructor<any>>
+    ): import('react').ReactNode {
+        const title = children.props.schema.title || '';
+        const description = children.props.schema.description || '';
+        children.props.schema.title = translate(title);
+        children.props.schema.description = translate(description);
         return children;
     }
 
@@ -60,8 +62,8 @@ export default function ArrayFieldItemTemplate<
         <Grid container={true} alignItems="top">
             <Grid item={true} xs style={{ overflow: 'auto' }}>
                 <Box>
-                <Box>{childrenTranslated(children)}</Box>
-                {/* <Box>{children}</Box> */}
+                    <Box>{childrenTranslated(children)}</Box>
+                    {/* <Box>{children}</Box> */}
                 </Box>
             </Grid>
             {hasToolbar && !readonly && (
