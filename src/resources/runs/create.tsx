@@ -110,7 +110,9 @@ const StepperToolbar = () => {
             </Box>
             <Box>
                 <StepperForm.NextButton />
-                {steps && currentStep === steps.length - 1 && <SaveButton />}
+                {steps && currentStep === steps.length - 1 && (
+                    <SaveButton alwaysEnable />
+                )}
             </Box>
         </Toolbar>
     );
