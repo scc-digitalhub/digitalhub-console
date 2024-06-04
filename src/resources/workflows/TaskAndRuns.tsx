@@ -30,8 +30,6 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import { runSpecUiSchemaFactory } from '../runs/types';
-
 import { WorkflowView } from '../../components/WorkflowView';
 
 export const TaskAndRuns = (props: { key?: string }) => {
@@ -257,3 +255,31 @@ const CreateRunDialogToolbar = () => (
         <SaveButton alwaysEnable />
     </Toolbar>
 );
+
+//TODO cleanup
+const runSpecUiSchemaFactory = (kind: string) => {
+    const schema = {
+        task: {
+            'ui:widget': 'hidden',
+        },
+        local_execution: {
+            'ui:widget': 'hidden',
+        },
+        function_spec: {
+            'ui:widget': 'hidden',
+        },
+        workflow_spec: {
+            'ui:widget': 'hidden',
+        },
+    };
+    // expect to have runtime+task
+    const split = kind.split('+');
+    const runtime = split[0];
+    const task = split[1];
+    const tasks = getTaskByFunction(runtime) || [];
+    tasks.forEach(t => {
+        schema[t + '_spec'] = { 'ui:widget': 'hidden' };
+    });
+
+    return schema;
+};

@@ -43,8 +43,13 @@ export const ArtifactCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+    const kinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+          }))
+        : [];
 
     const transform = data => ({
         ...data,
@@ -54,16 +59,7 @@ export const ArtifactCreate = () => {
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('artifacts').then(res => {
-                if (res) {
-                    setSchemas(res);
-
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-
-                    setKinds(values);
-                }
+                setSchemas(res || []);
             });
         }
     }, [schemaProvider]);

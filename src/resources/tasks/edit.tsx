@@ -9,7 +9,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '../../components/JsonSchema';
-import { getTaskSpec } from './types';
+import { getTaskUiSpec } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -78,7 +78,7 @@ export const TaskEditComponent = () => {
                     source="spec"
                     schema={{ ...spec.schema, title: 'Spec' }}
                     label={false}
-                    uiSchema={getTaskSpec(spec.schema)}
+                    uiSchema={getTaskUiSpec(spec.schema)}
                     customValidate={customValidate}
                 />
             )}

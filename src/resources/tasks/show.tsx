@@ -9,7 +9,7 @@ import { Stack } from '@mui/material';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useEffect, useState } from 'react';
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { getTaskSpec } from './types';
+import { getTaskUiSpec } from './types';
 
 export const TaskShowComponent = () => {
     const resource = useResourceContext();
@@ -42,7 +42,7 @@ export const TaskShowComponent = () => {
                 <JsonSchemaField
                     source="spec"
                     schema={{ ...spec.schema, title: 'Spec' }}
-                    uiSchema={getTaskSpec(spec.schema)}
+                    uiSchema={getTaskUiSpec(spec.schema)}
                     label={false}
                 />
             )}

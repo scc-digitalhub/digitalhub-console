@@ -2,7 +2,6 @@
 import AccordionArrayFieldTemplate from '../components/resourceInput/AccordionArrayFieldTemplate';
 import { AccordionFieldTemplate } from '../components/resourceInput/AccordionFieldTemplate';
 import { CoreResourceFieldTemplate } from '../components/resourceInput/CoreResourceFieldTemplate';
-import { K8FieldTemplate } from '../components/resourceInput/K8FieldTemplate';
 import { KeyValueFieldTemplate } from '../components/resourceInput/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from '../components/resourceInput/VolumeResourceFieldTemplate';
 
@@ -107,124 +106,86 @@ export const BlankSchema = {
     properties: {},
 };
 
-export const k8sSpec = {
-    // 'ui:ObjectFieldTemplate': K8FieldTemplate,
-    affinity: {
-        'ui:widget': 'hidden',
-    },
-    tolerations: {
-        'ui:widget': 'hidden',
-    },
-    resources: {
-        'ui:ObjectFieldTemplate': AccordionFieldTemplate,
-        'ui:title': 'k8s.resources.title',
-        'ui:description': 'k8s.resources.description',
-        'ui:order': ['cpu', 'mem', 'gpu'],
+export const mergeUiTemplate = (schema: any, base: any, template: any) => {
+    if (!schema || !('properties' in schema) || !base || !template) {
+        return {};
+    }
 
-        cpu: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.cpu.title',
-            'ui:order': ['requests', 'limits'],
+    //filter and merge with template
+    const keys = Object.keys(template).filter(k => !k.startsWith('ui:'));
+    const ui = Object.keys(schema.properties)
+        .filter(key => keys.includes(key))
+        .reduce((obj, key) => {
+            obj[key] = template[key];
+            return obj;
+        }, base);
 
-            limits: {
-                'ui:widget': 'coreResourceCpuWidget',
-                'ui:title': 'k8s.resources.cpu.limits.title',
-                'ui:options': {
-                    'ui:title': 'Limits',
-                },
-            },
-            requests: {
-                'ui:widget': 'coreResourceCpuWidget',
-                'ui:title': 'k8s.resources.cpu.request.title',
-                'ui:options': {
-                    'ui:title': 'Request',
-                },
-            },
-        },
-        mem: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.memory.title',
-            'ui:order': ['requests', 'limits'],
-            limits: {
-                'ui:widget': 'coreResourceMemWidget',
-                'ui:title': 'k8s.resources.memory.limits.title',
-                'ui:options': {
-                    'ui:title': 'Limits',
-                },
-            },
-            requests: {
-                'ui:widget': 'coreResourceMemWidget',
-                'ui:title': 'k8s.resources.memory.request.title',
-                'ui:options': {
-                    'ui:title': 'Request',
-                },
-            },
-        },
-        gpu: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.gpu.title',
-            'ui:order': ['requests', 'limits'],
+    //build order if provided in base
+    if ('ui:order' in base) {
+        //add every other prop if missing
+        const ordering = Object.keys(schema.properties)
+            .filter(p => !keys.includes(p))
+            .filter(key => !base['ui:order'].includes(key))
+            .reduce((obj, key) => {
+                obj.push(key);
+                return obj;
+            }, base['ui:order']);
 
-            limits: {
-                'ui:widget': 'hidden',
-                'ui:title': 'k8s.resources.gpu.limits.title',
-            },
-            requests: {
-                'ui:widget': 'coreResourceGpuWidget',
-                'ui:title': 'k8s.resources.gpu.request.title',
-                'ui:options': {
-                    'ui:title': 'Request',
-                },
-            },
-        },
-    },
+        ui['ui:order'] =
+            'ui:order' in template
+                ? ordering.concat(template['ui:order'])
+                : ordering;
 
-    envs: {
-        'ui:title': 'k8s.envs.title',
-        'ui:description': 'k8s.envs.description',
+        //TODO handle allOf/anyOf ordering
+    }
 
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
-        items: {
-            'ui:title': '',
-            'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
-        },
-    },
-    secrets: {
-        'ui:title': 'k8s.secrets.title',
-        'ui:description': 'k8s.secrets.description',
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
-        items: {
-            'ui:title': '',
-        },
-    },
-    node_selector: {
-        'ui:title': 'k8s.node_selector.title',
-        'ui:description': 'k8s.node_selector.description',
+    return ui;
+};
 
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
-        items: {
-            'ui:title': '',
-            'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
-        },
-    },
-    volumes: {
-        'ui:title': 'k8s.volumes.title',
-        'ui:description': 'k8s.volumes.description',
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
-        items: {
-            'ui:title': '',
-            'ui:ObjectFieldTemplate': VolumeResourceFieldTemplate,
-            'ui:order': ['mount_path', 'name', 'volume_type', 'spec'],
-        },
-    },
+/**
+ * Filter second schema from first. Remove if embedded (via allOf) or clear matching properties as fallback
+ * @param first
+ * @param second
+ * @returns
+ */
+export const filterProps = (first: any, second: any) => {
+    if (
+        !first ||
+        !second ||
+        !('properties' in first) ||
+        !('properties' in second) ||
+        typeof first.properties !== 'object' ||
+        typeof second.properties !== 'object'
+    ) {
+        //invalid schema
+        return {};
+    }
 
-    // backoff_limit: {
-    //     'ui:widget': 'hidden',
-    // },
-    // schedule: {
-    //     'ui:widget': 'hidden',
-    // },
-    // replicas: {
-    //     'ui:widget': 'hidden',
-    // },
+    //filter out allOf if matches second
+    const allOf =
+        first.allOf &&
+        'title' in second &&
+        first.allOf.find(a => a.title === second.title)
+            ? first.allOf.filter(a => a.title != second.title)
+            : first.allOf;
+
+    let properties = first.properties;
+    if (allOf && allOf.length === first.allOf.length) {
+        //no filtering applied, fallback
+        //filter props from second and collect to new
+        const keys = Object.keys(second.properties);
+        properties = Object.keys(first.properties)
+            .filter(key => !keys.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = first.properties[key];
+                return obj;
+            }, {});
+    }
+
+    //deep copy first but properties and allOf
+    return {
+        ...JSON.parse(JSON.stringify(first)),
+        properties: JSON.parse(JSON.stringify(properties)),
+        allOf: JSON.parse(JSON.stringify(allOf)),
+    };
 };

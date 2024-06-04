@@ -12,9 +12,12 @@ import {
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
-import { getTaskSpec } from '../tasks/types';
+import { getTaskUiSpec } from '../tasks/types';
 import { useState } from 'react';
 import { Box } from '@mui/system';
+import { getRunUiSpec } from './types';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { AceEditorField } from '../../components/AceEditorField';
 
 const RunCreate = (props: { taskId: string }) => {
     const { taskId } = props;
@@ -60,24 +63,34 @@ export const RunCreateComponent = (props: {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-    console.log('schemas', runSchema, taskSchema);
     return (
         <StepperForm toolbar={<StepperToolbar />}>
             <StepperForm.Step label={getResourceLabel('tasks', 1)}>
                 <JsonSchemaInput
                     source="spec"
                     schema={taskSchema}
-                    uiSchema={getTaskSpec(taskSchema)}
+                    uiSchema={getTaskUiSpec(taskSchema)}
                 />
             </StepperForm.Step>
             <StepperForm.Step label={getResourceLabel('runs', 1)}>
-                <JsonSchemaInput source="spec" schema={runSchema} />
+                <JsonSchemaInput
+                    source="spec"
+                    schema={runSchema}
+                    uiSchema={getRunUiSpec(runSchema)}
+                />
             </StepperForm.Step>
             <StepperForm.Step label={translate('recap')} optional>
                 <FormDataConsumer>
-                    {({ formData }) => (
-                        <pre>{JSON.stringify(formData?.spec, 2)}</pre>
-                    )}
+                    {({ formData }) => {
+                        const r = { spec: btoa(toYaml(formData?.spec)) };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                            />
+                        );
+                    }}
                 </FormDataConsumer>
             </StepperForm.Step>
         </StepperForm>

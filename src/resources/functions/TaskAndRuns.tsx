@@ -34,9 +34,11 @@ import { checkGpuRequestError } from '../../components/resourceInput/CoreResourc
 import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
 import { StepperForm } from '@dslab/ra-stepper';
-import { getTaskSpec } from '../tasks/types';
+import { getTaskUiSpec } from '../tasks/types';
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
 import { RunCreateComponent } from '../runs';
+import { filterProps } from '../../common/schemas';
+import { useGetManySchemas } from '../../controllers/schemaController';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -94,12 +96,12 @@ export const TaskAndRuns = (props: {
 
 const TaskRunList = () => {
     const record = useRecordContext();
-    const schemaProvider = useSchemaProvider();
+    // const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [runSchema, setRunSchema] = useState<any>();
-    const [taskSchema, setTaskSchema] = useState<any>();
+    // const [runSchema, setRunSchema] = useState<any>();
+    // const [taskSchema, setTaskSchema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
     const runtime = url.protocol
@@ -107,90 +109,138 @@ const TaskRunList = () => {
         : '';
     url.protocol = record.kind + ':';
     const key = url.toString();
-    useEffect(() => {
-        if (!schemaProvider || !record || !fn) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (!schemaProvider || !record || !fn) {
+    //         return;
+    //     }
 
-        Promise.all([
-            schemaProvider.list('runs', runtime),
-            schemaProvider.list('tasks', runtime),
-            schemaProvider.list('functions', runtime),
-        ])
-            .then(([rSchemas, tSchemas, fSchemas]) => {
-                console.log('rschema', rSchemas);
-                console.log('tschema', tSchemas);
-                console.log('fschema', fSchemas);
-                //get schemas for task run and function of runtime
-                if (tSchemas && rSchemas && fSchemas) {
-                    // get the right schema based on kind ( run and function have single schema)
-                    const schemaTask = tSchemas.find(
-                        schema => schema.kind === record.kind
-                    );
-                    const schemaRun = rSchemas.pop();
-                    const schemaFunction = fSchemas.pop();
-                    if (schemaTask) {
-                        let rProp = schemaRun?.schema?.properties;
-                        let tProp = {};
-                        let allOfT = schemaRun?.schema?.allOf?.find(
-                            a => a.title == schemaTask?.schema?.title
-                        );
-                        //save task properties (all kind of tasks)
-                        tSchemas.forEach(element => {
-                            if (element.kind === record.kind)
-                                Object.entries(
-                                    element?.schema?.properties
-                                ).forEach(([key, value], index) => {
-                                    if (rProp[key]) {
-                                        tProp[key] = value;
-                                        delete rProp[key];
-                                    }
-                                    if (key in allOfT?.properties) {
-                                        delete allOfT.properties[key];
-                                    }
-                                });
-                        });
-                        //and remove function
-                        let allOfFn = schemaRun?.schema?.allOf?.find(
-                            a => a.title == schemaFunction?.schema?.title
-                        );
-                        Object.entries(
-                            schemaFunction?.schema?.properties
-                        ).forEach(([key, value], index) => {
-                            //remove from properties
-                            if (rProp[key]) {
-                                delete rProp[key];
-                            }
-                            //remove validation rules
-                            if (key in allOfFn?.properties) {
-                                delete allOfFn.properties[key];
-                            }
-                        });
-                        //and remove them from run schema
-                        tSchemas.forEach(element => {
-                            if (element.kind !== record.kind)
-                                Object.entries(
-                                    element?.schema?.properties
-                                ).forEach(([key, value], index) => {
-                                    if (rProp[key]) {
-                                        delete rProp[key];
-                                    }
-                                });
-                        });
+    //     Promise.all([
+    //         schemaProvider.list('runs', runtime),
+    //         schemaProvider.list('tasks', runtime),
+    //         schemaProvider.list('functions', runtime),
+    //     ])
+    //         .then(([rSchemas, tSchemas, fSchemas]) => {
+    //             console.log('rschema', rSchemas);
+    //             console.log('tschema', tSchemas);
+    //             console.log('fschema', fSchemas);
+    //             //get schemas for task run and function of runtime
+    //             if (tSchemas && rSchemas && fSchemas) {
+    //                 // get the right schema based on kind ( run and function have single schema)
+    //                 const schemaTask = tSchemas.find(
+    //                     schema => schema.kind === record.kind
+    //                 );
+    //                 const schemaRun = rSchemas.pop();
+    //                 const schemaFunction = fSchemas.pop();
 
-                        schemaTask.schema.properties = tProp;
-                        setTaskSchema(schemaTask);
-                        console.log('tschema', schemaTask.schema.properties);
-                        schemaRun.schema.properties = rProp;
-                        setRunSchema(schemaRun);
-                        console.log('rschema', schemaRun.schema.properties);
-                    }
-                }
-            })
-            .catch(error => {
-                console.log('error:', error);
+    //                 //keep unfiltered by default
+    //                 let schemaSpec = schemaRun.schema;
+
+    //                 //filter function props
+    //                 if (schemaFunction) {
+    //                     schemaSpec = filterProps(
+    //                         schemaSpec,
+    //                         schemaFunction.schema
+    //                     );
+    //                 }
+
+    //                 //filter all task props
+    //                 tSchemas.forEach(e => {
+    //                     schemaSpec = filterProps(schemaSpec, e.schema);
+    //                 });
+
+    //                 schemaRun.schema = schemaSpec;
+
+    //                 //store
+    //                 setTaskSchema(schemaTask);
+    //                 setRunSchema(schemaRun);
+
+    //                 // if (schemaTask) {
+    //                 //     let rProp = schemaRun?.schema?.properties;
+    //                 //     let tProp = {};
+    //                 //     let allOfT = schemaRun?.schema?.allOf?.find(
+    //                 //         a => a.title == schemaTask?.schema?.title
+    //                 //     );
+    //                 //     //save task properties (all kind of tasks)
+    //                 //     tSchemas.forEach(element => {
+    //                 //         if (element.kind === record.kind)
+    //                 //             Object.entries(
+    //                 //                 element?.schema?.properties
+    //                 //             ).forEach(([key, value], index) => {
+    //                 //                 if (rProp[key]) {
+    //                 //                     tProp[key] = value;
+    //                 //                     delete rProp[key];
+    //                 //                 }
+    //                 //                 if (key in allOfT?.properties) {
+    //                 //                     delete allOfT.properties[key];
+    //                 //                 }
+    //                 //             });
+    //                 //     });
+    //                 //     //and remove function
+    //                 //     let allOfFn = schemaRun?.schema?.allOf?.find(
+    //                 //         a => a.title == schemaFunction?.schema?.title
+    //                 //     );
+    //                 //     Object.entries(
+    //                 //         schemaFunction?.schema?.properties
+    //                 //     ).forEach(([key, value], index) => {
+    //                 //         //remove from properties
+    //                 //         if (rProp[key]) {
+    //                 //             delete rProp[key];
+    //                 //         }
+    //                 //         //remove validation rules
+    //                 //         if (key in allOfFn?.properties) {
+    //                 //             delete allOfFn.properties[key];
+    //                 //         }
+    //                 //     });
+    //                 //     //and remove them from run schema
+    //                 //     tSchemas.forEach(element => {
+    //                 //         if (element.kind !== record.kind)
+    //                 //             Object.entries(
+    //                 //                 element?.schema?.properties
+    //                 //             ).forEach(([key, value], index) => {
+    //                 //                 if (rProp[key]) {
+    //                 //                     delete rProp[key];
+    //                 //                 }
+    //                 //             });
+    //                 //     });
+
+    //                 //     schemaTask.schema.properties = tProp;
+    //                 //     setTaskSchema(schemaTask);
+    //                 //     console.log('tschema', schemaTask.schema.properties);
+    //                 //     schemaRun.schema.properties = rProp;
+    //                 //     setRunSchema(schemaRun);
+    //                 //     console.log('rschema', schemaRun.schema.properties);
+    //                 // }
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log('error:', error);
+    //         });
+    // }, [record, schemaProvider]);
+
+    const {
+        data: schemas,
+        isLoading,
+        error,
+    } = useGetManySchemas([
+        { resource: 'functions', runtime },
+        { resource: 'tasks', runtime },
+        { resource: 'runs', runtime },
+    ]);
+
+    //filter run and task schema
+    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    const taskSchema = schemas
+        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
+        : null;
+
+    if (runSchema && schemas) {
+        //filter out embedded props from spec
+        schemas
+            .filter(s => s.entity != 'RUN')
+            .forEach(s => {
+                runSchema.schema = filterProps(runSchema.schema, s.schema);
             });
-    }, [record, schemaProvider]);
+    }
 
     const partial = {
         project: record?.project,
@@ -198,8 +248,8 @@ const TaskRunList = () => {
         spec: {
             task: key,
             local_execution: false,
-            //copy the taask spec  (using record)
-            // ...record?.spec,
+            //copy the task spec  (using record)
+            ...record?.spec,
         },
     };
 
@@ -328,9 +378,3 @@ const TaskRunList = () => {
         </>
     );
 };
-
-const CreateRunDialogToolbar = () => (
-    <Toolbar>
-        <SaveButton alwaysEnable />
-    </Toolbar>
-);

@@ -4,12 +4,8 @@ import {
     JSONSchemaFormatInputProps,
     JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
-// import { JsonSchemaFieldProps,JsonSchemaField as RaJsonSchemaField} from './JsonSchemaField';
-//  import { JsonSchemaInput as RaJsonSchemaInput,JSONSchemaFormatInputProps} from './JsonSchemaInput';
+
 import { MuiChipsInputWidget } from './MuiChipsInputWidget';
-import { CoreResourceMemWidget } from './resourceInput/CoreResourceMemWidget';
-import { CoreResourceGpuWidget } from './resourceInput/CoreResourceGpuWidget';
-import { CoreResourceCpuWidget } from './resourceInput/CoreResourceCpuWidget';
 import { CoreResourceFieldTemplate } from './resourceInput/CoreResourceFieldTemplate';
 import { KeyValueFieldTemplate } from './resourceInput/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from './resourceInput/VolumeResourceFieldTemplate';
@@ -19,9 +15,6 @@ import ObjectFieldTemplate from './resourceInput/ObjectFieldTemplate';
 import WrapIfAdditionalTemplate from './resourceInput/WrapIfAdditionalTemplate';
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
-    coreResourceCpuWidget: CoreResourceCpuWidget,
-    coreResourceGpuWidget: CoreResourceGpuWidget,
-    coreResourceMemWidget: CoreResourceMemWidget,
 };
 const customTemplates = {
     CoreResourceFieldTemplate,

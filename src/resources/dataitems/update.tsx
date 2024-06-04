@@ -13,21 +13,14 @@ import {
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
-import { DataItemTypes } from './types';
 import { useNavigate } from 'react-router-dom';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import { RecordTitle } from '../../components/RecordTitle';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 
-const kinds = Object.values(DataItemTypes).map(v => {
-    return {
-        id: v,
-        name: v,
-    };
-});
-
-const PostCreateToolbar = () => {
+const EditToolbar = () => {
     const translate = useTranslate();
     const navigate = useNavigate();
     const handleClick = () => {
@@ -78,9 +71,25 @@ export const DataItemUpdate = () => {
 const DataItemEditForm = (props: { record: any }) => {
     const { record } = props;
     const kind = record?.kind || undefined;
-    console.log('record', record);
+    const schemaProvider = useSchemaProvider();
+    const [schemas, setSchemas] = useState<any[]>();
+    const kinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+          }))
+        : [];
+
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.list('dataitems').then(res => {
+                setSchemas(res || []);
+            });
+        }
+    }, [schemaProvider]);
+
     return (
-        <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>
+        <SimpleForm defaultValues={record} toolbar={<EditToolbar />}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <TextInput

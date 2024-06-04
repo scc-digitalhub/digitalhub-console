@@ -30,6 +30,7 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -42,31 +43,29 @@ const CreateToolbar = (props: CreateActionsProps) => {
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-    const [schemas, setSchemas] = useState<any[]>();
+    // const schemaProvider = useSchemaProvider();
+    // const [schemas, setSchemas] = useState<any[]>();
+    const { data: schemas, isLoading, error } = useGetSchemas('dataitems');
+    console.log(schemas, isLoading, error);
+    const kinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+          }))
+        : [];
 
     const transform = data => ({
         ...data,
         project: root || '',
     });
 
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.list('dataitems').then(res => {
-                if (res) {
-                    setSchemas(res);
-
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider]);
+    // useEffect(() => {
+    //     if (schemaProvider) {
+    //         schemaProvider.list('dataitems').then(res => {
+    //             setSchemas(res || []);
+    //         });
+    //     }
+    // }, [schemaProvider]);
 
     const getDataItemSpecSchema = (kind: string | undefined) => {
         if (!kind) {

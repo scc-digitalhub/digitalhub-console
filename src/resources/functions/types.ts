@@ -1,33 +1,9 @@
-import { BlankSchema } from '../../common/schemas';
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
 } from '../../components/SourceCodeTemplate';
 
-export enum FunctionTypes {
-    DBT = 'dbt',
-    NEFERTEM = 'nefertem',
-    JOB = 'job',
-}
-export const TaskMap = {
-    dbt: ['transform'],
-    nefertem: ['profile', 'validate', 'metric', 'infer'],
-    container: ['job', 'serve', 'deploy', 'build'],
-    mlrun: ['job', 'build', 'serve'],
-    kfp: ['pipeline'],
-};
-export const getTaskByFunction = kind => {
-    return TaskMap[kind];
-};
-
-export const getFunctionSpec = (kind: string | undefined) => {
-    if (!kind) {
-        return BlankSchema;
-    }
-
-    return BlankSchema;
-};
-
+//TODO cleanup implementation and properly check for source definition in schema!
 export const getFunctionUiSpec = (kind: string | undefined) => {
     return {
         source: {
