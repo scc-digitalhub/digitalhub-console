@@ -21,6 +21,7 @@ export const MyMenu = () => {
                 <Menu.ResourceItem name="models" />
                 <Menu.ResourceItem name="functions" />
                 <Menu.ResourceItem name="workflows" />
+                <Menu.ResourceItem name="runs" />
                 <Menu.ResourceItem name="secrets" />
                 <Divider />
                 <MenuItemLink

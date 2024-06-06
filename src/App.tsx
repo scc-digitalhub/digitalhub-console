@@ -155,6 +155,8 @@ import {
     ModelUpdate,
 } from './resources/models';
 import { ModelIcon } from './resources/models/icon';
+import { RunList } from './resources/runs';
+import { RunIcon } from './resources/runs/icon';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -246,7 +248,11 @@ const CoreApp = () => {
                                 />
                             </Resource>
                             <Resource name="tasks" />
-                            <Resource name="runs" />
+                            <Resource
+                                name="runs"
+                                list={RunList}
+                                icon={RunIcon}
+                            />
                             <Resource
                                 name="projects"
                                 list={ProjectSelectorList}

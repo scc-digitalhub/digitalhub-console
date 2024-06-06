@@ -191,6 +191,7 @@ const messages = {
         },
         runs: {
             name: 'Run |||| Runs',
+            list: 'List and search runs',
             fields: {
                 ...fields,
             },
@@ -300,6 +301,15 @@ const messages = {
             },
         },
     },
+    states: {
+        completed: 'Completed',
+        running: 'Running',
+        error: 'Error',
+        built: 'Built',
+        ready: 'Ready',
+        deleting: 'Deleting',
+        deleted: 'Deleted',
+    },
     pages: {
         dashboard: {
             text: 'Define, build and execute functions to manage artifacts and dataitems.',
@@ -318,6 +328,10 @@ const messages = {
             dataitems: {
                 title: 'Data items',
                 empty: 'No data items yet',
+            },
+            models: {
+                title: 'Models',
+                empty: 'No models yet',
             },
             artifacts: {
                 title: 'Artifacts',

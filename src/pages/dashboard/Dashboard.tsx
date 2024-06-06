@@ -1,9 +1,5 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import TableChartIcon from '@mui/icons-material/TableChart';
 import {
     Box,
     Card,
@@ -34,6 +30,11 @@ import { RunsGrid } from './RunsGrid';
 import { convertToDate } from './helper';
 import { RecentList } from './RecentList';
 import { RecentRunsList } from './RecentRunList';
+import { ModelIcon } from '../../resources/models/icon';
+import { FunctionIcon } from '../../resources/functions/icon';
+import { ArtifactIcon } from '../../resources/artifacts/icon';
+import { DataItemIcon } from '../../resources/dataitems/icon';
+import { RunIcon } from '../../resources/runs/icon';
 
 const DashboardCreateButton = (props: { resource: string }) => {
     const { resource } = props;
@@ -58,11 +59,13 @@ export const Dashboard = () => {
     const [functions, setFunctions] = useState<any[]>();
     const [artifacts, setArtifacts] = useState<any[]>();
     const [dataItems, setDataItems] = useState<any[]>();
+    const [models, setModels] = useState<any[]>();
     const [runs, setRuns] = useState<any[]>();
 
     const [totalFunctions, setTotalFunctions] = useState<number>();
     const [totalDataItems, setTotalDataItems] = useState<number>();
     const [totalArtifacts, setTotalArtifacts] = useState<number>();
+    const [totalModels, setTotalModels] = useState<number>();
 
     const [completed, setCompleted] = useState<number>();
     const [running, setRunning] = useState<number>();
@@ -98,6 +101,12 @@ export const Dashboard = () => {
                     setDataItems(res.data);
                 }
             });
+            dataProvider.getList('models', params).then(res => {
+                if (res.data) {
+                    setTotalModels(res.total);
+                    setModels(res.data);
+                }
+            });
             dataProvider.getList('runs', params).then(res => {
                 if (res.data) {
                     setRuns(res.data);
@@ -130,6 +139,8 @@ export const Dashboard = () => {
     const isArtifactsArrayNotEmpty = !!artifacts && artifacts.length > 0;
     const isDataItemsArrayNotEmpty = !!dataItems && dataItems.length > 0;
     const isFunctionsArrayNotEmpty = !!functions && functions.length > 0;
+    const isModelsArrayNotEmpty = !!models && models.length > 0;
+
     const isRunsArrayNotEmpty = !!runs && runs.length > 0;
 
     if (!project) {
@@ -183,11 +194,47 @@ export const Dashboard = () => {
             </div>
 
             <Grid container spacing={2}>
+                <Grid item xs={12} sm={12} md={12} xl={12} zeroMinWidth>
+                    <Card sx={cardStyle}>
+                        <CardHeader
+                            title={translate('pages.dashboard.runs.title')}
+                            avatar={<RunIcon />}
+                            titleTypographyProps={{
+                                variant: 'h5',
+                                color: 'secondary.main',
+                            }}
+                        />
+                        <CardContent>
+                            <RunsGrid
+                                runs={{
+                                    completed: completed,
+                                    running: running,
+                                    error: error,
+                                }}
+                            />
+                            {/* {isRunsArrayNotEmpty ? (
+                                <RecentRunsList elements={runs} />
+                            ) : (
+                                <EmptyList resource="runs" />
+                            )} */}
+                        </CardContent>
+                        <CardActions
+                            disableSpacing
+                            sx={{
+                                mt: 'auto',
+                                justifyContent: 'left',
+                            }}
+                        >
+                            <ToListButton resource="runs" />
+                        </CardActions>
+                    </Card>
+                </Grid>
+
                 <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
                     <Card sx={cardStyle}>
                         <CardHeader
                             title={translate('pages.dashboard.artifacts.title')}
-                            avatar={<InsertDriveFileIcon />}
+                            avatar={<ArtifactIcon />}
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
@@ -226,7 +273,7 @@ export const Dashboard = () => {
                     <Card sx={cardStyle}>
                         <CardHeader
                             title={translate('pages.dashboard.dataitems.title')}
-                            avatar={<TableChartIcon />}
+                            avatar={<DataItemIcon />}
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
@@ -265,7 +312,7 @@ export const Dashboard = () => {
                     <Card sx={cardStyle}>
                         <CardHeader
                             title={translate('pages.dashboard.functions.title')}
-                            avatar={<ElectricBoltIcon />}
+                            avatar={<FunctionIcon />}
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
@@ -303,27 +350,39 @@ export const Dashboard = () => {
                 <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
                     <Card sx={cardStyle}>
                         <CardHeader
-                            title={translate('pages.dashboard.runs.title')}
-                            avatar={<DirectionsRunIcon />}
+                            title={translate('pages.dashboard.models.title')}
+                            avatar={<ModelIcon />}
                             titleTypographyProps={{
                                 variant: 'h5',
                                 color: 'secondary.main',
                             }}
                         />
                         <CardContent>
-                            <RunsGrid
-                                runs={{
-                                    completed: completed,
-                                    running: running,
-                                    error: error,
-                                }}
-                            />
-                            {isRunsArrayNotEmpty ? (
-                                <RecentRunsList elements={runs} />
+                            <Counter value={totalModels} />
+                            {isModelsArrayNotEmpty ? (
+                                <RecentList
+                                    resource="models"
+                                    elements={models}
+                                />
                             ) : (
-                                <EmptyList resource="runs" />
+                                <EmptyList resource="models" />
                             )}
                         </CardContent>
+                        <CardActions
+                            disableSpacing
+                            sx={{
+                                mt: 'auto',
+                                justifyContent: isModelsArrayNotEmpty
+                                    ? 'left'
+                                    : 'center',
+                            }}
+                        >
+                            {isModelsArrayNotEmpty ? (
+                                <ToListButton resource="models" />
+                            ) : (
+                                <DashboardCreateButton resource="models" />
+                            )}
+                        </CardActions>
                     </Card>
                 </Grid>
             </Grid>

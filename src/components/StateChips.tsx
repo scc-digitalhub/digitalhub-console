@@ -1,10 +1,9 @@
 import {
     ChipField,
-    FunctionField,
     Identifier,
     RaRecord,
     useRecordContext,
-    useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import get from 'lodash/get';
 
@@ -14,21 +13,33 @@ export const StateChips = (props: {
     source: string;
 }) => {
     const { source, ...rest } = props;
+    const translate = useTranslate();
     const record = useRecordContext(rest);
     const value = get(record, source)?.toString();
     if (!record || !value) {
         return <></>;
     }
 
+    const r = {
+        value: translate('states.' + value.toLowerCase()).toUpperCase(),
+    };
+
     return (
-        <ChipField record={record} source={source} color={StateColors[value]} />
+        <ChipField
+            record={r}
+            source={'value'}
+            color={StateColors[value]}
+            valu
+        />
     );
 };
 
 export enum StateColors {
     COMPLETED = 'success',
     ERROR = 'error',
-    RUNNING = 'warning',
+    RUNNING = 'info',
     BUILT = 'warning',
-    READY = 'success',
+    READY = 'info',
+    // DELETED = 'secondary',
+    DELETING = 'warning',
 }

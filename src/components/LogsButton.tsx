@@ -158,6 +158,7 @@ const LogsView = (props: LogsButtonProps) => {
         sort: { field: 'created', order: 'DESC' },
         filter,
         perPage: 100,
+        disableSyncWithLocation: true,
     });
 
     if (!data) {

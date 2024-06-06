@@ -90,6 +90,7 @@ const messages = {
         },
         runs: {
             name: 'Esecuzione |||| Esecuzioni',
+            list: 'Lista delle esecuzioni',
             fields: {
                 ...fields,
             },
@@ -199,6 +200,15 @@ const messages = {
             },
         },
     },
+    states: {
+        completed: 'Completato',
+        running: 'In esecuzione',
+        error: 'Errore',
+        built: 'Built',
+        ready: 'Pronto',
+        deleting: 'In cancellazione',
+        deleted: 'Cancellato',
+    },
     pages: {
         dashboard: {
             text: 'Definisci, crea ed esegui funzioni per gestire artefatti e data items.',
@@ -218,6 +228,10 @@ const messages = {
                 title: 'Dati',
                 empty: 'Ancora nessun dato',
             },
+            models: {
+                title: 'Modelli',
+                empty: 'Ancora nessun modello',
+            },            
             artifacts: {
                 title: 'Artefatti',
                 empty: 'Ancora nessun artefatto',
