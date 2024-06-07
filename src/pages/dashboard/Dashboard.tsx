@@ -1,7 +1,11 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentAdd from '@mui/icons-material/Add';
+
 import {
     Box,
+    Button,
     Card,
     CardActions,
     CardContent,
@@ -10,19 +14,25 @@ import {
     Container,
     Grid,
     ListItem,
+    ListItemText,
+    Menu,
+    MenuItem,
     List as MuiList,
     Stack,
     Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import {
     CreateButton,
+    Button as RaButton,
     ListButton,
     LoadingIndicator,
     SortPayload,
+    useCreatePath,
     useDataProvider,
     useGetResourceLabel,
     useTranslate,
+    Link,
 } from 'react-admin';
 import { PageTitle } from '../../components/PageTitle';
 import { Counter } from './Counter';
@@ -35,6 +45,7 @@ import { FunctionIcon } from '../../resources/functions/icon';
 import { ArtifactIcon } from '../../resources/artifacts/icon';
 import { DataItemIcon } from '../../resources/dataitems/icon';
 import { RunIcon } from '../../resources/runs/icon';
+import { ResourceIcon } from '../../components/ResourceIcon';
 
 const DashboardCreateButton = (props: { resource: string }) => {
     const { resource } = props;
@@ -165,7 +176,19 @@ export const Dashboard = () => {
                 <PageTitle
                     text={project.metadata ? project.metadata.name : project.id}
                     secondaryText={project.metadata?.description}
-                    icon={<DashboardIcon fontSize={'large'} />}
+                    icon={
+                        <>
+                            <DashboardIcon fontSize={'large'} />
+                            <CreateDropDownButton
+                                resources={[
+                                    'functions',
+                                    'models',
+                                    'dataitems',
+                                    'artifacts',
+                                ]}
+                            />
+                        </>
+                    }
                     sx={{ pl: 0, pr: 0 }}
                 />
                 <Box sx={{ pt: 0, textAlign: 'left' }}>
@@ -415,5 +438,58 @@ const EmptyList = (props: { resource: string }) => {
                 name: resourceName(resource),
             })}
         </Typography>
+    );
+};
+
+const CreateDropDownButton = (props: { resources: string[] }) => {
+    const { resources } = props;
+    const translate = useTranslate();
+    const createPath = useCreatePath();
+    const getResourceLabel = useGetResourceLabel();
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const handleOpen = (event: MouseEvent<HTMLElement>): void => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = (): void => {
+        setAnchorEl(null);
+    };
+
+    return (
+        <Box className="CreateDropDownMenu" component="span">
+            <Box>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    aria-controls="simple-menu"
+                    aria-label=""
+                    aria-haspopup="true"
+                    onClick={handleOpen}
+                    startIcon={<ContentAdd />}
+                    endIcon={<ExpandMoreIcon fontSize="small" />}
+                >
+                    {translate('ra.action.create')}
+                </Button>
+            </Box>
+            <Menu
+                id="root-selector-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                {resources?.map(res => (
+                    <MenuItem key={res}>
+                        <RaButton
+                            label={getResourceLabel(res, 1)}
+                            to={createPath({ resource: res, type: 'create' })}
+                            component={Link}
+                        >
+                            <ResourceIcon resource={res} />
+                        </RaButton>
+                    </MenuItem>
+                ))}
+            </Menu>
+        </Box>
     );
 };
