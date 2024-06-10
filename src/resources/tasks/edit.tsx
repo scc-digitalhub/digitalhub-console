@@ -13,9 +13,9 @@ import { getTaskUiSpec } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
-import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
-import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+import { checkCpuRequestError } from '../../jsonSchema/CoreResourceCpuWidget';
+import { checkGpuRequestError } from '../../jsonSchema/CoreResourceGpuWidget';
+import { checkMemRequestError } from '../../jsonSchema/CoreResourceMemWidget';
 
 export interface TaskProp {
     record?: any;

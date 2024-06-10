@@ -5,14 +5,14 @@ import {
     JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
 
-import { MuiChipsInputWidget } from './MuiChipsInputWidget';
-import { CoreResourceFieldTemplate } from './resourceInput/CoreResourceFieldTemplate';
-import { KeyValueFieldTemplate } from './resourceInput/KeyValueFieldTemplate';
-import { VolumeResourceFieldTemplate } from './resourceInput/VolumeResourceFieldTemplate';
-import ArrayFieldTemplate from './resourceInput/ArrayFieldTemplate';
-import ArrayFieldItemTemplate from './resourceInput/ArrayFieldItemTemplate';
-import ObjectFieldTemplate from './resourceInput/ObjectFieldTemplate';
-import WrapIfAdditionalTemplate from './resourceInput/WrapIfAdditionalTemplate';
+import { MuiChipsInputWidget } from '../jsonSchema/MuiChipsInputWidget';
+import { CoreResourceFieldTemplate } from '../jsonSchema/CoreResourceFieldTemplate';
+import { KeyValueFieldTemplate } from '../jsonSchema/KeyValueFieldTemplate';
+import { VolumeResourceFieldTemplate } from '../jsonSchema/VolumeResourceFieldTemplate';
+import ArrayFieldTemplate from '../jsonSchema/ArrayFieldTemplate';
+import ArrayFieldItemTemplate from '../jsonSchema/ArrayFieldItemTemplate';
+import ObjectFieldTemplate from '../jsonSchema/ObjectFieldTemplate';
+import WrapIfAdditionalTemplate from '../jsonSchema/WrapIfAdditionalTemplate';
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
 };

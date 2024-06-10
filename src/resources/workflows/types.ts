@@ -1,5 +1,5 @@
 import { BlankSchema } from '../../common/schemas';
-import { SourceCodeTemplate } from '../../components/resourceInput/SourceCodeTemplate';
+import { SourceCodeTemplate } from '../../jsonSchema/SourceCodeTemplate';
 
 export enum WorkflowTypes {
     KFP = 'kfp',

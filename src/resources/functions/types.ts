@@ -1,7 +1,7 @@
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
-} from '../../components/resourceInput/SourceCodeTemplate';
+} from '../../jsonSchema/SourceCodeTemplate';
 
 //TODO cleanup implementation and properly check for source definition in schema!
 export const getFunctionUiSpec = (kind: string | undefined) => {

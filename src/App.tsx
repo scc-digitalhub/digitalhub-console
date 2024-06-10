@@ -7,7 +7,7 @@ import {
     fetchUtils,
 } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { i18nProvider } from './i18n/i18nProvider';
+import { i18nProvider } from './provider/i18nProvider';
 import appDataProvider from './provider/dataProvider';
 import { MyLayout } from './layout/MyLayout';
 import { themeProvider } from './provider/themeProvider';

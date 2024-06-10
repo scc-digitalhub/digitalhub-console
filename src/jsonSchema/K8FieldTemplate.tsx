@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { k8sSpec } from '../../resources/tasks/types';
+import { k8sSpec } from '../resources/tasks/types';
 
 export const K8FieldTemplate = (props: ObjectFieldTemplateProps) => {
     const k8sPropNames = Object.keys(k8sSpec);

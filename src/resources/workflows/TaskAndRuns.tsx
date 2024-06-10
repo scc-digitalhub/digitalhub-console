@@ -30,7 +30,7 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import { WorkflowView } from '../../components/WorkflowView';
+import { WorkflowView } from './WorkflowView';
 
 export const TaskAndRuns = (props: { key?: string }) => {
     const { key } = props;

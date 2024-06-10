@@ -40,7 +40,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { WorkflowIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { WorkflowView } from '../../components/WorkflowView';
+import { WorkflowView } from './WorkflowView';
 
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { JsonSchemaInput } from '../../components/JsonSchema';

@@ -30,7 +30,7 @@ import {
 } from 'react-admin';
 import { Grid, Typography, Divider } from '@mui/material';
 
-import { StateChips } from './StateChips';
+import { StateChips } from '../../components/StateChips';
 
 import 'reactflow/dist/style.css';
 

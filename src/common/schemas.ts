@@ -1,10 +1,3 @@
-// import { MetadataTemplate } from '../components/MetadataTemplate';
-import AccordionArrayFieldTemplate from '../components/resourceInput/AccordionArrayFieldTemplate';
-import { AccordionFieldTemplate } from '../components/resourceInput/AccordionFieldTemplate';
-import { CoreResourceFieldTemplate } from '../components/resourceInput/CoreResourceFieldTemplate';
-import { KeyValueFieldTemplate } from '../components/resourceInput/KeyValueFieldTemplate';
-import { VolumeResourceFieldTemplate } from '../components/resourceInput/VolumeResourceFieldTemplate';
-
 export const MetadataSchema = {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     type: 'object',
@@ -41,7 +34,6 @@ export const MetadataSchema = {
 };
 
 export const MetadataCreateUiSchema = {
-    // 'ui:ObjectFieldTemplate': MetadataTemplate,
     project: {
         'ui:widget': 'hidden',
     },
@@ -57,7 +49,6 @@ export const MetadataCreateUiSchema = {
 };
 
 export const MetadataEditUiSchema = {
-    // 'ui:ObjectFieldTemplate': MetadataTemplate,
     project: {
         'ui:widget': 'hidden',
     },
@@ -105,6 +96,14 @@ export const BlankSchema = {
     type: 'object',
     properties: {},
 };
+
+/**
+ * Merge ui templates from a base with a template, properly processing the schema for properties
+ * @param schema
+ * @param base
+ * @param template
+ * @returns
+ */
 
 export const mergeUiTemplate = (schema: any, base: any, template: any) => {
     if (!schema || !('properties' in schema) || !base || !template) {

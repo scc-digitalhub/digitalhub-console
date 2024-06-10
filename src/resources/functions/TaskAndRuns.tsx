@@ -29,9 +29,9 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
-import { checkCpuRequestError } from '../../components/resourceInput/CoreResourceCpuWidget';
-import { checkGpuRequestError } from '../../components/resourceInput/CoreResourceGpuWidget';
-import { checkMemRequestError } from '../../components/resourceInput/CoreResourceMemWidget';
+import { checkCpuRequestError } from '../../jsonSchema/CoreResourceCpuWidget';
+import { checkGpuRequestError } from '../../jsonSchema/CoreResourceGpuWidget';
+import { checkMemRequestError } from '../../jsonSchema/CoreResourceMemWidget';
 import { LogsButton } from '../../components/LogsButton';
 import { StepperForm } from '@dslab/ra-stepper';
 import { getTaskUiSpec } from '../tasks/types';

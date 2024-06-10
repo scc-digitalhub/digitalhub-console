@@ -1,12 +1,12 @@
 import { mergeUiTemplate } from '../../common/schemas';
-import AccordionArrayFieldTemplate from '../../components/resourceInput/AccordionArrayFieldTemplate';
-import { AccordionFieldTemplate } from '../../components/resourceInput/AccordionFieldTemplate';
-import { CoreResourceCpuWidget } from '../../components/resourceInput/CoreResourceCpuWidget';
-import { CoreResourceFieldTemplate } from '../../components/resourceInput/CoreResourceFieldTemplate';
-import { CoreResourceGpuWidget } from '../../components/resourceInput/CoreResourceGpuWidget';
-import { CoreResourceMemWidget } from '../../components/resourceInput/CoreResourceMemWidget';
-import { KeyValueFieldTemplate } from '../../components/resourceInput/KeyValueFieldTemplate';
-import { VolumeResourceFieldTemplate } from '../../components/resourceInput/VolumeResourceFieldTemplate';
+import AccordionArrayFieldTemplate from '../../jsonSchema/AccordionArrayFieldTemplate';
+import { AccordionFieldTemplate } from '../../jsonSchema/AccordionFieldTemplate';
+import { CoreResourceCpuWidget } from '../../jsonSchema/CoreResourceCpuWidget';
+import { CoreResourceFieldTemplate } from '../../jsonSchema/CoreResourceFieldTemplate';
+import { CoreResourceGpuWidget } from '../../jsonSchema/CoreResourceGpuWidget';
+import { CoreResourceMemWidget } from '../../jsonSchema/CoreResourceMemWidget';
+import { KeyValueFieldTemplate } from '../../jsonSchema/KeyValueFieldTemplate';
+import { VolumeResourceFieldTemplate } from '../../jsonSchema/VolumeResourceFieldTemplate';
 
 export const getTaskUiSpec = (schema: any | undefined) => {
     //filter and merge with template
