@@ -5,6 +5,7 @@ import {
     CustomRoutes,
     Resource,
     fetchUtils,
+    localStorageStore,
 } from 'react-admin';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './provider/i18nProvider';
@@ -183,6 +184,7 @@ const CoreApp = () => {
                 lightTheme={theme.light}
                 darkTheme={theme.dark}
                 authProvider={authProvider}
+                store={localStorageStore('dh')}
             >
                 <SearchContextProvider searchProvider={dataProvider}>
                     <ResourceSchemaProvider
@@ -313,6 +315,7 @@ const InitialWrapper = () => {
                 authProvider={authProvider}
                 loginPage={MyLoginPage}
                 requireAuth={!!authProvider}
+                store={localStorageStore('dh')}
             >
                 <Resource
                     name="projects"
