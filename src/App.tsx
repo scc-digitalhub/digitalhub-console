@@ -178,7 +178,10 @@ const CoreApp = () => {
                 dashboard={Dashboard}
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
-                theme={theme}
+                theme={theme.light}
+                defaultTheme="light"
+                lightTheme={theme.light}
+                darkTheme={theme.dark}
                 authProvider={authProvider}
             >
                 <SearchContextProvider searchProvider={dataProvider}>
@@ -303,7 +306,10 @@ const InitialWrapper = () => {
                 layout={LayoutProjects}
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
-                theme={theme}
+                theme={theme.light}
+                defaultTheme="light"
+                lightTheme={theme.light}
+                darkTheme={theme.dark}
                 authProvider={authProvider}
                 loginPage={MyLoginPage}
                 requireAuth={!!authProvider}

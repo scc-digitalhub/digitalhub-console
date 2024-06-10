@@ -79,7 +79,7 @@ export const RunCreateComponent = (props: {
                     uiSchema={getRunUiSpec(runSchema)}
                 />
             </StepperForm.Step>
-            <StepperForm.Step label={translate('recap')} optional>
+            <StepperForm.Step label={translate('Recap')} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
                         const r = { spec: btoa(toYaml(formData?.spec)) };

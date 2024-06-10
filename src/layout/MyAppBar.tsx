@@ -8,15 +8,24 @@ import {
     CheckboxGroupInput,
     ReferenceArrayInput,
     TextInput,
+    ToggleThemeButton,
     useRedirect,
     useTranslate,
 } from 'react-admin';
 import { Button, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
+
+const APP_VERSION: string =
+    (globalThis as any).REACT_APP_VERSION ||
+    (process.env.REACT_APP_VERSION as string);
+const docsVersion = APP_VERSION
+    ? APP_VERSION.replace(new RegExp(/\.[^/.]+$/), '')
+    : undefined;
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
@@ -198,13 +207,18 @@ export const MyAppBar = () => {
                     filterSeparator=":"
                 />
             )}
-            <Button
-                color="inherit"
-                onClick={() => redirect('/')}
-                startIcon={<HomeIcon />}
-            >
-                {translate('bar.backProjects')}
-            </Button>
+
+            {docsVersion && (
+                <Button
+                    color="inherit"
+                    href={
+                        'https://scc-digitalhub.github.io/docs/' + docsVersion
+                    }
+                    target="_blank"
+                >
+                    <HelpCenterIcon />
+                </Button>
+            )}
         </AppBar>
     );
 };

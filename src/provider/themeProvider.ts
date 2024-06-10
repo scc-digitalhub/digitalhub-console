@@ -2,6 +2,7 @@ import { createTheme, PaletteOptions, Theme } from '@mui/material';
 import {
     defaultTheme,
     houseLightTheme,
+    houseDarkTheme,
     nanoLightTheme,
     radiantLightTheme,
     RaThemeOptions,
@@ -160,24 +161,53 @@ const componentsOverrides = (theme: Theme) => ({
     MuiTabs: {},
 });
 
-const palette: PaletteOptions & { paper: string } = {
-    mode: 'light' as 'light',
-    primary: {
-        main: '#E0701B',
-        dark: '#9c3b15',
-        light: '#ec934f',
+// const palette: PaletteOptions & { paper: string } = {
+//     mode: 'light' as 'light',
+//     primary: {
+//         main: '#E0701B',
+//         dark: '#9c3b15',
+//         light: '#ec934f',
+//     },
+//     secondary: { main: '#062D4B' },
+//     paper: '#F8F7F2',
+//     background: { default: '#f5f5f6', paper: '#FFF' },
+// };
+
+const palette: {
+    light: PaletteOptions & { paper: string };
+    dark: PaletteOptions & { paper: string };
+} = {
+    light: {
+        mode: 'light' as 'light',
+        primary: {
+            main: '#E0701B',
+            dark: '#9c3b15',
+            light: '#ec934f',
+        },
+        secondary: { main: '#062D4B' },
+        paper: '#F8F7F2',
+        background: { default: '#f5f5f6', paper: '#FFF' },
     },
-    secondary: { main: '#062D4B' },
-    paper: '#F8F7F2',
-    background: { default: '#f5f5f6', paper: '#FFF' },
+    dark: {
+        mode: 'dark' as 'dark',
+        primary: {
+            main: '#E0701B',
+            dark: '#9c3b15',
+            light: '#ec934f',
+        },
+        secondary: { main: '#6EA3CB' },
+        paper: '#2B3033',
+        background: { default: '#363D40', paper: '#2B3033' },
+    },
 };
 
 const createApplicationTheme = (
-    themeOptions: RaThemeOptions
+    themeOptions: RaThemeOptions,
+    mode: 'light' | 'dark'
 ): RaThemeOptions => {
     const options = {
         ...themeOptions,
-        palette,
+        palette: palette[mode],
         shape: { borderRadius: 5 },
     };
     const theme = createTheme(options);
@@ -187,9 +217,19 @@ const createApplicationTheme = (
 
 export const BASE_THEME = defaultTheme;
 
-export const themeProvider = (): RaThemeOptions => {
-    // return createApplicationTheme(BASE_THEME);
-    return createApplicationTheme(houseLightTheme);
+// export const themeProvider = (): RaThemeOptions => {
+//     // return createApplicationTheme(BASE_THEME);
+//     return createApplicationTheme(houseLightTheme);
+// };
+
+export const themeProvider = (): {
+    light: RaThemeOptions;
+    dark: RaThemeOptions;
+} => {
+    return {
+        light: createApplicationTheme(houseLightTheme, 'light'),
+        dark: createApplicationTheme(houseDarkTheme, 'dark'),
+    };
 };
 
 export default themeProvider;

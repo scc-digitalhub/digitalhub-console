@@ -47,10 +47,13 @@ const springDataProvider = (
             //handle pagination request as pageable (page,size)
             const { page, perPage } = params.pagination;
             const { field: fieldParam, order } = params.sort;
-            const field =
-                fieldParam && fieldParam.startsWith('metadata.')
-                    ? fieldParam.substring(9)
-                    : fieldParam;
+            //unbox metadata and status fields as tl params
+            const field = !fieldParam
+                ? fieldParam
+                : fieldParam.indexOf('.') > 0
+                ? fieldParam.substring(fieldParam.indexOf('.') + 1)
+                : fieldParam;
+
             const record = params.meta?.record;
             const allVersion = params.meta?.allVersion;
 

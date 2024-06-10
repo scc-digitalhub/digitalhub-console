@@ -1,11 +1,8 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ContentAdd from '@mui/icons-material/Add';
 
 import {
     Box,
-    Button,
     Card,
     CardActions,
     CardContent,
@@ -14,69 +11,31 @@ import {
     Container,
     Grid,
     ListItem,
-    ListItemText,
-    Menu,
-    MenuItem,
     List as MuiList,
     Stack,
     Typography,
 } from '@mui/material';
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 import {
-    CreateButton,
-    Button as RaButton,
     ListButton,
     LoadingIndicator,
     SortPayload,
-    useCreatePath,
     useDataProvider,
-    useGetResourceLabel,
     useTranslate,
-    Link,
 } from 'react-admin';
 import { PageTitle } from '../../components/PageTitle';
-import { Counter } from './Counter';
 import { RunsGrid } from './RunsGrid';
 import { convertToDate } from './helper';
-import { RecentList } from './RecentList';
-import { RecentRunsList } from './RecentRunList';
-import { ModelIcon } from '../../resources/models/icon';
-import { FunctionIcon } from '../../resources/functions/icon';
-import { ArtifactIcon } from '../../resources/artifacts/icon';
-import { DataItemIcon } from '../../resources/dataitems/icon';
 import { RunIcon } from '../../resources/runs/icon';
-import { ResourceIcon } from '../../components/ResourceIcon';
-
-const DashboardCreateButton = (props: { resource: string }) => {
-    const { resource } = props;
-
-    return <CreateButton resource={resource} variant="contained" />;
-};
-
-const ToListButton = (props: { resource: string }) => {
-    const { resource } = props;
-
-    return <ListButton resource={resource} variant="text" />;
-};
+import { CreateDropDownButton } from './CreateDropdownButton';
+import { OverviewCard } from './OverviewCard';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
-    const getResourceLabel = useGetResourceLabel();
 
     const [project, setProject] = useState<any>();
-
-    const [functions, setFunctions] = useState<any[]>();
-    const [artifacts, setArtifacts] = useState<any[]>();
-    const [dataItems, setDataItems] = useState<any[]>();
-    const [models, setModels] = useState<any[]>();
-    const [runs, setRuns] = useState<any[]>();
-
-    const [totalFunctions, setTotalFunctions] = useState<number>();
-    const [totalDataItems, setTotalDataItems] = useState<number>();
-    const [totalArtifacts, setTotalArtifacts] = useState<number>();
-    const [totalModels, setTotalModels] = useState<number>();
 
     const [completed, setCompleted] = useState<number>();
     const [running, setRunning] = useState<number>();
@@ -94,35 +53,7 @@ export const Dashboard = () => {
                 sort: { field: 'updated', order: 'DESC' } as SortPayload,
                 filter: {},
             };
-            dataProvider.getList('functions', params).then(res => {
-                if (res.data) {
-                    setFunctions(res.data);
-                    setTotalFunctions(res.total);
-                }
-            });
-            dataProvider.getList('artifacts', params).then(res => {
-                if (res.data) {
-                    setTotalArtifacts(res.total);
-                    setArtifacts(res.data);
-                }
-            });
-            dataProvider.getList('dataitems', params).then(res => {
-                if (res.data) {
-                    setTotalDataItems(res.total);
-                    setDataItems(res.data);
-                }
-            });
-            dataProvider.getList('models', params).then(res => {
-                if (res.data) {
-                    setTotalModels(res.total);
-                    setModels(res.data);
-                }
-            });
-            dataProvider.getList('runs', params).then(res => {
-                if (res.data) {
-                    setRuns(res.data);
-                }
-            });
+
             dataProvider
                 .getList('runs', { ...params, filter: { state: 'COMPLETED' } })
                 .then(res => {
@@ -147,13 +78,6 @@ export const Dashboard = () => {
         }
     }, [dataProvider, projectId]);
 
-    const isArtifactsArrayNotEmpty = !!artifacts && artifacts.length > 0;
-    const isDataItemsArrayNotEmpty = !!dataItems && dataItems.length > 0;
-    const isFunctionsArrayNotEmpty = !!functions && functions.length > 0;
-    const isModelsArrayNotEmpty = !!models && models.length > 0;
-
-    const isRunsArrayNotEmpty = !!runs && runs.length > 0;
-
     if (!project) {
         return <LoadingIndicator />;
     }
@@ -164,58 +88,71 @@ export const Dashboard = () => {
         flexDirection: 'column',
     };
 
-    const resourceName = (resource: string) =>
-        translate(`resources.${resource}.forcedCaseName`, {
-            smart_count: 0,
-            _: getResourceLabel(resource, 0),
-        });
-
     return (
         <Container maxWidth={false}>
-            <div>
-                <PageTitle
-                    text={project.metadata ? project.metadata.name : project.id}
-                    secondaryText={project.metadata?.description}
-                    icon={
-                        <>
-                            <DashboardIcon fontSize={'large'} />
-                            <CreateDropDownButton
-                                resources={[
-                                    'functions',
-                                    'models',
-                                    'dataitems',
-                                    'artifacts',
-                                ]}
-                            />
-                        </>
-                    }
-                    sx={{ pl: 0, pr: 0 }}
+            <PageTitle
+                text={project.metadata ? project.metadata.name : project.id}
+                secondaryText={project.metadata?.description}
+                icon={<DashboardIcon fontSize={'large'} />}
+                // icon={
+                //     <>
+                //         <DashboardIcon fontSize={'large'} />
+                //         <CreateDropDownButton
+                //             resources={[
+                //                 'functions',
+                //                 'models',
+                //                 'dataitems',
+                //                 'artifacts',
+                //             ]}
+                //         />
+                //     </>
+                // }
+                sx={{ pl: 0, pr: 0 }}
+            />
+            <Box sx={{ pt: 0, textAlign: 'left' }}>
+                {project.metadata && (
+                    <MuiList sx={{ pt: 0 }}>
+                        <ListItem disableGutters sx={{ pt: 0 }}>
+                            {translate('pages.dashboard.created')}{' '}
+                            {convertToDate(
+                                project.metadata.created
+                            ).toLocaleString()}
+                        </ListItem>
+                        <ListItem disableGutters sx={{ pt: 0 }}>
+                            {translate('pages.dashboard.updated')}{' '}
+                            {convertToDate(
+                                project.metadata.updated
+                            ).toLocaleString()}
+                        </ListItem>
+                        {project.metadata.createdBy && (
+                            <ListItem disableGutters sx={{ pt: 0 }}>
+                                {translate('ra.auth.username')}{' '}
+                                {project.metadata.createdBy}
+                            </ListItem>
+                        )}
+                    </MuiList>
+                )}
+            </Box>
+            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                {project.metadata?.labels?.map((label: string) => (
+                    <Chip key={label} label={label} />
+                ))}
+            </Stack>
+            <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{ mb: 2 }}
+            >
+                <CreateDropDownButton
+                    resources={[
+                        'functions',
+                        'models',
+                        'dataitems',
+                        'artifacts',
+                    ]}
                 />
-                <Box sx={{ pt: 0, textAlign: 'left' }}>
-                    {project.metadata && (
-                        <MuiList sx={{ pt: 0 }}>
-                            <ListItem disableGutters sx={{ pt: 0 }}>
-                                {translate('pages.dashboard.created')}{' '}
-                                {convertToDate(
-                                    project.metadata.created
-                                ).toLocaleString()}
-                            </ListItem>
-                            <ListItem disableGutters sx={{ pt: 0 }}>
-                                {translate('pages.dashboard.updated')}{' '}
-                                {convertToDate(
-                                    project.metadata.updated
-                                ).toLocaleString()}
-                            </ListItem>
-                        </MuiList>
-                    )}
-                </Box>
-                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                    {project.metadata?.labels?.map((label: string) => (
-                        <Chip key={label} label={label} />
-                    ))}
-                </Stack>
-            </div>
-
+            </Stack>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={12} xl={12} zeroMinWidth>
                     <Card sx={cardStyle}>
@@ -235,11 +172,6 @@ export const Dashboard = () => {
                                     error: error,
                                 }}
                             />
-                            {/* {isRunsArrayNotEmpty ? (
-                                <RecentRunsList elements={runs} />
-                            ) : (
-                                <EmptyList resource="runs" />
-                            )} */}
                         </CardContent>
                         <CardActions
                             disableSpacing
@@ -248,165 +180,22 @@ export const Dashboard = () => {
                                 justifyContent: 'left',
                             }}
                         >
-                            <ToListButton resource="runs" />
+                            <ListButton resource={'runs'} variant="text" />
                         </CardActions>
                     </Card>
                 </Grid>
-
                 <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
-                    <Card sx={cardStyle}>
-                        <CardHeader
-                            title={translate('pages.dashboard.artifacts.title')}
-                            avatar={<ArtifactIcon />}
-                            titleTypographyProps={{
-                                variant: 'h5',
-                                color: 'secondary.main',
-                            }}
-                        />
-                        <CardContent>
-                            <Counter value={totalArtifacts} />
-                            {isArtifactsArrayNotEmpty ? (
-                                <RecentList
-                                    resource="artifacts"
-                                    elements={artifacts}
-                                />
-                            ) : (
-                                <EmptyList resource="artifacts" />
-                            )}
-                        </CardContent>
-                        <CardActions
-                            disableSpacing
-                            sx={{
-                                mt: 'auto',
-                                justifyContent: isArtifactsArrayNotEmpty
-                                    ? 'left'
-                                    : 'center',
-                            }}
-                        >
-                            {isArtifactsArrayNotEmpty ? (
-                                <ToListButton resource="artifacts" />
-                            ) : (
-                                <DashboardCreateButton resource="artifacts" />
-                            )}
-                        </CardActions>
-                    </Card>
+                    <OverviewCard resource="functions" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                    <OverviewCard resource="models" />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                    <OverviewCard resource="dataitems" />
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
-                    <Card sx={cardStyle}>
-                        <CardHeader
-                            title={translate('pages.dashboard.dataitems.title')}
-                            avatar={<DataItemIcon />}
-                            titleTypographyProps={{
-                                variant: 'h5',
-                                color: 'secondary.main',
-                            }}
-                        />
-                        <CardContent>
-                            <Counter value={totalDataItems} />
-                            {isDataItemsArrayNotEmpty ? (
-                                <RecentList
-                                    resource="dataitems"
-                                    elements={dataItems}
-                                />
-                            ) : (
-                                <EmptyList resource="dataitems" />
-                            )}
-                        </CardContent>
-                        <CardActions
-                            disableSpacing
-                            sx={{
-                                mt: 'auto',
-                                justifyContent: isDataItemsArrayNotEmpty
-                                    ? 'left'
-                                    : 'center',
-                            }}
-                        >
-                            {isDataItemsArrayNotEmpty ? (
-                                <ToListButton resource="dataitems" />
-                            ) : (
-                                <DashboardCreateButton resource="dataitems" />
-                            )}
-                        </CardActions>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
-                    <Card sx={cardStyle}>
-                        <CardHeader
-                            title={translate('pages.dashboard.functions.title')}
-                            avatar={<FunctionIcon />}
-                            titleTypographyProps={{
-                                variant: 'h5',
-                                color: 'secondary.main',
-                            }}
-                        />
-                        <CardContent>
-                            <Counter value={totalFunctions} />
-                            {isFunctionsArrayNotEmpty ? (
-                                <RecentList
-                                    resource="functions"
-                                    elements={functions}
-                                />
-                            ) : (
-                                <EmptyList resource="functions" />
-                            )}
-                        </CardContent>
-                        <CardActions
-                            disableSpacing
-                            sx={{
-                                mt: 'auto',
-                                justifyContent: isFunctionsArrayNotEmpty
-                                    ? 'left'
-                                    : 'center',
-                            }}
-                        >
-                            {isFunctionsArrayNotEmpty ? (
-                                <ToListButton resource="functions" />
-                            ) : (
-                                <DashboardCreateButton resource="functions" />
-                            )}
-                        </CardActions>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
-                    <Card sx={cardStyle}>
-                        <CardHeader
-                            title={translate('pages.dashboard.models.title')}
-                            avatar={<ModelIcon />}
-                            titleTypographyProps={{
-                                variant: 'h5',
-                                color: 'secondary.main',
-                            }}
-                        />
-                        <CardContent>
-                            <Counter value={totalModels} />
-                            {isModelsArrayNotEmpty ? (
-                                <RecentList
-                                    resource="models"
-                                    elements={models}
-                                />
-                            ) : (
-                                <EmptyList resource="models" />
-                            )}
-                        </CardContent>
-                        <CardActions
-                            disableSpacing
-                            sx={{
-                                mt: 'auto',
-                                justifyContent: isModelsArrayNotEmpty
-                                    ? 'left'
-                                    : 'center',
-                            }}
-                        >
-                            {isModelsArrayNotEmpty ? (
-                                <ToListButton resource="models" />
-                            ) : (
-                                <DashboardCreateButton resource="models" />
-                            )}
-                        </CardActions>
-                    </Card>
+                    <OverviewCard resource="artifacts" />
                 </Grid>
             </Grid>
 
@@ -414,82 +203,5 @@ export const Dashboard = () => {
                 {translate('pages.dashboard.text')}
             </Typography>
         </Container>
-    );
-};
-
-const EmptyList = (props: { resource: string }) => {
-    const { resource } = props;
-    const translate = useTranslate();
-    const getResourceLabel = useGetResourceLabel();
-
-    const resourceName = (resource: string) =>
-        translate(`resources.${resource}.forcedCaseName`, {
-            smart_count: 0,
-            _: getResourceLabel(resource, 0),
-        });
-
-    return (
-        <Typography
-            variant="body1"
-            color={'gray'}
-            sx={{ textAlign: 'center', pt: 5 }}
-        >
-            {translate('ra.page.empty', {
-                name: resourceName(resource),
-            })}
-        </Typography>
-    );
-};
-
-const CreateDropDownButton = (props: { resources: string[] }) => {
-    const { resources } = props;
-    const translate = useTranslate();
-    const createPath = useCreatePath();
-    const getResourceLabel = useGetResourceLabel();
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const handleOpen = (event: MouseEvent<HTMLElement>): void => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = (): void => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <Box className="CreateDropDownMenu" component="span">
-            <Box>
-                <Button
-                    color="primary"
-                    variant="contained"
-                    aria-controls="simple-menu"
-                    aria-label=""
-                    aria-haspopup="true"
-                    onClick={handleOpen}
-                    startIcon={<ContentAdd />}
-                    endIcon={<ExpandMoreIcon fontSize="small" />}
-                >
-                    {translate('ra.action.create')}
-                </Button>
-            </Box>
-            <Menu
-                id="root-selector-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                {resources?.map(res => (
-                    <MenuItem key={res}>
-                        <RaButton
-                            label={getResourceLabel(res, 1)}
-                            to={createPath({ resource: res, type: 'create' })}
-                            component={Link}
-                        >
-                            <ResourceIcon resource={res} />
-                        </RaButton>
-                    </MenuItem>
-                ))}
-            </Menu>
-        </Box>
     );
 };

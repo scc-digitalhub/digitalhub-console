@@ -1,11 +1,17 @@
-import { Menu, MenuItemLink, useBasename, useTranslate } from 'react-admin';
+import {
+    Menu,
+    MenuItemLink,
+    useBasename,
+    useGetResourceLabel,
+} from 'react-admin';
 import { ProjectIcon } from '../resources/projects/icon';
 import SettingsIcon from '@mui/icons-material/Settings';
+
 import { Box, Divider } from '@mui/material';
 
 export const MyMenu = () => {
     const basename = useBasename();
-    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
 
     return (
         <Menu
@@ -28,6 +34,12 @@ export const MyMenu = () => {
                     leftIcon={<SettingsIcon />}
                     to={`${basename}/config`}
                     primaryText={'menu.configuration'}
+                />
+                <MenuItemLink
+                    leftIcon={<ProjectIcon />}
+                    to={'/projects'}
+                    primaryText={<>{getResourceLabel('projects', 2)}</>}
+                    selected={false}
                 />
             </Box>
         </Menu>

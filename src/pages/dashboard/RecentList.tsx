@@ -11,23 +11,27 @@ import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { convertToDate } from './helper';
 
-export const RecentList = (props: { resource: string; elements: any[] }) => {
-    const { resource, elements } = props;
+export const RecentList = (props: {
+    resource: string;
+    records: any[];
+    num?: number;
+}) => {
+    const { resource, records, num = 3 } = props;
     const createPath = useCreatePath();
     const navigate = useNavigate();
     const theme = useTheme();
 
     return (
         <MuiList sx={{ pt: 0, mt: 2 }}>
-            {elements.slice(0, 3).map(el => (
-                <ListItem disablePadding key={el.id}>
+            {records?.slice(0, num).map(record => (
+                <ListItem disablePadding key={record.id}>
                     <ListItemButton
                         onClick={() =>
                             navigate(
                                 createPath({
                                     type: 'show',
                                     resource: resource,
-                                    id: el.id,
+                                    id: record.id,
                                 })
                             )
                         }
@@ -44,7 +48,7 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                             disableTypography
                             primary={
                                 <Typography variant="body1" color={'primary'}>
-                                    {el.metadata.name || el.name}
+                                    {record.metadata.name || record.name}
                                 </Typography>
                             }
                             secondary={
@@ -53,15 +57,15 @@ export const RecentList = (props: { resource: string; elements: any[] }) => {
                                     justifyContent="space-between"
                                 >
                                     <Typography variant="body2" color={'gray'}>
-                                        {el.metadata?.updated
+                                        {record.metadata?.updated
                                             ? convertToDate(
-                                                  el.metadata.updated
+                                                  record.metadata.updated
                                               ).toLocaleString()
                                             : ''}
                                     </Typography>
 
                                     <Typography variant="body2" color={'gray'}>
-                                        {el.kind}
+                                        {record.kind}
                                     </Typography>
                                 </Box>
                             }

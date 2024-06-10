@@ -185,7 +185,10 @@ export const RunList = () => {
                                     showTime
                                 />
                                 <TextField source="kind" />
-                                <TextField source="spec.task" />
+                                <TextField
+                                    source="spec.task"
+                                    sortable={false}
+                                />
                                 <StateChips source="status.state" />
                                 {/* <FunctionField
                                     source="status.state"

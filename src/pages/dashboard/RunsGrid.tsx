@@ -1,6 +1,7 @@
 import { Grid, Paper, Typography } from '@mui/material';
 import { useTranslate } from 'react-admin';
 import { StateColors } from '../../components/StateChips';
+import { CounterBadge } from '../../components/CounterBadge';
 
 export const RunsGrid = (props: {
     runs: {
@@ -23,28 +24,11 @@ export const RunsGrid = (props: {
                     textAlign={'center'}
                     minWidth={'5em'}
                 >
-                    <Paper
-                        variant="outlined"
-                        sx={{
-                            backgroundColor: `${
-                                StateColors[k.toUpperCase()]
-                            }.main`,
-                            color: `${
-                                StateColors[k.toUpperCase()]
-                            }.contrastText`,
-                            lineHeight: '100%',
-                            aspectRatio: 1,
-                            display: 'inline-grid',
-                            placeItems: 'center',
-                            minWidth: '3.2em',
-                            minHeight: '3.2em',
-                            padding: '.5em',
-                            borderRadius: '50%',
-                            boxSizing: 'border-box',
-                        }}
-                    >
-                        {v}
-                    </Paper>
+                    <CounterBadge
+                        value={v}
+                        color={`${StateColors[k.toUpperCase()]}.contrastText`}
+                        backgroundColor={`${StateColors[k.toUpperCase()]}.main`}
+                    />
                     <Typography
                         variant="body2"
                         sx={{ textAlign: 'center' }}
