@@ -24,14 +24,7 @@ export const StateChips = (props: {
         value: translate('states.' + value.toLowerCase()).toUpperCase(),
     };
 
-    return (
-        <ChipField
-            record={r}
-            source={'value'}
-            color={StateColors[value]}
-            valu
-        />
-    );
+    return <ChipField record={r} source={'value'} color={StateColors[value]} />;
 };
 
 export enum StateColors {

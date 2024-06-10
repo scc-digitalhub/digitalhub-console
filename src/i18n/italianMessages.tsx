@@ -39,6 +39,22 @@ const fields = {
     status: {
         state: 'Stato',
     },
+    inputs: {
+        title: 'Input',
+        description: 'Input',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
+    outputs: {
+        title: 'Output',
+        description: 'Output',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
     code: 'Codice sorgente',
     logs: 'Logs',
     base: 'Base',
@@ -50,7 +66,7 @@ const messages = {
     login: {
         basicMessage: 'Autenticarsi per continuare',
         title: 'Resource Manager',
-        message: 'Accedi con AAC',
+        message: 'Login',
     },
     bar: {
         backProjects: 'Torna ai progetti',
@@ -231,7 +247,7 @@ const messages = {
             models: {
                 title: 'Modelli',
                 empty: 'Ancora nessun modello',
-            },            
+            },
             artifacts: {
                 title: 'Artefatti',
                 empty: 'Ancora nessun artefatto',

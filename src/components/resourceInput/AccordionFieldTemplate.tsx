@@ -31,28 +31,24 @@ export const AccordionFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const titleText = props.title || '';
     const descriptionText = props.description || '';
     return (
-        <>
-            <Accordion elevation={0} square disableGutters>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                >
-                    <Typography variant="h5">{translate(titleText)}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    {props.description && (
-                        <Typography>
-                            <p>{translate(descriptionText)}</p>
-                        </Typography>
-                    )}
-                    {props.properties.map((element, index) => (
-                        <div style={{ width: '100%' }} key={index}>
-                            {element.content}
-                        </div>
-                    ))}
-                </AccordionDetails>
-            </Accordion>
-        </>
+        <Accordion elevation={0} square disableGutters>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+            >
+                <Typography variant="h5">{translate(titleText)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                {props.description && (
+                    <Typography>{translate(descriptionText)}</Typography>
+                )}
+                {props.properties.map((element, index) => (
+                    <div style={{ width: '100%' }} key={index}>
+                        {element.content}
+                    </div>
+                ))}
+            </AccordionDetails>
+        </Accordion>
     );
 };

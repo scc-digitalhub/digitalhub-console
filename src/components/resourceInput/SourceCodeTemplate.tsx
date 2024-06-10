@@ -3,7 +3,7 @@ import {
     ObjectFieldTemplatePropertyType,
     WidgetProps,
 } from '@rjsf/utils';
-import { FormLabel } from './FormLabel';
+import { FormLabel } from '../FormLabel';
 import { Box, Grid, Stack } from '@mui/material';
 import AceEditor from 'react-ace';
 

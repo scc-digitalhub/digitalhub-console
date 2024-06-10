@@ -139,7 +139,22 @@ const fields = {
     status: {
         state: 'Status',
     },
-
+    inputs: {
+        title: 'Inputs',
+        description: 'Input objects',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
+    outputs: {
+        title: 'Outputs',
+        description: 'Output objects',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
     code: 'Code',
     logs: 'Logs',
     base: 'Base',
@@ -151,7 +166,7 @@ const messages = {
     login: {
         basicMessage: 'Authenticate to continue',
         title: 'Resource Manager',
-        message: 'Access with AAC',
+        message: 'Login',
     },
     bar: {
         backProjects: 'To projects',
