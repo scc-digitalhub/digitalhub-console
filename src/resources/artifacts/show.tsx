@@ -5,6 +5,7 @@ import { JsonSchemaField } from '../../components/JsonSchema';
 import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 import {
+    Button,
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
@@ -13,6 +14,8 @@ import {
     TabbedShowLayout,
     TextField,
     TopToolbar,
+    useDataProvider,
+    useNotify,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
@@ -27,6 +30,7 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getArtifactSpecUiSchema } from './types';
 import { ArtifactIcon } from './icon';
+import { DownloadButton } from '../../components/DownloadButton';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -38,6 +42,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
+        <DownloadButton source="spec.path" />
         <InspectButton />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />

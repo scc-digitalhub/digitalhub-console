@@ -344,6 +344,21 @@ const springDataProvider = (
                 };
             });
         },
+        download: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/download`;
+            return httpClient(url).then(({ status, body }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return {
+                    url: body,
+                };
+            });
+        },
     };
 };
 
