@@ -1,16 +1,25 @@
 import {
+    DateField,
     DeleteWithConfirmButton,
     Labeled,
     Show,
+    ShowBase,
+    ShowView,
     SimpleShowLayout,
     TextField,
     TopToolbar,
     useTranslate,
 } from 'react-admin';
-import { Grid, Typography } from '@mui/material';
+import { Container, Divider, Grid, Stack, Typography } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { RunIcon } from './icon';
+import { FlatCard } from '../../components/FlatCard';
+import { ShowPageTitle } from '../../components/PageTitle';
+import { VersionsListWrapper } from '../../components/VersionsList';
+import { StateChips } from '../../components/StateChips';
+import { LogsButton } from '../../components/LogsButton';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -33,9 +42,44 @@ export const RunShowLayout = () => {
     );
 };
 
+export const RunShowComponent = () => {
+    return (
+        <SimpleShowLayout>
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <TextField source="name" />
+                </Labeled>
+
+                <Labeled>
+                    <TextField source="kind" />
+                </Labeled>
+            </Stack>
+            <Labeled>
+                <TextField source="key" />
+            </Labeled>
+            <Divider />
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <DateField source="metadata.created" showDate showTime />
+                </Labeled>
+
+                <Labeled>
+                    <DateField source="metadata.updated" showDate showTime />
+                </Labeled>
+            </Stack>
+            <Labeled>
+                <TextField source="spec.task" />
+            </Labeled>
+            <Labeled>
+                <StateChips source="status.state" />
+            </Labeled>
+        </SimpleShowLayout>
+    );
+};
 const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
+        <LogsButton style={{ marginLeft: 'auto' }}  />
         <InspectButton />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
@@ -44,11 +88,21 @@ const ShowToolbar = () => (
 
 export const RunShow = () => {
     return (
-        <Show
-            actions={<ShowToolbar />}
-            sx={{ '& .RaShow-card': { width: '50%' } }}
-        >
-            <RunShowLayout />
-        </Show>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <ShowBase>
+                <>
+                    <ShowPageTitle icon={<RunIcon fontSize={'large'} />} />
+                    <ShowView
+                        actions={<ShowToolbar />}
+                        sx={{
+                            width: '100%',
+                        }}
+                        component={FlatCard}
+                    >
+                        <RunShowComponent />
+                    </ShowView>
+                </>
+            </ShowBase>
+        </Container>
     );
 };

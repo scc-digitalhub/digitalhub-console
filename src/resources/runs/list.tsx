@@ -170,7 +170,7 @@ export const RunList = () => {
                             sx={{ pb: 2 }}
                         >
                             <Datagrid
-                                rowClick={false}
+                                rowClick={'show'}
                                 bulkActionButtons={false}
                             >
                                 <TextField source="id" />

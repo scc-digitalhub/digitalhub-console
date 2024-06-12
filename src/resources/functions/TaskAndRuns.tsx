@@ -36,7 +36,7 @@ import { LogsButton } from '../../components/LogsButton';
 import { StepperForm } from '@dslab/ra-stepper';
 import { getTaskUiSpec } from '../tasks/types';
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
-import { RunCreateComponent } from '../runs';
+import { RunCreateComponent, RunShowComponent } from '../runs';
 import { filterProps } from '../../common/schemas';
 import { useGetManySchemas } from '../../controllers/schemaController';
 
@@ -330,44 +330,7 @@ const TaskRunList = () => {
                     <StateChips source="status.state" />
                     <RowButtonGroup label="⋮">
                         <ShowInDialogButton>
-                            <SimpleShowLayout>
-                                <Stack direction={'row'} spacing={3}>
-                                    <Labeled>
-                                        <TextField source="name" />
-                                    </Labeled>
-
-                                    <Labeled>
-                                        <TextField source="kind" />
-                                    </Labeled>
-                                </Stack>
-                                <Labeled>
-                                    <TextField source="key" />
-                                </Labeled>
-                                <Divider />
-                                <Stack direction={'row'} spacing={3}>
-                                    <Labeled>
-                                        <DateField
-                                            source="metadata.created"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-
-                                    <Labeled>
-                                        <DateField
-                                            source="metadata.updated"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-                                </Stack>
-                                <Labeled>
-                                    <TextField source="spec.task" />
-                                </Labeled>
-                                <Labeled>
-                                    <StateChips source="status.state" />
-                                </Labeled>
-                            </SimpleShowLayout>
+                            <RunShowComponent />
                         </ShowInDialogButton>
                         <LogsButton />
                         <InspectButton />

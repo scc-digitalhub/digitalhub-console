@@ -156,7 +156,7 @@ import {
     ModelUpdate,
 } from './resources/models';
 import { ModelIcon } from './resources/models/icon';
-import { RunList } from './resources/runs';
+import { RunList, RunShow } from './resources/runs';
 import { RunIcon } from './resources/runs/icon';
 
 export const SearchEnabledContext = createContext(false);
@@ -257,6 +257,7 @@ const CoreApp = () => {
                                 name="runs"
                                 list={RunList}
                                 icon={RunIcon}
+                                show={RunShow}
                             />
                             <Resource
                                 name="projects"
