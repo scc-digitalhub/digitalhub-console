@@ -29,6 +29,7 @@ import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -54,7 +55,14 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-
+    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    const metadataKinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -91,12 +99,20 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 
                 <TextField source="key" />
 
-                <JsonSchemaField
-                    source="metadata"
-                    schema={MetadataSchema}
-                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
-                    label={false}
-                />
+                {metadataKinds &&
+                    metadataKinds.map(r => {
+                        return (
+                            <JsonSchemaField
+                                key={r.id}
+                                source="metadata"
+                                schema={r.schema}
+                                uiSchema={createMetadataViewUiSchema(
+                                    record?.metadata
+                                )}
+                                label={false}
+                            />
+                        );
+                    })}
 
                 {spec && (
                     <JsonSchemaField

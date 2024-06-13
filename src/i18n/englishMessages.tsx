@@ -29,6 +29,10 @@ const specs = {
         title:"Artifact",
         description:""
     },
+    dataitem: {
+        title:"Metadata dataitem",
+        description:""
+    },
 }
 const fields = {
     id: 'Id',
