@@ -1,5 +1,29 @@
 import italianMessages from '@dslab/ra-language-italian';
 
+const specs = {
+    metadata: {
+        base: {
+            title:"Metadata",
+            description:""
+        },
+        embedded: {
+            title:"Embedded",
+            description:""
+        },
+        versioning: {
+            title:"Versioning",
+            description:""
+        },
+        openmetadata: {
+            title:"Openmetadata",
+            description:""
+        },
+        audit: {
+            title:"Audit",
+            description:""
+        }
+    }
+}
 const fields = {
     id: 'Id',
     name: 'Nome',
@@ -59,6 +83,39 @@ const fields = {
     logs: 'Logs',
     base: 'Base',
     summary: 'Riepilogo',
+    description: {
+        title:"",
+        description:""
+    },
+    labels: {
+        title:"",
+        description:""
+    },
+    updated: {
+        title:"",
+        description:""
+    },
+    embedded: {
+        title:"",
+        description:""
+    },
+    openMetadata:{
+        title:"",
+        description:"" 
+    },
+    publish:{
+        title:"",
+        description:"" 
+    },
+    createdBy:{
+        title:"",
+        description:"" 
+    },
+    updatedBy:{
+        title:"",
+        description:"" 
+    }
+
 };
 
 const messages = {
@@ -80,6 +137,7 @@ const messages = {
             'Codice non valido: impossibile visualizzare il codice sorgente. Errore di conversione',
     },
     fields: fields,
+    specs: specs,
     resources: {
         projects: {
             name: 'Progetto |||| Progetti',

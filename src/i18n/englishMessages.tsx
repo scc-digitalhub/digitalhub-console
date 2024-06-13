@@ -1,5 +1,35 @@
 import englishMessages from 'ra-language-english';
 
+const specs = {
+    metadata: {
+        base: {
+            title:"Metadata",
+            description:""
+        },
+        embedded: {
+            title:"Embedded",
+            description:""
+        },
+        versioning: {
+            title:"Versioning",
+            description:""
+        },
+        openmetadata: {
+            title:"Openmetadata",
+            description:""
+        },
+        audit: {
+            title:"Audit",
+            description:""
+        },
+
+        
+    },
+    artifact: {
+        title:"Artifact",
+        description:""
+    },
+}
 const fields = {
     id: 'Id',
     // name: 'Name',
@@ -159,6 +189,55 @@ const fields = {
     logs: 'Logs',
     base: 'Base',
     summary: 'Summary',
+    description: {
+        title:"Description",
+        description:""
+    },
+    labels: {
+        title:"Labels",
+        description:""
+    },
+    updated: {
+        title:"Updated",
+        description:""
+    },
+    embedded: {
+        title:"Embedded",
+        description:""
+    },
+    openMetadata:{
+        title:"Open Metadata",
+        description:"" 
+    },
+    publish:{
+        title:"Publish",
+        description:"" 
+    },
+    createdBy:{
+        title:"Created by",
+        description:"" 
+    },
+    updatedBy:{
+        title:"Updated by",
+        description:"" 
+    },
+    created:{
+        title:"Created",
+        description:"" 
+    },
+    
+    version:{
+        title:"Version",
+        description:"" 
+    },
+    path:{
+        title:"Path",
+        description:"" 
+    },
+    srcPath:{
+        title:"Src path",
+        description:"" 
+    }
 };
 
 const messages = {
@@ -180,6 +259,7 @@ const messages = {
             'Code invalid: imppossible to show the source code. Conversion error',
     },
     fields: fields,
+    specs:specs,
     resources: {
         projects: {
             name: 'Project |||| Projects',
