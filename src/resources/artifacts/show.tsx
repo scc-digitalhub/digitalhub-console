@@ -31,10 +31,11 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getArtifactSpecUiSchema } from './types';
 import { ArtifactIcon } from './icon';
 import { DownloadButton } from '../../components/DownloadButton';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 const ShowComponent = () => {
     const record = useRecordContext();
-
+    
     return <ArtifactShowLayout record={record} />;
 };
 
@@ -57,7 +58,15 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-
+    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    console.log(schemas, isLoading, error);
+    const metadataKinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema:s.schema
+          }))
+        : [];
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -86,13 +95,18 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 
                 <TextField source="key" />
 
-                <JsonSchemaField
-                    source="metadata"
-                    schema={MetadataSchema}
-                    uiSchema={createMetadataViewUiSchema(record?.metadata)}
-                    label={false}
-                />
-
+ {metadataKinds && (
+     metadataKinds.map(r => {
+        return (
+             <JsonSchemaField
+            key={r.id}
+            source="metadata"
+            schema={r.schema}
+            uiSchema={createMetadataViewUiSchema(record?.metadata)}
+            label={false}
+         />
+        );
+    }))} 
                 {spec && (
                     <JsonSchemaField
                         source="spec"

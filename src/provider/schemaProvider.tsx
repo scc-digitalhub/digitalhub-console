@@ -38,6 +38,9 @@ function mapType(resource) {
     if (resource === 'workflows') {
         return 'WORKFLOW';
     }
+    if (resource === 'metadata'){
+        return 'METADATA'
+    }
     return null;
 }
 
