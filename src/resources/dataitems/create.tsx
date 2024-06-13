@@ -58,14 +58,27 @@ export const DataItemCreate = () => {
         ...data,
         project: root || '',
     });
-
-    // useEffect(() => {
-    //     if (schemaProvider) {
-    //         schemaProvider.list('dataitems').then(res => {
-    //             setSchemas(res || []);
-    //         });
-    //     }
-    // }, [schemaProvider]);
+    const { data: metaSchema} = useGetSchemas('metadata');
+    const metadataKinds = metaSchema
+        ? metaSchema.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
+    {metadataKinds &&
+        metadataKinds.map(r => {
+            return (
+                <JsonSchemaInput
+                    key={r.id}
+                    source="metadata"
+                    schema={r.schema}
+                    uiSchema={
+                        MetadataCreateUiSchema
+                    }
+                />
+            );
+        })}
 
     const getDataItemSpecSchema = (kind: string | undefined) => {
         if (!kind) {

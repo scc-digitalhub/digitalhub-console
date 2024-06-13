@@ -22,7 +22,11 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { MetadataCreateUiSchema, MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
+import {
+    MetadataCreateUiSchema,
+    MetadataEditUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -112,12 +116,12 @@ export const ArtifactEdit = () => {
     const redirect = useRedirect();
     const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
     const metadataKinds = metaSchema
-            ? metaSchema.map(s => ({
-                  id: s.kind,
-                  name: s.kind,
-                  schema:s.schema
-              }))
-            : [];
+        ? metaSchema.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('artifacts').then(res => {
@@ -175,17 +179,19 @@ export const ArtifactEdit = () => {
                                     />
                                 </Stack>
 
-                                {metadataKinds && (
-     metadataKinds.map(r => {
-        return (
-            <JsonSchemaInput
-            key={r.id}
-            source="metadata"
-            schema={r.schema}
-            uiSchema={MetadataCreateUiSchema}
-         />
-        );
-    }))} 
+                                {metadataKinds &&
+                                    metadataKinds.map(r => {
+                                        return (
+                                            <JsonSchemaInput
+                                                key={r.id}
+                                                source="metadata"
+                                                schema={r.schema}
+                                                uiSchema={
+                                                    MetadataCreateUiSchema
+                                                }
+                                            />
+                                        );
+                                    })}
 
                                 <SpecInput
                                     source="spec"

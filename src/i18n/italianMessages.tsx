@@ -22,7 +22,14 @@ const specs = {
             title:"Audit",
             description:""
         }
-    }
+    },artifact: {
+        title:"Artifact",
+        description:""
+    },
+    dataitem: {
+        title:"Metadata dataitem",
+        description:""
+    },
 }
 const fields = {
     id: 'Id',
@@ -84,35 +91,52 @@ const fields = {
     base: 'Base',
     summary: 'Riepilogo',
     description: {
-        title:"",
+        title:"Description",
         description:""
     },
     labels: {
-        title:"",
+        title:"Labels",
         description:""
     },
     updated: {
-        title:"",
+        title:"Updated",
         description:""
     },
     embedded: {
-        title:"",
+        title:"Embedded",
         description:""
     },
     openMetadata:{
-        title:"",
+        title:"Open Metadata",
         description:"" 
     },
     publish:{
-        title:"",
+        title:"Publish",
         description:"" 
     },
     createdBy:{
-        title:"",
+        title:"Created by",
         description:"" 
     },
     updatedBy:{
-        title:"",
+        title:"Updated by",
+        description:"" 
+    },
+    created:{
+        title:"Created",
+        description:"" 
+    },
+    
+    version:{
+        title:"Version",
+        description:"" 
+    },
+    path:{
+        title:"Path",
+        description:"" 
+    },
+    srcPath:{
+        title:"Src path",
         description:"" 
     }
 

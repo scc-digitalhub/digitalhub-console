@@ -53,12 +53,12 @@ export const ArtifactCreate = () => {
         : [];
     const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
     const metadataKinds = metaSchema
-            ? metaSchema.map(s => ({
-                  id: s.kind,
-                  name: s.kind,
-                  schema:s.schema
-              }))
-            : [];
+        ? metaSchema.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
     const transform = data => ({
         ...data,
         project: root || '',
@@ -119,22 +119,19 @@ export const ArtifactCreate = () => {
                                         ]}
                                     />
                                 </Stack>
-                                {metadataKinds && (
-     metadataKinds.map(r => {
-        return (
-            <JsonSchemaInput
-            key={r.id}
-            source="metadata"
-            schema={r.schema}
-            uiSchema={MetadataCreateUiSchema}
-         />
-        );
-    }))} 
-                                {/* <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataCreateUiSchema}
-                                /> */}
+                                {metadataKinds &&
+                                    metadataKinds.map(r => {
+                                        return (
+                                            <JsonSchemaInput
+                                                key={r.id}
+                                                source="metadata"
+                                                schema={r.schema}
+                                                uiSchema={
+                                                    MetadataCreateUiSchema
+                                                }
+                                            />
+                                        );
+                                    })}
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
