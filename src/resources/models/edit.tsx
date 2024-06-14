@@ -20,7 +20,7 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
+import { MetadataCreateUiSchema, MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -28,6 +28,7 @@ import { Spinner } from '../../components/Spinner';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 export const ModelEditToolbar = () => {
     const translate = useTranslate();
@@ -107,7 +108,15 @@ export const ModelEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
-
+    const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
+    const metadataKinds = metaSchema
+        ? metaSchema.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
+        
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('models').then(res => {
@@ -165,11 +174,19 @@ export const ModelEdit = () => {
                                     />
                                 </Stack>
 
-                                <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataEditUiSchema}
-                                />
+                                {metadataKinds &&
+                                    metadataKinds.map(r => {
+                                        return (
+                                            <JsonSchemaInput
+                                                key={r.id}
+                                                source="metadata"
+                                                schema={r.schema}
+                                                uiSchema={
+                                                    MetadataCreateUiSchema
+                                                }
+                                            />
+                                        );
+                                    })}
 
                                 <SpecInput
                                     source="spec"

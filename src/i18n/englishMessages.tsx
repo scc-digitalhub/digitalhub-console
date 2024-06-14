@@ -22,17 +22,41 @@ const specs = {
             title:"Audit",
             description:""
         },
-
+       
         
     },
     artifact: {
-        title:"Artifact",
+        title:"Metadata Artifact",
         description:""
     },
     dataitem: {
-        title:"Metadata dataitem",
+        title:"Metadata Dataitem",
         description:""
     },
+    model:{
+        title:"Metadata Model",
+        description:""
+    },
+    container:{
+        title:"Container",
+        description:""
+    },
+    nefertem:{
+        title:"Nefertem",
+        description:""
+    },
+    python:{
+        title:"Python",
+        description:""
+    },
+    dbt:{
+        title:"Dbt",
+        description:""
+    },
+    mlrun:{
+        title:"mlrun",
+        description:""
+    }
 }
 const fields = {
     id: 'Id',
@@ -241,6 +265,29 @@ const fields = {
     srcPath:{
         title:"Src path",
         description:"" 
+    },
+    algorithm: {
+        title:"Algorithm",
+        description:"" 
+    },
+    parameters: {
+        title:"Parameters",
+        description:"" 
+    },
+    baseModel: {
+        title:"Base Model",
+        description:"" 
+    },
+    metrics:{
+        title:"Metrics",
+        description:"" 
+    },constraints:{
+        title:"Contraints",
+        description:"Contraints object" ,
+        item:{
+            title:"Item",
+             description:"" , 
+        }
     }
 };
 

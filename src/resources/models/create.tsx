@@ -30,6 +30,7 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -45,7 +46,14 @@ export const ModelCreate = () => {
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
-
+    const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
+    const metadataKinds = metaSchema
+        ? metaSchema.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
     const transform = data => ({
         ...data,
         project: root || '',
@@ -103,7 +111,6 @@ export const ModelCreate = () => {
                                             isAlphaNumeric(),
                                         ]}
                                     />
-
                                     <SelectInput
                                         source="kind"
                                         choices={kinds}
@@ -113,12 +120,19 @@ export const ModelCreate = () => {
                                         ]}
                                     />
                                 </Stack>
-
-                                <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataCreateUiSchema}
-                                />
+                                {metadataKinds &&
+                                    metadataKinds.map(r => {
+                                        return (
+                                            <JsonSchemaInput
+                                                key={r.id}
+                                                source="metadata"
+                                                schema={r.schema}
+                                                uiSchema={
+                                                    MetadataCreateUiSchema
+                                                }
+                                            />
+                                        );
+                                    })}
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {

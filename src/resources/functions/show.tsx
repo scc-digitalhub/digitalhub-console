@@ -34,6 +34,7 @@ import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
 import { AceEditorField } from '../../components/AceEditorField';
+import { useGetSchemas } from '../../controllers/schemaController';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -48,7 +49,14 @@ const ShowComponent = () => {
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
-
+    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    const metadataKinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+              schema: s.schema,
+          }))
+        : [];
     const isInitializing = () => {
         return initializing.current === true;
     };
@@ -206,12 +214,20 @@ const ShowComponent = () => {
 
                 <TextField source="key" />
 
-                <JsonSchemaField
-                    source="metadata"
-                    schema={MetadataSchema}
-                    uiSchema={createMetadataViewUiSchema(record.metadata)}
-                    label={false}
-                />
+                {metadataKinds &&
+                    metadataKinds.map(r => {
+                        return (
+                            <JsonSchemaField
+                                key={r.id}
+                                source="metadata"
+                                schema={r.schema}
+                                uiSchema={createMetadataViewUiSchema(
+                                    record?.metadata
+                                )}
+                                label={false}
+                            />
+                        );
+                    })}
                 {spec && (
                     <JsonSchemaField
                         source="spec"
