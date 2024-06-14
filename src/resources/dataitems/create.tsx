@@ -3,7 +3,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { useEffect, useState } from 'react';
 import {
     CreateActionsProps,
     CreateBase,
@@ -27,10 +26,10 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { useGetSchemas } from '../../controllers/schemaController';
+import { MetadataInput } from '../../components/MetadataInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -58,27 +57,8 @@ export const DataItemCreate = () => {
         ...data,
         project: root || '',
     });
-    const { data: metaSchema} = useGetSchemas('metadata');
-    const metadataKinds = metaSchema
-        ? metaSchema.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
-        : [];
-    {metadataKinds &&
-        metadataKinds.map(r => {
-            return (
-                <JsonSchemaInput
-                    key={r.id}
-                    source="metadata"
-                    schema={r.schema}
-                    uiSchema={
-                        MetadataCreateUiSchema
-                    }
-                />
-            );
-        })}
+    
+    <MetadataInput />
 
     const getDataItemSpecSchema = (kind: string | undefined) => {
         if (!kind) {
@@ -128,11 +108,8 @@ export const DataItemCreate = () => {
                                     />
                                 </Stack>
 
-                                <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataCreateUiSchema}
-                                />
+                                <MetadataInput />
+
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {

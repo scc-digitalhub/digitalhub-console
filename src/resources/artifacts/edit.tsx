@@ -34,7 +34,7 @@ import { Spinner } from '../../components/Spinner';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
-import { useGetSchemas } from '../../controllers/schemaController';
+import { MetadataInput } from '../../components/MetadataInput';
 
 export const ArtifactEditToolbar = () => {
     const translate = useTranslate();
@@ -114,14 +114,6 @@ export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
-    const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
-    const metadataKinds = metaSchema
-        ? metaSchema.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
-        : [];
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('artifacts').then(res => {
@@ -179,19 +171,7 @@ export const ArtifactEdit = () => {
                                     />
                                 </Stack>
 
-                                {metadataKinds &&
-                                    metadataKinds.map(r => {
-                                        return (
-                                            <JsonSchemaInput
-                                                key={r.id}
-                                                source="metadata"
-                                                schema={r.schema}
-                                                uiSchema={
-                                                    MetadataCreateUiSchema
-                                                }
-                                            />
-                                        );
-                                    })}
+                                <MetadataInput />
 
                                 <SpecInput
                                     source="spec"

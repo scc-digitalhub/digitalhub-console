@@ -22,12 +22,41 @@ const specs = {
             title:"Audit",
             description:""
         }
-    },artifact: {
-        title:"Artifact",
+    },
+    artifact: {
+        title:"Metadata Artifact",
         description:""
     },
     dataitem: {
-        title:"Metadata dataitem",
+        title:"Metadata Dataitem",
+        description:""
+    },
+    model:{
+        title:"Metadata Model",
+        description:""
+    },
+    container:{
+        title:"Container",
+        description:""
+    },
+    nefertem:{
+        title:"Nefertem",
+        description:""
+    },
+    python:{
+        title:"Python",
+        description:""
+    },
+    dbt:{
+        title:"Dbt",
+        description:""
+    },
+    mlrun:{
+        title:"mlrun",
+        description:""
+    },
+    table: {
+        title:"Table",
         description:""
     },
 }
@@ -138,8 +167,24 @@ const fields = {
     srcPath:{
         title:"Src path",
         description:"" 
-    }
-
+    },
+    fields: {
+        title: 'Fields',
+        description: '',
+        item: {
+            title: '',
+            description: '',
+        },
+        
+    },
+    example: { title: 'Example', description: '' },
+    format: { title: 'Format', description: '' },
+    title: { title: 'Title', description: '' },
+    type: { title: 'Type', description: '' },
+    schema: {
+        title: 'Base Model',
+        description: '',
+    },
 };
 
 const messages = {

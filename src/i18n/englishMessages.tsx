@@ -3,61 +3,63 @@ import englishMessages from 'ra-language-english';
 const specs = {
     metadata: {
         base: {
-            title:"Metadata",
-            description:""
+            title: 'Metadata',
+            description: '',
         },
         embedded: {
-            title:"Embedded",
-            description:""
+            title: 'Embedded',
+            description: '',
         },
         versioning: {
-            title:"Versioning",
-            description:""
+            title: 'Versioning',
+            description: '',
         },
         openmetadata: {
-            title:"Openmetadata",
-            description:""
+            title: 'Openmetadata',
+            description: '',
         },
         audit: {
-            title:"Audit",
-            description:""
+            title: 'Audit',
+            description: '',
         },
-       
-        
     },
     artifact: {
-        title:"Metadata Artifact",
-        description:""
+        title: 'Metadata Artifact',
+        description: '',
     },
     dataitem: {
-        title:"Metadata Dataitem",
-        description:""
+        title: 'Metadata Dataitem',
+        description: '',
     },
-    model:{
-        title:"Metadata Model",
-        description:""
+    model: {
+        title: 'Metadata Model',
+        description: '',
     },
-    container:{
-        title:"Container",
-        description:""
+    container: {
+        title: 'Container',
+        description: '',
     },
-    nefertem:{
-        title:"Nefertem",
-        description:""
+    nefertem: {
+        title: 'Nefertem',
+        description: '',
     },
-    python:{
-        title:"Python",
-        description:""
+    python: {
+        title: 'Python',
+        description: '',
     },
-    dbt:{
-        title:"Dbt",
-        description:""
+    dbt: {
+        title: 'Dbt',
+        description: '',
     },
-    mlrun:{
-        title:"mlrun",
-        description:""
-    }
-}
+    mlrun: {
+        title: 'mlrun',
+        description: '',
+    },
+    table: {
+        title: 'Table',
+        description: '',
+    },
+};
 const fields = {
     id: 'Id',
     // name: 'Name',
@@ -65,9 +67,13 @@ const fields = {
     // key: 'Key',
     project: 'Project',
     container: {
+        args: { title: 'Container args', description: '' },
         instructions: {
             description: 'Instructions definition',
         },
+        baseImage: { title: 'Container args', description: '' },
+        command: { title: 'Container args', description: '' },
+        image: { title: 'Container args', description: '' },
     },
     execArgs: {
         title: 'Execution arguments',
@@ -218,77 +224,122 @@ const fields = {
     base: 'Base',
     summary: 'Summary',
     description: {
-        title:"Description",
-        description:""
+        title: 'Description',
+        description: '',
     },
     labels: {
-        title:"Labels",
-        description:""
+        title: 'Labels',
+        description: '',
     },
     updated: {
-        title:"Updated",
-        description:""
+        title: 'Updated',
+        description: '',
     },
     embedded: {
-        title:"Embedded",
-        description:""
+        title: 'Embedded',
+        description: '',
     },
-    openMetadata:{
-        title:"Open Metadata",
-        description:"" 
+    openMetadata: {
+        title: 'Open Metadata',
+        description: '',
     },
-    publish:{
-        title:"Publish",
-        description:"" 
+    publish: {
+        title: 'Publish',
+        description: '',
     },
-    createdBy:{
-        title:"Created by",
-        description:"" 
+    createdBy: {
+        title: 'Created by',
+        description: '',
     },
-    updatedBy:{
-        title:"Updated by",
-        description:"" 
+    updatedBy: {
+        title: 'Updated by',
+        description: '',
     },
-    created:{
-        title:"Created",
-        description:"" 
+    created: {
+        title: 'Created',
+        description: '',
     },
-    
-    version:{
-        title:"Version",
-        description:"" 
+
+    version: {
+        title: 'Version',
+        description: '',
     },
-    path:{
-        title:"Path",
-        description:"" 
+    path: {
+        title: 'Path',
+        description: '',
     },
-    srcPath:{
-        title:"Src path",
-        description:"" 
+    srcPath: {
+        title: 'Src path',
+        description: '',
     },
     algorithm: {
-        title:"Algorithm",
-        description:"" 
+        title: 'Algorithm',
+        description: '',
     },
     parameters: {
-        title:"Parameters",
-        description:"" 
+        title: 'Parameters',
+        description: '',
     },
     baseModel: {
-        title:"Base Model",
-        description:"" 
+        title: 'Base Model',
+        description: '',
     },
-    metrics:{
-        title:"Metrics",
-        description:"" 
-    },constraints:{
-        title:"Contraints",
-        description:"Contraints object" ,
-        item:{
-            title:"Item",
-             description:"" , 
-        }
-    }
+    metrics: {
+        title: 'Metrics',
+        description: '',
+    },
+    constraints: {
+        title: 'Contraints',
+        description: 'Contraints object',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    fields: {
+        title: 'Fields',
+        description: '',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
+    example: { title: 'Example', description: '' },
+    format: { title: 'Format', description: '' },
+    title: { title: 'Title', description: '' },
+    type: { title: 'Type', description: '' },
+    schema: {
+        title: 'Schema',
+        description: '',
+    },
+    python: {
+        requirements: {
+            title: 'Python requirements',
+            description: '',
+        },
+    },
+    errorReport: {
+        title: 'Error report',
+        description: '',
+    },
+    sourceCode: {
+        source: {
+            title: 'Source Code',
+            description: '',
+        },
+        lang: {
+            title: 'Language',
+            description: '',
+        },
+        handler: {
+            title: 'Handler',
+            description: '',
+            base64: {
+                title: 'Base 64',
+                description: '',
+            },
+        },
+    },
 };
 
 const messages = {
@@ -310,7 +361,7 @@ const messages = {
             'Code invalid: imppossible to show the source code. Conversion error',
     },
     fields: fields,
-    specs:specs,
+    specs: specs,
     resources: {
         projects: {
             name: 'Project |||| Projects',

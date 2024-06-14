@@ -31,6 +31,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
 import { useGetSchemas } from '../../controllers/schemaController';
+import { MetadataInput } from '../../components/MetadataInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -46,14 +47,7 @@ export const ModelCreate = () => {
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
-    const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
-    const metadataKinds = metaSchema
-        ? metaSchema.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
-        : [];
+    
     const transform = data => ({
         ...data,
         project: root || '',
@@ -120,19 +114,8 @@ export const ModelCreate = () => {
                                         ]}
                                     />
                                 </Stack>
-                                {metadataKinds &&
-                                    metadataKinds.map(r => {
-                                        return (
-                                            <JsonSchemaInput
-                                                key={r.id}
-                                                source="metadata"
-                                                schema={r.schema}
-                                                uiSchema={
-                                                    MetadataCreateUiSchema
-                                                }
-                                            />
-                                        );
-                                    })}
+                                <MetadataInput />
+
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {

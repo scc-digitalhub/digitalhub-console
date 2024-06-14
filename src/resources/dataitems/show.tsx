@@ -1,7 +1,7 @@
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { Container, Paper, Stack } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -16,10 +16,6 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import {
-    MetadataSchema,
-    createMetadataViewUiSchema,
-} from '../../common/schemas';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
@@ -29,7 +25,7 @@ import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
-import { useGetSchemas } from '../../controllers/schemaController';
+import { MetadataField } from '../../components/MetadataField';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -55,14 +51,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
-    const metadataKinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
-        : [];
+
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -99,20 +88,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 
                 <TextField source="key" />
 
-                {metadataKinds &&
-                    metadataKinds.map(r => {
-                        return (
-                            <JsonSchemaField
-                                key={r.id}
-                                source="metadata"
-                                schema={r.schema}
-                                uiSchema={createMetadataViewUiSchema(
-                                    record?.metadata
-                                )}
-                                label={false}
-                            />
-                        );
-                    })}
+                <MetadataField />
 
                 {spec && (
                     <JsonSchemaField
