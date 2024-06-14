@@ -55,6 +55,7 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { AceEditorField } from '../../components/AceEditorField';
+import { MetadataField } from '../../components/MetadataField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -227,12 +228,8 @@ const ShowComponent = () => {
 
                 <TextField source="key" />
 
-                <JsonSchemaField
-                    source="metadata"
-                    schema={MetadataSchema}
-                    uiSchema={createMetadataViewUiSchema(record.metadata)}
-                    label={false}
-                />
+                <MetadataField />
+
                 {spec && (
                     <JsonSchemaField
                         source="spec"

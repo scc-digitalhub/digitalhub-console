@@ -2,8 +2,16 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { Container, Stack } from '@mui/material';
+import {
+    AccordionDetails,
+    AccordionSummary,
+    Container,
+    Stack,
+    Typography,
+} from '@mui/material';
 import { memo, useEffect, useState } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import {
     Button,
     DeleteWithConfirmButton,
@@ -18,6 +26,7 @@ import {
     useNotify,
     useRecordContext,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
 import {
@@ -32,6 +41,24 @@ import { getArtifactSpecUiSchema } from './types';
 import { ArtifactIcon } from './icon';
 import { DownloadButton } from '../../components/DownloadButton';
 import { useGetSchemas } from '../../controllers/schemaController';
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import { styled } from '@mui/material/styles';
+import { MetadataField } from '../../components/MetadataField';
+
+// const Accordion = styled((props: AccordionProps) => (
+//     <MuiAccordion disableGutters elevation={0} square {...props} />
+// ))(({ theme }) => ({
+//     border: `1px solid ${theme.palette.divider}`,
+//     '&:not(:last-child)': {
+//         borderBottom: 0,
+//     },
+//     '&::before': {
+//         display: 'none',
+//     },
+//     '& .MuiAccordionSummary-expandIconWrapper': {
+//         color: '#E0701B',
+//     },
+// }));
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -58,14 +85,15 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
-    const metadataKinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
-        : [];
+    // const translate = useTranslate();
+    // const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    // const metadataKinds = schemas
+    //     ? schemas.map(s => ({
+    //           id: s.kind,
+    //           name: s.kind,
+    //           schema: s.schema,
+    //       }))
+    //     : [];
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -93,21 +121,34 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 </Stack>
 
                 <TextField source="key" />
-
-                {metadataKinds &&
+                <MetadataField />
+                {/* {metadataKinds &&
                     metadataKinds.map(r => {
                         return (
-                            <JsonSchemaField
-                                key={r.id}
-                                source="metadata"
-                                schema={r.schema}
-                                uiSchema={createMetadataViewUiSchema(
-                                    record?.metadata
-                                )}
-                                label={false}
-                            />
+                            <Accordion elevation={0} square disableGutters defaultExpanded={r.id==="metadata.base"}>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1-content"
+                                    id="panel1-header"
+                                >
+                                    <Typography variant="h5">
+                                        {translate(r.schema.title)}
+                                    </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <JsonSchemaField
+                                        key={r.id}
+                                        source="metadata"
+                                        schema={{ ...r.schema, title: '' }}
+                                        uiSchema={createMetadataViewUiSchema(
+                                            record?.metadata
+                                        )}
+                                        label={false}
+                                    />
+                                </AccordionDetails>
+                            </Accordion>
                         );
-                    })}
+                    })} */}
                 {spec && (
                     <JsonSchemaField
                         source="spec"

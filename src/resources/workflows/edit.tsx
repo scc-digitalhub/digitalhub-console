@@ -31,6 +31,7 @@ import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '../../components/JsonSchema';
+import { MetadataInput } from '../../components/MetadataInput';
 
 export const WorkflowEditToolbar = () => {
     const translate = useTranslate();
@@ -193,11 +194,8 @@ export const WorkflowEdit = () => {
                                     />
                                 </Stack>
 
-                                <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataEditUiSchema}
-                                />
+                                <MetadataInput />
+
 
                                 <SpecInput
                                     source="spec"

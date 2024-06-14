@@ -21,8 +21,6 @@ import {
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
 import {
     BlankSchema,
-    MetadataCreateUiSchema,
-    MetadataSchema,
 } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
@@ -30,7 +28,7 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
-import { useGetSchemas } from '../../controllers/schemaController';
+import { MetadataInput } from '../../components/MetadataInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -49,14 +47,6 @@ export const ArtifactCreate = () => {
         ? schemas.map(s => ({
               id: s.kind,
               name: s.kind,
-          }))
-        : [];
-    const { data: metaSchema, isLoading, error } = useGetSchemas('metadata');
-    const metadataKinds = metaSchema
-        ? metaSchema.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
           }))
         : [];
     const transform = data => ({
@@ -119,19 +109,7 @@ export const ArtifactCreate = () => {
                                         ]}
                                     />
                                 </Stack>
-                                {metadataKinds &&
-                                    metadataKinds.map(r => {
-                                        return (
-                                            <JsonSchemaInput
-                                                key={r.id}
-                                                source="metadata"
-                                                schema={r.schema}
-                                                uiSchema={
-                                                    MetadataCreateUiSchema
-                                                }
-                                            />
-                                        );
-                                    })}
+                                <MetadataInput />
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {

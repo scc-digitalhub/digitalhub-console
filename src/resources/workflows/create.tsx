@@ -34,6 +34,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
+import { MetadataInput } from '../../components/MetadataInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -137,12 +138,8 @@ export const WorkflowCreate = () => {
                                     />
                                 </Stack>
 
-                                <JsonSchemaInput
-                                    source="metadata"
-                                    schema={MetadataSchema}
-                                    uiSchema={MetadataCreateUiSchema}
-                                    label={false}
-                                />
+                                <MetadataInput />
+
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
