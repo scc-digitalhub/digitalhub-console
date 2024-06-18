@@ -4,15 +4,10 @@ import {
     ButtonProps,
     DateField,
     Labeled,
-    List,
     LoadingIndicator,
-    Pagination,
     RaRecord,
     RecordContextProvider,
     RefreshButton,
-    SelectInput,
-    ShowButton,
-    SimpleList,
     TextField,
     useGetResourceLabel,
     useListController,
@@ -31,13 +26,14 @@ import {
     MenuItem,
     Select,
     Stack,
-    Typography,
     styled,
-    useTheme,
 } from '@mui/material';
 import SegmentIcon from '@mui/icons-material/Segment';
-import CloseIcon from '@mui/icons-material/Close';
 import { LazyLog } from '@melloware/react-logviewer';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import Parser from 'k8s-resource-parser';
+import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 
 const defaultIcon = <SegmentIcon />;
 
@@ -272,6 +268,10 @@ const LogsDetail = (props: { record?: any }) => {
                 </Labeled>
             )}
 
+            {record.status?.metrics && (
+                <LogMetrics metrics={record.status.metrics} />
+            )}
+
             <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
                 <LazyLog
                     ref={ref}
@@ -301,3 +301,69 @@ const LogViewer = styled(Box, {
         marginRight: 0,
     },
 }));
+
+const LogMetrics = (props: { metrics: any[] }) => {
+    const { metrics } = props;
+    const keyToLabel: { [key: string]: string } = {
+        cpu: 'Cpu (n)',
+        memory: 'Memory (MB)',
+    };
+
+    const data = metrics.map((m: { timestamp: any; usage: any }) => {
+        let val = { timestamp: new Date(m.timestamp) };
+        if (m.usage.memory) {
+            //parse kubernetes resource and convert to Megabytes
+            const bytes = Parser.memoryParser(m.usage.memory);
+            val['memory'] = ByteConverter.convert(
+                Byte.value(bytes),
+                'MB'
+            ).value;
+        }
+        if (m.usage.cpu) {
+            //cut measurement unit and parse number
+            const str = m.usage.cpu.endsWith('n')
+                ? m.usage.cpu.substring(1)
+                : m.usage.cpu;
+            val['cpu'] = parseInt(str);
+        }
+        return val;
+    });
+
+    return (
+        <LineChart
+            xAxis={[
+                {
+                    dataKey: 'timestamp',
+                    scaleType: 'time',
+                    tickNumber: 4,
+                    valueFormatter: (value: Date, context) =>
+                        context.location === 'tick'
+                            ? `${value.toLocaleDateString()}\n${value.toLocaleTimeString()}`
+                            : value.toLocaleString(),
+                },
+            ]}
+            yAxis={Object.keys(keyToLabel).map(key => ({
+                id: key,
+                scaleType: 'linear',
+                label: keyToLabel[key],
+                min: 0,
+            }))}
+            series={Object.keys(keyToLabel).map(key => ({
+                dataKey: key,
+                label: keyToLabel[key],
+                yAxisKey: key,
+                showMark: false,
+            }))}
+            margin={{ top: 50, right: 50, bottom: 50, left: 65 }}
+            sx={{
+                [`.${axisClasses.left} .${axisClasses.label}`]: {
+                    transform: 'translateX(-15px)',
+                },
+            }}
+            dataset={data}
+            leftAxis="cpu"
+            rightAxis="memory"
+            height={300}
+        />
+    );
+};
