@@ -98,6 +98,7 @@ const fields = {
     },
     status: {
         state: 'Stato',
+        files: 'File',
     },
     inputs: {
         title: 'Input',
@@ -185,6 +186,7 @@ const fields = {
         title: 'Base Model',
         description: '',
     },
+    info: 'Info',
 };
 
 const messages = {
