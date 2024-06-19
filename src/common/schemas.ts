@@ -40,6 +40,9 @@ export const MetadataCreateUiSchema = {
     created: {
         'ui:widget': 'hidden',
     },
+    updated: {
+        'ui:widget': 'hidden',
+    },
     description: {
         'ui:widget': 'textarea',
     },
@@ -53,6 +56,9 @@ export const MetadataEditUiSchema = {
         'ui:widget': 'hidden',
     },
     created: {
+        'ui:widget': 'hidden',
+    },
+    updated: {
         'ui:widget': 'hidden',
     },
     description: {

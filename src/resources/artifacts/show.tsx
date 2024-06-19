@@ -3,17 +3,12 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import {
-    AccordionDetails,
-    AccordionSummary,
     Container,
     Stack,
-    Typography,
 } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
-    Button,
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
@@ -22,17 +17,10 @@ import {
     TabbedShowLayout,
     TextField,
     TopToolbar,
-    useDataProvider,
-    useNotify,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import {
-    MetadataSchema,
-    createMetadataViewUiSchema,
-} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
@@ -40,9 +28,6 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getArtifactSpecUiSchema } from './types';
 import { ArtifactIcon } from './icon';
 import { DownloadButton } from '../../components/DownloadButton';
-import { useGetSchemas } from '../../controllers/schemaController';
-import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import { styled } from '@mui/material/styles';
 import { MetadataField } from '../../components/MetadataField';
 
 // const Accordion = styled((props: AccordionProps) => (
@@ -122,33 +107,6 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
 
                 <TextField source="key" />
                 <MetadataField />
-                {/* {metadataKinds &&
-                    metadataKinds.map(r => {
-                        return (
-                            <Accordion elevation={0} square disableGutters defaultExpanded={r.id==="metadata.base"}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1-content"
-                                    id="panel1-header"
-                                >
-                                    <Typography variant="h5">
-                                        {translate(r.schema.title)}
-                                    </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <JsonSchemaField
-                                        key={r.id}
-                                        source="metadata"
-                                        schema={{ ...r.schema, title: '' }}
-                                        uiSchema={createMetadataViewUiSchema(
-                                            record?.metadata
-                                        )}
-                                        label={false}
-                                    />
-                                </AccordionDetails>
-                            </Accordion>
-                        );
-                    })} */}
                 {spec && (
                     <JsonSchemaField
                         source="spec"

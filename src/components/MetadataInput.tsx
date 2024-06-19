@@ -1,4 +1,4 @@
-import { AccordionSummary, Typography, AccordionDetails } from '@mui/material';
+import { AccordionSummary, Typography, AccordionDetails, Box } from '@mui/material';
 import { MetadataCreateUiSchema, createMetadataViewUiSchema } from '../common/schemas';
 import { useGetSchemas } from '../controllers/schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
@@ -11,7 +11,7 @@ const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
     width:`100%`,
-    border: `1px solid ${theme.palette.divider}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
     '&:not(:last-child)': {
         // borderBottom: 0,
     },
@@ -34,10 +34,26 @@ export const MetadataInput = ({ prompt }: any) => {
           }))
         : [];
     return (
-        <>
+        <Box gap={4} p={2} sx={{ border: '1px solid rgba(0, 0, 0, 0.12)' }}>
             {metadataKinds &&
                 metadataKinds.map(r => {
                     return (
+                        <>
+                        {r.id === 'metadata.base' && (
+                            <>
+                                <Typography variant="h5">
+                                    {translate(r.schema.title)}
+                                </Typography>
+                                <JsonSchemaInput
+                                    key={r.id}
+                                    source="metadata"
+                                    schema={{ ...r.schema, title: '' }}
+                                    uiSchema={MetadataCreateUiSchema}
+                                />
+                                 </>
+                            )}
+                                                        {r.id !== 'metadata.base' && (
+
                         <Accordion
                             elevation={0}
                             square
@@ -62,8 +78,10 @@ export const MetadataInput = ({ prompt }: any) => {
                                 />
                             </AccordionDetails>
                         </Accordion>
-                    );
+                      )}
+                      </>
+                  );
                 })}
-        </>
+        </Box>
     );
 };
