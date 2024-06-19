@@ -44,6 +44,7 @@ import { MetadataField } from '../../components/MetadataField';
 //         color: '#E0701B',
 //     },
 // }));
+import { FileInfo } from '../../components/FileInfo';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -115,6 +116,9 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                         label={false}
                     />
                 )}
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="fields.info">
+                <FileInfo />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );

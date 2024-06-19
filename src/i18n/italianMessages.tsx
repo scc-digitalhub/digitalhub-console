@@ -289,6 +289,7 @@ const fields = {
         target_image: 'Immagine Target',    },
     status: {
         state: 'Stato',
+        files: 'File',
     },
     inputs: {
         title: 'Input',
@@ -479,6 +480,7 @@ const fields = {
         title: 'Immagine target',
         description: '',
     },
+    info: 'Info',
 };
 
 const messages = {

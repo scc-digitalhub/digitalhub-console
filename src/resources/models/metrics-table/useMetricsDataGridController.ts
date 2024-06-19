@@ -19,7 +19,7 @@ export const useMetricsDataGridController = (props: {
         {
             field: 'key',
             headerName: translate('resources.models.metrics.key'),
-            flex: 1,
+            flex: 0.5,
         },
         {
             field: 'value',
