@@ -387,7 +387,7 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/upload?filename=${params.id}`;
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/upload?filename=${params.filename}`;
             return httpClient(url).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
