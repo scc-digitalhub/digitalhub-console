@@ -16,6 +16,8 @@ import {
     TextInput,
     TopToolbar,
     required,
+    useDataProvider,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
@@ -29,6 +31,8 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
+import { Uppy, AwsS3 } from 'uppy';
+import { DragDrop } from '@uppy/react';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -115,18 +119,21 @@ export const ArtifactCreate = () => {
                                     {({ formData }) => {
                                         if (formData.kind)
                                             return (
-                                                <JsonSchemaInput
-                                                    source="spec"
-                                                    schema={{
-                                                        ...getArtifactSpecSchema(
+                                                <>
+                                                    <JsonSchemaInput
+                                                        source="spec"
+                                                        schema={{
+                                                            ...getArtifactSpecSchema(
+                                                                formData.kind
+                                                            ),
+                                                            title: 'Spec',
+                                                        }}
+                                                        uiSchema={getArtifactSpecUiSchema(
                                                             formData.kind
-                                                        ),
-                                                        title: 'Spec',
-                                                    }}
-                                                    uiSchema={getArtifactSpecUiSchema(
-                                                        formData.kind
-                                                    )}
-                                                />
+                                                        )}
+                                                    />
+                                                    <FileUploader />
+                                                </>
                                             );
                                         else
                                             return (
@@ -152,4 +159,62 @@ export const ArtifactCreate = () => {
             </CreateBase>
         </Container>
     );
+};
+
+const FileUploader = () => {
+    const dataProvider = useDataProvider();
+    const resource = useResourceContext();
+    const { root } = useRootSelector();
+    const [uppy] = useState(() =>
+        new Uppy().use(AwsS3, {
+            id: 'myAWSPlugin',
+            shouldUseMultipart: false,
+            getUploadParameters: async (file) => {
+                // const response = await fetch('/sign-s3', {
+                //     method: 'POST',
+                //     headers: {
+                //         accept: 'application/json',
+                //     },
+                //     body: serialize({
+                //         filename: file.name,
+                //         contentType: file.type,
+                //     }),
+                //     signal: options.signal,
+                // });
+                const data = await dataProvider.upload(resource, {
+                    id: 'foo',
+                    meta: { root },
+                });
+
+                const { url, path, expiration } = data;
+
+                return {
+                    method: 'PUT',
+                    url: url,
+                    fields: {},
+                };
+
+                // if (!response.ok)
+                //     throw new Error('Unsuccessful request', {
+                //         cause: response,
+                //     });
+
+                // Parse the JSON response.
+                // const data = await response.json();
+
+                // Return an object in the correct shape.
+                // return {
+                //     method: 'PUT',
+                //     url: '', //url ricevuto da core
+                //     fields: {}, // For presigned PUT uploads, this should be left empty.
+                //     // Provide content type header required by S3
+                //     // headers: {
+                //     //     'Content-Type': file.type,
+                //     // },
+                // };
+            },
+        })
+    );
+
+    return <DragDrop uppy={uppy} />;
 };
