@@ -3,7 +3,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     CreateActionsProps,
     CreateBase,
@@ -32,7 +32,7 @@ import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { Uppy, AwsS3 } from 'uppy';
-import { DragDrop } from '@uppy/react';
+import { Dashboard } from '@uppy/react';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -47,16 +47,62 @@ export const ArtifactCreate = () => {
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
+    const dataProvider = useDataProvider();
+    const resource = useResourceContext();
+    // const [path, setPath] = useState<string>();
+    // const [id, setId] = useState<string>();
+    const id = useRef('');
+    const resourcePath = useRef('');
+
+    const [uppy] = useState(() =>
+        new Uppy({ debug: true }).use(AwsS3, {
+            id: 'myAWSPlugin',
+            shouldUseMultipart: false,
+            getUploadParameters: async (file) => {
+                const randomId = crypto.randomUUID();
+                const data = await dataProvider.upload(resource, {
+                    id: randomId,
+                    meta: { root },
+                    filename: file.name,
+                });
+
+                const { url, path, expiration } = data;
+
+                id.current = randomId;
+                resourcePath.current = path;
+
+                return {
+                    method: 'PUT',
+                    url: url,
+                    fields: {},
+                    headers: file.type? { 'Content-Type': file.type } : undefined,
+                };
+            },
+        })
+    );
+
     const kinds = schemas
         ? schemas.map(s => ({
               id: s.kind,
               name: s.kind,
           }))
         : [];
-    const transform = data => ({
-        ...data,
-        project: root || '',
-    });
+
+
+    const transform = async data => {
+        //TODO gestire fallimento upload
+        const uploaded = await uppy.upload();
+
+        if (uploaded.failed.length === 0 && resourcePath.current !== '' && id.current !== '') {
+            data.spec.path = resourcePath.current;
+            data.id = id.current
+        };
+        
+        return {
+            ...data,
+            project: root || '',
+        }
+    };
 
     useEffect(() => {
         if (schemaProvider) {
@@ -132,7 +178,7 @@ export const ArtifactCreate = () => {
                                                             formData.kind
                                                         )}
                                                     />
-                                                    <FileUploader />
+                                                    <Dashboard uppy={uppy} hideUploadButton />
                                                 </>
                                             );
                                         else
@@ -161,60 +207,6 @@ export const ArtifactCreate = () => {
     );
 };
 
-const FileUploader = () => {
-    const dataProvider = useDataProvider();
-    const resource = useResourceContext();
-    const { root } = useRootSelector();
-    const [uppy] = useState(() =>
-        new Uppy().use(AwsS3, {
-            id: 'myAWSPlugin',
-            shouldUseMultipart: false,
-            getUploadParameters: async (file) => {
-                // const response = await fetch('/sign-s3', {
-                //     method: 'POST',
-                //     headers: {
-                //         accept: 'application/json',
-                //     },
-                //     body: serialize({
-                //         filename: file.name,
-                //         contentType: file.type,
-                //     }),
-                //     signal: options.signal,
-                // });
-                const data = await dataProvider.upload(resource, {
-                    id: 'foo',
-                    meta: { root },
-                });
-
-                const { url, path, expiration } = data;
-
-                return {
-                    method: 'PUT',
-                    url: url,
-                    fields: {},
-                };
-
-                // if (!response.ok)
-                //     throw new Error('Unsuccessful request', {
-                //         cause: response,
-                //     });
-
-                // Parse the JSON response.
-                // const data = await response.json();
-
-                // Return an object in the correct shape.
-                // return {
-                //     method: 'PUT',
-                //     url: '', //url ricevuto da core
-                //     fields: {}, // For presigned PUT uploads, this should be left empty.
-                //     // Provide content type header required by S3
-                //     // headers: {
-                //     //     'Content-Type': file.type,
-                //     // },
-                // };
-            },
-        })
-    );
-
-    return <DragDrop uppy={uppy} />;
-};
+// const FileUploader = () => {
+//     return <Dashboard uppy={uppy} hideUploadButton />;
+// };
