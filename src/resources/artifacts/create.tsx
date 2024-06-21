@@ -33,6 +33,8 @@ import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { Uppy, AwsS3 } from 'uppy';
 import { Dashboard } from '@uppy/react';
+import '@uppy/core/dist/style.min.css';
+import '@uppy/dashboard/dist/style.min.css';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -49,36 +51,40 @@ export const ArtifactCreate = () => {
     const [schemas, setSchemas] = useState<any[]>();
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
-    // const [path, setPath] = useState<string>();
-    // const [id, setId] = useState<string>();
     const id = useRef('');
     const resourcePath = useRef('');
 
     const [uppy] = useState(() =>
-        new Uppy({ debug: true }).use(AwsS3, {
-            id: 'myAWSPlugin',
-            shouldUseMultipart: false,
-            getUploadParameters: async (file) => {
-                const randomId = crypto.randomUUID();
-                const data = await dataProvider.upload(resource, {
-                    id: randomId,
-                    meta: { root },
-                    filename: file.name,
-                });
+        new Uppy({ debug: true, restrictions: { maxNumberOfFiles: 1 } }).use(
+            AwsS3,
+            {
+                id: 'myAWSPlugin',
+                shouldUseMultipart: false,
+                allowedMetaFields: ['name'],
+                getUploadParameters: async file => {
+                    const randomId = crypto.randomUUID();
+                    const data = await dataProvider.upload(resource, {
+                        id: randomId,
+                        meta: { root },
+                        filename: file.name,
+                    });
 
-                const { url, path, expiration } = data;
+                    const { url, path, expiration } = data;
 
-                id.current = randomId;
-                resourcePath.current = path;
+                    id.current = randomId;
+                    resourcePath.current = path;
 
-                return {
-                    method: 'PUT',
-                    url: url,
-                    fields: {},
-                    headers: file.type? { 'Content-Type': file.type } : undefined,
-                };
-            },
-        })
+                    return {
+                        method: 'PUT',
+                        url: url,
+                        fields: {},
+                        headers: file.type
+                            ? { 'Content-Type': file.type }
+                            : undefined,
+                    };
+                },
+            }
+        )
     );
 
     const kinds = schemas
@@ -93,15 +99,19 @@ export const ArtifactCreate = () => {
         //TODO gestire fallimento upload
         const uploaded = await uppy.upload();
 
-        if (uploaded.failed.length === 0 && resourcePath.current !== '' && id.current !== '') {
+        if (
+            uploaded.failed.length === 0 &&
+            resourcePath.current !== '' &&
+            id.current !== ''
+        ) {
             data.spec.path = resourcePath.current;
-            data.id = id.current
-        };
-        
+            data.id = id.current;
+        }
+
         return {
             ...data,
             project: root || '',
-        }
+        };
     };
 
     useEffect(() => {
@@ -178,7 +188,14 @@ export const ArtifactCreate = () => {
                                                             formData.kind
                                                         )}
                                                     />
-                                                    <Dashboard uppy={uppy} hideUploadButton />
+                                                    <Dashboard
+                                                        uppy={uppy}
+                                                        hideUploadButton
+                                                        proudlyDisplayPoweredByUppy={
+                                                            false
+                                                        }
+                                                        metaFields={[{ id: 'name', name: 'Name', placeholder: 'file name' }]}
+                                                    />
                                                 </>
                                             );
                                         else
