@@ -22,7 +22,7 @@ import {
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
 import {
-    BlankSchema,
+    BlankSchema, MetadataCreateUiSchema, MetadataSchema,
 } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
@@ -35,6 +35,7 @@ import { Uppy, AwsS3 } from 'uppy';
 import { Dashboard } from '@uppy/react';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
+import { useFormContext } from 'react-hook-form';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -46,45 +47,27 @@ const CreateToolbar = (props: CreateActionsProps) => {
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
-    const dataProvider = useDataProvider();
-    const resource = useResourceContext();
-    const id = useRef('');
-    const resourcePath = useRef('');
+    const id = useRef(crypto.randomUUID());
+
+    const uploadUrl = useRef('');
 
     const [uppy] = useState(() =>
-        new Uppy({ debug: true, restrictions: { maxNumberOfFiles: 1 } }).use(
-            AwsS3,
-            {
-                id: 'myAWSPlugin',
-                shouldUseMultipart: false,
-                allowedMetaFields: ['name'],
-                getUploadParameters: async file => {
-                    const randomId = crypto.randomUUID();
-                    const data = await dataProvider.upload(resource, {
-                        id: randomId,
-                        meta: { root },
-                        filename: file.name,
-                    });
-
-                    const { url, path, expiration } = data;
-
-                    id.current = randomId;
-                    resourcePath.current = path;
-
-                    return {
-                        method: 'PUT',
-                        url: url,
-                        fields: {},
-                        headers: file.type
-                            ? { 'Content-Type': file.type }
-                            : undefined,
-                    };
-                },
-            }
-        )
+        new Uppy({ restrictions: { maxNumberOfFiles: 1 } }).use(AwsS3, {
+            id: 'myAWSPlugin',
+            shouldUseMultipart: false,
+            getUploadParameters: async file => {
+                return {
+                    method: 'PUT',
+                    url: uploadUrl.current,
+                    fields: {},
+                    headers: file.type
+                        ? { 'Content-Type': file.type }
+                        : undefined,
+                };
+            },
+        })
     );
 
     const kinds = schemas
@@ -96,17 +79,7 @@ export const ArtifactCreate = () => {
 
 
     const transform = async data => {
-        //TODO gestire fallimento upload
-        const uploaded = await uppy.upload();
-
-        if (
-            uploaded.failed.length === 0 &&
-            resourcePath.current !== '' &&
-            id.current !== ''
-        ) {
-            data.spec.path = resourcePath.current;
-            data.id = id.current;
-        }
+        await uppy.upload();
 
         return {
             ...data,
@@ -121,18 +94,6 @@ export const ArtifactCreate = () => {
             });
         }
     }, [schemaProvider]);
-
-    const getArtifactSpecSchema = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
-        }
-
-        if (schemas) {
-            return schemas.find(s => s.id === 'ARTIFACT:' + kind)?.schema;
-        }
-
-        return BlankSchema;
-    };
 
     if (!kinds) {
         return <LoadingIndicator />;
@@ -149,7 +110,7 @@ export const ArtifactCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm>
-                                <FormLabel label="fields.base" />
+                                {/* <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>
                                     <TextInput
@@ -214,7 +175,14 @@ export const ArtifactCreate = () => {
                                                 </Card>
                                             );
                                     }}
-                                </FormDataConsumer>
+                                </FormDataConsumer> */}
+                                <ArtifactForm
+                                    schemas={schemas}
+                                    uppy={uppy}
+                                    kinds={kinds}
+                                    id={id.current}
+                                    uploadUrl={uploadUrl}
+                                />
                             </SimpleForm>
                         </FlatCard>
                     </CreateView>
@@ -224,6 +192,121 @@ export const ArtifactCreate = () => {
     );
 };
 
-// const FileUploader = () => {
-//     return <Dashboard uppy={uppy} hideUploadButton />;
-// };
+const ArtifactForm = (props: any) => {
+    const { schemas, uppy, kinds, id, uploadUrl } = props;
+    const { root } = useRootSelector();
+    const translate = useTranslate();
+    const dataProvider = useDataProvider();
+    const resource = useResourceContext();
+    const formContext = useFormContext();
+
+    useEffect(() => {
+        if (formContext && dataProvider) {
+            formContext.setValue('id', id);
+            uppy.on('file-added', async file => {
+                const data = await dataProvider.upload(resource, {
+                    id: id,
+                    meta: { root },
+                    filename: file.name,
+                });
+
+                const { url, path } = data;
+
+                formContext.setValue('spec.path', path);
+                uploadUrl.current = url;
+            });
+
+            uppy.on('file-removed', (file, reason) => {
+                formContext.setValue('spec.path', '');
+                uploadUrl.current = '';
+            });
+        }
+    }, [dataProvider, formContext, id, resource, root, uploadUrl, uppy]);
+
+    const getArtifactSpecSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return BlankSchema;
+        }
+
+        if (schemas) {
+            return schemas.find(s => s.id === 'ARTIFACT:' + kind)?.schema;
+        }
+
+        return BlankSchema;
+    };
+
+    const getArtifactUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uploadUrl.current !== '') {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getArtifactSpecUiSchema(kind);
+        }
+    };
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput
+                    source="name"
+                    validate={[required(), isAlphaNumeric()]}
+                />
+
+                <SelectInput
+                    source="kind"
+                    choices={kinds}
+                    validate={[required(), isValidKind(kinds)]}
+                />
+            </Stack>
+
+            {/* <JsonSchemaInput
+                source="metadata"
+                schema={MetadataSchema}
+                uiSchema={MetadataCreateUiSchema}
+            /> */}
+            <MetadataInput />
+            <FormDataConsumer<{ kind: string }>>
+                {({ formData }) => {
+                    if (formData.kind)
+                        return (
+                            <>
+                                <JsonSchemaInput
+                                    source="spec"
+                                    schema={{
+                                        ...getArtifactSpecSchema(formData.kind),
+                                        title: 'Spec',
+                                    }}
+                                    uiSchema={getArtifactUiSchema(
+                                        formData.kind
+                                    )}
+                                />
+                                <Dashboard
+                                    uppy={uppy}
+                                    hideUploadButton
+                                    proudlyDisplayPoweredByUppy={false}
+                                />
+                            </>
+                        );
+                    else
+                        return (
+                            <Card
+                                sx={{
+                                    width: 1,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <CardContent>
+                                    {translate('resources.common.emptySpec')}{' '}
+                                </CardContent>
+                            </Card>
+                        );
+                }}
+            </FormDataConsumer>
+        </>
+    );
+};
