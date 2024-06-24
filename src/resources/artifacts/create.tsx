@@ -17,6 +17,7 @@ import {
     TopToolbar,
     required,
     useDataProvider,
+    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -35,7 +36,7 @@ import { Uppy, AwsS3 } from 'uppy';
 import { Dashboard } from '@uppy/react';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext,useForm } from 'react-hook-form';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -83,6 +84,7 @@ export const ArtifactCreate = () => {
 
         return {
             ...data,
+            id: id.current,
             project: root || '',
         };
     };
@@ -101,7 +103,11 @@ export const ArtifactCreate = () => {
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <CreateBase transform={transform} redirect="list">
+            <CreateBase
+                transform={transform}
+                redirect="list"
+                record={{ id: id.current }}
+            >
                 <>
                     <CreatePageTitle
                         icon={<ArtifactIcon fontSize={'large'} />}
@@ -193,36 +199,36 @@ export const ArtifactCreate = () => {
 };
 
 const ArtifactForm = (props: any) => {
-    const { schemas, uppy, kinds, id, uploadUrl } = props;
+    const { schemas, uppy, kinds, uploadUrl } = props;
     const { root } = useRootSelector();
+    const record = useRecordContext();
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
     const formContext = useFormContext();
-
-    useEffect(() => {
-        if (formContext && dataProvider) {
-            formContext.setValue('id', id);
-            uppy.on('file-added', async file => {
+    const {setValue} = useForm();
+    if (uppy) {
+        uppy.on('file-added', async file => {
+            if (formContext && dataProvider) {
                 const data = await dataProvider.upload(resource, {
-                    id: id,
+                    xid: record.id,
                     meta: { root },
                     filename: file.name,
                 });
 
                 const { url, path } = data;
-
-                formContext.setValue('spec.path', path);
+                setValue('spec.path', path);
                 uploadUrl.current = url;
-            });
+            }
+        });
 
-            uppy.on('file-removed', (file, reason) => {
-                formContext.setValue('spec.path', '');
+        uppy.on('file-removed', (file, reason) => {
+            if (formContext) {
+                setValue('spec.path', null);
                 uploadUrl.current = '';
-            });
-        }
-    }, [dataProvider, formContext, id, resource, root, uploadUrl, uppy]);
-
+            }
+        });
+    }
     const getArtifactSpecSchema = (kind: string | undefined) => {
         if (!kind) {
             return BlankSchema;
@@ -285,11 +291,13 @@ const ArtifactForm = (props: any) => {
                                         formData.kind
                                     )}
                                 />
+                                {uppy &&
                                 <Dashboard
                                     uppy={uppy}
                                     hideUploadButton
                                     proudlyDisplayPoweredByUppy={false}
                                 />
+                                }
                             </>
                         );
                     else
