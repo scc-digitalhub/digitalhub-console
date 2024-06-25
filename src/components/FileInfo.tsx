@@ -5,6 +5,7 @@ import { useDataProvider, useLocaleState, useNotify, useRecordContext, useResour
 import { Spinner } from "./Spinner";
 import { DataGrid, enUS, gridClasses, itIT } from '@mui/x-data-grid';
 import { useDataGridController } from "../controllers/useDataGridController";
+import { EmptyList } from "../pages/dashboard/EmptyList";
 
 type FileInfoResult = {
     loading: boolean,
@@ -72,15 +73,13 @@ const EmptyResult = () => {
     const translate = useTranslate();
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-            }}
+        <Typography
+            variant="body1"
+            color={'gray'}
+            sx={{ textAlign: 'center', pt: 5 }}
         >
-            <Typography variant="h6">
-                {translate('some.empty.error')}
-            </Typography>
-        </Box>
+            {translate('fields.info.empty')}
+        </Typography>
     );
 };
 
