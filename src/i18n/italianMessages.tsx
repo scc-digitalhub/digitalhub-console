@@ -481,6 +481,10 @@ const fields = {
         description: '',
     },
     info: 'Info',
+    datagrid:{
+        key: 'Nome',
+        value: 'Valore'
+    }
 };
 
 const messages = {
