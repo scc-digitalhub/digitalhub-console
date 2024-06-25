@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDataProvider, useLocaleState, useNotify, useRecordContext, useResourceContext, useTranslate } from "react-admin";
 import { Spinner } from "./Spinner";
 import { DataGrid, enUS, gridClasses, itIT } from '@mui/x-data-grid';
-import { useMetricsDataGridController } from "../resources/models/metrics-table/useMetricsDataGridController";
+import { useDataGridController } from "../controllers/useDataGridController";
 
 type FileInfoResult = {
     loading: boolean,
@@ -91,8 +91,8 @@ const FileInfoTable = (props: any) => {
         locale && locale === 'it'
             ? itIT.components.MuiDataGrid.defaultProps.localeText
             : enUS.components.MuiDataGrid.defaultProps.localeText;
-    const { data, isLoading } = useMetricsDataGridController({
-        metrics: info,
+    const { data, isLoading } = useDataGridController({
+        fields: info,
     });
 
     const valueFormatter = (value?: any) => {

@@ -2,7 +2,7 @@ import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
-import { useMetricsDataGridController } from './useMetricsDataGridController';
+import { useDataGridController } from '../../../controllers/useDataGridController';
 
 export const MetricsTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -13,8 +13,8 @@ export const MetricsTabComponent = (props: { record: any }) => {
             ? itIT.components.MuiDataGrid.defaultProps.localeText
             : enUS.components.MuiDataGrid.defaultProps.localeText;
 
-    const { data, isLoading } = useMetricsDataGridController({
-        metrics: record?.spec?.metrics,
+    const { data, isLoading } = useDataGridController({
+        fields: record?.spec?.metrics,
     });
 
     return (
