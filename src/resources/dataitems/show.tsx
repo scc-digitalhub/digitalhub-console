@@ -26,6 +26,7 @@ import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
+import { FileInfo } from '../../components/FileInfo';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -98,6 +99,9 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         label={false}
                     />
                 )}
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="fields.info.tab">
+                <FileInfo />
             </TabbedShowLayout.Tab>
             {kind && kind === 'table' && (
                 <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">

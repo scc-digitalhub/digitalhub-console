@@ -30,6 +30,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetricsTabComponent } from './metrics-table/MetricsTabComponent';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
+import { FileInfo } from '../../components/FileInfo';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -108,6 +109,9 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                         label={false}
                     />
                 )}
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="fields.info.tab">
+                <FileInfo />
             </TabbedShowLayout.Tab>
             {kind && kind === 'model' && (
                 <TabbedShowLayout.Tab label="resources.models.tab.metrics">
