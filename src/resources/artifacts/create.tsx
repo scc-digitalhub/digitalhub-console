@@ -17,6 +17,7 @@ import {
     TopToolbar,
     required,
     useDataProvider,
+    useInput,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -205,28 +206,29 @@ const ArtifactForm = (props: any) => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
-    const formContext = useFormContext();
-    const {setValue} = useForm();
+    const {field} = useInput({resource,source:'spec'});
+    const [path,setPath] = useState<string|null>(null);
+    useEffect(() => {
+        if (field){
+            field.onChange({...field.value,path:path});
+        }
+    },[path]);
     if (uppy) {
         uppy.on('file-added', async file => {
-            if (formContext && dataProvider) {
-                const data = await dataProvider.upload(resource, {
-                    xid: record.id,
+            if ( dataProvider) {
+                const res = await dataProvider.upload(resource, {
+                    id: record.id,
                     meta: { root },
                     filename: file.name,
                 });
-
-                const { url, path } = data;
-                setValue('spec.path', path);
-                uploadUrl.current = url;
+                setPath(res.path);
+                uploadUrl.current = res.url;
             }
         });
 
         uppy.on('file-removed', (file, reason) => {
-            if (formContext) {
-                setValue('spec.path', null);
+                setPath(null);
                 uploadUrl.current = '';
-            }
         });
     }
     const getArtifactSpecSchema = (kind: string | undefined) => {
