@@ -341,7 +341,10 @@ const fields = {
             },
         },
     },
-    info: 'Info',
+    info: {
+        tab: 'Info',
+        empty: 'No info available',
+    },
     datagrid:{
         key: 'Name',
         value: 'Value'
