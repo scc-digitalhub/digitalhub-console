@@ -212,7 +212,7 @@ const ArtifactForm = (props: any) => {
         if (field){
             field.onChange({...field.value,path:path});
         }
-    },[path]);
+    },[path,field]);
     if (uppy) {
         uppy.on('file-added', async file => {
             if ( dataProvider) {
