@@ -3,10 +3,10 @@ import inflection from 'inflection';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslate } from 'react-admin';
 
-export const useMetricsDataGridController = (props: {
-    metrics: any;
-}): MetricsDataGridControllerResult => {
-    const { metrics = {} } = props;
+export const useDataGridController = (props: {
+    fields: any;
+}): DataGridControllerResult => {
+    const { fields = {} } = props;
     const translate = useTranslate();
 
     const [data, setData] = useState<{
@@ -18,12 +18,12 @@ export const useMetricsDataGridController = (props: {
     const baseColumns: GridColDef[] = [
         {
             field: 'key',
-            headerName: translate('resources.models.metrics.key'),
+            headerName: translate('fields.datagrid.key'),
             flex: 0.5,
         },
         {
             field: 'value',
-            headerName: translate('resources.models.metrics.value'),
+            headerName: translate('fields.datagrid.value'),
             flex: 1,
         },
     ];
@@ -31,13 +31,13 @@ export const useMetricsDataGridController = (props: {
     useEffect(() => {
         isLoading.current = true;
 
-        if (metrics) {
+        if (fields) {
             const columns = [...baseColumns];
 
             //rows
             const rows: any = [];
             let index = 0;
-            for (const [key, value] of Object.entries(metrics)) {
+            for (const [key, value] of Object.entries(fields)) {
                 rows.push({
                     id: index,
                     key,
@@ -55,7 +55,7 @@ export const useMetricsDataGridController = (props: {
         }
 
         isLoading.current = false;
-    }, [metrics]);
+    }, [fields]);
 
     return {
         data: data,
@@ -63,7 +63,7 @@ export const useMetricsDataGridController = (props: {
     };
 };
 
-type MetricsDataGridControllerResult = {
+type DataGridControllerResult = {
     data: {
         rows: GridRowsProp;
         columns: GridColDef[];
