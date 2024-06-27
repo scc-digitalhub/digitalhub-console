@@ -55,8 +55,9 @@ export const DataItemEditToolbar = () => {
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
+    getUiSchema: (kind: string) => any;
 }) => {
-    const { source, onDirty } = props;
+    const { source, onDirty, getUiSchema } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -98,7 +99,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getDataItemSpecUiSchema(record.kind)}
+            uiSchema={getUiSchema(record.kind)}
         />
     );
 };
@@ -191,6 +192,19 @@ const FormContent = (props: any) => {
     useEffect(() => {
         updateForm(path);
     }, [path]);
+
+    const getDataItemUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getDataItemSpecUiSchema(kind);
+        }
+    };
+
     return (
         <>
             <FormLabel label="fields.base" />
@@ -203,7 +217,7 @@ const FormContent = (props: any) => {
 
             <MetadataInput />
 
-            <SpecInput source="spec" onDirty={setIsSpecDirty} />
+            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getDataItemUiSchema} />
             {uppy && <FileInput uppy={uppy} />}
         </>
     );

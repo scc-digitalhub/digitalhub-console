@@ -124,8 +124,6 @@ const FormContent = (props: any) => {
     useEffect(() => {
         updateForm(path);
     }, [path]);
-    //qui va definito effect che fa watch su path come in file input 
-    //fa aggiornamento della form
 
     const getArtifactSpecSchema = (kind: string | undefined) => {
         if (!kind) {

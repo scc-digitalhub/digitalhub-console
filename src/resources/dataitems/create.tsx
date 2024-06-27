@@ -68,9 +68,6 @@ export const DataItemCreate = () => {
         };
     };
 
-    <MetadataInput />;
-
-
     if (!kinds) {
         return <LoadingIndicator />;
     }
@@ -126,6 +123,23 @@ const FormContent = (props: any) => {
 
         return BlankSchema;
     };
+
+    const getDataItemUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getDataItemSpecUiSchema(kind);
+        }
+    };
+
+    if (!kinds) {
+        return <LoadingIndicator />;
+    }
+
     return (
         <>
             <FormLabel label="fields.base" />
@@ -156,7 +170,7 @@ const FormContent = (props: any) => {
                                     ...getDataItemSpecSchema(formData.kind),
                                     title: 'Spec',
                                 }}
-                                uiSchema={getDataItemSpecUiSchema(
+                                uiSchema={getDataItemUiSchema(
                                     formData.kind
                                 )}
                             />
