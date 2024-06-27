@@ -4,7 +4,7 @@ import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -14,6 +14,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -22,11 +23,6 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import {
-    MetadataCreateUiSchema,
-    MetadataEditUiSchema,
-    MetadataSchema,
-} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -35,6 +31,8 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
+import { useUploadController } from '../../controllers/uploadController';
+import { FileInput } from '../../components/FileInput';
 
 export const ArtifactEditToolbar = () => {
     const translate = useTranslate();
@@ -114,6 +112,9 @@ export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
+    const id = useRef(crypto.randomUUID());
+    const { uppy , path} = useUploadController({id:id.current});
+
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('artifacts').then(res => {
@@ -138,17 +139,24 @@ export const ArtifactEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
+    const transform = async data => {
+        await uppy.upload();
+        return {
+            ...data,
+            
+        };
+    };
 
     if (!kinds) {
         return <Spinner />;
     }
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty },
+                    meta: { update: !isSpecDirty, id: id.current },
                     onSuccess: onSuccess,
                     onSettled: onSettled,
                 }}
@@ -159,29 +167,45 @@ export const ArtifactEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<ArtifactEditToolbar />}>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput source="name" readOnly />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        readOnly
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
-                                />
+                                <FormContent
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    setIsSpecDirty={setIsSpecDirty}
+                                    path={path}                                />
+                                
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
                 </>
             </EditBase>
         </Container>
+    );
+};
+const FormContent = (props: any) => {
+    const { uppy, kinds,setIsSpecDirty,path } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+
+                <SelectInput source="kind" choices={kinds} readOnly />
+            </Stack>
+            <MetadataInput />
+            <SpecInput source="spec" onDirty={setIsSpecDirty} />
+            {uppy && <FileInput uppy={uppy}  />}
+        </>
     );
 };
