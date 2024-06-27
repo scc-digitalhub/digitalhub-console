@@ -15,6 +15,8 @@ import {
     TextInput,
     TopToolbar,
     required,
+    useInput,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
@@ -30,6 +32,9 @@ import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataInput } from '../../components/MetadataInput';
+import { useEffect, useRef } from 'react';
+import { useUploadController } from '../../controllers/uploadController';
+import { FileInput } from '../../components/FileInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -42,10 +47,11 @@ const CreateToolbar = (props: CreateActionsProps) => {
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
-    // const schemaProvider = useSchemaProvider();
-    // const [schemas, setSchemas] = useState<any[]>();
     const { data: schemas, isLoading, error } = useGetSchemas('dataitems');
-    console.log(schemas, isLoading, error);
+    const id = useRef(crypto.randomUUID());
+
+    const { uppy, path } = useUploadController({ id: id.current });
+
     const kinds = schemas
         ? schemas.map(s => ({
               id: s.kind,
@@ -53,24 +59,17 @@ export const DataItemCreate = () => {
           }))
         : [];
 
-    const transform = data => ({
-        ...data,
-        project: root || '',
-    });
-    
-    <MetadataInput />
-
-    const getDataItemSpecSchema = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
-        }
-
-        if (schemas) {
-            return schemas.find(s => s.id === 'DATAITEM:' + kind)?.schema;
-        }
-
-        return BlankSchema;
+    const transform = async data => {
+        await uppy.upload();
+        return {
+            ...data,
+            id: id.current,
+            project: root || '',
+        };
     };
+
+    <MetadataInput />;
+
 
     if (!kinds) {
         return <LoadingIndicator />;
@@ -87,69 +86,102 @@ export const DataItemCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput
-                                        source="name"
-                                        validate={[
-                                            required(),
-                                            isAlphaNumeric(),
-                                        ]}
-                                    />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        validate={[
-                                            required(),
-                                            isValidKind(kinds),
-                                        ]}
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-
-                                <FormDataConsumer<{ kind: string }>>
-                                    {({ formData }) => {
-                                        if (formData.kind)
-                                            return (
-                                                <JsonSchemaInput
-                                                    source="spec"
-                                                    schema={{
-                                                        ...getDataItemSpecSchema(
-                                                            formData.kind
-                                                        ),
-                                                        title: 'Spec',
-                                                    }}
-                                                    uiSchema={getDataItemSpecUiSchema(
-                                                        formData.kind
-                                                    )}
-                                                />
-                                            );
-                                        else
-                                            return (
-                                                <Card
-                                                    sx={{
-                                                        width: 1,
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <CardContent>
-                                                        {translate(
-                                                            'resources.common.emptySpec'
-                                                        )}{' '}
-                                                    </CardContent>
-                                                </Card>
-                                            );
-                                    }}
-                                </FormDataConsumer>
+                                <FormContent
+                                    schemas={schemas}
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    path={path}
+                                />
                             </SimpleForm>
                         </FlatCard>
                     </CreateView>
                 </>
             </CreateBase>
         </Container>
+    );
+};
+
+const FormContent = (props: any) => {
+    const { schemas, uppy, kinds, path } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+
+    const getDataItemSpecSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return BlankSchema;
+        }
+
+        if (schemas) {
+            return schemas.find(s => s.id === 'DATAITEM:' + kind)?.schema;
+        }
+
+        return BlankSchema;
+    };
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput
+                    source="name"
+                    validate={[required(), isAlphaNumeric()]}
+                />
+
+                <SelectInput
+                    source="kind"
+                    choices={kinds}
+                    validate={[required(), isValidKind(kinds)]}
+                />
+            </Stack>
+
+            <MetadataInput />
+
+            <FormDataConsumer<{ kind: string }>>
+                {({ formData }) => {
+                    if (formData.kind)
+                        return (
+                            <>
+                            <JsonSchemaInput
+                                source="spec"
+                                schema={{
+                                    ...getDataItemSpecSchema(formData.kind),
+                                    title: 'Spec',
+                                }}
+                                uiSchema={getDataItemSpecUiSchema(
+                                    formData.kind
+                                )}
+                            />
+                            {uppy && (
+                                <FileInput
+                                    uppy={uppy}
+                                />
+                            )}
+                            </>
+                        );
+                    else
+                        return (
+                            <Card
+                                sx={{
+                                    width: 1,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                <CardContent>
+                                    {translate('resources.common.emptySpec')}{' '}
+                                </CardContent>
+                            </Card>
+                        );
+                }}
+            </FormDataConsumer>
+        </>
     );
 };
