@@ -179,7 +179,7 @@ const springDataProvider = (
                     body:
                         typeof params.data === 'string'
                             ? params.data
-                            : JSON.stringify({ ...params.data, id: null }),
+                            : JSON.stringify({ ...params.data, id: params.meta?.id }),
                 }).then(({ json }) => ({
                     data: { ...params.data, id: json.id } as any,
                 }));
