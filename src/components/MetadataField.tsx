@@ -39,7 +39,7 @@ export const MetadataField = ({ prompt }: any) => {
           }))
         : [];
     return (
-        <Box gap={4} p={2} sx={{ border: '1px solid rgba(0, 0, 0, 0.12)' }}>
+        <Box gap={4}  >
             {metadataKinds &&
                 metadataKinds.map(r => {
                     return (
