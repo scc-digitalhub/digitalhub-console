@@ -2,7 +2,7 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, CardContent, Container, Stack } from '@mui/material';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -12,6 +12,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -20,11 +21,6 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import {
-    MetadataCreateUiSchema,
-    MetadataEditUiSchema,
-    MetadataSchema,
-} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -32,8 +28,9 @@ import { Spinner } from '../../components/Spinner';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
-import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataInput } from '../../components/MetadataInput';
+import { useUploadController } from '../../controllers/uploadController';
+import { FileInput } from '../../components/FileInput';
 
 export const ModelEditToolbar = () => {
     const translate = useTranslate();
@@ -58,8 +55,9 @@ export const ModelEditToolbar = () => {
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
+    getUiSchema: (kind: string) => any;
 }) => {
-    const { source, onDirty } = props;
+    const { source, onDirty, getUiSchema } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -101,7 +99,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getModelSpecUiSchema(record.kind)}
+            uiSchema={getUiSchema(record.kind)}
         />
     );
 };
@@ -113,6 +111,8 @@ export const ModelEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
+    const id = useRef(crypto.randomUUID());
+    const { uppy, path } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -143,12 +143,20 @@ export const ModelEdit = () => {
         return <Spinner />;
     }
 
+    const transform = async data => {
+        await uppy.upload();
+        return {
+            ...data,
+        };
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty },
+                    meta: { update: !isSpecDirty, id: id.current },
                     onSuccess: onSuccess,
                     onSettled: onSettled,
                 }}
@@ -158,30 +166,62 @@ export const ModelEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm toolbar={<ModelEditToolbar />}>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput source="name" readOnly />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        readOnly
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
-                                />
+                            <SimpleForm
+                                toolbar={<ModelEditToolbar />}
+                            >
+                                <FormContent
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    setIsSpecDirty={setIsSpecDirty}
+                                    path={path} />
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
                 </>
             </EditBase>
         </Container>
+    );
+};
+
+const FormContent = (props: any) => {
+    const { uppy, kinds, setIsSpecDirty, path } = props;
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+
+    const getModelUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getModelSpecUiSchema(kind);
+        }
+    };
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+
+                <SelectInput source="kind" choices={kinds} readOnly />
+            </Stack>
+
+            <MetadataInput />
+
+            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getModelUiSchema} />
+            {uppy && <FileInput uppy={uppy} />}
+        </>
     );
 };

@@ -57,8 +57,9 @@ export const ArtifactEditToolbar = () => {
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
+    getUiSchema: (kind: string) => any;
 }) => {
-    const { source, onDirty } = props;
+    const { source, onDirty, getUiSchema } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -100,7 +101,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getArtifactSpecUiSchema(record.kind)}
+            uiSchema={getUiSchema(record.kind)}
         />
     );
 };
@@ -171,7 +172,7 @@ export const ArtifactEdit = () => {
                                     kinds={kinds}
                                     uppy={uppy}
                                     setIsSpecDirty={setIsSpecDirty}
-                                    path={path}                                />
+                                    path={path} />
                                 
                             </SimpleForm>
                         </FlatCard>
@@ -194,6 +195,19 @@ const FormContent = (props: any) => {
     useEffect(() => {
         updateForm(path);
     }, [path]);
+
+    const getArtifactUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0 ) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getArtifactSpecUiSchema(kind);
+        }
+    };
+
     return (
         <>
             <FormLabel label="fields.base" />
@@ -204,7 +218,7 @@ const FormContent = (props: any) => {
                 <SelectInput source="kind" choices={kinds} readOnly />
             </Stack>
             <MetadataInput />
-            <SpecInput source="spec" onDirty={setIsSpecDirty} />
+            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getArtifactUiSchema} />
             {uppy && <FileInput uppy={uppy}  />}
         </>
     );
