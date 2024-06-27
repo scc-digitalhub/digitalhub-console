@@ -2,7 +2,7 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, CardContent, Container, Stack } from '@mui/material';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -12,6 +12,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -28,6 +29,8 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
+import { FileInput } from '../../components/FileInput';
+import { useUploadController } from '../../controllers/uploadController';
 
 export const DataItemEditToolbar = () => {
     const translate = useTranslate();
@@ -107,6 +110,8 @@ export const DataItemEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
+    const id = useRef(crypto.randomUUID());
+    const { uppy, path } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -132,7 +137,12 @@ export const DataItemEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
-
+    const transform = async data => {
+        await uppy.upload();
+        return {
+            ...data,
+        };
+    };
     if (!kinds) {
         return <Spinner />;
     }
@@ -141,8 +151,9 @@ export const DataItemEdit = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty },
+                    meta: { update: !isSpecDirty, id: id.current },
                     onSuccess: onSuccess,
                     onSettled: onSettled,
                 }}
@@ -153,23 +164,11 @@ export const DataItemEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<DataItemEditToolbar />}>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput source="name" readOnly />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        readOnly
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
+                                <FormContent
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    setIsSpecDirty={setIsSpecDirty}
+                                    path={path}
                                 />
                             </SimpleForm>
                         </FlatCard>
@@ -177,5 +176,35 @@ export const DataItemEdit = () => {
                 </>
             </EditBase>
         </Container>
+    );
+};
+const FormContent = (props: any) => {
+    const { uppy, kinds, setIsSpecDirty, path } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+
+                <SelectInput source="kind" choices={kinds} readOnly />
+            </Stack>
+
+            <MetadataInput />
+
+            <SpecInput source="spec" onDirty={setIsSpecDirty} />
+            {uppy && <FileInput uppy={uppy} />}
+        </>
     );
 };
