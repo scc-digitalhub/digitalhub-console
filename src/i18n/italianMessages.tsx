@@ -813,6 +813,7 @@ const messages = {
             },
         },
     },
+    upload_error: " Errore durante l'upload del file %{fileName}.  %{error} ",
 };
 
 export default messages;
