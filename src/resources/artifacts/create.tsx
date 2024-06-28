@@ -49,7 +49,7 @@ export const ArtifactCreate = () => {
     const [schemas, setSchemas] = useState<any[]>();
     const id = useRef(crypto.randomUUID());
 
-    const { uppy , path} = useUploadController({id:id.current});
+    const { uppy, files, upload} = useUploadController({id:id.current});
 
     const kinds = schemas
         ? schemas.map(s => ({
@@ -60,11 +60,14 @@ export const ArtifactCreate = () => {
 
 
     const transform = async data => {
-        await uppy.upload();
+        await upload();
 
         return {
             ...data,
             id: id.current,
+            status: {
+                files: files.map(f => f.info),
+            },
             project: root || '',
         };
     };
@@ -100,7 +103,7 @@ export const ArtifactCreate = () => {
                                     schemas={schemas}
                                     kinds={kinds}
                                     uppy={uppy}
-                                    path={path}
+                                    files={files}
                                 />
                             </SimpleForm>
                         </FlatCard>
@@ -112,7 +115,7 @@ export const ArtifactCreate = () => {
 };
 
 const FormContent = (props: any) => {
-    const { schemas,uppy, kinds, path } = props;
+    const { schemas,uppy, kinds, files } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const { field } = useInput({ resource, source: 'spec' });
@@ -121,6 +124,7 @@ const FormContent = (props: any) => {
             field.onChange({ ...field.value, path: path });
         }
     }
+    const path = files.length > 0 ? files[0].path : null;
     useEffect(() => {
         updateForm(path);
     }, [path]);
@@ -141,6 +145,7 @@ const FormContent = (props: any) => {
         if (!kind) {
             return undefined;
         }
+        console.log('files', uppy.getFiles());
 
         if (uppy.getFiles().length > 0 ) {
             return { path: { 'ui:readonly': true } };

@@ -114,7 +114,7 @@ export const ArtifactEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(crypto.randomUUID());
-    const { uppy , path} = useUploadController({id:id.current});
+    const { uppy , files, upload} = useUploadController({id:id.current});
 
     useEffect(() => {
         if (schemaProvider) {
@@ -141,9 +141,12 @@ export const ArtifactEdit = () => {
         redirect('show', resource, data.id, data);
     };
     const transform = async data => {
-        await uppy.upload();
+        await upload();
         return {
             ...data,
+            status: {
+                files: files.map(f => f.info),
+            },
             
         };
     };
@@ -172,7 +175,7 @@ export const ArtifactEdit = () => {
                                     kinds={kinds}
                                     uppy={uppy}
                                     setIsSpecDirty={setIsSpecDirty}
-                                    path={path} />
+                                    files={files} />
                                 
                             </SimpleForm>
                         </FlatCard>
@@ -183,7 +186,7 @@ export const ArtifactEdit = () => {
     );
 };
 const FormContent = (props: any) => {
-    const { uppy, kinds,setIsSpecDirty,path } = props;
+    const { uppy, kinds,setIsSpecDirty,files } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const { field } = useInput({ resource, source: 'spec' });
@@ -192,6 +195,7 @@ const FormContent = (props: any) => {
             field.onChange({ ...field.value, path: path });
         }
     };
+    const path = files.length > 0 ? files[0].path : null;
     useEffect(() => {
         updateForm(path);
     }, [path]);

@@ -636,6 +636,7 @@ const messages = {
             },
         },
     },
+    upload_error: 'Error during upload of %{fileName} %{error}',
 };
 
 export default messages;
