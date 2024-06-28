@@ -98,6 +98,7 @@ const fields = {
     },
     status: {
         state: 'Stato',
+        files: 'File',
     },
     inputs: {
         title: 'Input',
@@ -185,6 +186,11 @@ const fields = {
         title: 'Base Model',
         description: '',
     },
+    info: 'Info',
+    datagrid:{
+        key: 'Nome',
+        value: 'Valore'
+    }
 };
 
 const messages = {
@@ -509,6 +515,7 @@ const messages = {
             },
         },
     },
+    upload_error: " Errore durante l'upload del file %{fileName}.  %{error} ",
 };
 
 export default messages;

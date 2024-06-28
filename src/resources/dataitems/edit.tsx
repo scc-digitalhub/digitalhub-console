@@ -2,7 +2,7 @@ import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, CardContent, Container, Stack } from '@mui/material';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -12,6 +12,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -28,6 +29,8 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
+import { FileInput } from '../../components/FileInput';
+import { useUploadController } from '../../controllers/uploadController';
 
 export const DataItemEditToolbar = () => {
     const translate = useTranslate();
@@ -52,8 +55,9 @@ export const DataItemEditToolbar = () => {
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
+    getUiSchema: (kind: string) => any;
 }) => {
-    const { source, onDirty } = props;
+    const { source, onDirty, getUiSchema } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -95,7 +99,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getDataItemSpecUiSchema(record.kind)}
+            uiSchema={getUiSchema(record.kind)}
         />
     );
 };
@@ -107,6 +111,8 @@ export const DataItemEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
+    const id = useRef(crypto.randomUUID());
+    const { uppy, files, upload  } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -132,7 +138,15 @@ export const DataItemEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
-
+    const transform = async data => {
+        await upload();
+        return {
+            ...data,
+            status: {
+                files: files.map(f => f.info),
+            },
+        };
+    };
     if (!kinds) {
         return <Spinner />;
     }
@@ -141,8 +155,9 @@ export const DataItemEdit = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty },
+                    meta: { update: !isSpecDirty, id: id.current },
                     onSuccess: onSuccess,
                     onSettled: onSettled,
                 }}
@@ -153,23 +168,11 @@ export const DataItemEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<DataItemEditToolbar />}>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput source="name" readOnly />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        readOnly
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
+                                <FormContent
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    setIsSpecDirty={setIsSpecDirty}
+                                    files={files}
                                 />
                             </SimpleForm>
                         </FlatCard>
@@ -177,5 +180,50 @@ export const DataItemEdit = () => {
                 </>
             </EditBase>
         </Container>
+    );
+};
+const FormContent = (props: any) => {
+    const { uppy, kinds, setIsSpecDirty, files } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    const path = files.length > 0 ? files[0].path : null;
+
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+
+    const getDataItemUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getDataItemSpecUiSchema(kind);
+        }
+    };
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+
+                <SelectInput source="kind" choices={kinds} readOnly />
+            </Stack>
+
+            <MetadataInput />
+
+            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getDataItemUiSchema} />
+            {uppy && <FileInput uppy={uppy} />}
+        </>
     );
 };

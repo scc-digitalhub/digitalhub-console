@@ -4,7 +4,7 @@ import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
@@ -14,6 +14,7 @@ import {
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -22,11 +23,6 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import {
-    MetadataCreateUiSchema,
-    MetadataEditUiSchema,
-    MetadataSchema,
-} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -35,6 +31,8 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
+import { useUploadController } from '../../controllers/uploadController';
+import { FileInput } from '../../components/FileInput';
 
 export const ArtifactEditToolbar = () => {
     const translate = useTranslate();
@@ -59,8 +57,9 @@ export const ArtifactEditToolbar = () => {
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
+    getUiSchema: (kind: string) => any;
 }) => {
-    const { source, onDirty } = props;
+    const { source, onDirty, getUiSchema } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
@@ -102,7 +101,7 @@ const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getArtifactSpecUiSchema(record.kind)}
+            uiSchema={getUiSchema(record.kind)}
         />
     );
 };
@@ -114,6 +113,9 @@ export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
+    const id = useRef(crypto.randomUUID());
+    const { uppy , files, upload} = useUploadController({id:id.current});
+
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('artifacts').then(res => {
@@ -138,17 +140,27 @@ export const ArtifactEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
+    const transform = async data => {
+        await upload();
+        return {
+            ...data,
+            status: {
+                files: files.map(f => f.info),
+            },
+            
+        };
+    };
 
     if (!kinds) {
         return <Spinner />;
     }
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty },
+                    meta: { update: !isSpecDirty, id: id.current },
                     onSuccess: onSuccess,
                     onSettled: onSettled,
                 }}
@@ -159,29 +171,59 @@ export const ArtifactEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<ArtifactEditToolbar />}>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
-                                    <TextInput source="name" readOnly />
-
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        readOnly
-                                    />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
-                                />
+                                <FormContent
+                                    kinds={kinds}
+                                    uppy={uppy}
+                                    setIsSpecDirty={setIsSpecDirty}
+                                    files={files} />
+                                
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
                 </>
             </EditBase>
         </Container>
+    );
+};
+const FormContent = (props: any) => {
+    const { uppy, kinds,setIsSpecDirty,files } = props;
+    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { field } = useInput({ resource, source: 'spec' });
+    const updateForm = path => {
+        if (field) {
+            field.onChange({ ...field.value, path: path });
+        }
+    };
+    const path = files.length > 0 ? files[0].path : null;
+    useEffect(() => {
+        updateForm(path);
+    }, [path]);
+
+    const getArtifactUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        if (uppy.getFiles().length > 0 ) {
+            return { path: { 'ui:readonly': true } };
+        } else {
+            return getArtifactSpecUiSchema(kind);
+        }
+    };
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+
+                <SelectInput source="kind" choices={kinds} readOnly />
+            </Stack>
+            <MetadataInput />
+            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getArtifactUiSchema} />
+            {uppy && <FileInput uppy={uppy}  />}
+        </>
     );
 };

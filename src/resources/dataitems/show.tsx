@@ -26,6 +26,8 @@ import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { getDataItemSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
+import { FileInfo } from '../../components/FileInfo';
+import { DownloadButton } from '../../components/DownloadButton';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -37,6 +39,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
+        <DownloadButton source="spec.path" />
         <InspectButton />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
@@ -98,6 +101,9 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                         label={false}
                     />
                 )}
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="fields.info.tab">
+                <FileInfo />
             </TabbedShowLayout.Tab>
             {kind && kind === 'table' && (
                 <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">

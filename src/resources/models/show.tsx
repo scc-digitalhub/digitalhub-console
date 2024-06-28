@@ -30,6 +30,8 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetricsTabComponent } from './metrics-table/MetricsTabComponent';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
+import { FileInfo } from '../../components/FileInfo';
+import { DownloadButton } from '../../components/DownloadButton';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -41,6 +43,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
+        <DownloadButton source="spec.path" />
         <InspectButton />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
@@ -108,6 +111,9 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                         label={false}
                     />
                 )}
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="fields.info.tab">
+                <FileInfo />
             </TabbedShowLayout.Tab>
             {kind && kind === 'model' && (
                 <TabbedShowLayout.Tab label="resources.models.tab.metrics">

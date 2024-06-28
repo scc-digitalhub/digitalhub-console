@@ -202,6 +202,7 @@ const fields = {
     },
     status: {
         state: 'Status',
+        files: 'Files',
     },
     inputs: {
         title: 'Inputs',
@@ -340,6 +341,14 @@ const fields = {
             },
         },
     },
+    info: {
+        tab: 'Info',
+        empty: 'No info available',
+    },
+    datagrid:{
+        key: 'Name',
+        value: 'Value'
+    }
 };
 
 const messages = {
@@ -627,6 +636,7 @@ const messages = {
             },
         },
     },
+    upload_error: 'Error during upload of %{fileName} %{error}',
 };
 
 export default messages;
