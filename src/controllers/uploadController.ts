@@ -17,7 +17,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
     const { id } = props;
-    // const [pathFile, setPathFile] = useState<string | null>(null);
+    const [pathFile, setPathFile] = useState<string | null>(null);
     const uppyConfig = { restrictions: { maxNumberOfFiles: 1 } };
     const uploadUrl = useRef('');
     const uploadId = useRef('');
@@ -146,7 +146,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
 
 
                 }
-                // setPathFile(res?.path);
+                setPathFile(res?.path);
                 let info = {
                     id: file.id,
                     info: extractInfo(file, res?.path),
