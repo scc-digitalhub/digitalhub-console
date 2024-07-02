@@ -59,6 +59,10 @@ const specs = {
         title:"Table",
         description:""
     },
+    kfp:{
+        title:"Kfp",
+        description:""
+    }
 }
 const fields = {
     id: 'Id',
@@ -185,6 +189,37 @@ const fields = {
         title: 'Base Model',
         description: '',
     },
+    sourceCode: {
+        source: {
+            title: 'Source Code',
+            description: '',
+        },
+        lang: {
+            title: 'Language',
+            description: '',
+        },
+        handler: {
+            title: 'Handler',
+            description: '',
+            base64: {
+                title: 'Base 64',
+                description: '',
+            },
+        },
+    },
+
+    requirements: {
+        item: {
+            title: 'Componente',
+            description:''
+        }
+    },
+    container: {
+        tag: {
+            title: 'Tag',
+         description: ''
+        }
+    }
 };
 
 const messages = {
