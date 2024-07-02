@@ -1,23 +1,33 @@
 import { useRootSelector } from "@dslab/ra-root-selector";
 import { useRef, useState } from "react";
 import { useDataProvider, useNotify, useResourceContext, useTranslate } from "react-admin";
-import { AwsS3, Uppy } from "uppy";
+import { Uppy } from "uppy";
+import AwsS3 from "@uppy/aws-s3-multipart";
+
+const MiB = 0x10_00_00;
+function partSize(file): number {
+    if (file.size <= 100 * MiB)
+        return 1;
+    else {
+        return Math.ceil(file.size / (100 * MiB));
+    }
+}
 
 export const useUploadController = (props?: any): UploadControllerResult => {
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
     const { id } = props;
-    const [path, setPath] = useState<string | null>(null);
+    // const [pathFile, setPathFile] = useState<string | null>(null);
     const uppyConfig = { restrictions: { maxNumberOfFiles: 1 } };
     const uploadUrl = useRef('');
+    const uploadId = useRef('');
     const resource = useResourceContext();
     const [files, setFiles] = useState<any[]>([]);
-    const notify = useNotify();
-    const translate = useTranslate();
     const [uppy] = useState(() =>
         new Uppy(uppyConfig).use(AwsS3, {
             id: 'AwsS3',
-            shouldUseMultipart: false,
+            shouldUseMultipart: (file) => file.size > 100 * MiB,
+            getChunkSize: (file) => 100 * MiB,
             getUploadParameters: async file => {
                 return {
                     method: 'PUT',
@@ -26,23 +36,122 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                     headers: file.type ? { 'Content-Type': file.type } : undefined,
                 }
             },
-        })
+            // ========== Multipart Uploads ==========
+            // The following methods are only useful for multipart uploads:
+            // If you are not interested in multipart uploads, you don't need to
+            // implement them (you'd also need to set `shouldUseMultipart: false` though).
+
+            async createMultipartUpload(file) {
+                return {
+                    uploadId: uploadId.current,
+                    key: file.name
+                }
+            },
+
+            async abortMultipartUpload(file, { key, uploadId }) {
+                const filename = encodeURIComponent(key)
+                const uploadIdEnc = encodeURIComponent(uploadId)
+                const response = await fetch(
+                    `/s3/multipart/${uploadIdEnc}?key=${filename}`,
+                    {
+                        method: 'DELETE',
+                    },
+                )
+
+                if (!response.ok)
+                    throw new Error('Unsuccessful request', { cause: response })
+            },
+
+            async signPart(file, options) {
+
+                const { signal } = options
+
+                signal?.throwIfAborted()
+
+                const data = await dataProvider.uploadMultipartPart(resource, {
+                    id: id,
+                    meta: { root },
+                    path: files[0].path,
+                    uploadId: uploadId.current,
+                    partNumber: options.partNumber
+                })
+
+                return data
+            },
+
+            async listParts(file, { key, uploadId }) {
+
+                const filename = encodeURIComponent(key)
+                const response = await fetch(
+                    `/s3/multipart/${uploadId}?key=${filename}`
+                )
+
+                if (!response.ok)
+                    throw new Error('Unsuccessful request', { cause: response })
+
+                const data = await response.json()
+
+                return data
+            },
+
+            async completeMultipartUpload(
+                file,
+                { key, uploadId, parts },
+            ) {
+
+                // dataProvider.uploadMultipartComplete
+                const filename = encodeURIComponent(key)
+                const uploadIdEnc = encodeURIComponent(uploadId)
+                const response = await fetch(
+                    `s3/multipart/${uploadIdEnc}/complete?key=${filename}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            accept: 'application/json',
+                        },
+                        body: JSON.stringify({ parts }),
+                    },
+                )
+
+                if (!response.ok)
+                    throw new Error('Unsuccessful request', { cause: response })
+
+                const data = await response.json()
+
+                return data
+            },
+        }),
     );
     if (uppy) {
         uppy.on('file-added', async file => {
             if (dataProvider) {
-                const res = await dataProvider.upload(resource, {
-                    id: id,
-                    meta: { root },
-                    filename: file.name,
-                });
-                setPath(res.path);
-                uploadUrl.current = res.url;
+                const partSizeNumber = partSize(file);
+                let res: any = null;
+                if (partSizeNumber === 1) {
+                    res = await dataProvider.upload(resource, {
+                        id: id,
+                        meta: { root },
+                        filename: file.name,
+                    });
+                    uploadUrl.current = res?.url;
+
+
+                } else {
+                    res = await dataProvider.uploadMultipartStart(resource, {
+                        id: id,
+                        meta: { root },
+                        filename: file.name,
+                    });
+                    uploadId.current = res?.uploadId;
+
+
+                }
+                // setPathFile(res?.path);
                 let info = {
                     id: file.id,
-                    info: extractInfo(file,res.path),
+                    info: extractInfo(file, res?.path),
                     file: file,
-                    path: res.path,
+                    path: res?.path,
 
                 }
                 setFiles((prev) => {
@@ -54,45 +163,46 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                     }
                     return prev;
                 })
+
             }
         });
 
-        uppy.on('file-removed', (file, reason) => {
-            setPath(null);
+        uppy.on('file-removed', (file) => {
+            // setPathFile(null);
             uploadUrl.current = '';
             if (file) {
                 setFiles((prev) => {
-                    let p = prev.slice(prev.findIndex(f => f.id === file.id),1);
+                    let p = prev.slice(prev.findIndex(f => f.id === file.id), 1);
                     if (p) {
                         p['file'] = file;
-                    } 
+                    }
                     return prev;
                 })
             }
         });
-        uppy.on('upload-progress', (file, progress) => {
+        uppy.on('upload-progress', (file) => {
             if (file) {
                 setFiles((prev) => {
                     let p = prev.find(f => f.id === file.id);
                     if (p) {
                         p['file'] = file;
-                    } 
+                    }
                     return prev;
                 })
             }
         });
-        uppy.on('upload-success', (file, response) => {
+        uppy.on('upload-success', (file) => {
             if (file) {
                 setFiles((prev) => {
                     let p = prev.find(f => f.id === file.id);
                     if (p) {
                         p['file'] = file;
-                    } 
+                    }
                     return prev;
                 })
             }
         })
-        uppy.on('upload-error', (file, error, response) => {
+        uppy.on('upload-error', () => {
             //using default informer of dashboard. More powerfull and automatic. It must be styled and i18n
             // notify(translate('upload_error',{
             //     fileName:file?.name,
@@ -112,10 +222,10 @@ export const useUploadController = (props?: any): UploadControllerResult => {
 
 function extractInfo(file: any, path: string): any {
     return {
-        path:path,
+        path: path,
         name: file.name,
         content_type: file.type,
-        last_modified:new Date(file.data?.lastModified).toUTCString(),
+        last_modified: new Date(file.data?.lastModified).toUTCString(),
         size: file.size,
     }
 }
