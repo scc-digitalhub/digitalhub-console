@@ -403,6 +403,70 @@ const springDataProvider = (
                 };
             });
         },
+        uploadMultipartStart: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/start?filename=${params.filename}`;
+            return httpClient(url).then(({ status, body }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                if (!body) {
+                    throw new Error('Resource not found')
+                }
+                const jsonBody = JSON.parse(body);
+                return {
+                    path: jsonBody.path,
+                    uploadId: jsonBody.uploadId,
+                };
+            });
+        },
+        uploadMultipartPart: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/part?path=${params.path}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`;
+            return httpClient(url).then(({ status, body }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                if (!body) {
+                    throw new Error('Resource not found')
+                }
+                const jsonBody = JSON.parse(body);
+                return {
+                    path: jsonBody.path,
+                    url: jsonBody.url,
+                    expiration: jsonBody.expiration,
+                };
+            });
+        },
+        uploadMultipartComplete: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const eTagPartList =params.eTagPartList?params.eTagPartList.map(etag => `eTagPartList=${etag}`).join('&'):''
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/complete?path=${params.path}&uploadId=${params.uploadId}&${eTagPartList}`;
+            return httpClient(url).then(({ status, body }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                if (!body) {
+                    throw new Error('Resource not found')
+                }
+                const jsonBody = JSON.parse(body);
+                return {
+                    path: jsonBody.path,
+                    url: jsonBody.url,
+                    expiration: jsonBody.expiration,
+                };
+            });
+        }
+        
     };
 };
 
