@@ -59,10 +59,10 @@ const specs = {
         title: 'Table',
         description: '',
     },
-    kfp:{
-        title:"Kfp",
-        description:""
-    }
+    kfp: {
+        title: 'Kfp',
+        description: '',
+    },
 };
 const fields = {
     id: 'Id',
@@ -78,10 +78,10 @@ const fields = {
         baseImage: { title: 'Container base Image', description: '' },
         command: { title: 'Container command', description: '' },
         image: { title: 'Container image', description: '' },
-            tag: {
-                title: 'Tag',
-             description: ''
-            }
+        tag: {
+            title: 'Tag',
+            description: '',
+        },
     },
     execArgs: {
         title: 'Execution arguments',
@@ -295,6 +295,10 @@ const fields = {
     metrics: {
         title: 'Metrics',
         description: '',
+        item: {
+            title: 'Item',
+            description: '',
+        },
     },
     constraints: {
         title: 'Contraints',
@@ -330,7 +334,7 @@ const fields = {
         title: 'Error report',
         description: '',
     },
-    
+
     sourceCode: {
         source: {
             title: 'Source Code',
@@ -352,10 +356,9 @@ const fields = {
     requirements: {
         item: {
             title: 'Item',
-            description:''
-        }
+            description: '',
+        },
     },
-    
 };
 
 const messages = {
@@ -646,4 +649,3 @@ const messages = {
 };
 
 export default messages;
-

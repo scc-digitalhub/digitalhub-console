@@ -181,6 +181,15 @@ const fields = {
         },
         
     },
+
+    metrics: {
+        title: 'Metriche',
+        description: '',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
     example: { title: 'Example', description: '' },
     format: { title: 'Format', description: '' },
     title: { title: 'Title', description: '' },
