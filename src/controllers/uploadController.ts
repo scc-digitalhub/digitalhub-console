@@ -71,7 +71,8 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                 const data = await dataProvider.uploadMultipartPart(resource, {
                     id: id,
                     meta: { root },
-                    path: files[0].path,
+                    // path: files[0].path,
+                    filename: file.name,
                     uploadId: uploadId,
                     partNumber: options.partNumber
                 })
@@ -103,12 +104,13 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                  const response = await dataProvider.uploadMultipartComplete(resource,{
                     id: id,
                     meta: { root },
-                    path: files[0].path,
+                    filename: file.name,
+                    // path: files[0].path,
                     uploadId,
                     eTagPartList:parts.map((part:any)=>part.etag),
 
                  })
-                 return {location: response.url};
+                //  return {location: response.url};
                 } catch(error) {
                     throw new Error('Unsuccessful request')
 
