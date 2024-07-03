@@ -403,13 +403,14 @@ const springDataProvider = (
                 };
             });
         },
+        //POST
         uploadMultipartStart: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/start?filename=${params.filename}`;
-            return httpClient(url).then(({ status, body }) => {
+            return httpClient(url,{method:'POST'}).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
@@ -423,13 +424,14 @@ const springDataProvider = (
                 };
             });
         },
+        //PUT
         uploadMultipartPart: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/part?path=${params.path}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`;
-            return httpClient(url).then(({ status, body }) => {
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/part?filename=${params.filename}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`;
+            return httpClient(url,{method:'PUT'}).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
@@ -444,14 +446,15 @@ const springDataProvider = (
                 };
             });
         },
+        //POST
         uploadMultipartComplete: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const eTagPartList =params.eTagPartList?params.eTagPartList.map(etag => `eTagPartList=${etag}`).join('&'):''
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/complete?path=${params.path}&uploadId=${params.uploadId}&${eTagPartList}`;
-            return httpClient(url).then(({ status, body }) => {
+            const eTagPartList =params.eTagPartList?params.eTagPartList.map(etag => `partList=${etag}`).join('&'):''
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/complete?filename=${params.filename}&uploadId=${params.uploadId}&${eTagPartList}`;
+            return httpClient(url,{method:'POST'}).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
