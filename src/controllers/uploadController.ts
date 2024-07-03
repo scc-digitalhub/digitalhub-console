@@ -64,7 +64,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
 
             async signPart(file, options) {
 
-                const { signal } = options
+                const { signal,uploadId } = options
 
                 signal?.throwIfAborted()
 
@@ -72,7 +72,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                     id: id,
                     meta: { root },
                     path: files[0].path,
-                    uploadId: uploadId.current,
+                    uploadId: uploadId,
                     partNumber: options.partNumber
                 })
 
@@ -98,27 +98,34 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                 file,
                 { key, uploadId, parts },
             ) {
+                //parts is array of part
+                try{
+                 const response = await dataProvider.uploadMultipartComplete(resource,{
+                    id: id,
+                    meta: { root },
+                    path: files[0].path,
+                    uploadId,
+                    eTagPartList:parts.map((part:any)=>part.etag),
 
-                // dataProvider.uploadMultipartComplete
-                const filename = encodeURIComponent(key)
-                const uploadIdEnc = encodeURIComponent(uploadId)
-                const response = await fetch(
-                    `s3/multipart/${uploadIdEnc}/complete?key=${filename}`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            accept: 'application/json',
-                        },
-                        body: JSON.stringify({ parts }),
-                    },
-                )
+                 })
+                 return {location: response.url};
+                } catch(error) {
+                    throw new Error('Unsuccessful request')
 
-                if (!response.ok)
-                    throw new Error('Unsuccessful request', { cause: response })
-
-                const data = await response.json()
-
-                return data
+                }
+                // const filename = encodeURIComponent(key)
+                // const uploadIdEnc = encodeURIComponent(uploadId)
+                // const response = await fetch(
+                //     `s3/multipart/${uploadIdEnc}/complete?key=${filename}`,
+                //     {
+                //         method: 'POST',
+                //         headers: {
+                //             accept: 'application/json',
+                //         },
+                //         body: JSON.stringify({ parts }),
+                //     },
+                // )
+                return {};
             },
         }),
     );
@@ -191,7 +198,8 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                 })
             }
         });
-        uppy.on('upload-success', (file) => {
+        uppy.on('upload-success', (file, response) => {
+            console.log('response',response);
             if (file) {
                 setFiles((prev) => {
                     let p = prev.find(f => f.id === file.id);
