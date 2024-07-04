@@ -305,7 +305,7 @@ const LogViewer = styled(Box, {
 const LogMetrics = (props: { metrics: any[] }) => {
     const { metrics } = props;
     const keyToLabel: { [key: string]: string } = {
-        cpu: 'Cpu (n)',
+        cpu: 'Cpu (m)',
         memory: 'Memory (MB)',
     };
 
@@ -320,11 +320,11 @@ const LogMetrics = (props: { metrics: any[] }) => {
             ).value;
         }
         if (m.usage.cpu) {
-            //cut measurement unit and parse number
-            const str = m.usage.cpu.endsWith('n')
-                ? m.usage.cpu.substring(1)
-                : m.usage.cpu;
-            val['cpu'] = parseInt(str);
+            //convert nanocores to millicores
+            const cpu = m.usage.cpu.endsWith('n')
+                ? parseInt(m.usage.cpu.slice(0, -1))/1000000
+                : parseInt(m.usage.cpu);
+            val['cpu'] = cpu;
         }
         return val;
     });
