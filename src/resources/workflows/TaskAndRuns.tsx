@@ -5,12 +5,8 @@ import {
     DeleteWithConfirmButton,
     Labeled,
     List,
-    SaveButton,
-    SimpleForm,
     SimpleShowLayout,
     TextField,
-    TextInput,
-    Toolbar,
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
@@ -23,28 +19,29 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
 
 import { WorkflowView } from './WorkflowView';
+import { useGetManySchemas } from '../../controllers/schemaController';
+import { filterProps } from '../../common/schemas';
+import { RunCreateComponent } from '../runs';
 
-export const TaskAndRuns = (props: { key?: string }) => {
-    const { key } = props;
-
-    const record = useRecordContext();
-    const translate = useTranslate();
+export const TaskAndRuns = (props: {
+    task?: string;
+    onEdit: (id: string, data: any) => void;
+}) => {
+    const { task, onEdit } = props;
     const getResourceLabel = useGetResourceLabel();
-    const label = getResourceLabel('task', 1);
 
     const prepare = (r: any) => {
         return {
             ...r,
             spec: {
-                task: key,
+                task,
                 ...r.spec,
             },
         };
@@ -60,6 +57,12 @@ export const TaskAndRuns = (props: { key?: string }) => {
                     fullWidth
                     maxWidth={'lg'}
                     transform={prepare}
+                    mutationOptions={{
+                        onSuccess: (data, variables, context) => {
+                            //data is updated
+                            if (task && data) onEdit(task, data);
+                        },
+                    }}
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
@@ -85,11 +88,10 @@ export const TaskAndRuns = (props: { key?: string }) => {
 
 const TaskRunList = () => {
     const record = useRecordContext();
-    const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [schema, setSchema] = useState<any>();
+    const [schema] = useState<any>();
     const fn = record?.spec?.function || '';
     const url = new URL(fn);
     const runtime = url.protocol
@@ -97,45 +99,50 @@ const TaskRunList = () => {
         : '';
     url.protocol = record.kind + ':';
     const key = url.toString();
-    useEffect(() => {
-        if (!schemaProvider || !record || !fn) {
-            return;
-        }
 
-        schemaProvider
-            .list('runs', runtime)
-            .then(schemas => {
-                if (schemas) {
-                    setSchema(schemas.pop());
-                }
-            })
-            .catch(error => {
-                console.log('error:', error);
+    const {
+        data: schemas,
+        isLoading,
+        error,
+    } = useGetManySchemas([
+        { resource: 'workflows', runtime },
+        { resource: 'tasks', runtime },
+        { resource: 'runs', runtime },
+    ]);
+
+    //filter run and task schema
+    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    const taskSchema = schemas
+        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
+        : null;
+
+    if (runSchema && schemas) {
+        //filter out embedded props from spec
+        schemas
+            .filter(s => s.entity != 'RUN')
+            .forEach(s => {
+                runSchema.schema = filterProps(runSchema.schema, s.schema);
             });
-    }, [record, schemaProvider]);
-
+    }
     const partial = {
         project: record?.project,
         kind: schema ? schema.kind : 'run',
         spec: {
             task: key,
+            local_execution: false,
+            //copy the task spec  (using record)
+            ...record?.spec,
         },
     };
-
+    
     const prepare = (r: any) => {
         return {
             ...r,
             spec: {
                 task: key,
-                local_execution: false,
+                ...r.spec,
             },
         };
-    };
-
-    const runSpecUiSchema = {
-        task: {
-            'ui:readonly': true,
-        },
     };
 
     const getExpandArea = () => {
@@ -153,16 +160,13 @@ const TaskRunList = () => {
             maxWidth={'lg'}
             transform={prepare}
         >
-            <SimpleForm toolbar={<CreateRunDialogToolbar />}>
-                <TextInput source="kind" readOnly />
-                {schema?.schema && (
-                    <JsonSchemaInput
-                        source="spec"
-                        schema={schema.schema}
-                        uiSchema={runSpecUiSchemaFactory(record.kind)}
-                    />
-                )}
-            </SimpleForm>
+            {runSchema?.schema && taskSchema?.schema && (
+                <RunCreateComponent
+                    runSchema={runSchema.schema}
+                    taskSchema={taskSchema.schema}
+                />
+            )}
+
         </CreateInDialogButton>
     );
     const ListActions = () => <CreateActionButton />;
@@ -248,38 +252,4 @@ const TaskRunList = () => {
             </List>
         </>
     );
-};
-
-const CreateRunDialogToolbar = () => (
-    <Toolbar>
-        <SaveButton alwaysEnable />
-    </Toolbar>
-);
-
-//TODO cleanup
-const runSpecUiSchemaFactory = (kind: string) => {
-    const schema = {
-        task: {
-            'ui:widget': 'hidden',
-        },
-        local_execution: {
-            'ui:widget': 'hidden',
-        },
-        function_spec: {
-            'ui:widget': 'hidden',
-        },
-        workflow_spec: {
-            'ui:widget': 'hidden',
-        },
-    };
-    // expect to have runtime+task
-    const split = kind.split('+');
-    const runtime = split[0];
-    const task = split[1];
-    const tasks = getTaskByFunction(runtime) || [];
-    tasks.forEach(t => {
-        schema[t + '_spec'] = { 'ui:widget': 'hidden' };
-    });
-
-    return schema;
 };
