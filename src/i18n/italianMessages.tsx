@@ -39,33 +39,202 @@ const specs = {
         title:"Container",
         description:""
     },
-    nefertem:{
-        title:"Nefertem",
-        description:""
+    'container+build': {
+        title: 'Operazione di build del container',
+        description: "Definizione dell'operazione di build del container", 
     },
-    python:{
-        title:"Python",
-        description:""
+    'container+deploy': {
+        title: 'Operazione di deploy del container',
+        description: 'Definizione dell\'operazione di deploy del container',
     },
-    dbt:{
-        title:"Dbt",
-        description:""
+    'container+job': {
+        title: 'Container job',
+        description: 'Definizione del container job',
     },
-    mlrun:{
-        title:"mlrun",
-        description:""
+    'container+serve': {
+        title: 'Container serve',
+        description: 'Definizione del container serve',
+    },
+    'container+run': {
+        title: 'Esecuzione dell\'operazione su container',
+        description: 'Definizione dell\'esecuzione dell\'operazione su container', 
+    },
+    nefertem: {
+        title: 'Nefertem',
+        description: '',
+    },
+    'nefertem+infer': {
+        title: 'Operazione di infer Nefertem',
+        description: 'Definizione dell\'operazione di infer Nefertem',
+    },
+    'nefertem+metric': {
+        title: 'Operazione di metriche Nefertem',
+        description: 'Definizione dell\'operazione di metriche Nefertem',
+    },
+    'nefertem+profile': {
+        title: 'Operazione di profilazione Nefertem',
+        description: 'Definizione dell\'operazione di profilazione Nefertem',    
+    },
+    'nefertem+validate': {
+        title: 'Operazione di validazione Nefertem',
+        description: 'Definizione dell\'operazione di validazione Nefertem',
+    },
+    'nefertem+run': {
+        title: 'Esecuzione di operazione Nefertem',
+        description: 'Definizione dell\'esecuzione di operazione Nefertem',
+    },  
+    python: {
+        title: 'Python',
+        description: '',
+    },
+    dbt: {
+        title: 'DBT',
+        description: '',
+    },
+    'dbt+transform': {
+        title: 'Operazione di transformazione DBT',
+        description: 'Definizione dell\'operazione di transformazione DBT',    
+    },
+    'dbt+run': {
+        title: 'Esecuzione DBT',
+        description: 'Definizione dell\'esecuzione DBT',    
+    },
+    mlrun: {
+        title: 'MLRun',
+        description: '',
+    },
+    'mlrun+build': {
+        title: 'Operazione di build dell\'immagine MLRun',
+        description: 'Definizione dell\'operazione di build dell\'immagine MLRun',
+    },
+    'mlrun+job': {
+        title: 'Job di MLRun',
+        description: 'Definizione del job di MLRun',
+    },
+    'mlrun+run': {
+        title: 'Esecuzione MLRun',
+        description: 'Definizione dell\'esecuzione MLRun',    
     },
     table: {
         title:"Table",
         description:""
     },
-}
+    kfp: {
+        title: 'Kubeflow Pipeline',
+        description: '',
+    },
+    'kfp+pipeline': {    
+        title: 'Operazione di Kubeflow Pipeline',
+        description: 'Definizione dell\'operazione di Kubeflow Pipeline',   
+    },
+    'kfp+run': {
+        title: 'Esecuzione di Kubeflow Pipeline',
+        description: 'Definizione dell\'esecuzione di Kubeflow Pipeline',   
+    },
+};
 const fields = {
     id: 'Id',
-    name: 'Nome',
+    // name: 'Name',
     kind: 'Tipo',
-    key: 'Chiave',
+    // key: 'Key',
     project: 'Progetto',
+    container: {
+        args: { title: 'Argomenti di esecuzione del Container', description: '' },
+        instructions: {
+            description: 'Istruzioni di esecuzione',
+        },
+        baseImage: { title: 'Immagine di base', description: '' },
+        command: { title: 'Commandi di esecuzione del Container', description: '' },
+        image: { title: 'Immagine del Container', description: '' },
+        tag: {
+            title: 'Tag',
+            description: '',
+        },
+    },
+    execArgs: {
+        title: 'Argomenti di esecuzione',
+        description: 'Argomenti di esecuzione',
+    },
+    schedule: {
+        title: 'Schedule',
+        description: 'Definizione di schedule',
+    },
+    backoffLimit: {
+        title: 'Backoff Limit',
+        description: 'Definizione di Backoff Limit',
+    },
+    requests: {
+        title: 'Request',
+        description: 'Definizione di Request',
+    },
+    limits: {
+        title: 'Limiti',
+        description: 'Definizioni dei Limiti',
+    },
+    base64: {
+        title: 'Base 64',
+        description: 'Definizione Base 64',
+    },
+    mountPath: {
+        title: 'Mount Path',
+        description: 'Definizione Mount Path ',
+    },
+    volumeType: {
+        title: 'Tipo Volume',
+        description: 'Definizione di Tipo Volume',
+    },
+    name: {
+        title: 'Nome',
+        description: '',
+    },
+    key: {
+        title: 'Chiave',
+        description: '',
+    },
+    value: {
+        title: 'Valore',
+        description: '',
+    },
+    protocol: {
+        title: 'Protocollo',
+        description: 'Definizione di Protocollo',
+    },
+    source: {
+        title: 'Sorgente',
+        description: 'Definizione di Sorgente',
+    },
+    replicas: {
+        title: 'Repliche',
+        description: 'Definizione di Repliche',
+    },
+    contextSources: {
+        title: 'Sorgenti di contesto',
+        description: 'Definizione di Sorgenti di contesto',
+        item: {
+            title: 'Elemento',
+            description: '',
+        },
+    },
+    secrets: {
+        title: 'Segreti',
+        description: 'Definizione di Segreti',
+        item: {
+            title: 'Elemento',
+            description: '',
+        },
+    },
+    instructions: {
+        title: 'Istruzioni',
+        description: 'Definizione di Istruzioni',
+        item: {
+            title: 'Titolo',
+            description: '',
+        },
+    },
+    destination: {
+        title: 'Destinazione',
+        description: 'Definizione di Destinazione',
+    },
     metadata: {
         created: 'Creazione',
         updated: 'Aggiornamento',
@@ -75,7 +244,18 @@ const fields = {
         version: 'Versione',
         labels: 'Etichette',
     },
+    k8s: {
+        envs: {
+            description: 'Definizione di ambiente',
+        },
+        description: 'Definizione risorse K8S',
+    },
+    framework: {
+        description: 'Definizione di Framework',
+    },
     spec: {
+        title: 'Spec',
+        description: 'Descrizione della Spec',
         path: 'Percorso',
         src_path: 'Percorso sorgente',
         compiled_code: 'Codice compilato',
@@ -95,7 +275,18 @@ const fields = {
         k8s: 'Risorse K8S',
         service_ports: 'Porte',
         service_type: 'Tipo servizio',
-    },
+        priorityClass: 'K8S Priority Class',
+        runtimeClass: 'K8S Runtime Class',
+        python_version: 'Versione Python',
+        handler: 'Handler',
+        schedule: 'Schedule',
+        workflow: 'Definizione di Workflow',
+        framework: 'Framework',
+        parallel: 'Eseguire in parallelo',
+        num_worker: 'Numero di worker',
+        commands: 'Commandi',
+        force_build: 'Forzare build',
+        target_image: 'Immagine Target',    },
     status: {
         state: 'Stato',
         files: 'File',
@@ -141,36 +332,64 @@ const fields = {
         description:"" 
     },
     publish:{
-        title:"Publish",
+        title:"Pubblicare",
         description:"" 
     },
     createdBy:{
-        title:"Created by",
+        title:"Creato dat",
         description:"" 
     },
     updatedBy:{
-        title:"Updated by",
+        title:"Aggiornato da",
         description:"" 
     },
     created:{
-        title:"Created",
+        title:"Creazione",
         description:"" 
     },
     
     version:{
-        title:"Version",
+        title:"Versione",
         description:"" 
     },
     path:{
-        title:"Path",
+        title:"Percorso",
         description:"" 
     },
     srcPath:{
-        title:"Src path",
+        title:"Percorso sorgente",
         description:"" 
     },
+    algorithm: {
+        title: 'Algoritmo',
+        description: '',
+    },
+    parameters: {
+        title: 'Parametri',
+        description: '',
+    },
+    baseModel: {
+        title: 'Modello di base',
+        description: '',
+    },
+    metrics: {
+        title: 'Metriche',
+        description: '',
+        item: {
+            title: 'Elemento',
+            description: '',
+        },
+    },
+    constraints: {
+        title: 'Constraint',
+        description: 'Oggetto di Constraint',
+        item: {
+            title: 'Elemento',
+            description: '',
+        },
+    },
     fields: {
-        title: 'Fields',
+        title: 'Campi',
         description: '',
         item: {
             title: '',
@@ -178,12 +397,87 @@ const fields = {
         },
         
     },
-    example: { title: 'Example', description: '' },
-    format: { title: 'Format', description: '' },
-    title: { title: 'Title', description: '' },
-    type: { title: 'Type', description: '' },
+    example: { title: 'Esempio', description: '' },
+    format: { title: 'Formato', description: '' },
+    title: { title: 'Titolo', description: '' },
+    type: { title: 'Tipo', description: '' },
     schema: {
-        title: 'Base Model',
+        title: 'Schema',
+        description: '',
+    },
+    python: {
+        requirements: {
+            title: 'Requisiti Python',
+            description: '',
+        },
+        version: {
+            title: 'Version Python',
+            description: '',
+        }
+    },
+    errorReport: {
+        title: 'Rapporto di errori',
+        description: '',
+    },
+    sourceCode: {
+        source: {
+            title: 'Codice sorgente',
+            description: '',
+        },
+        lang: {
+            title: 'Linguaggio',
+            description: '',
+        },
+        handler: {
+            title: 'Handler',
+            description: '',
+            base64: {
+                title: 'Base 64',
+                description: '',
+            },
+        },
+    },
+
+    requirements: {
+        item: {
+            title: 'Componente',
+            description:''
+        }
+    },
+    priorityClass: {
+        title: 'Priority Class',
+        description: '',
+    },
+    runtimeClass: {
+        title: 'Runtime Class',
+        description: '',
+    },
+    function: {
+        title: 'Funzione',
+        description: '',
+    },
+    workflow: {
+        title: 'Workflow',
+        description: '',
+    },
+    numWorker: {
+        title: 'Numero di worker',
+        description: '',
+    },
+    parallel: {
+        title: 'Eseguire in parallelo',
+        description: '',
+    },
+    commands: {
+        title: 'Commandi',
+        description: '',
+    },
+    forceBuild: {
+        title: 'Forzare build',
+        description: '',
+    },
+    targetImage: {
+        title: 'Immagine target',
         description: '',
     },
     info: 'Info',
@@ -308,7 +602,7 @@ const messages = {
         },
         workflows: {
             name: 'Workflow |||| Workflow',
-            list: 'List and search workflows',
+            list: 'Elenco e ricerca di workflow',
             fields: {
                 ...fields,
                 run_id: 'ID Esecuzione',
@@ -483,6 +777,10 @@ const messages = {
             },
         },
         loading: 'Caricamento...',
+    },
+    messages: {
+        type_and_press_enter: 'Type and press ENTER to add',
+        double_click_to_edit: 'Double click to edit',
     },
     k8s: {
         envs: {
