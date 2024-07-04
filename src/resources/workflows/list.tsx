@@ -87,9 +87,9 @@ export const WorkflowList = () => {
 
     const postFilters = kinds
         ? [
-              <TextInput label="fields.name" source="name" alwaysOn key={1} />,
+              <TextInput  label={translate('search.name')} source="name" alwaysOn key={1} />,
               <SelectInput
-                  label="fields.kind"
+                  label="search.kind"
                   alwaysOn
                   key={2}
                   source="kind"
