@@ -38,9 +38,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
             },
             // ========== Multipart Uploads ==========
             // The following methods are only useful for multipart uploads:
-            // If you are not interested in multipart uploads, you don't need to
-            // implement them (you'd also need to set `shouldUseMultipart: false` though).
-
+       
             async createMultipartUpload(file) {
                 return {
                     uploadId: uploadId.current,
@@ -49,17 +47,17 @@ export const useUploadController = (props?: any): UploadControllerResult => {
             },
 
             async abortMultipartUpload(file, { key, uploadId }) {
-                const filename = encodeURIComponent(key)
-                const uploadIdEnc = encodeURIComponent(uploadId)
-                const response = await fetch(
-                    `/s3/multipart/${uploadIdEnc}?key=${filename}`,
-                    {
-                        method: 'DELETE',
-                    },
-                )
+                // const filename = encodeURIComponent(key)
+                // const uploadIdEnc = encodeURIComponent(uploadId)
+                // const response = await fetch(
+                //     `/s3/multipart/${uploadIdEnc}?key=${filename}`,
+                //     {
+                //         method: 'DELETE',
+                //     },
+                // )
 
-                if (!response.ok)
-                    throw new Error('Unsuccessful request', { cause: response })
+                // if (!response.ok)
+                //     throw new Error('Unsuccessful request', { cause: response })
             },
 
             async signPart(file, options) {
@@ -71,7 +69,6 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                 const data = await dataProvider.uploadMultipartPart(resource, {
                     id: id,
                     meta: { root },
-                    // path: files[0].path,
                     filename: file.name,
                     uploadId: uploadId,
                     partNumber: options.partNumber
@@ -82,17 +79,19 @@ export const useUploadController = (props?: any): UploadControllerResult => {
 
             async listParts(file, { key, uploadId }) {
 
-                const filename = encodeURIComponent(key)
-                const response = await fetch(
-                    `/s3/multipart/${uploadId}?key=${filename}`
-                )
+                const returnParts: any[] = [];
+                // const filename = encodeURIComponent(key)
+                // const response = await fetch(
+                //     `/s3/multipart/${uploadId}?key=${filename}`
+                // )
 
-                if (!response.ok)
-                    throw new Error('Unsuccessful request', { cause: response })
+                // if (!response.ok)
+                //     throw new Error('Unsuccessful request', { cause: response })
 
-                const data = await response.json()
+                // const data = await response.json()
 
-                return data
+                // return data
+                return returnParts;
             },
 
             async completeMultipartUpload(
@@ -105,28 +104,15 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                     id: id,
                     meta: { root },
                     filename: file.name,
-                    // path: files[0].path,
                     uploadId,
                     eTagPartList:parts.map((part:any)=>part.etag),
 
                  })
-                //  return {location: response.url};
                 } catch(error) {
                     throw new Error('Unsuccessful request')
 
                 }
-                // const filename = encodeURIComponent(key)
-                // const uploadIdEnc = encodeURIComponent(uploadId)
-                // const response = await fetch(
-                //     `s3/multipart/${uploadIdEnc}/complete?key=${filename}`,
-                //     {
-                //         method: 'POST',
-                //         headers: {
-                //             accept: 'application/json',
-                //         },
-                //         body: JSON.stringify({ parts }),
-                //     },
-                // )
+
                 return {};
             },
         }),
@@ -177,15 +163,12 @@ export const useUploadController = (props?: any): UploadControllerResult => {
         });
 
         uppy.on('file-removed', (file) => {
-            // setPathFile(null);
+            setPathFile(null);
             uploadUrl.current = '';
             if (file) {
                 setFiles((prev) => {
-                    let p = prev.slice(prev.findIndex(f => f.id === file.id), 1);
-                    if (p) {
-                        p['file'] = file;
-                    }
-                    return prev;
+                    let p = prev.splice(prev.findIndex(f => f.id === file.id), 1);
+                    return p;
                 })
             }
         });
