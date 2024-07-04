@@ -1,5 +1,8 @@
 import { BlankSchema } from '../../common/schemas';
-import { SourceCodeTemplate } from '../../jsonSchema/SourceCodeTemplate';
+import { 
+    SourceCodeTemplate,
+    SourceCodeEditorWidget, 
+} from '../../jsonSchema/SourceCodeTemplate';
 
 export enum WorkflowTypes {
     KFP = 'kfp',
@@ -24,7 +27,7 @@ export const getWorkflowUiSpec = (kind: string | undefined) => {
         source: {
             'ui:ObjectFieldTemplate': SourceCodeTemplate,
             base64: {
-                'ui:widget': 'hidden',
+                'ui:widget': SourceCodeEditorWidget,
                 'ui:disabled': 'true',
             },
             code: {
