@@ -1,4 +1,3 @@
-import { JsonSchemaInput, JsonSchemaField } from '@dslab/ra-jsonschema-input';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { StepperForm, useStepper } from '@dslab/ra-stepper';
 import {
@@ -18,6 +17,7 @@ import { Box } from '@mui/system';
 import { getRunUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField } from '../../components/AceEditorField';
+import { JsonSchemaInput } from '../../components/JsonSchema';
 
 const RunCreate = (props: { taskId: string }) => {
     const { taskId } = props;
