@@ -63,7 +63,7 @@ export const SecretEdit = () => {
             >
                 <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid item xs={6}>
-                        <Labeled label={translate('resources.secrets.name')}>
+                        <Labeled label={translate('resources.secrets.labelName')}>
                             <TextInput source="name" required readOnly />
                         </Labeled>
                     </Grid>

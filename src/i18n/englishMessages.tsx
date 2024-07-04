@@ -1,3 +1,5 @@
+import { version } from 'os';
+import { title } from 'process';
 import englishMessages from 'ra-language-english';
 
 const specs = {
@@ -39,29 +41,97 @@ const specs = {
         title: 'Container',
         description: '',
     },
+    'container+build': {
+        title: 'Container build task',
+        description: 'Container build task definition', 
+    },
+    'container+deploy': {
+        title: 'Container deploy task',
+        description: 'Container deploy task definition',
+    },
+    'container+job': {
+        title: 'Container job',
+        description: 'Container job definition',
+    },
+    'container+serve': {
+        title: 'Container serve',
+        description: 'Container serve definition',
+    },
+    'container+run': {
+        title: 'Container run',
+        description: 'Container run definition', 
+    },
     nefertem: {
         title: 'Nefertem',
         description: '',
     },
+    'nefertem+infer': {
+        title: 'Nefertem infer task',
+        description: 'Nefertem infer task definition',
+    },
+    'nefertem+metric': {
+        title: 'Nefertem metric task',
+        description: 'Nefertem metric task definition',
+    },
+    'nefertem+profile': {
+        title: 'Nefertem profile task',
+        description: 'Nefertem profile task definition',    
+    },
+    'nefertem+validate': {
+        title: 'Nefertem validate task',
+        description: 'Nefertem validate task definition',
+    },
+    'nefertem+run': {
+        title: 'Nefertem run',
+        description: 'Nefertem run definition',
+    },  
     python: {
         title: 'Python',
         description: '',
     },
     dbt: {
-        title: 'Dbt',
+        title: 'DBT',
         description: '',
     },
+    'dbt+transform': {
+        title: 'DBT transform task',
+        description: ' DBT transform task definition',    
+    },
+    'dbt+run': {
+        title: 'DBT run',
+        description: ' DBT run definition',    
+    },
     mlrun: {
-        title: 'mlrun',
+        title: 'MLRun',
         description: '',
+    },
+    'mlrun+build': {
+        title: 'MLRun build task',
+        description: 'MLRun build task definition',
+    },
+    'mlrun+job': {
+        title: 'MLRun job',
+        description: 'MLRun job definition',
+    },
+    'mlrun+run': {
+        title: 'MLRun run',
+        description: 'MLRun run definition',    
     },
     table: {
         title: 'Table',
         description: '',
     },
     kfp: {
-        title: 'Kfp',
+        title: 'Kubeflow Pipeline',
         description: '',
+    },
+    'kfp+pipeline': {    
+        title: 'Kubeflow Pipeline task',
+        description: 'Kubeflow Pipeline task definition',   
+    },
+    'kfp+run': {
+        title: 'Kubeflow Pipeline run',
+        description: 'Kubeflow Pipeline run definition',   
     },
 };
 const fields = {
@@ -108,8 +178,8 @@ const fields = {
         description: 'Base 64 definition',
     },
     mountPath: {
-        title: 'Mounth Path',
-        description: 'Mounth Path definition ',
+        title: 'Mount Path',
+        description: 'Mount Path definition ',
     },
     volumeType: {
         title: 'Volume Type',
@@ -183,7 +253,7 @@ const fields = {
         description: 'K8S Resources definition',
     },
     framework: {
-        description: 'framework definition',
+        description: 'Framework definition',
     },
     spec: {
         title: 'Spec',
@@ -207,6 +277,18 @@ const fields = {
         k8s: 'K8S Resources',
         service_ports: 'Service ports',
         service_type: 'Service type',
+        priorityClass: 'K8S Priority Class',
+        runtimeClass: 'K8S Runtime Class',
+        python_version: 'Python version',
+        handler: 'Handler',
+        schedule: 'Schedule',
+        workflow: 'Workflow definition',
+        framework: 'Framework',
+        parallel: 'Parallel execution',
+        num_worker: 'Number of workers',
+        commands: 'Commands',
+        force_build: 'Force build',
+        target_image: 'Target image',
     },
     status: {
         state: 'Status',
@@ -301,8 +383,8 @@ const fields = {
         },
     },
     constraints: {
-        title: 'Contraints',
-        description: 'Contraints object',
+        title: 'Constraints',
+        description: 'Constraints object',
         item: {
             title: 'Item',
             description: '',
@@ -329,12 +411,15 @@ const fields = {
             title: 'Python requirements',
             description: '',
         },
+        version: {
+            title: 'Python version',
+            description: '',
+        }
     },
     errorReport: {
         title: 'Error report',
         description: '',
     },
-
     sourceCode: {
         source: {
             title: 'Source Code',
@@ -358,6 +443,42 @@ const fields = {
             title: 'Item',
             description: '',
         },
+    },
+    priorityClass: {
+        title: 'Priority Class',
+        description: '',
+    },
+    runtimeClass: {
+        title: 'Runtime Class',
+        description: '',
+    },
+    function: {
+        title: 'Function',
+        description: '',
+    },
+    workflow: {
+        title: 'Workflow',
+        description: '',
+    },
+    numWorker: {
+        title: 'Number of workers',
+        description: '',
+    },
+    parallel: {
+        title: 'Parallel execution',
+        description: '',
+    },
+    commands: {
+        title: 'Commands',
+        description: '',
+    },
+    forceBuild: {
+        title: 'Force build',
+        description: '',
+    },
+    targetImage: {
+        title: 'Target image',
+        description: '',
     },
 };
 
@@ -609,6 +730,48 @@ const messages = {
         invalidDate: 'Invalid date',
         invalidDatetime: 'Invalid datetime',
         unsupportedField: 'Unsupported field',
+    },
+    csv: {
+        buttonMain: {
+            label: 'Import',
+            tooltip: "Must be a file '.csv' or '.tsv'",
+            emptyResource:
+                "The 'resource' property was empty, have you defined {...props} for the import button?",
+        },
+        parsing: {
+            collidingIds: 'Recocrds with conflicting IDs found',
+            failedValidateRow:
+                'The CSV file has not pass the validation requirements',
+            invalidCsv:
+                'The document cannot be imported in "CSV" format',
+        },
+        dialogCommon: {
+            subtitle:
+                'import fo %{count} elements from file %{fileName} to "%{resource}"',
+            conflictCount:
+                'The resource "%{resource}" contains <strong>%{conflictingCount}</strong> records with conflicting IDs',
+            buttons: {
+                cancel: 'Cancel',
+            },
+        },
+        dialogImport: {
+            alertClose: '%{fname} imported',
+            title: 'Importing in "%{resource}"',
+            buttons: {
+                replaceAllConflicts: 'Replace the lines',
+                skipAllConflicts: 'Skip the lines',
+                letmeDecide: 'Leave to decide for each records',
+            },
+        },
+        dialogDecide: {
+            title: 'Import into "%{resource}" of the element with ID %{id}',
+            buttons: {
+                replaceRow: 'Replace the row with ID %{id}',
+                addAsNewRow: 'Add the line as new (no replace)',
+                skipDontReplace: 'Skip this line (no replace)',
+            },
+        },
+        loading: 'Loading...',
     },
     messages: {
         type_and_press_enter: 'Type and press ENTER to add',
