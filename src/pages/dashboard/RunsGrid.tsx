@@ -1,7 +1,8 @@
-import { Grid, Paper, Typography } from '@mui/material';
-import { useTranslate } from 'react-admin';
+import { Grid, Typography, Button } from '@mui/material';
+import { useCreatePath, useTranslate } from 'react-admin';
 import { StateColors } from '../../components/StateChips';
 import { CounterBadge } from '../../components/CounterBadge';
+import { Link } from 'react-router-dom';
 
 export const RunsGrid = (props: {
     runs: {
@@ -11,33 +12,60 @@ export const RunsGrid = (props: {
     };
 }) => {
     const { runs } = props;
+    const createPath = useCreatePath();
+
     const entries = Object.entries(runs);
     const translate = useTranslate();
 
     return (
         <Grid container justifyContent="center" height="5em">
-            {entries.map(([k, v]) => (
-                <Grid
-                    item
-                    xs={true}
-                    key={k}
-                    textAlign={'center'}
-                    minWidth={'5em'}
-                >
-                    <CounterBadge
-                        value={v}
-                        color={`${StateColors[k.toUpperCase()]}.contrastText`}
-                        backgroundColor={`${StateColors[k.toUpperCase()]}.main`}
-                    />
-                    <Typography
-                        variant="body2"
-                        sx={{ textAlign: 'center' }}
-                        pt={0.5}
+            {entries.map(([k, v]) => {
+                const filter = { state: k.toUpperCase() };
+                const link =
+                    createPath({ type: 'list', resource: 'runs' }) +
+                    '?filter=' +
+                    encodeURIComponent(JSON.stringify(filter));
+                return (
+                    <Grid
+                        item
+                        xs={true}
+                        key={k}
+                        textAlign={'center'}
+                        minWidth={'5em'}
                     >
-                        {translate(`pages.dashboard.states.${k}`)}
-                    </Typography>
-                </Grid>
-            ))}
+                        <Button
+                            component={Link}
+                            to={link}
+                            sx={{
+                                display: 'block',
+                                textAlign: 'center',
+                                textTransform: 'none',
+                            }}
+                            color="secondary"
+                        >
+                            <CounterBadge
+                                value={v}
+                                color={`${
+                                    StateColors[k.toUpperCase()]
+                                }.contrastText`}
+                                backgroundColor={`${
+                                    StateColors[k.toUpperCase()]
+                                }.main`}
+                            />
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    textAlign: 'center',
+                                    textDecoration: 'none',
+                                }}
+                                pt={0.5}
+                            >
+                                {translate(`pages.dashboard.states.${k}`)}
+                            </Typography>
+                        </Button>
+                    </Grid>
+                );
+            })}
         </Grid>
     );
 };
