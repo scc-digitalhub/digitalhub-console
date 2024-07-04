@@ -167,8 +167,8 @@ export const useUploadController = (props?: any): UploadControllerResult => {
             uploadUrl.current = '';
             if (file) {
                 setFiles((prev) => {
-                    let p = prev.splice(prev.findIndex(f => f.id === file.id), 1);
-                    return p;
+                    prev.splice(prev.findIndex(f => f.id === file.id), 1);
+                    return prev;
                 })
             }
         });
