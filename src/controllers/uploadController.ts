@@ -18,7 +18,20 @@ export const useUploadController = (props?: any): UploadControllerResult => {
     const { root } = useRootSelector();
     const { id } = props;
     const [pathFile, setPathFile] = useState<string | null>(null);
-    const uppyConfig = { restrictions: { maxNumberOfFiles: 1 } };
+    const notify = useNotify();
+    const translate = useTranslate();
+    const uppyConfig = {
+        restrictions: { maxNumberOfFiles: 1 },
+        onBeforeFileAdded: (currentFile, files) => {
+            if (currentFile.size < 1000 * MiB) {
+                return true
+            }
+            notify(translate('upload.file_too_big'), {
+                type: 'error'
+            })
+            return false
+        },
+    };
     const uploadUrl = useRef('');
     const uploadId = useRef('');
     const resource = useResourceContext();
@@ -38,7 +51,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
             },
             // ========== Multipart Uploads ==========
             // The following methods are only useful for multipart uploads:
-       
+
             async createMultipartUpload(file) {
                 return {
                     uploadId: uploadId.current,
@@ -62,7 +75,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
 
             async signPart(file, options) {
 
-                const { signal,uploadId } = options
+                const { signal, uploadId } = options
 
                 signal?.throwIfAborted()
 
@@ -99,16 +112,16 @@ export const useUploadController = (props?: any): UploadControllerResult => {
                 { key, uploadId, parts },
             ) {
                 //parts is array of part
-                try{
-                 const response = await dataProvider.uploadMultipartComplete(resource,{
-                    id: id,
-                    meta: { root },
-                    filename: file.name,
-                    uploadId,
-                    eTagPartList:parts.map((part:any)=>part.etag),
+                try {
+                    const response = await dataProvider.uploadMultipartComplete(resource, {
+                        id: id,
+                        meta: { root },
+                        filename: file.name,
+                        uploadId,
+                        eTagPartList: parts.map((part: any) => part.etag),
 
-                 })
-                } catch(error) {
+                    })
+                } catch (error) {
                     throw new Error('Unsuccessful request')
 
                 }
@@ -184,7 +197,7 @@ export const useUploadController = (props?: any): UploadControllerResult => {
             }
         });
         uppy.on('upload-success', (file, response) => {
-            console.log('response',response);
+            console.log('response', response);
             if (file) {
                 setFiles((prev) => {
                     let p = prev.find(f => f.id === file.id);
