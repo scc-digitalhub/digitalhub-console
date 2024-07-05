@@ -813,7 +813,12 @@ const messages = {
             },
         },
     },
-    upload_error: " Errore durante l'upload del file %{fileName}.  %{error} ",
+    upload: {
+        upload_error: 'Errore durante l\'upload del file %{fileName}. %{error}',
+       file_too_big: 'Il file  supera il limite di 100 GiB.',
+    }
+
+    
 };
 
 export default messages;
