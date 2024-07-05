@@ -36,7 +36,7 @@ const ShowToolbar = () => {
             <EditButton style={{ marginLeft: 'auto' }} />
             <InspectButton />
             <ExportRecordButton language="yaml" color="info" />
-            <DeleteWithDialogButton />
+            <DeleteWithDialogButton redirect="/projects" />
         </TopToolbar>
     );
 };
