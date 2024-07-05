@@ -114,19 +114,49 @@ export const useSchemaProvider = () => {
     return value;
 };
 
+/**
+ * Workaround: convert serializable inputs to pure String input. 
+ * TODO: custom widget with input field and type selection? 
+ * @param schema 
+ */
 const preprocessSchema = schema => {
     if (schema && schema.schema) {
-        if (schema.schema['$defs']) {
-            const defs = schema.schema['$defs'];
-            [
-                'Map_String.Serializable_',
-                'Serializable',
-                'Entry_String.Serializable_',
-            ].forEach(k => {
-                if (k in defs) {
-                    defs[k].additionalProperties = { type: 'string' };
+        if (schema.schema['properties']) {
+            const props = schema.schema['properties'];
+            if (!schema.schema['$defs']) {
+                schema.schema['$defs'] = {};
+            }
+            if (schema.schema['$defs']['Map_String.Serializable_'] && !schema.schema['$defs']['Map_String.String_']) {
+                schema.schema['$defs']['Map_String.String_'] = {
+                    type: 'object',
+                    additionalProperties: { type: 'string' },
+                }
+            }
+            if (schema.schema['$defs']['Entry_String.Serializable_'] && !schema.schema['$defs']['Entry_String.String_']) {
+                schema.schema['$defs']['Entry_String.String_'] = {
+                    type: 'object',
+                    additionalProperties: { type: 'string' },
+                }
+            }
+            Object.keys(props).forEach(k => {
+                if (props[k]['$ref'] === '#/$defs/Map_String.Serializable_') {
+                    props[k]['$ref'] = '#/$defs/Map_String.String_';
+                    props[k]['additionalProperties']['type'] = 'string';
+                    delete props[k]['additionalProperties']['$ref'];
+                }
+                if (props[k]['$ref'] === '#/$defs/Entry_String.Serializable_') {
+                    props[k]['$ref'] = '#/$defs/Entry_String.String_';
+                    props[k]['additionalProperties']['type'] = 'string';
+                    delete props[k]['additionalProperties']['$ref'];
                 }
             });
+
+        }
+        if (schema.schema['$defs']) {
+            const defs = schema.schema['$defs'];
+            if (defs['Serializable']) {
+                defs['Serializable'].additionalProperties = { type: 'string' };                
+            }
         }
     }
 };

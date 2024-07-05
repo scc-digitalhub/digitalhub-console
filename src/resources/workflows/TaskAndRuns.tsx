@@ -29,6 +29,7 @@ import { WorkflowView } from './WorkflowView';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { filterProps } from '../../common/schemas';
 import { RunCreateComponent } from '../runs';
+import { LogsButton } from '../../components/LogsButton';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -245,6 +246,7 @@ const TaskRunList = () => {
                                 </Labeled>
                             </SimpleShowLayout>
                         </ShowInDialogButton>
+                        <LogsButton />
                         <InspectButton />
                         <DeleteWithConfirmButton redirect={false} />
                     </RowButtonGroup>
