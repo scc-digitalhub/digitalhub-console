@@ -436,6 +436,30 @@ const fields = {
                 description: '',
             },
         },
+        servicePorts: {
+            title:"Porte di servizio",
+            description:"",
+            item: {
+                title: 'Elemento',
+                description: '',
+            },
+        },
+        port: {
+            title: 'Porta',
+            description: '',
+        },
+        targetPort:{
+            title: 'Porta target',
+            description: '',
+        },
+        serviceType:{
+            title: 'Tipo di servizio',
+            description: '',
+        },
+        task:{
+            title: 'Task',
+            description: '',
+        }
     },
 
     requirements: {

@@ -488,6 +488,30 @@ const fields = {
     datagrid:{
         key: 'Name',
         value: 'Value'
+    },
+    servicePorts: {
+        title:"Service Ports",
+        description:"",
+        item: {
+            title: 'Element',
+            description: '',
+        },
+    },
+    port: {
+        title: 'Port',
+        description: '',
+    },
+    targetPort:{
+        title: 'Target Port',
+        description: '',
+    },
+    serviceType:{
+        title: 'Service Type',
+        description: '',
+    },
+    task:{
+        title: 'Task',
+        description: '',
     }
 };
 
