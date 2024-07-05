@@ -16,20 +16,18 @@ import {
     TextInput,
     TopToolbar,
     required,
+    useInput,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import {
-    isAlphaNumeric,
-    isValidKind,
-} from '../../common/helper';
+import { isAlphaNumeric, isValidKind } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
-import { useWatch } from 'react-hook-form';
+import { useWatch, useForm } from 'react-hook-form';
 import { MetadataInput } from '../../components/MetadataInput';
 
 const CreateToolbar = (props: CreateActionsProps) => {
@@ -88,7 +86,7 @@ export const FunctionCreate = () => {
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
-    
+
     const transform = data => ({
         ...data,
         project: root || '',
@@ -136,18 +134,10 @@ export const FunctionCreate = () => {
                                             isAlphaNumeric(),
                                         ]}
                                     />
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        validate={[
-                                            required(),
-                                            isValidKind(kinds),
-                                        ]}
-                                    />
+                                    <KindSelector kinds={kinds} />
                                 </Stack>
 
                                 <MetadataInput />
-
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {
@@ -176,5 +166,25 @@ export const FunctionCreate = () => {
                 </>
             </CreateBase>
         </Container>
+    );
+};
+
+const KindSelector = (props: { kinds: any[] }) => {
+    const { kinds } = props;
+    const resource = useResourceContext();
+    const { formState } = useForm();
+    const { field } = useInput({ resource, source: 'spec' });
+
+    const reset = () => {
+        console.log('form is dirty', formState.isDirty);
+        field.onChange({});
+    };
+    return (
+        <SelectInput
+            source="kind"
+            choices={kinds}
+            validate={[required(), isValidKind(kinds)]}
+            onChange={() => reset()}
+        />
     );
 };
