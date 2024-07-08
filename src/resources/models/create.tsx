@@ -206,7 +206,9 @@ const KindSelector = (props: { kinds: any[] }) => {
     const { field } = useInput({ resource, source: 'spec' });
 
     const reset = () => {
-        console.log('form is dirty', formState.isDirty);
+        console.log('form is dirty', field.isDirty); //popup di conferma se resettare o meno la form 
+        //se si ongchange altrimenti restore del select al valore precedente
+        //useinput 
         field.onChange({});
     };
     return (
