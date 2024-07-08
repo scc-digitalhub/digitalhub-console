@@ -35,6 +35,7 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { useEffect, useRef } from 'react';
 import { useUploadController } from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
+import { useForm } from 'react-hook-form';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -154,11 +155,7 @@ const FormContent = (props: any) => {
                     validate={[required(), isAlphaNumeric()]}
                 />
 
-                <SelectInput
-                    source="kind"
-                    choices={kinds}
-                    validate={[required(), isValidKind(kinds)]}
-                />
+                <KindSelector kinds={kinds} />
             </Stack>
 
             <MetadataInput />
@@ -201,5 +198,25 @@ const FormContent = (props: any) => {
                 }}
             </FormDataConsumer>
         </>
+    );
+};
+const KindSelector = (props: { kinds: any[] }) => {
+    const { kinds } = props;
+    const resource = useResourceContext();
+    const { formState } = useForm();
+    const { field } = useInput({ resource, source: 'spec' });
+
+    const reset = () => {
+        console.log('form is dirty', formState.isDirty);
+        field.onChange({});
+    };
+    return (
+        <SelectInput
+            source="kind"
+            choices={kinds}
+            validate={[required(), isValidKind(kinds)]}
+            onChange={() => reset()}
+        />
+        
     );
 };

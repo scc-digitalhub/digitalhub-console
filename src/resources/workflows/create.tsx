@@ -16,6 +16,8 @@ import {
     TextInput,
     TopToolbar,
     required,
+    useInput,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import {
@@ -25,8 +27,6 @@ import {
 } from '../../common/helper';
 import {
     BlankSchema,
-    MetadataCreateUiSchema,
-    MetadataSchema,
 } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -35,6 +35,7 @@ import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
+import {  useForm } from 'react-hook-form';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -128,14 +129,9 @@ export const WorkflowCreate = () => {
                                             isAlphaNumeric(),
                                         ]}
                                     />
-                                    <SelectInput
-                                        source="kind"
-                                        choices={kinds}
-                                        validate={[
-                                            required(),
-                                            isValidKind(kinds),
-                                        ]}
-                                    />
+
+                                <KindSelector kinds={kinds} />
+
                                 </Stack>
 
                                 <MetadataInput />
@@ -181,5 +177,25 @@ export const WorkflowCreate = () => {
                 </>
             </CreateBase>
         </Container>
+    );
+};
+const KindSelector = (props: { kinds: any[] }) => {
+    const { kinds } = props;
+    const resource = useResourceContext();
+    const { formState } = useForm();
+    const { field } = useInput({ resource, source: 'spec' });
+
+    const reset = () => {
+        console.log('form is dirty', formState.isDirty);
+        field.onChange({});
+    };
+    return (
+        <SelectInput
+            source="kind"
+            choices={kinds}
+            validate={[required(), isValidKind(kinds)]}
+            onChange={() => reset()}
+        />
+        
     );
 };

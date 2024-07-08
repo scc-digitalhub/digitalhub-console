@@ -34,6 +34,8 @@ import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
 import { FileInput } from '../../components/FileInput';
 import { useUploadController } from '../../controllers/uploadController';
+import {  useForm } from 'react-hook-form';
+
 
 const CreateToolbar = () => {
     return (
@@ -163,12 +165,9 @@ const FormContent = (props: any) => {
                     source="name"
                     validate={[required(), isAlphaNumeric()]}
                 />
+                 <KindSelector kinds={kinds} />
 
-                <SelectInput
-                    source="kind"
-                    choices={kinds}
-                    validate={[required(), isValidKind(kinds)]}
-                />
+
             </Stack>
 
             <MetadataInput />
@@ -211,5 +210,26 @@ const FormContent = (props: any) => {
                 }}
             </FormDataConsumer>
         </>
+    );
+};
+
+const KindSelector = (props: { kinds: any[] }) => {
+    const { kinds } = props;
+    const resource = useResourceContext();
+    const { formState } = useForm();
+    const { field } = useInput({ resource, source: 'spec' });
+
+    const reset = () => {
+        console.log('form is dirty', formState.isDirty);
+        field.onChange({});
+    };
+    return (
+        <SelectInput
+            source="kind"
+            choices={kinds}
+            validate={[required(), isValidKind(kinds)]}
+            onChange={() => reset()}
+        />
+        
     );
 };
