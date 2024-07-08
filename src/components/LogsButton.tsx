@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useMemo, useState } from 'react';
+import React, { Fragment, ReactElement, useCallback, useMemo, useState } from 'react';
 import {
     Button,
     ButtonProps,
@@ -68,9 +68,12 @@ export const LogsButton = (props: LogsButtonProps) => {
     };
 
     const handleDialogClose = e => {
-        setOpen(false);
         e.stopPropagation();
+        setOpen(false);
     };
+    const handleClick = useCallback(e => {
+        e.stopPropagation();
+    }, []);
 
     return (
         <Fragment>
@@ -85,6 +88,7 @@ export const LogsButton = (props: LogsButtonProps) => {
             <Dialog
                 open={open}
                 onClose={handleDialogClose}
+                onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="logs-dialog-title"
