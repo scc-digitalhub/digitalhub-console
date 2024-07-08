@@ -278,10 +278,10 @@
     ra-core "^4.11.0"
     yaml "^2.3.4"
 
-"@dslab/ra-inspect-button@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-inspect-button/-/ra-inspect-button-1.0.0.tgz#5c18ecbd2a2691f7a15d06a4e0090853337facab"
-  integrity sha512-wRtXUl837Kz3dAJQtadmvRsS5iDKsznP5LeiewTmtVxVCIrrGwgJZEo1H9yjSG+5yBBlnR3CoS+C7jcyj1kcKw==
+"@dslab/ra-inspect-button@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-inspect-button/-/ra-inspect-button-1.0.1.tgz#6d1cdfbdd76914f5f82895158d66d9ee88287f6b"
+  integrity sha512-MVntVqmZWsf0A9C96zG+DrAQU0uydx6bxvjmexeWVLJDO1TJs5grSCUTY2e9t8hjCUZarBba8zN5I7CHimHTZw==
   dependencies:
     ra-core "^4.11.0"
     react-syntax-highlighter "^15.5.0"

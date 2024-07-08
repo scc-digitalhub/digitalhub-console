@@ -37,7 +37,7 @@
         "@dslab/ra-dialog-crud": "^1.0.1",
         "@dslab/ra-export-record-button": "^1.0.0",
         "@dslab/ra-export-yaml": "^1.0.0",
-        "@dslab/ra-inspect-button": "^1.0.0",
+        "@dslab/ra-inspect-button": "^1.0.1",
         "@dslab/ra-jsonschema-input": "^1.3.7",
         "@dslab/ra-language-italian": "^1.0.0",
         "@dslab/ra-root-selector": "^1.0.1",
