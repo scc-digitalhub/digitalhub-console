@@ -140,6 +140,12 @@ const fields = {
     kind: 'Kind',
     // key: 'Key',
     project: 'Project',
+    args: {
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
     container: {
         args: { title: 'Container args', description: '' },
         instructions: {
