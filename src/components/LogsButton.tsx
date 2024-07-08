@@ -22,6 +22,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -34,6 +35,8 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import Parser from 'k8s-resource-parser';
 import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
+import CloseIcon from '@mui/icons-material/Close';
+import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 
 const defaultIcon = <SegmentIcon />;
 
@@ -85,17 +88,29 @@ export const LogsButton = (props: LogsButtonProps) => {
             >
                 {icon}
             </Button>
-            <Dialog
+            <LogsDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="logs-dialog-title"
+                className={CreateInDialogButtonClasses.dialog}
             >
-                <DialogTitle id="logs-dialog-title" sx={{ paddingBottom: 0 }}>
-                    {translate(label)}
-                </DialogTitle>
+                <div className={CreateInDialogButtonClasses.header}>
+                    <DialogTitle id="logs-dialog-title" className={CreateInDialogButtonClasses.title}>
+                        {translate(label)}
+                    </DialogTitle>
+                    <IconButton
+                        className={CreateInDialogButtonClasses.closeButton}
+                        aria-label={translate('ra.action.close')}
+                        title={translate('ra.action.close')}
+                        onClick={handleDialogClose}
+                        size="small"
+                    >
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                </div>
 
                 <DialogContent>
                     {isLoading ? (
@@ -104,10 +119,28 @@ export const LogsButton = (props: LogsButtonProps) => {
                         <LogsView id={id} resource={resource} />
                     )}
                 </DialogContent>
-            </Dialog>
+            </LogsDialog>
         </Fragment>
     );
 };
+
+const LogsDialog = styled(Dialog, {
+    name: 'RaCreateInDialogButton',
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme }) => ({
+    [`& .${CreateInDialogButtonClasses.title}`]: {
+        padding: theme.spacing(0),
+    },
+    [`& .${CreateInDialogButtonClasses.header}`]: {
+        padding: theme.spacing(2, 2),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
+        height: 'fit-content',
+    },
+}));
 
 export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     /**
