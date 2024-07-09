@@ -670,6 +670,10 @@ const messages = {
         common: {
             emptySpec: 'Select the kind to view the specification',
             labels: 'Labels',
+            reset: {
+                title:'Change kind',
+                content: 'Are you sure you want to change kind? Changes made will be discarded',
+            },
             version: {
                 title: 'Versions',
                 version: 'Version',

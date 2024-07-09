@@ -34,6 +34,7 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { useUploadController } from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
 import {  useForm } from 'react-hook-form';
+import { KindSelector } from '../../components/KindSelector';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -93,7 +94,7 @@ export const ModelCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
+                            <SimpleForm defaultValues={{}}>
                                 <FormContent
                                     schemas={schemas}
                                     kinds={kinds}
@@ -197,25 +198,5 @@ const FormContent = (props: any) => {
                 }}
             </FormDataConsumer>
         </>
-    );
-};
-const KindSelector = (props: { kinds: any[] }) => {
-    const { kinds } = props;
-    const resource = useResourceContext();
-    const { formState } = useForm();
-    const { field } = useInput({ resource, source: 'spec' });
-
-    const reset = () => {
-        console.log('form is dirty', formState.isDirty);
-        field.onChange({});
-    };
-    return (
-        <SelectInput
-            source="kind"
-            choices={kinds}
-            validate={[required(), isValidKind(kinds)]}
-            onChange={() => reset()}
-        />
-        
     );
 };

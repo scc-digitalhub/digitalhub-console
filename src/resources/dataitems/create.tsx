@@ -4,6 +4,7 @@ import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {
+    Confirm,
     CreateActionsProps,
     CreateBase,
     CreateView,
@@ -20,11 +21,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
-import {
-    BlankSchema,
-    MetadataCreateUiSchema,
-    MetadataSchema,
-} from '../../common/schemas';
+import { BlankSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -32,12 +29,15 @@ import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataInput } from '../../components/MetadataInput';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useUploadController } from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
+import { trace } from 'console';
+import { transcode } from 'buffer';
+import { KindSelector } from '../../components/KindSelector';
 
-const CreateToolbar = (props: CreateActionsProps) => {
+const CreateToolbar = () => {
     return (
         <TopToolbar>
             <ListButton />
@@ -47,8 +47,7 @@ const CreateToolbar = (props: CreateActionsProps) => {
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
-    const { data: schemas, isLoading, error } = useGetSchemas('dataitems');
+    const { data: schemas } = useGetSchemas('dataitems');
     const id = useRef(crypto.randomUUID());
 
     const { uppy, files, upload } = useUploadController({ id: id.current });
@@ -86,7 +85,13 @@ export const DataItemCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
+                            <SimpleForm
+                                defaultValues={{
+                                    metadata: {},
+                                    status: {},
+                                    spec: {},
+                                }}
+                            >
                                 <FormContent
                                     schemas={schemas}
                                     kinds={kinds}
@@ -133,7 +138,7 @@ const FormContent = (props: any) => {
         if (!kind) {
             return undefined;
         }
-        
+
         if (uppy.getFiles().length > 0) {
             return { path: { 'ui:readonly': true } };
         } else {
@@ -154,7 +159,6 @@ const FormContent = (props: any) => {
                     source="name"
                     validate={[required(), isAlphaNumeric()]}
                 />
-
                 <KindSelector kinds={kinds} />
             </Stack>
 
@@ -165,21 +169,17 @@ const FormContent = (props: any) => {
                     if (formData.kind)
                         return (
                             <>
-                            <JsonSchemaInput
-                                source="spec"
-                                schema={{
-                                    ...getDataItemSpecSchema(formData.kind),
-                                    title: 'Spec',
-                                }}
-                                uiSchema={getDataItemUiSchema(
-                                    formData.kind
-                                )}
-                            />
-                            {uppy && (
-                                <FileInput
-                                    uppy={uppy}
+                                <JsonSchemaInput
+                                    source="spec"
+                                    schema={{
+                                        ...getDataItemSpecSchema(formData.kind),
+                                        title: 'Spec',
+                                    }}
+                                    uiSchema={getDataItemUiSchema(
+                                        formData.kind
+                                    )}
                                 />
-                            )}
+                                {uppy && <FileInput uppy={uppy} />}
                             </>
                         );
                     else
@@ -198,28 +198,5 @@ const FormContent = (props: any) => {
                 }}
             </FormDataConsumer>
         </>
-    );
-};
-const KindSelector = (props: { kinds: any[] }) => {
-    const { kinds } = props;
-    const resource = useResourceContext();
-    const { formState } = useForm();
-    const { field } = useInput({ resource, source: 'spec' });
-
-             //popup di conferma se resettare o meno la form 
-        //se si ongchange altrimenti restore del select al valore precedente
-        //useinput 
-    const reset = () => {
-        console.log('form is dirty', formState.isDirty);
-        field.onChange({});
-    };
-    return (
-        <SelectInput
-            source="kind"
-            choices={kinds}
-            validate={[required(), isValidKind(kinds)]}
-            onChange={() => reset()}
-        />
-        
     );
 };

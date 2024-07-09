@@ -36,6 +36,7 @@ import { getWorkflowUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
 import {  useForm } from 'react-hook-form';
+import { KindSelector } from '../../components/KindSelector';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -177,25 +178,5 @@ export const WorkflowCreate = () => {
                 </>
             </CreateBase>
         </Container>
-    );
-};
-const KindSelector = (props: { kinds: any[] }) => {
-    const { kinds } = props;
-    const resource = useResourceContext();
-    const { formState } = useForm();
-    const { field } = useInput({ resource, source: 'spec' });
-
-    const reset = () => {
-        console.log('form is dirty', formState.isDirty);
-        field.onChange({});
-    };
-    return (
-        <SelectInput
-            source="kind"
-            choices={kinds}
-            validate={[required(), isValidKind(kinds)]}
-            onChange={() => reset()}
-        />
-        
     );
 };

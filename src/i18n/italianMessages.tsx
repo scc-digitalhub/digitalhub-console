@@ -666,6 +666,10 @@ const messages = {
         common: {
             emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
             labels: 'Etichette',
+            reset: {
+                title:'Cambiamento di tipologia',
+                content: 'Sei sicuro di voler cambiare tipologia? Le modifiche effettuate saranno annullate',
+            },
             version: {
                 title: 'Versioni',
                 version: 'Versione',
