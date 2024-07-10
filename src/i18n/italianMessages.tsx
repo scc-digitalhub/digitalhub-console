@@ -256,9 +256,7 @@ const fields = {
         },
         description: 'Definizione risorse K8S',
     },
-    framework: {
-        description: 'Definizione di Framework',
-    },
+
     spec: {
         title: 'Spec',
         description: 'Descrizione della Spec',
@@ -370,9 +368,17 @@ const fields = {
         title: 'Algoritmo',
         description: '',
     },
+    framework: {
+        title:'Framework',
+        description: '',
+    },
     parameters: {
         title: 'Parametri',
         description: '',
+        item: {
+            title: 'Elemento',
+            description: '',
+        }
     },
     baseModel: {
         title: 'Modello di base',
