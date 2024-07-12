@@ -50,7 +50,7 @@ const ShowComponent = () => {
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
-    
+
     const isInitializing = () => {
         return initializing.current === true;
     };
@@ -226,7 +226,7 @@ const ShowComponent = () => {
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeView sourceCode={sourceCode} />
+                    <SourceCodeTab sourceCode={sourceCode} spec={spec} />
                 </TabbedShowLayout.Tab>
             )}
 
@@ -247,6 +247,32 @@ const ShowComponent = () => {
     );
 };
 
+const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
+    const { sourceCode, spec } = props;
+    const record = useRecordContext();
+    const uiSchema = getFunctionUiSpec(record.kind);
+    const values = { spec: { source: sourceCode } };
+    const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
+    if ('properties' in schema) {
+        schema.properties = { source: schema.properties.source };
+    }
+
+    return (
+        <RecordContextProvider value={values}>
+            <TopToolbar>
+                <InspectButton showCopyButton={false} />
+            </TopToolbar>
+            {spec && (
+                <JsonSchemaField
+                    source="spec"
+                    schema={{ ...schema, title: '' }}
+                    uiSchema={uiSchema}
+                    label={false}
+                />
+            )}
+        </RecordContextProvider>
+    );
+};
 const SourceCodeView = (props: { sourceCode: any }) => {
     const { sourceCode } = props;
     console.log('source', sourceCode);
