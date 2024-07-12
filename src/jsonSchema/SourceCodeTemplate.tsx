@@ -36,28 +36,28 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
         prop: properties.find(
             element => element.name == 'source'
         ) as ObjectFieldTemplatePropertyType,
-        value: formData['source'] || '',
+        value: formData ? formData['source'] || '' : '',
     };
 
     const language = {
         prop: properties.find(
             element => element.name == 'lang'
         ) as ObjectFieldTemplatePropertyType,
-        value: formData['lang'] || '',
+        value: formData ? formData['lang'] || '' : '',
     };
 
     const handler = {
         prop: properties.find(
             element => element.name == 'handler'
         ) as ObjectFieldTemplatePropertyType,
-        value: formData['handler'] || '',
+        value: formData ? formData['handler'] || '' : '',
     };
 
     const base64 = {
         prop: properties.find(
             element => element.name == 'base64'
         ) as ObjectFieldTemplatePropertyType,
-        value: formData['base64'] || '',
+        value: formData ? formData['base64'] || '' : '',
     };
 
     //hack: expose lang via context for editor widget
