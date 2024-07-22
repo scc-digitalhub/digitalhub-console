@@ -7,6 +7,7 @@ import {
     RegistryFieldsType,
     RegistryWidgetsType,
     UiSchema,
+    getDefaultFormState,
 } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2020 from 'ajv/dist/2020';
@@ -56,53 +57,6 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
         source,
         validate,
     });
-    let data = field.value;
-    // const initialData = useRef(field.value);
-    const onChange = (e: any, id?:string) => {
-        if (isLoading != undefined && !isLoading && id) {
-            //validate first
-            if (formRef.current) {
-                const isValid = formRef?.current?.validateForm();
-                if (isValid) {
-                    //clear errors
-                    errors.current = new Array();
-                }
-            }
-
-            //update data
-            if (e.formData){
-                field.onChange(e.formData);
-          }        }
-    };
-    // const onChange = (e: any, id?: string) => {
-    //     if (isLoading != undefined && !isLoading && !id && e.formData) {
-    //         initialData.current = e.formData;
-    //     }
-    //     if (isLoading != undefined && !isLoading && id) {
-    //         //validate first
-    //         if (formRef.current) {
-    //             const isValid = formRef?.current?.validateForm();
-    //             if (isValid) {
-    //                 //clear errors
-    //                 errors.current = new Array();
-    //             }
-    //         }
-
-    //         //update data
-    //         if (e.formData) {
-    //             field.onChange(e.formData);
-    //         }
-    //     }
-    // };
-
-    const onError = (values: RJSFValidationError[]) => {
-        //always reset errors
-        errors.current = new Array();
-        if (values && values.length > 0) {
-            //push errors to be consumed by validator
-            values.forEach(e => errors.current.push(e));
-        }
-    };
 
     const { schema: rjsSchema, uiSchema: ruiSchema } = useRJSchema({
         resource,
@@ -116,14 +70,44 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
                 : undefined,
     });
 
+    const data = getDefaultFormState(validator, rjsSchema, undefined, rjsSchema);
+    // const data = field.value;
+    // const initialData = useRef(field.value);
+    const onChange = (e: any, id?: string) => {
+        if (isLoading != undefined && !isLoading/* && id*/) {
+            //validate first
+            if (formRef.current) {
+                const isValid = formRef?.current?.validateForm();
+                if (isValid) {
+                    //clear errors
+                    errors.current = new Array();
+                }
+            }
+
+            //update data
+            if (e.formData && formRef.current) {
+                field.onChange(e.formData);
+            }
+        }
+    };
+
+    const onError = (values: RJSFValidationError[]) => {
+        //always reset errors
+        errors.current = new Array();
+        if (values && values.length > 0) {
+            //push errors to be consumed by validator
+            values.forEach(e => errors.current.push(e));
+        }
+    };
+
     const formRef = useRef<Form>();
-    // const validated = useRef<boolean>(false);
-    // //quando ref caricato chiamre onchange e flaggare altro ref per dire di non farlo piu
-    // if (formRef && formRef.current && !validated.current) {
-    //     formRef?.current?.validateForm();
-    //     validated.current = true;
-    //     //onchange
-    // }
+    const validated = useRef<boolean>(false);
+    //quando ref caricato chiamre onchange e flaggare altro ref per dire di non farlo piu
+    if (formRef && formRef.current && !validated.current) {
+        formRef?.current?.validateForm();
+        validated.current = true;
+        //onchange
+    }
 
     return (
         <MuiForm
@@ -133,7 +117,7 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
             uiSchema={ruiSchema}
             templates={templates}
             fields={fields}
-            formData={initialData.current}
+            formData={data}
             validator={validator}
             onChange={onChange}
             onError={onError}
