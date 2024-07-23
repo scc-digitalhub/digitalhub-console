@@ -56,6 +56,8 @@ import {
 
 import { Dashboard } from './pages/dashboard/Dashboard';
 
+import { Client as StompClient } from '@stomp/stompjs';
+
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -110,6 +112,7 @@ const authProvider =
           })
         : undefined;
 
+//TODO passare httpclient a stomp se possibile, oppure fare stessa cosa
 const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     const headers = (options.headers ||
         new Headers({
@@ -159,6 +162,11 @@ import {
 import { ModelIcon } from './resources/models/icon';
 import { RunList, RunShow } from './resources/runs';
 import { RunIcon } from './resources/runs/icon';
+import { StompContextProvider } from './contexts/StompContext';
+
+const stompClient = new StompClient({
+    brokerURL: 'ws://localhost:8080/mywebsocket', //TODO usare API_URL
+});
 
 export const SearchEnabledContext = createContext(false);
 
@@ -192,107 +200,109 @@ const CoreApp = () => {
                         dataProvider={dataProvider}
                         resource="schemas"
                     >
-                        <AdminUI
-                            dashboard={Dashboard}
-                            layout={WrappedLayout}
-                            loginPage={MyLoginPage}
-                            requireAuth={!!authProvider}
-                        >
-                            <Resource
-                                name="functions"
-                                list={FunctionList}
-                                show={FunctionShow}
-                                edit={FunctionEdit}
-                                create={FunctionCreate}
-                                icon={FunctionIcon}
-                            />
-                            <Resource
-                                name="workflows"
-                                list={WorkflowList}
-                                show={WorkflowShow}
-                                edit={WorkflowEdit}
-                                create={WorkflowCreate}
-                                icon={WorkflowIcon}
-                            />
-                            <Resource
-                                name="dataitems"
-                                list={DataItemList}
-                                show={DataItemShow}
-                                edit={DataItemEdit}
-                                create={DataItemCreate}
-                                icon={DataItemIcon}
+                        <StompContextProvider stompClient={stompClient}>
+                            <AdminUI
+                                dashboard={Dashboard}
+                                layout={WrappedLayout}
+                                loginPage={MyLoginPage}
+                                requireAuth={!!authProvider}
                             >
-                                <Route
-                                    path=":id/update"
-                                    element={<DataItemUpdate />}
+                                <Resource
+                                    name="functions"
+                                    list={FunctionList}
+                                    show={FunctionShow}
+                                    edit={FunctionEdit}
+                                    create={FunctionCreate}
+                                    icon={FunctionIcon}
                                 />
-                            </Resource>
-                            <Resource
-                                name="models"
-                                list={ModelList}
-                                show={ModelShow}
-                                edit={ModelEdit}
-                                create={ModelCreate}
-                                icon={ModelIcon}
-                            >
-                                <Route
-                                    path=":id/update"
-                                    element={<ModelUpdate />}
+                                <Resource
+                                    name="workflows"
+                                    list={WorkflowList}
+                                    show={WorkflowShow}
+                                    edit={WorkflowEdit}
+                                    create={WorkflowCreate}
+                                    icon={WorkflowIcon}
                                 />
-                            </Resource>
-                            <Resource
-                                name="artifacts"
-                                list={ArtifactList}
-                                show={ArtifactShow}
-                                edit={ArtifactEdit}
-                                create={ArtifactCreate}
-                                icon={ArtifactIcon}
-                            >
-                                <Route
-                                    path=":id/update"
-                                    element={<ArtifactUpdate />}
+                                <Resource
+                                    name="dataitems"
+                                    list={DataItemList}
+                                    show={DataItemShow}
+                                    edit={DataItemEdit}
+                                    create={DataItemCreate}
+                                    icon={DataItemIcon}
+                                >
+                                    <Route
+                                        path=":id/update"
+                                        element={<DataItemUpdate />}
+                                    />
+                                </Resource>
+                                <Resource
+                                    name="models"
+                                    list={ModelList}
+                                    show={ModelShow}
+                                    edit={ModelEdit}
+                                    create={ModelCreate}
+                                    icon={ModelIcon}
+                                >
+                                    <Route
+                                        path=":id/update"
+                                        element={<ModelUpdate />}
+                                    />
+                                </Resource>
+                                <Resource
+                                    name="artifacts"
+                                    list={ArtifactList}
+                                    show={ArtifactShow}
+                                    edit={ArtifactEdit}
+                                    create={ArtifactCreate}
+                                    icon={ArtifactIcon}
+                                >
+                                    <Route
+                                        path=":id/update"
+                                        element={<ArtifactUpdate />}
+                                    />
+                                </Resource>
+                                <Resource name="tasks" />
+                                <Resource
+                                    name="runs"
+                                    list={RunList}
+                                    icon={RunIcon}
+                                    show={RunShow}
                                 />
-                            </Resource>
-                            <Resource name="tasks" />
-                            <Resource
-                                name="runs"
-                                list={RunList}
-                                icon={RunIcon}
-                                show={RunShow}
-                            />
-                            <Resource
-                                name="projects"
-                                list={ProjectSelectorList}
-                                edit={ProjectEdit}
-                                create={ProjectCreate}
-                            />
-                            <Resource name="schemas" />
-                            <Resource name="logs" />
-                            <Resource name="metadata" />
-                            <Resource
-                                name="secrets"
-                                list={SecretList}
-                                show={SecretShow}
-                                edit={SecretEdit}
-                                create={SecretCreate}
-                                icon={SecretIcon}
-                            ></Resource>
-                            <Resource name="labels" />
-                            <CustomRoutes>
-                                <Route
-                                    path="/config"
-                                    element={<ProjectConfig />}
+                                <Resource
+                                    name="projects"
+                                    list={ProjectSelectorList}
+                                    edit={ProjectEdit}
+                                    create={ProjectCreate}
                                 />
-                            </CustomRoutes>
-                            {enableSearch && (
+                                <Resource name="schemas" />
+                                <Resource name="logs" />
+                                <Resource name="metadata" />
+                                <Resource
+                                    name="secrets"
+                                    list={SecretList}
+                                    show={SecretShow}
+                                    edit={SecretEdit}
+                                    create={SecretCreate}
+                                    icon={SecretIcon}
+                                ></Resource>
+                                <Resource name="labels" />
                                 <CustomRoutes>
                                     <Route
-                                        path="/searchresults"
-                                        element={<SearchList />}
+                                        path="/config"
+                                        element={<ProjectConfig />}
                                     />
                                 </CustomRoutes>
-                            )}
-                        </AdminUI>
+                                {enableSearch && (
+                                    <CustomRoutes>
+                                        <Route
+                                            path="/searchresults"
+                                            element={<SearchList />}
+                                        />
+                                    </CustomRoutes>
+                                )}
+                            </AdminUI>
+                        </StompContextProvider>
                     </ResourceSchemaProvider>
                 </SearchContextProvider>
             </AdminContext>
