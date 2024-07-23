@@ -91,11 +91,11 @@ export const k8sSpec = {
             'ui:title': 'k8s.resources.gpu.title',
             'ui:order': ['requests', 'limits'],
 
-            limits: {
+            requests: {
                 'ui:widget': 'hidden',
                 'ui:title': 'k8s.resources.gpu.limits.title',
             },
-            requests: {
+            limits: {
                 'ui:widget': CoreResourceGpuWidget,
                 'ui:title': 'k8s.resources.gpu.request.title',
                 'ui:options': {
