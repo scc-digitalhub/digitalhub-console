@@ -33,6 +33,6 @@ export enum StateColors {
     RUNNING = 'info',
     BUILT = 'warning',
     READY = 'info',
-    // DELETED = 'secondary',
+    DELETED = 'warning',
     DELETING = 'warning',
 }
