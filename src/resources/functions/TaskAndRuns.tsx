@@ -65,9 +65,9 @@ export const TaskAndRuns = (props: {
                     fullWidth
                     maxWidth={'lg'}
                     transform={prepare}
+                    mutationMode="pessimistic"
                     mutationOptions={{
                         onSuccess: (data, variables, context) => {
-                            //data is updated
                             if (task && data) onEdit(task, data);
                         },
                     }}
