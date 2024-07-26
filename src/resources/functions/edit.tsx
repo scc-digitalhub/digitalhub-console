@@ -26,7 +26,11 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { MetadataCreateUiSchema, MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
+import {
+    MetadataCreateUiSchema,
+    MetadataEditUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -80,15 +84,12 @@ const SpecInput = (props: {
             </Card>
         );
     }
-
     return (
-        <>
-            <JsonSchemaInput
-                source={source}
-                schema={{ ...spec.schema, title: 'Spec' }}
-                uiSchema={getFunctionUiSpec(record.kind)}
-            />
-        </>
+        <JsonSchemaInput
+            source={source}
+            schema={{ ...spec.schema, title: 'Spec' }}
+            uiSchema={getFunctionUiSpec(record.kind)}
+        />
     );
 };
 export const FunctionEditToolbar = () => {
@@ -118,7 +119,7 @@ export const FunctionEdit = () => {
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
-    
+
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('functions').then(res => {
@@ -203,9 +204,7 @@ export const FunctionEdit = () => {
                                     />
                                 </Stack>
 
-
                                 <MetadataInput />
-
 
                                 <SpecInput
                                     source="spec"

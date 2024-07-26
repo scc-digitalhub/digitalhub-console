@@ -1,5 +1,14 @@
-import { AccordionSummary, Typography, AccordionDetails, Box } from '@mui/material';
-import { MetadataCreateUiSchema, createMetadataViewUiSchema } from '../common/schemas';
+import {
+    AccordionSummary,
+    Typography,
+    AccordionDetails,
+    Box,
+    Grid,
+} from '@mui/material';
+import {
+    MetadataCreateUiSchema,
+    createMetadataViewUiSchema,
+} from '../common/schemas';
 import { useGetSchemas } from '../controllers/schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,7 +19,7 @@ import { JsonSchemaInput } from './JsonSchema';
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
-    width:`100%`,
+    width: `100%`,
     borderTop: `1px solid ${theme.palette.divider}`,
     '&:not(:last-child)': {
         // borderBottom: 0,
@@ -34,54 +43,57 @@ export const MetadataInput = ({ prompt }: any) => {
           }))
         : [];
     return (
-        <Box gap={4}  >
+        <Grid container={true} alignItems="top">
             {metadataKinds &&
                 metadataKinds.map(r => {
                     return (
-                        <>
-                        {r.id === 'metadata.base' && (
-                            <>
-                                <Typography variant="h5">
-                                    {translate(r.schema.title)}
-                                </Typography>
-                                <JsonSchemaInput
-                                    key={r.id}
-                                    source="metadata"
-                                    schema={{ ...r.schema, title: '' }}
-                                    uiSchema={MetadataCreateUiSchema}
-                                />
-                                 </>
-                            )}
-                                                        {r.id !== 'metadata.base' && (
-
-                        <Accordion
-                            elevation={0}
-                            square
-                            disableGutters
-                            defaultExpanded={r.id === 'metadata.base'}
+                        <Grid
+                            item={true}
+                            xs={12}
+                            style={{ overflow: 'auto' }}
+                            key={r.id}
                         >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                <Typography variant="h5">
-                                    {translate(r.schema.title)}
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <JsonSchemaInput
-                                    key={r.id}
-                                    source="metadata"
-                                    schema={{ ...r.schema, title: '' }}
-                                    uiSchema={MetadataCreateUiSchema}
-                                />
-                            </AccordionDetails>
-                        </Accordion>
-                      )}
-                      </>
-                  );
+                            {r.id === 'metadata.base' ? (
+                                <>
+                                    <Typography variant="h5">
+                                        {translate(r.schema.title)}
+                                    </Typography>
+                                    <JsonSchemaInput
+                                        key={r.id}
+                                        source="metadata"
+                                        schema={{ ...r.schema, title: '' }}
+                                        uiSchema={MetadataCreateUiSchema}
+                                    />
+                                </>
+                            ) : (
+                                <Accordion
+                                    elevation={0}
+                                    // square
+                                    disableGutters
+                                    defaultExpanded={r.id === 'metadata.base'}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                    >
+                                        <Typography variant="h5">
+                                            {translate(r.schema.title)}
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <JsonSchemaInput
+                                            key={r.id}
+                                            source="metadata"
+                                            schema={{
+                                                ...r.schema,
+                                                title: '',
+                                            }}
+                                        />
+                                    </AccordionDetails>
+                                </Accordion>
+                            )}
+                        </Grid>
+                    );
                 })}
-        </Box>
+        </Grid>
     );
 };

@@ -26,6 +26,7 @@ export const getTaskUiSpec = (schema: any | undefined) => {
 
 export const k8sSpec = {
     'ui:order': [
+        'profile',
         'resources',
         'envs',
         'secrets',
@@ -34,6 +35,7 @@ export const k8sSpec = {
         'tolerations',
         'affinity',
     ],
+    profile: {},
     affinity: {
         'ui:widget': 'hidden',
         'ui:disabled': true,
@@ -42,7 +44,8 @@ export const k8sSpec = {
         'ui:widget': 'hidden',
     },
     resources: {
-        'ui:ObjectFieldTemplate': AccordionFieldTemplate,
+        // 'ui:ObjectFieldTemplate': AccordionFieldTemplate,
+        'ui:expandable': true,
         'ui:title': 'k8s.resources.title',
         'ui:description': 'k8s.resources.description',
         'ui:order': ['cpu', 'mem', 'gpu'],
@@ -108,17 +111,21 @@ export const k8sSpec = {
     envs: {
         'ui:title': 'k8s.envs.title',
         'ui:description': 'k8s.envs.description',
-
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        'ui:orderable': false,
+        // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        'ui:expandable': true,
         items: {
             'ui:title': '',
-            'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
+            // 'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
+            'ui:layout': [6, 6],
+            'ui:label': false,
         },
     },
     secrets: {
         'ui:title': 'k8s.secrets.title',
         'ui:description': 'k8s.secrets.description',
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        'ui:expandable': true,
         items: {
             'ui:title': '',
         },
@@ -127,20 +134,33 @@ export const k8sSpec = {
         'ui:title': 'k8s.node_selector.title',
         'ui:description': 'k8s.node_selector.description',
 
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        'ui:expandable': true,
         items: {
             'ui:title': '',
-            'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
+            // 'ui:ObjectFieldTemplate': KeyValueFieldTemplate,
+            'ui:layout': [6, 6],
+            'ui:label': false,
         },
     },
     volumes: {
         'ui:title': 'k8s.volumes.title',
         'ui:description': 'k8s.volumes.description',
-        'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
+        'ui:expandable': true,
         items: {
             'ui:title': '',
-            'ui:ObjectFieldTemplate': VolumeResourceFieldTemplate,
-            'ui:order': ['mount_path', 'name', 'volume_type', 'spec'],
+            // 'ui:ObjectFieldTemplate': VolumeResourceFieldTemplate,
+            // 'ui:order': ['mount_path', 'name', 'volume_type', 'spec'],
+            'ui:order': ['name', 'volume_type', 'mount_path', 'spec'],
+            'ui:layout': [5, 2, 5, 12],
+            'ui:label': false,
+            spec: {
+                // 'ui:description': '',
+                additionalProperties: {
+                    'ui:label': false,
+                },
+            },
         },
     },
 };

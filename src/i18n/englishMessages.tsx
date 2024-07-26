@@ -43,7 +43,7 @@ const specs = {
     },
     'container+build': {
         title: 'Container build task',
-        description: 'Container build task definition', 
+        description: 'Container build task definition',
     },
     'container+deploy': {
         title: 'Container deploy task',
@@ -59,7 +59,7 @@ const specs = {
     },
     'container+run': {
         title: 'Container run',
-        description: 'Container run definition', 
+        description: 'Container run definition',
     },
     nefertem: {
         title: 'Nefertem',
@@ -75,7 +75,7 @@ const specs = {
     },
     'nefertem+profile': {
         title: 'Nefertem profile task',
-        description: 'Nefertem profile task definition',    
+        description: 'Nefertem profile task definition',
     },
     'nefertem+validate': {
         title: 'Nefertem validate task',
@@ -84,7 +84,7 @@ const specs = {
     'nefertem+run': {
         title: 'Nefertem run',
         description: 'Nefertem run definition',
-    },  
+    },
     python: {
         title: 'Python',
         description: '',
@@ -95,11 +95,11 @@ const specs = {
     },
     'dbt+transform': {
         title: 'DBT transform task',
-        description: ' DBT transform task definition',    
+        description: ' DBT transform task definition',
     },
     'dbt+run': {
         title: 'DBT run',
-        description: ' DBT run definition',    
+        description: ' DBT run definition',
     },
     mlrun: {
         title: 'MLRun',
@@ -115,7 +115,7 @@ const specs = {
     },
     'mlrun+run': {
         title: 'MLRun run',
-        description: 'MLRun run definition',    
+        description: 'MLRun run definition',
     },
     table: {
         title: 'Table',
@@ -125,13 +125,13 @@ const specs = {
         title: 'Kubeflow Pipeline',
         description: '',
     },
-    'kfp+pipeline': {    
+    'kfp+pipeline': {
         title: 'Kubeflow Pipeline task',
-        description: 'Kubeflow Pipeline task definition',   
+        description: 'Kubeflow Pipeline task definition',
     },
     'kfp+run': {
         title: 'Kubeflow Pipeline run',
-        description: 'Kubeflow Pipeline run definition',   
+        description: 'Kubeflow Pipeline run definition',
     },
 };
 const fields = {
@@ -258,41 +258,40 @@ const fields = {
         },
         description: 'K8S Resources definition',
     },
-    
     spec: {
         title: 'Spec',
         description: 'Spec description',
-        path: 'Path',
-        src_path: 'Source path',
-        compiled_code: 'Compiled code',
-        raw_code: 'Raw code',
-        schema: 'Schema',
-        constraints: 'Constraints',
-        error_report: 'Error report',
-        metrics: 'Metrics',
-        args: 'Args',
-        base_image: 'Base image',
-        command: 'Command',
-        image: 'Image',
-        base64: 'Base64',
-        code: 'Code',
-        source: 'Source',
-        function: 'Function',
-        k8s: 'K8S Resources',
-        service_ports: 'Service ports',
-        service_type: 'Service type',
-        priorityClass: 'K8S Priority Class',
-        runtimeClass: 'K8S Runtime Class',
-        python_version: 'Python version',
-        handler: 'Handler',
-        schedule: 'Schedule',
-        workflow: 'Workflow definition',
-        framework: 'Framework',
-        parallel: 'Parallel execution',
-        num_worker: 'Number of workers',
-        commands: 'Commands',
-        force_build: 'Force build',
-        target_image: 'Target image',
+        // path: 'Path',
+        // src_path: 'Source path',
+        // compiled_code: 'Compiled code',
+        // raw_code: 'Raw code',
+        // schema: 'Schema',
+        // constraints: 'Constraints',
+        // error_report: 'Error report',
+        // metrics: 'Metrics',
+        // args: 'Args',
+        // base_image: 'Base image',
+        // command: 'Command',
+        // image: 'Image',
+        // base64: 'Base64',
+        // code: 'Code',
+        // source: 'Source',
+        // function: 'Function',
+        // k8s: 'K8S Resources',
+        // service_ports: 'Service ports',
+        // service_type: 'Service type',
+        // priorityClass: 'K8S Priority Class',
+        // runtimeClass: 'K8S Runtime Class',
+        // python_version: 'Python version',
+        // handler: 'Handler',
+        // schedule: 'Schedule',
+        // workflow: 'Workflow definition',
+        // framework: 'Framework',
+        // parallel: 'Parallel execution',
+        // num_worker: 'Number of workers',
+        // commands: 'Commands',
+        // force_build: 'Force build',
+        // target_image: 'Target image',
     },
     status: {
         state: 'Status',
@@ -380,8 +379,8 @@ const fields = {
         description: '',
         item: {
             title: 'Item',
-            description: '',   
-        }
+            description: '',
+        },
     },
     baseModel: {
         title: 'Base Model',
@@ -427,28 +426,34 @@ const fields = {
         version: {
             title: 'Python version',
             description: '',
-        }
+        },
     },
     errorReport: {
         title: 'Error report',
         description: '',
     },
     sourceCode: {
+        title: 'Source code',
+        description: 'Source code',
         source: {
-            title: 'Source Code',
-            description: '',
+            title: 'Source ref',
+            description: 'Reference to source (path or uri)',
         },
         lang: {
-            title: 'Language',
-            description: '',
+            title: 'Source language',
+            description: 'Language used for source code',
         },
         handler: {
-            title: 'Handler',
-            description: '',
-            base64: {
-                title: 'Base 64',
-                description: '',
-            },
+            title: 'Handler function',
+            description: 'Name of the handler function',
+        },
+        init_function: {
+            title: 'Init function',
+            description: 'Name of the initializing function (optional)',
+        },
+        base64: {
+            title: 'Source code',
+            description: 'Source code',
         },
     },
     requirements: {
@@ -497,13 +502,13 @@ const fields = {
         tab: 'Info',
         empty: 'No info available',
     },
-    datagrid:{
+    datagrid: {
         key: 'Name',
-        value: 'Value'
+        value: 'Value',
     },
     servicePorts: {
-        title:"Service Ports",
-        description:"",
+        title: 'Service Ports',
+        description: '',
         item: {
             title: 'Element',
             description: '',
@@ -513,18 +518,18 @@ const fields = {
         title: 'Port',
         description: '',
     },
-    targetPort:{
+    targetPort: {
         title: 'Target Port',
         description: '',
     },
-    serviceType:{
+    serviceType: {
         title: 'Service Type',
         description: '',
     },
-    task:{
+    task: {
         title: 'Task',
         description: '',
-    }
+    },
 };
 
 const messages = {
@@ -671,8 +676,9 @@ const messages = {
             emptySpec: 'Select the kind to view the specification',
             labels: 'Labels',
             reset: {
-                title:'Change kind',
-                content: 'Are you sure you want to change kind? Changes made will be discarded',
+                title: 'Change kind',
+                content:
+                    'Are you sure you want to change kind? Changes made will be discarded',
             },
             version: {
                 title: 'Versions',
@@ -791,8 +797,7 @@ const messages = {
             collidingIds: 'Recocrds with conflicting IDs found',
             failedValidateRow:
                 'The CSV file has not pass the validation requirements',
-            invalidCsv:
-                'The document cannot be imported in "CSV" format',
+            invalidCsv: 'The document cannot be imported in "CSV" format',
         },
         dialogCommon: {
             subtitle:
@@ -860,8 +865,8 @@ const messages = {
     },
     upload: {
         upload_error: 'Error during upload of %{fileName} %{error}',
-       file_too_big: 'File exceeds the maximum allowed size of 100 GiB',
-    }
+        file_too_big: 'File exceeds the maximum allowed size of 100 GiB',
+    },
 };
 
 export default messages;

@@ -1,14 +1,12 @@
-import { CSSProperties, JSXElementConstructor, ReactElement } from 'react';
+import { CSSProperties } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import {
     ArrayFieldTemplateItemType,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
 } from '@rjsf/utils';
-import { useTranslate } from 'react-admin';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
@@ -35,7 +33,6 @@ export default function ArrayFieldItemTemplate<
         uiSchema,
         registry,
     } = props;
-    const translate = useTranslate();
 
     const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } =
         registry.templates.ButtonTemplates;
@@ -48,22 +45,12 @@ export default function ArrayFieldItemTemplate<
         marginTop: 16,
         minHeight: 40,
     };
-    function childrenTranslated(
-        children: ReactElement<any, string | JSXElementConstructor<any>>
-    ): import('react').ReactNode {
-        const title = children.props.schema.title || '';
-        const description = children.props.schema.description || '';
-        children.props.schema.title = translate(title);
-        children.props.schema.description = translate(description);
-        return children;
-    }
 
     return (
         <Grid container={true} alignItems="top">
             <Grid item={true} xs style={{ overflow: 'auto' }}>
                 <Box>
-                    <Box>{childrenTranslated(children)}</Box>
-                    {/* <Box>{children}</Box> */}
+                    <Box>{children}</Box>
                 </Box>
             </Grid>
             {hasToolbar && !readonly && (
