@@ -41,7 +41,10 @@ export const PageTitle = (props: PageTitleProps) => {
                 )}
             </Box>
             {icon && isValidElement(icon) ? (
-                <Box sx={{ pt: 2, pb: 2, textAlign: 'right' }}> {icon} </Box>
+                <Box sx={{ pt: 2, pb: 2, textAlign: 'right' }}>
+                    {' '}
+                    <Typography color={'secondary.main'}>{icon} </Typography>
+                </Box>
             ) : (
                 ''
             )}
