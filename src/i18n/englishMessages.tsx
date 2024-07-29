@@ -198,6 +198,9 @@ const messages = {
         upload_error: 'Error during upload of %{fileName} %{error}',
         file_too_big: 'File exceeds the maximum allowed size of 100 GiB',
     },
+    actions: {
+        'toggle-x': 'Show/Hide %{el}',
+    },
 };
 
 export default messages;

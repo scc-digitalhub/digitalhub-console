@@ -16,6 +16,7 @@ import { Box, Container, Grid } from '@mui/material';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { SecretIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -83,15 +84,21 @@ export const SecretCreate = () => {
                                 validate={validator}
                                 onSubmit={postSave}
                             >
-                                <Grid
-                                    container
-                                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                >
+                                <FormLabel label="fields.secrets.title" />
+                                <Grid container columnSpacing={1} pt={1}>
                                     <Grid item xs={4}>
-                                        <TextInput source="name" required />
+                                        <TextInput
+                                            source="name"
+                                            required
+                                            fullWidth
+                                        />
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <TextInput source="value" required />
+                                        <TextInput
+                                            source="value"
+                                            required
+                                            fullWidth
+                                        />
                                     </Grid>
                                 </Grid>
                             </SimpleForm>

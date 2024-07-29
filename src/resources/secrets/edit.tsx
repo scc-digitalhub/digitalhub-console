@@ -19,6 +19,7 @@ import { SecretIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { useNavigate } from 'react-router';
 import ClearIcon from '@mui/icons-material/Clear';
+import { FormLabel } from '../../components/FormLabel';
 
 export const SecretsEditToolbar = () => {
     const translate = useTranslate();
@@ -26,6 +27,7 @@ export const SecretsEditToolbar = () => {
     const handleClick = () => {
         navigate(-1);
     };
+
     return (
         <Toolbar sx={{ justifyContent: 'space-between' }}>
             <SaveButton />
@@ -97,12 +99,22 @@ export const SecretEdit = () => {
                                 onSubmit={postSave}
                                 resetOptions={{ keepDirtyValues: false }}
                             >
-                                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <FormLabel label="fields.secrets.title" />
+                                <Grid container columnSpacing={1} pt={1}>
                                     <Grid item xs={4}>
-                                        <TextInput source="name" required readOnly />
+                                        <TextInput
+                                            source="name"
+                                            required
+                                            readOnly
+                                            fullWidth
+                                        />
                                     </Grid>
                                     <Grid item xs={8}>
-                                        <TextInput source="value" required />
+                                        <TextInput
+                                            source="value"
+                                            required
+                                            fullWidth
+                                        />
                                     </Grid>
                                 </Grid>
                             </SimpleForm>

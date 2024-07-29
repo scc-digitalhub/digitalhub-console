@@ -8,23 +8,14 @@ import {
     useRecordContext,
     useTranslate,
     useDataProvider,
-    LoadingIndicator,
     useNotify,
     DeleteWithConfirmButton,
     EditButton,
     TopToolbar,
 } from 'react-admin';
-import {
-    Container,
-    Dialog,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid,
-} from '@mui/material';
-
-import { memo, useEffect, useState } from 'react';
-import { arePropsEqual } from '../../common/helper';
+import { Container, Stack, Typography } from '@mui/material';
+import { MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ShowPageTitle } from '../../components/PageTitle';
@@ -33,17 +24,8 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { SecretIcon } from './icon';
-
-const ShowComponent = () => {
-    const record = useRecordContext();
-
-    return <SecretShowLayout record={record} />;
-};
-export interface SimpleDialogProps {
-    open: boolean;
-    selectedValue: string;
-    onClose: (value: string) => void;
-}
+import HideIcon from '@mui/icons-material/VisibilityOff';
+import ShowIcon from '@mui/icons-material/Visibility';
 
 const ShowToolbar = () => (
     <TopToolbar>
@@ -55,113 +37,114 @@ const ShowToolbar = () => (
     </TopToolbar>
 );
 
-export const SecretShowLayout = memo(function SecretShowLayout(props: {
-    record: any;
-}) {
+const ShowComponent = () => {
+    const translate = useTranslate();
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
+    const record = useRecordContext();
+
     const [value, setValue] = useState<string>('');
-    const translate = useTranslate();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState();
-    const [open, setOpen] = useState(false);
+    const [show, setShow] = useState<boolean>(false);
 
     const notify = useNotify();
-    const { record } = props;
-    const kind = record?.kind || undefined;
-    useEffect(() => {
-        showData(false);
-    }, []);
 
-    function SimpleDialog(props: SimpleDialogProps) {
-        const { onClose, selectedValue, open } = props;
+    const toggleLabel = translate('actions.toggle-x', {
+        el: translate('fields.secrets.title'),
+    });
 
-        const handleClose = () => {
-            onClose(selectedValue);
-        };
-        const getValue = (value: Object) => {
-            return Object.values(value)[0];
-        };
-        return (
-            <Dialog onClose={handleClose} open={open}>
-                <DialogTitle>
-                    {translate('resources.secrets.fields.value')}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText
-                        sx={{ color: 'black', fontWeight: 'bold' }}
-                    >
-                        {getValue(value)}
-                    </DialogContentText>
-                </DialogContent>
-            </Dialog>
-        );
-    }
-    const handleClose = (value: string) => {
-        setValue('');
-        setOpen(false);
-    };
-    const showData = async (show: boolean) => {
-        if (show)
+    const loadData = () => {
+        if (record) {
             dataProvider
                 .getSecretData({ keys: record.name, root })
                 .then(({ data }) => {
-                    if (show) {
+                    if (typeof data === 'string') {
                         setValue(data);
-                        setOpen(true);
-                    } else setValue('');
-                    setLoading(false);
+                    } else if (typeof data === 'object') {
+                        if (record.name in data) {
+                            setValue(data[record.name] || '');
+                        }
+                    }
                 })
-
                 .catch(error => {
-                    setError(error);
-                    notify(`Error getting secret: ${error.message}`, {
-                        type: 'error',
-                    });
                     setValue('');
-                    setLoading(false);
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
                 });
-        else {
-            setValue('');
-            setLoading(false);
         }
     };
-    if (loading) return <LoadingIndicator />;
+
+    const toggle = () => {
+        setShow(v => !v);
+    };
+
+    useEffect(() => {
+        loadData();
+    }, [record]);
+
     if (!record) return <></>;
+
     return (
         <SimpleShowLayout record={record}>
-            <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={4}>
-                    <Labeled>
-                        <TextField source="name" />
-                    </Labeled>
-                </Grid>
-                <Grid item xs={8}>
-                    <Button
-                        label={translate('resources.secrets.showData')}
-                        onClick={() => showData(!value)}
-                    />
-                    <SimpleDialog
-                        selectedValue={value}
-                        open={open}
-                        onClose={handleClose}
-                    />
-                </Grid>
-                <Grid item xs={4}>
-                    <Labeled>
-                        <TextField source="spec.path" />
-                    </Labeled>
-                </Grid>
-                <Grid item xs={8}>
-                    <Labeled>
-                        <TextField source="spec.provider" />
-                    </Labeled>
-                </Grid>
-            </Grid>
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <TextField source="kind" />
+                </Labeled>
+
+                <Labeled>
+                    <TextField source="id" />
+                </Labeled>
+            </Stack>
+            <Labeled>
+                <TextField source="key" />
+            </Labeled>
+
+            <Typography component="h5" variant="h5" pt={2}>
+                {translate('fields.secrets.title')}
+            </Typography>
+
+            <Labeled>
+                <TextField source="spec.path" />
+            </Labeled>
+
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <TextField source="name" label="fields.key.title" />
+                </Labeled>
+
+                <Labeled label="fields.value.title">
+                    <Typography
+                        component="span"
+                        variant="body2"
+                        sx={{ background: 'lightgray', paddingX: '2px' }}
+                        fontFamily={'monospace'}
+                    >
+                        {show ? value : '*******************'}
+                    </Typography>
+                </Labeled>
+            </Stack>
+
+            <Button
+                onClick={(event: MouseEvent<HTMLElement>) => {
+                    event.stopPropagation();
+                    toggle();
+                }}
+                color="error"
+                variant="contained"
+                label={toggleLabel}
+                startIcon={
+                    show ? (
+                        <HideIcon fontSize="small" />
+                    ) : (
+                        <ShowIcon fontSize="small" />
+                    )
+                }
+            />
         </SimpleShowLayout>
     );
-},
-arePropsEqual);
+};
 
 export const SecretShow = () => {
     return (
