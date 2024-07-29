@@ -27,6 +27,8 @@ export const getTaskUiSpec = (schema: any | undefined) => {
 export const k8sSpec = {
     'ui:order': [
         'profile',
+        'service_type',
+        'service_ports',
         'resources',
         'envs',
         'secrets',
@@ -49,7 +51,7 @@ export const k8sSpec = {
         'ui:title': 'k8s.resources.title',
         'ui:description': 'k8s.resources.description',
         'ui:order': ['cpu', 'mem', 'gpu'],
-
+        'ui:layout': [5, 5, 2],
         cpu: {
             'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
             'ui:title': 'k8s.resources.cpu.title',
@@ -161,6 +163,16 @@ export const k8sSpec = {
                     'ui:label': false,
                 },
             },
+        },
+    },
+    service_type: {},
+    service_ports: {
+        'ui:orderable': false,
+        'ui:expandable': true,
+        items: {
+            'ui:title': '',
+            'ui:layout': [3, 3],
+            'ui:label': false,
         },
     },
 };

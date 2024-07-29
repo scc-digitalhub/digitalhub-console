@@ -1,0 +1,376 @@
+export const fields = {
+    id: 'Id',
+    kind: 'Kind',
+    name: {
+        title: 'Name',
+        description: '',
+    },
+    key: {
+        title: 'Key',
+        description: '',
+    },
+    project: { title: 'Project', description: 'Identifier for the project' },
+    args: {
+        item: {
+            title: 'Argument',
+            description: '',
+        },
+    },
+    container: {
+        args: { title: 'Container args', description: '' },
+        instructions: {
+            title: 'Build instruction',
+            description: 'Instructions executed as RUN during build stage',
+            item: {
+                title: 'Run',
+                description: '',
+            },
+        },
+        baseImage: {
+            title: ' Base image',
+            description: 'Image used as base for building tasks',
+        },
+        command: {
+            title: 'Command',
+            description: 'Override command executed in image',
+        },
+        image: {
+            title: 'Image',
+            description: 'Container image used for tasks',
+        },
+        tag: {
+            title: 'Tag',
+            description: '',
+        },
+    },
+    execArgs: {
+        title: 'Execution args',
+        description: 'Arguments passed to command for execution',
+    },
+    schedule: {
+        title: 'Schedule',
+        description: 'Schedule definition as crontab',
+    },
+    backoffLimit: {
+        title: 'Backoff Limit',
+        description: 'Backoff limit for job completion',
+    },
+    requests: {
+        title: 'Request',
+        description: '',
+    },
+    limits: {
+        title: 'Limit',
+        description: '',
+    },
+    base64: {
+        title: 'Base 64',
+        description: 'Source code encoded as base64',
+    },
+    mountPath: {
+        title: 'Mount Path',
+        description: '',
+    },
+    volumeType: {
+        title: 'Volume Type',
+        description: '',
+    },
+    value: {
+        title: 'Value',
+        description: '',
+    },
+    protocol: {
+        title: 'Protocol',
+        description: '',
+    },
+    source: {
+        title: 'Source',
+        description: '',
+    },
+    replicas: {
+        title: 'Replicas',
+        description: 'Number of replicas for the current task',
+    },
+    contextSources: {
+        title: 'Context sources',
+        description: '',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    secrets: {
+        title: 'Secrets',
+        description: '',
+        item: {
+            title: 'Key',
+            description: '',
+        },
+    },
+    instructions: {
+        title: 'Instructions',
+        description: '',
+        item: {
+            title: 'Title',
+            description: '',
+        },
+    },
+    destination: {
+        title: 'Destination',
+        description: '',
+    },
+    metadata: {
+        created: 'Created',
+        updated: 'Updated',
+        name: 'Name',
+        description: 'Description',
+        project: 'Project',
+        version: 'Version',
+        labels: 'Labels',
+    },
+    k8s: {
+        envs: {
+            title: '',
+            description: '',
+        },
+        title: 'Compute resources',
+        description: 'Define resources required for task execution in K8s',
+    },
+    spec: {
+        title: 'Spec',
+        description: '',
+    },
+    status: {
+        state: 'Status',
+        files: 'Files',
+    },
+    inputs: {
+        title: 'Inputs',
+        description: 'Input elements',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
+    outputs: {
+        title: 'Outputs',
+        description: 'Output elements',
+        item: {
+            title: '',
+            description: '',
+        },
+    },
+    code: 'Code',
+    logs: 'Logs',
+    base: 'Base',
+    summary: 'Summary',
+    description: {
+        title: 'Description',
+        description: '',
+    },
+    labels: {
+        title: 'Labels',
+        description: '',
+    },
+    updated: {
+        title: 'Updated',
+        description: 'Date of the last update',
+    },
+    embedded: {
+        title: 'Embedded',
+        description: '',
+    },
+    openMetadata: {
+        title: 'Open Metadata',
+        description: '',
+    },
+    publish: {
+        title: 'Publish',
+        description: '',
+    },
+    createdBy: {
+        title: 'Created by',
+        description: 'Username for the resource author',
+    },
+    updatedBy: {
+        title: 'Updated by',
+        description: 'Username of the last user modifying the resource',
+    },
+    created: {
+        title: 'Created',
+        description: 'Date of creation',
+    },
+    version: {
+        title: 'Version',
+        description: 'Name or identifier for the version',
+    },
+    path: {
+        title: 'Path',
+        description: 'Uri pointing to the content',
+    },
+    srcPath: {
+        title: 'Source path',
+        description: 'Uri pointing to the source',
+    },
+    algorithm: {
+        title: 'Algorithm',
+        description: '',
+    },
+    framework: {
+        title: 'Framework',
+        description: '',
+    },
+    parameters: {
+        title: 'Parameters',
+        description: '',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    baseModel: {
+        title: 'Base Model',
+        description: '',
+    },
+    metrics: {
+        title: 'Metrics',
+        description: '',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    constraints: {
+        title: 'Constraints',
+        description: 'Constraints object',
+        item: {
+            title: 'Item',
+            description: '',
+        },
+    },
+    example: { title: 'Example', description: '' },
+    format: { title: 'Format', description: '' },
+    title: { title: 'Title', description: '' },
+    type: { title: 'Type', description: '' },
+    schema: {
+        title: 'Schema',
+        description: '',
+    },
+    python: {
+        requirements: {
+            title: 'Python requirements',
+            description: 'List of requirements (formatted as requirements.txt)',
+        },
+        version: {
+            title: 'Python version',
+            description: 'Major version of language',
+        },
+    },
+    errorReport: {
+        title: 'Error report',
+        description: '',
+    },
+    sourceCode: {
+        title: 'Source code',
+        description: 'Source code',
+        source: {
+            title: 'Source ref',
+            description: 'Reference to source (path or uri)',
+        },
+        lang: {
+            title: 'Source language',
+            description: 'Language used for source code',
+        },
+        handler: {
+            title: 'Handler function',
+            description: 'Name of the handler function',
+        },
+        init_function: {
+            title: 'Init function',
+            description: 'Name of the initializing function (optional)',
+        },
+        base64: {
+            title: 'Source code',
+            description: 'Source code',
+        },
+    },
+    requirements: {
+        item: {
+            title: 'Package',
+            description: '',
+        },
+    },
+    priorityClass: {
+        title: 'Priority Class',
+        description: 'Priority for pods deployed for task execution',
+    },
+    runtimeClass: {
+        title: 'Runtime Class',
+        description: 'Runtime class name for pods',
+    },
+    profile: {
+        title: 'Run profile',
+        description: 'Select a profile to leverage a pre-configured template',
+    },
+    function: {
+        title: 'Function',
+        description: 'Static reference to function',
+    },
+    workflow: {
+        title: 'Workflow',
+        description: 'Static reference to workflow',
+    },
+    numWorker: {
+        title: 'Number of workers',
+        description: '',
+    },
+    parallel: {
+        title: 'Parallel execution',
+        description: '',
+    },
+    commands: {
+        title: 'Commands',
+        description: '',
+    },
+    forceBuild: {
+        title: 'Force build',
+        description: '',
+    },
+    targetImage: {
+        title: 'Target image',
+        description: '',
+    },
+    info: {
+        tab: 'Info',
+        empty: 'No info available',
+    },
+    datagrid: {
+        key: 'Name',
+        value: 'Value',
+    },
+    servicePorts: {
+        title: 'Service Ports',
+        description: 'Define ports mapping for the service',
+        item: {
+            title: 'Port',
+            description: '',
+        },
+    },
+    port: {
+        title: 'Port',
+        description: 'Port number for incoming traffic to service',
+    },
+    targetPort: {
+        title: 'Target Port',
+        description: 'Port number for traffic routed to pod',
+    },
+    serviceType: {
+        title: 'Service Type',
+        description:
+            'Select the type used for service definition. Defaults to `NodePort`',
+    },
+    task: {
+        title: 'Task',
+        description: '',
+    },
+};

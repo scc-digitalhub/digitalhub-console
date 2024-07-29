@@ -122,6 +122,10 @@ const RequestTypes = [
         value: 'm',
         label: 'millicpu',
     },
+    {
+        value: '',
+        label: 'cpu',
+    },
 ];
 function getValueCpu(value: string) {
     if (!value) return 0;
