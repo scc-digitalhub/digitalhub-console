@@ -1,25 +1,50 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    Edit,
-    Labeled,
     SimpleForm,
     TextInput,
     useDataProvider,
     useNotify,
     useRedirect,
     useTranslate,
-    useRecordContext,
+    EditBase,
+    EditView,
+    Toolbar,
+    SaveButton,
+    Button,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
-import { Grid } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
+import { EditPageTitle } from '../../components/PageTitle';
+import { SecretIcon } from './icon';
+import { FlatCard } from '../../components/FlatCard';
+import { useNavigate } from 'react-router';
+import ClearIcon from '@mui/icons-material/Clear';
+
+export const SecretsEditToolbar = () => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(-1);
+    };
+    return (
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <SaveButton />
+            <Button
+                color="info"
+                label={translate('buttons.cancel')}
+                onClick={handleClick}
+            >
+                <ClearIcon />
+            </Button>
+        </Toolbar>
+    );
+};
 
 export const SecretEdit = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const notify = useNotify();
     const dataProvider = useDataProvider();
     const redirect = useRedirect();
-    const record = useRecordContext();
     const validator = data => {
         const errors: any = {};
 
@@ -46,7 +71,11 @@ export const SecretEdit = () => {
         dataProvider
             .createSecret(obj)
             .then(() => {
-                redirect('list', 'secrets');
+                notify('ra.notification.updated', {
+                    type: 'info',
+                    messageArgs: { smart_count: 1 },
+                });
+                redirect('show', 'secrets', data.id);
             })
             .catch(error => {
                 notify(`Error creating secret: ${error.message}`, {
@@ -55,25 +84,32 @@ export const SecretEdit = () => {
             });
     };
     return (
-        <Edit redirect="list">
-            <SimpleForm
-                validate={validator}
-                onSubmit={postSave}
-                resetOptions={{ keepDirtyValues: false }}
-            >
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.secrets.labelName')}>
-                            <TextInput source="name" required readOnly />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.secrets.value')}>
-                            <TextInput source="value" required />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-            </SimpleForm>
-        </Edit>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <EditBase redirect="show">
+                <>
+                    <EditPageTitle icon={<SecretIcon fontSize={'large'} />} />
+
+                    <EditView component={Box}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm
+                                toolbar={<SecretsEditToolbar />}
+                                validate={validator}
+                                onSubmit={postSave}
+                                resetOptions={{ keepDirtyValues: false }}
+                            >
+                                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                    <Grid item xs={4}>
+                                        <TextInput source="name" required readOnly />
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <TextInput source="value" required />
+                                    </Grid>
+                                </Grid>
+                            </SimpleForm>
+                        </FlatCard>
+                    </EditView>
+                </>
+            </EditBase>
+        </Container>
     );
 };
