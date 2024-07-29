@@ -21,7 +21,6 @@ import {
     DialogContentText,
     DialogTitle,
     Grid,
-    Typography,
 } from '@mui/material';
 
 import { memo, useEffect, useState } from 'react';
@@ -86,7 +85,7 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
         return (
             <Dialog onClose={handleClose} open={open}>
                 <DialogTitle>
-                    {translate('resources.secrets.title')}
+                    {translate('resources.secrets.fields.value')}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText
@@ -131,16 +130,13 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
     if (!record) return <></>;
     return (
         <SimpleShowLayout record={record}>
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.secrets.title')}
-            </Typography>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={6}>
-                    <Labeled label={translate('resources.secrets.labelName')}>
+                <Grid item xs={4}>
+                    <Labeled>
                         <TextField source="name" />
                     </Labeled>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
                     <Button
                         label={translate('resources.secrets.showData')}
                         onClick={() => showData(!value)}
@@ -151,13 +147,13 @@ export const SecretShowLayout = memo(function SecretShowLayout(props: {
                         onClose={handleClose}
                     />
                 </Grid>
-                <Grid item xs={6}>
-                    <Labeled label={translate('resources.secrets.path')}>
+                <Grid item xs={4}>
+                    <Labeled>
                         <TextField source="spec.path" />
                     </Labeled>
                 </Grid>
-                <Grid item xs={6}>
-                    <Labeled label={translate('resources.secrets.provider')}>
+                <Grid item xs={8}>
+                    <Labeled>
                         <TextField source="spec.provider" />
                     </Labeled>
                 </Grid>
@@ -177,15 +173,6 @@ export const SecretShow = () => {
                         actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
                         }}
                         component={FlatCard}
                     >

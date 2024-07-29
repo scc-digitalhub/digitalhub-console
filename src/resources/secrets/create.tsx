@@ -1,23 +1,36 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    Create,
-    Labeled,
+    CreateActionsProps,
+    CreateBase,
+    CreateView,
+    ListButton,
     SimpleForm,
     TextInput,
+    TopToolbar,
     useDataProvider,
     useNotify,
     useRedirect,
-    useTranslate,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
-import { Grid } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
+import { CreatePageTitle } from '../../components/PageTitle';
+import { SecretIcon } from './icon';
+import { FlatCard } from '../../components/FlatCard';
+
+const CreateToolbar = (props: CreateActionsProps) => {
+    return (
+        <TopToolbar>
+            <ListButton />
+        </TopToolbar>
+    );
+};
 
 export const SecretCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const notify = useNotify();
     const dataProvider = useDataProvider();
     const redirect = useRedirect();
+
     const validator = data => {
         const errors: any = {};
 
@@ -33,6 +46,7 @@ export const SecretCreate = () => {
         }
         return errors;
     };
+
     const postSave = data => {
         const obj = { project: root || '' };
         Object.defineProperty(obj, data.name, {
@@ -44,6 +58,10 @@ export const SecretCreate = () => {
         dataProvider
             .createSecret(obj)
             .then(() => {
+                notify('ra.notification.created', {
+                    type: 'info',
+                    messageArgs: { smart_count: 1 },
+                });
                 redirect('list', 'secrets');
             })
             .catch(error => {
@@ -52,22 +70,35 @@ export const SecretCreate = () => {
                 });
             });
     };
+
     return (
-        <Create redirect="list">
-            <SimpleForm validate={validator} onSubmit={postSave}>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.secrets.labelName')}>
-                            <TextInput source="name" required />
-                        </Labeled>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.secrets.value')}>
-                            <TextInput source="value" required />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-            </SimpleForm>
-        </Create>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <CreateBase redirect="list">
+                <>
+                    <CreatePageTitle icon={<SecretIcon fontSize={'large'} />} />
+
+                    <CreateView component={Box} actions={<CreateToolbar />}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm
+                                validate={validator}
+                                onSubmit={postSave}
+                            >
+                                <Grid
+                                    container
+                                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                >
+                                    <Grid item xs={4}>
+                                        <TextInput source="name" required />
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <TextInput source="value" required />
+                                    </Grid>
+                                </Grid>
+                            </SimpleForm>
+                        </FlatCard>
+                    </CreateView>
+                </>
+            </CreateBase>
+        </Container>
     );
 };
