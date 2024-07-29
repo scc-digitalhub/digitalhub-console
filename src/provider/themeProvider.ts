@@ -157,6 +157,15 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
+    MuiTablePagination: {
+        styleOverrides: {
+            root: {
+                '& .MuiTablePagination-input ': {
+                    paddingTop: '6px'
+                },
+            },
+        },
+    },
     MuiTab: {},
     MuiTabs: {},
 });
