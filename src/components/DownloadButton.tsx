@@ -51,6 +51,13 @@ export const DownloadButton = (props: DownloadButtonProps) => {
                         type: 'error',
                     });
                 }
+            })
+            .catch(error => {
+                const e =
+                    typeof error === 'string'
+                        ? error
+                        : error.message || 'error';
+                notify(e);
             });
     };
 

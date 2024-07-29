@@ -1,16 +1,23 @@
-import { useRootSelector } from "@dslab/ra-root-selector";
-import { Box, Typography, alpha } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useDataProvider, useLocaleState, useNotify, useRecordContext, useResourceContext, useTranslate } from "react-admin";
-import { Spinner } from "./Spinner";
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { Box, Typography, alpha } from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+    useDataProvider,
+    useLocaleState,
+    useNotify,
+    useRecordContext,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
+import { Spinner } from './Spinner';
 import { DataGrid, enUS, gridClasses, itIT } from '@mui/x-data-grid';
-import { useDataGridController } from "../controllers/useDataGridController";
-import { EmptyList } from "../pages/dashboard/EmptyList";
+import { useDataGridController } from '../controllers/useDataGridController';
+import { EmptyList } from '../pages/dashboard/EmptyList';
 
 type FileInfoResult = {
-    loading: boolean,
-    data: any,
-}
+    loading: boolean;
+    data: any;
+};
 
 export const FileInfo = () => {
     const record = useRecordContext();
@@ -19,32 +26,42 @@ export const FileInfo = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const translate = useTranslate();
-    const [result, setResult] = useState<FileInfoResult>({loading: false, data: null});
+    const [result, setResult] = useState<FileInfoResult>({
+        loading: false,
+        data: null,
+    });
 
     useEffect(() => {
         if (record && dataProvider) {
             if (record.status?.files) {
                 //status.files = [{fileinfo},{fileinfo}]
-                setResult({loading: false, data: record.status.files[0]});
+                setResult({ loading: false, data: record.status.files[0] });
             } else {
-                setResult({loading: true, data: null});
+                setResult({ loading: true, data: null });
                 dataProvider
                     .fileInfo(resource, { id: record.id, meta: { root } })
                     .then(data => {
                         //data.info = [{fileinfo},{fileinfo}]
                         if (data?.info && data.info.length !== 0) {
                             const currentFileInfo = data.info[0];
-                            setResult({loading: false, data: currentFileInfo});
+                            setResult({
+                                loading: false,
+                                data: currentFileInfo,
+                            });
                         } else {
-                            setResult({loading: false, data: null});
+                            setResult({ loading: false, data: null });
                             notify('ra.message.not_found', {
                                 type: 'error',
                             });
                         }
                     })
-                    .catch(e => {
-                        setResult({loading: false, data: null});
-                        throw e;
+                    .catch(error => {
+                        setResult({ loading: false, data: null });
+                        const e =
+                            typeof error === 'string'
+                                ? error
+                                : error.message || 'error';
+                        notify(e);
                     });
             }
         }
@@ -62,8 +79,10 @@ export const FileInfo = () => {
 
             {result.loading ? (
                 <Spinner />
+            ) : result.data ? (
+                <FileInfoTable info={result.data} />
             ) : (
-                result.data ? <FileInfoTable info={result.data} /> : <EmptyResult />
+                <EmptyResult />
             )}
         </Box>
     );
@@ -110,14 +129,14 @@ const FileInfoTable = (props: any) => {
             return JSON.stringify(value.value);
         }
         return value.value;
-    }
+    };
 
     const columnsWithFormatter = data?.columns.map(col => {
         if (col.field === 'value') {
             col['valueFormatter'] = valueFormatter;
         }
         return col;
-    })
+    });
 
     return (
         <DataGrid
@@ -125,16 +144,11 @@ const FileInfoTable = (props: any) => {
             rows={data?.rows || []}
             getRowHeight={() => 'auto'}
             autoHeight
-            hideFooter={
-                data?.rows && data.rows.length > 100 ? false : true
-            }
+            hideFooter={data?.rows && data.rows.length > 100 ? false : true}
             localeText={localeText}
             sx={theme => ({
                 '& .MuiDataGrid-columnHeader': {
-                    backgroundColor: alpha(
-                        theme.palette?.primary?.main,
-                        0.12
-                    ),
+                    backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
                 },
                 '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
                     '&:not(:last-child)': {
