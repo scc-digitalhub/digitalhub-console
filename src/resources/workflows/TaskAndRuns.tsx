@@ -68,7 +68,7 @@ export const TaskAndRuns = (props: {
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
-                <InspectButton />
+                <InspectButton fullWidth />
             </TopToolbar>
             <SimpleShowLayout>
                 <Stack direction={'row'} spacing={3}>
@@ -247,7 +247,7 @@ const TaskRunList = () => {
                             </SimpleShowLayout>
                         </ShowInDialogButton>
                         <LogsButton />
-                        <InspectButton />
+                        <InspectButton fullWidth />
                         <DeleteWithConfirmButton redirect={false} />
                     </RowButtonGroup>
                 </Datagrid>

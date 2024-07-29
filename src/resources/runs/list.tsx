@@ -96,7 +96,7 @@ const RowActions = () => {
     return (
         <RowButtonGroup label="⋮">
             <LogsButton />
-            <InspectButton />
+            <InspectButton fullWidth />
             <DeleteWithConfirmButton redirect={false} />
         </RowButtonGroup>
     );

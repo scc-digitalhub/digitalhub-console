@@ -80,7 +80,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <LogsButton style={{ marginLeft: 'auto' }}  />
-        <InspectButton />
+        <InspectButton fullWidth />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>

@@ -326,7 +326,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
+        <InspectButton fullWidth />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
@@ -509,7 +509,7 @@ const WorkflowRunList = () => {
                                 </Labeled>
                             </SimpleShowLayout>
                         </ShowInDialogButton>
-                        <InspectButton />
+                        <InspectButton fullWidth />
                         <DeleteWithConfirmButton redirect={false} />
                     </RowButtonGroup>
                 </Datagrid>

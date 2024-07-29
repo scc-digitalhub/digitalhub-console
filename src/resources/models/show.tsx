@@ -44,7 +44,7 @@ const ShowToolbar = () => (
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
         <DownloadButton source="spec.path" />
-        <InspectButton />
+        <InspectButton fullWidth />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
