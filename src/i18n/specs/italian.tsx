@@ -9,7 +9,7 @@ export const specs = {
             description: '',
         },
         versioning: {
-            title: 'Versioning',
+            title: 'Versionamento',
             description: '',
         },
         openmetadata: {

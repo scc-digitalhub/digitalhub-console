@@ -96,7 +96,7 @@ export const fields = {
         description: 'Numero di repliche per il task attuale',
     },
     contextSources: {
-        title: 'Sorgenti di contesto', //TODO
+        title: 'Sorgenti di Contesto',
         description: '',
         item: {
             title: 'Elemento',
@@ -181,7 +181,7 @@ export const fields = {
         description: "Data dell'ultimo aggiornamento",
     },
     embedded: {
-        title: 'Integrato', //TODO
+        title: 'Integrato',
         description: '',
     },
     openMetadata: {
@@ -288,7 +288,7 @@ export const fields = {
             description: 'Linguaggio usato per il codice sorgente',
         },
         handler: {
-            title: 'Funzione Handler', //TODO
+            title: 'Funzione Handler',
             description: 'Nome della funzione handler',
         },
         init_function: {
@@ -311,7 +311,7 @@ export const fields = {
         description: "Priorità dei pod impiegati per l'esecuzione di task",
     },
     runtimeClass: {
-        title: 'Classe di Runtime', //TODO
+        title: 'Classe di Runtime',
         description: 'Nome della classe di runtime per i pod',
     },
     profile: {
