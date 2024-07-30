@@ -22,7 +22,7 @@ const messages = {
     },
     exception: {
         code_invalid:
-            'Code invalid: impossible to show the source code. Conversion error',
+            'Code invalid: cannot display the source code. Conversion error',
     },
     states: {
         completed: 'Completed',
@@ -107,10 +107,10 @@ const messages = {
         create: 'To create a new project, press the button below',
     },
     validation: {
-        minValue: 'Value must be greater that or equal to %{min}',
+        minValue: 'Value must be greater than or equal to %{min}',
         noSpace: 'Value must contain no space',
         wrongChar:
-            'The name must consist exclusively of numbers, lowercase letters, and hyphens, without the possibility of placing the latter at the beginning or end of the word',
+            'The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word.',
         invalidKind: 'Invalid kind',
         invalidValue: 'Invalid value',
         invalidDate: 'Invalid date',
@@ -125,14 +125,14 @@ const messages = {
                 "The 'resource' property was empty, have you defined {...props} for the import button?",
         },
         parsing: {
-            collidingIds: 'Recocrds with conflicting IDs found',
+            collidingIds: 'Records with conflicting IDs found',
             failedValidateRow:
-                'The CSV file has not pass the validation requirements',
+                'The CSV file has not passed validation requirements',
             invalidCsv: 'The document cannot be imported in "CSV" format',
         },
         dialogCommon: {
             subtitle:
-                'import fo %{count} elements from file %{fileName} to "%{resource}"',
+                'import of %{count} elements from file %{fileName} to "%{resource}"',
             conflictCount:
                 'The resource "%{resource}" contains <strong>%{conflictingCount}</strong> records with conflicting IDs',
             buttons: {
@@ -160,7 +160,6 @@ const messages = {
     },
     messages: {
         type_and_press_enter: 'Type and press ENTER to add',
-        double_click_to_edit: 'Double click to edit',
     },
     k8s: {
         envs: {
@@ -168,7 +167,7 @@ const messages = {
             description: 'Environments definition',
         },
         node_selector: {
-            title: 'Node selector',
+            title: 'Node Selector',
             description: 'Node selector definition',
         },
         secrets: {

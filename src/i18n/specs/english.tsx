@@ -85,6 +85,18 @@ export const specs = {
         title: 'Python',
         description: '',
     },
+    'python+build': {
+        title: 'Python build',
+        description: "Python build definition",
+    },
+    'python+job': {
+        title: 'Python job',
+        description: "Python job definition",
+    },
+    'python+serve': {
+        title: 'Python serve',
+        description: "Python serve definition",
+    },
     dbt: {
         title: 'DBT',
         description: '',

@@ -3,31 +3,35 @@ import { fields } from '../fields/english';
 export const resources = {
     projects: {
         name: 'Project |||| Projects',
-        fields,
+        fields: { ...fields, name: 'Name', key: 'Key' },
     },
     functions: {
         name: 'Function |||| Functions',
         list: 'List and search functions',
-        fields,
+        fields: { ...fields, name: 'Name', key: 'Key' },
         tab: {
             summary: 'Recap',
-            test: 'test',
+            test: 'Test',
         },
     },
     secrets: {
-        title: 'Secrets',
         list: 'List secrets',
         showData: 'Show the secret',
         name: 'Secret |||| Secrets',
-        value: 'Value',
-        labelName: 'Name',
-        path: 'Path',
-        provider: 'Provider',
+        fields: {
+            ...fields,
+            name: 'Name',
+            key: 'Key',
+            value: 'Value',
+            spec: {
+                path: 'Path',
+            },
+        },
     },
     runs: {
         name: 'Run |||| Runs',
         list: 'List and search runs',
-        fields,
+        fields: { ...fields, name: 'Name', key: 'Key' },
         empty: 'No runs yet',
         create: 'Create a new run',
         labelName: 'Name',
@@ -35,15 +39,12 @@ export const resources = {
     artifacts: {
         name: 'Artifact |||| Artifacts',
         list: 'List and search artifacts',
-        fields: {
-            ...fields,
-            name: 'Name',
-        },
+        fields: { ...fields, name: 'Name', key: 'Key' },
     },
     dataitems: {
         name: 'Data item |||| Data items',
         list: 'List and search data items',
-        fields,
+        fields: { ...fields, name: 'Name', key: 'Key' },
         tab: {
             schema: 'Schema',
             preview: 'Preview',
@@ -63,8 +64,8 @@ export const resources = {
     },
     models: {
         name: 'Model |||| Models',
-        list: 'List of models with search filters',
-        fields,
+        list: 'List and search models',
+        fields: { ...fields, name: 'Name', key: 'Key' },
         tab: {
             metrics: 'Metrics',
             preview: 'Preview',
@@ -77,7 +78,7 @@ export const resources = {
     },
     tasks: {
         name: 'Task |||| Tasks',
-        fields,
+        fields: { ...fields, name: 'Name', key: 'Key' },
         kinds: {
             transform: 'Transform',
             infer: 'Infer',
@@ -91,7 +92,7 @@ export const resources = {
             build: 'Build',
         },
         errors: {
-            requestMinorLimits: 'Request must be minor than Limits',
+            requestMinorLimits: 'Requests must be minor than Limits',
         },
     },
     workflows: {
@@ -99,15 +100,19 @@ export const resources = {
         list: 'List and search workflows',
         fields: {
             ...fields,
+            name: 'Nome',
+            key: 'Chiave',
             run_id: 'Run ID',
             action: 'Action',
             function: 'Function',
             start_time: 'Start',
             end_time: 'End',
+            lang: 'Language',
+            source: 'Source',
         },
         tab: {
             summary: 'Recap',
-            test: 'test',
+            test: 'Test',
             runs: 'Runs',
         },
         inputs: 'Inputs',
