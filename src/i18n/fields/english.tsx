@@ -17,9 +17,9 @@ export const fields = {
         },
     },
     container: {
-        args: { title: 'Container args', description: '' },
+        args: { title: 'Container Args', description: '' },
         instructions: {
-            title: 'Build instruction',
+            title: 'Build Instructions',
             description: 'Instructions executed as RUN during build stage',
             item: {
                 title: 'Run',
@@ -27,7 +27,7 @@ export const fields = {
             },
         },
         baseImage: {
-            title: ' Base image',
+            title: 'Base Image',
             description: 'Image used as base for building tasks',
         },
         command: {
@@ -44,7 +44,7 @@ export const fields = {
         },
     },
     execArgs: {
-        title: 'Execution args',
+        title: 'Execution Args',
         description: 'Arguments passed to command for execution',
     },
     schedule: {
@@ -56,11 +56,11 @@ export const fields = {
         description: 'Backoff limit for job completion',
     },
     requests: {
-        title: 'Request',
+        title: 'Requests',
         description: '',
     },
     limits: {
-        title: 'Limit',
+        title: 'Limits',
         description: '',
     },
     base64: {
@@ -92,7 +92,7 @@ export const fields = {
         description: 'Number of replicas for the current task',
     },
     contextSources: {
-        title: 'Context sources',
+        title: 'Context Sources',
         description: '',
         item: {
             title: 'Item',
@@ -133,7 +133,7 @@ export const fields = {
             title: '',
             description: '',
         },
-        title: 'Compute resources',
+        title: 'Compute Resources',
         description: 'Define resources required for task execution in K8s',
     },
     spec: {
@@ -189,11 +189,11 @@ export const fields = {
         description: '',
     },
     createdBy: {
-        title: 'Created by',
+        title: 'Created By',
         description: 'Username for the resource author',
     },
     updatedBy: {
-        title: 'Updated by',
+        title: 'Updated By',
         description: 'Username of the last user modifying the resource',
     },
     created: {
@@ -206,11 +206,11 @@ export const fields = {
     },
     path: {
         title: 'Path',
-        description: 'Uri pointing to the content',
+        description: 'URI pointing to the content',
     },
     srcPath: {
-        title: 'Source path',
-        description: 'Uri pointing to the source',
+        title: 'Source Path',
+        description: 'URI pointing to the source',
     },
     algorithm: {
         title: 'Algorithm',
@@ -258,39 +258,39 @@ export const fields = {
     },
     python: {
         requirements: {
-            title: 'Python requirements',
+            title: 'Python Requirements',
             description: 'List of requirements (formatted as requirements.txt)',
         },
         version: {
-            title: 'Python version',
+            title: 'Python Version',
             description: 'Major version of language',
         },
     },
     errorReport: {
-        title: 'Error report',
+        title: 'Error Report',
         description: '',
     },
     sourceCode: {
-        title: 'Source code',
+        title: 'Source Code',
         description: 'Source code',
         source: {
-            title: 'Source ref',
-            description: 'Reference to source (path or uri)',
+            title: 'Source Ref',
+            description: 'Reference to source (path or URI)',
         },
         lang: {
-            title: 'Source language',
+            title: 'Source Language',
             description: 'Language used for source code',
         },
         handler: {
-            title: 'Handler function',
+            title: 'Handler Function',
             description: 'Name of the handler function',
         },
         init_function: {
-            title: 'Init function',
+            title: 'Init Function',
             description: 'Name of the initializing function (optional)',
         },
         base64: {
-            title: 'Source code',
+            title: 'Source Code',
             description: 'Source code',
         },
     },
@@ -309,7 +309,7 @@ export const fields = {
         description: 'Runtime class name for pods',
     },
     profile: {
-        title: 'Run profile',
+        title: 'Run Profile',
         description: 'Select a profile to leverage a pre-configured template',
     },
     function: {
@@ -321,11 +321,11 @@ export const fields = {
         description: 'Static reference to workflow',
     },
     numWorker: {
-        title: 'Number of workers',
+        title: 'Number of Workers',
         description: '',
     },
     parallel: {
-        title: 'Parallel execution',
+        title: 'Parallel Execution',
         description: '',
     },
     commands: {
@@ -333,11 +333,11 @@ export const fields = {
         description: '',
     },
     forceBuild: {
-        title: 'Force build',
+        title: 'Force Build',
         description: '',
     },
     targetImage: {
-        title: 'Target image',
+        title: 'Target Image',
         description: '',
     },
     info: {

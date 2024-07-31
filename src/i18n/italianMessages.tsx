@@ -1,530 +1,13 @@
 import italianMessages from '@dslab/ra-language-italian';
-
-const specs = {
-    metadata: {
-        base: {
-            title:"Metadata",
-            description:""
-        },
-        embedded: {
-            title:"Embedded",
-            description:""
-        },
-        versioning: {
-            title:"Versioning",
-            description:""
-        },
-        openmetadata: {
-            title:"Openmetadata",
-            description:""
-        },
-        audit: {
-            title:"Audit",
-            description:""
-        }
-    },
-    artifact: {
-        title:"Metadata Artifact",
-        description:""
-    },
-    dataitem: {
-        title:"Metadata Dataitem",
-        description:""
-    },
-    model:{
-        title:"Metadata Model",
-        description:""
-    },
-    container:{
-        title:"Container",
-        description:""
-    },
-    'container+build': {
-        title: 'Operazione di build del container',
-        description: "Definizione dell'operazione di build del container", 
-    },
-    'container+deploy': {
-        title: 'Operazione di deploy del container',
-        description: 'Definizione dell\'operazione di deploy del container',
-    },
-    'container+job': {
-        title: 'Container job',
-        description: 'Definizione del container job',
-    },
-    'container+serve': {
-        title: 'Container serve',
-        description: 'Definizione del container serve',
-    },
-    'container+run': {
-        title: 'Esecuzione dell\'operazione su container',
-        description: 'Definizione dell\'esecuzione dell\'operazione su container', 
-    },
-    nefertem: {
-        title: 'Nefertem',
-        description: '',
-    },
-    'nefertem+infer': {
-        title: 'Operazione di infer Nefertem',
-        description: 'Definizione dell\'operazione di infer Nefertem',
-    },
-    'nefertem+metric': {
-        title: 'Operazione di metriche Nefertem',
-        description: 'Definizione dell\'operazione di metriche Nefertem',
-    },
-    'nefertem+profile': {
-        title: 'Operazione di profilazione Nefertem',
-        description: 'Definizione dell\'operazione di profilazione Nefertem',    
-    },
-    'nefertem+validate': {
-        title: 'Operazione di validazione Nefertem',
-        description: 'Definizione dell\'operazione di validazione Nefertem',
-    },
-    'nefertem+run': {
-        title: 'Esecuzione di operazione Nefertem',
-        description: 'Definizione dell\'esecuzione di operazione Nefertem',
-    },  
-    python: {
-        title: 'Python',
-        description: '',
-    },
-    dbt: {
-        title: 'DBT',
-        description: '',
-    },
-    'dbt+transform': {
-        title: 'Operazione di transformazione DBT',
-        description: 'Definizione dell\'operazione di transformazione DBT',    
-    },
-    'dbt+run': {
-        title: 'Esecuzione DBT',
-        description: 'Definizione dell\'esecuzione DBT',    
-    },
-    mlrun: {
-        title: 'MLRun',
-        description: '',
-    },
-    'mlrun+build': {
-        title: 'Operazione di build dell\'immagine MLRun',
-        description: 'Definizione dell\'operazione di build dell\'immagine MLRun',
-    },
-    'mlrun+job': {
-        title: 'Job di MLRun',
-        description: 'Definizione del job di MLRun',
-    },
-    'mlrun+run': {
-        title: 'Esecuzione MLRun',
-        description: 'Definizione dell\'esecuzione MLRun',    
-    },
-    table: {
-        title:"Table",
-        description:""
-    },
-    kfp: {
-        title: 'Kubeflow Pipeline',
-        description: '',
-    },
-    'kfp+pipeline': {    
-        title: 'Operazione di Kubeflow Pipeline',
-        description: 'Definizione dell\'operazione di Kubeflow Pipeline',   
-    },
-    'kfp+run': {
-        title: 'Esecuzione di Kubeflow Pipeline',
-        description: 'Definizione dell\'esecuzione di Kubeflow Pipeline',   
-    },
-};
-const fields = {
-    id: 'Id',
-    // name: 'Name',
-    kind: 'Tipo',
-    // key: 'Key',
-    project: 'Progetto',
-    args: {
-        item: {
-            title: 'Oggetto',
-            description: '',
-        },
-    },
-    container: {
-        args: { title: 'Argomenti di esecuzione del Container', description: '' },
-        instructions: {
-            description: 'Istruzioni di esecuzione',
-        },
-        baseImage: { title: 'Immagine di base', description: '' },
-        command: { title: 'Commandi di esecuzione del Container', description: '' },
-        image: { title: 'Immagine del Container', description: '' },
-        tag: {
-            title: 'Tag',
-            description: '',
-        },
-    },
-    execArgs: {
-        title: 'Argomenti di esecuzione',
-        description: 'Argomenti di esecuzione',
-    },
-    schedule: {
-        title: 'Schedule',
-        description: 'Definizione di schedule',
-    },
-    backoffLimit: {
-        title: 'Backoff Limit',
-        description: 'Definizione di Backoff Limit',
-    },
-    requests: {
-        title: 'Request',
-        description: 'Definizione di Request',
-    },
-    limits: {
-        title: 'Limiti',
-        description: 'Definizioni dei Limiti',
-    },
-    base64: {
-        title: 'Base 64',
-        description: 'Definizione Base 64',
-    },
-    mountPath: {
-        title: 'Mount Path',
-        description: 'Definizione Mount Path ',
-    },
-    volumeType: {
-        title: 'Tipo Volume',
-        description: 'Definizione di Tipo Volume',
-    },
-    name: {
-        title: 'Nome',
-        description: '',
-    },
-    key: {
-        title: 'Chiave',
-        description: '',
-    },
-    value: {
-        title: 'Valore',
-        description: '',
-    },
-    protocol: {
-        title: 'Protocollo',
-        description: 'Definizione di Protocollo',
-    },
-    source: {
-        title: 'Sorgente',
-        description: 'Definizione di Sorgente',
-    },
-    replicas: {
-        title: 'Repliche',
-        description: 'Definizione di Repliche',
-    },
-    contextSources: {
-        title: 'Sorgenti di contesto',
-        description: 'Definizione di Sorgenti di contesto',
-        item: {
-            title: 'Elemento',
-            description: '',
-        },
-    },
-    secrets: {
-        title: 'Segreti',
-        description: 'Definizione di Segreti',
-        item: {
-            title: 'Elemento',
-            description: '',
-        },
-    },
-    instructions: {
-        title: 'Istruzioni',
-        description: 'Definizione di Istruzioni',
-        item: {
-            title: 'Titolo',
-            description: '',
-        },
-    },
-    destination: {
-        title: 'Destinazione',
-        description: 'Definizione di Destinazione',
-    },
-    metadata: {
-        created: 'Creazione',
-        updated: 'Aggiornamento',
-        name: 'Nome',
-        description: 'Descrizione',
-        project: 'Progetto',
-        version: 'Versione',
-        labels: 'Etichette',
-    },
-    k8s: {
-        envs: {
-            description: 'Definizione di ambiente',
-        },
-        description: 'Definizione risorse K8S',
-    },
-
-    spec: {
-        title: 'Spec',
-        description: 'Descrizione della Spec',
-        path: 'Percorso',
-        src_path: 'Percorso sorgente',
-        compiled_code: 'Codice compilato',
-        raw_code: 'Codice sorgente',
-        schema: 'Schema',
-        constraints: 'Vincoli',
-        error_report: 'Report di errore',
-        metrics: 'Metriche',
-        args: 'Argomenti',
-        base_image: 'Immagine di base',
-        command: 'Comando',
-        image: 'Immagine',
-        base64: 'Base64',
-        code: 'Codice',
-        source: 'Sorgente',
-        function: 'Funzione',
-        k8s: 'Risorse K8S',
-        service_ports: 'Porte',
-        service_type: 'Tipo servizio',
-        priorityClass: 'K8S Priority Class',
-        runtimeClass: 'K8S Runtime Class',
-        python_version: 'Versione Python',
-        handler: 'Handler',
-        schedule: 'Schedule',
-        workflow: 'Definizione di Workflow',
-        framework: 'Framework',
-        parallel: 'Eseguire in parallelo',
-        num_worker: 'Numero di worker',
-        commands: 'Commandi',
-        force_build: 'Forzare build',
-        target_image: 'Immagine Target',    },
-    status: {
-        state: 'Stato',
-        files: 'File',
-    },
-    inputs: {
-        title: 'Input',
-        description: 'Input',
-        item: {
-            title: '',
-            description: '',
-        },
-    },
-    outputs: {
-        title: 'Output',
-        description: 'Output',
-        item: {
-            title: '',
-            description: '',
-        },
-    },
-    code: 'Codice sorgente',
-    logs: 'Logs',
-    base: 'Base',
-    summary: 'Riepilogo',
-    description: {
-        title:"Description",
-        description:""
-    },
-    labels: {
-        title:"Labels",
-        description:""
-    },
-    updated: {
-        title:"Updated",
-        description:""
-    },
-    embedded: {
-        title:"Embedded",
-        description:""
-    },
-    openMetadata:{
-        title:"Open Metadata",
-        description:"" 
-    },
-    publish:{
-        title:"Pubblicare",
-        description:"" 
-    },
-    createdBy:{
-        title:"Creato dat",
-        description:"" 
-    },
-    updatedBy:{
-        title:"Aggiornato da",
-        description:"" 
-    },
-    created:{
-        title:"Creazione",
-        description:"" 
-    },
-    
-    version:{
-        title:"Versione",
-        description:"" 
-    },
-    path:{
-        title:"Percorso",
-        description:"" 
-    },
-    srcPath:{
-        title:"Percorso sorgente",
-        description:"" 
-    },
-    algorithm: {
-        title: 'Algoritmo',
-        description: '',
-    },
-    framework: {
-        title:'Framework',
-        description: '',
-    },
-    parameters: {
-        title: 'Parametri',
-        description: '',
-        item: {
-            title: 'Elemento',
-            description: '',
-        }
-    },
-    baseModel: {
-        title: 'Modello di base',
-        description: '',
-    },
-    metrics: {
-        title: 'Metriche',
-        description: '',
-        item: {
-            title: 'Elemento',
-            description: '',
-        },
-    },
-    constraints: {
-        title: 'Constraint',
-        description: 'Oggetto di Constraint',
-        item: {
-            title: 'Elemento',
-            description: '',
-        },
-    },
-    fields: {
-        title: 'Campi',
-        description: '',
-        item: {
-            title: '',
-            description: '',
-        },
-        
-    },
-    example: { title: 'Esempio', description: '' },
-    format: { title: 'Formato', description: '' },
-    title: { title: 'Titolo', description: '' },
-    type: { title: 'Tipo', description: '' },
-    schema: {
-        title: 'Schema',
-        description: '',
-    },
-    python: {
-        requirements: {
-            title: 'Requisiti Python',
-            description: '',
-        },
-        version: {
-            title: 'Version Python',
-            description: '',
-        }
-    },
-    errorReport: {
-        title: 'Rapporto di errori',
-        description: '',
-    },
-    sourceCode: {
-        source: {
-            title: 'Codice sorgente',
-            description: '',
-        },
-        lang: {
-            title: 'Linguaggio',
-            description: '',
-        },
-        handler: {
-            title: 'Handler',
-            description: '',
-            base64: {
-                title: 'Base 64',
-                description: '',
-            },
-        },
-        servicePorts: {
-            title:"Porte di servizio",
-            description:"",
-            item: {
-                title: 'Elemento',
-                description: '',
-            },
-        },
-        port: {
-            title: 'Porta',
-            description: '',
-        },
-        targetPort:{
-            title: 'Porta target',
-            description: '',
-        },
-        serviceType:{
-            title: 'Tipo di servizio',
-            description: '',
-        },
-        task:{
-            title: 'Task',
-            description: '',
-        }
-    },
-
-    requirements: {
-        item: {
-            title: 'Componente',
-            description:''
-        }
-    },
-    priorityClass: {
-        title: 'Priority Class',
-        description: '',
-    },
-    runtimeClass: {
-        title: 'Runtime Class',
-        description: '',
-    },
-    function: {
-        title: 'Funzione',
-        description: '',
-    },
-    workflow: {
-        title: 'Workflow',
-        description: '',
-    },
-    numWorker: {
-        title: 'Numero di worker',
-        description: '',
-    },
-    parallel: {
-        title: 'Eseguire in parallelo',
-        description: '',
-    },
-    commands: {
-        title: 'Commandi',
-        description: '',
-    },
-    forceBuild: {
-        title: 'Forzare build',
-        description: '',
-    },
-    targetImage: {
-        title: 'Immagine target',
-        description: '',
-    },
-    info: 'Info',
-    datagrid:{
-        key: 'Nome',
-        value: 'Valore'
-    }
-};
+import { fields } from './fields/italian';
+import { resources } from './resources/italian';
+import { specs } from './specs/italian';
 
 const messages = {
     ...italianMessages,
+    fields,
+    specs,
+    resources,
     login: {
         basicMessage: 'Autenticarsi per continuare',
         title: 'Resource Manager',
@@ -540,148 +23,6 @@ const messages = {
     exception: {
         code_invalid:
             'Codice non valido: impossibile visualizzare il codice sorgente. Errore di conversione',
-    },
-    fields: fields,
-    specs: specs,
-    resources: {
-        projects: {
-            name: 'Progetto |||| Progetti',
-            fields: { ...fields },
-        },
-        functions: {
-            name: 'Funzione |||| Funzioni',
-            list: 'Lista delle funzioni con filtri di ricerca',
-            fields: { ...fields },
-            tab: {
-                summary: 'Riepilogo',
-                test: 'test',
-            },
-        },
-        secrets: {
-            title: 'Segreti',
-            list: 'Lista dei segreti',
-            showData: 'Mostra il segreto',
-            name: 'Segreto |||| Segreti',
-            value: 'Valore',
-            labelName: 'Nome',
-            path: 'Percorso',
-            provider: 'Provider',
-        },
-        runs: {
-            name: 'Esecuzione |||| Esecuzioni',
-            list: 'Lista delle esecuzioni',
-            fields: {
-                ...fields,
-            },
-            empty: 'Nessuna esecuzione',
-            create: 'Crea una nuova esecuzione',
-            labelName: 'Nome',
-        },
-        artifacts: {
-            name: 'Artefatto |||| Artefatti',
-            list: 'Lista degli artefatti con filtri di ricerca',
-            fields: { ...fields },
-        },
-        dataitems: {
-            name: 'Dato |||| Dati',
-            list: 'Lista dei dati con filtri di ricerca',
-            fields: { ...fields },
-            tab: {
-                schema: 'Schema',
-                preview: 'Anteprima',
-            },
-            schema: {
-                title: 'Schema',
-                name: 'Nome',
-                type: 'Tipo',
-            },
-            preview: {
-                title: 'Anteprima',
-                true: 'Vero',
-                false: 'Falso',
-                numberOfRows: 'Numero di righe',
-                notAvailable: 'Anteprima non disponibile',
-            },
-        },
-        models: {
-            name: 'Modello |||| Modelli',
-            list: 'Lista dei modelli con filtri di ricerca',
-            fields: { ...fields },
-            tab: {
-                metrics: 'Metriche',
-                preview: 'Anteprima',
-            },
-            metrics: {
-                title: 'Metriche',
-                key: 'Nome',
-                value: 'Valore',
-            },
-        },
-        tasks: {
-            name: 'Task |||| Tasks',
-            fields: { ...fields },
-            kinds: {
-                transform: 'Transform',
-                infer: 'Infer',
-                metric: 'Metric',
-                profile: 'Profile',
-                validate: 'Validate',
-                deploy: 'Deploy',
-                job: 'Job',
-                serve: 'Serve',
-                pipeline: 'Pipeline',
-                build: 'Build',
-            },
-            errors: {
-                requestMinorLimits: 'Request deve essere minore di Limits',
-            },
-        },
-        workflows: {
-            name: 'Workflow |||| Workflow',
-            list: 'Elenco e ricerca di workflow',
-            fields: {
-                ...fields,
-                run_id: 'ID Esecuzione',
-                action: 'Task',
-                function: 'Funzione',
-                start_time: 'Inizio',
-                end_time: 'Fine',
-            },
-            tab: {
-                summary: 'Recap',
-                test: 'test',
-                runs: 'Esecuzioni',
-            },
-            inputs: 'Parametri di Input',
-            outputs: 'Parametri di Output',
-        },
-        logs: {
-            name: 'Log |||| Log',
-            list: 'Elenco log',
-            fields: {
-                ...fields,
-                run_id: 'Run ID',
-            },
-        },
-        common: {
-            emptySpec: 'Seleziona il tipo per visualizzare le specifiche',
-            labels: 'Etichette',
-            reset: {
-                title:'Cambiamento di tipologia',
-                content: 'Sei sicuro di voler cambiare tipologia? Le modifiche effettuate saranno annullate',
-            },
-            version: {
-                title: 'Versioni',
-                version: 'Versione',
-                created: 'Data di creazione',
-            },
-        },
-        list: {
-            expandable: {
-                version: 'Versione',
-                created: 'Data di creazione',
-            },
-        },
     },
     states: {
         completed: 'Completato',
@@ -727,7 +68,7 @@ const messages = {
         functions: {
             show: {
                 title: 'Funzione #%{name}',
-                subtitle: '%{kind} funzione',
+                subtitle: 'Funzione %{kind}',
             },
         },
         config: {
@@ -738,7 +79,7 @@ const messages = {
     pageTitle: {
         show: {
             title: '%{resource} #%{name}',
-            subtitle: '%{kind} %{resource}',
+            subtitle: '%{resource} %{kind}',
         },
         create: {
             title: 'Crea %{resource}',
@@ -769,7 +110,7 @@ const messages = {
         minValue: 'Il valore deve esere maggiore o uguale a %{min}',
         noSpace: 'Il valore non deve contenere spazi',
         wrongChar:
-            "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini, senza la possibilità di posizionare questi ultimi all'inizio o alla fine della parola",
+            "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini. I trattini non possono trovarsi all'inizio o alla fine della parola.",
         invalidKind: 'Tipo invalido',
         invalidValue: 'Valore invalido',
         invalidDate: 'Data non valida',
@@ -819,8 +160,8 @@ const messages = {
         loading: 'Caricamento...',
     },
     messages: {
-        type_and_press_enter: 'Type and press ENTER to add',
-        double_click_to_edit: 'Double click to edit',
+        type_and_press_enter: 'Digita e premi INVIO per aggiungere',
+        double_click_to_edit: 'Doppio click per modificare',
     },
     k8s: {
         envs: {
@@ -828,8 +169,8 @@ const messages = {
             description: 'Definizione di ambienti',
         },
         node_selector: {
-            title: 'Selettore di nodo',
-            description: 'Definizione di Selettore di nodo',
+            title: 'Selettore di Nodo',
+            description: 'Definizione di Selettore di Nodo',
         },
         secrets: {
             title: 'Segreti',
@@ -839,9 +180,10 @@ const messages = {
             title: 'Volumi',
             description: 'Definizione di volumi',
         },
+
         resources: {
             title: 'Risorse',
-            description: 'Definizione di risorse',
+            description: 'Risorse K8s',
             cpu: {
                 title: 'Cpu',
             },
@@ -854,11 +196,12 @@ const messages = {
         },
     },
     upload: {
-        upload_error: 'Errore durante l\'upload del file %{fileName}. %{error}',
-       file_too_big: 'Il file  supera il limite di 100 GiB.',
-    }
-
-    
+        upload_error: "Errore durante l'upload del file %{fileName}. %{error}",
+        file_too_big: 'Il file  supera il limite di 100 GiB',
+    },
+    actions: {
+        'toggle-x': 'Mostra/Nascondi %{el}',
+    },
 };
 
 export default messages;

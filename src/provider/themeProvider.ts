@@ -168,6 +168,13 @@ const componentsOverrides = (theme: Theme) => ({
     },
     MuiTab: {},
     MuiTabs: {},
+    MuiFormHelperText: {
+        styleOverrides: {
+            root: {
+                marginLeft: 0
+            },
+        },
+    }
 });
 
 // const palette: PaletteOptions & { paper: string } = {
