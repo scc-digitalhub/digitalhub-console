@@ -111,7 +111,7 @@ const ShowComponent = () => {
 
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
-                    <TextField source="name" />
+                    <TextField source="name" label="fields.key.title" />
                 </Labeled>
 
                 <Labeled label="fields.value.title">

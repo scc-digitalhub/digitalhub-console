@@ -26,6 +26,7 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
     const [list, setList] = useState<string[]>(value || []);
     const translate = useTranslate();
     const placeholder = translate('messages.type_and_press_enter');
+    const helperText = translate('messages.double_click_to_edit');
 
     const handleChange = chips => {
         setList(chips);
@@ -47,6 +48,7 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
             onBlur={!readonly ? handleBlur : undefined}
             onFocus={!readonly ? handleFocus : undefined}
             placeholder={placeholder}
+            helperText={helperText}
         />
     ) : (
         <FormControl variant="standard" focused>
