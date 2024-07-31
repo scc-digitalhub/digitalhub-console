@@ -160,6 +160,7 @@ const messages = {
     },
     messages: {
         type_and_press_enter: 'Type and press ENTER to add',
+        double_click_to_edit: 'Double click to edit',
     },
     k8s: {
         envs: {

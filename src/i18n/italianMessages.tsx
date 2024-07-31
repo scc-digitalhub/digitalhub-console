@@ -128,7 +128,8 @@ const messages = {
             collidingIds: 'Trovati record con ID che collidono',
             failedValidateRow:
                 'Il CSV non ha superato i requisiti di validazione',
-            invalidCsv: 'Il documento non può essere analizzato come file "csv"',
+            invalidCsv:
+                'Il documento non può essere analizzato come file "csv"',
         },
         dialogCommon: {
             subtitle:
@@ -160,6 +161,7 @@ const messages = {
     },
     messages: {
         type_and_press_enter: 'Digita e premi INVIO per aggiungere',
+        double_click_to_edit: 'Doppio click per modificare',
     },
     k8s: {
         envs: {
