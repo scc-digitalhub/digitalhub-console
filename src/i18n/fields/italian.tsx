@@ -380,4 +380,72 @@ export const fields = {
         title: 'Task',
         description: '',
     },
+    modelserve: {
+        path: {
+            title: 'URI del modello',
+            description: '',
+        },
+        modelname: {
+            title: 'Nome esposto del modello',
+            description: '',
+        },
+        image: {
+            title: 'Image del Inference Server',
+            description: '',
+        }
+    },
+    huggingface: {
+        task: {
+            title: 'HuggingFace Inference Task',
+            description: '',   
+        },
+        backend: {
+            title: 'Tipo di HuggingFace backend',
+            description: '',   
+        },
+        tokenizerrevision: {
+            title: 'Versione di HuggingFace Tokenizer',
+            description: '',   
+        },
+        maxlength: {
+            title: 'Lunghezza massima di Tokenizer Sequence',
+            description: '',    
+        },
+        disablelowercase: {
+            title: 'Disabilitare Tokenizer Lowercase',
+            description: '',    
+        },
+        disablespecialtokens: {
+            title: 'Disabilitare Special Tokens Encoding',
+            description: '',    
+        },
+        dtype: {
+            title: 'Tipo dati per Weights',
+            description: '',    
+        },
+        trustremotecode: {
+            title: 'Abilitare Custom Code per modelli e tokenizer',
+            description: '',    
+        },
+        tensorinputnames: {
+            title: 'Nomi input dei Tensor',
+            description: '',
+        },
+        returntokentypeids: {
+            title: 'Restituire Token Type ID',
+            description: '',
+        },
+        returnprobabilities: {
+            title: 'Restituire tuttel le probabilita`',
+            description: '',
+        },
+        disablelogrequests: {
+            title: 'Disabilitare le richieste di logging',
+            description: '',
+        },
+        maxloglen: {
+            title: 'Numero max dei prompt da loggare',
+            description: '',
+        },
+    },
 };

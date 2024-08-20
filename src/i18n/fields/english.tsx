@@ -373,4 +373,72 @@ export const fields = {
         title: 'Task',
         description: '',
     },
+    modelserve: {
+        path: {
+            title: 'Model URI Path',
+            description: '',
+        },
+        modelname: {
+            title: 'Exposed Model Name',
+            description: '',
+        },
+        image: {
+            title: 'Inference Server Image',
+            description: '',
+        }
+    },
+    huggingface: {
+        task: {
+            title: 'HuggingFace Inference Task',
+            description: '',   
+        },
+        backend: {
+            title: 'HuggingFace Backend Type',
+            description: '',   
+        },
+        tokenizerrevision: {
+            title: 'HuggingFace Tokenizer Revision',
+            description: '',   
+        },
+        maxlength: {
+            title: 'Tokenizer Max Sequence Length',
+            description: '',    
+        },
+        disablelowercase: {
+            title: 'Disable Tokenizer Lowercase',
+            description: '',    
+        },
+        disablespecialtokens: {
+            title: 'Disable Special Tokens Encoding',
+            description: '',    
+        },
+        dtype: {
+            title: 'Weights Data Type',
+            description: '',    
+        },
+        trustremotecode: {
+            title: 'Allow Custom Code for Models and Tokenizers',
+            description: '',    
+        },
+        tensorinputnames: {
+            title: 'Tensor Input Names',
+            description: '',
+        },
+        returntokentypeids: {
+            title: 'Return Token Type IDs',
+            description: '',
+        },
+        returnprobabilities: {
+            title: 'Return All Probabilities',
+            description: '',
+        },
+        disablelogrequests: {
+            title: 'Disable Logging Requests',
+            description: '',
+        },
+        maxloglen: {
+            title: 'Max Num of Prompt to Log',
+            description: '',
+        },
+    },
 };
