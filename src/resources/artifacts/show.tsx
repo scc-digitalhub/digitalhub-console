@@ -114,7 +114,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                     />
                 )}
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="fields.info.tab">
+            <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>

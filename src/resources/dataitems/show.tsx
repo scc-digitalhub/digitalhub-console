@@ -102,7 +102,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     />
                 )}
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="fields.info.tab">
+            <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
             {kind && kind === 'table' && (

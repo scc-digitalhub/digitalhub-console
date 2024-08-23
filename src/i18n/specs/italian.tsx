@@ -141,4 +141,8 @@ export const specs = {
         title: 'Esecuzione di Kubeflow Pipeline',
         description: "Definizione dell'esecuzione di Kubeflow Pipeline",
     },
+    mlflow: {
+        title: 'MLflow',
+        description: 'Definizione modello MLFlow',    
+    },
 };

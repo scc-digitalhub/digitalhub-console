@@ -344,6 +344,10 @@ export const fields = {
         tab: 'Info',
         empty: 'No info available',
     },
+    files: {
+        tab: 'Files',
+        empty: 'No files available',
+    },
     datagrid: {
         key: 'Name',
         value: 'Value',
@@ -440,5 +444,82 @@ export const fields = {
             title: 'Max Num of Prompt to Log',
             description: '',
         },
+        modelid: {
+            title: 'HuggingFace Model ID',
+            description: '',
+        },
+        modelrevision: {
+            title: 'HuggingFace Model Revision',
+            description: '',
+        }
     },
+    mlflow: {
+        flavor: {
+            title: 'Model Flavor',
+            description: '',
+        },
+        inputdatasets: {
+            title: 'Input Datasets',
+            description: '',
+            item: {
+                title: 'Input Dataset',
+                description: '',
+            },
+        },
+        inputdatasetdigest: {
+            title: 'Input Dataset Digest',
+            description: '',
+        },
+        inputdatasetname: {
+            title: 'Input Dataset Name',
+            description: '',
+        },
+        inputdatasetprofile: {
+            title: 'Input Dataset Profile',
+            description: '',
+        },
+        inputdatasetschema: {
+            title: 'Input Dataset Schema',
+            description: '',   
+        },
+        inputdatasetsource: {
+            title: 'Input Dataset Source',
+            description: '',
+        },
+        inputdatasetsourcetype: {
+            title: 'Input Dataset Source Type',
+            description: '',
+        },
+        digest: {
+            title: 'Dataset Digest',
+            description: '',
+        },
+        modelconfig: {
+            title: 'Model Configuration',
+            description: '',
+        },
+        signature: {    
+            title: 'Model Signature',
+            description: '',
+        },
+        signatureinputs: {
+            title: 'Model Signature Inputs',
+            description: '',
+        },
+        signatureoutputs: {
+            title: 'Model Signature Outputs',
+            description: '',
+        },  
+        signatureparams: {
+            title: 'Model Signature Parameters',
+            description: '',
+        },  
+    },
+    inputDatasets: {
+        item: {
+            title: 'Input Dataset',
+            description: '',
+        },
+    },
+    preview: 'File Preview'
 };

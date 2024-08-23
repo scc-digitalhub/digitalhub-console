@@ -346,10 +346,14 @@ const springDataProvider = (
         },
         download: (resource, params) => {
             let prefix = '';
+            let sub = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/download`;
+            if (params.sub) {
+                sub = '/' + params.sub;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/download${sub}`;
             return httpClient(url).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);

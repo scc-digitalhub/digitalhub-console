@@ -21,6 +21,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         label = 'download',
         icon = defaultIcon,
         fileName,
+        sub
     } = props;
     const { root } = useRootSelector();
     const resource = useResourceContext(props);
@@ -28,13 +29,18 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const dataProvider = useDataProvider();
     const notify = useNotify();
 
-    if (!record || !get(record, source)) {
+    const srcValue = get(record, source);
+    if (!record || !srcValue) {
         return <></>;
     }
 
+    let subPath = sub;
+    if (sub && sub.startsWith(srcValue)) {
+        subPath = sub.replace(srcValue, '');
+    }
     const handleDownload = () => {
         dataProvider
-            .download(resource, { id: record.id, meta: { root } })
+            .download(resource, { id: record.id, meta: { root }, sub: subPath })
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');
@@ -69,4 +75,4 @@ export const DownloadButton = (props: DownloadButtonProps) => {
 };
 
 export type DownloadButtonProps<RecordType extends RaRecord = any> =
-    FieldProps & ButtonProps & { icon?: ReactElement; fileName?: string };
+    FieldProps & ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };
