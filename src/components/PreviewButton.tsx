@@ -196,7 +196,7 @@ const PreviewView = (props: PreviewButtonProps) => {
                 {fileType === 'image' && <img src={url} width={'100%'} style={{ border: 'none' }}></img>}
                 {['yaml', 'json', 'markdown'].indexOf(fileType) !== -1 && content && 
                     <AceEditor
-                        mode={'yaml'}
+                        mode={fileType}
                         readOnly={true}
                         theme={'monokai'}
                         wrapEnabled
@@ -238,7 +238,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                 complete: (results) => {
                     console.log(results.data)
                     if (results.data && results.data.length > 0) {
-                        const cols = Object.keys(results.data[0] as any).map(c => ({field: c}));
+                        const cols = Object.keys(results.data[0] as any).map(c => ({field: c, flex: 1}));
                         const res = {rows: results.data.map((row: any, index: number) => ({...row, id: index})), columns: cols}
                         setContent(res);    
                     }
@@ -269,6 +269,7 @@ const CSVViewer = (props: CSVViewerProps) => {
         rows={content.rows}
         columns={content.columns}
         pageSizeOptions={[MAX_ROWS]}
+        autoHeight
         disableRowSelectionOnClick
         />}
         {!content && <EmptyResult />}

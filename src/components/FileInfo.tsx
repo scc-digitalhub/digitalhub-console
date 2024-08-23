@@ -143,7 +143,7 @@ const convertFiles = (data: any[]): any[] => {
 
     if (data.length === 1) {
         // If there is only one file, return it as the root element
-        return [{id: data[0].path, label: data[0].name, fileType: extractFileType(data[0])}];
+        return [{id: data[0].path, label: data[0].name, fileType: extractFileType(data[0]), data: data[0]}];
     }
 
     // Find the common root of all the files
@@ -501,6 +501,7 @@ const FileInfoTable = (props: any) => {
     const { data, isLoading } = useDataGridController({
         fields: info.data,
     });
+    console.log('info', info);
 
     const valueFormatter = (value?: any) => {
         if (!value.value) {
