@@ -64,7 +64,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-    
+
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -101,7 +101,6 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
 
                 <TextField source="key" />
                 <MetadataField />
-
 
                 {spec && (
                     <JsonSchemaField

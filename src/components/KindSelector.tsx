@@ -1,6 +1,13 @@
-import { useState, useRef } from "react";
-import { useResourceContext, useInput, useTranslate, SelectInput, required, Confirm } from "react-admin";
-import { isValidKind } from "../common/helper";
+import { useState, useRef } from 'react';
+import {
+    useResourceContext,
+    useInput,
+    useTranslate,
+    SelectInput,
+    required,
+    Confirm,
+} from 'react-admin';
+import { isValidKind } from '../common/helper';
 import { useFormState } from 'react-hook-form';
 
 export const KindSelector = (props: { kinds: any[] }) => {

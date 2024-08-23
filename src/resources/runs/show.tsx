@@ -79,7 +79,7 @@ export const RunShowComponent = () => {
 const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
-        <LogsButton style={{ marginLeft: 'auto' }}  />
+        <LogsButton style={{ marginLeft: 'auto' }} />
         <InspectButton fullWidth />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />

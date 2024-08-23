@@ -20,9 +20,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
-import {
-    BlankSchema,
-} from '../../common/schemas';
+import { BlankSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -34,9 +32,8 @@ import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
 import { FileInput } from '../../components/FileInput';
 import { useUploadController } from '../../controllers/uploadController';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { KindSelector } from '../../components/KindSelector';
-
 
 const CreateToolbar = () => {
     return (
@@ -52,7 +49,7 @@ export const ArtifactCreate = () => {
     const [schemas, setSchemas] = useState<any[]>();
     const id = useRef(crypto.randomUUID());
 
-    const { uppy, files, upload} = useUploadController({id:id.current});
+    const { uppy, files, upload } = useUploadController({ id: id.current });
 
     const kinds = schemas
         ? schemas.map(s => ({
@@ -60,7 +57,6 @@ export const ArtifactCreate = () => {
               name: s.kind,
           }))
         : [];
-
 
     const transform = async data => {
         await upload();
@@ -118,15 +114,15 @@ export const ArtifactCreate = () => {
 };
 
 const FormContent = (props: any) => {
-    const { schemas,uppy, kinds, files } = props;
+    const { schemas, uppy, kinds, files } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const { field } = useInput({ resource, source: 'spec' });
-    const updateForm = (path) =>{
+    const updateForm = path => {
         if (field) {
             field.onChange({ ...field.value, path: path });
         }
-    }
+    };
     const path = files.length > 0 ? files[0].path : null;
     useEffect(() => {
         updateForm(path);
@@ -150,7 +146,7 @@ const FormContent = (props: any) => {
         }
         console.log('files', uppy.getFiles());
 
-        if (uppy.getFiles().length > 0 ) {
+        if (uppy.getFiles().length > 0) {
             return { path: { 'ui:readonly': true } };
         } else {
             return getArtifactSpecUiSchema(kind);
@@ -166,7 +162,7 @@ const FormContent = (props: any) => {
                     source="name"
                     validate={[required(), isAlphaNumeric()]}
                 />
-                 <KindSelector kinds={kinds} />
+                <KindSelector kinds={kinds} />
             </Stack>
 
             <MetadataInput />
@@ -186,11 +182,7 @@ const FormContent = (props: any) => {
                                     )}
                                 />
 
-                                {uppy && (
-                                    <FileInput
-                                        uppy={uppy}
-                                    />
-                                )}
+                                {uppy && <FileInput uppy={uppy} />}
                             </>
                         );
                     else

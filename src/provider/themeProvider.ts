@@ -161,7 +161,7 @@ const componentsOverrides = (theme: Theme) => ({
         styleOverrides: {
             root: {
                 '& .MuiTablePagination-input ': {
-                    paddingTop: '6px'
+                    paddingTop: '6px',
                 },
             },
         },
@@ -171,10 +171,10 @@ const componentsOverrides = (theme: Theme) => ({
     MuiFormHelperText: {
         styleOverrides: {
             root: {
-                marginLeft: 0
+                marginLeft: 0,
             },
         },
-    }
+    },
 });
 
 // const palette: PaletteOptions & { paper: string } = {

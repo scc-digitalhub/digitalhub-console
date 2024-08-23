@@ -1,7 +1,7 @@
 import { BlankSchema } from '../../common/schemas';
-import { 
+import {
     SourceCodeTemplate,
-    SourceCodeEditorWidget, 
+    SourceCodeEditorWidget,
 } from '../../jsonSchema/SourceCodeTemplate';
 
 export enum WorkflowTypes {

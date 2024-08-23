@@ -42,7 +42,6 @@ import 'ace-builds/src-noconflict/worker-json.js';
 import 'ace-builds/src-noconflict/worker-xml.js';
 import 'ace-builds/src-noconflict/worker-yaml.js';
 
-
 import React, {
     Fragment,
     JSXElementConstructor,

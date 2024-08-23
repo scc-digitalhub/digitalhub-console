@@ -112,7 +112,7 @@ export const DataItemEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(crypto.randomUUID());
-    const { uppy, files, upload  } = useUploadController({ id: id.current });
+    const { uppy, files, upload } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -222,7 +222,11 @@ const FormContent = (props: any) => {
 
             <MetadataInput />
 
-            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getDataItemUiSchema} />
+            <SpecInput
+                source="spec"
+                onDirty={setIsSpecDirty}
+                getUiSchema={getDataItemUiSchema}
+            />
             {uppy && <FileInput uppy={uppy} />}
         </>
     );

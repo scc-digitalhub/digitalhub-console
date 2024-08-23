@@ -114,7 +114,7 @@ export const ArtifactEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(crypto.randomUUID());
-    const { uppy , files, upload} = useUploadController({id:id.current});
+    const { uppy, files, upload } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -147,7 +147,6 @@ export const ArtifactEdit = () => {
             status: {
                 files: files.map(f => f.info),
             },
-            
         };
     };
 
@@ -175,8 +174,8 @@ export const ArtifactEdit = () => {
                                     kinds={kinds}
                                     uppy={uppy}
                                     setIsSpecDirty={setIsSpecDirty}
-                                    files={files} />
-                                
+                                    files={files}
+                                />
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
@@ -186,7 +185,7 @@ export const ArtifactEdit = () => {
     );
 };
 const FormContent = (props: any) => {
-    const { uppy, kinds,setIsSpecDirty,files } = props;
+    const { uppy, kinds, setIsSpecDirty, files } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const { field } = useInput({ resource, source: 'spec' });
@@ -205,7 +204,7 @@ const FormContent = (props: any) => {
             return undefined;
         }
 
-        if (uppy.getFiles().length > 0 ) {
+        if (uppy.getFiles().length > 0) {
             return { path: { 'ui:readonly': true } };
         } else {
             return getArtifactSpecUiSchema(kind);
@@ -222,8 +221,12 @@ const FormContent = (props: any) => {
                 <SelectInput source="kind" choices={kinds} readOnly />
             </Stack>
             <MetadataInput />
-            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getArtifactUiSchema} />
-            {uppy && <FileInput uppy={uppy}  />}
+            <SpecInput
+                source="spec"
+                onDirty={setIsSpecDirty}
+                getUiSchema={getArtifactUiSchema}
+            />
+            {uppy && <FileInput uppy={uppy} />}
         </>
     );
 };

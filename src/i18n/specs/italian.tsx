@@ -91,7 +91,7 @@ export const specs = {
     },
     'python+job': {
         title: 'Job Python',
-        description: "Definizione di un job Python",
+        description: 'Definizione di un job Python',
     },
     'python+serve': {
         title: 'Serve di codice Python',
@@ -143,6 +143,6 @@ export const specs = {
     },
     mlflow: {
         title: 'MLflow',
-        description: 'Definizione modello MLFlow',    
+        description: 'Definizione modello MLFlow',
     },
 };

@@ -112,7 +112,7 @@ export const ModelEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(crypto.randomUUID());
-    const { uppy, files, upload  } = useUploadController({ id: id.current });
+    const { uppy, files, upload } = useUploadController({ id: id.current });
 
     useEffect(() => {
         if (schemaProvider) {
@@ -169,14 +169,13 @@ export const ModelEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm
-                                toolbar={<ModelEditToolbar />}
-                            >
+                            <SimpleForm toolbar={<ModelEditToolbar />}>
                                 <FormContent
                                     kinds={kinds}
                                     uppy={uppy}
                                     setIsSpecDirty={setIsSpecDirty}
-                                    files={files} />
+                                    files={files}
+                                />
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
@@ -224,7 +223,11 @@ const FormContent = (props: any) => {
 
             <MetadataInput />
 
-            <SpecInput source="spec" onDirty={setIsSpecDirty} getUiSchema={getModelUiSchema} />
+            <SpecInput
+                source="spec"
+                onDirty={setIsSpecDirty}
+                getUiSchema={getModelUiSchema}
+            />
             {uppy && <FileInput uppy={uppy} />}
         </>
     );

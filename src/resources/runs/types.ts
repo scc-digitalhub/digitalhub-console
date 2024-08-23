@@ -23,6 +23,5 @@ export const getRunUiSpec = (schema: any | undefined) => {
 const template = {
     'ui:order': ['inputs', 'parameters'],
     inputs: {},
-    parameters: {
-    },
+    parameters: {},
 };

@@ -196,7 +196,6 @@ export const WorkflowEdit = () => {
 
                                 <MetadataInput />
 
-
                                 <SpecInput
                                     source="spec"
                                     onDirty={setIsSpecDirty}

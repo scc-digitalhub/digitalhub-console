@@ -21,9 +21,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, isValidKind } from '../../common/helper';
-import {
-    BlankSchema,
-} from '../../common/schemas';
+import { BlankSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -33,7 +31,7 @@ import { getModelSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { useUploadController } from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { KindSelector } from '../../components/KindSelector';
 
 const CreateToolbar = (props: CreateActionsProps) => {
@@ -175,11 +173,7 @@ const FormContent = (props: any) => {
                                     }}
                                     uiSchema={getModelUiSchema(formData.kind)}
                                 />
-                                {uppy && (
-                                    <FileInput
-                                        uppy={uppy}
-                                    />
-                                )}
+                                {uppy && <FileInput uppy={uppy} />}
                             </>
                         );
                     else

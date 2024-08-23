@@ -25,9 +25,7 @@ import {
     isAlphaNumeric,
     isValidKind,
 } from '../../common/helper';
-import {
-    BlankSchema,
-} from '../../common/schemas';
+import { BlankSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -35,7 +33,7 @@ import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
-import {  useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { KindSelector } from '../../components/KindSelector';
 
 const CreateToolbar = (props: CreateActionsProps) => {
@@ -131,12 +129,10 @@ export const WorkflowCreate = () => {
                                         ]}
                                     />
 
-                                <KindSelector kinds={kinds} />
-
+                                    <KindSelector kinds={kinds} />
                                 </Stack>
 
                                 <MetadataInput />
-
 
                                 <FormDataConsumer<{ kind: string }>>
                                     {({ formData }) => {

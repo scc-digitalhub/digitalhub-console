@@ -1,4 +1,10 @@
-import React, { Fragment, ReactElement, useCallback, useMemo, useState } from 'react';
+import React, {
+    Fragment,
+    ReactElement,
+    useCallback,
+    useMemo,
+    useState,
+} from 'react';
 import {
     Button,
     ButtonProps,
@@ -98,7 +104,10 @@ export const LogsButton = (props: LogsButtonProps) => {
                 className={CreateInDialogButtonClasses.dialog}
             >
                 <div className={CreateInDialogButtonClasses.header}>
-                    <DialogTitle id="logs-dialog-title" className={CreateInDialogButtonClasses.title}>
+                    <DialogTitle
+                        id="logs-dialog-title"
+                        className={CreateInDialogButtonClasses.title}
+                    >
                         {translate(label)}
                     </DialogTitle>
                     <IconButton
@@ -359,7 +368,7 @@ const LogMetrics = (props: { metrics: any[] }) => {
         if (m.usage.cpu) {
             //convert nanocores to millicores
             const cpu = m.usage.cpu.endsWith('n')
-                ? parseInt(m.usage.cpu.slice(0, -1))/1000000
+                ? parseInt(m.usage.cpu.slice(0, -1)) / 1000000
                 : parseInt(m.usage.cpu);
             val['cpu'] = cpu;
         }

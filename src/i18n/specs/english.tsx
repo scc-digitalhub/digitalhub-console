@@ -87,15 +87,15 @@ export const specs = {
     },
     'python+build': {
         title: 'Python build',
-        description: "Python build definition",
+        description: 'Python build definition',
     },
     'python+job': {
         title: 'Python job',
-        description: "Python job definition",
+        description: 'Python job definition',
     },
     'python+serve': {
         title: 'Python serve',
-        description: "Python serve definition",
+        description: 'Python serve definition',
     },
     dbt: {
         title: 'DBT',
@@ -143,6 +143,6 @@ export const specs = {
     },
     mlflow: {
         title: 'MLflow',
-        description: 'MLFlow model definition',    
+        description: 'MLFlow model definition',
     },
 };

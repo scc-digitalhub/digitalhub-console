@@ -389,40 +389,40 @@ export const fields = {
         image: {
             title: 'Inference Server Image',
             description: '',
-        }
+        },
     },
     huggingface: {
         task: {
             title: 'HuggingFace Inference Task',
-            description: '',   
+            description: '',
         },
         backend: {
             title: 'HuggingFace Backend Type',
-            description: '',   
+            description: '',
         },
         tokenizerrevision: {
             title: 'HuggingFace Tokenizer Revision',
-            description: '',   
+            description: '',
         },
         maxlength: {
             title: 'Tokenizer Max Sequence Length',
-            description: '',    
+            description: '',
         },
         disablelowercase: {
             title: 'Disable Tokenizer Lowercase',
-            description: '',    
+            description: '',
         },
         disablespecialtokens: {
             title: 'Disable Special Tokens Encoding',
-            description: '',    
+            description: '',
         },
         dtype: {
             title: 'Weights Data Type',
-            description: '',    
+            description: '',
         },
         trustremotecode: {
             title: 'Allow Custom Code for Models and Tokenizers',
-            description: '',    
+            description: '',
         },
         tensorinputnames: {
             title: 'Tensor Input Names',
@@ -451,7 +451,7 @@ export const fields = {
         modelrevision: {
             title: 'HuggingFace Model Revision',
             description: '',
-        }
+        },
     },
     mlflow: {
         flavor: {
@@ -480,7 +480,7 @@ export const fields = {
         },
         inputdatasetschema: {
             title: 'Input Dataset Schema',
-            description: '',   
+            description: '',
         },
         inputdatasetsource: {
             title: 'Input Dataset Source',
@@ -498,7 +498,7 @@ export const fields = {
             title: 'Model Configuration',
             description: '',
         },
-        signature: {    
+        signature: {
             title: 'Model Signature',
             description: '',
         },
@@ -509,11 +509,11 @@ export const fields = {
         signatureoutputs: {
             title: 'Model Signature Outputs',
             description: '',
-        },  
+        },
         signatureparams: {
             title: 'Model Signature Parameters',
             description: '',
-        },  
+        },
     },
     inputDatasets: {
         item: {
@@ -521,5 +521,5 @@ export const fields = {
             description: '',
         },
     },
-    preview: 'File Preview'
+    preview: 'File Preview',
 };

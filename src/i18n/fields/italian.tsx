@@ -396,40 +396,40 @@ export const fields = {
         image: {
             title: 'Image del Inference Server',
             description: '',
-        }
+        },
     },
     huggingface: {
         task: {
             title: 'HuggingFace Inference Task',
-            description: '',   
+            description: '',
         },
         backend: {
             title: 'Tipo di HuggingFace backend',
-            description: '',   
+            description: '',
         },
         tokenizerrevision: {
             title: 'Versione di HuggingFace Tokenizer',
-            description: '',   
+            description: '',
         },
         maxlength: {
             title: 'Lunghezza massima di Tokenizer Sequence',
-            description: '',    
+            description: '',
         },
         disablelowercase: {
             title: 'Disabilitare Tokenizer Lowercase',
-            description: '',    
+            description: '',
         },
         disablespecialtokens: {
             title: 'Disabilitare Special Tokens Encoding',
-            description: '',    
+            description: '',
         },
         dtype: {
             title: 'Tipo dati per Weights',
-            description: '',    
+            description: '',
         },
         trustremotecode: {
             title: 'Abilitare Custom Code per modelli e tokenizer',
-            description: '',    
+            description: '',
         },
         tensorinputnames: {
             title: 'Nomi input dei Tensor',
@@ -458,7 +458,7 @@ export const fields = {
         modelrevision: {
             title: 'Versione modello HuggingFace',
             description: '',
-        }
+        },
     },
     mlflow: {
         flavor: {
@@ -487,7 +487,7 @@ export const fields = {
         },
         inputdatasetschema: {
             title: 'Schema del Input Dataset',
-            description: '',   
+            description: '',
         },
         inputdatasetsource: {
             title: 'Sorgente del Input Dataset',
@@ -505,7 +505,7 @@ export const fields = {
             title: 'Configurazione del Modello',
             description: '',
         },
-        signature: {    
+        signature: {
             title: 'Signature del modello',
             description: '',
         },
@@ -516,11 +516,11 @@ export const fields = {
         signatureoutputs: {
             title: 'Output del Signature',
             description: '',
-        },  
+        },
         signatureparams: {
             title: 'Parametri del Signature',
             description: '',
-        },  
+        },
     },
     inputDatasets: {
         item: {
@@ -528,5 +528,5 @@ export const fields = {
             description: '',
         },
     },
-    preview: 'Anteprima File'
+    preview: 'Anteprima File',
 };
