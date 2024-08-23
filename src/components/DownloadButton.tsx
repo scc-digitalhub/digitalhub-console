@@ -21,7 +21,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         label = 'download',
         icon = defaultIcon,
         fileName,
-        sub
+        sub,
     } = props;
     const { root } = useRootSelector();
     const resource = useResourceContext(props);
@@ -75,4 +75,5 @@ export const DownloadButton = (props: DownloadButtonProps) => {
 };
 
 export type DownloadButtonProps<RecordType extends RaRecord = any> =
-    FieldProps & ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };
+    FieldProps &
+        ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };

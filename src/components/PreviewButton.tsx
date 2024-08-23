@@ -14,7 +14,13 @@ import {
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { Fragment, ReactElement, useCallback, useEffect, useState } from 'react';
+import {
+    Fragment,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 
 import { get } from 'lodash';
 
@@ -28,16 +34,19 @@ import { usePapaParse } from 'react-papaparse';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { 
+import {
     Box,
-    Breakpoint, 
-    Dialog, 
+    Breakpoint,
+    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
+    ImageList,
+    ImageListItem,
     Stack,
-    styled, 
-    Typography} from '@mui/material';
+    styled,
+    Typography,
+} from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import React from 'react';
 
@@ -52,7 +61,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         fullWidth = true,
         maxWidth = 'md',
         sub,
-        fileType
+        fileType,
     } = props;
 
     const translate = useTranslate();
@@ -80,7 +89,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
-     
+
     let subPath = sub;
     if (sub && sub.startsWith(srcValue)) {
         subPath = sub.replace(srcValue, '');
@@ -101,7 +110,10 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                 className={CreateInDialogButtonClasses.dialog}
             >
                 <div className={CreateInDialogButtonClasses.header}>
-                    <DialogTitle id="logs-dialog-title" className={CreateInDialogButtonClasses.title}>
+                    <DialogTitle
+                        id="logs-dialog-title"
+                        className={CreateInDialogButtonClasses.title}
+                    >
                         {translate(label)}
                     </DialogTitle>
                     <IconButton
@@ -119,7 +131,12 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                     {isLoading ? (
                         <LoadingIndicator />
                     ) : (
-                        <PreviewView resource={resource} id={record.id} sub={subPath} fileType={fileType} />
+                        <PreviewView
+                            resource={resource}
+                            id={record.id}
+                            sub={subPath}
+                            fileType={fileType}
+                        />
                     )}
                 </DialogContent>
             </PreviewDialog>
@@ -145,7 +162,6 @@ const PreviewDialog = styled(Dialog, {
     },
 }));
 
-
 const PreviewView = (props: PreviewButtonProps) => {
     const { resource, sub, fileType } = props;
     const [url, setUrl] = useState<any>(undefined);
@@ -158,7 +174,7 @@ const PreviewView = (props: PreviewButtonProps) => {
     const ref = React.createRef<LazyLog>();
 
     const handlePreview = () => {
-        if (url) return; 
+        if (url) return;
 
         dataProvider
             .download(resource, { id: record.id, meta: { root }, sub })
@@ -166,10 +182,15 @@ const PreviewView = (props: PreviewButtonProps) => {
                 if (data?.url) {
                     setUrl(data.url);
                     // url = data.url;
-                    if (fileType && ['yaml', 'json', 'markdown'].indexOf(fileType) !== -1) {
-                        fetch(data.url).then(res => res.text()).then(text => {
-                            setContent(text);
-                        })
+                    if (
+                        fileType &&
+                        ['yaml', 'json', 'markdown'].indexOf(fileType) !== -1
+                    ) {
+                        fetch(data.url)
+                            .then(res => res.text())
+                            .then(text => {
+                                setContent(text);
+                            });
                     }
                 } else {
                     notify('ra.message.not_found', {
@@ -186,26 +207,47 @@ const PreviewView = (props: PreviewButtonProps) => {
             });
     };
     useEffect(() => {
-        handlePreview();        
-    }, [url])
+        handlePreview();
+    }, [url]);
 
     return (
         <Stack>
             <Box sx={{ pt: 2 }}>
-                {fileType === 'html' && <iframe src={url} width={'100%'} height={'100%'} style={{ border: 'none' }}></iframe>}
-                {fileType === 'image' && <img src={url} width={'100%'} style={{ border: 'none' }}></img>}
-                {['yaml', 'json', 'markdown'].indexOf(fileType) !== -1 && content && 
-                    <AceEditor
-                        mode={fileType}
-                        readOnly={true}
-                        theme={'monokai'}
-                        wrapEnabled
+                {fileType === 'html' && (
+                    <iframe
+                        title="preview-ext"
+                        src={url}
                         width={'100%'}
-                        setOptions={{ showPrintMargin: false }}
-                        value={content}
-                    />}
-                {url &&fileType === 'txt' &&    
-                    <LogViewer sx={{ height: '100%', minHeight: '520px' }}>             
+                        height={'100%'}
+                        style={{ border: 'none' }}
+                    ></iframe>
+                )}
+                {fileType === 'image' && (
+                    <ImageList cols={1}>
+                        <ImageListItem>
+                            <img
+                                alt="preview-img"
+                                src={url}
+                                // width={'100%'}
+                                style={{ border: 'none' }}
+                            ></img>
+                        </ImageListItem>
+                    </ImageList>
+                )}
+                {['yaml', 'json', 'markdown'].indexOf(fileType) !== -1 &&
+                    content && (
+                        <AceEditor
+                            mode={fileType}
+                            readOnly={true}
+                            theme={'monokai'}
+                            wrapEnabled
+                            width={'100%'}
+                            setOptions={{ showPrintMargin: false }}
+                            value={content}
+                        />
+                    )}
+                {url && fileType === 'txt' && (
+                    <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
                         <LazyLog
                             ref={ref}
                             url={url}
@@ -218,8 +260,9 @@ const PreviewView = (props: PreviewButtonProps) => {
                             selectableLines={true}
                             width={'auto'}
                         />
-                    </LogViewer>}
-                {url && fileType === 'csv' && <CSVViewer url={url}/>}
+                    </LogViewer>
+                )}
+                {url && fileType === 'csv' && <CSVViewer url={url} />}
             </Box>
         </Stack>
     );
@@ -227,7 +270,7 @@ const PreviewView = (props: PreviewButtonProps) => {
 
 const CSVViewer = (props: CSVViewerProps) => {
     const MAX_ROWS = 100;
-    const { url } =  props;
+    const { url } = props;
     const { readRemoteFile } = usePapaParse();
     const [content, setContent] = useState<any>(undefined);
     const notify = useNotify();
@@ -235,15 +278,24 @@ const CSVViewer = (props: CSVViewerProps) => {
     useEffect(() => {
         if (!content) {
             readRemoteFile(url, {
-                complete: (results) => {
-                    console.log(results.data)
+                complete: results => {
                     if (results.data && results.data.length > 0) {
-                        const cols = Object.keys(results.data[0] as any).map(c => ({field: c, flex: 1}));
-                        const res = {rows: results.data.map((row: any, index: number) => ({...row, id: index})), columns: cols}
-                        setContent(res);    
+                        const cols = Object.keys(results.data[0] as any).map(
+                            c => ({ field: c, flex: 1 })
+                        );
+                        const res = {
+                            rows: results.data.map(
+                                (row: any, index: number) => ({
+                                    ...row,
+                                    id: index,
+                                })
+                            ),
+                            columns: cols,
+                        };
+                        setContent(res);
                     }
                 },
-                error: (err) => {
+                error: err => {
                     notify('ra.message.not_found', {
                         type: 'error',
                     });
@@ -251,30 +303,34 @@ const CSVViewer = (props: CSVViewerProps) => {
                 header: true,
                 download: true,
                 preview: MAX_ROWS,
-                skipEmptyLines: true
+                skipEmptyLines: true,
             });
-        
-        }            
-    }, [content])
+        }
+    }, [content]);
 
-    return <Box sx={{ 
-            height: 400, 
-            width: '100%',
-            '& .MuiDataGrid-columnHeaderTitle': {
-            fontWeight: 'bold',
-            } 
-        }}>
-        {content && 
-        <DataGrid
-        rows={content.rows}
-        columns={content.columns}
-        pageSizeOptions={[MAX_ROWS]}
-        autoHeight
-        disableRowSelectionOnClick
-        />}
-        {!content && <EmptyResult />}
-    </Box>;
-}
+    return (
+        <Box
+            sx={{
+                height: 400,
+                width: '100%',
+                '& .MuiDataGrid-columnHeaderTitle': {
+                    fontWeight: 'bold',
+                },
+            }}
+        >
+            {content && (
+                <DataGrid
+                    rows={content.rows}
+                    columns={content.columns}
+                    pageSizeOptions={[MAX_ROWS]}
+                    autoHeight
+                    disableRowSelectionOnClick
+                />
+            )}
+            {!content && <EmptyResult />}
+        </Box>
+    );
+};
 
 const LogViewer = styled(Box, {
     name: 'LogViewer',
@@ -299,8 +355,15 @@ const EmptyResult = () => {
         </Typography>
     );
 };
-export type CSVViewerProps<RecordType extends RaRecord = any> =
-    FieldProps & { url: string};
+export type CSVViewerProps<RecordType extends RaRecord = any> = FieldProps & {
+    url: string;
+};
 
-export type PreviewButtonProps<RecordType extends RaRecord = any> =
-    FieldProps & ButtonProps & { icon?: ReactElement; sub?: string; fullWidth?: boolean; maxWidth?: Breakpoint, fileType: string};
+export type PreviewButtonProps<RecordType extends RaRecord = any> = FieldProps &
+    ButtonProps & {
+        icon?: ReactElement;
+        sub?: string;
+        fullWidth?: boolean;
+        maxWidth?: Breakpoint;
+        fileType: string;
+    };
