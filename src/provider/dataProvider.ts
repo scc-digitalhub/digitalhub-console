@@ -179,7 +179,10 @@ const springDataProvider = (
                     body:
                         typeof params.data === 'string'
                             ? params.data
-                            : JSON.stringify({ ...params.data, id: params.meta?.id }),
+                            : JSON.stringify({
+                                  ...params.data,
+                                  id: params.meta?.id,
+                              }),
                 }).then(({ json }) => ({
                     data: { ...params.data, id: json.id } as any,
                 }));
@@ -346,16 +349,20 @@ const springDataProvider = (
         },
         download: (resource, params) => {
             let prefix = '';
+            let sub = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/download`;
+            if (params.sub) {
+                sub = `?${stringify({ sub: params.sub })}`;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/download${sub}`;
             return httpClient(url).then(({ status, body }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
                 if (!body) {
-                    throw new Error('Resource not found')
+                    throw new Error('Resource not found');
                 }
                 const jsonBody = JSON.parse(body);
                 return {
@@ -374,7 +381,7 @@ const springDataProvider = (
                     throw new Error('Invalid response status ' + status);
                 }
                 if (!body) {
-                    throw new Error('Resource not found')
+                    throw new Error('Resource not found');
                 }
                 const jsonBody = JSON.parse(body);
                 return {
@@ -389,20 +396,22 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/upload?filename=${params.filename}`;
-            return httpClient(url,{method:'POST'}).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
+            return httpClient(url, { method: 'POST' }).then(
+                ({ status, body }) => {
+                    if (status !== 200) {
+                        throw new Error('Invalid response status ' + status);
+                    }
+                    if (!body) {
+                        throw new Error('Resource not found');
+                    }
+                    const jsonBody = JSON.parse(body);
+                    return {
+                        path: jsonBody.path,
+                        url: jsonBody.url,
+                        expiration: jsonBody.expiration,
+                    };
                 }
-                if (!body) {
-                    throw new Error('Resource not found')
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    path: jsonBody.path,
-                    url: jsonBody.url,
-                    expiration: jsonBody.expiration,
-                };
-            });
+            );
         },
         //POST
         uploadMultipartStart: (resource, params) => {
@@ -411,19 +420,21 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/start?filename=${params.filename}`;
-            return httpClient(url,{method:'POST'}).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
+            return httpClient(url, { method: 'POST' }).then(
+                ({ status, body }) => {
+                    if (status !== 200) {
+                        throw new Error('Invalid response status ' + status);
+                    }
+                    if (!body) {
+                        throw new Error('Resource not found');
+                    }
+                    const jsonBody = JSON.parse(body);
+                    return {
+                        path: jsonBody.path,
+                        uploadId: jsonBody.uploadId,
+                    };
                 }
-                if (!body) {
-                    throw new Error('Resource not found')
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    path: jsonBody.path,
-                    uploadId: jsonBody.uploadId,
-                };
-            });
+            );
         },
         //PUT
         uploadMultipartPart: (resource, params) => {
@@ -432,20 +443,22 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/part?filename=${params.filename}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`;
-            return httpClient(url,{method:'PUT'}).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
+            return httpClient(url, { method: 'PUT' }).then(
+                ({ status, body }) => {
+                    if (status !== 200) {
+                        throw new Error('Invalid response status ' + status);
+                    }
+                    if (!body) {
+                        throw new Error('Resource not found');
+                    }
+                    const jsonBody = JSON.parse(body);
+                    return {
+                        path: jsonBody.path,
+                        url: jsonBody.url,
+                        expiration: jsonBody.expiration,
+                    };
                 }
-                if (!body) {
-                    throw new Error('Resource not found')
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    path: jsonBody.path,
-                    url: jsonBody.url,
-                    expiration: jsonBody.expiration,
-                };
-            });
+            );
         },
         //POST
         uploadMultipartComplete: (resource, params) => {
@@ -453,24 +466,27 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const eTagPartList =params.eTagPartList?params.eTagPartList.map(etag => `partList=${etag}`).join('&'):''
+            const eTagPartList = params.eTagPartList
+                ? params.eTagPartList.map(etag => `partList=${etag}`).join('&')
+                : '';
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/files/multipart/complete?filename=${params.filename}&uploadId=${params.uploadId}&${eTagPartList}`;
-            return httpClient(url,{method:'POST'}).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
+            return httpClient(url, { method: 'POST' }).then(
+                ({ status, body }) => {
+                    if (status !== 200) {
+                        throw new Error('Invalid response status ' + status);
+                    }
+                    if (!body) {
+                        throw new Error('Resource not found');
+                    }
+                    const jsonBody = JSON.parse(body);
+                    return {
+                        path: jsonBody.path,
+                        url: jsonBody.url,
+                        expiration: jsonBody.expiration,
+                    };
                 }
-                if (!body) {
-                    throw new Error('Resource not found')
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    path: jsonBody.path,
-                    url: jsonBody.url,
-                    expiration: jsonBody.expiration,
-                };
-            });
-        }
-        
+            );
+        },
     };
 };
 

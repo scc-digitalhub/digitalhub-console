@@ -351,6 +351,10 @@ export const fields = {
         tab: 'Info',
         empty: 'Nessuna informazione disponibile',
     },
+    files: {
+        tab: 'File',
+        empty: 'Nessuna informazione disponibile',
+    },
     datagrid: {
         key: 'Nome',
         value: 'Valore',
@@ -447,5 +451,82 @@ export const fields = {
             title: 'Numero max dei prompt da loggare',
             description: '',
         },
+        modelid: {
+            title: 'ID modello HuggingFace',
+            description: '',
+        },
+        modelrevision: {
+            title: 'Versione modello HuggingFace',
+            description: '',
+        }
     },
+    mlflow: {
+        flavor: {
+            title: 'Model Flavor',
+            description: '',
+        },
+        inputdatasets: {
+            title: 'Input Dataset',
+            description: '',
+            item: {
+                title: 'Input Dataset',
+                description: '',
+            },
+        },
+        inputdatasetdigest: {
+            title: 'Digest del Input Dataset',
+            description: '',
+        },
+        inputdatasetname: {
+            title: 'Nome del Input Dataset',
+            description: '',
+        },
+        inputdatasetprofile: {
+            title: 'Profilo del Input Dataset',
+            description: '',
+        },
+        inputdatasetschema: {
+            title: 'Schema del Input Dataset',
+            description: '',   
+        },
+        inputdatasetsource: {
+            title: 'Sorgente del Input Dataset',
+            description: '',
+        },
+        inputdatasetsourcetype: {
+            title: 'Tipo sorgente del Input Dataset',
+            description: '',
+        },
+        digest: {
+            title: 'Digest del Dataset',
+            description: '',
+        },
+        modelconfig: {
+            title: 'Configurazione del Modello',
+            description: '',
+        },
+        signature: {    
+            title: 'Signature del modello',
+            description: '',
+        },
+        signatureinputs: {
+            title: 'Input del Signature',
+            description: '',
+        },
+        signatureoutputs: {
+            title: 'Output del Signature',
+            description: '',
+        },  
+        signatureparams: {
+            title: 'Parametri del Signature',
+            description: '',
+        },  
+    },
+    inputDatasets: {
+        item: {
+            title: 'Input Dataset',
+            description: '',
+        },
+    },
+    preview: 'Anteprima File'
 };
