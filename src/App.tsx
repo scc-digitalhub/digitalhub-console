@@ -56,8 +56,6 @@ import {
 
 import { Dashboard } from './pages/dashboard/Dashboard';
 
-import { Client as StompClient } from '@stomp/stompjs';
-
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -72,6 +70,9 @@ const API_URL: string =
 const AUTH_URL: string =
     (globalThis as any).REACT_APP_AUTH_URL ||
     (process.env.REACT_APP_AUTH_URL as string);
+const WEBSOCKET_URL: string =
+    (globalThis as any).REACT_APP_WEBSOCKET_URL ||
+    (process.env.REACT_APP_WEBSOCKET_URL as string);
 
 // oidc login
 const ISSUER_URI: string =
@@ -112,7 +113,6 @@ const authProvider =
           })
         : undefined;
 
-//TODO passare httpclient a stomp se possibile, oppure fare stessa cosa
 const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
     const headers = (options.headers ||
         new Headers({
@@ -164,10 +164,6 @@ import { RunList, RunShow } from './resources/runs';
 import { RunIcon } from './resources/runs/icon';
 import { StompContextProvider } from './contexts/StompContext';
 
-const stompClient = new StompClient({
-    brokerURL: 'ws://localhost:8080/mywebsocket', //TODO usare API_URL
-});
-
 export const SearchEnabledContext = createContext(false);
 
 const WrappedLayout = (props: any) => {
@@ -200,7 +196,7 @@ const CoreApp = () => {
                         dataProvider={dataProvider}
                         resource="schemas"
                     >
-                        <StompContextProvider stompClient={stompClient}>
+                        <StompContextProvider authProvider={authProvider} websocketUrl={WEBSOCKET_URL}>
                             <AdminUI
                                 dashboard={Dashboard}
                                 layout={WrappedLayout}
