@@ -14,6 +14,7 @@ import {
     TextField as MuiTextField,
     Menu,
     MenuItem,
+    useTheme,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
@@ -187,6 +188,8 @@ const ActualSearchBar = (props: any) => {
         formContext.reset();
     };
 
+    const theme = useTheme();
+
     return (
         <MuiTextField
             {...field}
@@ -201,7 +204,7 @@ const ActualSearchBar = (props: any) => {
             InputProps={{
                 sx: {
                     width: '50ch',
-                    backgroundColor: 'white',
+                    backgroundColor: theme.palette.background.paper,
                     '& .MuiInputBase-input': {
                         padding: '8px 0',
                     },
