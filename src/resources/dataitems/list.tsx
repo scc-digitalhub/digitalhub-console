@@ -115,6 +115,7 @@ export const DataItemList = () => {
                                 <TextField source="kind" />
                                 <FunctionField
                                     source="metadata.labels"
+                                    sortable={false}
                                     render={record =>
                                         record.metadata.labels?.map(label => (
                                             <Chip
