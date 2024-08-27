@@ -131,6 +131,7 @@ export const FunctionList = () => {
                                 />
                                 <FunctionField
                                     source="metadata.labels"
+                                    sortable={false}
                                     render={record =>
                                         record.metadata.labels?.map(label => (
                                             <Chip
