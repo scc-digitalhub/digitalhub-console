@@ -17,6 +17,8 @@ import SearchBar from '../search/searchbar/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
+import { useStompContext } from '../contexts/StompContext';
+import { NotificationArea } from '../components/NotificationArea';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -179,6 +181,7 @@ export const MyAppBar = () => {
     const translate = useTranslate();
 
     const enableSearch = useContext(SearchEnabledContext);
+    const { messages, setMessages } = useStompContext();
 
     return (
         <AppBar color="primary" elevation={0}>
@@ -204,6 +207,10 @@ export const MyAppBar = () => {
                     filters={filters}
                     filterSeparator=":"
                 />
+            )}
+
+            {messages && (
+                <NotificationArea messages={messages} setMessages={setMessages} />
             )}
 
             {docsVersion && (

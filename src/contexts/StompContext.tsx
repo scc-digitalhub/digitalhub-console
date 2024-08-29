@@ -10,6 +10,7 @@ interface StompContextValue {
     connect: () => void;
     disconnect: () => Promise<void>;
     messages: any[];
+    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const StompContext = createContext<StompContextValue | undefined>(undefined);
@@ -25,7 +26,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         const state: String = entity.status.state;
         console.log('received stomp message', entity.id, entity.status.state);
 
-        setMessages(prev => [...prev, entity]);
+        setMessages(prev => [...prev, {...entity, notificationId: `${entity.id}_${state}`}]);
 
         const alertContent =
             state === 'DELETED' ? (
@@ -127,7 +128,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     }, [authProvider]);
 
     return (
-        <StompContext.Provider value={stompContext ? {...stompContext, messages} : undefined}>
+        <StompContext.Provider value={stompContext ? {...stompContext, messages, setMessages} : undefined}>
             {children}
         </StompContext.Provider>
     );
