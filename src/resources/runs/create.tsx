@@ -1,59 +1,20 @@
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { StepperForm, useStepper } from '@dslab/ra-stepper';
 import {
-    Create,
     FormDataConsumer,
-    LoadingIndicator,
     SaveButton,
-    SimpleForm,
     Toolbar,
-    useGetOne,
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import { getTaskUiSpec } from '../tasks/types';
-import { useState } from 'react';
 import { Box } from '@mui/system';
 import { getRunUiSpec } from './types';
-import { toYaml } from '@dslab/ra-export-record-button';
-import { AceEditorField } from '../../components/AceEditorField';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 
-const RunCreate = (props: { taskId: string }) => {
-    const { taskId } = props;
-    //data
-    const [runSchema, setRunSchema] = useState<any>();
-    const [taskSchema, setTaskSchema] = useState<any>();
+import { Editor } from '../../components/AceEditorInput';
+import 'ace-builds/src-noconflict/mode-yaml';
 
-    //fetch task
-    const { data: task, isLoading, error } = useGetOne('tasks', { id: taskId });
-
-    //rebuild spec
-    const fn = task?.spec?.function || '';
-    const url = new URL(fn);
-    const runtime = url.protocol
-        ? url.protocol.substring(0, url.protocol.length - 1)
-        : '';
-    url.protocol = task.kind + ':';
-    const key = url.toString();
-
-    const partial = {
-        project: task?.project,
-        kind: runSchema ? runSchema.kind : runtime + '+run',
-        spec: {
-            task: key,
-            local_execution: false,
-            //spread task details to init
-            ...task?.spec,
-        },
-    };
-
-    if (isLoading || error) {
-        return <LoadingIndicator />;
-    }
-
-    return <></>;
-};
+// import { ajvResolver } from '@hookform/resolvers/ajv';
 
 export const RunCreateComponent = (props: {
     runSchema: any;
@@ -63,8 +24,21 @@ export const RunCreateComponent = (props: {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
+
+    // const resolverOptions: any = {strict: 'log', strictSchema: 'log', validateSchema: 'log'}
+    // const schema = { ...runSchema };
+    // delete schema["$schema"]
+    // if (schema.allOf && schema.allOf.length == 0) {
+    //     delete schema.allOf
+    // }
+    // console.log('schema', schema);
+
+
     return (
-        <StepperForm toolbar={<StepperToolbar />}>
+        <StepperForm 
+            toolbar={<StepperToolbar />} 
+            // resolver={ajvResolver(schema, resolverOptions)} 
+            >
             <StepperForm.Step label={getResourceLabel('tasks', 1)}>
                 <JsonSchemaInput
                     source="spec"
@@ -82,13 +56,21 @@ export const RunCreateComponent = (props: {
             <StepperForm.Step label={translate('Recap')} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
-                        const r = { spec: btoa(toYaml(formData?.spec)) };
+                        // const r = { spec: btoa(toYaml(formData?.spec)) };
                         return (
-                            <AceEditorField
-                                mode="yaml"
-                                source="spec"
-                                record={r}
-                            />
+                            <>
+                            <Editor
+                            mode='yaml'
+                            theme='github'
+                            source='spec'
+                            schema={[runSchema, taskSchema]}
+                            /> 
+                            </>                         
+                            // <AceEditorField
+                            //     mode="yaml"
+                            //     source="spec"
+                            //     record={r}
+                            // />
                         );
                     }}
                 </FormDataConsumer>
@@ -96,6 +78,7 @@ export const RunCreateComponent = (props: {
         </StepperForm>
     );
 };
+
 
 const StepperToolbar = () => {
     const { steps, currentStep } = useStepper();

@@ -16,7 +16,11 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
+
+import { toYaml, toJson, } from '@dslab/ra-export-record-button';
+import yaml from 'yaml';
+
 import {
     useTranslate,
     Toolbar,
@@ -29,7 +33,7 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router';
 
-export const Editor = (props: AceInputProps) => {
+export const Editor = (props: AceInputProps & {schema?: any[]}) => {
     const {
         mode = 'html',
         theme = 'monokai',
@@ -44,6 +48,7 @@ export const Editor = (props: AceInputProps) => {
         onChange,
         resource,
         source,
+        schema
     } = props;
 
     const {
@@ -59,7 +64,9 @@ export const Editor = (props: AceInputProps) => {
         onBlur,
         ...props,
     });
-    const valueCode = atob(field?.value.base64 || '');
+
+    const [value, setValue] = useState<string>(toYaml(field?.value || ''));
+
     const labelProps = {
         fullWidth,
         isRequired,
@@ -73,10 +80,17 @@ export const Editor = (props: AceInputProps) => {
         useWorker: useWorker,
         showPrintMargin: false,
     };
-    const onCodeChange = (data: string) => {
-        const encodedValue = btoa(data);
-        field.onChange({ ...field.value, base64: encodedValue });
+    const onLeave = () => {
+        try {
+            const obj = yaml.parse(value);
+            field.onChange(obj);
+        } catch (e) {
+            console.log('error', e);
+        }
     };
+    const onValueChange = (data: string) => {
+        setValue(data);
+    }
     // import workers (disabled by default)
     // NOTE: this should match *exactly* the included ace version
     // ace.config.set('basePath', basePath + ace.version + '/src-noconflict/');
@@ -91,8 +105,9 @@ export const Editor = (props: AceInputProps) => {
                     wrapEnabled
                     width={fullWidth ? '100%' : width}
                     setOptions={aceOptions}
-                    value={valueCode}
-                    onChange={onCodeChange}
+                    value={value }
+                    onBlur={onLeave}
+                    onChange={onValueChange}
                 />
             </Labeled>
             <InputHelperText
