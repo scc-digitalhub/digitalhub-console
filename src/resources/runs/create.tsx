@@ -16,6 +16,8 @@ import 'ace-builds/src-noconflict/mode-yaml';
 
 // import { ajvResolver } from '@hookform/resolvers/ajv';
 
+import { validateSchemas } from '../../common/helper';
+
 export const RunCreateComponent = (props: {
     runSchema: any;
     taskSchema: any;
@@ -26,17 +28,15 @@ export const RunCreateComponent = (props: {
 
 
     // const resolverOptions: any = {strict: 'log', strictSchema: 'log', validateSchema: 'log'}
-    // const schema = { ...runSchema };
-    // delete schema["$schema"]
-    // if (schema.allOf && schema.allOf.length == 0) {
-    //     delete schema.allOf
-    // }
-    // console.log('schema', schema);
-
+    const validateRun = (values) => {
+        const errors = validateSchemas(values.spec, [runSchema, taskSchema]);
+        return errors;  
+    }
 
     return (
         <StepperForm 
             toolbar={<StepperToolbar />} 
+            validate={validateRun}
             // resolver={ajvResolver(schema, resolverOptions)} 
             >
             <StepperForm.Step label={getResourceLabel('tasks', 1)}>
