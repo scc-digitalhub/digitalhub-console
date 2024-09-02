@@ -114,7 +114,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
-            {kind && kind === 'model' && (
+            {kind && (
                 <TabbedShowLayout.Tab label="resources.models.tab.metrics">
                     <MetricsTabComponent record={record} />
                 </TabbedShowLayout.Tab>
