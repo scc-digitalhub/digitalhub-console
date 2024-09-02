@@ -56,6 +56,10 @@ export const RunCreateComponent = (props: {
             <StepperForm.Step label={translate('Recap')} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
+                        // workaround: remove k8s from spec as it is not part of the schema
+                        if (formData && formData.spec && formData.spec.k8s) {
+                            delete formData.spec.k8s
+                        }
                         // const r = { spec: btoa(toYaml(formData?.spec)) };
                         return (
                             <>
