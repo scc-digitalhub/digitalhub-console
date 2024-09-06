@@ -27,6 +27,7 @@ export const getTaskUiSpec = (schema: any | undefined) => {
 export const k8sSpec = {
     'ui:order': [
         'profile',
+        'template',
         'service_type',
         'service_ports',
         'resources',
@@ -34,6 +35,8 @@ export const k8sSpec = {
         'secrets',
         'volumes',
         'node_selector',
+        'priorityClass',
+        'runtimeClass',
         'tolerations',
         'affinity',
     ],
@@ -175,4 +178,6 @@ export const k8sSpec = {
             'ui:label': false,
         },
     },
+    priorityClass: {},
+    runtimeClass: {},
 };

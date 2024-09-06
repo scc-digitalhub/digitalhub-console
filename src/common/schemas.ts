@@ -191,6 +191,6 @@ export const filterProps = (first: any, second: any) => {
     return {
         ...JSON.parse(JSON.stringify(first)),
         properties: JSON.parse(JSON.stringify(properties)),
-        allOf: JSON.parse(JSON.stringify(allOf)),
+        allOf: allOf ? JSON.parse(JSON.stringify(allOf)) : [],
     };
 };
