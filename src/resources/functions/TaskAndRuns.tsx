@@ -36,7 +36,7 @@ import { LogsButton } from '../../components/LogsButton';
 import { StepperForm } from '@dslab/ra-stepper';
 import { getTaskUiSpec } from '../tasks/types';
 import { JsonSchemaField, JsonSchemaInput } from '../../components/JsonSchema';
-import { RunCreateComponent, RunShowComponent } from '../runs';
+import { RunCreateForm, RunShowComponent } from '../runs';
 import { filterProps } from '../../common/schemas';
 import { useGetManySchemas } from '../../controllers/schemaController';
 
@@ -258,27 +258,12 @@ const TaskRunList = () => {
             ...r,
             spec: {
                 task: key,
+                local_execution: false,
+                //copy the task spec  (using form)
                 ...r.spec,
             },
         };
     };
-
-    // function customValidate(formData, errors, uiSchema) {
-    //     if (checkCpuRequestError(formData)) {
-    //         errors.k8s.resources.cpu.requests.addError(
-    //             translate('resources.tasks.errors.requestMinorLimits')
-    //         );
-    //     }
-    //     if (checkMemRequestError(formData)) {
-    //         errors.k8s.resources.mem.requests.addError(
-    //             translate('resources.tasks.errors.requestMinorLimits')
-    //         );
-    //     }
-    //     if (checkGpuRequestError(formData)) {
-    //         errors.k8s.resources.gpu.requests.addError('');
-    //     }
-    //     return errors;
-    // }
 
     const CreateActionButton = () => (
         <CreateInDialogButton
@@ -289,7 +274,8 @@ const TaskRunList = () => {
             transform={prepare}
         >
             {runSchema?.schema && taskSchema?.schema && (
-                <RunCreateComponent
+                <RunCreateForm
+                    runtime={runtime}
                     runSchema={runSchema.schema}
                     taskSchema={taskSchema.schema}
                 />

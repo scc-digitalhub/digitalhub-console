@@ -241,6 +241,14 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@dslab/ra-ace-editor@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-ace-editor/-/ra-ace-editor-1.2.0.tgz#c966644b4caa06a3921f0b19f7611062a4fcbf2c"
+  integrity sha512-cP+hHKFH+2uEsKZfZbCqxSNbQt03o+l3HsgdHTgASeJfVEK+CE/uL6zIX1lGHBpu8gb3nSCk/GXzmG3g79nFgQ==
+  dependencies:
+    ace-builds "^1.14.0"
+    react-ace "^10.1.0"
+
 "@dslab/ra-auth-oidc@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@dslab/ra-auth-oidc/-/ra-auth-oidc-1.0.1.tgz#281a698efef4ca09874bcd8b6564b2110a625a3d"
@@ -1989,6 +1997,11 @@
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/@wtfcode/byte-converter/-/byte-converter-2.0.8.tgz#e9991b7b5493e3eed95a511d0303107e991895d1"
   integrity sha512-lVl65lgHdSUlIPVQopEr/cWZvCtZOh7eBu8zizjMJ39mLFJWkaPFrjLcdyE2Xux1H5DCYzmMN780K1FzGt4eyg==
+
+ace-builds@^1.14.0, ace-builds@^1.4.14:
+  version "1.36.2"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.36.2.tgz#9499bd59e839a335ac4850e74549ca8d849dc554"
+  integrity sha512-eqqfbGwx/GKjM/EnFu4QtQ+d2NNBu84MGgxoG8R5iyFpcVeQ4p9YlTL+ZzdEJqhdkASqoqOxCSNNGyB6lvMm+A==
 
 ace-builds@^1.32.8:
   version "1.33.1"
@@ -4264,7 +4277,7 @@ promise-queue@^2.2.5:
   resolved "https://registry.yarnpkg.com/promise-queue/-/promise-queue-2.2.5.tgz#2f6f5f7c0f6d08109e967659c79b88a9ed5e93b4"
   integrity sha512-p/iXrPSVfnqPft24ZdNNLECw/UrtLTpT3jpAAMzl/o5/rDsGCPo3/CQS2611flL6LkoEJ3oQZw7C8Q80ZISXRQ==
 
-prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.0, prop-types@^15.8.1:
+prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.0, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -4377,6 +4390,17 @@ randexp@0.4.6:
   dependencies:
     discontinuous-range "1.0.0"
     ret "~0.1.10"
+
+react-ace@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/react-ace/-/react-ace-10.1.0.tgz#d348eac2b16475231779070b6cd16768deed565f"
+  integrity sha512-VkvUjZNhdYTuKOKQpMIZi7uzZZVgzCjM7cLYu6F64V0mejY8a2XTyPUIMszC6A4trbeMIHbK5fYFcT/wkP/8VA==
+  dependencies:
+    ace-builds "^1.4.14"
+    diff-match-patch "^1.0.5"
+    lodash.get "^4.4.2"
+    lodash.isequal "^4.5.0"
+    prop-types "^15.7.2"
 
 react-ace@^11.0.1:
   version "11.0.1"

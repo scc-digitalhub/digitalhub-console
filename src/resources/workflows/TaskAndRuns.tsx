@@ -28,7 +28,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import { WorkflowView } from './WorkflowView';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { filterProps } from '../../common/schemas';
-import { RunCreateComponent } from '../runs';
+import { RunCreateForm } from '../runs';
 import { LogsButton } from '../../components/LogsButton';
 
 export const TaskAndRuns = (props: {
@@ -142,6 +142,8 @@ const TaskRunList = () => {
             ...r,
             spec: {
                 task: key,
+                local_execution: false,
+                //copy the task spec  (using form)
                 ...r.spec,
             },
         };
@@ -163,7 +165,8 @@ const TaskRunList = () => {
             transform={prepare}
         >
             {runSchema?.schema && taskSchema?.schema && (
-                <RunCreateComponent
+                <RunCreateForm
+                    runtime={runtime}
                     runSchema={runSchema.schema}
                     taskSchema={taskSchema.schema}
                 />

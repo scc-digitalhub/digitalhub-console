@@ -1,4 +1,5 @@
 import { isEmpty, regex } from 'react-admin';
+import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
@@ -22,3 +23,24 @@ export const isValidKind = (kinds: any[]) => (value, values?) => {
         ? 'validation.invalidKind'
         : undefined;
 };
+
+export const isValidAgainstSchema =
+    (ajv: ValidatorType<any, RJSFSchema, any>, schema: any) => value => {
+        if (ajv == null || ajv == undefined) {
+            return undefined;
+        }
+        if (!schema || !value) return undefined;
+        try {
+            const validation = ajv.validateFormData(value, schema);
+            if (!validation.errors) {
+                return undefined;
+            }
+
+            const errors = validation.errors?.map(
+                e => e.property + ': ' + e.message
+            );
+            return errors?.join(',');
+        } catch (error) {
+            return 'error with validator';
+        }
+    };
