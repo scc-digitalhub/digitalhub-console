@@ -33,6 +33,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
+import { AceEditorField } from '../../components/AceEditorField';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
 
@@ -269,6 +270,47 @@ const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
                     label={false}
                 />
             )}
+        </RecordContextProvider>
+    );
+};
+const SourceCodeView = (props: { sourceCode: any }) => {
+    const { sourceCode } = props;
+    console.log('source', sourceCode);
+    const code = sourceCode.code
+        ? sourceCode.code
+        : sourceCode.base64
+        ? atob(sourceCode.base64)
+        : '';
+
+    const values = {
+        ...{ sourceCode },
+        source: sourceCode.source || '-',
+        lang: sourceCode.lang || 'unknown',
+    };
+
+    return (
+        <RecordContextProvider value={values}>
+            <TopToolbar>
+                <InspectButton showCopyButton={false} />
+            </TopToolbar>
+            <Stack direction={'row'} spacing={3} color={'gray'}>
+                <Labeled>
+                    <TextField source="lang" record={values} />
+                </Labeled>
+
+                <Labeled>
+                    <TextField source="source" record={values} />
+                </Labeled>
+            </Stack>
+            <Box sx={{ pt: 2 }}>
+                <Labeled label="fields.code">
+                    <AceEditorField
+                        mode={sourceCode.lang}
+                        source="sourceCode.base64"
+                        theme="monokai"
+                    />
+                </Labeled>
+            </Box>
         </RecordContextProvider>
     );
 };

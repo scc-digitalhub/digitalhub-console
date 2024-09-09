@@ -16,11 +16,7 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import React, { Fragment, useState } from 'react';
-
-import { toYaml, toJson, } from '@dslab/ra-export-record-button';
-import yaml from 'yaml';
-
+import React, { Fragment } from 'react';
 import {
     useTranslate,
     Toolbar,
@@ -33,7 +29,7 @@ import {
 } from 'react-admin';
 import { useNavigate } from 'react-router';
 
-export const Editor = (props: AceInputProps & {schema?: any[]}) => {
+export const Editor = (props: AceInputProps) => {
     const {
         mode = 'html',
         theme = 'monokai',
@@ -48,7 +44,6 @@ export const Editor = (props: AceInputProps & {schema?: any[]}) => {
         onChange,
         resource,
         source,
-        schema
     } = props;
 
     const {
@@ -64,9 +59,7 @@ export const Editor = (props: AceInputProps & {schema?: any[]}) => {
         onBlur,
         ...props,
     });
-
-    const [value, setValue] = useState<string>(toYaml(field?.value || ''));
-
+    const valueCode = atob(field?.value.base64 || '');
     const labelProps = {
         fullWidth,
         isRequired,
@@ -80,17 +73,10 @@ export const Editor = (props: AceInputProps & {schema?: any[]}) => {
         useWorker: useWorker,
         showPrintMargin: false,
     };
-    const onLeave = () => {
-        try {
-            const obj = yaml.parse(value);
-            field.onChange(obj);
-        } catch (e) {
-            console.log('error', e);
-        }
+    const onCodeChange = (data: string) => {
+        const encodedValue = btoa(data);
+        field.onChange({ ...field.value, base64: encodedValue });
     };
-    const onValueChange = (data: string) => {
-        setValue(data);
-    }
     // import workers (disabled by default)
     // NOTE: this should match *exactly* the included ace version
     // ace.config.set('basePath', basePath + ace.version + '/src-noconflict/');
@@ -105,9 +91,8 @@ export const Editor = (props: AceInputProps & {schema?: any[]}) => {
                     wrapEnabled
                     width={fullWidth ? '100%' : width}
                     setOptions={aceOptions}
-                    value={value }
-                    onBlur={onLeave}
-                    onChange={onValueChange}
+                    value={valueCode}
+                    onChange={onCodeChange}
                 />
             </Labeled>
             <InputHelperText
