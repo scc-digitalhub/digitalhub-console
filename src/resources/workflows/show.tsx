@@ -54,8 +54,8 @@ import {
     CreateInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
-import { AceEditorField } from '../../components/AceEditorField';
 import { MetadataField } from '../../components/MetadataField';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -212,7 +212,11 @@ const ShowComponent = () => {
         }
         return kind;
     };
-
+    const editTask = (id: string, taskUpdated: any) => {
+        setTasks(tasks => {
+            return tasks.map(task => (task.id === id ? taskUpdated : task));
+        });
+    };
     return (
         <TabbedShowLayout record={record}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
@@ -251,17 +255,6 @@ const ShowComponent = () => {
             )}
 
             {tasks?.map(task => (
-                // <TabbedShowLayout.Tab
-                //     label={'resources.workflows.tab.runs'}
-                //     key={'runs'}
-                //     path={'runs'}
-                // >
-                //     <ResourceContextProvider value="tasks">
-                //         <RecordContextProvider value={task}>
-                //             <WorkflowRunList key={task.id} />
-                //         </RecordContextProvider>
-                //     </ResourceContextProvider>
-                // </TabbedShowLayout.Tab>
                 <TabbedShowLayout.Tab
                     label={'resources.tasks.kinds.' + getKind(task.kind)}
                     key={task.kind}
@@ -269,7 +262,7 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns key={task.id} />
+                            <TaskAndRuns key={task.id} onEdit={editTask} />
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
@@ -314,6 +307,7 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                             mode={sourceCode.lang}
                             source="sourceCode.base64"
                             theme="monokai"
+                            parse={atob}
                         />
                     </Labeled>
                 </Box>
