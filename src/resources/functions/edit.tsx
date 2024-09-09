@@ -2,17 +2,22 @@ import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
     Button,
     EditBase,
     EditView,
+    InputHelperText,
+    InputProps,
+    Labeled,
     LoadingIndicator,
+    RecordContextProvider,
     SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
     Toolbar,
+    useInput,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -21,6 +26,11 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import {
+    MetadataCreateUiSchema,
+    MetadataEditUiSchema,
+    MetadataSchema,
+} from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -29,7 +39,9 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '../../components/JsonSchema';
+import { Editor } from '../../components/AceEditorInput';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataInput } from '../../components/MetadataInput';
 
 const SpecInput = (props: {
