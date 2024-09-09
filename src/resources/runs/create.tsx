@@ -1,6 +1,7 @@
 import { StepperForm, useStepper } from '@dslab/ra-stepper';
 import {
     FormDataConsumer,
+    required,
     SaveButton,
     Toolbar,
     useGetResourceLabel,
@@ -9,36 +10,33 @@ import {
 import { getTaskUiSpec } from '../tasks/types';
 import { Box } from '@mui/system';
 import { getRunUiSpec } from './types';
+import { toYaml } from '@dslab/ra-export-record-button';
 import { JsonSchemaInput } from '../../components/JsonSchema';
+import { useGetManySchemas } from '../../controllers/schemaController';
+import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
+import yaml from 'yaml';
+import { isValidAgainstSchema } from '../../common/helper';
+import Ajv2020 from 'ajv/dist/2020';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 
-import { Editor } from '../../components/AceEditorInput';
-import 'ace-builds/src-noconflict/mode-yaml';
+const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
-// import { ajvResolver } from '@hookform/resolvers/ajv';
-
-import { validateSchemas } from '../../common/helper';
-
-export const RunCreateComponent = (props: {
+export const RunCreateForm = (props: {
+    runtime: string;
     runSchema: any;
     taskSchema: any;
 }) => {
-    const { runSchema, taskSchema } = props;
+    const { runtime, runSchema, taskSchema } = props;
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-
-    // const resolverOptions: any = {strict: 'log', strictSchema: 'log', validateSchema: 'log'}
-    const validateRun = (values) => {
-        const errors = validateSchemas(values.spec, [runSchema, taskSchema]);
-        return errors;  
-    }
+    const { data: schemas } = useGetManySchemas([
+        { resource: 'runs', runtime },
+    ]);
+    const schema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
 
     return (
-        <StepperForm 
-            toolbar={<StepperToolbar />} 
-            validate={validateRun}
-            // resolver={ajvResolver(schema, resolverOptions)} 
-            >
+        <StepperForm toolbar={<StepperToolbar />}>
             <StepperForm.Step label={getResourceLabel('tasks', 1)}>
                 <JsonSchemaInput
                     source="spec"
@@ -56,33 +54,41 @@ export const RunCreateComponent = (props: {
             <StepperForm.Step label={translate('Recap')} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
-                        // workaround: remove k8s from spec as it is not part of the schema
-                        if (formData && formData.spec && formData.spec.k8s) {
-                            delete formData.spec.k8s
+                        if (schema) {
+                            //let users edit and then validate against schema
+                            return (
+                                <AceEditorInput
+                                    mode="yaml"
+                                    source="spec"
+                                    parse={toYaml}
+                                    format={yaml.parse}
+                                    validate={[
+                                        required(),
+                                        isValidAgainstSchema(
+                                            ajv,
+                                            schema?.schema
+                                        ),
+                                    ]}
+                                />
+                            );
+                        } else {
+                            //read-only view
+                            const r = { spec: btoa(toYaml(formData?.spec)) };
+                            return (
+                                <AceEditorField
+                                    mode="yaml"
+                                    source="spec"
+                                    record={r}
+                                    parse={atob}
+                                />
+                            );
                         }
-                        // const r = { spec: btoa(toYaml(formData?.spec)) };
-                        return (
-                            <>
-                            <Editor
-                            mode='yaml'
-                            theme='github'
-                            source='spec'
-                            schema={[runSchema, taskSchema]}
-                            /> 
-                            </>                         
-                            // <AceEditorField
-                            //     mode="yaml"
-                            //     source="spec"
-                            //     record={r}
-                            // />
-                        );
                     }}
                 </FormDataConsumer>
             </StepperForm.Step>
         </StepperForm>
     );
 };
-
 
 const StepperToolbar = () => {
     const { steps, currentStep } = useStepper();

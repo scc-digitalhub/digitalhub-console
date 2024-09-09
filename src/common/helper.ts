@@ -1,13 +1,5 @@
 import { isEmpty, regex } from 'react-admin';
-
-import Ajv from 'ajv/dist/2020';
-
-const ajv = new Ajv({
-    strictTypes: false,
-    strict: false,
-    allErrors: true,
-}) 
-
+import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
@@ -32,32 +24,23 @@ export const isValidKind = (kinds: any[]) => (value, values?) => {
         : undefined;
 };
 
-export const validateSchemas = (value: any, schema: any[]) => {
-    if (!schema || schema.length == 0) {
-        return {};
-    }
-    const s = { ...schema[0] };
-    for (let i = 1; i < schema.length; i++) {
-        if (schema[i].$defs) s.$defs = { ...s.$defs, ...schema[i].$defs };
-        if (schema[i].properties) s.properties = { ...s.properties, ...schema[i].properties };
-        if (schema[i].required) s.required = [...s.required, ...schema[i].required];
-    }
-    s.additionalProperties = false;
-
-    if (s.allOf && s.allOf.length == 0) {
-        delete s.allOf
-    }
-    console.log('schema', s);
-
-    const validate = ajv.compile(s);
-
-    const valid = validate(value);
-    if (!valid) {
-        const errors = {};
-        for (let i = 0; i < validate.errors!.length; i++) {
-            errors[validate.errors![i].schemaPath] = validate.errors![i].message
+export const isValidAgainstSchema =
+    (ajv: ValidatorType<any, RJSFSchema, any>, schema: any) => value => {
+        if (ajv == null || ajv == undefined) {
+            return undefined;
         }
-        console.log('errors', errors);
-        return errors
-    } else return {}
-}
+        if (!schema || !value) return undefined;
+        try {
+            const validation = ajv.validateFormData(value, schema);
+            if (!validation.errors) {
+                return undefined;
+            }
+
+            const errors = validation.errors?.map(
+                e => e.property + ': ' + e.message
+            );
+            return errors?.join(',');
+        } catch (error) {
+            return 'error with validator';
+        }
+    };
