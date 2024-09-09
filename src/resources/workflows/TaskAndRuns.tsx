@@ -30,6 +30,7 @@ import { useGetManySchemas } from '../../controllers/schemaController';
 import { filterProps } from '../../common/schemas';
 import { RunCreateForm } from '../runs';
 import { LogsButton } from '../../components/LogsButton';
+import { Empty } from '../../components/Empty';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -173,19 +174,7 @@ const TaskRunList = () => {
             )}
         </CreateInDialogButton>
     );
-    const ListActions = () => <CreateActionButton />;
-    const Empty = () => (
-        <Box textAlign="center" m={'auto'} sx={{ color: 'grey.500' }}>
-            <InboxIcon fontSize="large" sx={{ width: '9em', height: '9em' }} />
-            <Typography variant="h4" paragraph>
-                {translate('resources.runs.empty')}
-            </Typography>
-            <Typography variant="body1">
-                {translate('resources.runs.create')}
-            </Typography>
-            <CreateActionButton />
-        </Box>
-    );
+
     return (
         <>
             <Typography variant="h4" color={'secondary.main'}>
@@ -197,8 +186,12 @@ const TaskRunList = () => {
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
-                empty={<Empty />}
-                actions={<ListActions />}
+                empty={
+                    <Empty>
+                        <CreateActionButton />
+                    </Empty>
+                }
+                actions={<CreateActionButton />}
             >
                 <Datagrid
                     expand={getExpandArea()}
