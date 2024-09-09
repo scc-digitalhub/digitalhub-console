@@ -1,6 +1,19 @@
-import { Menu, Button, Stack, Alert, Typography } from '@mui/material';
+import {
+    Menu,
+    Button,
+    Stack,
+    Typography,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    Badge,
+    styled,
+    alpha,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useState, MouseEvent, ReactElement, useEffect, useRef } from 'react';
 import {
     useTranslate,
@@ -8,10 +21,13 @@ import {
     ShowButtonProps,
     useRecordContext,
     useResourceContext,
-    Link,
-    useCreatePath,
+    ShowButton,
+    IconButtonWithTooltip,
+    DateField,
+    localStorageStore,
 } from 'react-admin';
-import { StateColors } from './StateChips';
+import { RunIcon } from '../resources/runs/icon';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 export const NotificationArea = (props: NotificationAreaProps) => {
     const { messages, setMessages } = props;
@@ -19,11 +35,22 @@ export const NotificationArea = (props: NotificationAreaProps) => {
     console.log('messages', messages);
 
     const notifications: ReactElement[] = messages.map((message, index) => (
-        <Notification message={message} key={index} open={open} setMessages={setMessages} />
+        <Notification
+            message={message}
+            key={index}
+            open={open}
+            setMessages={setMessages}
+        />
     ));
 
+    const icon = (
+        <Badge badgeContent={messages.length} color="error">
+            <NotificationsIcon />
+        </Badge>
+    );
+
     return (
-        <DropDownButton label="" icon={<NotificationsIcon />} setOpen={setOpen}>
+        <DropDownButton label="" icon={icon} setOpen={setOpen}>
             {notifications.length != 0 ? (
                 notifications
             ) : (
@@ -41,7 +68,6 @@ type NotificationAreaProps = {
 export const Notification = (props: NotificationProps) => {
     const { message, open, setMessages, timeout = 10000 } = props;
     const state: String = message.status.state;
-    const createPath = useCreatePath();
     const ref = useRef(null);
 
     useEffect(() => {
@@ -58,15 +84,19 @@ export const Notification = (props: NotificationProps) => {
             const observer = new IntersectionObserver(([entry]) => {
                 if (timer && !entry.isIntersecting) {
                     console.log('clearing timer for', entry.target);
-                    clearTimeout(timer);
+                    timer = clearTimeout(timer);
                 } else if (entry.isIntersecting && !timer) {
                     console.log('creating timer for', entry.target);
                     timer = setTimeout(() => {
                         console.log('timeout for', entry.target);
                         //edit messages
-                        setMessages(prev => {
-                            return prev.filter(value => value.notificationId != message.notificationId )
-                        })
+                        // setMessages(prev => {
+                        //     return prev.filter(
+                        //         value =>
+                        //             value.notificationId !=
+                        //             message.notificationId
+                        //     );
+                        // });
                     }, timeout);
                 }
             }, observerOptions);
@@ -84,27 +114,119 @@ export const Notification = (props: NotificationProps) => {
         }
     }, [open]);
 
-    const alertContent =
-        state === 'DELETED' ? (
-            `Run ${message.id} status changed to ${state}`
-        ) : (
-            <Link
-                to={createPath({
-                    resource: 'runs',
-                    id: message.id,
-                    type: 'show',
-                })}
-            >
-                Run status changed to {state}
-            </Link>
-        );
+    const { root } = useRootSelector();
+    const store = localStorageStore('dh');
+
+    const removeNotification = () => {
+        //TODO fix when localstorage persistence is improved
+        setMessages(prev => {
+            const val = prev.filter(
+                value => value.notificationId != message.notificationId
+            );
+            store.setItem('dh.notifications.messages.' + root, val);
+            return val;
+        });
+    };
+
+    const notificationClass =
+        state === 'COMPLETED'
+            ? NotificationClasses.completed
+            : state === 'ERROR'
+            ? NotificationClasses.error
+            : NotificationClasses.default;
 
     return (
-        <Alert severity={StateColors[state.toUpperCase()]} ref={ref}>
-            {alertContent}
-        </Alert>
+        <NotificationCard
+            elevation={0}
+            ref={ref}
+            square
+            className={notificationClass}
+        >
+            <CardHeader
+                avatar={<RunIcon fontSize="small" />}
+                title={
+                    'Run ' + message.spec.function.split('/')[3].split(':')[0]
+                }
+                subheader={
+                    <DateField
+                        record={message}
+                        source="metadata.updated"
+                        showTime
+                    />
+                }
+                action={
+                    <IconButtonWithTooltip
+                        label={'ra.action.delete'}
+                        onClick={removeNotification}
+                    >
+                        <ClearIcon fontSize="small" />
+                    </IconButtonWithTooltip>
+                }
+            />
+            <CardContent>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Run status changed to {state}
+                </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+                <ShowButton
+                    resource="runs"
+                    record={message}
+                    variant="text"
+                    color="info"
+                />
+            </CardActions>
+        </NotificationCard>
     );
 };
+
+const NotificationClasses = {
+    default: 'default',
+    error: 'error',
+    completed: 'success',
+};
+
+const NotificationCard = styled(Card, {
+    name: 'NotificationCard',
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme, className }) => ({
+    width: '100%',
+    boxSizing: 'border-box',
+    backgroundColor:
+        className == NotificationClasses.completed
+            ? alpha(theme.palette.success.light, 0.3)
+            : className == NotificationClasses.error
+            ? alpha(theme.palette.error.light, 0.3)
+            : theme.palette.common.white,
+    ...theme.applyStyles('dark', {
+        backgroundColor:
+            className == NotificationClasses.completed
+                ? alpha(theme.palette.success.dark, 0.5)
+                : className == NotificationClasses.error
+                ? alpha(theme.palette.error.dark, 0.5)
+                : theme.palette.common.black,
+    }),
+    ['& .MuiCardContent-root, & .MuiCardHeader-root']: {
+        paddingBottom: 0,
+        paddingTop: 8,
+    },
+    ['&:hover']: {
+        backgroundColor:
+            className == NotificationClasses.completed
+                ? alpha(theme.palette.success.light, 0.5)
+                : className == NotificationClasses.error
+                ? alpha(theme.palette.error.light, 0.5)
+                : theme.palette.grey[100],
+        ...theme.applyStyles('dark', {
+            backgroundColor:
+                className == NotificationClasses.completed
+                    ? alpha(theme.palette.success.dark, 0.7)
+                    : className == NotificationClasses.error
+                    ? alpha(theme.palette.error.dark, 0.7)
+                    : theme.palette.grey[800],
+        }),
+    },
+}));
 
 type NotificationProps = {
     message: any;

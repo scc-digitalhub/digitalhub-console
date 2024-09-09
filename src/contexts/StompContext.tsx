@@ -1,9 +1,11 @@
 import { ReactElement, createContext, useContext, useMemo, useRef, useState } from 'react';
 import { Client as StompClient, messageCallbackType } from '@stomp/stompjs';
-import { Link, useCreatePath, useNotify } from 'react-admin';
+import { Link, Store, useCreatePath, useNotify, useStore } from 'react-admin';
 import { Alert } from '@mui/material';
 import { StateColors } from '../components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { localStorageStore } from 'react-admin';
 
 interface StompContextValue {
     client: StompClient;
@@ -17,16 +19,26 @@ const StompContext = createContext<StompContextValue | undefined>(undefined);
 
 export const StompContextProvider = (props: StompContextProviderParams) => {
     const { children, authProvider, websocketUrl } = props;
+    const { root } = useRootSelector();
     const notify = useNotify();
     const createPath = useCreatePath();
-    const [messages, setMessages] = useState<any[]>([]);
+    const store = localStorageStore('dh');
+    
+    const [messages, setMessages] = useState<any[]>(store.getItem('dh.notifications.messages.' + root, []));
+    // const [messages, setMessages] = useStore<any[]>('notifications.messages.' + root, []);
 
     const messageCallback: messageCallbackType = message => {
         const entity = JSON.parse(message.body);
         const state: String = entity.status.state;
         console.log('received stomp message', entity.id, entity.status.state);
 
-        setMessages(prev => [...prev, {...entity, notificationId: `${entity.id}_${state}`}]);
+        // if (root) {
+        setMessages((prev) => {
+            const val = [{...entity, notificationId: `${entity.id}_${state}`}, ...prev];
+            store.setItem('dh.notifications.messages.' + root, val);
+            return val;
+        });
+        // }
 
         const alertContent =
             state === 'DELETED' ? (
@@ -124,8 +136,9 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             client: stompClientRef.current,
             connect: stompClientRef.current.activate,
             disconnect: stompClientRef.current.deactivate,
+            // messages: root ? messages[root] : [],
         };
-    }, [authProvider]);
+    }, [authProvider/*, root*/]);
 
     return (
         <StompContext.Provider value={stompContext ? {...stompContext, messages, setMessages} : undefined}>
