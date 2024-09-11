@@ -1,39 +1,33 @@
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container, Stack } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
     CreateBase,
     CreateView,
     FormDataConsumer,
     ListButton,
-    LoadingIndicator,
-    SelectInput,
     SimpleForm,
     TextInput,
     TopToolbar,
     required,
     useInput,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
-import { isAlphaNumeric, isValidKind } from '../../common/helper';
-import { BlankSchema } from '../../common/schemas';
+import { isAlphaNumeric } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
-import '@uppy/core/dist/style.min.css';
-import '@uppy/dashboard/dist/style.min.css';
 import { FileInput } from '../../components/FileInput';
-import { useUploadController } from '../../controllers/uploadController';
-import { useForm } from 'react-hook-form';
+import {
+    UploadController,
+    useUploadController,
+} from '../../controllers/uploadController';
 import { KindSelector } from '../../components/KindSelector';
+import { useGetSchemas } from '../../controllers/schemaController';
+import { SpecInput } from '../../components/SpecInput';
 
 const CreateToolbar = () => {
     return (
@@ -45,43 +39,26 @@ const CreateToolbar = () => {
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
-    const [schemas, setSchemas] = useState<any[]>();
     const id = useRef(crypto.randomUUID());
-
-    const { uppy, files, upload } = useUploadController({ id: id.current });
-
-    const kinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-          }))
-        : [];
+    const uploader = useUploadController({
+        id: id.current,
+    });
 
     const transform = async data => {
-        await upload();
+        await uploader.upload();
+
+        //strip path tl which is a transient field
+        const { path, ...rest } = data;
 
         return {
-            ...data,
+            ...rest,
             id: id.current,
+            project: root,
             status: {
-                files: files.map(f => f.info),
+                files: uploader.files.map(f => f.info),
             },
-            project: root || '',
         };
     };
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.list('artifacts').then(res => {
-                setSchemas(res || []);
-            });
-        }
-    }, [schemaProvider]);
-
-    if (!kinds) {
-        return <LoadingIndicator />;
-    }
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -98,12 +75,7 @@ export const ArtifactCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm>
-                                <FormContent
-                                    schemas={schemas}
-                                    kinds={kinds}
-                                    uppy={uppy}
-                                    files={files}
-                                />
+                                <ArtifactCreateForm uploader={uploader} />
                             </SimpleForm>
                         </FlatCard>
                     </CreateView>
@@ -113,50 +85,59 @@ export const ArtifactCreate = () => {
     );
 };
 
-const FormContent = (props: any) => {
-    const { schemas, uppy, kinds, files } = props;
-    const translate = useTranslate();
+const ArtifactCreateForm = (props: { uploader?: UploadController }) => {
+    const { uploader } = props;
     const resource = useResourceContext();
+
+    const { data: schemas } = useGetSchemas(resource);
+    const kinds = schemas
+        ? schemas.map(s => ({
+              id: s.kind,
+              name: s.kind,
+          }))
+        : [];
+
+    //update path in spec depending on upload
+    //we need to watch it here because path is nested in spec
+    //also set name if empty
     const { field } = useInput({ resource, source: 'spec' });
-    const updateForm = path => {
-        if (field) {
-            field.onChange({ ...field.value, path: path });
-        }
-    };
-    const path = files.length > 0 ? files[0].path : null;
+    const { field: nameField } = useInput({ resource, source: 'name' });
     useEffect(() => {
-        updateForm(path);
-    }, [path]);
-
-    const getArtifactSpecSchema = (kind: string | undefined) => {
-        if (!kind) {
-            return BlankSchema;
+        if (uploader && field) {
+            field.onChange({ ...field.value, path: uploader.path });
         }
 
-        if (schemas) {
-            return schemas.find(s => s.id === 'ARTIFACT:' + kind)?.schema;
+        if (uploader?.path && nameField && !nameField.value) {
+            //set name as fileName from path
+            const fileName = new URL(uploader.path).pathname.replace(
+                /^.*[\\\/]/,
+                ''
+            );
+            nameField.onChange(fileName);
         }
+    }, [uploader?.path]);
 
-        return BlankSchema;
+    const getSpecSchema = (kind: string | undefined) => {
+        return schemas
+            ? schemas.find(s => s.id === 'ARTIFACT:' + kind)?.schema
+            : undefined;
     };
 
-    const getArtifactUiSchema = (kind: string | undefined) => {
+    const getUiSchema = (kind: string | undefined) => {
         if (!kind) {
             return undefined;
         }
-        console.log('files', uppy.getFiles());
-
-        if (uppy.getFiles().length > 0) {
-            return { path: { 'ui:readonly': true } };
-        } else {
-            return getArtifactSpecUiSchema(kind);
+        const uiSchema = getArtifactSpecUiSchema(kind) as any;
+        if (uiSchema && uploader?.path != null) {
+            uiSchema['path'] = { 'ui:readonly': true };
         }
+
+        return uiSchema;
     };
 
     return (
         <>
             <FormLabel label="fields.base" />
-
             <Stack direction={'row'} spacing={3} pt={4}>
                 <TextInput
                     source="name"
@@ -164,41 +145,22 @@ const FormContent = (props: any) => {
                 />
                 <KindSelector kinds={kinds} />
             </Stack>
-
             <MetadataInput />
             <FormDataConsumer<{ kind: string }>>
-                {({ formData }) => {
-                    if (formData.kind)
-                        return (
-                            <>
-                                <JsonSchemaInput
-                                    source="spec"
-                                    schema={{
-                                        ...getArtifactSpecSchema(formData.kind),
-                                        title: 'Spec',
-                                    }}
-                                    uiSchema={getArtifactUiSchema(
-                                        formData.kind
-                                    )}
-                                />
+                {({ formData }) => (
+                    <>
+                        <SpecInput
+                            source="spec"
+                            kind={formData.kind}
+                            schema={getSpecSchema(formData.kind)}
+                            getUiSchema={getUiSchema}
+                        />
 
-                                {uppy && <FileInput uppy={uppy} />}
-                            </>
-                        );
-                    else
-                        return (
-                            <Card
-                                sx={{
-                                    width: 1,
-                                    textAlign: 'center',
-                                }}
-                            >
-                                <CardContent>
-                                    {translate('resources.common.emptySpec')}{' '}
-                                </CardContent>
-                            </Card>
-                        );
-                }}
+                        {formData.kind && uploader && (
+                            <FileInput uploader={uploader} source="path" />
+                        )}
+                    </>
+                )}
             </FormDataConsumer>
         </>
     );

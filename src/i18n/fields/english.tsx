@@ -345,6 +345,8 @@ export const fields = {
         empty: 'No info available',
     },
     files: {
+        title: 'Files',
+        description: '',
         tab: 'Files',
         empty: 'No files available',
     },

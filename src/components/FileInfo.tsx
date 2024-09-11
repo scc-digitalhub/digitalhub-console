@@ -151,7 +151,7 @@ const convertFiles = (data: any[]): any[] => {
         // If there is only one file, return it as the root element
         return [
             {
-                id: data[0].path,
+                id: data[0].path || '.',
                 label: data[0].name,
                 fileType: extractFileType(data[0]),
                 data: data[0],
@@ -518,7 +518,6 @@ const FileInfoTable = (props: any) => {
     const { data, isLoading } = useDataGridController({
         fields: info.data,
     });
-    console.log('info', info);
 
     const valueFormatter = (value?: any) => {
         if (!value.value) {
@@ -549,14 +548,14 @@ const FileInfoTable = (props: any) => {
         <>
             {!(info.children && info.children.length > 0) && (
                 <TopToolbar>
-                    {info.fileType && (
+                    {info.fileType && info.data.path && (
                         <PreviewButton
                             source="spec.path"
                             sub={info.data.path}
                             fileType={info.fileType}
                         />
                     )}
-                    {<DownloadButton source="spec.path" sub={info.data.path} />}
+                    {info.data.path && <DownloadButton sub={info.data.path} />}
                 </TopToolbar>
             )}
             <DataGrid

@@ -1,14 +1,20 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
+    RaRecord,
     useDataProvider,
     useNotify,
+    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Uppy } from 'uppy';
+import { UploadResult } from '@uppy/core';
 import AwsS3 from '@uppy/aws-s3-multipart';
 
+/**
+ * private helpers
+ */
 const MiB = 0x10_00_00;
 function partSize(file): number {
     if (file.size <= 100 * MiB) return 1;
@@ -16,224 +22,303 @@ function partSize(file): number {
         return Math.ceil(file.size / (100 * MiB));
     }
 }
-
-export const useUploadController = (props?: any): UploadControllerResult => {
-    const dataProvider = useDataProvider();
-    const { root } = useRootSelector();
-    const { id } = props;
-    const [pathFile, setPathFile] = useState<string | null>(null);
-    const notify = useNotify();
-    const translate = useTranslate();
-    const uppyConfig = {
-        restrictions: { maxNumberOfFiles: 1 },
-        onBeforeFileAdded: (currentFile, files) => {
-            if (currentFile.size < 1000 * MiB) {
-                return true;
-            }
-            notify(translate('upload.file_too_big'), {
-                type: 'error',
-            });
-            return false;
-        },
-    };
-    const uploadUrl = useRef('');
-    const uploadId = useRef('');
-    const resource = useResourceContext();
-    const [files, setFiles] = useState<any[]>([]);
-    const [uppy] = useState(() =>
-        new Uppy(uppyConfig).use(AwsS3, {
-            id: 'AwsS3',
-            shouldUseMultipart: file => file.size > 100 * MiB,
-            getChunkSize: file => 100 * MiB,
-            getUploadParameters: async file => {
-                return {
-                    method: 'PUT',
-                    url: uploadUrl.current,
-                    fields: {},
-                    headers: file.type
-                        ? { 'Content-Type': file.type }
-                        : undefined,
-                };
-            },
-            // ========== Multipart Uploads ==========
-            // The following methods are only useful for multipart uploads:
-
-            async createMultipartUpload(file) {
-                return {
-                    uploadId: uploadId.current,
-                    key: file.name,
-                };
-            },
-
-            async abortMultipartUpload(file, { key, uploadId }) {
-                // const filename = encodeURIComponent(key)
-                // const uploadIdEnc = encodeURIComponent(uploadId)
-                // const response = await fetch(
-                //     `/s3/multipart/${uploadIdEnc}?key=${filename}`,
-                //     {
-                //         method: 'DELETE',
-                //     },
-                // )
-                // if (!response.ok)
-                //     throw new Error('Unsuccessful request', { cause: response })
-            },
-
-            async signPart(file, options) {
-                const { signal, uploadId } = options;
-
-                signal?.throwIfAborted();
-
-                const data = await dataProvider.uploadMultipartPart(resource, {
-                    id: id,
-                    meta: { root },
-                    filename: file.name,
-                    uploadId: uploadId,
-                    partNumber: options.partNumber,
-                });
-
-                return data;
-            },
-
-            async listParts(file, { key, uploadId }) {
-                const returnParts: any[] = [];
-                // const filename = encodeURIComponent(key)
-                // const response = await fetch(
-                //     `/s3/multipart/${uploadId}?key=${filename}`
-                // )
-
-                // if (!response.ok)
-                //     throw new Error('Unsuccessful request', { cause: response })
-
-                // const data = await response.json()
-
-                // return data
-                return returnParts;
-            },
-
-            async completeMultipartUpload(file, { key, uploadId, parts }) {
-                //parts is array of part
-                try {
-                    const response = await dataProvider.uploadMultipartComplete(
-                        resource,
-                        {
-                            id: id,
-                            meta: { root },
-                            filename: file.name,
-                            uploadId,
-                            eTagPartList: parts.map((part: any) => part.etag),
-                        }
-                    );
-                } catch (error) {
-                    throw new Error('Unsuccessful request');
-                }
-
-                return {};
-            },
-        })
-    );
-    if (uppy) {
-        uppy.on('file-added', async file => {
-            if (dataProvider) {
-                const partSizeNumber = partSize(file);
-                let res: any = null;
-                if (partSizeNumber === 1) {
-                    res = await dataProvider.upload(resource, {
-                        id: id,
-                        meta: { root },
-                        filename: file.name,
-                    });
-                    uploadUrl.current = res?.url;
-                } else {
-                    res = await dataProvider.uploadMultipartStart(resource, {
-                        id: id,
-                        meta: { root },
-                        filename: file.name,
-                    });
-                    uploadId.current = res?.uploadId;
-                }
-                setPathFile(res?.path);
-                let info = {
-                    id: file.id,
-                    info: extractInfo(file, res?.path),
-                    file: file,
-                    path: res?.path,
-                };
-                setFiles(prev => {
-                    let p = prev.find(f => f.id === file.id);
-                    if (p) {
-                        p = info;
-                    } else {
-                        prev.push(info);
-                    }
-                    return prev;
-                });
-            }
-        });
-
-        uppy.on('file-removed', file => {
-            setPathFile(null);
-            uploadUrl.current = '';
-            if (file) {
-                setFiles(prev => {
-                    prev.splice(
-                        prev.findIndex(f => f.id === file.id),
-                        1
-                    );
-                    return prev;
-                });
-            }
-        });
-        uppy.on('upload-progress', file => {
-            if (file) {
-                setFiles(prev => {
-                    let p = prev.find(f => f.id === file.id);
-                    if (p) {
-                        p['file'] = file;
-                    }
-                    return prev;
-                });
-            }
-        });
-        uppy.on('upload-success', (file, response) => {
-            console.log('response', response);
-            if (file) {
-                setFiles(prev => {
-                    let p = prev.find(f => f.id === file.id);
-                    if (p) {
-                        p['file'] = file;
-                    }
-                    return prev;
-                });
-            }
-        });
-        uppy.on('upload-error', () => {
-            //using default informer of dashboard. More powerfull and automatic. It must be styled and i18n
-            // notify(translate('upload_error',{
-            //     fileName:file?.name,
-            //     error: error.message
-            // }), {
-            //     type: 'error',
-            // });
-        });
-    }
+function extractInfo(file: any): any {
     return {
-        uppy,
-        files,
-        upload: () => uppy?.upload(),
-    };
-};
-
-function extractInfo(file: any, path: string): any {
-    return {
-        path: path,
+        //no subfolders support for browser upload!
+        //skip path for zip files
+        path: 'application/zip' !== file.type ? file.name : undefined,
         name: file.name,
         content_type: file.type,
         last_modified: new Date(file.data?.lastModified).toUTCString(),
         size: file.size,
     };
 }
-type UploadControllerResult = {
+
+/**
+ * upload hook
+ */
+
+export type UploadControllerProps = {
+    resource?: string;
+    record?: RaRecord;
+    id?: string;
+};
+
+export type UploadController = {
     uppy: Uppy;
     files: any[];
-    upload: () => void;
+    path: string | null;
+    upload: () => Promise<UploadResult>;
+};
+
+export const useUploadController = (
+    props: UploadControllerProps
+): UploadController => {
+    const { id: idProps } = props;
+
+    const resource = useResourceContext(props);
+    const record = useRecordContext(props);
+    const id = record?.id || idProps;
+
+    const dataProvider = useDataProvider();
+    const { root } = useRootSelector();
+    const notify = useNotify();
+    const translate = useTranslate();
+
+    //keep files info
+    const [files, setFiles] = useState<any[]>([]);
+
+    const uppyConfig = {
+        onBeforeFileAdded: (currentFile, files) => {
+            //block files over max
+            if (currentFile.size > 1000 * MiB) {
+                notify(translate('upload.file_too_big'), {
+                    type: 'error',
+                });
+                return false;
+            }
+
+            //disallow all remote
+            if (currentFile.isRemote) {
+                notify(translate('upload.remote_files_unsupported'), {
+                    type: 'error',
+                });
+                return false;
+            }
+
+            //allow single file for zip
+            if (files) {
+                const exists = Object.keys(files).filter(
+                    k => 'application/zip' == files[k].type
+                );
+                if (exists?.length > 0) {
+                    notify(translate('upload.single_zip_file_supported'), {
+                        type: 'error',
+                    });
+                    return false;
+                }
+            }
+            if (
+                Object.keys(files).length > 0 &&
+                'application/zip' == currentFile.type
+            ) {
+                notify(translate('upload.single_zip_file_supported'), {
+                    type: 'error',
+                });
+                return false;
+            }
+
+            return true;
+        },
+    };
+
+    //memoize uppy instantiation
+    //NOTE: event handlers *have* to be attached once to avoid double firing!
+    const uppy = useMemo(
+        () =>
+            new Uppy(uppyConfig)
+                .use(AwsS3, {
+                    id: 'AwsS3',
+                    shouldUseMultipart: file => file.size > 100 * MiB,
+                    getChunkSize: file => 100 * MiB,
+                    getUploadParameters: async file => {
+                        return {
+                            method: 'PUT',
+                            url: file['s3']?.uploadUrl,
+                            fields: {},
+                            headers: file.type
+                                ? { 'Content-Type': file.type }
+                                : undefined,
+                        };
+                    },
+                    // ========== Multipart Uploads ==========
+                    // The following methods are only useful for multipart uploads:
+
+                    async createMultipartUpload(file) {
+                        return {
+                            // uploadId: uploadId.current,
+                            uploadId: file['s3']?.uploadId,
+                            key: file.name,
+                        };
+                    },
+
+                    async abortMultipartUpload(file, { key, uploadId }) {
+                        // const filename = encodeURIComponent(key)
+                        // const uploadIdEnc = encodeURIComponent(uploadId)
+                        // const response = await fetch(
+                        //     `/s3/multipart/${uploadIdEnc}?key=${filename}`,
+                        //     {
+                        //         method: 'DELETE',
+                        //     },
+                        // )
+                        // if (!response.ok)
+                        //     throw new Error('Unsuccessful request', { cause: response })
+                    },
+
+                    async signPart(file, options) {
+                        const { signal, uploadId } = options;
+
+                        signal?.throwIfAborted();
+
+                        const data = await dataProvider.uploadMultipartPart(
+                            resource,
+                            {
+                                id: id,
+                                meta: { root },
+                                filename: file.name,
+                                uploadId: uploadId,
+                                partNumber: options.partNumber,
+                            }
+                        );
+
+                        return data;
+                    },
+
+                    async listParts(file, { key, uploadId }) {
+                        const returnParts: any[] = [];
+                        // const filename = encodeURIComponent(key)
+                        // const response = await fetch(
+                        //     `/s3/multipart/${uploadId}?key=${filename}`
+                        // )
+
+                        // if (!response.ok)
+                        //     throw new Error('Unsuccessful request', { cause: response })
+
+                        // const data = await response.json()
+
+                        // return data
+                        return returnParts;
+                    },
+
+                    async completeMultipartUpload(
+                        file,
+                        { key, uploadId, parts }
+                    ) {
+                        //parts is array of part
+                        try {
+                            await dataProvider.uploadMultipartComplete(
+                                resource,
+                                {
+                                    id: id,
+                                    meta: { root },
+                                    filename: file.name,
+                                    uploadId,
+                                    eTagPartList: parts.map(
+                                        (part: any) => part.etag
+                                    ),
+                                }
+                            );
+                        } catch (error) {
+                            throw new Error('Unsuccessful request');
+                        }
+
+                        return {};
+                    },
+                })
+                .on('file-added', async file => {
+                    if (dataProvider) {
+                        const partSizeNumber = partSize(file);
+                        let res: any = null;
+                        if (partSizeNumber === 1) {
+                            res = await dataProvider.upload(resource, {
+                                id: id,
+                                meta: { root },
+                                filename: file.name,
+                            });
+                            file['s3'] = { uploadUrl: res?.url };
+                        } else {
+                            res = await dataProvider.uploadMultipartStart(
+                                resource,
+                                {
+                                    id: id,
+                                    meta: { root },
+                                    filename: file.name,
+                                }
+                            );
+                            file['s3'] = { uploadId: res?.uploadId };
+                        }
+
+                        const info = {
+                            id: file.id,
+                            info: extractInfo(file),
+                            file: file,
+                            path: res?.path,
+                        };
+                        setFiles(prev => {
+                            const cur = prev.filter(f => f.id != file.id);
+                            return [...cur, info];
+                        });
+                    }
+                })
+                .on('file-removed', file => {
+                    if (file) {
+                        setFiles(prev => {
+                            return [...prev.filter(f => f.id != file.id)];
+                        });
+                    }
+                })
+                .on('upload-progress', file => {
+                    if (file) {
+                        setFiles(prev => {
+                            let p = prev.find(f => f.id === file.id);
+                            if (p) {
+                                p['file'] = file;
+                            }
+                            return prev;
+                        });
+                    }
+                })
+                .on('upload-success', (file, response) => {
+                    if (file) {
+                        setFiles(prev => {
+                            let p = prev.find(f => f.id === file.id);
+                            if (p) {
+                                p['file'] = file;
+                            }
+                            return prev;
+                        });
+                    }
+                })
+                .on('upload-error', () => {
+                    //using default informer of dashboard. More powerfull and automatic. It must be styled and i18n
+                    // notify(translate('upload_error',{
+                    //     fileName:file?.name,
+                    //     error: error.message
+                    // }), {
+                    //     type: 'error',
+                    // });
+                }),
+        [dataProvider, setFiles]
+    );
+
+    const path = useMemo(() => {
+        let p =
+            files?.length > 0
+                ? files.length == 1
+                    ? files[0].path
+                    : files[0].path.substring(
+                          0,
+                          files[0].path.lastIndexOf('/') + 1
+                      )
+                : null;
+
+        //handle zip
+        if (
+            p?.startsWith('s3://') &&
+            p.endsWith('.zip') &&
+            files?.length == 1
+        ) {
+            p = 'zip+' + p;
+        }
+        return p;
+    }, [files?.length]);
+
+    return {
+        uppy,
+        files,
+        path,
+        upload: () => {
+            return uppy?.upload();
+        },
+    };
 };

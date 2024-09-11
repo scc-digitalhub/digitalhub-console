@@ -1,40 +1,35 @@
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Container, Stack } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import deepEqual from 'deep-is';
 import { useEffect, useRef, useState } from 'react';
 import {
     Button,
     EditBase,
     EditView,
     SaveButton,
-    SelectInput,
     SimpleForm,
     TextInput,
     Toolbar,
     useInput,
     useNotify,
-    useRecordContext,
     useRedirect,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
-import { Spinner } from '../../components/Spinner';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
-import { useUploadController } from '../../controllers/uploadController';
+import {
+    UploadController,
+    useUploadController,
+} from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
+import { SpecInput } from '../../components/SpecInput';
 
-export const ArtifactEditToolbar = () => {
+const ArtifactEditToolbar = () => {
     const translate = useTranslate();
     const navigate = useNavigate();
     const handleClick = () => {
@@ -54,85 +49,17 @@ export const ArtifactEditToolbar = () => {
     );
 };
 
-const SpecInput = (props: {
-    source: string;
-    onDirty?: (state: boolean) => void;
-    getUiSchema: (kind: string) => any;
-}) => {
-    const { source, onDirty, getUiSchema } = props;
-    const translate = useTranslate();
-    const resource = useResourceContext();
-    const record = useRecordContext();
-    const value = useWatch({ name: source });
-    const eq = deepEqual(record[source], value);
-
-    const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || null;
-
-    useEffect(() => {
-        if (schemaProvider && record) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
-        }
-    }, [record, schemaProvider]);
-
-    useEffect(() => {
-        if (onDirty) {
-            onDirty(!eq);
-        }
-    }, [eq]);
-
-    if (!record || !record.kind || !spec) {
-        return (
-            <Card
-                sx={{
-                    width: 1,
-                    textAlign: 'center',
-                }}
-            >
-                <CardContent>
-                    {translate('resources.common.emptySpec')}{' '}
-                </CardContent>
-            </Card>
-        );
-    }
-
-    return (
-        <JsonSchemaInput
-            source={source}
-            schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getUiSchema(record.kind)}
-        />
-    );
-};
-
 export const ArtifactEdit = () => {
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(crypto.randomUUID());
-    const { uppy, files, upload } = useUploadController({ id: id.current });
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.list('artifacts').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider]);
+    const uploader = useUploadController({
+        id: id.current,
+    });
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     const onSuccess = (data, variables, context) => {};
-
     const onSettled = (data, variables, context) => {
         notify('ra.notification.updated', {
             type: 'info',
@@ -140,19 +67,21 @@ export const ArtifactEdit = () => {
         });
         redirect('show', resource, data.id, data);
     };
+
     const transform = async data => {
-        await upload();
+        await uploader.upload();
+
+        //strip path tl which is a transient field
+        const { path, ...rest } = data;
+
         return {
-            ...data,
+            ...rest,
             status: {
-                files: files.map(f => f.info),
+                files: uploader.files.map(f => f.info),
             },
         };
     };
 
-    if (!kinds) {
-        return <Spinner />;
-    }
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
@@ -170,11 +99,9 @@ export const ArtifactEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<ArtifactEditToolbar />}>
-                                <FormContent
-                                    kinds={kinds}
-                                    uppy={uppy}
-                                    setIsSpecDirty={setIsSpecDirty}
-                                    files={files}
+                                <ArtifactEditForm
+                                    onSpecDirty={setIsSpecDirty}
+                                    uploader={uploader}
                                 />
                             </SimpleForm>
                         </FlatCard>
@@ -184,49 +111,49 @@ export const ArtifactEdit = () => {
         </Container>
     );
 };
-const FormContent = (props: any) => {
-    const { uppy, kinds, setIsSpecDirty, files } = props;
-    const translate = useTranslate();
-    const resource = useResourceContext();
-    const { field } = useInput({ resource, source: 'spec' });
-    const updateForm = path => {
-        if (field) {
-            field.onChange({ ...field.value, path: path });
-        }
-    };
-    const path = files.length > 0 ? files[0].path : null;
-    useEffect(() => {
-        updateForm(path);
-    }, [path]);
 
-    const getArtifactUiSchema = (kind: string | undefined) => {
+const ArtifactEditForm = (props: {
+    onSpecDirty?: (state: boolean) => void;
+    uploader?: UploadController;
+}) => {
+    const { onSpecDirty, uploader } = props;
+    const resource = useResourceContext();
+
+    //update path in spec depending on upload
+    //we need to watch it here because path is nested in spec
+    const { field } = useInput({ resource, source: 'spec' });
+    useEffect(() => {
+        if (uploader && field) {
+            field.onChange({ ...field.value, path: uploader.path });
+        }
+    }, [uploader?.path]);
+
+    const getUiSchema = (kind: string | undefined) => {
         if (!kind) {
             return undefined;
         }
-
-        if (uppy.getFiles().length > 0) {
-            return { path: { 'ui:readonly': true } };
-        } else {
-            return getArtifactSpecUiSchema(kind);
+        const uiSchema = getArtifactSpecUiSchema(kind) as any;
+        if (uiSchema && uploader?.path != null) {
+            uiSchema['path'] = { 'ui:readonly': true };
         }
+
+        return uiSchema;
     };
 
     return (
         <>
             <FormLabel label="fields.base" />
-
             <Stack direction={'row'} spacing={3} pt={4}>
                 <TextInput source="name" readOnly />
-
-                <SelectInput source="kind" choices={kinds} readOnly />
+                <TextInput source="kind" readOnly />
             </Stack>
             <MetadataInput />
             <SpecInput
                 source="spec"
-                onDirty={setIsSpecDirty}
-                getUiSchema={getArtifactUiSchema}
+                onDirty={onSpecDirty}
+                getUiSchema={getUiSchema}
             />
-            {uppy && <FileInput uppy={uppy} />}
+            {uploader && <FileInput uploader={uploader} source="path" />}
         </>
     );
 };

@@ -72,8 +72,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
 
     const isLoading = !record;
 
-    const srcValue = get(record, source);
-    if (!record || !srcValue) {
+    if (!record) {
         return <></>;
     }
 
@@ -89,11 +88,6 @@ export const PreviewButton = (props: PreviewButtonProps) => {
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
-
-    let subPath = sub;
-    if (sub && sub.startsWith(srcValue)) {
-        subPath = sub.replace(srcValue, '');
-    }
 
     return (
         <Fragment>
@@ -134,7 +128,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         <PreviewView
                             resource={resource}
                             id={record.id}
-                            sub={subPath}
+                            sub={sub}
                             fileType={fileType}
                         />
                     )}

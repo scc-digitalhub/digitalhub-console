@@ -16,7 +16,6 @@ const defaultIcon = <DownloadIcon />;
 
 export const DownloadButton = (props: DownloadButtonProps) => {
     const {
-        source,
         color = 'info',
         label = 'download',
         icon = defaultIcon,
@@ -29,18 +28,13 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const dataProvider = useDataProvider();
     const notify = useNotify();
 
-    const srcValue = get(record, source);
-    if (!record || !srcValue) {
+    if (!record) {
         return <></>;
     }
 
-    let subPath = sub;
-    if (sub && sub.startsWith(srcValue)) {
-        subPath = sub.replace(srcValue, '');
-    }
     const handleDownload = () => {
         dataProvider
-            .download(resource, { id: record.id, meta: { root }, sub: subPath })
+            .download(resource, { id: record.id, meta: { root }, sub })
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');
