@@ -82,19 +82,89 @@ export const MetadataViewUiSchema = {
     labels: {
         'ui:widget': 'tagsChipInput',
     },
+    'ui:order': ['created', 'updated', 'description', 'labels'],
+    'ui:layout': [6, 6],
+};
+export const MetadataEmbeddedUiSchema = {
+    embedded: {
+        'ui:widget': 'hidden',
+    },
+};
+export const MetadataVersioningUiSchema = {
+    project: {
+        'ui:widget': 'hidden',
+    },
+    name: {
+        'ui:widget': 'hidden',
+    },
+};
+export const MetadataAuditUiSchema = {
+    created: {
+        'ui:widget': 'hidden',
+    },
+    updated: {
+        'ui:widget': 'hidden',
+    },
+
+    'ui:order': ['created_by', 'updated_by'],
+    'ui:layout': [6, 6],
+};
+const metadataUiSchemas = {
+    'metadata.base': MetadataViewUiSchema,
+    'metadata.embedded': MetadataEmbeddedUiSchema,
+    'metadata.versioning': MetadataVersioningUiSchema,
+    'metadata.audit': MetadataAuditUiSchema,
 };
 
-export const createMetadataViewUiSchema = (metadata: any) => {
-    const schema = Object.assign({}, MetadataViewUiSchema);
-    for (const f in schema) {
-        //replace missing values with hidden field
-        if (metadata)
+export const createMetadataViewUiSchema = (
+    metadata: any,
+    schema: any,
+    id: string
+) => {
+    const ui =
+        id && id in metadataUiSchemas
+            ? Object.assign({}, metadataUiSchemas[id])
+            : {};
+
+    if (schema) {
+        for (const f of Object.keys(schema.properties)) {
+            //hide missing/null values
             if (!(f in metadata)) {
-                schema[f]['ui:widget'] = 'hidden';
+                ui[f] = ui[f]
+                    ? { ...ui[f], 'ui:widget': 'hidden' }
+                    : { 'ui:widget': 'hidden' };
             }
+        }
     }
 
-    return schema;
+    //inject properties if order and missing
+    if (schema && ui['ui:order']) {
+        for (const f of Object.keys(schema.properties)) {
+            if (!ui['ui:order'].includes(f)) {
+                ui['ui:order'].push(f);
+            }
+        }
+    }
+
+    //hide title
+    ui['ui:title'] = false;
+
+    //hide if empty/blank
+    const hidden = Object.keys(ui).filter(
+        p =>
+            Object.keys(ui[p]).includes('ui:widget') &&
+            ui[p]['ui:widget'] == 'hidden'
+    );
+    if (
+        schema &&
+        Object.keys(schema.properties).filter(p => !hidden.includes(p))
+            .length == 0
+    ) {
+        //nothing to show
+        ui['ui:hide'] = true;
+    }
+
+    return ui;
 };
 
 export const BlankSchema = {

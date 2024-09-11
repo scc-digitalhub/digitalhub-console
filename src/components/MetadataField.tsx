@@ -17,15 +17,23 @@ export const MetadataField = ({ prompt }: any) => {
     return (
         <Box>
             {metadataKinds?.map(r => {
+                const uiSchema = createMetadataViewUiSchema(
+                    record?.metadata,
+                    r.schema,
+                    r.id
+                );
+
+                //hide if no fields are visibile
+                if (uiSchema['ui:hide']) {
+                    return <></>;
+                }
+
                 return (
                     <JsonSchemaField
                         key={r.id}
                         source="metadata"
-                        schema={r.schema}
-                        uiSchema={{
-                            ...createMetadataViewUiSchema(record?.metadata),
-                            'ui:expandable': 'metadata.base' !== r.id,
-                        }}
+                        schema={{ ...r.schema, title: '' }}
+                        uiSchema={uiSchema}
                         label={false}
                     />
                 );
