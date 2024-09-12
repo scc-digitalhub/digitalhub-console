@@ -25,8 +25,7 @@ function partSize(file): number {
 function extractInfo(file: any): any {
     return {
         //no subfolders support for browser upload!
-        //skip path for zip files
-        path: 'application/zip' !== file.type ? file.name : undefined,
+        path: file.name,
         name: file.name,
         content_type: file.type,
         last_modified: new Date(file.data?.lastModified).toUTCString(),
