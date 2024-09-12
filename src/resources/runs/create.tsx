@@ -59,6 +59,7 @@ export const RunCreateForm = (props: {
                             return (
                                 <AceEditorInput
                                     mode="yaml"
+                                    theme="github"
                                     source="spec"
                                     parse={toYaml}
                                     format={yaml.parse}
