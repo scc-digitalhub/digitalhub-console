@@ -1,17 +1,21 @@
 import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
+    Button,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
+    FunctionField,
     Labeled,
     List,
+    ShowButton,
     SimpleShowLayout,
     TextField,
     TopToolbar,
+    useDataProvider,
     useGetResourceLabel,
     useRecordContext,
 } from 'react-admin';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -26,6 +30,12 @@ import { RunCreateForm, RunShowComponent } from '../runs';
 import { filterProps } from '../../common/schemas';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { Empty } from '../../components/Empty';
+import { ReactElement } from 'react';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import { StopButton } from '../runs/StopButton';
+import { DropDownButton } from '../../components/DropdownButton';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -142,23 +152,32 @@ const TaskRunList = () => {
         };
     };
 
-    const CreateActionButton = () => (
-        <CreateInDialogButton
-            resource="runs"
-            record={partial}
-            fullWidth
-            maxWidth={'lg'}
-            transform={prepare}
-        >
-            {runSchema?.schema && taskSchema?.schema && (
-                <RunCreateForm
-                    runtime={runtime}
-                    runSchema={runSchema.schema}
-                    taskSchema={taskSchema.schema}
-                />
-            )}
-        </CreateInDialogButton>
-    );
+    const CreateActionButton = (props: {
+        record?: any;
+        label?: string;
+        icon?: ReactElement;
+    }) => {
+        const { record, label, icon } = props;
+        return (
+            <CreateInDialogButton
+                resource="runs"
+                label={label}
+                icon={icon}
+                record={record}
+                fullWidth
+                maxWidth={'lg'}
+                transform={prepare}
+            >
+                {runSchema?.schema && taskSchema?.schema && (
+                    <RunCreateForm
+                        runtime={runtime}
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                )}
+            </CreateInDialogButton>
+        );
+    };
 
     return (
         <>
@@ -167,28 +186,48 @@ const TaskRunList = () => {
             </Typography>
 
             <List
+                component={Box}
                 resource="runs"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
                 empty={
                     <Empty>
-                        <CreateActionButton />
+                        <CreateActionButton record={partial} />
                     </Empty>
                 }
-                actions={<CreateActionButton />}
+                actions={<CreateActionButton record={partial} />}
             >
-                <Datagrid bulkActionButtons={false}>
-                    <DateField source="metadata.created" />
-                    <TextField source="id" />
-                    <StateChips source="status.state" />
+                <Datagrid bulkActionButtons={false} rowClick={false}>
+                    <DateField source="metadata.created" showTime />
+                    <TextField source="id" sortable={false} />
+                    <StateChips source="status.state" sortable={false} />
                     <RowButtonGroup label="⋮">
-                        <ShowInDialogButton>
-                            <RunShowComponent />
-                        </ShowInDialogButton>
-                        <LogsButton />
-                        <InspectButton fullWidth />
-                        <DeleteWithConfirmButton redirect={false} />
+                        <DropDownButton>
+                            <ShowButton />
+                            <LogsButton />
+                            <InspectButton fullWidth />
+                            <FunctionField
+                                render={record => (
+                                    <CreateActionButton
+                                        record={{
+                                            ...partial,
+                                            spec: record.spec,
+                                        }}
+                                        label="ra.action.clone"
+                                        icon={<ContentCopyIcon />}
+                                    />
+                                )}
+                            />
+                            <FunctionField
+                                render={record =>
+                                    record.status?.state == 'RUNNING' ? (
+                                        <StopButton record={record} />
+                                    ) : null
+                                }
+                            />
+                            <DeleteWithConfirmButton redirect={false} />
+                        </DropDownButton>
                     </RowButtonGroup>
                 </Datagrid>
             </List>

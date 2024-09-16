@@ -32,6 +32,8 @@ const messages = {
         ready: 'Ready',
         deleting: 'Deleting',
         deleted: 'Deleted',
+        stopping: 'Stopping',
+        stopped: 'Stopped',
     },
     pages: {
         dashboard: {
@@ -200,6 +202,8 @@ const messages = {
     },
     actions: {
         'toggle-x': 'Show/Hide %{el}',
+        stop: 'Stop',
+        actions: 'Actions',
     },
 };
 

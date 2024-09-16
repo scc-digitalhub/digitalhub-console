@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-import { GetListParams } from 'react-admin';
+import { GetListParams, Options } from 'react-admin';
 import {
     SearchFilter,
     SearchParams,
@@ -43,6 +43,30 @@ const springDataProvider = (
     }> = fetchUtils.fetchJson
 ): DataProvider & SearchProvider => {
     return {
+        apiUrl: async () => apiUrl,
+        invoke: ({
+            path,
+            params,
+            body,
+            options,
+        }: {
+            path: string;
+            params?: any;
+            body?: string;
+            options?: Options;
+        }) => {
+            let url = `${apiUrl}${path}`;
+            if (params) {
+                url = `${apiUrl}${path}?${stringify(params)}`;
+            }
+            const opts = options ? options : {};
+            if (body) {
+                opts.body = body;
+            }
+            return httpClient(url, opts).then(({ headers, json }) => {
+                return json;
+            });
+        },
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
             const { page, perPage } = params.pagination;

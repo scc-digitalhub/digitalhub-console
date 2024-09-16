@@ -3,6 +3,7 @@ import { createMetadataViewUiSchema } from '../common/schemas';
 import { useGetSchemas } from '../controllers/schemaController';
 import { useRecordContext } from 'react-admin';
 import { JsonSchemaField } from './JsonSchema';
+import { Fragment } from 'react/jsx-runtime';
 
 export const MetadataField = ({ prompt }: any) => {
     const record = useRecordContext();
@@ -25,7 +26,7 @@ export const MetadataField = ({ prompt }: any) => {
 
                 //hide if no fields are visibile
                 if (uiSchema['ui:hide']) {
-                    return <></>;
+                    return <Fragment key={r.id}></Fragment>;
                 }
 
                 return (

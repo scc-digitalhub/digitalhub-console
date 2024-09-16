@@ -65,7 +65,6 @@ const ShowComponent = () => {
 
         if (cur.current != null && !deepEqual(cur.current, record)) {
             //reloading, reset
-            console.log('reloading');
             cur.current = null;
             if (isInitializing()) {
                 initializing.current = false;
@@ -85,13 +84,11 @@ const ShowComponent = () => {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
-                console.log('spec', s);
                 setSpec(s);
             });
 
             Promise.all([
                 schemaProvider.list('tasks', record.kind).then(schemas => {
-                    console.log('schema  for ' + record.kind, schemas);
                     return schemas?.map(s => s.kind);
                 }),
 
@@ -104,8 +101,8 @@ const ShowComponent = () => {
                 }),
             ])
                 .then(([kinds, list]) => {
-                    console.log('kinds', kinds);
-                    console.log('list', list);
+                    // console.log('kinds', kinds);
+                    // console.log('list', list);
 
                     if (!kinds || !list || !list.data) {
                         return;
@@ -115,7 +112,7 @@ const ShowComponent = () => {
                     const missing = kinds.filter(
                         k => !list.data.find(t => t.kind == k)
                     );
-                    console.log('missing', missing);
+                    // console.log('missing', missing);
                     if (missing.length == 0) {
                         //all tasks defined
                         list.data.sort((a, b) => {
@@ -241,14 +238,14 @@ const ShowComponent = () => {
     );
 };
 
-const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
+export const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
     const { sourceCode, spec } = props;
     const record = useRecordContext();
-    const uiSchema = getFunctionUiSpec(record.kind);
+    const uiSchema = getFunctionUiSpec(record.kind) || {};
     const values = { spec: { source: sourceCode } };
     const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
     if ('properties' in schema) {
-        schema.properties = { source: schema.properties.source };
+        schema.properties = { source: spec?.schema.properties.source };
     }
 
     return (

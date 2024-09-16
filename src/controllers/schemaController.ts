@@ -42,7 +42,7 @@ export const useGetSchema = (
     const error = useRef<any>(null);
 
     useEffect(() => {
-        if (schemaProvider) {
+        if (schemaProvider && kind) {
             isLoading.current = true;
             schemaProvider
                 .get(resource, kind)

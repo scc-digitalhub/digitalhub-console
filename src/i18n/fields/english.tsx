@@ -164,6 +164,7 @@ export const fields = {
     logs: 'Logs',
     base: 'Base',
     summary: 'Summary',
+    results: 'Results',
     description: {
         title: 'Description',
         description: '',

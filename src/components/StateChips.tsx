@@ -11,6 +11,7 @@ export const StateChips = (props: {
     resource?: string;
     record?: RaRecord<Identifier>;
     source: string;
+    sortable?: boolean;
 }) => {
     const { source, ...rest } = props;
     const translate = useTranslate();
@@ -33,6 +34,8 @@ export enum StateColors {
     RUNNING = 'info',
     BUILT = 'warning',
     READY = 'info',
-    // DELETED = 'secondary',
+    DELETED = 'secondary',
     DELETING = 'warning',
+    STOPPING = 'warning',
+    STOPPED = 'warning',
 }

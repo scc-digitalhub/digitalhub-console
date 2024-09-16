@@ -12,6 +12,7 @@ import {
     Labeled,
     LoadingIndicator,
     RaRecord,
+    Identifier,
     RecordContextProvider,
     RefreshButton,
     TextField,
@@ -155,7 +156,7 @@ export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     /**
      * (Optional) ref id, by default uses record.id
      */
-    id?: string;
+    id?: Identifier;
     /**
      * (Optional) Custom icon for the button
      */
@@ -178,7 +179,7 @@ export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     maxWidth?: Breakpoint;
 };
 
-const LogsView = (props: LogsButtonProps) => {
+export const LogsView = (props: LogsButtonProps) => {
     const { id, resource } = props;
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();

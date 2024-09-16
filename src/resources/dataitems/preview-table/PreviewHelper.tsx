@@ -458,7 +458,7 @@ export class Value {
     invalidityType?: Type;
 
     constructor(value: any, isValid = true, invalidityType?: Type) {
-        this.value = typeof value === 'string' ? value.slice(0, 10000) : value;
+        this.value = value && typeof value === 'string' ? value.slice(0, 10000) : value;
         this.isValid = isValid;
         if (invalidityType) this.invalidityType = invalidityType;
     }
