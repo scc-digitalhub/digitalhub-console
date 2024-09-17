@@ -10,11 +10,12 @@ import {
     Badge,
     styled,
     alpha,
+    Divider,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useState, MouseEvent, ReactElement, useEffect, useRef } from 'react';
+import { useState, MouseEvent, ReactElement, useEffect, useRef, Fragment } from 'react';
 import {
     useTranslate,
     RaRecord,
@@ -25,6 +26,7 @@ import {
     IconButtonWithTooltip,
     DateField,
     localStorageStore,
+    useStore,
 } from 'react-admin';
 import { RunIcon } from '../resources/runs/icon';
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -35,12 +37,14 @@ export const NotificationArea = (props: NotificationAreaProps) => {
     console.log('messages', messages);
 
     const notifications: ReactElement[] = messages.map((message, index) => (
-        <Notification
-            message={message}
-            key={index}
-            open={open}
-            setMessages={setMessages}
-        />
+        <Fragment key={index}>
+            <Divider flexItem />
+            <Notification
+                message={message}
+                open={open}
+                setMessages={setMessages}
+            />
+        </Fragment>
     ));
 
     const icon = (
@@ -52,7 +56,18 @@ export const NotificationArea = (props: NotificationAreaProps) => {
     return (
         <DropDownButton label="" icon={icon} setOpen={setOpen}>
             {notifications.length != 0 ? (
-                notifications
+                <>
+                    <Typography
+                        variant="button"
+                        gutterBottom
+                        align="center"
+                        width={'100%'}
+                        color={'grey'}
+                    >
+                        Recent messages
+                    </Typography>
+                    {notifications}
+                </>
             ) : (
                 <Typography sx={{ paddingX: 2 }}>No new messages</Typography> //TODO translate
             )}
@@ -69,6 +84,18 @@ export const Notification = (props: NotificationProps) => {
     const { message, open, setMessages, timeout = 10000 } = props;
     const state: String = message.status.state;
     const ref = useRef(null);
+    const [isRead, setIsRead] = useState(false);
+    const [readNotifications, setReadNotifications] = useStore<any[]>(
+        'dh.notifications.messages.read',
+        []
+    );
+
+    useEffect(() => {
+        //if current notification has already been read, set isRead to true
+        if (readNotifications.indexOf(message.notificationId) !== -1) {
+            setIsRead(true);
+        }
+    }, [readNotifications]);
 
     useEffect(() => {
         if (open) {
@@ -89,14 +116,10 @@ export const Notification = (props: NotificationProps) => {
                     console.log('creating timer for', entry.target);
                     timer = setTimeout(() => {
                         console.log('timeout for', entry.target);
-                        //edit messages
-                        // setMessages(prev => {
-                        //     return prev.filter(
-                        //         value =>
-                        //             value.notificationId !=
-                        //             message.notificationId
-                        //     );
-                        // });
+                        //mark as read
+                        setReadNotifications(prev => {
+                            return [...prev, message.notificationId];
+                        });
                     }, timeout);
                 }
             }, observerOptions);
@@ -128,24 +151,32 @@ export const Notification = (props: NotificationProps) => {
         });
     };
 
-    const notificationClass =
-        state === 'COMPLETED'
-            ? NotificationClasses.completed
-            : state === 'ERROR'
-            ? NotificationClasses.error
-            : NotificationClasses.default;
+    // const notificationClass =
+    //     state === 'COMPLETED'
+    //         ? NotificationClasses.completed
+    //         : state === 'ERROR'
+    //         ? NotificationClasses.error
+    //         : NotificationClasses.default;
+
+    const title = 'Run ' + message.spec.function.split('/')[3].split(':')[0];
 
     return (
         <NotificationCard
             elevation={0}
             ref={ref}
             square
-            className={notificationClass}
+            // className={notificationClass}
         >
             <CardHeader
                 avatar={<RunIcon fontSize="small" />}
                 title={
-                    'Run ' + message.spec.function.split('/')[3].split(':')[0]
+                    isRead ? (
+                        title
+                    ) : (
+                        <Box component="span" sx={{ fontWeight: 'bold' }}>
+                            {title}
+                        </Box>
+                    )
                 }
                 subheader={
                     <DateField
@@ -180,11 +211,11 @@ export const Notification = (props: NotificationProps) => {
     );
 };
 
-const NotificationClasses = {
-    default: 'default',
-    error: 'error',
-    completed: 'success',
-};
+// const NotificationClasses = {
+//     default: 'default',
+//     error: 'error',
+//     completed: 'success',
+// };
 
 const NotificationCard = styled(Card, {
     name: 'NotificationCard',
@@ -193,18 +224,18 @@ const NotificationCard = styled(Card, {
     width: '100%',
     boxSizing: 'border-box',
     backgroundColor:
-        className == NotificationClasses.completed
+        /*className == NotificationClasses.completed
             ? alpha(theme.palette.success.light, 0.3)
             : className == NotificationClasses.error
             ? alpha(theme.palette.error.light, 0.3)
-            : theme.palette.common.white,
+            : */ theme.palette.common.white,
     ...theme.applyStyles('dark', {
         backgroundColor:
-            className == NotificationClasses.completed
+            /*className == NotificationClasses.completed
                 ? alpha(theme.palette.success.dark, 0.5)
                 : className == NotificationClasses.error
                 ? alpha(theme.palette.error.dark, 0.5)
-                : theme.palette.common.black,
+                : */ theme.palette.common.black,
     }),
     ['& .MuiCardContent-root, & .MuiCardHeader-root']: {
         paddingBottom: 0,
@@ -212,18 +243,18 @@ const NotificationCard = styled(Card, {
     },
     ['&:hover']: {
         backgroundColor:
-            className == NotificationClasses.completed
+            /*className == NotificationClasses.completed
                 ? alpha(theme.palette.success.light, 0.5)
                 : className == NotificationClasses.error
                 ? alpha(theme.palette.error.light, 0.5)
-                : theme.palette.grey[100],
+                : */ theme.palette.grey[100],
         ...theme.applyStyles('dark', {
             backgroundColor:
-                className == NotificationClasses.completed
+                /*className == NotificationClasses.completed
                     ? alpha(theme.palette.success.dark, 0.7)
                     : className == NotificationClasses.error
                     ? alpha(theme.palette.error.dark, 0.7)
-                    : theme.palette.grey[800],
+                    : */ theme.palette.grey[800],
         }),
     },
 }));
@@ -272,7 +303,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                     aria-haspopup="true"
                     onClick={handleOpen}
                     startIcon={icon}
-                    // endIcon={<ExpandMoreIcon fontSize="small" />}
                 >
                     {translate(label)}
                 </Button>
@@ -288,7 +318,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                     direction={'column'}
                     sx={{
                         minWidth: '80px',
-                        // marginLeft: '10px',
                         alignItems: 'flex-start',
                     }}
                 >
