@@ -12,7 +12,7 @@ import {
     useInput,
     useResourceContext,
 } from 'react-admin';
-import { isAlphaNumeric } from '../../common/helper';
+import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -39,7 +39,7 @@ const CreateToolbar = () => {
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const id = useRef(crypto.randomUUID());
+    const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
     });

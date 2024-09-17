@@ -105,7 +105,10 @@ export const WorkflowList = () => {
         : [];
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase exporter={yamlExporter}>
+            <ListBase
+                exporter={yamlExporter}
+                sort={{ field: 'metadata.updated', order: 'DESC' }}
+            >
                 <>
                     <ListPageTitle icon={<WorkflowIcon fontSize={'large'} />} />
                     <ListToolbar />

@@ -28,6 +28,7 @@ import {
     useUploadController,
 } from '../../controllers/uploadController';
 import { SpecInput } from '../../components/SpecInput';
+import { randomId } from '../../common/helper';
 
 const DataItemEditToolbar = () => {
     const translate = useTranslate();
@@ -53,7 +54,7 @@ export const DataItemEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
-    const id = useRef(crypto.randomUUID());
+    const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
     });

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
     CreateButton,
     Datagrid,
+    DateField,
     EditButton,
     FunctionField,
     ListBase,
@@ -92,7 +93,10 @@ export const ArtifactList = () => {
         : [];
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase exporter={yamlExporter}>
+            <ListBase
+                exporter={yamlExporter}
+                sort={{ field: 'metadata.updated', order: 'DESC' }}
+            >
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
 
@@ -113,6 +117,11 @@ export const ArtifactList = () => {
                             >
                                 <TextField source="name" />
                                 <TextField source="kind" />
+                                <DateField
+                                    source="metadata.updated"
+                                    showDate={true}
+                                    showTime={true}
+                                />
                                 <FunctionField
                                     source="metadata.labels"
                                     sortable={false}

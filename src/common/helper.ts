@@ -1,11 +1,15 @@
 import { isEmpty, regex } from 'react-admin';
 import { ValidatorType, RJSFSchema } from '@rjsf/utils';
+import memoize from 'lodash/memoize';
+
+export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
+export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
 };
 export const alphaNumericName = s => {
-    return /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/.test(s);
+    return ALPHANUMERIC_REGEX.test(s);
 };
 
 export const arePropsEqual = (oldProps: any, newProps: any) => {
@@ -13,9 +17,8 @@ export const arePropsEqual = (oldProps: any, newProps: any) => {
     return Object.is(oldProps.record, newProps.record);
 };
 
-export const isAlphaNumeric = regex(
-    /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/,
-    'validation.wrongChar'
+export const isAlphaNumeric = memoize(() =>
+    regex(ALPHANUMERIC_REGEX, 'validation.wrongChar')
 );
 
 export const isValidKind = (kinds: any[]) => (value, values?) => {
@@ -44,3 +47,11 @@ export const isValidAgainstSchema =
             return 'error with validator';
         }
     };
+
+export const randomId = () => {
+    //generate a ~random id from (time + rand)
+    let p3 = Date.now().toString(36);
+    let p2 = Math.random().toString(16).substring(2, 7);
+    let p1 = Math.random().toString(36).substring(2);
+    return p1 + '-' + p2 + '-' + p3;
+};

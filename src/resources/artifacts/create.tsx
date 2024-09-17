@@ -10,10 +10,15 @@ import {
     TextInput,
     TopToolbar,
     required,
+    regex,
     useInput,
     useResourceContext,
 } from 'react-admin';
-import { isAlphaNumeric } from '../../common/helper';
+import {
+    ALPHANUMERIC_REGEX,
+    isAlphaNumeric,
+    randomId,
+} from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
@@ -39,7 +44,7 @@ const CreateToolbar = () => {
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
-    const id = useRef(crypto.randomUUID());
+    const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
     });
@@ -141,7 +146,11 @@ const ArtifactCreateForm = (props: { uploader?: UploadController }) => {
             <Stack direction={'row'} spacing={3} pt={4}>
                 <TextInput
                     source="name"
-                    validate={[required(), isAlphaNumeric()]}
+                    validate={[
+                        required(),
+                        // regex(ALPHANUMERIC_REGEX, 'validation.wrongChar'),
+                        isAlphaNumeric(),
+                    ]}
                 />
                 <KindSelector kinds={kinds} />
             </Stack>
