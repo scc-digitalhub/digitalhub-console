@@ -36,64 +36,71 @@ export const MetadataInput = ({ prompt }: any) => {
     const translate = useTranslate();
     const { data: schemas, isLoading, error } = useGetSchemas('metadata');
     const metadataKinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
+        ? schemas
+              .map(s => ({
+                  id: s.kind,
+                  name: s.kind,
+                  schema: s.schema,
+              }))
+              .sort((a, b) =>
+                  a.id === 'metadata.base'
+                      ? -1
+                      : b.id === 'metadata.base'
+                      ? 1
+                      : a.id.localeCompare(b.id)
+              )
         : [];
     return (
         <Grid container={true} alignItems="top">
-            {metadataKinds &&
-                metadataKinds.map(r => {
-                    return (
-                        <Grid
-                            item={true}
-                            xs={12}
-                            style={{ overflow: 'auto' }}
-                            key={r.id}
-                        >
-                            {r.id === 'metadata.base' ? (
-                                <>
+            {metadataKinds?.map(r => {
+                return (
+                    <Grid
+                        item={true}
+                        xs={12}
+                        style={{ overflow: 'auto' }}
+                        key={r.id}
+                    >
+                        {r.id === 'metadata.base' ? (
+                            <>
+                                <Typography variant="h5">
+                                    {translate(r.schema.title)}
+                                </Typography>
+                                <JsonSchemaInput
+                                    key={r.id}
+                                    source="metadata"
+                                    schema={{ ...r.schema, title: '' }}
+                                    uiSchema={MetadataCreateUiSchema}
+                                />
+                            </>
+                        ) : (
+                            <Accordion
+                                elevation={0}
+                                // square
+                                disableGutters
+                                defaultExpanded={r.id === 'metadata.base'}
+                            >
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                >
                                     <Typography variant="h5">
                                         {translate(r.schema.title)}
                                     </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
                                     <JsonSchemaInput
                                         key={r.id}
                                         source="metadata"
-                                        schema={{ ...r.schema, title: '' }}
-                                        uiSchema={MetadataCreateUiSchema}
+                                        schema={{
+                                            ...r.schema,
+                                            title: '',
+                                        }}
                                     />
-                                </>
-                            ) : (
-                                <Accordion
-                                    elevation={0}
-                                    // square
-                                    disableGutters
-                                    defaultExpanded={r.id === 'metadata.base'}
-                                >
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                    >
-                                        <Typography variant="h5">
-                                            {translate(r.schema.title)}
-                                        </Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <JsonSchemaInput
-                                            key={r.id}
-                                            source="metadata"
-                                            schema={{
-                                                ...r.schema,
-                                                title: '',
-                                            }}
-                                        />
-                                    </AccordionDetails>
-                                </Accordion>
-                            )}
-                        </Grid>
-                    );
-                })}
+                                </AccordionDetails>
+                            </Accordion>
+                        )}
+                    </Grid>
+                );
+            })}
         </Grid>
     );
 };

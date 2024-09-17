@@ -9,11 +9,19 @@ export const MetadataField = ({ prompt }: any) => {
     const record = useRecordContext();
     const { data: schemas, isLoading, error } = useGetSchemas('metadata');
     const metadataKinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-              schema: s.schema,
-          }))
+        ? schemas
+              .map(s => ({
+                  id: s.kind,
+                  name: s.kind,
+                  schema: s.schema,
+              }))
+              .sort((a, b) =>
+                  a.id === 'metadata.base'
+                      ? -1
+                      : b.id === 'metadata.base'
+                      ? 1
+                      : a.id.localeCompare(b.id)
+              )
         : [];
     return (
         <Box>
