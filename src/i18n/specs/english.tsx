@@ -142,7 +142,27 @@ export const specs = {
         description: 'Kubeflow Pipeline run definition',
     },
     mlflow: {
-        title: 'MLflow',
+        title: 'MLFlow',
         description: 'MLFlow model definition',
+    },
+    sklearn: {
+        title: 'SKLearn',
+        description: 'SKLearn model definition',
+    },
+    huggingface: {
+        title: 'Huggingface',
+        description: 'Huggingface model definition',
+    },
+    mlflowserve: {
+        title: 'MLFlow',
+        description: 'MLFlow model serving',
+    },
+    sklearnserve: {
+        title: 'SKLearn',
+        description: 'SKLearn model serving',
+    },
+    huggingfaceserve: {
+        title: 'Huggingface',
+        description: 'Huggingface model serving',
     },
 };

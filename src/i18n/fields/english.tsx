@@ -395,6 +395,10 @@ export const fields = {
         },
     },
     huggingface: {
+        path: {
+            description:
+                'Path for the full model, either as folder or .zip, or a remote model as `huggingface://<>`',
+        },
         task: {
             title: 'HuggingFace Inference Task',
             description: '',
@@ -456,7 +460,15 @@ export const fields = {
             description: '',
         },
     },
+    sklearn: {
+        path: {
+            description: 'Path for a .pkl or .joblib model',
+        },
+    },
     mlflow: {
+        path: {
+            description: 'Path for MLFlow model, either as folder or .zip file',
+        },
         flavor: {
             title: 'Model Flavor',
             description: '',
