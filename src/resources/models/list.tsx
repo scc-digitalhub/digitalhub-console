@@ -77,7 +77,7 @@ export const ModelList = () => {
     const postFilters = kinds
         ? [
               <TextInput
-                  label={translate('search.name')}
+                  label="fields.name.title"
                   source="name"
                   alwaysOn
                   key={1}
@@ -85,6 +85,7 @@ export const ModelList = () => {
               <SelectInput
                   alwaysOn
                   key={2}
+                  label="fields.kind"
                   source="kind"
                   choices={kinds}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}

@@ -104,11 +104,11 @@ export const ShowPageTitle = (props: RecordPageTitleProps) => {
 
     return (
         <PageTitle
-            text={translate('pageTitle.show.title', {
+            text={translate('pages.pageTitle.show.title', {
                 resource: label,
                 name,
             })}
-            secondaryText={translate('pageTitle.show.subtitle', {
+            secondaryText={translate('pages.pageTitle.show.subtitle', {
                 resource: label,
                 kind,
             })}
@@ -134,10 +134,10 @@ export const CreatePageTitle = (props: RecordPageTitleProps) => {
 
     return (
         <PageTitle
-            text={translate('pageTitle.create.title', {
+            text={translate('pages.pageTitle.create.title', {
                 resource: label,
             })}
-            secondaryText={translate('pageTitle.create.subtitle', {
+            secondaryText={translate('pages.pageTitle.create.subtitle', {
                 resource: label,
             })}
             {...rest}
@@ -164,11 +164,11 @@ export const EditPageTitle = (props: RecordPageTitleProps) => {
 
     return (
         <PageTitle
-            text={translate('pageTitle.edit.title', {
+            text={translate('pages.pageTitle.edit.title', {
                 resource: label,
                 name,
             })}
-            secondaryText={translate('pageTitle.edit.subtitle', {
+            secondaryText={translate('pages.pageTitle.edit.subtitle', {
                 resource: label,
                 kind,
             })}

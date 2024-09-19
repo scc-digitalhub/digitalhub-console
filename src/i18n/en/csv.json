@@ -1,0 +1,37 @@
+{
+    "buttonMain": {
+        "emptyResource": "The 'resource' property was empty, have you defined {...props} for the import button?",
+        "label": "Import",
+        "tooltip": "Must be a file '.csv' or '.tsv'"
+    },
+    "dialogCommon": {
+        "buttons": {
+            "cancel": "Cancel"
+        },
+        "conflictCount": "The resource \"%{resource}\" contains <strong>%{conflictingCount}</strong> records with conflicting IDs",
+        "subtitle": "import of %{count} elements from file %{fileName} to \"%{resource}\""
+    },
+    "dialogDecide": {
+        "buttons": {
+            "addAsNewRow": "Add the line as new (no replace)",
+            "replaceRow": "Replace the row with ID %{id}",
+            "skipDontReplace": "Skip this line (no replace)"
+        },
+        "title": "Import into \"%{resource}\" of the element with ID %{id}"
+    },
+    "dialogImport": {
+        "alertClose": "%{fname} imported",
+        "buttons": {
+            "letmeDecide": "Leave to decide for each records",
+            "replaceAllConflicts": "Replace the lines",
+            "skipAllConflicts": "Skip the lines"
+        },
+        "title": "Importing in \"%{resource}\""
+    },
+    "loading": "Loading...",
+    "parsing": {
+        "collidingIds": "Records with conflicting IDs found",
+        "failedValidateRow": "The CSV file has not passed validation requirements",
+        "invalidCsv": "The document cannot be imported in \"CSV\" format"
+    }
+}

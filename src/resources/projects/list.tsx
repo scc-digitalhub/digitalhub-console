@@ -55,9 +55,6 @@ export const ProjectSelectorList = props => {
                     maxWidth={'md'}
                     transform={transform}
                     variant="contained"
-                    label={translate('pageTitle.create.title', {
-                        resource: resourceLabel,
-                    })}
                 >
                     <ProjectCreateForm />
                 </CreateInDialogButton>
@@ -143,12 +140,14 @@ const ProjectsGridItem = (props: any) => {
                                 <Labeled>
                                     <DateField
                                         source="metadata.created"
+                                        label="fields.created.title"
                                         showTime
                                     />
                                 </Labeled>
                                 <Labeled>
                                     <DateField
                                         source="metadata.updated"
+                                        label="fields.updated.title"
                                         showTime
                                     />
                                 </Labeled>

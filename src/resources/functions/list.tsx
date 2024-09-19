@@ -88,15 +88,15 @@ export const FunctionList = () => {
     const postFilters = kinds
         ? [
               <TextInput
-                  label={translate('search.name')}
+                  label="fields.name.title"
                   source="name"
                   alwaysOn
                   key={1}
               />,
               <SelectInput
-                  label="search.kind"
                   alwaysOn
                   key={2}
+                  label="fields.kind"
                   source="kind"
                   choices={kinds}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}

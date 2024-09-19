@@ -61,7 +61,7 @@ export const PreviewHeaderCell = (props: {
                             fontWeight: 'bold',
                         }}
                     >
-                        {translate('validation.unsupportedField')}
+                        {translate('messages.validation.unsupportedField')}
                     </span>
                 </Box>
             )}

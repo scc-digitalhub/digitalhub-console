@@ -1,0 +1,6 @@
+{
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "stop": "Stop",
+    "toggle-x": "Show/Hide %{el}"
+}

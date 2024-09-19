@@ -49,13 +49,13 @@ const InvalidCellContent = forwardRef<
     let label: string;
     switch (invalidityType) {
         case Type.InvalidDate:
-            label = translate('validation.invalidDate');
+            label = translate('messages.validation.invalidDate');
             break;
         case Type.InvalidDatetime:
-            label = translate('validation.invalidDatetime');
+            label = translate('messages.validation.invalidDatetime');
             break;
         default:
-            label = translate('validation.invalidValue');
+            label = translate('messages.validation.invalidValue');
             break;
     }
 

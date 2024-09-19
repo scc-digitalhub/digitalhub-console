@@ -41,7 +41,7 @@ const ModelEditToolbar = () => {
             <SaveButton />
             <Button
                 color="info"
-                label={translate('buttons.cancel')}
+                label={translate('actions.cancel')}
                 onClick={handleClick}
             >
                 <ClearIcon />

@@ -1,0 +1,168 @@
+{
+  "artifact": {
+    "description": "",
+    "title": "Metadata Artifact"
+  },
+  "container": {
+    "description": "",
+    "title": "Container"
+  },
+  "container+build": {
+    "description": "Definizione dell'operazione di build del container",
+    "title": "Operazione di build del container"
+  },
+  "container+deploy": {
+    "description": "Definizione dell'operazione di deploy del container",
+    "title": "Operazione di deploy del container"
+  },
+  "container+job": {
+    "description": "Definizione del container job",
+    "title": "Container job"
+  },
+  "container+run": {
+    "description": "Definizione dell'esecuzione dell'operazione su container",
+    "title": "Esecuzione dell'operazione su container"
+  },
+  "container+serve": {
+    "description": "Definizione del container serve",
+    "title": "Container serve"
+  },
+  "dataitem": {
+    "description": "",
+    "title": "Metadata Dataitem"
+  },
+  "dbt": {
+    "description": "",
+    "title": "DBT"
+  },
+  "dbt+run": {
+    "description": "Definizione dell'esecuzione DBT",
+    "title": "Esecuzione DBT"
+  },
+  "dbt+transform": {
+    "description": "Definizione dell'operazione di transformazione DBT",
+    "title": "Operazione di transformazione DBT"
+  },
+  "huggingface": {
+    "description": "Definizione del modello Huggingface",
+    "title": "Huggingface"
+  },
+  "huggingfaceserve": {
+    "description": "Esecuzione modello Huggingface ",
+    "title": "Huggingface"
+  },
+  "kfp": {
+    "description": "",
+    "title": "Pipeline di Kubeflow"
+  },
+  "kfp+pipeline": {
+    "description": "Definizione dell'operazione di Kubeflow Pipeline",
+    "title": "Operazione di Kubeflow Pipeline"
+  },
+  "kfp+run": {
+    "description": "Definizione dell'esecuzione di Kubeflow Pipeline",
+    "title": "Esecuzione di Kubeflow Pipeline"
+  },
+  "metadata": {
+    "audit": {
+      "description": "",
+      "title": "Audit"
+    },
+    "base": {
+      "description": "",
+      "title": "Metadata"
+    },
+    "embedded": {
+      "description": "",
+      "title": "Embedded"
+    },
+    "openmetadata": {
+      "description": "",
+      "title": "Openmetadata"
+    },
+    "versioning": {
+      "description": "",
+      "title": "Versionamento"
+    }
+  },
+  "mlflow": {
+    "description": "Definizione modello MLFlow",
+    "title": "MLflow"
+  },
+  "mlflowserve": {
+    "description": "Esecuzione modello MLFlow",
+    "title": "MLFlow"
+  },
+  "mlrun": {
+    "description": "",
+    "title": "MLRun"
+  },
+  "mlrun+build": {
+    "description": "Definizione dell'operazione di build dell'immagine MLRun",
+    "title": "Operazione di build dell'immagine MLRun"
+  },
+  "mlrun+job": {
+    "description": "Definizione del job di MLRun",
+    "title": "Job di MLRun"
+  },
+  "mlrun+run": {
+    "description": "Definizione dell'esecuzione MLRun",
+    "title": "Esecuzione MLRun"
+  },
+  "model": {
+    "description": "",
+    "title": "Metadata Model"
+  },
+  "nefertem": {
+    "description": "",
+    "title": "Nefertem"
+  },
+  "nefertem+infer": {
+    "description": "Definizione dell'operazione di infer Nefertem",
+    "title": "Operazione di infer Nefertem"
+  },
+  "nefertem+metric": {
+    "description": "Definizione dell'operazione di metriche Nefertem",
+    "title": "Operazione di metriche Nefertem"
+  },
+  "nefertem+profile": {
+    "description": "Definizione dell'operazione di profilazione Nefertem",
+    "title": "Operazione di profilazione Nefertem"
+  },
+  "nefertem+run": {
+    "description": "Definizione dell'esecuzione di operazione Nefertem",
+    "title": "Esecuzione di operazione Nefertem"
+  },
+  "nefertem+validate": {
+    "description": "Definizione dell'operazione di validazione Nefertem",
+    "title": "Operazione di validazione Nefertem"
+  },
+  "python": {
+    "description": "",
+    "title": "Python"
+  },
+  "python+build": {
+    "description": "Definizione dell'operazione di build del codice Python",
+    "title": "Build di codice Python"
+  },
+  "python+job": {
+    "description": "Definizione di un job Python",
+    "title": "Job Python"
+  },
+  "python+serve": {
+    "description": "Definizione dell'operazione di serve del codice Python",
+    "title": "Serve di codice Python"
+  },
+  "sklearn": {
+    "description": "Definizione modello SKLearn",
+    "title": "SKLearn"
+  },
+  "sklearnserve": {
+    "description": "Esecuzione modello SKLearn",
+    "title": "SKLearn"
+  },
+  "table": {
+    "description": "",
+    "title": "Tabella"
+  }
+}

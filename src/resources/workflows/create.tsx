@@ -101,7 +101,7 @@ export const WorkflowCreate = () => {
         }
 
         if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
+            errors.name = 'messages.validation.wrongChar';
         }
 
         return errors;

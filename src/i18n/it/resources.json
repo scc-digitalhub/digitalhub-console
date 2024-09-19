@@ -1,0 +1,158 @@
+{
+    "artifacts": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "list": "Elenco e ricerca di artefatti",
+        "name": "Artefatto |||| Artefatti"
+    },
+    "common": {
+        "emptySpec": "Seleziona il tipo per visualizzare le specifiche",
+        "labels": "Etichette",
+        "reset": {
+            "content": "Sei sicuro di voler cambiare tipologia? Le modifiche effettuate saranno annullate",
+            "title": "Cambia tipologia"
+        },
+        "version": {
+            "created": "Data di creazione",
+            "title": "Versioni",
+            "version": "Versione"
+        }
+    },
+    "dataitems": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "list": "Elenco e ricerca di dati",
+        "name": "Dato |||| Dati",
+        "preview": {
+            "false": "Falso",
+            "notAvailable": "Anteprima non disponibile",
+            "numberOfRows": "Numero di righe",
+            "title": "Anteprima",
+            "true": "Vero"
+        },
+        "schema": {
+            "name": "Nome",
+            "title": "Schema",
+            "type": "Tipo"
+        },
+        "tab": {
+            "preview": "Anteprima",
+            "schema": "Schema"
+        }
+    },
+    "functions": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "list": "Elenco e ricerca di funzioni",
+        "name": "Funzione |||| Funzioni",
+        "tab": {
+            "summary": "Riepilogo",
+            "test": "Test"
+        }
+    },
+    "logs": {
+        "fields": {
+            "run_id": "Run ID"
+        },
+        "list": "Elenco log",
+        "name": "Log |||| Log"
+    },
+    "models": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "list": "Elenco e ricerca di modelli",
+        "metrics": {
+            "key": "Nome",
+            "title": "Metriche",
+            "value": "Valore"
+        },
+        "name": "Modello |||| Modelli",
+        "tab": {
+            "metrics": "Metriche",
+            "preview": "Anteprima"
+        }
+    },
+    "projects": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "name": "Progetto |||| Progetti"
+    },
+    "runs": {
+        "create": "Crea una nuova esecuzione",
+        "empty": "Nessuna esecuzione",
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "labelName": "Nome",
+        "list": "Elenco e ricerca di esecuzioni",
+        "name": "Esecuzione |||| Esecuzioni"
+    },
+    "secrets": {
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome",
+            "spec": {
+                "path": "Percorso"
+            },
+            "value": "Valore"
+        },
+        "list": "Elenco dei segreti",
+        "name": "Segreto |||| Segreti",
+        "showData": "Mostra il segreto"
+    },
+    "tasks": {
+        "errors": {
+            "requestMinorLimits": "Requests deve essere inferiore a Limits"
+        },
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "kinds": {
+            "build": "Build",
+            "deploy": "Deploy",
+            "infer": "Analizza",
+            "job": "Job",
+            "metric": "Metriche",
+            "pipeline": "Pipeline",
+            "profile": "Profila",
+            "serve": "Servi",
+            "transform": "Trasforma",
+            "validate": "Valida"
+        },
+        "name": "Task |||| Tasks"
+    },
+    "workflows": {
+        "fields": {
+            "action": "Azione",
+            "end_time": "Fine",
+            "function": "Funzione",
+            "key": "Chiave",
+            "lang": "Linguaggio",
+            "name": "Nome",
+            "run_id": "ID Esecuzione",
+            "source": "Sorgente",
+            "start_time": "Inizio"
+        },
+        "inputs": "Parametri di Input",
+        "list": "Elenco e ricerca di workflow",
+        "name": "Workflow |||| Workflow",
+        "outputs": "Parametri di Output",
+        "tab": {
+            "runs": "Esecuzioni",
+            "summary": "Riepilogo",
+            "test": "Test"
+        }
+    }
+}

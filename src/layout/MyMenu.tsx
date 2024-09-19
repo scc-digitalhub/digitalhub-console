@@ -33,7 +33,7 @@ export const MyMenu = () => {
                 <MenuItemLink
                     leftIcon={<SettingsIcon />}
                     to={`${basename}/config`}
-                    primaryText={'menu.configuration'}
+                    primaryText={'pages.config.title'}
                 />
                 <MenuItemLink
                     leftIcon={<ProjectIcon />}

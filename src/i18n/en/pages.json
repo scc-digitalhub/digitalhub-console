@@ -1,0 +1,60 @@
+{
+    "config": {
+        "text": "Review and update project configuration and settings",
+        "title": "Configuration"
+    },
+    "dashboard": {
+        "artifacts": {
+            "empty": "No artifacts yet",
+            "title": "Artifacts"
+        },
+        "created": "Created",
+        "dataitems": {
+            "empty": "No data items yet",
+            "title": "Data items"
+        },
+        "functions": {
+            "empty": "No functions yet",
+            "title": "Functions and code"
+        },
+        "models": {
+            "empty": "No models yet",
+            "title": "Models"
+        },
+        "recent": "Recent",
+        "runs": {
+            "empty": "No runs yet",
+            "title": "Jobs and runs"
+        },
+        "states": {
+            "completed": "Completed",
+            "error": "Error",
+            "running": "Running"
+        },
+        "text": "Define, build and execute functions to manage artifacts and data items.",
+        "updated": "Updated"
+    },
+    "functions": {
+        "show": {
+            "subtitle": "%{kind} function",
+            "title": "Function #%{name}"
+        }
+    },
+    "pageTitle": {
+        "create": {
+            "subtitle": "Fill the form to create and save a new %{resource}",
+            "title": "Create a new %{resource}"
+        },
+        "edit": {
+            "subtitle": "Modify the %{resource} for %{kind} by updating metadata and specification",
+            "title": "Edit %{resource} #%{name}"
+        },
+        "list": {
+            "title": "%{resource}"
+        },
+        "show": {
+            "subtitle": "%{kind} %{resource}",
+            "title": "%{resource} #%{name}"
+        }
+    }
+}

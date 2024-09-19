@@ -1,5 +1,5 @@
 import { Create, SimpleForm, TextInput, required } from 'react-admin';
-import { alphaNumericName, isAlphaNumeric } from '../../common/helper';
+import { isAlphaNumeric } from '../../common/helper';
 import { MetadataSchema } from '../../common/schemas';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
@@ -10,15 +10,7 @@ export const ProjectCreate = () => {
         ...data,
         kind: `project`,
     });
-    const validator = data => {
-        const errors: any = {};
 
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
-        }
-
-        return errors;
-    };
     return (
         <Create transform={transform} redirect="list">
             <ProjectCreateForm />

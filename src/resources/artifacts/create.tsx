@@ -146,11 +146,7 @@ const ArtifactCreateForm = (props: { uploader?: UploadController }) => {
             <Stack direction={'row'} spacing={3} pt={4}>
                 <TextInput
                     source="name"
-                    validate={[
-                        required(),
-                        // regex(ALPHANUMERIC_REGEX, 'validation.wrongChar'),
-                        isAlphaNumeric(),
-                    ]}
+                    validate={[required(), isAlphaNumeric()]}
                 />
                 <KindSelector kinds={kinds} />
             </Stack>

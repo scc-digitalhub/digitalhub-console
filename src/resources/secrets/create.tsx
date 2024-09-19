@@ -42,9 +42,6 @@ export const SecretCreate = () => {
             errors.kind = 'messages.validation.required';
         }
 
-        // if (!alphaNumericName(data.name)) {
-        //     errors.name = 'validation.wrongChar';
-        // }
         return errors;
     };
 

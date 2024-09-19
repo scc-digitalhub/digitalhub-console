@@ -33,7 +33,7 @@ export const SecretsEditToolbar = () => {
             <SaveButton />
             <Button
                 color="info"
-                label={translate('buttons.cancel')}
+                label={translate('actions.cancel')}
                 onClick={handleClick}
             >
                 <ClearIcon />
@@ -58,7 +58,7 @@ export const SecretEdit = () => {
         }
 
         if (!alphaNumericName(data.name)) {
-            errors.name = 'validation.wrongChar';
+            errors.name = 'messages.validation.wrongChar';
         }
         return errors;
     };

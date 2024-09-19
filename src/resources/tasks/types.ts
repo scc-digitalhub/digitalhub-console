@@ -51,25 +51,25 @@ export const k8sSpec = {
     resources: {
         // 'ui:ObjectFieldTemplate': AccordionFieldTemplate,
         'ui:expandable': true,
-        'ui:title': 'k8s.resources.title',
-        'ui:description': 'k8s.resources.description',
+        'ui:title': 'fields.k8s.resources.title',
+        'ui:description': 'fields.k8s.resources.description',
         'ui:order': ['cpu', 'mem', 'gpu'],
         'ui:layout': [5, 5, 2],
         cpu: {
             'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.cpu.title',
+            'ui:title': 'fields.k8s.resources.cpu.title',
             'ui:order': ['requests', 'limits'],
 
             limits: {
                 'ui:widget': CoreResourceCpuWidget,
-                'ui:title': 'k8s.resources.cpu.limits.title',
+                'ui:title': 'fields.k8s.resources.cpu.limits.title',
                 'ui:options': {
                     'ui:title': 'Limits',
                 },
             },
             requests: {
                 'ui:widget': CoreResourceCpuWidget,
-                'ui:title': 'k8s.resources.cpu.request.title',
+                'ui:title': 'fields.k8s.resources.cpu.request.title',
                 'ui:options': {
                     'ui:title': 'Request',
                 },
@@ -77,18 +77,18 @@ export const k8sSpec = {
         },
         mem: {
             'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.memory.title',
+            'ui:title': 'fields.k8s.resources.memory.title',
             'ui:order': ['requests', 'limits'],
             limits: {
                 'ui:widget': CoreResourceMemWidget,
-                'ui:title': 'k8s.resources.memory.limits.title',
+                'ui:title': 'fields.k8s.resources.memory.limits.title',
                 'ui:options': {
                     'ui:title': 'Limits',
                 },
             },
             requests: {
                 'ui:widget': CoreResourceMemWidget,
-                'ui:title': 'k8s.resources.memory.request.title',
+                'ui:title': 'fields.k8s.resources.memory.request.title',
                 'ui:options': {
                     'ui:title': 'Request',
                 },
@@ -96,16 +96,16 @@ export const k8sSpec = {
         },
         gpu: {
             'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
-            'ui:title': 'k8s.resources.gpu.title',
+            'ui:title': 'fields.k8s.resources.gpu.title',
             'ui:order': ['requests', 'limits'],
 
             requests: {
                 'ui:widget': 'hidden',
-                'ui:title': 'k8s.resources.gpu.limits.title',
+                'ui:title': 'fields.k8s.resources.gpu.limits.title',
             },
             limits: {
                 'ui:widget': CoreResourceGpuWidget,
-                'ui:title': 'k8s.resources.gpu.request.title',
+                'ui:title': 'fields.k8s.resources.gpu.request.title',
                 'ui:options': {
                     'ui:title': 'Request',
                 },
@@ -114,8 +114,8 @@ export const k8sSpec = {
     },
 
     envs: {
-        'ui:title': 'k8s.envs.title',
-        'ui:description': 'k8s.envs.description',
+        'ui:title': 'fields.k8s.envs.title',
+        'ui:description': 'fields.k8s.envs.description',
         'ui:orderable': false,
         // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
         'ui:expandable': true,
@@ -127,8 +127,8 @@ export const k8sSpec = {
         },
     },
     secrets: {
-        'ui:title': 'k8s.secrets.title',
-        'ui:description': 'k8s.secrets.description',
+        'ui:title': 'fields.k8s.secrets.title',
+        'ui:description': 'fields.k8s.secrets.description',
         // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
         'ui:expandable': true,
         items: {
@@ -136,8 +136,8 @@ export const k8sSpec = {
         },
     },
     node_selector: {
-        'ui:title': 'k8s.node_selector.title',
-        'ui:description': 'k8s.node_selector.description',
+        'ui:title': 'fields.k8s.node_selector.title',
+        'ui:description': 'fields.k8s.node_selector.description',
 
         // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
         'ui:expandable': true,
@@ -149,8 +149,8 @@ export const k8sSpec = {
         },
     },
     volumes: {
-        'ui:title': 'k8s.volumes.title',
-        'ui:description': 'k8s.volumes.description',
+        'ui:title': 'fields.k8s.volumes.title',
+        'ui:description': 'fields.k8s.volumes.description',
         // 'ui:ArrayFieldTemplate': AccordionArrayFieldTemplate,
         'ui:expandable': true,
         items: {

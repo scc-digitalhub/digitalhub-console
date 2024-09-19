@@ -1,0 +1,168 @@
+{
+    "artifact": {
+        "description": "",
+        "title": "Metadata Artifact"
+    },
+    "container": {
+        "description": "",
+        "title": "Container"
+    },
+    "container+build": {
+        "description": "Container build task definition",
+        "title": "Container build task"
+    },
+    "container+deploy": {
+        "description": "Container deploy task definition",
+        "title": "Container deploy task"
+    },
+    "container+job": {
+        "description": "Container job definition",
+        "title": "Container job"
+    },
+    "container+run": {
+        "description": "Container run definition",
+        "title": "Container run"
+    },
+    "container+serve": {
+        "description": "Container serve definition",
+        "title": "Container serve"
+    },
+    "dataitem": {
+        "description": "",
+        "title": "Metadata Dataitem"
+    },
+    "dbt": {
+        "description": "",
+        "title": "DBT"
+    },
+    "dbt+run": {
+        "description": " DBT run definition",
+        "title": "DBT run"
+    },
+    "dbt+transform": {
+        "description": " DBT transform task definition",
+        "title": "DBT transform task"
+    },
+    "huggingface": {
+        "description": "Huggingface model definition",
+        "title": "Huggingface"
+    },
+    "huggingfaceserve": {
+        "description": "Huggingface model serving",
+        "title": "Huggingface"
+    },
+    "kfp": {
+        "description": "",
+        "title": "Kubeflow Pipeline"
+    },
+    "kfp+pipeline": {
+        "description": "Kubeflow Pipeline task definition",
+        "title": "Kubeflow Pipeline task"
+    },
+    "kfp+run": {
+        "description": "Kubeflow Pipeline run definition",
+        "title": "Kubeflow Pipeline run"
+    },
+    "metadata": {
+        "audit": {
+            "description": "",
+            "title": "Audit"
+        },
+        "base": {
+            "description": "",
+            "title": "Metadata"
+        },
+        "embedded": {
+            "description": "",
+            "title": "Embedded"
+        },
+        "openmetadata": {
+            "description": "",
+            "title": "Openmetadata"
+        },
+        "versioning": {
+            "description": "",
+            "title": "Versioning"
+        }
+    },
+    "mlflow": {
+        "description": "MLFlow model definition",
+        "title": "MLFlow"
+    },
+    "mlflowserve": {
+        "description": "MLFlow model serving",
+        "title": "MLFlow"
+    },
+    "mlrun": {
+        "description": "",
+        "title": "MLRun"
+    },
+    "mlrun+build": {
+        "description": "MLRun build task definition",
+        "title": "MLRun build task"
+    },
+    "mlrun+job": {
+        "description": "MLRun job definition",
+        "title": "MLRun job"
+    },
+    "mlrun+run": {
+        "description": "MLRun run definition",
+        "title": "MLRun run"
+    },
+    "model": {
+        "description": "",
+        "title": "Metadata Model"
+    },
+    "nefertem": {
+        "description": "",
+        "title": "Nefertem"
+    },
+    "nefertem+infer": {
+        "description": "Nefertem infer task definition",
+        "title": "Nefertem infer task"
+    },
+    "nefertem+metric": {
+        "description": "Nefertem metric task definition",
+        "title": "Nefertem metric task"
+    },
+    "nefertem+profile": {
+        "description": "Nefertem profile task definition",
+        "title": "Nefertem profile task"
+    },
+    "nefertem+run": {
+        "description": "Nefertem run definition",
+        "title": "Nefertem run"
+    },
+    "nefertem+validate": {
+        "description": "Nefertem validate task definition",
+        "title": "Nefertem validate task"
+    },
+    "python": {
+        "description": "",
+        "title": "Python"
+    },
+    "python+build": {
+        "description": "Python build definition",
+        "title": "Python build"
+    },
+    "python+job": {
+        "description": "Python job definition",
+        "title": "Python job"
+    },
+    "python+serve": {
+        "description": "Python serve definition",
+        "title": "Python serve"
+    },
+    "sklearn": {
+        "description": "SKLearn model definition",
+        "title": "SKLearn"
+    },
+    "sklearnserve": {
+        "description": "SKLearn model serving",
+        "title": "SKLearn"
+    },
+    "table": {
+        "description": "",
+        "title": "Table"
+    }
+}

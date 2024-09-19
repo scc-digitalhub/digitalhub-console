@@ -65,7 +65,7 @@ export const RunList = () => {
     const postFilters = kinds
         ? [
               <TextInput
-                  label={translate('search.name')}
+                  label="fields.name.title"
                   source="name"
                   alwaysOn
                   key={1}
@@ -73,6 +73,7 @@ export const RunList = () => {
               <SelectInput
                   alwaysOn
                   key={2}
+                  label="fields.kind"
                   source="kind"
                   choices={kinds}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
@@ -80,7 +81,7 @@ export const RunList = () => {
               <SelectInput
                   alwaysOn
                   key={3}
-                  label={translate('fields.status.state')}
+                  label="fields.status.state"
                   source="state"
                   choices={states}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}

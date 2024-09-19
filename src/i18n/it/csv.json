@@ -1,0 +1,37 @@
+{
+    "buttonMain": {
+        "emptyResource": "La proprietà 'resource' era vuota, hai passato {...props} al pulsante di importazione?",
+        "label": "Importa",
+        "tooltip": "Deve essere un file '.csv' o '.tsv'"
+    },
+    "dialogCommon": {
+        "buttons": {
+            "cancel": "Annulla"
+        },
+        "conflictCount": "La risorsa \"%{resource}\" presenta <strong>%{conflictingCount}</strong> record con ID collidente/i",
+        "subtitle": "Importazione di %{count} elementi dal file %{fileName} a \"%{resource}\""
+    },
+    "dialogDecide": {
+        "buttons": {
+            "addAsNewRow": "Aggiungi come nuova riga (non sostituire)",
+            "replaceRow": "Sostituisci la riga con ID %{id}",
+            "skipDontReplace": "Salta questa riga (non sostituire)"
+        },
+        "title": "Importazione in \"%{resource}\" dell'elemento con ID %{id}"
+    },
+    "dialogImport": {
+        "alertClose": "%{fname} importato",
+        "buttons": {
+            "letmeDecide": "Lascia che decida per ogni riga",
+            "replaceAllConflicts": "Sostituisci le righe",
+            "skipAllConflicts": "Salta queste righe"
+        },
+        "title": "Importazione in \"%{resource}\""
+    },
+    "loading": "Caricamento...",
+    "parsing": {
+        "collidingIds": "Trovati record con ID che collidono",
+        "failedValidateRow": "Il CSV non ha superato i requisiti di validazione",
+        "invalidCsv": "Il documento non può essere analizzato come file \"csv\""
+    }
+}

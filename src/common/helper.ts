@@ -18,12 +18,12 @@ export const arePropsEqual = (oldProps: any, newProps: any) => {
 };
 
 export const isAlphaNumeric = memoize(() =>
-    regex(ALPHANUMERIC_REGEX, 'validation.wrongChar')
+    regex(ALPHANUMERIC_REGEX, 'messages.validation.wrongChar')
 );
 
 export const isValidKind = (kinds: any[]) => (value, values?) => {
     return !isEmpty(value) && !kinds.find(k => k.id === value)
-        ? 'validation.invalidKind'
+        ? 'messages.validation.invalidKind'
         : undefined;
 };
 

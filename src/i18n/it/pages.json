@@ -1,0 +1,60 @@
+{
+    "config": {
+        "text": "Riguarda e aggiorna la configurazione del progetto e le impostazioni",
+        "title": "Configurazione"
+    },
+    "dashboard": {
+        "artifacts": {
+            "empty": "Ancora nessun artefatto",
+            "title": "Artefatti"
+        },
+        "created": "Creazione",
+        "dataitems": {
+            "empty": "Ancora nessun dato",
+            "title": "Dati"
+        },
+        "functions": {
+            "empty": "Ancora nessuna funzione",
+            "title": "Funzioni e codice"
+        },
+        "models": {
+            "empty": "Ancora nessun modello",
+            "title": "Modelli"
+        },
+        "recent": "Recenti",
+        "runs": {
+            "empty": "Ancora nessuna esecuzione",
+            "title": "Compiti ed esecuzioni"
+        },
+        "states": {
+            "completed": "Completati",
+            "error": "Errore",
+            "running": "In esecuzione"
+        },
+        "text": "Definisci, crea ed esegui funzioni per gestire artefatti e data items.",
+        "updated": "Aggiornamento"
+    },
+    "functions": {
+        "show": {
+            "subtitle": "Funzione %{kind}",
+            "title": "Funzione #%{name}"
+        }
+    },
+    "pageTitle": {
+        "create": {
+            "subtitle": "Compila il modulo per creare e salvare %{resource}",
+            "title": "Crea %{resource}"
+        },
+        "edit": {
+            "subtitle": "Modifica %{resource} per %{kind} aggiornando i metadati e le specifiche",
+            "title": "Modifica %{resource} #%{name}"
+        },
+        "list": {
+            "title": "%{resource}"
+        },
+        "show": {
+            "subtitle": "%{resource} %{kind}",
+            "title": "%{resource} #%{name}"
+        }
+    }
+}

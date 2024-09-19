@@ -1,0 +1,582 @@
+{
+  "algorithm": {
+    "description": "",
+    "title": "Algoritmo"
+  },
+  "args": {
+    "item": {
+      "description": "",
+      "title": "Oggetto"
+    }
+  },
+  "backoffLimit": {
+    "description": "Limite di backoff per il completamento dei job",
+    "title": "Limite di Backoff"
+  },
+  "base": "Base",
+  "base64": {
+    "description": "Codice sorgente codificato in base64",
+    "title": "Base 64"
+  },
+  "baseModel": {
+    "description": "",
+    "title": "Modello di Base"
+  },
+  "code": "Codice sorgente",
+  "commands": {
+    "description": "",
+    "title": "Comandi"
+  },
+  "constraints": {
+    "description": "Oggetto di constraint",
+    "item": {
+      "description": "",
+      "title": "Elemento"
+    },
+    "title": "Constraint"
+  },
+  "container": {
+    "args": {
+      "description": "",
+      "title": "Argomenti di Esecuzione del Container"
+    },
+    "baseImage": {
+      "description": "Immagine usata come base per costruire i task",
+      "title": "Immagine di Base"
+    },
+    "command": {
+      "description": "Sovrascrive il comando eseguito nell'immagine",
+      "title": "Comando di Esecuzione del Container"
+    },
+    "image": {
+      "description": "Immagine usata per i container dei task",
+      "title": "Immagine"
+    },
+    "instructions": {
+      "description": "Istruzioni eseguite come RUN durante la fase di build",
+      "item": {
+        "description": "",
+        "title": "Run"
+      },
+      "title": "Istruzioni di Esecuzione"
+    },
+    "tag": {
+      "description": "",
+      "title": "Tag"
+    }
+  },
+  "contextSources": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Elemento"
+    },
+    "title": "Sorgenti di Contesto"
+  },
+  "created": {
+    "description": "Data di creazione",
+    "title": "Creazione"
+  },
+  "createdBy": {
+    "description": "Username dell'autore della risorsa",
+    "title": "Creato Da"
+  },
+  "datagrid": {
+    "key": "Nome",
+    "value": "Valore"
+  },
+  "description": {
+    "description": "",
+    "title": "Descrizione"
+  },
+  "destination": {
+    "description": "",
+    "title": "Destinazione"
+  },
+  "embedded": {
+    "description": "",
+    "title": "Integrato"
+  },
+  "errorReport": {
+    "description": "",
+    "title": "Rapporto sugli Errori"
+  },
+  "events": "Eventi",
+  "example": {
+    "description": "",
+    "title": "Esempio"
+  },
+  "execArgs": {
+    "description": "Argomenti passati al comando per l'esecuzione",
+    "title": "Argomenti di Esecuzione"
+  },
+  "files": {
+    "description": "",
+    "empty": "Nessuna informazione disponibile",
+    "tab": "File",
+    "title": "File"
+  },
+  "forceBuild": {
+    "description": "",
+    "title": "Forzare Build"
+  },
+  "format": {
+    "description": "",
+    "title": "Formato"
+  },
+  "framework": {
+    "description": "",
+    "title": "Framework"
+  },
+  "function": {
+    "description": "Riferimento statico alla funzione",
+    "title": "Funzione"
+  },
+  "huggingface": {
+    "backend": {
+      "description": "",
+      "title": "Tipo di HuggingFace backend"
+    },
+    "disablelogrequests": {
+      "description": "",
+      "title": "Disabilitare le richieste di logging"
+    },
+    "disablelowercase": {
+      "description": "",
+      "title": "Disabilitare Tokenizer Lowercase"
+    },
+    "disablespecialtokens": {
+      "description": "",
+      "title": "Disabilitare Special Tokens Encoding"
+    },
+    "dtype": {
+      "description": "",
+      "title": "Tipo dati per Weights"
+    },
+    "maxlength": {
+      "description": "",
+      "title": "Lunghezza massima di Tokenizer Sequence"
+    },
+    "maxloglen": {
+      "description": "",
+      "title": "Numero max dei prompt da loggare"
+    },
+    "modelid": {
+      "description": "",
+      "title": "ID modello HuggingFace"
+    },
+    "modelrevision": {
+      "description": "",
+      "title": "Versione modello HuggingFace"
+    },
+    "path": {
+      "description": "Path per il modello, come cartella o .zip, oppure remoto come `huggingface://<>`"
+    },
+    "returnprobabilities": {
+      "description": "",
+      "title": "Restituire tuttel le probabilita`"
+    },
+    "returntokentypeids": {
+      "description": "",
+      "title": "Restituire Token Type ID"
+    },
+    "task": {
+      "description": "",
+      "title": "HuggingFace Inference Task"
+    },
+    "tensorinputnames": {
+      "description": "",
+      "title": "Nomi input dei Tensor"
+    },
+    "tokenizerrevision": {
+      "description": "",
+      "title": "Versione di HuggingFace Tokenizer"
+    },
+    "trustremotecode": {
+      "description": "",
+      "title": "Abilitare Custom Code per modelli e tokenizer"
+    }
+  },
+  "id": "Id",
+  "info": {
+    "empty": "Nessuna informazione disponibile",
+    "tab": "Info"
+  },
+  "inputDatasets": {
+    "item": {
+      "description": "",
+      "title": "Input Dataset"
+    }
+  },
+  "inputs": {
+    "description": "Elementi di input",
+    "item": {
+      "description": "",
+      "title": ""
+    },
+    "title": "Input"
+  },
+  "instructions": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Titolo"
+    },
+    "title": "Istruzioni"
+  },
+  "k8s": {
+    "description": "Definire le risorse necessarie per eseguire task in K8s",
+    "envs": {
+      "description": "Definizione di variabili di ambiente",
+      "title": "Ambiente"
+    },
+    "node_selector": {
+      "description": "Definizione di Selettore di Nodo",
+      "title": "Selettore di Nodo"
+    },
+    "resources": {
+      "cpu": {
+        "title": "Cpu"
+      },
+      "description": "Risorse K8s",
+      "gpu": {
+        "title": "Gpu"
+      },
+      "memory": {
+        "title": "Memoria"
+      },
+      "title": "Risorse"
+    },
+    "secrets": {
+      "description": "Definizione di segreti",
+      "title": "Segreti"
+    },
+    "title": "Risorse per Esecuzione",
+    "volumes": {
+      "description": "Definizione di volumi",
+      "title": "Volumi"
+    }
+  },
+  "key": {
+    "description": "",
+    "title": "Chiave"
+  },
+  "kind": "Tipo",
+  "labels": {
+    "description": "",
+    "title": "Etichette"
+  },
+  "limits": {
+    "description": "",
+    "title": "Limiti"
+  },
+  "logs": "Log",
+  "metadata": {
+    "created": "Creazione",
+    "description": "Descrizione",
+    "labels": "Etichette",
+    "name": "Nome",
+    "project": "Progetto",
+    "updated": "Aggiornamento",
+    "version": "Versione"
+  },
+  "metrics": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Elemento"
+    },
+    "title": "Metriche"
+  },
+  "mlflow": {
+    "digest": {
+      "description": "",
+      "title": "Digest del Dataset"
+    },
+    "flavor": {
+      "description": "",
+      "title": "Model Flavor"
+    },
+    "inputdatasetdigest": {
+      "description": "",
+      "title": "Digest del Input Dataset"
+    },
+    "inputdatasetname": {
+      "description": "",
+      "title": "Nome del Input Dataset"
+    },
+    "inputdatasetprofile": {
+      "description": "",
+      "title": "Profilo del Input Dataset"
+    },
+    "inputdatasets": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "Input Dataset"
+      },
+      "title": "Input Dataset"
+    },
+    "inputdatasetschema": {
+      "description": "",
+      "title": "Schema del Input Dataset"
+    },
+    "inputdatasetsource": {
+      "description": "",
+      "title": "Sorgente del Input Dataset"
+    },
+    "inputdatasetsourcetype": {
+      "description": "",
+      "title": "Tipo sorgente del Input Dataset"
+    },
+    "modelconfig": {
+      "description": "",
+      "title": "Configurazione del Modello"
+    },
+    "path": {
+      "description": "Percorso per il modello MLFLow, come cartella o file .zip"
+    },
+    "signature": {
+      "description": "",
+      "title": "Signature del modello"
+    },
+    "signatureinputs": {
+      "description": "",
+      "title": "Input del Signature"
+    },
+    "signatureoutputs": {
+      "description": "",
+      "title": "Output del Signature"
+    },
+    "signatureparams": {
+      "description": "",
+      "title": "Parametri del Signature"
+    }
+  },
+  "modelserve": {
+    "image": {
+      "description": "",
+      "title": "Image del Inference Server"
+    },
+    "modelname": {
+      "description": "",
+      "title": "Nome esposto del modello"
+    },
+    "path": {
+      "description": "",
+      "title": "URI del modello"
+    }
+  },
+  "mountPath": {
+    "description": "",
+    "title": "Mount Path"
+  },
+  "name": {
+    "description": "",
+    "title": "Nome"
+  },
+  "numWorker": {
+    "description": "",
+    "title": "Numero di Worker"
+  },
+  "openMetadata": {
+    "description": "",
+    "title": "Open Metadata"
+  },
+  "outputs": {
+    "description": "Elementi di output",
+    "item": {
+      "description": "",
+      "title": ""
+    },
+    "title": "Output"
+  },
+  "parallel": {
+    "description": "",
+    "title": "Eseguire in Parallelo"
+  },
+  "parameters": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Elemento"
+    },
+    "title": "Parametri"
+  },
+  "path": {
+    "description": "URI che punta al contenuto",
+    "title": "Percorso"
+  },
+  "port": {
+    "description": "Numero di porta per il traffico in ingresso al servizio",
+    "title": "Porta"
+  },
+  "preview": "Anteprima File",
+  "priorityClass": {
+    "description": "Priorità dei pod impiegati per l'esecuzione di task",
+    "title": "Classe di Priorità"
+  },
+  "profile": {
+    "description": "Seleziona un profilo per sfruttare un template preconfigurato",
+    "title": "Profilo della Run"
+  },
+  "project": {
+    "description": "Identificatore del progetto",
+    "title": "Progetto"
+  },
+  "protocol": {
+    "description": "",
+    "title": "Protocollo"
+  },
+  "publish": {
+    "description": "",
+    "title": "Pubblicare"
+  },
+  "python": {
+    "requirements": {
+      "description": "Elenco di requisiti (formattati come requirements.txt)",
+      "title": "Requisiti Python"
+    },
+    "version": {
+      "description": "Versione maggiore del linguaggio",
+      "title": "Versione di Python"
+    }
+  },
+  "replicas": {
+    "description": "Numero di repliche per il task attuale",
+    "title": "Repliche"
+  },
+  "requests": {
+    "description": "",
+    "title": "Richieste"
+  },
+  "requirements": {
+    "item": {
+      "description": "",
+      "title": "Componente"
+    }
+  },
+  "results": "Risultati",
+  "runtimeClass": {
+    "description": "Nome della classe di runtime per i pod",
+    "title": "Classe di Runtime"
+  },
+  "schedule": {
+    "description": "Definizione di schedule come crontab",
+    "title": "Schedule"
+  },
+  "schema": {
+    "description": "",
+    "title": "Schema"
+  },
+  "secrets": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Chiave"
+    },
+    "title": "Segreti"
+  },
+  "servicePorts": {
+    "description": "Definisci la mappatura delle porte per il servizio",
+    "item": {
+      "description": "",
+      "title": "Porta"
+    },
+    "title": "Porte del Servizio"
+  },
+  "serviceType": {
+    "description": "Seleziona il tipo da usare nella definizione del servizio. Il default è `NodePort`",
+    "title": "Tipo di Servizio"
+  },
+  "sklearn": {
+    "path": {
+      "description": "Percorso per un modello .pkl o .joblib"
+    }
+  },
+  "source": {
+    "description": "",
+    "title": "Sorgente"
+  },
+  "sourceCode": {
+    "base64": {
+      "description": "Codice",
+      "title": "Codice"
+    },
+    "description": "Codice sorgente",
+    "handler": {
+      "description": "Nome della funzione handler",
+      "title": "Funzione Handler"
+    },
+    "init_function": {
+      "description": "Nome della funzione di inizializzazione (opzionale)",
+      "title": "Funzione di Inizializzazione"
+    },
+    "lang": {
+      "description": "Linguaggio usato per il codice sorgente",
+      "title": "Linguaggio"
+    },
+    "source": {
+      "description": "Riferimento al codice sorgente (percorso o URI)",
+      "title": "Riferimento"
+    },
+    "title": "Codice Sorgente"
+  },
+  "spec": {
+    "description": "",
+    "title": "Spec"
+  },
+  "srcPath": {
+    "description": "URI che punta alla sorgente",
+    "title": "Percorso della Sorgente"
+  },
+  "status": {
+    "files": "File",
+    "state": "Stato"
+  },
+  "summary": "Riepilogo",
+  "targetImage": {
+    "description": "",
+    "title": "Immagine Target"
+  },
+  "targetPort": {
+    "description": "Numero di porta per il traffico indirizzato al pod",
+    "title": "Porta Target"
+  },
+  "task": {
+    "description": "",
+    "title": "Task"
+  },
+  "title": {
+    "description": "",
+    "title": "Titolo"
+  },
+  "type": {
+    "description": "",
+    "title": "Tipo"
+  },
+  "updated": {
+    "description": "Data dell'ultimo aggiornamento",
+    "title": "Aggiornamento"
+  },
+  "updatedBy": {
+    "description": "Username dell'autore che ha modificato per ultimo la risorsa",
+    "title": "Aggiornato Da"
+  },
+  "value": {
+    "description": "",
+    "title": "Valore"
+  },
+  "version": {
+    "description": "Nome o identificativo della versione",
+    "title": "Versione"
+  },
+  "volumeType": {
+    "description": "",
+    "title": "Tipo di Volume"
+  },
+  "workflow": {
+    "description": "Riferimento statico al workflow",
+    "title": "Workflow"
+  }
+}

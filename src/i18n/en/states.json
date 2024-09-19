@@ -1,0 +1,11 @@
+{
+    "built": "Built",
+    "completed": "Completed",
+    "deleted": "Deleted",
+    "deleting": "Deleting",
+    "error": "Error",
+    "ready": "Ready",
+    "running": "Running",
+    "stopped": "Stopped",
+    "stopping": "Stopping"
+}

@@ -1,0 +1,158 @@
+{
+    "artifacts": {
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "list": "List and search artifacts",
+        "name": "Artifact |||| Artifacts"
+    },
+    "common": {
+        "emptySpec": "Select the kind to view the specification",
+        "labels": "Labels",
+        "reset": {
+            "content": "Are you sure you want to change kind? Changes made will be discarded",
+            "title": "Change kind"
+        },
+        "version": {
+            "created": "Creation date",
+            "title": "Versions",
+            "version": "Version"
+        }
+    },
+    "dataitems": {
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "list": "List and search data items",
+        "name": "Data item |||| Data items",
+        "preview": {
+            "false": "False",
+            "notAvailable": "Preview not available",
+            "numberOfRows": "Number of rows",
+            "title": "Preview",
+            "true": "True"
+        },
+        "schema": {
+            "name": "Name",
+            "title": "Schema",
+            "type": "Type"
+        },
+        "tab": {
+            "preview": "Preview",
+            "schema": "Schema"
+        }
+    },
+    "functions": {
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "list": "List and search functions",
+        "name": "Function |||| Functions",
+        "tab": {
+            "summary": "Recap",
+            "test": "Test"
+        }
+    },
+    "logs": {
+        "fields": {
+            "run_id": "Run ID"
+        },
+        "list": "List logs",
+        "name": "Log |||| Logs"
+    },
+    "models": {
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "list": "List and search models",
+        "metrics": {
+            "key": "Name",
+            "title": "Metrics",
+            "value": "Value"
+        },
+        "name": "Model |||| Models",
+        "tab": {
+            "metrics": "Metrics",
+            "preview": "Preview"
+        }
+    },
+    "projects": {
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "name": "Project |||| Projects"
+    },
+    "runs": {
+        "create": "Create a new run",
+        "empty": "No runs yet",
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "labelName": "Name",
+        "list": "List and search runs",
+        "name": "Run |||| Runs"
+    },
+    "secrets": {
+        "fields": {
+            "key": "Key",
+            "name": "Name",
+            "spec": {
+                "path": "Path"
+            },
+            "value": "Value"
+        },
+        "list": "List secrets",
+        "name": "Secret |||| Secrets",
+        "showData": "Show the secret"
+    },
+    "tasks": {
+        "errors": {
+            "requestMinorLimits": "Requests must be minor than Limits"
+        },
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "kinds": {
+            "build": "Build",
+            "deploy": "Deploy",
+            "infer": "Infer",
+            "job": "Job",
+            "metric": "Metric",
+            "pipeline": "Pipeline",
+            "profile": "Profile",
+            "serve": "Serve",
+            "transform": "Transform",
+            "validate": "Validate"
+        },
+        "name": "Task |||| Tasks"
+    },
+    "workflows": {
+        "fields": {
+            "action": "Action",
+            "end_time": "End",
+            "function": "Function",
+            "key": "Chiave",
+            "lang": "Language",
+            "name": "Nome",
+            "run_id": "Run ID",
+            "source": "Source",
+            "start_time": "Start"
+        },
+        "inputs": "Inputs",
+        "list": "List and search workflows",
+        "name": "Workflow |||| Workflows",
+        "outputs": "Outputs",
+        "tab": {
+            "runs": "Runs",
+            "summary": "Recap",
+            "test": "Test"
+        }
+    }
+}

@@ -71,7 +71,7 @@ export const useUploadController = (
         onBeforeFileAdded: (currentFile, files) => {
             //block files over max
             if (currentFile.size > 1000 * MiB) {
-                notify(translate('upload.file_too_big'), {
+                notify(translate('messages.upload.file_too_big'), {
                     type: 'error',
                 });
                 return false;
@@ -79,7 +79,7 @@ export const useUploadController = (
 
             //disallow all remote
             if (currentFile.isRemote) {
-                notify(translate('upload.remote_files_unsupported'), {
+                notify(translate('messages.upload.remote_files_unsupported'), {
                     type: 'error',
                 });
                 return false;
@@ -91,9 +91,12 @@ export const useUploadController = (
                     k => 'application/zip' == files[k].type
                 );
                 if (exists?.length > 0) {
-                    notify(translate('upload.single_zip_file_supported'), {
-                        type: 'error',
-                    });
+                    notify(
+                        translate('messages.upload.single_zip_file_supported'),
+                        {
+                            type: 'error',
+                        }
+                    );
                     return false;
                 }
             }
@@ -101,7 +104,7 @@ export const useUploadController = (
                 Object.keys(files).length > 0 &&
                 'application/zip' == currentFile.type
             ) {
-                notify(translate('upload.single_zip_file_supported'), {
+                notify(translate('messages.upload.single_zip_file_supported'), {
                     type: 'error',
                 });
                 return false;

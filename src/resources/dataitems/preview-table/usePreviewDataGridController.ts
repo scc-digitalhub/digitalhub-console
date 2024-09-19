@@ -12,9 +12,9 @@ export const usePreviewDataGridController = (props: {
     const translate = useTranslate();
 
     const translations = {
-        invalidValue: translate('validation.invalidValue'),
-        invalidDate: translate('validation.invalidDate'),
-        invalidDatetime: translate('validation.invalidDatetime'),
+        invalidValue: translate('messages.validation.invalidValue'),
+        invalidDate: translate('messages.validation.invalidDate'),
+        invalidDatetime: translate('messages.validation.invalidDatetime'),
     };
 
     const [data, setData] = useState<{
