@@ -8,8 +8,8 @@ export const EmptyList = (props: { resource: string }) => {
 
     const resourceName = (resource: string) =>
         translate(`resources.${resource}.forcedCaseName`, {
-            smart_count: 0,
-            _: getResourceLabel(resource, 0),
+            smart_count: 1,
+            _: getResourceLabel(resource, 1),
         });
 
     return (
