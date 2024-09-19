@@ -32,7 +32,6 @@ const ShowToolbar = () => {
 
     return (
         <TopToolbar>
-            <BackButton />
             <EditButton style={{ marginLeft: 'auto' }} />
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
