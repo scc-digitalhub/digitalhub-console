@@ -196,6 +196,7 @@ const EventsList = (props: { record: any }) => {
                 <Datagrid bulkActionButtons={false} rowClick={false}>
                     <DateField showTime source="time" />
                     <StateChips source="status" sortable={false} />
+                    <TextField source="message" sortable={false} />
                     <TextField source="details" sortable={false} />
                 </Datagrid>
             </ListContextProvider>
