@@ -1,39 +1,20 @@
-import {
-    Menu,
-    Button,
-    Stack,
-    Typography,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    Badge,
-    styled,
-    alpha,
-    Divider,
-} from '@mui/material';
+import { Menu, Button, Stack, Typography, Badge, Divider } from '@mui/material';
 import { Box } from '@mui/system';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import ClearIcon from '@mui/icons-material/Clear';
-import { useState, MouseEvent, ReactElement, useEffect, useRef, Fragment } from 'react';
+import { useState, MouseEvent, ReactElement, Fragment } from 'react';
 import {
     useTranslate,
     RaRecord,
     ShowButtonProps,
     useRecordContext,
     useResourceContext,
-    ShowButton,
-    IconButtonWithTooltip,
-    DateField,
-    localStorageStore,
-    useStore,
 } from 'react-admin';
-import { RunIcon } from '../resources/runs/icon';
-import { useRootSelector } from '@dslab/ra-root-selector';
+import { Notification } from './Notification';
 
 export const NotificationArea = (props: NotificationAreaProps) => {
     const { messages, setMessages } = props;
     const [open, setOpen] = useState(false);
+    const translate = useTranslate();
     console.log('messages', messages);
 
     const notifications: ReactElement[] = messages.map((message, index) => (
@@ -48,7 +29,10 @@ export const NotificationArea = (props: NotificationAreaProps) => {
     ));
 
     const icon = (
-        <Badge badgeContent={messages.length} color="error">
+        <Badge
+            badgeContent={messages.filter(m => m.isRead === false).length}
+            color="error"
+        >
             <NotificationsIcon />
         </Badge>
     );
@@ -64,7 +48,9 @@ export const NotificationArea = (props: NotificationAreaProps) => {
                         width={'100%'}
                         color={'grey'}
                     >
-                        Recent messages
+                        {messages.length +
+                            ' ' +
+                            translate('notifications.header')}
                     </Typography>
                     {notifications}
                 </>
@@ -78,192 +64,6 @@ export const NotificationArea = (props: NotificationAreaProps) => {
 type NotificationAreaProps = {
     messages: any[];
     setMessages: React.Dispatch<React.SetStateAction<any[]>>;
-};
-
-export const Notification = (props: NotificationProps) => {
-    const { message, open, setMessages, timeout = 10000 } = props;
-    const state: String = message.status.state;
-    const ref = useRef(null);
-    const [isRead, setIsRead] = useState(false);
-    const [readNotifications, setReadNotifications] = useStore<any[]>(
-        'dh.notifications.messages.read',
-        []
-    );
-
-    useEffect(() => {
-        //if current notification has already been read, set isRead to true
-        if (readNotifications.indexOf(message.notificationId) !== -1) {
-            setIsRead(true);
-        }
-    }, [readNotifications]);
-
-    useEffect(() => {
-        if (open) {
-            /**
-             * Set an observer to check if the notification is visible (at least 90%).
-             * Threshold=0.9 means the entry is intersecting when intersectionRatio>=0.9.
-             * When intersecting, set a timer to delete the notification after given time.
-             * If the notification stops intersecting (i.e. intersectionRatio<0.9), clear timer.
-             */
-            let currentElement, timer;
-            const observerOptions = { threshold: [0.9] };
-
-            const observer = new IntersectionObserver(([entry]) => {
-                if (timer && !entry.isIntersecting) {
-                    console.log('clearing timer for', entry.target);
-                    timer = clearTimeout(timer);
-                } else if (entry.isIntersecting && !timer) {
-                    console.log('creating timer for', entry.target);
-                    timer = setTimeout(() => {
-                        console.log('timeout for', entry.target);
-                        //mark as read
-                        setReadNotifications(prev => {
-                            return [...prev, message.notificationId];
-                        });
-                    }, timeout);
-                }
-            }, observerOptions);
-
-            if (ref?.current) {
-                currentElement = ref.current;
-                observer.observe(ref.current);
-            }
-
-            return () => {
-                console.log('clearing timer and stop observing');
-                clearTimeout(timer);
-                observer.unobserve(currentElement);
-            };
-        }
-    }, [open]);
-
-    const { root } = useRootSelector();
-    const store = localStorageStore('dh');
-
-    const removeNotification = () => {
-        //TODO fix when localstorage persistence is improved
-        setMessages(prev => {
-            const val = prev.filter(
-                value => value.notificationId != message.notificationId
-            );
-            store.setItem('dh.notifications.messages.' + root, val);
-            return val;
-        });
-    };
-
-    // const notificationClass =
-    //     state === 'COMPLETED'
-    //         ? NotificationClasses.completed
-    //         : state === 'ERROR'
-    //         ? NotificationClasses.error
-    //         : NotificationClasses.default;
-
-    const title = 'Run ' + message.spec.function.split('/')[3].split(':')[0];
-
-    return (
-        <NotificationCard
-            elevation={0}
-            ref={ref}
-            square
-            // className={notificationClass}
-        >
-            <CardHeader
-                avatar={<RunIcon fontSize="small" />}
-                title={
-                    isRead ? (
-                        title
-                    ) : (
-                        <Box component="span" sx={{ fontWeight: 'bold' }}>
-                            {title}
-                        </Box>
-                    )
-                }
-                subheader={
-                    <DateField
-                        record={message}
-                        source="metadata.updated"
-                        showTime
-                    />
-                }
-                action={
-                    <IconButtonWithTooltip
-                        label={'ra.action.delete'}
-                        onClick={removeNotification}
-                    >
-                        <ClearIcon fontSize="small" />
-                    </IconButtonWithTooltip>
-                }
-            />
-            <CardContent>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Run status changed to {state}
-                </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-                <ShowButton
-                    resource="runs"
-                    record={message}
-                    variant="text"
-                    color="info"
-                />
-            </CardActions>
-        </NotificationCard>
-    );
-};
-
-// const NotificationClasses = {
-//     default: 'default',
-//     error: 'error',
-//     completed: 'success',
-// };
-
-const NotificationCard = styled(Card, {
-    name: 'NotificationCard',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme, className }) => ({
-    width: '100%',
-    boxSizing: 'border-box',
-    backgroundColor:
-        /*className == NotificationClasses.completed
-            ? alpha(theme.palette.success.light, 0.3)
-            : className == NotificationClasses.error
-            ? alpha(theme.palette.error.light, 0.3)
-            : */ theme.palette.common.white,
-    ...theme.applyStyles('dark', {
-        backgroundColor:
-            /*className == NotificationClasses.completed
-                ? alpha(theme.palette.success.dark, 0.5)
-                : className == NotificationClasses.error
-                ? alpha(theme.palette.error.dark, 0.5)
-                : */ theme.palette.common.black,
-    }),
-    ['& .MuiCardContent-root, & .MuiCardHeader-root']: {
-        paddingBottom: 0,
-        paddingTop: 8,
-    },
-    ['&:hover']: {
-        backgroundColor:
-            /*className == NotificationClasses.completed
-                ? alpha(theme.palette.success.light, 0.5)
-                : className == NotificationClasses.error
-                ? alpha(theme.palette.error.light, 0.5)
-                : */ theme.palette.grey[100],
-        ...theme.applyStyles('dark', {
-            backgroundColor:
-                /*className == NotificationClasses.completed
-                    ? alpha(theme.palette.success.dark, 0.7)
-                    : className == NotificationClasses.error
-                    ? alpha(theme.palette.error.dark, 0.7)
-                    : */ theme.palette.grey[800],
-        }),
-    },
-}));
-
-type NotificationProps = {
-    message: any;
-    open: boolean;
-    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
-    timeout?: number;
 };
 
 export const DropDownButton = (props: DrodownButtonProps) => {
@@ -313,6 +113,14 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                sx={theme => ({
+                    '& .MuiList-root': {
+                        backgroundColor: 'white',
+                        ...theme.applyStyles('dark', {
+                            backgroundColor: 'black',
+                        }),
+                    },
+                })}
             >
                 <Stack
                     direction={'column'}
