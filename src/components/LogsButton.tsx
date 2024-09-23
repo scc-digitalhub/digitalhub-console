@@ -21,6 +21,9 @@ import {
     useRecordContext,
     useResourceContext,
     useTranslate,
+    Toolbar,
+    TopToolbar,
+    ToolbarClasses,
 } from 'react-admin';
 import {
     Box,
@@ -44,6 +47,7 @@ import Parser from 'k8s-resource-parser';
 import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 import CloseIcon from '@mui/icons-material/Close';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
+import DownloadIcon from '@mui/icons-material/GetApp';
 
 const defaultIcon = <SegmentIcon />;
 
@@ -319,6 +323,13 @@ const LogsDetail = (props: { record?: any }) => {
                 <LogMetrics metrics={record.status.metrics} />
             )}
 
+            <TopToolbar
+                className={ToolbarClasses.mobileToolbar}
+                sx={{ mb: 0, pb: 0 }}
+            >
+                <RefreshButton label="" />
+                <DownloadButton label="" record={record} />
+            </TopToolbar>
             <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
                 <LazyLog
                     ref={ref}
@@ -333,9 +344,41 @@ const LogsDetail = (props: { record?: any }) => {
                     width={'auto'}
                 />
             </LogViewer>
-
-            <RefreshButton />
         </Stack>
+    );
+};
+
+const DownloadButton = (props: { record: any; label?: string }) => {
+    const { record, label = 'actions.download' } = props;
+
+    const filename = record.status?.container || record.id;
+    let text = '\n';
+    try {
+        text = atob(record.content || '');
+    } catch (e: any) {}
+
+    const handleDownload = e => {
+        e.stopPropagation();
+
+        //export string as blob with exposed contextType
+        const blob = new Blob([text], {
+            type: 'text/plain;charset=utf-8',
+        });
+
+        // Creating the hyperlink and auto click it to start the download
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        document.body.appendChild(link);
+
+        link.href = URL.createObjectURL(blob);
+        link.download = `${filename}.txt`;
+        link.click();
+    };
+
+    return (
+        <Button label={label} color={'info'} onClick={handleDownload}>
+            <DownloadIcon />
+        </Button>
     );
 };
 
