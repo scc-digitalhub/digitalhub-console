@@ -50,7 +50,7 @@ export const NotificationArea = (props: NotificationAreaProps) => {
                     >
                         {messages.length +
                             ' ' +
-                            translate('notifications.header')}
+                            translate('messages.notifications.header')}
                     </Typography>
                     {notifications}
                 </>

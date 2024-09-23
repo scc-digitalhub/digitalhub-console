@@ -38,7 +38,7 @@ function parseMessage(
                 translate('resources.runs.name', { smart_count: 1 }) +
                 ' #' +
                 message.spec.function.split('/')[3].split(':')[0],
-            content: translate('notifications.runMessage', {
+            content: translate('messages.notifications.runMessage', {
                 state: message.status.state,
             }),
             resource: 'runs',

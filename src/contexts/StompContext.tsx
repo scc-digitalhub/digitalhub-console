@@ -64,7 +64,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
 
         const alertContent =
             state === 'DELETED' ? (
-                translate('notifications.runAlertMessage', {
+                translate('messages.notifications.runAlertMessage', {
                     id: entity.id,
                     state: state,
                 })
@@ -76,7 +76,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
                         type: 'show',
                     })}
                 >
-                    {translate('notifications.runMessage', {
+                    {translate('messages.notifications.runMessage', {
                         state: state,
                     })}
                 </Link>
