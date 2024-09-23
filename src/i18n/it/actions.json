@@ -1,6 +1,8 @@
 {
     "actions": "Azioni",
     "cancel": "Annulla",
+    "Download": "Scarica",
     "stop": "Ferma",
+    "resume": "Riprendi",
     "toggle-x": "Mostra/Nascondi %{el}"
 }

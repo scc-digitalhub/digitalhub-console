@@ -1,6 +1,8 @@
 {
     "actions": "Actions",
     "cancel": "Cancel",
+    "download": "Download",
     "stop": "Stop",
+    "resume": "Resume",
     "toggle-x": "Show/Hide %{el}"
 }

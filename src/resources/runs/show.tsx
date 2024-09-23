@@ -50,6 +50,7 @@ import { JSONTree } from 'react-json-tree';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { ResumeButton } from './ResumeButton';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -375,6 +376,8 @@ const ShowToolbar = () => (
             render={record =>
                 record.status?.state == 'RUNNING' ? (
                     <StopButton record={record} />
+                ) : record.status?.state == 'STOPPED' ? (
+                    <ResumeButton record={record} />
                 ) : null
             }
         />

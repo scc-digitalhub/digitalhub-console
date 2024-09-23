@@ -6,6 +6,8 @@
     "error": "Error",
     "ready": "Ready",
     "running": "Running",
+    "resume": "Resume",
     "stopped": "Stopped",
-    "stopping": "Stopping"
+    "stopping": "Stopping",
+    "stop": "Stop"
 }
