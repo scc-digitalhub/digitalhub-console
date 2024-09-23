@@ -129,7 +129,7 @@ const TaskRunList = () => {
     }
     const partial = {
         project: record?.project,
-        kind: schema ? schema.kind : 'run',
+        kind: runSchema ? runSchema.kind : 'run',
         spec: {
             task: key,
             local_execution: false,
