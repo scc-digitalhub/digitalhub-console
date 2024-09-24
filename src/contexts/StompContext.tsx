@@ -7,12 +7,7 @@ import {
     useState,
 } from 'react';
 import { Client as StompClient, messageCallbackType } from '@stomp/stompjs';
-import {
-    Link,
-    useCreatePath,
-    useNotify,
-    useTranslate,
-} from 'react-admin';
+import { Link, useCreatePath, useNotify, useTranslate } from 'react-admin';
 import { Alert } from '@mui/material';
 import { StateColors } from '../components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
@@ -95,17 +90,8 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         );
     };
 
-    //TODO check if enough
-    if (!websocketUrl) {
-        return (
-            <StompContext.Provider value={undefined}>
-                {children}
-            </StompContext.Provider>
-        );
-    }
-
     const stompClientRef = useRef<StompClient | null>(null);
-    if (stompClientRef.current === null) {
+    if (stompClientRef.current === null && websocketUrl) {
         stompClientRef.current = new StompClient({
             brokerURL: websocketUrl,
         });
@@ -133,15 +119,10 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         stompClientRef.current.beforeConnect = async () => {
             if (authProvider && stompClientRef.current) {
                 const authHeader = await authProvider.getAuthorization();
-                const identity = authProvider.getIdentity
-                    ? await authProvider.getIdentity()
-                    : undefined;
                 if (authHeader) {
-                    let headers = { Authorization: authHeader };
-                    if (identity) {
-                        headers['user'] = identity.id;
-                    }
-                    stompClientRef.current.connectHeaders = headers;
+                    stompClientRef.current.connectHeaders = {
+                        Authorization: authHeader,
+                    };
                 }
             }
         };
