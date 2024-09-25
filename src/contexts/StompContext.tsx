@@ -130,7 +130,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         stompClientRef.current.onConnect = frame => {
             console.log('successfully connected to stomp');
             const subscription = stompClientRef.current?.subscribe(
-                '/user/runs',
+                '/user/notifications/runs',
                 messageCallback
             );
         };
