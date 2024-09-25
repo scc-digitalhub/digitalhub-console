@@ -59,6 +59,10 @@
         "description": "Kubeflow Pipeline task definition",
         "title": "Kubeflow Pipeline task"
     },
+    "kfp+build": {
+        "description": "Kubeflow Pipeline build task definition",
+        "title": "Kubeflow Pipeline build task"
+    },
     "kfp+run": {
         "description": "Kubeflow Pipeline run definition",
         "title": "Kubeflow Pipeline run"

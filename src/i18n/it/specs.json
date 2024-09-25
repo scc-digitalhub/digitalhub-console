@@ -59,6 +59,10 @@
     "description": "Definizione dell'operazione di Kubeflow Pipeline",
     "title": "Operazione di Kubeflow Pipeline"
   },
+  "kfp+build": {
+    "description": "Definizione di operazione di build di Kubeflow Pipeline",
+    "title": "Operazione di build di Kubeflow Pipeline"
+  },
   "kfp+run": {
     "description": "Definizione dell'esecuzione di Kubeflow Pipeline",
     "title": "Esecuzione di Kubeflow Pipeline"
