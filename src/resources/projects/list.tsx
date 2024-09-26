@@ -1,5 +1,4 @@
-import { RootSelectorButton, useRootSelector } from '@dslab/ra-root-selector';
-import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
+import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     List,
     Pagination,
@@ -11,11 +10,16 @@ import {
     useGetResourceLabel,
     DateField,
     Labeled,
+    TextField,
+    useNotify,
+    useRefresh,
+    useAuthProvider,
+    useAuthenticated,
+    SortButton,
 } from 'react-admin';
 import {
     Box,
     Card,
-    CardActions,
     CardContent,
     CardHeader,
     Typography,
@@ -23,8 +27,11 @@ import {
     CardActionArea,
     Button,
     Menu,
+    Chip,
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
+import LockIcon from '@mui/icons-material/Lock';
+
 import { grey } from '@mui/material/colors';
 import { GridList } from '../../components/GridList';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
@@ -33,34 +40,14 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import React from 'react';
 import purify from 'dompurify';
+import { useProjectPermissions } from '../../provider/authProvider';
 
 export const ProjectSelectorList = props => {
-    const translate = useTranslate();
-    const redirect = useRedirect();
-    const theme = useTheme();
     const perPage = 8;
     const getResourceLabel = useGetResourceLabel();
-    const resourceLabel = getResourceLabel('projects', 1).toLowerCase();
 
-    const Toolbar = () => {
-        const transform = data => ({
-            ...data,
-            kind: `project`,
-        });
-
-        return (
-            <TopToolbar>
-                <CreateInDialogButton
-                    fullWidth
-                    maxWidth={'md'}
-                    transform={transform}
-                    variant="contained"
-                >
-                    <ProjectCreateForm />
-                </CreateInDialogButton>
-            </TopToolbar>
-        );
-    };
+    //check if auth is required to redirect to login
+    useAuthenticated();
 
     return (
         <List
@@ -79,6 +66,46 @@ export const ProjectSelectorList = props => {
     );
 };
 
+const Toolbar = () => {
+    const authProvider = useAuthProvider();
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const transform = data => ({
+        ...data,
+        kind: `project`,
+    });
+
+    return (
+        <TopToolbar>
+            <SortButton fields={['updated', 'name']} />
+            <CreateInDialogButton
+                fullWidth
+                maxWidth={'md'}
+                transform={transform}
+                variant="contained"
+                mutationOptions={{
+                    onSuccess: () => {
+                        notify('ra.notification.created', {
+                            type: 'info',
+                            messageArgs: { smart_count: 1 },
+                        });
+
+                        if (authProvider) {
+                            //refresh permissions
+                            authProvider.refreshUser().then(user => {
+                                refresh();
+                            });
+                        }
+                    },
+                }}
+            >
+                <ProjectCreateForm />
+            </CreateInDialogButton>
+        </TopToolbar>
+    );
+};
+
 function convertToDate(value) {
     if (typeof value === 'string' || typeof value === 'number') {
         return new Date(value);
@@ -87,11 +114,23 @@ function convertToDate(value) {
 }
 
 const ProjectsGridItem = (props: any) => {
-    const translate = useTranslate();
     const project = useRecordContext(props);
     const { selectRoot } = useRootSelector();
+    const notify = useNotify();
+    const { hasAccess } = useProjectPermissions();
+
+    const isAccessible = hasAccess(project.id);
+
     const handleClick = e => {
         if (project) {
+            if (!isAccessible) {
+                notify('ra.notification.not_authorized', {
+                    type: 'error',
+                });
+
+                return;
+            }
+
             selectRoot(project);
         }
         e.stopPropagation();
@@ -114,7 +153,13 @@ const ProjectsGridItem = (props: any) => {
                             ? project.metadata.name
                             : null
                     }
-                    avatar={<FolderIcon />}
+                    avatar={
+                        isAccessible ? (
+                            <FolderIcon />
+                        ) : (
+                            <LockIcon color="disabled" />
+                        )
+                    }
                     titleTypographyProps={{
                         variant: 'h6',
                         color: 'secondary.main',
@@ -134,32 +179,56 @@ const ProjectsGridItem = (props: any) => {
                     >
                         {description}
                     </Typography>
-                    <Box color={grey[500]} sx={{ mb: 2 }}>
-                        {project.metadata && (
-                            <Stack spacing={2}>
-                                <Labeled>
-                                    <DateField
-                                        source="metadata.created"
-                                        label="fields.created.title"
-                                        showTime
-                                    />
-                                </Labeled>
-                                <Labeled>
-                                    <DateField
-                                        source="metadata.updated"
-                                        label="fields.updated.title"
-                                        showTime
-                                    />
-                                </Labeled>
-                            </Stack>
-                        )}
-                    </Box>
+                    {isAccessible && (
+                        <Box color={grey[500]} sx={{ mb: 2 }}>
+                            {project.metadata && (
+                                <>
+                                    <Labeled>
+                                        <TextField
+                                            source="metadata.created_by"
+                                            label="fields.createdBy.title"
+                                        />
+                                    </Labeled>
+                                    <Stack spacing={2} direction={'row'}>
+                                        <Labeled>
+                                            <DateField
+                                                source="metadata.created"
+                                                label="fields.created.title"
+                                                showTime
+                                            />
+                                        </Labeled>
+                                        <Labeled>
+                                            <DateField
+                                                source="metadata.updated"
+                                                label="fields.updated.title"
+                                                showTime
+                                            />
+                                        </Labeled>
+                                    </Stack>
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        sx={{ my: 2 }}
+                                    >
+                                        {project.metadata?.labels?.map(
+                                            (label: string) => (
+                                                <Chip
+                                                    key={label}
+                                                    label={label}
+                                                />
+                                            )
+                                        )}
+                                    </Stack>
+                                </>
+                            )}
+                        </Box>
+                    )}
                 </CardContent>
             </CardActionArea>
-            <CardActions disableSpacing sx={{ mt: 'auto' }}>
+            {/* <CardActions disableSpacing sx={{ mt: 'auto' }}>
                 <RootSelectorButton label="ra.action.open" />
                 <DeleteWithDialogButton confirmTitle="Resource Deletion" />
-            </CardActions>
+            </CardActions> */}
         </Card>
     );
 };

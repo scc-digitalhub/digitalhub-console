@@ -56,5 +56,8 @@
             "subtitle": "%{resource} %{kind}",
             "title": "%{resource} #%{name}"
         }
+    },
+    "share": {
+        "description": "Condividi con altri utenti aggiungendo il loro username alla lista"
     }
 }

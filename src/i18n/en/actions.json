@@ -2,7 +2,9 @@
     "actions": "Actions",
     "cancel": "Cancel",
     "download": "Download",
+    "share": "Share",
     "stop": "Stop",
     "resume": "Resume",
+    "revoke": "Revoke",
     "toggle-x": "Show/Hide %{el}"
 }

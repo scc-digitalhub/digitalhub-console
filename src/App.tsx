@@ -97,6 +97,7 @@ const authProvider =
               clientId: CLIENT_ID,
               issuer: ISSUER_URI,
               scope: SCOPE,
+              loginUrl: AUTH_URL + LOGIN_URL,
               logoutTo: '/login',
               redirectUrl: applicationUrl.endsWith('/')
                   ? `${applicationUrl}auth-callback`

@@ -112,6 +112,12 @@ export const Dashboard = () => {
             <Box sx={{ pt: 0, textAlign: 'left' }}>
                 {project.metadata && (
                     <MuiList sx={{ pt: 0 }}>
+                        {project.user && (
+                            <ListItem disableGutters sx={{ pt: 0 }}>
+                                {translate('fields.createdBy.title')}{' '}
+                                {project.user}
+                            </ListItem>
+                        )}
                         <ListItem disableGutters sx={{ pt: 0 }}>
                             {translate('pages.dashboard.created')}{' '}
                             {convertToDate(
@@ -124,12 +130,6 @@ export const Dashboard = () => {
                                 project.metadata.updated
                             ).toLocaleString()}
                         </ListItem>
-                        {project.metadata.createdBy && (
-                            <ListItem disableGutters sx={{ pt: 0 }}>
-                                {translate('ra.auth.username')}{' '}
-                                {project.metadata.createdBy}
-                            </ListItem>
-                        )}
                     </MuiList>
                 )}
             </Box>

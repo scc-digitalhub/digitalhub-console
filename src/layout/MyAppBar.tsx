@@ -1,7 +1,4 @@
-import {
-    RootResourceSelectorMenu,
-    useRootSelector,
-} from '@dslab/ra-root-selector';
+import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     AppBar,
     AutocompleteArrayInput,
@@ -19,6 +16,7 @@ import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
+import RootResourceSelectorMenu from '../components/RootSelectorMenu';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||

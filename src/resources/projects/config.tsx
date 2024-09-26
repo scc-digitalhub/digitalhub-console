@@ -22,9 +22,12 @@ import { MetadataSchema } from '../../common/schemas';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 import { ProjectMetadataViewUiSchema } from './types';
+import { ShareButton } from '../../components/ShareButton';
+import { useProjectPermissions } from '../../provider/authProvider';
 
 const ShowToolbar = () => {
     const record = useRecordContext();
+    const { isAdmin } = useProjectPermissions();
 
     if (!record) {
         return <></>;
@@ -35,6 +38,7 @@ const ShowToolbar = () => {
             <EditButton style={{ marginLeft: 'auto' }} />
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
+            {isAdmin(record.id) && <ShareButton />}
             <DeleteWithDialogButton redirect="/projects" />
         </TopToolbar>
     );
