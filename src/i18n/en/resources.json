@@ -83,7 +83,9 @@
     "projects": {
         "fields": {
             "key": "Key",
-            "name": "Name"
+            "name": "Name",
+            "updated": "Updated date",
+            "created": "Created date"
         },
         "name": "Project |||| Projects"
     },

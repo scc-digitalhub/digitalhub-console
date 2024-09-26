@@ -9,6 +9,8 @@ import {
     useAuthProvider,
     usePermissions,
     AuthProvider,
+    useGetIdentity,
+    RaRecord,
 } from 'react-admin';
 
 const refreshUser = (provider: AuthProvider, loginUrl: string) => {
@@ -77,7 +79,7 @@ export const OidcAuthProvider = (
                     return Promise.resolve();
                 });
         },
-        refreshUser,
+        refreshUser: () => refreshUser(provider, loginUrl),
         logout: (params: any) => {
             return provider.logout(params).then(() => {
                 return logoutTo;
@@ -228,24 +230,52 @@ export type BasicUser = {
     updatedAt: number;
 };
 
-export const useProjectPermissions = () => {
+export const useProjectPermissions = (): ProjectPermissionsProvider => {
     const authProvider = useAuthProvider();
     const { permissions } = usePermissions();
+    const { data: user } = useGetIdentity();
 
-    const hasAccess = useMemo(() => {
-        return (project: Identifier): boolean => {
-            if (!authProvider) {
-                return true;
-            }
+    const fn = useMemo(() => {
+        return {
+            hasAccess: (project: Identifier): boolean => {
+                if (!authProvider) {
+                    return true;
+                }
 
-            //check permissions
-            const pp = permissions || [];
-            const isAdmin = pp.find(p => p == 'ROLE_ADMIN');
-            const hasAccess = pp.find(p => p.startsWith(project + ':'));
+                //check permissions
+                const pp = permissions || [];
+                const isAdmin = pp.find(p => p == 'ROLE_ADMIN');
+                const hasAccess = pp.find(p => p.startsWith(project + ':'));
 
-            return isAdmin || hasAccess;
+                return isAdmin || hasAccess;
+            },
+            isAdmin: (project: Identifier): boolean => {
+                if (!authProvider) {
+                    return true;
+                }
+
+                //check permissions
+                const pp = permissions || [];
+                return pp.find(
+                    p => p == 'ROLE_ADMIN' || p == project + ':ROLE_ADMIN'
+                );
+            },
+            isOwner: (project: RaRecord): boolean => {
+                if (!user || !authProvider?.getIdentity) {
+                    return true;
+                }
+
+                //check username
+                return user.id == project['user'];
+            },
         };
-    }, [authProvider, permissions]);
+    }, [authProvider, permissions, user]);
 
-    return { hasAccess };
+    return { ...fn };
+};
+
+export type ProjectPermissionsProvider = {
+    hasAccess(project: Identifier): boolean;
+    isAdmin(project: Identifier): boolean;
+    isOwner(project: RaRecord): boolean;
 };

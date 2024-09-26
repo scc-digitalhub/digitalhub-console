@@ -83,7 +83,9 @@
     "projects": {
         "fields": {
             "key": "Chiave",
-            "name": "Nome"
+            "name": "Nome",
+            "updated": "Data di aggiornamento",
+            "created": "Data di creazione"
         },
         "name": "Progetto |||| Progetti"
     },

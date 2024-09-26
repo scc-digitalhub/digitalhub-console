@@ -1,8 +1,10 @@
 {
     "actions": "Azioni",
     "cancel": "Annulla",
-    "Download": "Scarica",
+    "download": "Scarica",
+    "share": "Condividi",
     "stop": "Ferma",
     "resume": "Riprendi",
+    "revoke": "Revoca",
     "toggle-x": "Mostra/Nascondi %{el}"
 }

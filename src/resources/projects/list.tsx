@@ -14,6 +14,8 @@ import {
     useNotify,
     useRefresh,
     useAuthProvider,
+    useAuthenticated,
+    SortButton,
 } from 'react-admin';
 import {
     Box,
@@ -25,6 +27,7 @@ import {
     CardActionArea,
     Button,
     Menu,
+    Chip,
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import LockIcon from '@mui/icons-material/Lock';
@@ -40,51 +43,11 @@ import purify from 'dompurify';
 import { useProjectPermissions } from '../../provider/authProvider';
 
 export const ProjectSelectorList = props => {
-    const translate = useTranslate();
-    const redirect = useRedirect();
-    const theme = useTheme();
     const perPage = 8;
     const getResourceLabel = useGetResourceLabel();
-    const resourceLabel = getResourceLabel('projects', 1).toLowerCase();
-    const authProvider = useAuthProvider();
-    const notify = useNotify();
-    const refresh = useRefresh();
 
-    const Toolbar = () => {
-        const transform = data => ({
-            ...data,
-            kind: `project`,
-        });
-
-        return (
-            <TopToolbar>
-                <CreateInDialogButton
-                    fullWidth
-                    maxWidth={'md'}
-                    transform={transform}
-                    variant="contained"
-                    mutationOptions={{
-                        onSuccess: () => {
-                            notify('ra.notification.created', {
-                                type: 'info',
-                                messageArgs: { smart_count: 1 },
-                            });
-
-                            if (authProvider) {
-                                //refresh permissions
-                                authProvider.refreshUser().then(user => {
-                                    console.log('refreshed', user);
-                                    refresh();
-                                });
-                            }
-                        },
-                    }}
-                >
-                    <ProjectCreateForm />
-                </CreateInDialogButton>
-            </TopToolbar>
-        );
-    };
+    //check if auth is required to redirect to login
+    useAuthenticated();
 
     return (
         <List
@@ -100,6 +63,46 @@ export const ProjectSelectorList = props => {
                 <ProjectsGridItem />
             </GridList>
         </List>
+    );
+};
+
+const Toolbar = () => {
+    const authProvider = useAuthProvider();
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const transform = data => ({
+        ...data,
+        kind: `project`,
+    });
+
+    return (
+        <TopToolbar>
+            <SortButton fields={['updated', 'name']} />
+            <CreateInDialogButton
+                fullWidth
+                maxWidth={'md'}
+                transform={transform}
+                variant="contained"
+                mutationOptions={{
+                    onSuccess: () => {
+                        notify('ra.notification.created', {
+                            type: 'info',
+                            messageArgs: { smart_count: 1 },
+                        });
+
+                        if (authProvider) {
+                            //refresh permissions
+                            authProvider.refreshUser().then(user => {
+                                refresh();
+                            });
+                        }
+                    },
+                }}
+            >
+                <ProjectCreateForm />
+            </CreateInDialogButton>
+        </TopToolbar>
     );
 };
 
@@ -150,7 +153,13 @@ const ProjectsGridItem = (props: any) => {
                             ? project.metadata.name
                             : null
                     }
-                    avatar={isAccessible ? <FolderIcon /> : <LockIcon />}
+                    avatar={
+                        isAccessible ? (
+                            <FolderIcon />
+                        ) : (
+                            <LockIcon color="disabled" />
+                        )
+                    }
                     titleTypographyProps={{
                         variant: 'h6',
                         color: 'secondary.main',
@@ -195,6 +204,20 @@ const ProjectsGridItem = (props: any) => {
                                                 showTime
                                             />
                                         </Labeled>
+                                    </Stack>
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        sx={{ my: 2 }}
+                                    >
+                                        {project.metadata?.labels?.map(
+                                            (label: string) => (
+                                                <Chip
+                                                    key={label}
+                                                    label={label}
+                                                />
+                                            )
+                                        )}
                                     </Stack>
                                 </>
                             )}
