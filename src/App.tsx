@@ -196,7 +196,10 @@ const CoreApp = () => {
                         dataProvider={dataProvider}
                         resource="schemas"
                     >
-                        <StompContextProvider authProvider={authProvider} websocketUrl={WEBSOCKET_URL}>
+                        <StompContextProvider
+                            authProvider={authProvider}
+                            websocketUrl={WEBSOCKET_URL}
+                        >
                             <AdminUI
                                 dashboard={Dashboard}
                                 layout={WrappedLayout}

@@ -210,7 +210,10 @@ export const MyAppBar = () => {
             )}
 
             {messages && (
-                <NotificationArea messages={messages} setMessages={setMessages} />
+                <NotificationArea
+                    messages={messages}
+                    setMessages={setMessages}
+                />
             )}
 
             {docsVersion && (
