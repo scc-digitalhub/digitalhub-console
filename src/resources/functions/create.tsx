@@ -30,6 +30,7 @@ import { StepperForm, useStepper } from '@dslab/ra-stepper';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
+import { StepperToolbar } from '../../components/StepperToolbar';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -134,24 +135,5 @@ export const FunctionCreate = () => {
                 </>
             </CreateBase>
         </Container>
-    );
-};
-
-const StepperToolbar = () => {
-    const { steps, currentStep } = useStepper();
-
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box>
-                <StepperForm.PreviousButton
-                    variant={'text'}
-                    color="secondary"
-                />
-            </Box>
-            <Box>
-                <StepperForm.NextButton />
-                {steps && currentStep === steps.length - 1 && <SaveButton />}
-            </Box>
-        </Toolbar>
     );
 };
