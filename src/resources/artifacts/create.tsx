@@ -71,7 +71,7 @@ export const ArtifactCreate = () => {
             <CreateBase
                 transform={transform}
                 redirect="list"
-                record={{ id: id.current }}
+                record={{ id: id.current, spec: {path: null} }}
             >
                 <>
                     <CreatePageTitle
