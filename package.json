@@ -43,7 +43,7 @@
         "@dslab/ra-jsonschema-input": "^2.1.1",
         "@dslab/ra-language-italian": "^1.0.0",
         "@dslab/ra-root-selector": "^1.0.1",
-        "@dslab/ra-stepper": "^1.1.1",
+        "@dslab/ra-stepper": "^1.1.4",
         "@emotion/react": "^11.11.3",
         "@emotion/styled": "^11.11.0",
         "@melloware/react-logviewer": "^5.0.6",
