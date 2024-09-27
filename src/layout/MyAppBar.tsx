@@ -181,7 +181,7 @@ export const MyAppBar = () => {
     const translate = useTranslate();
 
     const enableSearch = useContext(SearchEnabledContext);
-    const { messages, setMessages } = useStompContext();
+    const { client } = useStompContext();
 
     return (
         <AppBar color="primary" elevation={0}>
@@ -209,12 +209,7 @@ export const MyAppBar = () => {
                 />
             )}
 
-            {messages && (
-                <NotificationArea
-                    messages={messages}
-                    setMessages={setMessages}
-                />
-            )}
+            {client && <NotificationArea />}
 
             {docsVersion && (
                 <Button

@@ -199,6 +199,7 @@ const CoreApp = () => {
                         <StompContextProvider
                             authProvider={authProvider}
                             websocketUrl={WEBSOCKET_URL}
+                            topics={['/user/notifications/runs']}
                         >
                             <AdminUI
                                 dashboard={Dashboard}

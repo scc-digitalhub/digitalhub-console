@@ -2,72 +2,83 @@ import {
     ReactElement,
     createContext,
     useContext,
+    useEffect,
     useMemo,
     useRef,
     useState,
 } from 'react';
-import { Client as StompClient, messageCallbackType } from '@stomp/stompjs';
-import { Link, useCreatePath, useNotify, useTranslate } from 'react-admin';
+import { Client as StompClient } from '@stomp/stompjs';
+import {
+    Link,
+    useCreatePath,
+    useNotify,
+    useTranslate,
+    localStorageStore,
+} from 'react-admin';
 import { Alert } from '@mui/material';
 import { StateColors } from '../components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { localStorageStore } from 'react-admin';
 
 interface StompContextValue {
     client: StompClient;
-    connect: () => void;
-    disconnect: () => Promise<void>;
+    // connect: () => void;
+    // disconnect: () => Promise<void>;
     messages: any[];
-    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+    // setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+    remove: (message: any) => void;
+    markAsRead: (message: any) => void;
+    markAllAsRead: (message: any[]) => void;
 }
 
 const StompContext = createContext<StompContextValue | undefined>(undefined);
 
 export const StompContextProvider = (props: StompContextProviderParams) => {
-    const { children, authProvider, websocketUrl } = props;
+    const { children, authProvider, websocketUrl, topics, onMessage } = props;
     const { root } = useRootSelector();
     const notify = useNotify();
     const createPath = useCreatePath();
-    const store = localStorageStore('dh');
+    const store = localStorageStore();
     const translate = useTranslate();
 
-    const [messages, setMessages] = useState<any[]>(
-        store.getItem('dh.notifications.messages.' + root, [])
-    );
+    const [messages, setMessages] = useState<any[]>([]);
+    const stompClientRef = useRef<StompClient | null>(null);
 
-    const messageCallback: messageCallbackType = message => {
-        const entity = JSON.parse(message.body);
-        const state: String = entity.status.state;
-        console.log('received stomp message', entity.id, entity.status.state);
+    //keep storage in sync with root
+    const storeKey = useRef<string>('');
+    useEffect(() => {
+        if (root) {
+            storeKey.current = 'dh.notifications.messages.' + root;
+            setMessages(store.getItem(storeKey.current));
+        }
+    }, [root]);
+    const storeMessages = value => {
+        if (storeKey.current) {
+            store.setItem(storeKey.current, value);
+        }
+    };
 
-        // if (root) {
-        setMessages(prev => {
-            const val = [
-                {
-                    ...entity,
-                    notificationId: `${entity.id}_${state}`,
-                    notificationType: 'run',
-                    isRead: false,
-                },
-                ...prev,
-            ];
-            store.setItem('dh.notifications.messages.' + root, val);
-            return val;
-        });
-        // }
+    const alertMessage = (message: any) => {
+        const resource = message.resource;
+        const record = message.record;
+
+        const state = record?.status?.state;
+
+        if (!state) {
+            return;
+        }
 
         const alertContent =
             state === 'DELETED' ? (
                 translate('messages.notifications.runAlertMessage', {
-                    id: entity.id,
+                    id: record.id,
                     state: state,
                 })
             ) : (
                 <Link
                     to={createPath({
-                        resource: 'runs',
-                        id: entity.id,
+                        resource: resource,
+                        id: record.id,
                         type: 'show',
                     })}
                 >
@@ -90,32 +101,77 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         );
     };
 
-    const stompClientRef = useRef<StompClient | null>(null);
-    if (stompClientRef.current === null && websocketUrl) {
-        stompClientRef.current = new StompClient({
-            brokerURL: websocketUrl,
+    const onReceive = message => {
+        const notification = JSON.parse(message.body);
+
+        //push as first element in stack
+        setMessages(prev => {
+            const value = [
+                {
+                    ...notification,
+                    isRead: false,
+                },
+                ...prev,
+            ];
+            //store
+            storeMessages(value);
+            return value;
         });
-    }
+        //notify
+        if (onMessage) {
+            onMessage(notification);
+        } else {
+            //default alert
+            alertMessage(notification);
+        }
+    };
 
-    // TODO effetto per gestire doppia creazione del client in dev mode chiudendo una connessione, ma messages non viene aggiornato
-    // useEffect(() => {
-    //     if (stompClientRef.current === null) {
-    //         stompClientRef.current = new StompClient({
-    //             brokerURL: websocketUrl,
-    //         });
-    //     }
+    const removeMessage = message => {
+        if (message?.id) {
+            setMessages(prev => {
+                const value = prev.filter(m => message.id !== m.id);
+                //store
+                storeMessages(value);
+                return value;
+            });
+        }
+    };
 
-    //     return () => {
-    //         stompClientRef.current?.deactivate();
-    //         stompClientRef.current = null;
-    //     };
-    // }, []);
+    const updateMessages = (fn: (msg) => any) => {
+        return (messages: any[]) => {
+            if (!messages) {
+                return;
+            }
+
+            const updated = messages.map(message => fn(message));
+
+            setMessages(prev => {
+                //replace all updated
+                const value = prev.map(
+                    m => updated.find(u => u.id == m.id) || m
+                );
+
+                //store
+                storeMessages(value);
+                return value;
+            });
+        };
+    };
 
     const stompContext = useMemo(() => {
-        if (stompClientRef.current === null) {
+        if (!websocketUrl) {
             return undefined;
         }
 
+        if (stompClientRef.current) {
+            //disconnect
+            stompClientRef.current.deactivate();
+        }
+
+        //define client
+        stompClientRef.current = new StompClient({
+            brokerURL: websocketUrl,
+        });
         stompClientRef.current.beforeConnect = async () => {
             if (authProvider && stompClientRef.current) {
                 const authHeader = await authProvider.getAuthorization();
@@ -128,11 +184,9 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         };
 
         stompClientRef.current.onConnect = frame => {
-            console.log('successfully connected to stomp');
-            const subscription = stompClientRef.current?.subscribe(
-                '/user/notifications/runs',
-                messageCallback
-            );
+            topics.forEach(t => {
+                stompClientRef.current?.subscribe(t, onReceive);
+            });
         };
 
         stompClientRef.current.onStompError = frame => {
@@ -140,33 +194,40 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             console.log('Additional details: ' + frame.body);
         };
 
+        //connect
         stompClientRef.current.activate();
 
         return {
             client: stompClientRef.current,
             connect: stompClientRef.current.activate,
             disconnect: stompClientRef.current.deactivate,
-            // messages: root ? messages[root] : [],
+            remove: removeMessage,
+            markAsRead: (msg: any) =>
+                updateMessages(msg => {
+                    return { ...msg, isRead: true };
+                })([msg]),
+            markAllAsRead: (msgs: any[]) =>
+                updateMessages(msg => {
+                    return { ...msg, isRead: true };
+                })(msgs),
         };
-    }, [authProvider /*, root*/]);
+    }, [authProvider]);
 
     return (
         <StompContext.Provider
-            value={
-                stompContext
-                    ? { ...stompContext, messages, setMessages }
-                    : undefined
-            }
+            value={stompContext ? { ...stompContext, messages } : undefined}
         >
             {children}
         </StompContext.Provider>
     );
 };
 
-type StompContextProviderParams = {
+export type StompContextProviderParams = {
     children: ReactElement;
     authProvider: AuthorizationAwareAuthProvider | undefined;
     websocketUrl: string;
+    topics: string[];
+    onMessage?: (message: any) => void;
 };
 
 export const useStompContext = () => {

@@ -1,36 +1,79 @@
-import { Menu, Button, Stack, Typography, Badge, Divider } from '@mui/material';
-import { Box } from '@mui/system';
+import { Menu, Typography, Badge, MenuItem, Box } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useState, MouseEvent, ReactElement, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import {
     useTranslate,
-    RaRecord,
-    ShowButtonProps,
-    useRecordContext,
-    useResourceContext,
+    IconButtonWithTooltip,
+    Error,
+    useCreatePath,
 } from 'react-admin';
 import { Notification } from './Notification';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useNavigate } from 'react-router-dom';
+import { useStompContext } from '../contexts/StompContext';
 
 export const NotificationArea = (props: NotificationAreaProps) => {
-    const { messages, setMessages } = props;
-    const [open, setOpen] = useState(false);
+    const {
+        messages,
+        markAllAsRead,
+        remove: removeMessage,
+    } = useStompContext();
     const translate = useTranslate();
-    console.log('messages', messages);
+    const createPath = useCreatePath();
+    const navigate = useNavigate();
+    const [read, setRead] = useState<any[]>([]);
+    const [data, setData] = useState<any[]>([]);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    useEffect(() => {
+        setData(messages);
+    }, [JSON.stringify(messages)]);
 
-    const notifications: ReactElement[] = messages.map((message, index) => (
-        <Fragment key={index}>
-            <Divider flexItem />
-            <Notification
-                message={message}
-                open={open}
-                setMessages={setMessages}
-            />
-        </Fragment>
-    ));
+    useEffect(() => {
+        if (read && read.length > 0) {
+            //callback and clear
+            //TODO debounce rate 1s
+            markAllAsRead(read);
+            setRead([]);
+        }
+    }, [JSON.stringify(read)]);
+
+    const handleOpen = (event): void => {
+        setAnchorEl(event.currentTarget);
+        event.stopPropagation();
+    };
+    const handleClose = (event?): void => {
+        setAnchorEl(null);
+        if (event) {
+            event.stopPropagation();
+        }
+    };
+
+    const isOpen = Boolean(anchorEl);
+
+    const handleShow = message => {
+        if (message?.resource && message.record) {
+            const path = createPath({
+                resource: message.resource,
+                id: message.record.id,
+                type: 'show',
+            });
+
+            //navigate
+            navigate(path);
+
+            //close
+            handleClose();
+        }
+    };
+
+    //debounce read callbacks for concurrency
+    const markMessageAsRead = message => {
+        setRead(prev => [...prev, message]);
+    };
 
     const icon = (
         <Badge
-            badgeContent={messages.filter(m => m.isRead === false).length}
+            badgeContent={data?.filter(m => m.isRead === false).length}
             color="error"
         >
             <NotificationsIcon />
@@ -38,106 +81,62 @@ export const NotificationArea = (props: NotificationAreaProps) => {
     );
 
     return (
-        <DropDownButton label="" icon={icon} setOpen={setOpen}>
-            {notifications.length != 0 ? (
-                <>
-                    <Typography
-                        variant="button"
-                        gutterBottom
-                        align="center"
-                        width={'100%'}
-                        color={'grey'}
-                    >
-                        {messages.length +
-                            ' ' +
-                            translate('messages.notifications.header')}
-                    </Typography>
-                    {notifications}
-                </>
-            ) : (
-                <Typography sx={{ paddingX: 2 }}>No new messages</Typography> //TODO translate
-            )}
-        </DropDownButton>
-    );
-};
-
-type NotificationAreaProps = {
-    messages: any[];
-    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
-};
-
-export const DropDownButton = (props: DrodownButtonProps) => {
-    const {
-        icon,
-        label = 'action.actions',
-        record: recordProp,
-        resource: resourceProp,
-        children,
-        setOpen,
-        ...rest
-    } = props;
-    const resource = useResourceContext(props);
-    const record = useRecordContext(props);
-    const translate = useTranslate();
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const handleOpen = (event: MouseEvent<HTMLElement>): void => {
-        event.stopPropagation();
-        setAnchorEl(event.currentTarget);
-        setOpen(true);
-    };
-    const handleClose = (event: MouseEvent<HTMLElement>): void => {
-        event.stopPropagation();
-        setAnchorEl(null);
-        setOpen(false);
-    };
-
-    return (
         <Box className="DropDownMenu" component="span">
             <Box>
-                <Button
-                    color="inherit"
-                    variant="text"
-                    aria-controls="simple-menu"
-                    aria-label=""
-                    aria-haspopup="true"
+                <IconButtonWithTooltip
+                    label={'ra.action.open'}
                     onClick={handleOpen}
-                    startIcon={icon}
+                    color="inherit"
                 >
-                    {translate(label)}
-                </Button>
+                    {icon}
+                </IconButtonWithTooltip>
             </Box>
             <Menu
                 id="dropdown-menu"
                 anchorEl={anchorEl}
                 keepMounted
-                open={Boolean(anchorEl)}
+                open={isOpen}
                 onClose={handleClose}
                 sx={theme => ({
-                    '& .MuiList-root': {
+                    '& .MuiMenu-list': {
                         backgroundColor: 'white',
+                        p: 0,
                         ...theme.applyStyles('dark', {
                             backgroundColor: 'black',
                         }),
                     },
+                    '& .MuiMenuItem-root': {
+                        p: 0,
+                        borderBottom: '1px solid #ddd',
+                    },
                 })}
             >
-                <Stack
-                    direction={'column'}
-                    sx={{
-                        minWidth: '80px',
-                        alignItems: 'flex-start',
-                    }}
-                >
-                    {children}
-                </Stack>
+                {data?.length > 0 ? (
+                    data.map((message, index) => (
+                        <MenuItem key={'m-' + index}>
+                            <ErrorBoundary FallbackComponent={Error}>
+                                <Notification
+                                    message={message}
+                                    open={isOpen}
+                                    onRemove={removeMessage}
+                                    onShow={handleShow}
+                                    markAsRead={markMessageAsRead}
+                                />
+                            </ErrorBoundary>
+                        </MenuItem>
+                    ))
+                ) : (
+                    <MenuItem>
+                        <Box p={1}>
+                            <Typography sx={{ paddingX: 2 }}>
+                                {translate('ra.navigation.no_results')}
+                            </Typography>
+                        </Box>
+                    </MenuItem>
+                )}
             </Menu>
         </Box>
     );
 };
 
-export type DrodownButtonProps<RecordType extends RaRecord = any> =
-    ShowButtonProps & {
-        children: ReactElement | ReactElement[];
-        setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    };
+export type NotificationAreaProps = {};
