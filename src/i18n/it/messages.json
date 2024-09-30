@@ -16,5 +16,9 @@
         "required": "Richiesto",
         "unsupportedField": "Campo non supportato",
         "wrongChar": "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini. I trattini non possono trovarsi all'inizio o alla fine della parola."
+    },
+    "notifications": {
+        "header": "Notifiche",
+        "statusMessage": "Stato %{resource} passato a %{state}"
     }
 }

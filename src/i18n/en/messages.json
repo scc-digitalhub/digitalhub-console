@@ -16,5 +16,9 @@
         "required": "Required",
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
+    },
+    "notifications": {
+        "header": "Notifications",
+        "stateMessage": "%{resource} status changed to %{state}"
     }
 }

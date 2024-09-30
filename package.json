@@ -53,6 +53,7 @@
         "@mui/x-charts": "^7.6.1",
         "@mui/x-data-grid": "^6.19.6",
         "@mui/x-tree-view": "^7.13.0",
+        "@stomp/stompjs": "^7.0.0",
         "@uppy/react": "^3.4.0",
         "@wtfcode/byte-converter": "^2.0.8",
         "change-case": "^5.4.2",
