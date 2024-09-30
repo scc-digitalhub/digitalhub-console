@@ -9,15 +9,18 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useEffect, useMemo, useRef } from 'react';
+import { createElement, useEffect, useMemo, useRef } from 'react';
 import {
     ShowButton,
     IconButtonWithTooltip,
     DateField,
     useTranslate,
+    useResourceDefinition,
+    useGetResourceLabel,
+    useGetRecordRepresentation,
 } from 'react-admin';
-import { RunIcon } from '../resources/runs/icon';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export const Notification = (props: NotificationProps) => {
     const {
@@ -32,30 +35,9 @@ export const Notification = (props: NotificationProps) => {
     const ref = useRef(null);
     const timer = useRef<any | null>(null);
     const { root } = useRootSelector();
-
-    const parseMessage = (message: any) => {
-        if (message.resource == 'runs') {
-            const record = message.record;
-
-            return {
-                icon: <RunIcon fontSize="small" />,
-                title:
-                    translate('resources.runs.name', { smart_count: 1 }) +
-                    ' #' +
-                    record.spec.function.split('/')[3].split(':')[0],
-                content: translate('messages.notifications.runMessage', {
-                    state: record.status.state,
-                }),
-                resource: 'runs',
-                showButton: record.status.state != 'DELETED',
-            };
-        }
-        //TODO add other types of notifications
-        return {};
-    };
-
-    const { icon, title, content, resource, showButton } =
-        parseMessage(message);
+    const definition = useResourceDefinition({ resource: message.resource });
+    const getResourceLabel = useGetResourceLabel();
+    const recordRepresentation = useGetRecordRepresentation(message.resource);
 
     const observer = useMemo(
         () =>
@@ -112,6 +94,37 @@ export const Notification = (props: NotificationProps) => {
 
     const notificationClass = !message.isRead ? NotificationClasses.unread : '';
 
+    if (!definition) {
+        return <></>;
+    }
+
+    const parseMessage = (message: any) => {
+        const record = message.record;
+        const label = getResourceLabel(message.resource, 1);
+        const name = recordRepresentation
+            ? recordRepresentation(record)
+            : record.name || record.id;
+
+        return {
+            icon: definition.icon ? (
+                createElement(definition.icon, { fontSize: 'small' })
+            ) : (
+                <NotificationsIcon fontSize="small" />
+            ),
+            title: translate('pages.pageTitle.show.title', {
+                resource: label,
+                name,
+            }),
+            content: translate('messages.notifications.stateMessage', {
+                state: record.status.state,
+                resource: label,
+            }),
+            showButton: record.status.state != 'DELETED',
+        };
+    };
+
+    const { icon, title, content, showButton } = parseMessage(message);
+
     return (
         <NotificationCard
             elevation={0}
@@ -152,7 +165,7 @@ export const Notification = (props: NotificationProps) => {
             <CardActions disableSpacing>
                 {showButton && onShow && (
                     <ShowButton
-                        resource={resource}
+                        resource={message.resource}
                         record={message.record}
                         variant="text"
                         color="info"

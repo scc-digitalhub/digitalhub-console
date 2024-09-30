@@ -1,6 +1,5 @@
 import { TaskEditComponent, TaskShowComponent } from '../tasks';
 import {
-    Button,
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
@@ -11,7 +10,6 @@ import {
     SimpleShowLayout,
     TextField,
     TopToolbar,
-    useDataProvider,
     useGetResourceLabel,
     useRecordContext,
 } from 'react-admin';
@@ -26,16 +24,14 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
 
 import { LogsButton } from '../../components/LogsButton';
-import { RunCreateForm, RunShowComponent } from '../runs';
 import { filterProps } from '../../common/schemas';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { Empty } from '../../components/Empty';
 import { ReactElement } from 'react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { useRootSelector } from '@dslab/ra-root-selector';
-import StopCircleIcon from '@mui/icons-material/StopCircle';
 import { StopButton } from '../runs/StopButton';
 import { DropDownButton } from '../../components/DropdownButton';
+import { RunCreateForm } from '../runs/create';
 
 export const TaskAndRuns = (props: {
     task?: string;

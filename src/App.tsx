@@ -160,8 +160,7 @@ import {
     ModelUpdate,
 } from './resources/models';
 import { ModelIcon } from './resources/models/icon';
-import { RunList, RunShow } from './resources/runs';
-import { RunIcon } from './resources/runs/icon';
+import runDefinition from './resources/runs';
 import { StompContextProvider } from './contexts/StompContext';
 
 export const SearchEnabledContext = createContext(false);
@@ -263,12 +262,7 @@ const CoreApp = () => {
                                     />
                                 </Resource>
                                 <Resource name="tasks" />
-                                <Resource
-                                    name="runs"
-                                    list={RunList}
-                                    icon={RunIcon}
-                                    show={RunShow}
-                                />
+                                <Resource {...runDefinition} />
                                 <Resource
                                     name="projects"
                                     list={ProjectSelectorList}

@@ -19,7 +19,6 @@
     },
     "notifications": {
         "header": "Notifiche",
-        "runMessage": "Stato dell'esecuzione passato a %{state}",
-        "runAlertMessage": "Stato dell'esecuzione #%{id} passato a %{state}"
+        "statusMessage": "Stato %{resource} passato a %{state}"
     }
 }

@@ -28,9 +28,9 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import { WorkflowView } from './WorkflowView';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { filterProps } from '../../common/schemas';
-import { RunCreateForm } from '../runs';
 import { LogsButton } from '../../components/LogsButton';
 import { Empty } from '../../components/Empty';
+import { RunCreateForm } from '../runs/create';
 
 export const TaskAndRuns = (props: {
     task?: string;

@@ -14,6 +14,7 @@ import {
     useNotify,
     useTranslate,
     localStorageStore,
+    useGetResourceLabel,
 } from 'react-admin';
 import { Alert } from '@mui/material';
 import { StateColors } from '../components/StateChips';
@@ -33,13 +34,33 @@ interface StompContextValue {
 
 const StompContext = createContext<StompContextValue | undefined>(undefined);
 
+export const filterOnStates = (message: any) => {
+    const ignore = ['DELETING', 'BUILT', 'STOP', 'RESUME'];
+    if (
+        message.record?.status?.state &&
+        ignore.includes(message.record.status.state)
+    ) {
+        return false;
+    }
+
+    return message;
+};
+
 export const StompContextProvider = (props: StompContextProviderParams) => {
-    const { children, authProvider, websocketUrl, topics, onMessage } = props;
+    const {
+        children,
+        authProvider,
+        websocketUrl,
+        topics,
+        onMessage,
+        onReceive: onReceiveTransformer = filterOnStates,
+    } = props;
     const { root } = useRootSelector();
     const notify = useNotify();
     const createPath = useCreatePath();
     const store = localStorageStore();
     const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
 
     const [messages, setMessages] = useState<any[]>([]);
     const stompClientRef = useRef<StompClient | null>(null);
@@ -58,22 +79,28 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         }
     };
 
-    const alertMessage = (message: any) => {
+    const onStateChanged = (message: any) => {
         const resource = message.resource;
         const record = message.record;
 
         const state = record?.status?.state;
+        const resourceName = translate(`resources.${resource}.forcedCaseName`, {
+            smart_count: 0,
+            _: getResourceLabel(resource, 1),
+        });
 
         if (!state) {
             return;
         }
 
+        const msg = translate('messages.notifications.stateMessage', {
+            state,
+            resource: resourceName,
+        });
+
         const alertContent =
             state === 'DELETED' ? (
-                translate('messages.notifications.runAlertMessage', {
-                    id: record.id,
-                    state: state,
-                })
+                <span> {msg}</span>
             ) : (
                 <Link
                     to={createPath({
@@ -82,9 +109,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
                         type: 'show',
                     })}
                 >
-                    {translate('messages.notifications.runMessage', {
-                        state: state,
-                    })}
+                    {msg}
                 </Link>
             );
 
@@ -102,7 +127,16 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     };
 
     const onReceive = message => {
-        const notification = JSON.parse(message.body);
+        let notification = JSON.parse(message.body);
+
+        if (onReceiveTransformer) {
+            //let callback transform or filter
+            notification = onReceiveTransformer(notification);
+            if (notification === false) {
+                //skip
+                return;
+            }
+        }
 
         //push as first element in stack
         setMessages(prev => {
@@ -117,12 +151,13 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             storeMessages(value);
             return value;
         });
+
         //notify
         if (onMessage) {
             onMessage(notification);
         } else {
             //default alert
-            alertMessage(notification);
+            onStateChanged(notification);
         }
     };
 
@@ -228,6 +263,7 @@ export type StompContextProviderParams = {
     websocketUrl: string;
     topics: string[];
     onMessage?: (message: any) => void;
+    onReceive?: (message: any) => any | false;
 };
 
 export const useStompContext = () => {

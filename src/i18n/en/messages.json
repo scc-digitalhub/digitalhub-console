@@ -19,7 +19,6 @@
     },
     "notifications": {
         "header": "Notifications",
-        "runMessage": "Run status changed to %{state}",
-        "runAlertMessage": "Run #%{id} status changed to %{state}"
+        "stateMessage": "%{resource} status changed to %{state}"
     }
 }
