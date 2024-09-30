@@ -59,5 +59,13 @@
     },
     "share": {
         "description": "Share with additional users by adding their username to the list"
+    },
+    "importer": {
+        "title": "Import %{resource}",
+        "helperText": "Import a resource from a valid yaml definition",
+        "resetOnImport": {
+            "label": "Reset identifiers",
+            "helperText": "Clear identifiers on import. Enable to avoid ID collisions"
+        }
     }
 }

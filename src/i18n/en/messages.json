@@ -7,6 +7,7 @@
     },
     "validation": {
         "invalid": "Invalid",
+        "invalid_field": "Invalid field: %{field} %{error}",
         "invalidDate": "Invalid date",
         "invalidDatetime": "Invalid datetime",
         "invalidKind": "Invalid kind",
@@ -14,6 +15,7 @@
         "minValue": "Value must be greater than or equal to %{min}",
         "noSpace": "Value must contain no space",
         "required": "Required",
+        "required_field": "Required field: %{field}",
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
     },

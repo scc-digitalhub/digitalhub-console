@@ -7,6 +7,7 @@
     },
     "validation": {
         "invalid": "Invalido",
+        "invalid_field": "Campo invalido: %{field} %{error}",
         "invalidDate": "Data non valida",
         "invalidDatetime": "Datetime non valido",
         "invalidKind": "Tipo invalido",
@@ -14,6 +15,7 @@
         "minValue": "Il valore deve esere maggiore o uguale a %{min}",
         "noSpace": "Il valore non deve contenere spazi",
         "required": "Richiesto",
+        "required_field": "Campo richiesto: %{field}",
         "unsupportedField": "Campo non supportato",
         "wrongChar": "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini. I trattini non possono trovarsi all'inizio o alla fine della parola."
     },
