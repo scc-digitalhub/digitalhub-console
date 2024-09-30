@@ -88,5 +88,10 @@
             "run_of": "run of"
         },
         "title": "Lineage"
+    },
+    "stepperTitles": {
+        "base": "Base",
+        "spec": "Spec",
+        "recap": "Recap"
     }
 }

@@ -8,12 +8,9 @@ import {
     FormDataConsumer,
     ListButton,
     LoadingIndicator,
-    SaveButton,
     TextInput,
-    Toolbar,
     TopToolbar,
     required,
-    useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import {
@@ -32,7 +29,7 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
-const CreateToolbar = (props: CreateActionsProps) => {
+const CreateToolbar = () => {
     return (
         <TopToolbar>
             <ListButton />
@@ -44,7 +41,6 @@ export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
-    const getResourceLabel = useGetResourceLabel();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
 
@@ -86,7 +82,7 @@ export const FunctionCreate = () => {
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
                                 <StepperForm.Step
-                                    label={getResourceLabel('base', 1)}
+                                    label={'pages.stepperTitles.base'}
                                 >
                                     <TextInput
                                         source="name"
@@ -98,7 +94,7 @@ export const FunctionCreate = () => {
                                     <MetadataInput />
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={getResourceLabel('spec', 1)}
+                                    label={'pages.stepperTitles.spec'}
                                 >
                                     <KindSelector kinds={kinds} />
                                     <SpecInput
@@ -107,7 +103,7 @@ export const FunctionCreate = () => {
                                     />
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={translate('Recap')}
+                                    label={'pages.stepperTitles.recap'}
                                     optional
                                 >
                                     <FormDataConsumer>
