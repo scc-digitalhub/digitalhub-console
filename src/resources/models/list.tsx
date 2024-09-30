@@ -27,11 +27,13 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
+import { ImportButton } from '../../components/ImportButton';
 
 const ListToolbar = () => {
     return (
         <TopToolbar>
             <CreateButton />
+            <ImportButton />
         </TopToolbar>
     );
 };

@@ -27,6 +27,7 @@ import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
+import { ImportButton } from '../../components/ImportButton';
 
 const ListToolbar = () => {
     return (
@@ -43,6 +44,7 @@ const ListToolbar = () => {
             //     '& .MuiButton-startIcon': { margin: 0 },
             // }}
             />
+            <ImportButton />
         </TopToolbar>
     );
 };
