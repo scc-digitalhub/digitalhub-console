@@ -35,6 +35,7 @@ export const SpecInput = (props: InputProps & {
 
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
+    const eq = record ? deepEqual(record[source], value) : undefined;
     const kind = kindProp || kindValue || (record ? record[kindSource] : null);
 
     useEffect(() => {
@@ -49,8 +50,8 @@ export const SpecInput = (props: InputProps & {
     }, [kind, schemaProvider, schemaProp]);
 
     useEffect(() => {
-        if (onDirty && record) {
-            onDirty(!deepEqual(record[source], value));
+        if (onDirty && record && eq !== undefined) {
+            onDirty(!eq);
         }
     }, [record, value]);
 

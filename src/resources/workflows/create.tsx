@@ -10,7 +10,6 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
@@ -40,7 +39,6 @@ export const WorkflowCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
-    const getResourceLabel = useGetResourceLabel();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
 
@@ -94,7 +92,7 @@ export const WorkflowCreate = () => {
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
                                 <StepperForm.Step
-                                    label={getResourceLabel('base', 1)}
+                                    label={'pages.stepperTitles.base'}
                                 >
                                     <TextInput
                                         source="name"
@@ -106,7 +104,7 @@ export const WorkflowCreate = () => {
                                     <MetadataInput />
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={getResourceLabel('spec', 1)}
+                                    label={'pages.stepperTitles.spec'}
                                 >
                                     <KindSelector kinds={kinds} />
 
@@ -123,7 +121,7 @@ export const WorkflowCreate = () => {
                                     </FormDataConsumer>
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={translate('Recap')}
+                                    label={'pages.stepperTitles.recap'}
                                     optional
                                 >
                                     <FormDataConsumer>

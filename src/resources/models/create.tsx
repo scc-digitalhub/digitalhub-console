@@ -10,7 +10,6 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useGetResourceLabel,
     useInput,
     useResourceContext,
     useTranslate,
@@ -44,7 +43,6 @@ const CreateToolbar = (props: CreateActionsProps) => {
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
-    const getResourceLabel = useGetResourceLabel();
     const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
@@ -79,53 +77,50 @@ export const ModelCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <StepperForm toolbar={<StepperToolbar />}>
-                                <StepperForm.Step
-                                    label={getResourceLabel('base', 1)}
-                                >
-                                    <TextInput
-                                        source="name"
-                                        validate={[
-                                            required(),
-                                            isAlphaNumeric(),
-                                        ]}
-                                    />
-                                    <MetadataInput />
-                                </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={getResourceLabel('spec', 1)}
-                                >
-                                    <SpecCreateStep uploader={uploader} />
-                                </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={translate('Recap')}
-                                    optional
-                                >
-                                    <FormDataConsumer>
-                                        {({ formData }) => {
-                                            //read-only view
-                                            const r = {
-                                                spec: btoa(
-                                                    toYaml(formData?.spec)
-                                                ),
-                                            };
-                                            return (
-                                                <AceEditorField
-                                                    mode="yaml"
-                                                    source="spec"
-                                                    record={r}
-                                                    parse={atob}
-                                                />
-                                            );
-                                        }}
-                                    </FormDataConsumer>
-                                </StepperForm.Step>
-                            </StepperForm>
+                            <ModelForm uploader={uploader} />
                         </FlatCard>
                     </CreateView>
                 </>
             </CreateBase>
         </Container>
+    );
+};
+
+export const ModelForm = (props: { uploader?: UploadController }) => {
+    const { uploader } = props;
+    const translate = useTranslate();
+
+    return (
+        <StepperForm toolbar={<StepperToolbar />}>
+            <StepperForm.Step label="pages.stepperTitles.base">
+                <TextInput
+                    source="name"
+                    validate={[required(), isAlphaNumeric()]}
+                />
+                <MetadataInput />
+            </StepperForm.Step>
+            <StepperForm.Step label="pages.stepperTitles.spec">
+                <SpecCreateStep uploader={uploader} />
+            </StepperForm.Step>
+            <StepperForm.Step label={'pages.stepperTitles.recap'} optional>
+                <FormDataConsumer>
+                    {({ formData }) => {
+                        //read-only view
+                        const r = {
+                            spec: btoa(toYaml(formData?.spec)),
+                        };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                                parse={atob}
+                            />
+                        );
+                    }}
+                </FormDataConsumer>
+            </StepperForm.Step>
+        </StepperForm>
     );
 };
 
