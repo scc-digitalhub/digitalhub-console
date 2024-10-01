@@ -91,9 +91,7 @@ export const WorkflowCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
-                                <StepperForm.Step
-                                    label={'pages.stepperTitles.base'}
-                                >
+                                <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
                                         validate={[
@@ -103,9 +101,7 @@ export const WorkflowCreate = () => {
                                     />
                                     <MetadataInput />
                                 </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={'pages.stepperTitles.spec'}
-                                >
+                                <StepperForm.Step label={'fields.spec.title'}>
                                     <KindSelector kinds={kinds} />
 
                                     <FormDataConsumer<{ kind: string }>>
@@ -121,7 +117,7 @@ export const WorkflowCreate = () => {
                                     </FormDataConsumer>
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={'pages.stepperTitles.recap'}
+                                    label={'fields.recap'}
                                     optional
                                 >
                                     <FormDataConsumer>

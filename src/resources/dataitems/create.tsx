@@ -93,17 +93,17 @@ export const DataItemForm = (props: { uploader?: UploadController }) => {
 
     return (
         <StepperForm toolbar={<StepperToolbar />}>
-            <StepperForm.Step label={'pages.stepperTitles.base'}>
+            <StepperForm.Step label={'fields.base'}>
                 <TextInput
                     source="name"
                     validate={[required(), isAlphaNumeric()]}
                 />
                 <MetadataInput />
             </StepperForm.Step>
-            <StepperForm.Step label={'pages.stepperTitles.spec'}>
+            <StepperForm.Step label={'fields.spec.title'}>
                 <SpecCreateStep uploader={uploader} />
             </StepperForm.Step>
-            <StepperForm.Step label={'pages.stepperTitles.recap'} optional>
+            <StepperForm.Step label={'fields.recap'} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
                         //read-only view
