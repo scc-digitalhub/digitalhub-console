@@ -28,6 +28,8 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
+import { Line } from '@melloware/react-logviewer';
+import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -115,6 +117,9 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     <PreviewTabComponent record={props.record} />
                 </TabbedShowLayout.Tab>
             )}
+             <TabbedShowLayout.Tab label="resources.dataitems.tab.lineage">
+                <LineageTabComponent  />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 },
