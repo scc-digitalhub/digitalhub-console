@@ -77,10 +77,5 @@
             "label": "Reset identifiers",
             "helperText": "Clear identifiers on import. Enable to avoid ID collisions"
         }
-    },
-    "stepperTitles": {
-        "base": "Base",
-        "spec": "Spec",
-        "recap": "Recap"
     }
 }

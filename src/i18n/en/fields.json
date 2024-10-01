@@ -464,6 +464,7 @@
       "title": "Python Version"
     }
   },
+  "recap": "Recap",
   "replicas": {
     "description": "Number of replicas for the current task",
     "title": "Replicas"
