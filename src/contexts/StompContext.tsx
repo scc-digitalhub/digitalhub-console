@@ -70,7 +70,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     useEffect(() => {
         if (root) {
             storeKey.current = 'dh.notifications.messages.' + root;
-            setMessages(store.getItem(storeKey.current));
+            setMessages(store.getItem(storeKey.current) || []);
         }
     }, [root]);
     const storeMessages = value => {
