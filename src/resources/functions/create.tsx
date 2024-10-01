@@ -13,9 +13,7 @@ import {
     required,
     useTranslate,
 } from 'react-admin';
-import {
-    isAlphaNumeric,
-} from '../../common/helper';
+import { isAlphaNumeric } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -81,9 +79,7 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
-                                <StepperForm.Step
-                                    label={'pages.stepperTitles.base'}
-                                >
+                                <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
                                         validate={[
@@ -93,9 +89,7 @@ export const FunctionCreate = () => {
                                     />
                                     <MetadataInput />
                                 </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={'pages.stepperTitles.spec'}
-                                >
+                                <StepperForm.Step label={'fields.spec.title'}>
                                     <KindSelector kinds={kinds} />
                                     <SpecInput
                                         source="spec"
@@ -103,7 +97,7 @@ export const FunctionCreate = () => {
                                     />
                                 </StepperForm.Step>
                                 <StepperForm.Step
-                                    label={'pages.stepperTitles.recap'}
+                                    label={'fields.recap'}
                                     optional
                                 >
                                     <FormDataConsumer>
