@@ -42,6 +42,7 @@ import { MetadataField } from '../../components/MetadataField';
 //     },
 // }));
 import { FileInfo } from '../../components/FileInfo';
+import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -116,6 +117,9 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent  />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
