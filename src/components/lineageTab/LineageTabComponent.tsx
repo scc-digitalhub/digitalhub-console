@@ -18,6 +18,8 @@ import {
     ConnectionLineType,
     useEdgesState,
     useNodesState,
+    useReactFlow,
+    ReactFlowProvider,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
@@ -79,7 +81,9 @@ export const LineageTabComponent = () => {
             <Typography variant="h6" gutterBottom>
                 {translate('resources.lineage.title')}
             </Typography>
-            <Flow relationships={record.metadata.relationships} />
+            <ReactFlowProvider>
+                <Flow relationships={record.metadata.relationships} />
+            </ReactFlowProvider>
         </Box>
     );
 };
@@ -127,6 +131,8 @@ export const Flow = (props: { relationships: any }) => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const notify = useNotify();
+    const { fitView } = useReactFlow();
+
     const { nodes: initialNodes, edges: initialEdges } = getNodesAndEdges(
         relationships,
         record
@@ -139,31 +145,41 @@ export const Flow = (props: { relationships: any }) => {
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
     useEffect(() => {
         if (dataProvider) {
-            dataProvider.getLineage(
-                resource,
-                { id: record.id, meta: { root } }
-                    ).then(data => {
-                        if (data?.lineage) {
-                            const { nodes: newNodes, edges: newEdges } =
-                                getNodesAndEdges(data.lineage, record);
-                            setNodes([...newNodes]);
-                            setEdges([...newEdges]);
-                        } else {
-                            notify('ra.message.not_found', {
-                                type: 'error',
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        const e =
-                            typeof error === 'string'
-                                ? error
-                                : error.message || 'error';
-                        notify(e);
-                    })}
+            dataProvider
+                .getLineage(resource, { id: record.id, meta: { root } })
+                .then(data => {
+                    if (data?.lineage) {
+                        const { nodes: newNodes, edges: newEdges } =
+                            getNodesAndEdges(data.lineage, record);
+                        const {
+                            nodes: newLayoutedNodes,
+                            edges: newLayoutedEdges,
+                        } = getLayoutedElements(newNodes, newEdges);
+                        setNodes([...newLayoutedNodes]);
+                        setEdges([...newLayoutedEdges]);
+                    } else {
+                        notify('ra.message.not_found', {
+                            type: 'error',
+                        });
+                    }
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
+        }
     }, [dataProvider]);
+
+    useEffect(() => {
+        window.requestAnimationFrame(() => {
+            fitView();
+        });
+    }, [nodes, edges]);
     return (
-        <div style={{ height: '400px', width: '800px' }}>
+        <div style={{ height: '400px', width: '100%' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -178,23 +194,3 @@ export const Flow = (props: { relationships: any }) => {
         </div>
     );
 };
-
-//     [
-//         {
-//             "type": "producedBy",
-//             "dest": "store://prj1/model/model/testm1:585a5b5a-3cd1-4c29-8e8c-c72f50cfe223"
-//           },
-//           {
-//             "type": "consumes",
-//             "dest": "store://prj1/model/model/testm1:585a5b5a-3cd1-4c29-8e8c-c72f50cfe223"
-//           },
-//           {
-//             "type": "producedBy",
-//             "dest": "store://prj1/model/model/testm1:585a5b5a-3cd1-4c29-8e8c-c72f50cfe223"
-//           }
-//       ]
-// const relationshipTypes = {
-//     "consumes":{
-
-//     }
-// }
