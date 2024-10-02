@@ -51,6 +51,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
+import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -188,6 +189,9 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };

@@ -33,6 +33,7 @@ import deepEqual from 'deep-is';
 
 import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
+import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -244,6 +245,9 @@ const ShowComponent = () => {
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
             ))}
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };
