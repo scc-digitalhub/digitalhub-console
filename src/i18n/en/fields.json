@@ -477,6 +477,9 @@
     },
     "title": "Secrets"
   },
+  "service": {
+    "title": "Service"
+  },
   "servicePorts": {
     "description": "Define ports mapping for the service",
     "item": {

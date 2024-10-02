@@ -477,6 +477,9 @@
     },
     "title": "Segreti"
   },
+  "service": {
+    "title": "Servizio"
+  },
   "servicePorts": {
     "description": "Definisci la mappatura delle porte per il servizio",
     "item": {

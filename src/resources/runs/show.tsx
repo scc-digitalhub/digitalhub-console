@@ -183,6 +183,11 @@ export const RunShowComponent = () => {
                     <K8sDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+            {record?.status?.service && (
+                <TabbedShowLayout.Tab label={'fields.service.title'}>
+                    <ServiceDetails record={record} />
+                </TabbedShowLayout.Tab>
+            )}
         </TabbedShowLayout>
     );
 };
@@ -354,6 +359,27 @@ const K8sDetails = (props: { record: any }) => {
 
     return (
         <Labeled label="fields.k8s.title" fullWidth>
+            <Box
+                sx={{
+                    backgroundColor: '#002b36',
+                    px: 2,
+                    py: 0,
+                    minHeight: '20vw',
+                }}
+            >
+                <JSONTree data={json} hideRoot />
+            </Box>
+        </Labeled>
+    );
+};
+
+const ServiceDetails = (props: { record: any }) => {
+    const { record } = props;
+
+    const json = record?.status?.service || {};
+
+    return (
+        <Labeled label="fields.service.title" fullWidth>
             <Box
                 sx={{
                     backgroundColor: '#002b36',
