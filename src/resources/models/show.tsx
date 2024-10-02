@@ -126,7 +126,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     <MetricsTabComponent record={record} />
                 </TabbedShowLayout.Tab>
             )}
-             <TabbedShowLayout.Tab label="resources.dataitems.tab.lineage">
+             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent  />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>

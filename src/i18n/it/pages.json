@@ -77,5 +77,8 @@
             "label": "Resetta identificatori",
             "helperText": "Rimuovi gli identificatori durante l'import. Abilita per evitare collisioni di ID"
         }
+    },
+    "lineage": {
+        "title": "Genealogia"
     }
 }

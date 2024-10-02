@@ -77,5 +77,8 @@
             "label": "Reset identifiers",
             "helperText": "Clear identifiers on import. Enable to avoid ID collisions"
         }
+    },
+    "lineage": {
+        "title": "Lineage"
     }
 }

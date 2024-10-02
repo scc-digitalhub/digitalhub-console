@@ -24,11 +24,15 @@ import {
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { CardNode } from './CardNode';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
+const nodeTypes = {
+    cardNode: CardNode,
+  };
 const getLayoutedElements = (nodes, edges, direction = 'LR') => {
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ rankdir: direction });
@@ -49,6 +53,7 @@ const getLayoutedElements = (nodes, edges, direction = 'LR') => {
             ...node,
             targetPosition: isHorizontal ? 'left' : 'top',
             sourcePosition: isHorizontal ? 'right' : 'bottom',
+            type: 'cardNode',
             // We are shifting the dagre node position (anchor=center center) to the top left
             // so it matches the React Flow node anchor point (top left).
             position: {
@@ -96,7 +101,7 @@ const getNodesAndEdges = (relationships: any, record: any) => {
                 x: 0,
                 y: 0,
             },
-            data: { label: "that's me" },
+            data: { key: record.key},
         },
         ...relationships.map((relationship: any, index: number) => ({
             id: getIdFromKey(relationship.dest || relationship.source),
@@ -104,7 +109,7 @@ const getNodesAndEdges = (relationships: any, record: any) => {
                 x: 0,
                 y: 0,
             },
-            data: { label: relationship.dest || relationship.source },
+            data: { key: relationship.dest || relationship.source, showButton: true },
         })),
     ];
 
@@ -186,6 +191,7 @@ export const Flow = (props: { relationships: any }) => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 connectionLineType={ConnectionLineType.SmoothStep}
+                nodeTypes={nodeTypes}
                 fitView
             >
                 <Background />

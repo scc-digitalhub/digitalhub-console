@@ -117,7 +117,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     <PreviewTabComponent record={props.record} />
                 </TabbedShowLayout.Tab>
             )}
-             <TabbedShowLayout.Tab label="resources.dataitems.tab.lineage">
+             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent  />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
