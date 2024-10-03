@@ -69,6 +69,7 @@
         }
     },
     "lineage": {
-        "title": "Genealogia"
+        "title": "Genealogia",
+        "noLineage": "Nessuna informazione disponibile sulla genealogia"
     }
 }

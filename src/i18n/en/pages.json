@@ -69,6 +69,7 @@
         }
     },
     "lineage": {
-        "title": "Lineage"
+        "title": "Lineage",
+        "noLineage": "No lineage information available"
     }
 }

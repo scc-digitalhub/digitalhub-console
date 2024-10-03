@@ -1,13 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import {
-    Card,
-    CardHeader,
-    CardContent,
-    Typography,
-    CardActions,
-} from '@mui/material';
-import { Resource, ShowButton, useCreatePath } from 'react-admin';
+import { Card, CardHeader, CardActions } from '@mui/material';
+import { ShowButton, useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { ArtifactIcon } from '../../resources/artifacts/icon';
 import { ModelIcon } from '../../resources/models/icon';
@@ -23,6 +17,7 @@ const parseKey = (key: string) => {
     const resource = resourceSplitted.pop() + 's';
     return { resource, type, id, name };
 };
+
 export const CardNode = memo(function CardNode(props: {
     data: any;
     isConnectable: boolean;
@@ -31,6 +26,7 @@ export const CardNode = memo(function CardNode(props: {
     const createPath = useCreatePath();
     const { data } = props;
     const { resource, id, name } = parseKey(data.key);
+
     const onShow = () => {
         const path = createPath({
             resource,
@@ -38,12 +34,9 @@ export const CardNode = memo(function CardNode(props: {
             type: 'show',
         });
 
-        //navigate
         navigate(path);
     };
-    //identificare l'icona da data.key
-    //prendere name da ky
-    //prendere id da ky
+
     return (
         <>
             <Handle
@@ -51,19 +44,21 @@ export const CardNode = memo(function CardNode(props: {
                 position={Position.Left}
                 style={{ background: '#555' }}
             />
-            <Card elevation={0}  sx={{ border: 'solid 1px #ccc' }}>
+            <Card elevation={0} sx={{ border: 'solid 1px #ccc' }}>
                 <CardHeader
                     avatar={icons[resource]}
                     title={name}
-                    // subheader={
-                    //     id
-                    // }
+                    // subheader={id}
+                    sx={{ padding: '8px', '& .MuiCardHeader-avatar': { marginRight: '8px' } }}
                 />
                 {/* <CardContent>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {content}
-        </Typography>
-    </CardContent> */}
+                    <Typography
+                        variant="body2"
+                        sx={{ color: 'text.secondary' }}
+                    >
+                        {content}
+                    </Typography>
+                </CardContent> */}
                 <CardActions disableSpacing>
                     {data?.showButton && (
                         <ShowButton
