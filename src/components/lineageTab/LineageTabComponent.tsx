@@ -1,39 +1,77 @@
-import { Box, Typography, alpha } from '@mui/material';
-import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
+import { Box, Typography } from '@mui/material';
 import {
     useDataProvider,
-    useLocaleState,
     useNotify,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
     ReactFlow,
-    applyEdgeChanges,
-    applyNodeChanges,
     Background,
     Controls,
-    ConnectionLineType,
     useEdgesState,
     useNodesState,
     useReactFlow,
     ReactFlowProvider,
+    Node,
+    Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import dagre from 'dagre';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { CardNode } from './CardNode';
 
+const NoLineage = () => {
+    const translate = useTranslate();
+
+    return (
+        <Typography
+            variant="body1"
+            color={'gray'}
+            sx={{ textAlign: 'center', pt: 5 }}
+        >
+            {translate('pages.lineage.noLineage')}
+        </Typography>
+    );
+};
+
+export const LineageTabComponent = () => {
+    const record = useRecordContext();
+    const translate = useTranslate();
+
+    return (
+        <Box
+            sx={{
+                width: '100%',
+            }}
+        >
+            <Typography variant="h6" gutterBottom>
+                {translate('pages.lineage.title')}
+            </Typography>
+            {record?.metadata?.relationships &&
+            record?.metadata?.relationships?.length !== 0 ? (
+                <ReactFlowProvider>
+                    <Flow relationships={record.metadata.relationships} />
+                </ReactFlowProvider>
+            ) : (
+                <NoLineage />
+            )}
+        </Box>
+    );
+};
+
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
+
 const nodeTypes = {
     cardNode: CardNode,
-  };
-const getLayoutedElements = (nodes, edges, direction = 'LR') => {
+};
+
+const getLayoutedElements = (nodes, edges, direction = 'LR'): { nodes: Node[], edges: Edge[] } => {
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ rankdir: direction });
 
@@ -68,32 +106,11 @@ const getLayoutedElements = (nodes, edges, direction = 'LR') => {
     return { nodes: newNodes, edges };
 };
 
-export const LineageTabComponent = () => {
-    const record = useRecordContext();
-    const translate = useTranslate();
-    if (
-        !record?.metadata?.relationships ||
-        record?.metadata?.relationships?.length === 0
-    ) {
-        return null;
-    }
-    return (
-        <Box
-            sx={{
-                width: '100%',
-            }}
-        >
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.lineage.title')}
-            </Typography>
-            <ReactFlowProvider>
-                <Flow relationships={record.metadata.relationships} />
-            </ReactFlowProvider>
-        </Box>
-    );
+const getIdFromKey = (key: string) => {
+    return key.split(':').pop() || '';
 };
 
-const getNodesAndEdges = (relationships: any, record: any) => {
+const getNodesAndEdges = (relationships: any[], record: any): { nodes: Node[], edges: Edge[] } => {
     const nodes = [
         {
             id: record.id,
@@ -101,34 +118,35 @@ const getNodesAndEdges = (relationships: any, record: any) => {
                 x: 0,
                 y: 0,
             },
-            data: { key: record.key},
+            data: { key: record.key },
         },
-        ...relationships.map((relationship: any, index: number) => ({
+        ...relationships.map((relationship: any): Node => ({
             id: getIdFromKey(relationship.dest || relationship.source),
             position: {
                 x: 0,
                 y: 0,
             },
-            data: { key: relationship.dest || relationship.source, showButton: true },
+            data: {
+                key: relationship.dest || relationship.source,
+                showButton: true,
+            },
         })),
     ];
 
-    const edges = relationships.map((relationship: any, index: number) => ({
-        id: index,
+    const edges = relationships.map((relationship: any, index: number): Edge => ({
+        id: index.toString(),
         source: relationship?.dest
             ? getIdFromKey(relationship?.dest)
             : record.id,
         target: relationship?.source
             ? getIdFromKey(relationship?.source)
             : record.id,
-        type: 'smoothstep',
+        type: 'default',
         animated: true,
     }));
     return { nodes, edges };
 };
-const getIdFromKey = (key: string) => {
-    return key.split(':').pop();
-};
+
 export const Flow = (props: { relationships: any }) => {
     const { relationships } = props;
     const record = useRecordContext();
@@ -142,12 +160,15 @@ export const Flow = (props: { relationships: any }) => {
         relationships,
         record
     );
+
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
         initialNodes,
         initialEdges
     );
+
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+
     useEffect(() => {
         if (dataProvider) {
             dataProvider
@@ -183,6 +204,7 @@ export const Flow = (props: { relationships: any }) => {
             fitView();
         });
     }, [nodes, edges]);
+
     return (
         <div style={{ height: '400px', width: '100%' }}>
             <ReactFlow
@@ -190,7 +212,6 @@ export const Flow = (props: { relationships: any }) => {
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
-                connectionLineType={ConnectionLineType.SmoothStep}
                 nodeTypes={nodeTypes}
                 fitView
             >
