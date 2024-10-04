@@ -6,7 +6,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
     ReactFlow,
     Background,
@@ -19,9 +19,9 @@ import {
     Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import dagre from 'dagre';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { CardNode } from './CardNode';
+import { getLayoutedElements } from './layouting';
 
 const NoLineage = () => {
     const translate = useTranslate();
@@ -40,6 +40,34 @@ const NoLineage = () => {
 export const LineageTabComponent = () => {
     const record = useRecordContext();
     const translate = useTranslate();
+    const [relationships, setRelationships] = useState<any[]>(record?.metadata?.relationships || []);
+    const dataProvider = useDataProvider();
+    const resource = useResourceContext();
+    const { root } = useRootSelector();
+    const notify = useNotify();
+
+    useEffect(() => {
+        if (dataProvider) {
+            dataProvider
+                .getLineage(resource, { id: record.id, meta: { root } })
+                .then(data => {
+                    if (data?.lineage) {
+                        setRelationships([...data.lineage]);
+                    } else {
+                        notify('ra.message.not_found', {
+                            type: 'error',
+                        });
+                    }
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
+        }
+    }, [dataProvider, notify, record.id, resource, root]);
 
     return (
         <Box
@@ -50,60 +78,15 @@ export const LineageTabComponent = () => {
             <Typography variant="h6" gutterBottom>
                 {translate('pages.lineage.title')}
             </Typography>
-            {record?.metadata?.relationships &&
-            record?.metadata?.relationships?.length !== 0 ? (
+            {relationships.length !== 0 ? (
                 <ReactFlowProvider>
-                    <Flow relationships={record.metadata.relationships} />
+                    <Flow relationships={relationships} />
                 </ReactFlowProvider>
             ) : (
                 <NoLineage />
             )}
         </Box>
     );
-};
-
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-const nodeWidth = 172;
-const nodeHeight = 36;
-
-const nodeTypes = {
-    cardNode: CardNode,
-};
-
-const getLayoutedElements = (nodes, edges, direction = 'LR'): { nodes: Node[], edges: Edge[] } => {
-    const isHorizontal = direction === 'LR';
-    dagreGraph.setGraph({ rankdir: direction });
-
-    nodes.forEach(node => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-    });
-
-    edges.forEach(edge => {
-        dagreGraph.setEdge(edge.source, edge.target);
-    });
-
-    dagre.layout(dagreGraph);
-
-    const newNodes = nodes.map(node => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        const newNode = {
-            ...node,
-            targetPosition: isHorizontal ? 'left' : 'top',
-            sourcePosition: isHorizontal ? 'right' : 'bottom',
-            type: 'cardNode',
-            // We are shifting the dagre node position (anchor=center center) to the top left
-            // so it matches the React Flow node anchor point (top left).
-            position: {
-                x: nodeWithPosition.x - nodeWidth / 2,
-                y: nodeWithPosition.y - nodeHeight / 2,
-            },
-        };
-
-        return newNode;
-    });
-
-    return { nodes: newNodes, edges };
 };
 
 const getIdFromKey = (key: string) => {
@@ -135,25 +118,26 @@ const getNodesAndEdges = (relationships: any[], record: any): { nodes: Node[], e
 
     const edges = relationships.map((relationship: any, index: number): Edge => ({
         id: index.toString(),
-        source: relationship?.dest
+        target: relationship?.dest
             ? getIdFromKey(relationship?.dest)
             : record.id,
-        target: relationship?.source
+        source: relationship?.source
             ? getIdFromKey(relationship?.source)
             : record.id,
         type: 'default',
         animated: true,
+        label: relationship.type
     }));
     return { nodes, edges };
 };
 
-export const Flow = (props: { relationships: any }) => {
+const nodeTypes = {
+    cardNode: CardNode,
+};
+
+export const Flow = (props: { relationships: any[] }) => {
     const { relationships } = props;
     const record = useRecordContext();
-    const dataProvider = useDataProvider();
-    const resource = useResourceContext();
-    const { root } = useRootSelector();
-    const notify = useNotify();
     const { fitView } = useReactFlow();
 
     const { nodes: initialNodes, edges: initialEdges } = getNodesAndEdges(
@@ -163,47 +147,29 @@ export const Flow = (props: { relationships: any }) => {
 
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
         initialNodes,
-        initialEdges
+        initialEdges,
+        'RL'
     );
 
     const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
     useEffect(() => {
-        if (dataProvider) {
-            dataProvider
-                .getLineage(resource, { id: record.id, meta: { root } })
-                .then(data => {
-                    if (data?.lineage) {
-                        const { nodes: newNodes, edges: newEdges } =
-                            getNodesAndEdges(data.lineage, record);
-                        const {
-                            nodes: newLayoutedNodes,
-                            edges: newLayoutedEdges,
-                        } = getLayoutedElements(newNodes, newEdges);
-                        setNodes([...newLayoutedNodes]);
-                        setEdges([...newLayoutedEdges]);
-                    } else {
-                        notify('ra.message.not_found', {
-                            type: 'error',
-                        });
-                    }
-                })
-                .catch(error => {
-                    const e =
-                        typeof error === 'string'
-                            ? error
-                            : error.message || 'error';
-                    notify(e);
-                });
-        }
-    }, [dataProvider]);
+        const { nodes: newNodes, edges: newEdges } =
+            getNodesAndEdges(relationships, record);
+        const {
+            nodes: newLayoutedNodes,
+            edges: newLayoutedEdges,
+        } = getLayoutedElements(newNodes, newEdges, 'RL');
+        setNodes([...newLayoutedNodes]);
+        setEdges([...newLayoutedEdges]);
+    }, [record, relationships, setEdges, setNodes]);
 
     useEffect(() => {
         window.requestAnimationFrame(() => {
             fitView();
         });
-    }, [nodes, edges]);
+    }, [nodes, edges, fitView]);
 
     return (
         <div style={{ height: '400px', width: '100%' }}>
