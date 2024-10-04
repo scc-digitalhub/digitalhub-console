@@ -1,7 +1,13 @@
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { Card, CardHeader, CardActions } from '@mui/material';
-import { ShowButton, useCreatePath } from 'react-admin';
+import { Card, CardHeader, alpha, CardContent, Stack } from '@mui/material';
+import {
+    DateField,
+    Labeled,
+    RecordContextProvider,
+    useCreatePath,
+    useGetOne,
+} from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { ArtifactIcon } from '../../resources/artifacts/icon';
 import { ModelIcon } from '../../resources/models/icon';
@@ -13,9 +19,9 @@ const parseKey = (key: string) => {
     const [store, resourcePath, id] = key.split(':');
     const resourceSplitted = resourcePath.split('/');
     const name = resourceSplitted.pop();
-    const type = resourceSplitted.pop();
+    const kind = resourceSplitted.pop();
     const resource = resourceSplitted.pop() + 's';
-    return { resource, type, id, name };
+    return { resource, kind, name, id };
 };
 
 export const CardNode = memo(function CardNode(props: {
@@ -25,7 +31,8 @@ export const CardNode = memo(function CardNode(props: {
     const navigate = useNavigate();
     const createPath = useCreatePath();
     const { data } = props;
-    const { resource, id, name } = parseKey(data.key);
+    const { resource, kind, name, id } = parseKey(data.key);
+    const { data: record, isLoading, error } = useGetOne(resource, { id });
 
     const onShow = () => {
         const path = createPath({
@@ -40,39 +47,61 @@ export const CardNode = memo(function CardNode(props: {
     return (
         <>
             <Handle
-                type="target"
+                type="source"
                 position={Position.Left}
                 style={{ background: '#555' }}
             />
-            <Card elevation={0} sx={{ border: 'solid 1px #ccc' }}>
+            <Card
+                elevation={0}
+                sx={theme => ({
+                    border: 'solid 1px #ccc',
+                    backgroundColor: data?.showButton
+                        ? 'white'
+                        : alpha(theme.palette?.primary?.main, 0.12),
+                    '& .MuiCardHeader-avatar': { marginRight: '8px' },
+                    '& .MuiCardHeader-root': { p: '8px' },
+                    '& .MuiCardContent-root': { p: '0 8px 0 8px !important' },
+                    '& .RaLabeled-label': { fontSize: '0.6em' },
+                    '& .MuiTypography-caption': { fontSize: '0.7em' },
+                })}
+            >
                 <CardHeader
                     avatar={icons[resource]}
-                    title={name}
-                    // subheader={id}
-                    sx={{ padding: '8px', '& .MuiCardHeader-avatar': { marginRight: '8px' } }}
+                    title={'#' + name}
+                    subheader={kind}
                 />
-                {/* <CardContent>
-                    <Typography
-                        variant="body2"
-                        sx={{ color: 'text.secondary' }}
-                    >
-                        {content}
-                    </Typography>
-                </CardContent> */}
-                <CardActions disableSpacing>
-                    {data?.showButton && (
+                {data?.showButton && (
+                    <CardContent sx={{ p: '8px' }}>
+                        {record && (
+                            <RecordContextProvider value={record}>
+                                <Stack sx={{ color: 'text.secondary' }}>
+                                    <Labeled>
+                                        <DateField
+                                            showTime
+                                            source="metadata.updated"
+                                            label="fields.updated.title"
+                                            variant="caption"
+                                        />
+                                    </Labeled>
+                                </Stack>
+                            </RecordContextProvider>
+                        )}
+                    </CardContent>
+                )}
+                {/* {data?.showButton && (
+                    <CardActions disableSpacing>
                         <ShowButton
                             resource={resource}
                             variant="text"
                             color="info"
                             record={{ id }}
-                            onClick={e => onShow()}
+                            onClick={() => onShow()}
                         />
-                    )}
-                </CardActions>
+                    </CardActions>
+                )} */}
             </Card>
             <Handle
-                type="source"
+                type="target"
                 position={Position.Right}
                 style={{ background: '#555' }}
             />
