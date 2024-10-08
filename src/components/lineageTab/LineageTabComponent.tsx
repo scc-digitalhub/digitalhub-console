@@ -40,7 +40,9 @@ const NoLineage = () => {
 export const LineageTabComponent = () => {
     const record = useRecordContext();
     const translate = useTranslate();
-    const [relationships, setRelationships] = useState<any[]>(record?.metadata?.relationships || []);
+    const [relationships, setRelationships] = useState<any[]>(
+        record?.metadata?.relationships || []
+    );
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
     const { root } = useRootSelector();
@@ -93,7 +95,10 @@ const getIdFromKey = (key: string) => {
     return key.split(':').pop() || '';
 };
 
-const getNodesAndEdges = (relationships: any[], record: any): { nodes: Node[], edges: Edge[] } => {
+const getNodesAndEdges = (
+    relationships: any[],
+    record: any
+): { nodes: Node[]; edges: Edge[] } => {
     const nodes = [
         {
             id: record.id,
@@ -101,33 +106,36 @@ const getNodesAndEdges = (relationships: any[], record: any): { nodes: Node[], e
                 x: 0,
                 y: 0,
             },
-            data: { key: record.key },
+            data: { key: record.key, current: true },
         },
-        ...relationships.map((relationship: any): Node => ({
-            id: getIdFromKey(relationship.dest || relationship.source),
-            position: {
-                x: 0,
-                y: 0,
-            },
-            data: {
-                key: relationship.dest || relationship.source,
-                showButton: true,
-            },
-        })),
+        ...relationships.map(
+            (relationship: any): Node => ({
+                id: getIdFromKey(relationship.dest || relationship.source),
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                data: {
+                    key: relationship.dest || relationship.source,
+                },
+            })
+        ),
     ];
 
-    const edges = relationships.map((relationship: any, index: number): Edge => ({
-        id: index.toString(),
-        target: relationship?.dest
-            ? getIdFromKey(relationship?.dest)
-            : record.id,
-        source: relationship?.source
-            ? getIdFromKey(relationship?.source)
-            : record.id,
-        type: 'default',
-        animated: true,
-        label: relationship.type
-    }));
+    const edges = relationships.map(
+        (relationship: any, index: number): Edge => ({
+            id: index.toString(),
+            target: relationship?.dest
+                ? getIdFromKey(relationship?.dest)
+                : record.id,
+            source: relationship?.source
+                ? getIdFromKey(relationship?.source)
+                : record.id,
+            type: 'default',
+            animated: true,
+            label: relationship.type,
+        })
+    );
     return { nodes, edges };
 };
 
@@ -155,12 +163,12 @@ export const Flow = (props: { relationships: any[] }) => {
     const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
 
     useEffect(() => {
-        const { nodes: newNodes, edges: newEdges } =
-            getNodesAndEdges(relationships, record);
-        const {
-            nodes: newLayoutedNodes,
-            edges: newLayoutedEdges,
-        } = getLayoutedElements(newNodes, newEdges, 'RL');
+        const { nodes: newNodes, edges: newEdges } = getNodesAndEdges(
+            relationships,
+            record
+        );
+        const { nodes: newLayoutedNodes, edges: newLayoutedEdges } =
+            getLayoutedElements(newNodes, newEdges, 'RL');
         setNodes([...newLayoutedNodes]);
         setEdges([...newLayoutedEdges]);
     }, [record, relationships, setEdges, setNodes]);
