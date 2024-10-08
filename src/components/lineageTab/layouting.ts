@@ -1,21 +1,21 @@
 import dagre from 'dagre';
-import {
-    Node,
-    Edge,
-    Position,
-} from '@xyflow/react';
+import { Node, Edge, Position } from '@xyflow/react';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
-const nodeWidth = 172;
-const nodeHeight = 36;
+export const NODE_WIDTH = 172;
+const NODE_HEIGHT = 90;
 
-export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR'): { nodes: Node[], edges: Edge[] } => {
+export const getLayoutedElements = (
+    nodes: Node[],
+    edges: Edge[],
+    direction = 'LR'
+): { nodes: Node[]; edges: Edge[] } => {
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({ rankdir: direction });
 
     nodes.forEach(node => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+        dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
     });
 
     edges.forEach(edge => {
@@ -34,8 +34,8 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'L
             // We are shifting the dagre node position (anchor=center center) to the top left
             // so it matches the React Flow node anchor point (top left).
             position: {
-                x: nodeWithPosition.x - nodeWidth / 2,
-                y: nodeWithPosition.y - nodeHeight / 2,
+                x: nodeWithPosition.x - NODE_WIDTH / 2,
+                y: nodeWithPosition.y - NODE_HEIGHT / 2,
             },
         };
 
