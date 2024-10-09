@@ -51,7 +51,7 @@ export const RunCreateForm = (props: {
                     uiSchema={getRunUiSpec(runSchema)}
                 />
             </StepperForm.Step>
-            <StepperForm.Step label={translate('Recap')} optional>
+            <StepperForm.Step label={'fields.recap'} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
                         if (schema) {
