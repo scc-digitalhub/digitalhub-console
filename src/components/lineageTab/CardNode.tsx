@@ -8,6 +8,7 @@ import {
     Stack,
     Chip,
     CardActionArea,
+    styled,
 } from '@mui/material';
 import {
     DateField,
@@ -33,10 +34,10 @@ const parseKey = (key: string) => {
     return { resource, kind, name, id };
 };
 
-const calculateLabelWidth = () => {
-    const width = (NODE_WIDTH - 50) / 2;
-    return width + 'px';
-};
+// const calculateLabelWidth = () => {
+//     const width = (NODE_WIDTH - 50) / 2;
+//     return width + 'px';
+// };
 
 export const CardNode = memo(function CardNode(props: {
     data: any;
@@ -46,7 +47,7 @@ export const CardNode = memo(function CardNode(props: {
     const createPath = useCreatePath();
     const { data } = props;
     const { resource, kind, name, id } = parseKey(data.key);
-    const { data: record, isLoading, error } = useGetOne(resource, { id });
+    // const { data: record, isLoading, error } = useGetOne(resource, { id });
 
     const handleCardClick = e => {
         const path = createPath({
@@ -66,7 +67,7 @@ export const CardNode = memo(function CardNode(props: {
                 title={'#' + name}
                 subheader={kind}
             />
-            <CardContent sx={{ p: '8px' }}>
+            {/* <CardContent sx={{ p: '8px' }}>
                 {record && (
                     <RecordContextProvider value={record}>
                         {!data?.current && (
@@ -112,30 +113,20 @@ export const CardNode = memo(function CardNode(props: {
                         </Stack>
                     </RecordContextProvider>
                 )}
-            </CardContent>
+            </CardContent> */}
         </>
     );
 
     return (
         <>
             <Handle
-                type="source"
+                type="target"
                 position={Position.Left}
                 style={{ background: '#555' }}
             />
-            <Card
+            <SquareNode
                 elevation={0}
-                sx={theme => ({
-                    border: 'solid 1px #ccc',
-                    backgroundColor: data?.current
-                        ? alpha(theme.palette?.primary?.main, 0.12)
-                        : 'white',
-                    '& .MuiCardHeader-avatar': { marginRight: '8px' },
-                    '& .MuiCardHeader-root': { p: '8px' },
-                    '& .MuiCardContent-root': { p: '0 8px 0 8px !important' },
-                    '& .RaLabeled-label': { fontSize: '0.6em' },
-                    '& .MuiTypography-caption': { fontSize: '0.7em' },
-                })}
+                className={data?.current ? 'MeNode' : 'RegularNode'}
             >
                 {data?.current ? (
                     innerCard
@@ -144,9 +135,9 @@ export const CardNode = memo(function CardNode(props: {
                         {innerCard}
                     </CardActionArea>
                 )}
-            </Card>
+            </SquareNode>
             <Handle
-                type="target"
+                type="source"
                 position={Position.Right}
                 style={{ background: '#555' }}
             />
@@ -160,3 +151,23 @@ const icons = {
     dataitems: <DataItemIcon />,
     runs: <RunIcon />,
 };
+
+const SquareNode = styled(Card, {
+    name: 'SquareNode',
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme, className }) => ({
+    border: 'solid 1px #ccc',
+    backgroundColor: className == 'MeNode'
+        ? alpha(theme.palette?.primary?.main, 0.12)
+        : 'white',
+    ...theme.applyStyles('dark', {
+        backgroundColor:
+            className == 'MeNode'
+                ? alpha(theme.palette?.primary?.main, 0.12)
+                : 'black',
+    }),
+    ['& .MuiCardHeader-avatar']: { marginRight: '8px' },
+    ['& .MuiCardHeader-root']: { padding: '8px' },
+    ['& .RaLabeled-label']: { fontSize: '0.6em' },
+    ['& .MuiTypography-caption']: { fontSize: '0.7em' },
+}));

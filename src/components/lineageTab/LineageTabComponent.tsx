@@ -97,7 +97,8 @@ const getIdFromKey = (key: string) => {
 
 const getNodesAndEdges = (
     relationships: any[],
-    record: any
+    record: any,
+    translate
 ): { nodes: Node[]; edges: Edge[] } => {
     const nodes = [
         {
@@ -125,15 +126,15 @@ const getNodesAndEdges = (
     const edges = relationships.map(
         (relationship: any, index: number): Edge => ({
             id: index.toString(),
-            target: relationship?.dest
+            source: relationship?.dest
                 ? getIdFromKey(relationship?.dest)
                 : record.id,
-            source: relationship?.source
+            target: relationship?.source
                 ? getIdFromKey(relationship?.source)
                 : record.id,
             type: 'default',
             animated: true,
-            label: relationship.type,
+            label: translate(`pages.lineage.relationships.${relationship.type}`),
         })
     );
     return { nodes, edges };
@@ -147,10 +148,12 @@ export const Flow = (props: { relationships: any[] }) => {
     const { relationships } = props;
     const record = useRecordContext();
     const { fitView } = useReactFlow();
+    const translate = useTranslate();
 
     const { nodes: initialNodes, edges: initialEdges } = getNodesAndEdges(
         relationships,
-        record
+        record,
+        translate
     );
 
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
@@ -165,13 +168,14 @@ export const Flow = (props: { relationships: any[] }) => {
     useEffect(() => {
         const { nodes: newNodes, edges: newEdges } = getNodesAndEdges(
             relationships,
-            record
+            record,
+            translate
         );
         const { nodes: newLayoutedNodes, edges: newLayoutedEdges } =
-            getLayoutedElements(newNodes, newEdges, 'RL');
+            getLayoutedElements(newNodes, newEdges, 'LR');
         setNodes([...newLayoutedNodes]);
         setEdges([...newLayoutedEdges]);
-    }, [record, relationships, setEdges, setNodes]);
+    }, [record, relationships, setEdges, setNodes, translate]);
 
     useEffect(() => {
         window.requestAnimationFrame(() => {

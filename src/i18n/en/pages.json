@@ -80,6 +80,10 @@
     },
     "lineage": {
         "title": "Lineage",
-        "noLineage": "No lineage information available"
+        "noLineage": "No lineage information available",
+        "relationships": {
+            "consumes": "consumed by",
+            "producedBy": "produces"
+        }
     }
 }
