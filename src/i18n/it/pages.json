@@ -70,6 +70,10 @@
     },
     "lineage": {
         "title": "Genealogia",
-        "noLineage": "Nessuna informazione disponibile sulla genealogia"
+        "noLineage": "Nessuna informazione disponibile sulla genealogia",
+        "relationships": {
+            "consumes": "consumato da",
+            "producedBy": "produce"
+        }
     }
 }
