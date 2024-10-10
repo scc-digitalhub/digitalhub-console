@@ -581,5 +581,9 @@
   "workflow": {
     "description": "Static reference to workflow",
     "title": "Workflow"
+  },
+  "user": {
+    "description": "",
+    "title": "User"
   }
 }
