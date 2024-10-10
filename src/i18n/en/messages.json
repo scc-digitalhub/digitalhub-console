@@ -21,6 +21,7 @@
     },
     "notifications": {
         "header": "Notifications",
+        "subheader": "%{unread} unread messages",
         "stateMessage": "%{resource} status changed to %{state}"
     }
 }

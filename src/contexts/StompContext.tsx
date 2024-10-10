@@ -28,6 +28,7 @@ interface StompContextValue {
     messages: any[];
     // setMessages: React.Dispatch<React.SetStateAction<any[]>>;
     remove: (message: any) => void;
+    removeAll: (message: any[]) => void;
     markAsRead: (message: any) => void;
     markAllAsRead: (message: any[]) => void;
 }
@@ -172,6 +173,18 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         }
     };
 
+    const removeAllMessages = messages => {
+        if (messages) {
+            const ids = messages.map(m => m.id);
+            setMessages(prev => {
+                const value = prev.filter(m => !ids.includes(m.id));
+                //store
+                storeMessages(value);
+                return value;
+            });
+        }
+    };
+
     const updateMessages = (fn: (msg) => any) => {
         return (messages: any[]) => {
             if (!messages) {
@@ -237,6 +250,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             connect: stompClientRef.current.activate,
             disconnect: stompClientRef.current.deactivate,
             remove: removeMessage,
+            removeAll: removeAllMessages,
             markAsRead: (msg: any) =>
                 updateMessages(msg => {
                     return { ...msg, isRead: true };

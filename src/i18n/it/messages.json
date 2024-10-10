@@ -21,6 +21,7 @@
     },
     "notifications": {
         "header": "Notifiche",
+        "subheader": "%{unread} messaggi non letti",
         "statusMessage": "Stato %{resource} passato a %{state}"
     }
 }

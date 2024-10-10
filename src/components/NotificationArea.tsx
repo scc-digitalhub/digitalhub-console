@@ -1,4 +1,11 @@
-import { Menu, Typography, Badge, MenuItem, Box } from '@mui/material';
+import {
+    Menu,
+    Typography,
+    Badge,
+    MenuItem,
+    Box,
+    CardHeader,
+} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useState, useEffect } from 'react';
 import {
@@ -6,17 +13,20 @@ import {
     IconButtonWithTooltip,
     Error,
     useCreatePath,
+    Button,
 } from 'react-admin';
 import { Notification } from './Notification';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
 import { useStompContext } from '../contexts/StompContext';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 export const NotificationArea = (props: NotificationAreaProps) => {
     const {
         messages,
         markAllAsRead,
         remove: removeMessage,
+        removeAll: removeAllMessages,
     } = useStompContext();
     const translate = useTranslate();
     const createPath = useCreatePath();
@@ -71,6 +81,10 @@ export const NotificationArea = (props: NotificationAreaProps) => {
         setRead(prev => [...prev, message]);
     };
 
+    const unreadCount = data
+        ? data.reduce((count, el) => (el.isRead ? count : count + 1), 0)
+        : 0;
+
     const icon = (
         <Badge
             badgeContent={data?.filter(m => m.isRead === false).length}
@@ -112,6 +126,39 @@ export const NotificationArea = (props: NotificationAreaProps) => {
                 })}
             >
                 {data?.length > 0 ? (
+                    <MenuItem sx={{ borderBottom: '2px' }}>
+                        <CardHeader
+                            sx={{ width: '100%', py: '5px' }}
+                            action={
+                                <IconButtonWithTooltip
+                                    onClick={() => removeAllMessages(data)}
+                                    label="ra.action.clear_array_input"
+                                >
+                                    <ClearAllIcon fontSize="small" />
+                                </IconButtonWithTooltip>
+                            }
+                            title={translate('messages.notifications.header')}
+                            titleTypographyProps={{ variant: 'subtitle1' }}
+                            subheader={translate(
+                                'messages.notifications.subheader',
+                                { unread: unreadCount }
+                            )}
+                            subheaderTypographyProps={{ variant: 'subtitle2' }}
+                        />
+                    </MenuItem>
+                ) : (
+                    <MenuItem>
+                        <CardHeader
+                            sx={{ width: '100%', py: '5px' }}
+                            title={translate('messages.notifications.header')}
+                            titleTypographyProps={{ variant: 'subtitle1' }}
+                            subheader={translate('ra.navigation.no_results')}
+                            subheaderTypographyProps={{ variant: 'subtitle2' }}
+                        />
+                    </MenuItem>
+                )}
+
+                {data?.length > 0 &&
                     data.map((message, index) => (
                         <MenuItem key={'m-' + index}>
                             <ErrorBoundary FallbackComponent={Error}>
@@ -121,19 +168,11 @@ export const NotificationArea = (props: NotificationAreaProps) => {
                                     onRemove={removeMessage}
                                     onShow={handleShow}
                                     markAsRead={markMessageAsRead}
+                                    timeout={5000}
                                 />
                             </ErrorBoundary>
                         </MenuItem>
-                    ))
-                ) : (
-                    <MenuItem>
-                        <Box p={1}>
-                            <Typography sx={{ paddingX: 2 }}>
-                                {translate('ra.navigation.no_results')}
-                            </Typography>
-                        </Box>
-                    </MenuItem>
-                )}
+                    ))}
             </Menu>
         </Box>
     );
