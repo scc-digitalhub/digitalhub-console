@@ -610,5 +610,9 @@
   "workflow": {
     "description": "Riferimento statico al workflow",
     "title": "Workflow"
+  },
+  "user": {
+    "description": "",
+    "title": "Utente"
   }
 }
