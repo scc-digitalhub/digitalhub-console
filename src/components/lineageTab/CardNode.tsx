@@ -188,7 +188,14 @@ const NodeInfo = (props: {
                             action={headerActions}
                         />
                         <CardContent sx={{ pt: 0, pb: '16px !important' }}>
-                            <Stack sx={{ maxWidth: NODE_WIDTH * 2 }}>
+                            <Stack
+                                sx={{
+                                    maxWidth: NODE_WIDTH * 2,
+                                    '& .RaChipField-chip': {
+                                        width: 'fit-content',
+                                    },
+                                }}
+                            >
                                 {record.metadata.version ? (
                                     <Labeled>
                                         <TextField
