@@ -7,5 +7,5 @@
     "stop": "Stop",
     "resume": "Resume",
     "revoke": "Revoke",
-    "toggle-x": "Show/Hide %{el}"
+    "toggle_x": "Show/Hide %{el}"
 }

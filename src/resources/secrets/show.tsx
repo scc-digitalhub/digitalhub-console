@@ -48,7 +48,7 @@ const ShowComponent = () => {
 
     const notify = useNotify();
 
-    const toggleLabel = translate('actions.toggle-x', {
+    const toggleLabel = translate('actions.toggle_x', {
         el: translate('fields.secrets.title'),
     });
 

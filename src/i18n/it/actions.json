@@ -7,5 +7,5 @@
     "stop": "Ferma",
     "resume": "Riprendi",
     "revoke": "Revoca",
-    "toggle-x": "Mostra/Nascondi %{el}"
+    "toggle_x": "Mostra/Nascondi %{el}"
 }
