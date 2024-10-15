@@ -179,50 +179,53 @@ const ProjectsGridItem = (props: any) => {
                     >
                         {description}
                     </Typography>
-                    {isAccessible && (
-                        <Box color={grey[500]} sx={{ mb: 2 }}>
-                            {project.metadata && (
-                                <>
-                                    <Labeled>
-                                        <TextField
-                                            source="metadata.created_by"
-                                            label="fields.createdBy.title"
-                                        />
-                                    </Labeled>
-                                    <Stack spacing={2} direction={'row'}>
-                                        <Labeled>
-                                            <DateField
-                                                source="metadata.created"
-                                                label="fields.created.title"
-                                                showTime
-                                            />
-                                        </Labeled>
-                                        <Labeled>
-                                            <DateField
-                                                source="metadata.updated"
-                                                label="fields.updated.title"
-                                                showTime
-                                            />
-                                        </Labeled>
-                                    </Stack>
-                                    <Stack
-                                        direction="row"
-                                        spacing={1}
-                                        sx={{ my: 2 }}
-                                    >
-                                        {project.metadata?.labels?.map(
-                                            (label: string) => (
-                                                <Chip
-                                                    key={label}
-                                                    label={label}
+
+                    <Box color={grey[500]} sx={{ mb: 2 }}>
+                        {project.metadata && (
+                            <>
+                                <Labeled>
+                                    <TextField
+                                        source="metadata.created_by"
+                                        label="fields.createdBy.title"
+                                    />
+                                </Labeled>
+                                {isAccessible && (
+                                    <>
+                                        <Stack spacing={2} direction={'row'}>
+                                            <Labeled>
+                                                <DateField
+                                                    source="metadata.created"
+                                                    label="fields.created.title"
+                                                    showTime
                                                 />
-                                            )
-                                        )}
-                                    </Stack>
-                                </>
-                            )}
-                        </Box>
-                    )}
+                                            </Labeled>
+                                            <Labeled>
+                                                <DateField
+                                                    source="metadata.updated"
+                                                    label="fields.updated.title"
+                                                    showTime
+                                                />
+                                            </Labeled>
+                                        </Stack>
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            sx={{ my: 2 }}
+                                        >
+                                            {project.metadata?.labels?.map(
+                                                (label: string) => (
+                                                    <Chip
+                                                        key={label}
+                                                        label={label}
+                                                    />
+                                                )
+                                            )}
+                                        </Stack>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </Box>
                 </CardContent>
             </CardActionArea>
             {/* <CardActions disableSpacing sx={{ mt: 'auto' }}>
