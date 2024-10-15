@@ -71,6 +71,39 @@ export const LineageTabComponent = () => {
         }
     }, [dataProvider, notify, record.id, resource, root]);
 
+    const onConnectStart = (event, { nodeId, handleId, handleType }) => {
+        //if handleType=target, call api with nodeId and filter on dest
+        //if handleType=source, call api with nodeId and filter on source
+        if (dataProvider) {
+            dataProvider
+                .getLineage(handleId.split(':')[0], {
+                    id: nodeId,
+                    meta: { root },
+                })
+                .then(data => {
+                    if (data?.lineage) {
+                        const sourceOrTarget =
+                            handleType == 'target' ? 'dest' : 'source';
+                        const expansions = data.lineage
+                            .filter(rel => rel[sourceOrTarget] !== undefined)
+                            .map(exp => ({ ...exp, expands: nodeId }));
+                        setRelationships(old => [...old, ...expansions]);
+                    } else {
+                        notify('ra.message.not_found', {
+                            type: 'error',
+                        });
+                    }
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
+        }
+    };
+
     return (
         <Box
             sx={{
@@ -80,9 +113,15 @@ export const LineageTabComponent = () => {
             <Typography variant="h6" gutterBottom>
                 {translate('pages.lineage.title')}
             </Typography>
+            <Typography variant="subtitle1" gutterBottom>
+                {translate('pages.lineage.description')}
+            </Typography>
             {relationships.length !== 0 ? (
                 <ReactFlowProvider>
-                    <Flow relationships={relationships} />
+                    <Flow
+                        relationships={relationships}
+                        onConnectStart={onConnectStart}
+                    />
                 </ReactFlowProvider>
             ) : (
                 <NoLineage />
@@ -92,7 +131,7 @@ export const LineageTabComponent = () => {
 };
 
 const getIdFromKey = (key: string) => {
-    return key.split(':').pop() || '';
+    return key.split(':').pop()?.split('/').pop() || '';
 };
 
 const getNodesAndEdges = (
@@ -103,6 +142,7 @@ const getNodesAndEdges = (
     const nodes = [
         {
             id: record.id,
+            type: 'cardNode',
             position: {
                 x: 0,
                 y: 0,
@@ -112,6 +152,7 @@ const getNodesAndEdges = (
         ...relationships.map(
             (relationship: any): Node => ({
                 id: getIdFromKey(relationship.dest || relationship.source),
+                type: 'cardNode',
                 position: {
                     x: 0,
                     y: 0,
@@ -128,13 +169,19 @@ const getNodesAndEdges = (
             id: index.toString(),
             source: relationship?.dest
                 ? getIdFromKey(relationship?.dest)
+                : relationship.expands
+                ? relationship.expands
                 : record.id,
             target: relationship?.source
                 ? getIdFromKey(relationship?.source)
+                : relationship.expands
+                ? relationship.expands
                 : record.id,
             type: 'default',
             animated: true,
-            label: translate(`pages.lineage.relationships.${relationship.type}`),
+            label: translate(
+                `pages.lineage.relationships.${relationship.type}`
+            ),
         })
     );
     return { nodes, edges };
@@ -144,8 +191,8 @@ const nodeTypes = {
     cardNode: CardNode,
 };
 
-export const Flow = (props: { relationships: any[] }) => {
-    const { relationships } = props;
+export const Flow = (props: { relationships: any[]; onConnectStart: any }) => {
+    const { relationships, onConnectStart } = props;
     const record = useRecordContext();
     const { fitView } = useReactFlow();
     const translate = useTranslate();
@@ -192,6 +239,8 @@ export const Flow = (props: { relationships: any[] }) => {
                 onEdgesChange={onEdgesChange}
                 nodeTypes={nodeTypes}
                 fitView
+                onConnectStart={onConnectStart}
+                proOptions={{ hideAttribution: true }}
             >
                 <Background />
                 <Controls />
