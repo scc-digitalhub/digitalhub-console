@@ -4,9 +4,6 @@ import {
     Pagination,
     TopToolbar,
     useRecordContext,
-    useTranslate,
-    useRedirect,
-    useTheme,
     useGetResourceLabel,
     DateField,
     Labeled,
@@ -16,6 +13,9 @@ import {
     useAuthProvider,
     useAuthenticated,
     SortButton,
+    useGetIdentity,
+    TextInput,
+    SelectInput,
 } from 'react-admin';
 import {
     Box,
@@ -43,11 +43,36 @@ import purify from 'dompurify';
 import { useProjectPermissions } from '../../provider/authProvider';
 
 export const ProjectSelectorList = props => {
-    const perPage = 8;
+    const perPage = 12;
     const getResourceLabel = useGetResourceLabel();
 
     //check if auth is required to redirect to login
     useAuthenticated();
+    const { data: identity } = useGetIdentity();
+
+    const username = identity?.id || null;
+    const filters = username
+        ? [
+              <TextInput
+                  label="fields.name.title"
+                  source="name"
+                  alwaysOn
+                  key={1}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={2}
+                  label="fields.createdBy.title"
+                  source="user"
+                  choices={[
+                      { id: username, name: 'pages.search.createdBy.me' },
+                  ]}
+                  emptyText={'pages.search.createdBy.anyone'}
+                  emptyValue={''}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+          ]
+        : [];
 
     return (
         <List
@@ -58,6 +83,7 @@ export const ProjectSelectorList = props => {
             perPage={perPage}
             storeKey={false}
             pagination={<Pagination rowsPerPageOptions={[perPage]} />}
+            filters={filters}
         >
             <GridList linkType={false}>
                 <ProjectsGridItem />
@@ -268,7 +294,7 @@ const RowActions = () => {
 };
 
 const cardStyle = {
-    height: '250px',
+    height: '280px',
     // width: '250px',
     // display: 'flex',
     // flexDirection: 'column',

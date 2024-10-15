@@ -57,6 +57,12 @@
             "title": "%{resource} #%{name}"
         }
     },
+    "search": {
+        "createdBy": {
+            "me": "me",
+            "anyone": "chiunque"
+        }
+    },
     "share": {
         "description": "Condividi con altri utenti aggiungendo il loro username alla lista"
     },
