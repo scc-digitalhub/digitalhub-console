@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { Handle, NodeToolbar, Position } from '@xyflow/react';
+import { Handle, NodeToolbar, Position, useEdges } from '@xyflow/react';
 import {
     Card,
     CardHeader,
@@ -9,6 +9,7 @@ import {
     Chip,
     CardActionArea,
     styled,
+    Typography,
 } from '@mui/material';
 import {
     DateField,
@@ -71,17 +72,38 @@ export const CardNode = memo(function CardNode(props: {
         setShowInfo(false);
     };
 
-    const nodeContent = (
-        <CardHeader
-            avatar={icons[resource]}
-            title={
-                resource == 'runs'
-                    ? '#' + recordRepresentation(record)
-                    : '#' + name
-            }
-            subheader={kind}
-        />
-    );
+    const edges = useEdges();
+
+    const nodeContent =
+        resource == 'runs' ? (
+            <CardContent sx={{ padding: '8px 4px 0 4px !important' }}>
+                <Stack>
+                    <RunIcon sx={{ alignSelf: 'center' }} />
+                    <Typography
+                        component={'span'}
+                        variant="body2"
+                        sx={{ textAlign: 'center' }}
+                    >
+                        {'#' + recordRepresentation(record)}
+                    </Typography>
+                    <Typography
+                        component={'span'}
+                        variant="body2"
+                        sx={theme => ({ textAlign: 'center',
+                            color: alpha(theme.palette.common.black, 0.6)
+                         })}
+                    >
+                        {kind}
+                    </Typography>
+                </Stack>
+            </CardContent>
+        ) : (
+            <CardHeader
+                avatar={icons[resource]}
+                title={'#' + name}
+                subheader={kind}
+            />
+        );
 
     const clickableNode = data?.current ? (
         nodeContent
@@ -93,8 +115,9 @@ export const CardNode = memo(function CardNode(props: {
         <>
             <Handle
                 type="target"
+                id={`${resource}:${id}:target`}
                 position={Position.Left}
-                style={{ background: '#555' }}
+                isConnectableStart={!edges.some(e => e.target == id)}
             />
             {resource == 'runs' ? (
                 <RoundNode elevation={0} className={nodeClass}>
@@ -115,8 +138,9 @@ export const CardNode = memo(function CardNode(props: {
             )}
             <Handle
                 type="source"
+                id={`${resource}:${id}:source`}
                 position={Position.Right}
-                style={{ background: '#555' }}
+                isConnectableStart={!edges.some(e => e.source == id)}
             />
         </>
     );
@@ -264,8 +288,18 @@ const icons = {
     artifacts: <ArtifactIcon />,
     models: <ModelIcon />,
     dataitems: <DataItemIcon />,
-    runs: <RunIcon />,
 };
+
+// const PlusHandle = styled(Handle, {
+//     name: 'PlusHandle',
+//     overridesResolver: (_props, styles) => styles.root,
+// })(({ theme, className }) => ({
+//     backgroundColor: 'green', width: '10px', height: '14px', borderRadius: '3px',
+//     // lineHeight: 20,
+//     left: -10,
+//     content: '"+"',
+//     ['&::after']: { content: '"+"', display: 'table-cell', verticalAlign: 'middle' }
+// }));
 
 const Node = styled(Card, {
     name: 'Node',
@@ -287,7 +321,6 @@ const Node = styled(Card, {
     ['& .MuiCardHeader-avatar']: { marginRight: '8px' },
     ['& .MuiCardHeader-root']: { padding: '8px' },
     ['& .RaLabeled-label']: { fontSize: '0.6em' },
-    ['& .MuiTypography-caption']: { fontSize: '0.7em' },
 }));
 
 const SquareNode = styled(Node, {
@@ -301,6 +334,5 @@ const RoundNode = styled(Node, {
 })(() => ({
     borderRadius: '100%',
     aspectRatio: 1 / 1,
-    display: 'flex',
-    justifyContent: 'center',
+    padding: '0 8px 0 8px'
 }));
