@@ -566,6 +566,10 @@
     "description": "Username of the last user modifying the resource",
     "title": "Updated By"
   },
+  "user": {
+    "description": "Username",
+    "title": "User"
+  },
   "value": {
     "description": "",
     "title": "Value"

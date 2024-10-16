@@ -566,6 +566,10 @@
     "description": "Username dell'autore che ha modificato per ultimo la risorsa",
     "title": "Aggiornato Da"
   },
+  "user": {
+    "description": "Username",
+    "title": "Utente"
+  },
   "value": {
     "description": "",
     "title": "Valore"

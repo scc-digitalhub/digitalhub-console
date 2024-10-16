@@ -163,7 +163,12 @@ const ShareCreateForm = (props: {
                 {/* <Stack direction={'row'}> */}
                 <Grid container>
                     <Grid item xs={10}>
-                        <TextInput source="user" fullWidth />
+                        <TextInput
+                            source="user"
+                            label="fields.user.title"
+                            helperText="fields.user.description"
+                            fullWidth
+                        />
                     </Grid>
                     <Grid item xs={2} pt={1}>
                         <SaveButton
