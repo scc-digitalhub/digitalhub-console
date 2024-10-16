@@ -464,6 +464,14 @@
       "title": "Versione di Python"
     }
   },
+  "relationships": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Relazioni"
+    },
+    "title": "Relazione"
+  },
   "replicas": {
     "description": "Numero di repliche per il task attuale",
     "title": "Repliche"
@@ -610,9 +618,5 @@
   "workflow": {
     "description": "Riferimento statico al workflow",
     "title": "Workflow"
-  },
-  "user": {
-    "description": "",
-    "title": "Utente"
   }
 }

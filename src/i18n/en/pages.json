@@ -80,7 +80,7 @@
     },
     "lineage": {
         "title": "Lineage",
-        "description": "Click and drag anywhere inside the viewport to move the flow. Explore it by zooming in or out. Click and drag on individual nodes to rearrange them. Click on a node to view its details. Click on <TODO symbol here> to expand the node lineage.",
+        "description": "Click and drag anywhere inside the viewport to move the flow. Explore it by zooming in or out. Click on a node to view its details. Click on <TODO symbol here> to expand the node lineage.",
         "noLineage": "No lineage information available",
         "relationships": {
             "consumes": "consumed by",

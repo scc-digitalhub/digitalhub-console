@@ -80,7 +80,7 @@
     },
     "lineage": {
         "title": "Genealogia",
-        "description": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca e trascina i singoli nodi per riorganizzarli. Clicca su un nodo per visualizzarne i dettagli. Clicca su <TODO symbol here> per espandere la genealogia del nodo.",
+        "description": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca su un nodo per visualizzarne i dettagli. Clicca su <TODO symbol here> per espandere la genealogia del nodo.",
         "noLineage": "Nessuna informazione disponibile sulla genealogia",
         "relationships": {
             "consumes": "consumato da",

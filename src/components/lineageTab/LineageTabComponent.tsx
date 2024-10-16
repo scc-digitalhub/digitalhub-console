@@ -241,6 +241,8 @@ export const Flow = (props: { relationships: any[]; onConnectStart: any }) => {
                 fitView
                 onConnectStart={onConnectStart}
                 proOptions={{ hideAttribution: true }}
+                nodesDraggable={false}
+                maxZoom={1}
             >
                 <Background />
                 <Controls />
