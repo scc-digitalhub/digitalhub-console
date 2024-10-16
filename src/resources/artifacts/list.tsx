@@ -82,6 +82,7 @@ export const ArtifactList = () => {
                   label="fields.name.title"
                   source="q"
                   alwaysOn
+                  resettable
                   key={1}
               />,
               <SelectInput

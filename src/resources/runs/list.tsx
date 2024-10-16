@@ -66,6 +66,7 @@ export const RunList = () => {
                   label="fields.name.title"
                   source="q"
                   alwaysOn
+                  resettable
                   key={1}
               />,
               <SelectInput

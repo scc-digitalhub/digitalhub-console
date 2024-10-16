@@ -57,6 +57,7 @@ export const ProjectSelectorList = props => {
                   label="fields.name.title"
                   source="name"
                   alwaysOn
+                  resettable
                   key={1}
               />,
               <SelectInput
