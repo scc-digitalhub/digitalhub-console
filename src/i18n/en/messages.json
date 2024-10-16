@@ -6,6 +6,7 @@
         "upload_error": "Error during upload of %{fileName} %{error}"
     },
     "validation": {
+        "duplicated": "Duplicated, already exists",
         "invalid": "Invalid",
         "invalid_field": "Invalid field: %{field} %{error}",
         "invalidDate": "Invalid date",

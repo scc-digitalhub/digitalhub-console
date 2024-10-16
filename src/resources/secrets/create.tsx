@@ -4,6 +4,7 @@ import {
     CreateBase,
     CreateView,
     ListButton,
+    required,
     SimpleForm,
     TextInput,
     TopToolbar,
@@ -11,7 +12,7 @@ import {
     useNotify,
     useRedirect,
 } from 'react-admin';
-import { alphaNumericName } from '../../common/helper';
+import { isAlphaNumeric } from '../../common/helper';
 import { Box, Container, Grid } from '@mui/material';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { SecretIcon } from './icon';
@@ -45,7 +46,29 @@ export const SecretCreate = () => {
         return errors;
     };
 
-    const postSave = data => {
+    //TODO move to server or refactor
+    const checkDuplicates = data => {
+        if (data) {
+            return dataProvider
+                .getList('secrets', {
+                    pagination: { perPage: 1000, page: 1 },
+                    sort: { field: 'name', order: 'ASC' },
+                    filter: {},
+                })
+                .then(list => {
+                    const s = list.data.find(e => e.name === data);
+                    if (s) {
+                        return 'messages.validation.duplicated';
+                    }
+
+                    return undefined;
+                });
+        }
+
+        return undefined;
+    };
+
+    const save = data => {
         const obj = { project: root || '' };
         Object.defineProperty(obj, data.name, {
             value: data.value,
@@ -53,7 +76,7 @@ export const SecretCreate = () => {
             configurable: true,
             enumerable: true,
         });
-        dataProvider
+        return dataProvider
             .createSecret(obj)
             .then(() => {
                 notify('ra.notification.created', {
@@ -77,17 +100,18 @@ export const SecretCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm
-                                validate={validator}
-                                onSubmit={postSave}
-                            >
+                            <SimpleForm onSubmit={save}>
                                 <FormLabel label="fields.secrets.title" />
                                 <Grid container columnSpacing={1} pt={1}>
                                     <Grid item xs={4}>
                                         <TextInput
                                             source="name"
-                                            required
                                             fullWidth
+                                            validate={[
+                                                required(),
+                                                isAlphaNumeric(),
+                                                checkDuplicates,
+                                            ]}
                                         />
                                     </Grid>
                                     <Grid item xs={8}>
