@@ -442,6 +442,14 @@
       "title": "Python Version"
     }
   },
+  "relationships": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Relationship"
+    },
+    "title": "Relationships"
+  },
   "replicas": {
     "description": "Number of replicas for the current task",
     "title": "Replicas"
@@ -585,9 +593,5 @@
   "workflow": {
     "description": "Static reference to workflow",
     "title": "Workflow"
-  },
-  "user": {
-    "description": "",
-    "title": "User"
   }
 }
