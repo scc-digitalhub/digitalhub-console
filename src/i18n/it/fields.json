@@ -442,6 +442,7 @@
       "title": "Versione di Python"
     }
   },
+  "recap": "Riepilogo",
   "replicas": {
     "description": "Numero di repliche per il task attuale",
     "title": "Repliche"
