@@ -32,18 +32,7 @@ import { ImportButton } from '../../components/ImportButton';
 const ListToolbar = () => {
     return (
         <TopToolbar>
-            <CreateButton
-            // variant="contained"
-            // label={''}
-            // size="large"
-            // sx={{
-            //     '&.MuiButton-contained': {
-            //         paddingY: '12px',
-            //         paddingX: '12px',
-            //     },
-            //     '& .MuiButton-startIcon': { margin: 0 },
-            // }}
-            />
+            <CreateButton />
             <ImportButton />
         </TopToolbar>
     );
@@ -91,7 +80,7 @@ export const FunctionList = () => {
         ? [
               <TextInput
                   label="fields.name.title"
-                  source="name"
+                  source="q"
                   alwaysOn
                   key={1}
               />,

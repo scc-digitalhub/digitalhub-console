@@ -80,7 +80,7 @@ export const ModelList = () => {
         ? [
               <TextInput
                   label="fields.name.title"
-                  source="name"
+                  source="q"
                   alwaysOn
                   key={1}
               />,

@@ -24,15 +24,13 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 
 const ListToolbar = () => {
-    return <TopToolbar>{/* <CreateButton /> */}</TopToolbar>;
+    return <TopToolbar />;
 };
 
 const RowActions = () => {
     return (
         <RowButtonGroup label="⋮">
             <ShowButton />
-            {/* <LogsButton /> */}
-            {/* <InspectButton fullWidth /> */}
             <DeleteWithConfirmButton redirect={false} />
         </RowButtonGroup>
     );
@@ -66,7 +64,7 @@ export const RunList = () => {
         ? [
               <TextInput
                   label="fields.name.title"
-                  source="name"
+                  source="q"
                   alwaysOn
                   key={1}
               />,
