@@ -31,6 +31,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { NODE_WIDTH } from './layouting';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../StateChips';
+import AddIcon from '@mui/icons-material/Add';
 
 /**
  * Run key: store://prj1/run/python+run/cee60681-54a9-49b8-a69a-59ee079148a9
@@ -72,11 +73,9 @@ export const CardNode = memo(function CardNode(props: {
         setShowInfo(false);
     };
 
-    const edges = useEdges();
-
     const nodeContent =
         resource == 'runs' ? (
-            <CardContent sx={{ padding: '8px 4px 0 4px !important' }}>
+            <CardContent sx={{ padding: '0 0 8px 0 !important' }}>
                 <Stack>
                     <RunIcon sx={{ alignSelf: 'center' }} />
                     <Typography
@@ -89,9 +88,10 @@ export const CardNode = memo(function CardNode(props: {
                     <Typography
                         component={'span'}
                         variant="body2"
-                        sx={theme => ({ textAlign: 'center',
-                            color: alpha(theme.palette.common.black, 0.6)
-                         })}
+                        sx={theme => ({
+                            textAlign: 'center',
+                            color: alpha(theme.palette.common.black, 0.6),
+                        })}
                     >
                         {kind}
                     </Typography>
@@ -111,14 +111,49 @@ export const CardNode = memo(function CardNode(props: {
         <CardActionArea onClick={handleNodeClick}>{nodeContent}</CardActionArea>
     );
 
+    const edges = useEdges();
+    const isLeftHandleClickable = !edges.some(e => e.target == id);
+    const isRightHandleClickable = !edges.some(e => e.source == id);
+
+    const leftPlusHandleStyle = {
+        left: -20,
+        background: '#555',
+        minWidth: 20,
+        height: 20,
+        borderRadius: 4,
+        placeItems: 'center',
+        display: 'grid',
+        color: '#fff',
+        zIndex: 2,
+    };
+
+    const rightPlusHandleStyle = {
+        right: -20,
+        background: '#555',
+        minWidth: 20,
+        height: 20,
+        borderRadius: 4,
+        placeItems: 'center',
+        display: 'grid',
+        color: '#fff',
+        zIndex: 2,
+    };
+
     return (
         <>
             <Handle
                 type="target"
                 id={`${resource}:${id}:target`}
                 position={Position.Left}
-                isConnectableStart={!edges.some(e => e.target == id)}
-            />
+                isConnectableStart={isLeftHandleClickable}
+                style={isLeftHandleClickable ? leftPlusHandleStyle : {}}
+            >
+                {isLeftHandleClickable && (
+                    <AddIcon
+                        style={{ width: 12, height: 12, pointerEvents: 'none' }}
+                    />
+                )}
+            </Handle>
             {resource == 'runs' ? (
                 <RoundNode elevation={0} className={nodeClass}>
                     {clickableNode}
@@ -140,8 +175,15 @@ export const CardNode = memo(function CardNode(props: {
                 type="source"
                 id={`${resource}:${id}:source`}
                 position={Position.Right}
-                isConnectableStart={!edges.some(e => e.source == id)}
-            />
+                isConnectableStart={isRightHandleClickable}
+                style={isRightHandleClickable ? rightPlusHandleStyle : {}}
+            >
+                {isRightHandleClickable && (
+                    <AddIcon
+                        style={{ width: 12, height: 12, pointerEvents: 'none' }}
+                    />
+                )}
+            </Handle>
         </>
     );
 });
@@ -334,5 +376,9 @@ const RoundNode = styled(Node, {
 })(() => ({
     borderRadius: '100%',
     aspectRatio: 1 / 1,
-    padding: '0 8px 0 8px'
+    ['& .MuiCardActionArea-root']: {
+        width: '100%',
+        height: '100%',
+        padding: '10px',
+    },
 }));

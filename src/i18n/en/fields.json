@@ -442,6 +442,14 @@
       "title": "Python Version"
     }
   },
+  "relationships": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Relationship"
+    },
+    "title": "Relationships"
+  },
   "replicas": {
     "description": "Number of replicas for the current task",
     "title": "Replicas"
@@ -566,6 +574,10 @@
     "description": "Username of the last user modifying the resource",
     "title": "Updated By"
   },
+  "user": {
+    "description": "",
+    "title": "User"
+  },
   "value": {
     "description": "",
     "title": "Value"
@@ -581,9 +593,5 @@
   "workflow": {
     "description": "Static reference to workflow",
     "title": "Workflow"
-  },
-  "user": {
-    "description": "",
-    "title": "User"
   }
 }
