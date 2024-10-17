@@ -25,5 +25,9 @@
         "header": "Notifications",
         "subheader": "%{unread} unread messages",
         "stateMessage": "%{resource} status changed to %{state}"
+    },
+    "lineage": {
+        "noLineage": "No lineage information available",
+        "noExpansion": "There are no further relationships to display"
     }
 }
