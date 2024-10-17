@@ -38,8 +38,7 @@ import AddIcon from '@mui/icons-material/Add';
  * Other keys: store://prj1/model/model/testm1:4b32d511-b0bc-450a-bbdb-01b781d323c7
  */
 const parseKey = (key: string) => {
-    const [store, emptyStr, project, resource, kind, nameAndId] =
-        key.split('/');
+    const [, , , resource, kind, nameAndId] = key.split('/');
     const [nameOrId, id] = nameAndId.split(':');
     return {
         resource: resource + 's',
@@ -111,7 +110,18 @@ export const CardNode = memo(function CardNode(props: {
         <CardActionArea onClick={handleNodeClick}>{nodeContent}</CardActionArea>
     );
 
+    // Manage handles:
+    // - if node is current resource and there are no edges on one side, hide handle
+    // - if generic node has no connections one one side, show clickable "plus" handle
+    // - if "plus" handle has been clicked and still no edges on that side, hide handle
     const edges = useEdges();
+    const hideLeftHandle =
+        data?.clickedHandle == 'dest' ||
+        (data?.current && !edges.some(e => e.target == id));
+    const hideRightHandle =
+        data?.clickedHandle == 'source' ||
+        (data?.current && !edges.some(e => e.source == id));
+
     const isLeftHandleClickable = !edges.some(e => e.target == id);
     const isRightHandleClickable = !edges.some(e => e.source == id);
 
@@ -141,19 +151,25 @@ export const CardNode = memo(function CardNode(props: {
 
     return (
         <>
-            <Handle
-                type="target"
-                id={`${resource}:${id}:target`}
-                position={Position.Left}
-                isConnectableStart={isLeftHandleClickable}
-                style={isLeftHandleClickable ? leftPlusHandleStyle : {}}
-            >
-                {isLeftHandleClickable && (
-                    <AddIcon
-                        style={{ width: 12, height: 12, pointerEvents: 'none' }}
-                    />
-                )}
-            </Handle>
+            {!hideLeftHandle && (
+                <Handle
+                    type="target"
+                    id={`${resource}:${id}:target`}
+                    position={Position.Left}
+                    isConnectableStart={isLeftHandleClickable}
+                    style={isLeftHandleClickable ? leftPlusHandleStyle : {}}
+                >
+                    {isLeftHandleClickable && (
+                        <AddIcon
+                            style={{
+                                width: 12,
+                                height: 12,
+                                pointerEvents: 'none',
+                            }}
+                        />
+                    )}
+                </Handle>
+            )}
             {resource == 'runs' ? (
                 <RoundNode elevation={0} className={nodeClass}>
                     {clickableNode}
@@ -171,19 +187,25 @@ export const CardNode = memo(function CardNode(props: {
                     close={closeInfo}
                 />
             )}
-            <Handle
-                type="source"
-                id={`${resource}:${id}:source`}
-                position={Position.Right}
-                isConnectableStart={isRightHandleClickable}
-                style={isRightHandleClickable ? rightPlusHandleStyle : {}}
-            >
-                {isRightHandleClickable && (
-                    <AddIcon
-                        style={{ width: 12, height: 12, pointerEvents: 'none' }}
-                    />
-                )}
-            </Handle>
+            {!hideRightHandle && (
+                <Handle
+                    type="source"
+                    id={`${resource}:${id}:source`}
+                    position={Position.Right}
+                    isConnectableStart={isRightHandleClickable}
+                    style={isRightHandleClickable ? rightPlusHandleStyle : {}}
+                >
+                    {isRightHandleClickable && (
+                        <AddIcon
+                            style={{
+                                width: 12,
+                                height: 12,
+                                pointerEvents: 'none',
+                            }}
+                        />
+                    )}
+                </Handle>
+            )}
         </>
     );
 });

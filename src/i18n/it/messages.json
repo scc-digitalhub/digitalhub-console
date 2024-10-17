@@ -22,5 +22,9 @@
     "notifications": {
         "header": "Notifiche",
         "statusMessage": "Stato %{resource} passato a %{state}"
+    },
+    "lineage": {
+        "noLineage": "Nessuna informazione disponibile sulla genealogia",
+        "noExpansion": "Non ci sono altre relazioni da mostrare"
     }
 }

@@ -22,5 +22,9 @@
     "notifications": {
         "header": "Notifications",
         "stateMessage": "%{resource} status changed to %{state}"
+    },
+    "lineage": {
+        "noLineage": "No lineage information available",
+        "noExpansion": "There are no further relationships to display"
     }
 }
