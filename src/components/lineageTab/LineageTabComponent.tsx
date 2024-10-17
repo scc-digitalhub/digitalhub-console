@@ -87,7 +87,30 @@ export const LineageTabComponent = () => {
                         const expansions = data.lineage
                             .filter(rel => rel[sourceOrTarget] !== undefined)
                             .map(exp => ({ ...exp, expands: nodeId }));
-                        setRelationships(old => [...old, ...expansions]);
+                        if (expansions.length === 0) {
+                            setRelationships(old => {
+                                const newRels = old.map(rel => {
+                                    if (
+                                        rel[sourceOrTarget] &&
+                                        getIdFromKey(rel[sourceOrTarget]) ==
+                                            nodeId
+                                    ) {
+                                        return {
+                                            ...rel,
+                                            clickedHandle: sourceOrTarget,
+                                        };
+                                    } else {
+                                        return rel;
+                                    }
+                                });
+                                return newRels;
+                            });
+                            notify('messages.lineage.noExpansion', {
+                                type: 'info',
+                            });
+                        } else {
+                            setRelationships(old => [...old, ...expansions]);
+                        }
                     } else {
                         notify('ra.message.not_found', {
                             type: 'error',
@@ -159,6 +182,7 @@ const getNodesAndEdges = (
                 },
                 data: {
                     key: relationship.dest || relationship.source,
+                    clickedHandle: relationship.clickedHandle,
                 },
             })
         ),
