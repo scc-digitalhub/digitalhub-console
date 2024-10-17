@@ -89,6 +89,10 @@
     "description": "",
     "title": "Descrizione"
   },
+  "dest": {
+    "description": "",
+    "title": "Dest"
+  },
   "destination": {
     "description": "",
     "title": "Destinazione"
