@@ -1,8 +1,5 @@
-import { JsonSchemaInput } from '../../components/JsonSchema';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container, Stack } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     CreateActionsProps,
@@ -11,76 +8,33 @@ import {
     FormDataConsumer,
     ListButton,
     LoadingIndicator,
-    SelectInput,
-    SimpleForm,
     TextInput,
     TopToolbar,
     required,
-    useInput,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { isAlphaNumeric, isValidKind } from '../../common/helper';
+import { isAlphaNumeric } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { FormLabel } from '../../components/FormLabel';
-import { useWatch, useForm } from 'react-hook-form';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
+import { StepperForm, useStepper } from '@dslab/ra-stepper';
+import { AceEditorField } from '@dslab/ra-ace-editor';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { SpecInput } from '../../components/SpecInput';
+import { StepperToolbar } from '../../components/StepperToolbar';
 
-const CreateToolbar = (props: CreateActionsProps) => {
+const CreateToolbar = () => {
     return (
         <TopToolbar>
             <ListButton />
         </TopToolbar>
     );
 };
-const SpecInput = (props: {
-    source: string;
-    onDirty?: (state: boolean) => void;
-}) => {
-    const { source, onDirty } = props;
-    const translate = useTranslate();
-    const resource = useResourceContext();
-    const value = useWatch({ name: source });
-    const kind = useWatch({ name: 'kind' });
-    const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
 
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
-        }
-    }, [schemaProvider, kind]);
-
-    if (!spec) {
-        return (
-            <Card
-                sx={{
-                    width: 1,
-                    textAlign: 'center',
-                }}
-            >
-                <CardContent>
-                    {translate('resources.common.emptySpec')}{' '}
-                </CardContent>
-            </Card>
-        );
-    }
-
-    return (
-        <>
-            <JsonSchemaInput
-                source={source}
-                schema={{ ...spec.schema, title: 'Spec' }}
-                uiSchema={getFunctionUiSpec(kind)}
-            />
-        </>
-    );
-};
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
@@ -124,10 +78,8 @@ export const FunctionCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
-                                <FormLabel label="fields.base" />
-
-                                <Stack direction={'row'} spacing={3} pt={4}>
+                            <StepperForm toolbar={<StepperToolbar />}>
+                                <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
                                         validate={[
@@ -135,33 +87,39 @@ export const FunctionCreate = () => {
                                             isAlphaNumeric(),
                                         ]}
                                     />
+                                    <MetadataInput />
+                                </StepperForm.Step>
+                                <StepperForm.Step label={'fields.spec.title'}>
                                     <KindSelector kinds={kinds} />
-                                </Stack>
-
-                                <MetadataInput />
-
-                                <FormDataConsumer<{ kind: string }>>
-                                    {({ formData }) => {
-                                        if (formData.kind)
-                                            return <SpecInput source="spec" />;
-                                        else
+                                    <SpecInput
+                                        source="spec"
+                                        getUiSchema={getFunctionUiSpec}
+                                    />
+                                </StepperForm.Step>
+                                <StepperForm.Step
+                                    label={'fields.recap'}
+                                    optional
+                                >
+                                    <FormDataConsumer>
+                                        {({ formData }) => {
+                                            //read-only view
+                                            const r = {
+                                                spec: btoa(
+                                                    toYaml(formData?.spec)
+                                                ),
+                                            };
                                             return (
-                                                <Card
-                                                    sx={{
-                                                        width: 1,
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    <CardContent>
-                                                        {translate(
-                                                            'resources.common.emptySpec'
-                                                        )}{' '}
-                                                    </CardContent>
-                                                </Card>
+                                                <AceEditorField
+                                                    mode="yaml"
+                                                    source="spec"
+                                                    record={r}
+                                                    parse={atob}
+                                                />
                                             );
-                                    }}
-                                </FormDataConsumer>
-                            </SimpleForm>
+                                        }}
+                                    </FormDataConsumer>
+                                </StepperForm.Step>
+                            </StepperForm>
                         </FlatCard>
                     </CreateView>
                 </>

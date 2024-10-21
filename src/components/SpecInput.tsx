@@ -2,6 +2,7 @@ import { Card, CardContent } from '@mui/material';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
+    InputProps,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -10,12 +11,13 @@ import { useWatch } from 'react-hook-form';
 import { useSchemaProvider } from '../provider/schemaProvider';
 import { JsonSchemaInput } from './JsonSchema';
 
-export const SpecInput = (props: {
+export const SpecInput = (props: InputProps & {
     source: string;
     onDirty?: (state: boolean) => void;
     getUiSchema: (kind: string) => any;
     schema?: any;
     kind?: string;
+    kindSource?: string;
 }) => {
     const {
         source,
@@ -23,16 +25,18 @@ export const SpecInput = (props: {
         getUiSchema,
         schema: schemaProp,
         kind: kindProp,
+        kindSource = 'kind',
     } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const eq = deepEqual(record[source], value);
+    const kindValue = useWatch({ name: kindSource });
 
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
-    const kind = kindProp || record?.kind || null;
+    const eq = record ? deepEqual(record[source], value) : undefined;
+    const kind = kindProp || kindValue || (record ? record[kindSource] : null);
 
     useEffect(() => {
         if (!kind) {
@@ -40,16 +44,16 @@ export const SpecInput = (props: {
         }
         if (schemaProp) {
             setSchema(schemaProp);
-        } else if (schemaProvider && record) {
+        } else if (schemaProvider) {
             schemaProvider.get(resource, kind).then(s => setSchema(s.schema));
         }
-    }, [record, schemaProvider, schemaProp]);
+    }, [kind, schemaProvider, schemaProp]);
 
     useEffect(() => {
-        if (onDirty) {
+        if (onDirty && record && eq !== undefined) {
             onDirty(!eq);
         }
-    }, [eq]);
+    }, [record, value]);
 
     if (!kind || !schema) {
         return (
@@ -70,7 +74,7 @@ export const SpecInput = (props: {
         <JsonSchemaInput
             source={source}
             schema={{ ...schema, title: 'Spec' }}
-            uiSchema={getUiSchema(record.kind)}
+            uiSchema={getUiSchema(kind)}
         />
     );
 };
