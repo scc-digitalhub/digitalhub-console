@@ -55,7 +55,7 @@ const ShowComponent = () => {
     const loadData = () => {
         if (record) {
             dataProvider
-                .getSecretData({ keys: record.name, root })
+                .readSecretData(record.name, { root })
                 .then(({ data }) => {
                     if (typeof data === 'string') {
                         setValue(data);
@@ -104,11 +104,14 @@ const ShowComponent = () => {
             <Typography component="h5" variant="h5" pt={2}>
                 {translate('fields.secrets.title')}
             </Typography>
-
-            <Labeled>
-                <TextField source="spec.path" />
-            </Labeled>
-
+            <Stack direction={'row'} spacing={3}>
+                <Labeled>
+                    <TextField source="spec.provider" />
+                </Labeled>
+                <Labeled>
+                    <TextField source="spec.path" />
+                </Labeled>
+            </Stack>
             <Stack direction={'row'} spacing={3}>
                 <Labeled>
                     <TextField source="name" label="fields.key.title" />

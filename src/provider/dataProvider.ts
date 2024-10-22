@@ -288,13 +288,15 @@ const springDataProvider = (
                 )
             ).then(responses => ({ data: responses.map(({ json }) => json) }));
         },
-        getSecretData: params => {
+        readSecretData: (name: string, params) => {
             let prefix = '';
             if (params.root) {
                 prefix = '/-/' + params.root;
-                delete params.root;
             }
-            const url = `${apiUrl}${prefix}/secrets/data?${stringify(params)}`;
+            const query = {
+                keys: name,
+            };
+            const url = `${apiUrl}${prefix}/secrets/data?${stringify(query)}`;
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
@@ -304,18 +306,29 @@ const springDataProvider = (
                 };
             });
         },
-        createSecret: params => {
-            let prefix = '/-/' + params.project;
-            let url = `${apiUrl}${prefix}/secrets`;
-            url += '/data ';
-            delete params['project'];
-            // const paramsSecret=JSON.parse(JSON.stringify(params.data));
-            // const newObj = Object.assign({}, params.data);
+        writeSecretData: (record, params) => {
+            let prefix = '';
+            if (params.root) {
+                prefix = '/-/' + params.root;
+            }
+            let url = `${apiUrl}${prefix}/secrets/data`;
+            if (!record?.name || !record.value) {
+                throw new Error('Invalid data');
+            }
+            let body = {};
+            body[record.name] = record.value;
 
             return httpClient(url, {
                 method: 'PUT',
-                body: JSON.stringify(params),
-            }).then(({ json }) => ({ data: json }));
+                body: JSON.stringify(body),
+            }).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return {
+                    data: json,
+                };
+            });
         },
         search: (
             searchParams: SearchParams,

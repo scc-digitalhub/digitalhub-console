@@ -16,6 +16,8 @@ export const SpecInput = (props: {
     getUiSchema: (kind: string) => any;
     schema?: any;
     kind?: string;
+    label?: string;
+    helperText?: string;
 }) => {
     const {
         source,
@@ -23,12 +25,14 @@ export const SpecInput = (props: {
         getUiSchema,
         schema: schemaProp,
         kind: kindProp,
+        label = 'fields.spec.title',
+        helperText,
     } = props;
     const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const eq = deepEqual(record[source], value);
+    const eq = record?.source ? deepEqual(record[source], value) : false;
 
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
@@ -66,11 +70,16 @@ export const SpecInput = (props: {
         );
     }
 
+    const jsonSchema = { ...schema, title: label };
+    if (helperText !== undefined) {
+        jsonSchema['description'] = helperText;
+    }
+
     return (
         <JsonSchemaInput
             source={source}
-            schema={{ ...schema, title: 'Spec' }}
-            uiSchema={getUiSchema(record.kind)}
+            schema={jsonSchema}
+            uiSchema={getUiSchema(kind)}
         />
     );
 };

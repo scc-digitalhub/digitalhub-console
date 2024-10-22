@@ -16,32 +16,38 @@ import {
 } from 'react-admin';
 
 //TODO fix backend API to properly define ENUM as TYPE(value)
-function mapType(resource) {
-    if (resource === 'functions') {
-        return 'FUNCTION';
-    }
-    if (resource === 'artifacts') {
-        return 'ARTIFACT';
-    }
-    if (resource === 'dataitems') {
-        return 'DATAITEM';
-    }
-    if (resource === 'models') {
-        return 'MODEL';
-    }
-    if (resource === 'tasks') {
-        return 'TASK';
-    }
-    if (resource === 'runs') {
-        return 'RUN';
-    }
-    if (resource === 'workflows') {
-        return 'WORKFLOW';
-    }
-    if (resource === 'metadata') {
-        return 'METADATA';
-    }
-    return null;
+function mapType(resource: string) {
+    //remove s + capitalize
+    //ex functions => FUNCTION
+    return resource.slice(0, -1).toUpperCase();
+    // if (resource === 'functions') {
+    //     return 'FUNCTION';
+    // }
+    // if (resource === 'artifacts') {
+    //     return 'ARTIFACT';
+    // }
+    // if (resource === 'dataitems') {
+    //     return 'DATAITEM';
+    // }
+    // if (resource === 'models') {
+    //     return 'MODEL';
+    // }
+    // if (resource === 'tasks') {
+    //     return 'TASK';
+    // }
+    // if (resource === 'runs') {
+    //     return 'RUN';
+    // }
+    // if (resource === 'workflows') {
+    //     return 'WORKFLOW';
+    // }
+    // if (resource === 'metadata') {
+    //     return 'METADATA';
+    // }
+    // if (resource === 'metadata') {
+    //     return 'METADATA';
+    // }
+    // return null;
 }
 
 const schemaProvider = (
