@@ -32,7 +32,7 @@ const NoLineage = () => {
             color={'gray'}
             sx={{ textAlign: 'center', pt: 5 }}
         >
-            {translate('pages.lineage.noLineage')}
+            {translate('messages.lineage.noLineage')}
         </Typography>
     );
 };
