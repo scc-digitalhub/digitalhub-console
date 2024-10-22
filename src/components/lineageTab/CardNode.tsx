@@ -74,7 +74,7 @@ export const CardNode = memo(function CardNode(props: {
 
     const nodeContent =
         resource == 'runs' ? (
-            <CardContent sx={{ padding: '0 0 8px 0 !important' }}>
+            <CardContent>
                 <Stack>
                     <RunIcon sx={{ alignSelf: 'center' }} />
                     <Typography
@@ -354,17 +354,6 @@ const icons = {
     dataitems: <DataItemIcon />,
 };
 
-// const PlusHandle = styled(Handle, {
-//     name: 'PlusHandle',
-//     overridesResolver: (_props, styles) => styles.root,
-// })(({ theme, className }) => ({
-//     backgroundColor: 'green', width: '10px', height: '14px', borderRadius: '3px',
-//     // lineHeight: 20,
-//     left: -10,
-//     content: '"+"',
-//     ['&::after']: { content: '"+"', display: 'table-cell', verticalAlign: 'middle' }
-// }));
-
 const Node = styled(Card, {
     name: 'Node',
     overridesResolver: (_props, styles) => styles.root,
@@ -395,7 +384,7 @@ const SquareNode = styled(Node, {
 const RoundNode = styled(Node, {
     name: 'SquareNode',
     overridesResolver: (_props, styles) => styles.root,
-})(() => ({
+})(({ className }) => ({
     borderRadius: '100%',
     aspectRatio: 1 / 1,
     ['& .MuiCardActionArea-root']: {
@@ -403,4 +392,11 @@ const RoundNode = styled(Node, {
         height: '100%',
         padding: '10px',
     },
+    ['& .MuiCardContent-root']: className?.includes('MeNode')
+        ? {
+              padding: '10px !important',
+          }
+        : {
+              padding: '0 0 8px 0 !important',
+          },
 }));
