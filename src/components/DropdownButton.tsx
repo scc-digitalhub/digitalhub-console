@@ -1,6 +1,6 @@
 import { Menu, Button, Stack } from '@mui/material';
 import { Box } from '@mui/system';
-import { useState, MouseEvent, ReactElement } from 'react';
+import { useState, MouseEvent, ReactElement, FocusEvent } from 'react';
 import {
     useTranslate,
     RaRecord,
@@ -35,6 +35,12 @@ export const DropDownButton = (props: DrodownButtonProps) => {
         setAnchorEl(null);
     };
 
+    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        event.stopPropagation();
+        setAnchorEl(null);
+    };
+    
+
     return (
         <Box className="DropDownMenu" component="span">
             <Box>
@@ -55,8 +61,10 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                 id="dropdown-menu"
                 anchorEl={anchorEl}
                 keepMounted
+                variant={'menu'}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                onBlur={handleBlur}
             >
                 <Stack
                     direction={'column'}
