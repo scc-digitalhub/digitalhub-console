@@ -39,7 +39,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
         event.stopPropagation();
         setAnchorEl(null);
     };
-    
 
     return (
         <Box className="DropDownMenu" component="span">
@@ -61,7 +60,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                 id="dropdown-menu"
                 anchorEl={anchorEl}
                 keepMounted
-                variant={'menu'}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 onBlur={handleBlur}
