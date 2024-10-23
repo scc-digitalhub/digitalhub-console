@@ -55,3 +55,43 @@ export const randomId = () => {
     let p1 = Math.random().toString(36).substring(2);
     return p1 + '-' + p2 + '-' + p3;
 };
+
+export const keyParser = (
+    key: string
+): {
+    project: string | undefined;
+    resource: string | undefined;
+    kind: string | undefined;
+    name: string | undefined;
+    id: string | undefined;
+} => {
+    const result = {
+        project: undefined as string | undefined,
+        resource: undefined as string | undefined,
+        kind: undefined as string | undefined,
+        name: undefined as string | undefined,
+        id: undefined as string | undefined,
+    };
+
+    if (key?.startsWith('store://')) {
+        //store key is a URI
+        const url = new URL('http://' + key.substring('store://'.length));
+
+        //project is hostname
+        result.project = url.hostname;
+
+        //details are in path variables
+        const vars = url.pathname.substring(1).split('/');
+
+        if (vars.length == 3) {
+            result.resource = vars[0] + 's';
+            result.kind = vars[1];
+
+            const np = vars[2].split(':');
+            result.name = np[0];
+            result.id = np.length == 2 ? np[1] : undefined;
+        }
+    }
+
+    return result;
+};

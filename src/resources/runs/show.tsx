@@ -51,6 +51,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
+import { keyParser } from '../../common/helper';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -287,26 +288,10 @@ const InputOutputsList = (props: { data: any[] }) => {
                                 r.key.startsWith('store://' + projectId + '/')
                             ) {
                                 //local ref, build path
-                                const url = new URL(r.key);
-                                const ip = url.pathname.substring(2).split('/');
-                                const res = ip[1] + 's';
-                                const rk = ip[2];
-                                const i = ip[ip.length - 1].split(':');
-                                if (i.length == 2) {
-                                    const rn = i[0];
-                                    const ri = i[1];
-
-                                    return (
-                                        <TextField
-                                            record={{
-                                                id: ri,
-                                                kind: rk,
-                                                resource: res,
-                                            }}
-                                            source={'kind'}
-                                        />
-                                    );
-                                }
+                                const obj = keyParser(r.key);
+                                return (
+                                    <TextField record={obj} source={'kind'} />
+                                );
                             }
                         } catch (e) {}
                         return null;
@@ -326,18 +311,12 @@ const InputOutputsList = (props: { data: any[] }) => {
                                 r.key.startsWith('store://' + projectId + '/')
                             ) {
                                 //local ref, build path
-                                const url = new URL(r.key);
-                                const ip = url.pathname.substring(2).split('/');
-                                const res = ip[1] + 's';
-                                const i = ip[ip.length - 1].split(':');
-                                if (i.length == 2) {
-                                    const rn = i[0];
-                                    const ri = i[1];
-
+                                const obj = keyParser(r.key);
+                                if (obj.id) {
                                     return (
                                         <ShowButton
-                                            resource={res}
-                                            record={{ id: ri }}
+                                            resource={obj.resource}
+                                            record={{ id: obj.id }}
                                         />
                                     );
                                 }
