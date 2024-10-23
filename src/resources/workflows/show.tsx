@@ -33,6 +33,7 @@ import deepEqual from 'deep-is';
 
 import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
+import { IdField } from '../../components/IdField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -203,7 +204,7 @@ const ShowComponent = () => {
                     </Labeled>
 
                     <Labeled>
-                        <TextField source="id" />
+                        <IdField source="id" />
                     </Labeled>
                 </Stack>
 

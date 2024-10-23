@@ -26,6 +26,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { SecretIcon } from './icon';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
+import { IdField } from '../../components/IdField';
 
 const ShowToolbar = () => (
     <TopToolbar>
@@ -94,7 +95,7 @@ const ShowComponent = () => {
                 </Labeled>
 
                 <Labeled>
-                    <TextField source="id" />
+                    <IdField source="id" />
                 </Labeled>
             </Stack>
             <Labeled>

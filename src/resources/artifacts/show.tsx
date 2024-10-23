@@ -42,6 +42,7 @@ import { MetadataField } from '../../components/MetadataField';
 //     },
 // }));
 import { FileInfo } from '../../components/FileInfo';
+import { IdField } from '../../components/IdField';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -99,7 +100,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                     </Labeled>
 
                     <Labeled>
-                        <TextField source="id" />
+                        <IdField source="id" />
                     </Labeled>
                 </Stack>
 

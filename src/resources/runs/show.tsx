@@ -52,6 +52,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
 import { keyParser } from '../../common/helper';
+import { IdField } from '../../components/IdField';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -110,7 +111,7 @@ export const RunShowComponent = () => {
                         <TextField source="kind" />
                     </Labeled>
                     <Labeled>
-                        <TextField source="id" />
+                        <IdField source="id" />
                     </Labeled>
                 </Stack>
                 <Labeled>

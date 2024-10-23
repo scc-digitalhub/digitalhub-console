@@ -32,6 +32,7 @@ import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
+import { IdField } from '../../components/IdField';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -95,7 +96,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     </Labeled>
 
                     <Labeled>
-                        <TextField source="id" />
+                        <IdField source="id" />
                     </Labeled>
                 </Stack>
 

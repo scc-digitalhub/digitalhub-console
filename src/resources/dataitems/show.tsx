@@ -28,6 +28,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
+import { IdField } from '../../components/IdField';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -85,7 +86,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     </Labeled>
 
                     <Labeled>
-                        <TextField source="id" />
+                        <IdField source="id" />
                     </Labeled>
                 </Stack>
 

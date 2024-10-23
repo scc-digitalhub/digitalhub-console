@@ -24,6 +24,7 @@ import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 import { ProjectMetadataViewUiSchema } from './types';
 import { ShareButton } from '../../components/ShareButton';
 import { useProjectPermissions } from '../../provider/authProvider';
+import { IdField } from '../../components/IdField';
 
 const ShowToolbar = () => {
     const record = useRecordContext();
@@ -71,7 +72,7 @@ export const ProjectConfig = () => {
                                     </Labeled>
 
                                     <Labeled>
-                                        <TextField source="id" />
+                                        <IdField source="id" />
                                     </Labeled>
                                 </Stack>
 
