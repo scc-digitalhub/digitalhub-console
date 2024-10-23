@@ -34,7 +34,7 @@ const Accordion = styled((props: AccordionProps) => (
 export const MetadataInput = ({ prompt }: any) => {
     const record = useRecordContext();
     const translate = useTranslate();
-    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    const { data: schemas, isLoading, error } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
               .map(s => ({

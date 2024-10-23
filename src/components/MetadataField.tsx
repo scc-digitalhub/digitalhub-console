@@ -7,7 +7,7 @@ import { Fragment } from 'react/jsx-runtime';
 
 export const MetadataField = ({ prompt }: any) => {
     const record = useRecordContext();
-    const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    const { data: schemas, isLoading, error } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
               .map(s => ({
