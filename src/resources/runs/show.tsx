@@ -115,7 +115,7 @@ export const RunShowComponent = () => {
                     </Labeled>
                 </Stack>
                 <Labeled>
-                    <TextField source="key" />
+                    <IdField source="key" />
                 </Labeled>
                 {record?.metadata && <MetadataField />}
                 <Divider />

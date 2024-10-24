@@ -99,7 +99,7 @@ const ShowComponent = () => {
                 </Labeled>
             </Stack>
             <Labeled>
-                <TextField source="key" />
+                <IdField source="key" />
             </Labeled>
 
             <Typography component="h5" variant="h5" pt={2}>

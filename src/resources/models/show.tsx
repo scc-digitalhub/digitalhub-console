@@ -100,7 +100,8 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     </Labeled>
                 </Stack>
 
-                <TextField source="key" />
+                <IdField source="key" />
+
                 <MetadataField />
 
                 {spec && (

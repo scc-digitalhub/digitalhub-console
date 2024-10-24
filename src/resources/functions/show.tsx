@@ -198,7 +198,7 @@ const ShowComponent = () => {
                     </Labeled>
                 </Stack>
 
-                <TextField source="key" />
+                <IdField source="key" />
 
                 <MetadataField />
 

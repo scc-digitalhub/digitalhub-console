@@ -90,7 +90,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     </Labeled>
                 </Stack>
 
-                <TextField source="key" />
+                <IdField source="key" />
 
                 <MetadataField />
 

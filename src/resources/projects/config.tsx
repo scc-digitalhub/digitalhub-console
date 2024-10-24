@@ -76,7 +76,7 @@ export const ProjectConfig = () => {
                                     </Labeled>
                                 </Stack>
 
-                                <TextField source="key" />
+                                <IdField source="key" />
 
                                 <JsonSchemaField
                                     source="metadata"

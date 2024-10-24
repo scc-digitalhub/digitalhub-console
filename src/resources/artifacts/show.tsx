@@ -104,7 +104,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                     </Labeled>
                 </Stack>
 
-                <TextField source="key" />
+                <IdField source="key" />
                 <MetadataField />
                 {spec && (
                     <JsonSchemaField
