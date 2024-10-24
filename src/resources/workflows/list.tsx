@@ -28,6 +28,7 @@ import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { ImportButton } from '../../components/ImportButton';
+import { ChipsField } from '../../components/ChipsField';
 
 const ListToolbar = () => {
     return (
@@ -117,29 +118,24 @@ export const WorkflowList = () => {
                                 expandSingle={true}
                                 bulkActionButtons={false}
                             >
-                                <TextField source="name" />
-                                <TextField source="kind" />
+                                <TextField
+                                    source="name"
+                                    label="fields.name.title"
+                                />
+                                <TextField source="kind" label="fields.kind" />
                                 <DateField
                                     source="metadata.updated"
+                                    label="fields.updated.title"
                                     showDate={true}
                                     showTime={true}
                                 />
-                                <FunctionField
+
+                                <ChipsField
+                                    label="fields.labels.title"
                                     source="metadata.labels"
                                     sortable={false}
-                                    render={record =>
-                                        record.metadata.labels?.map(label => (
-                                            <Chip
-                                                key={label}
-                                                label={label}
-                                                sx={{ mr: '5px' }}
-                                            ></Chip>
-                                        ))
-                                    }
                                 />
-                                {/* <div style={{ display: 'flex', justifyContent: 'end' }}> */}
                                 <RowActions />
-                                {/* </div> */}
                             </Datagrid>
                         </ListView>
                     </FlatCard>

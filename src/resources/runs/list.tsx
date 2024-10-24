@@ -109,33 +109,29 @@ export const RunList = () => {
                                 rowClick={'show'}
                                 bulkActionButtons={false}
                             >
-                                <TextField source="id" />
+                                <TextField source="id" label="fields.id" />
                                 <DateField
                                     source="metadata.created"
+                                    label="fields.created.title"
                                     showDate
                                     showTime
                                 />
                                 <DateField
                                     source="metadata.updated"
+                                    label="fields.updated.title"
                                     showDate
                                     showTime
                                 />
-                                <TextField source="kind" />
+                                <TextField source="kind" label="fields.kind" />
                                 <TextField
                                     source="spec.task"
+                                    label="fields.task.title"
                                     sortable={false}
                                 />
-                                <StateChips source="status.state" />
-                                {/* <FunctionField
+                                <StateChips
                                     source="status.state"
-                                    render={record => (
-                                        <Chip
-                                            key={record.status.state}
-                                            label={record.status.state}
-                                            sx={{ mr: '5px' }}
-                                        ></Chip>
-                                    )}
-                                /> */}
+                                    label="fields.status.state"
+                                />
 
                                 <RowActions />
                             </Datagrid>

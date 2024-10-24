@@ -11,6 +11,7 @@ export const StateChips = (props: {
     resource?: string;
     record?: RaRecord<Identifier>;
     source: string;
+    label?: string;
     sortable?: boolean;
 }) => {
     const { source, ...rest } = props;
