@@ -87,12 +87,8 @@ const Lineage = () => {
                 })
             );
 
-            const ids: string[] = projectResources.map(
-                (res: any) => res.id
-            );
-
             dataProvider
-                .getProjectLineage('projects', { data: ids })
+                .getProjectLineage('projects', { id: project.id })
                 .then(data => {
                     if (data?.lineage) {
                         let initialEdges: Edge[] = [];
