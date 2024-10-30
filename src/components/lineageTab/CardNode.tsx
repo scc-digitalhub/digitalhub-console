@@ -21,6 +21,7 @@ import {
     useCreatePath,
     useGetOne,
     useGetRecordRepresentation,
+    useTheme,
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { ArtifactIcon } from '../../resources/artifacts/icon';
@@ -31,12 +32,14 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { NODE_WIDTH } from './layouting';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../StateChips';
-import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { FunctionIcon } from '../../resources/functions/icon';
 
 /**
  * Run key: store://prj1/run/python+run/cee60681-54a9-49b8-a69a-59ee079148a9
  * Other keys: store://prj1/model/model/testm1:4b32d511-b0bc-450a-bbdb-01b781d323c7
  */
+//TODO usare funzione in common/utils
 const parseKey = (key: string) => {
     const [, , , resource, kind, nameAndId] = key.split('/');
     const [nameOrId, id] = nameAndId.split(':');
@@ -57,6 +60,8 @@ export const CardNode = memo(function CardNode(props: {
     const { resource, kind, name, id } = parseKey(data.key);
     const { data: record, error } = useGetOne(resource, { id });
     const recordRepresentation = useGetRecordRepresentation(resource);
+    const edges = useEdges();
+    const [theme] = useTheme();
 
     let nodeClass = data?.current ? 'MeNode' : 'RegularNode';
     if (showInfo) {
@@ -68,8 +73,9 @@ export const CardNode = memo(function CardNode(props: {
         e.stopPropagation();
     };
 
-    const closeInfo = () => {
+    const closeInfo = e => {
         setShowInfo(false);
+        e.stopPropagation();
     };
 
     const nodeContent =
@@ -113,40 +119,37 @@ export const CardNode = memo(function CardNode(props: {
     // Manage handles:
     // - if node is current resource and there are no edges on one side, hide handle
     // - if generic node has no connections one one side, show clickable "plus" handle
-    // - if "plus" handle has been clicked and still no edges on that side, hide handle
-    const edges = useEdges();
+    // - if generic node has no connections one one side and expandable=false, hide handle
     const hideLeftHandle =
-        data?.clickedHandle == 'dest' ||
-        (data?.current && !edges.some(e => e.target == id));
+        (data?.current && !edges.some(e => e.target == id)) ||
+        (data?.expandable === false && !edges.some(e => e.target == id));
     const hideRightHandle =
-        data?.clickedHandle == 'source' ||
-        (data?.current && !edges.some(e => e.source == id));
+        (data?.current && !edges.some(e => e.source == id)) ||
+        (data?.expandable === false && !edges.some(e => e.source == id));
 
     const isLeftHandleClickable = !edges.some(e => e.target == id);
     const isRightHandleClickable = !edges.some(e => e.source == id);
 
     const leftPlusHandleStyle = {
         left: -20,
-        background: '#555',
+        background: theme === 'dark' ? 'black' : 'white',
         minWidth: 20,
         height: 20,
-        borderRadius: 4,
         placeItems: 'center',
         display: 'grid',
-        color: '#fff',
         zIndex: 2,
+        border: 0,
     };
 
     const rightPlusHandleStyle = {
         right: -20,
-        background: '#555',
+        background: theme === 'dark' ? 'black' : 'white',
         minWidth: 20,
         height: 20,
-        borderRadius: 4,
         placeItems: 'center',
         display: 'grid',
-        color: '#fff',
         zIndex: 2,
+        border: 0,
     };
 
     return (
@@ -160,10 +163,10 @@ export const CardNode = memo(function CardNode(props: {
                     style={isLeftHandleClickable ? leftPlusHandleStyle : {}}
                 >
                     {isLeftHandleClickable && (
-                        <AddIcon
+                        <AddCircleOutlineIcon
                             style={{
-                                width: 12,
-                                height: 12,
+                                width: '100%',
+                                height: '100%',
                                 pointerEvents: 'none',
                             }}
                         />
@@ -196,10 +199,10 @@ export const CardNode = memo(function CardNode(props: {
                     style={isRightHandleClickable ? rightPlusHandleStyle : {}}
                 >
                     {isRightHandleClickable && (
-                        <AddIcon
+                        <AddCircleOutlineIcon
                             style={{
-                                width: 12,
-                                height: 12,
+                                width: '100%',
+                                height: '100%',
                                 pointerEvents: 'none',
                             }}
                         />
@@ -214,7 +217,7 @@ const NodeInfo = (props: {
     resource: string;
     record: any;
     error: any;
-    close: () => void;
+    close: (e) => void;
 }) => {
     const { resource, record, error, close } = props;
     const createPath = useCreatePath();
@@ -230,7 +233,8 @@ const NodeInfo = (props: {
         );
     }
 
-    const toShow = () => {
+    const toShow = (e) => {
+        e.stopPropagation();
         const path = createPath({
             resource,
             id: record.id,
@@ -352,6 +356,7 @@ const icons = {
     artifacts: <ArtifactIcon />,
     models: <ModelIcon />,
     dataitems: <DataItemIcon />,
+    functions: <FunctionIcon />,
 };
 
 const Node = styled(Card, {

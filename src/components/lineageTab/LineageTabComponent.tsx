@@ -6,7 +6,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     ReactFlow,
     Background,
@@ -23,7 +23,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { CardNode } from './CardNode';
 import { getLayoutedElements } from './layouting';
 
-const NoLineage = () => {
+export const NoLineage = () => {
     const translate = useTranslate();
 
     return (
@@ -55,10 +55,6 @@ export const LineageTabComponent = () => {
                 .then(data => {
                     if (data?.lineage) {
                         setRelationships([...data.lineage]);
-                    } else {
-                        notify('ra.message.not_found', {
-                            type: 'error',
-                        });
                     }
                 })
                 .catch(error => {
@@ -71,61 +67,89 @@ export const LineageTabComponent = () => {
         }
     }, [dataProvider, notify, record.id, resource, root]);
 
-    const onConnectStart = (event, { nodeId, handleId, handleType }) => {
-        //if handleType=target, call api with nodeId and filter on dest
-        //if handleType=source, call api with nodeId and filter on source
-        if (dataProvider) {
-            dataProvider
-                .getLineage(handleId.split(':')[0], {
-                    id: nodeId,
-                    meta: { root },
-                })
-                .then(data => {
-                    if (data?.lineage) {
-                        const sourceOrTarget =
-                            handleType == 'target' ? 'dest' : 'source';
-                        const expansions = data.lineage
-                            .filter(rel => rel[sourceOrTarget] !== undefined)
-                            .map(exp => ({ ...exp, expands: nodeId }));
-                        if (expansions.length === 0) {
-                            setRelationships(old => {
-                                const newRels = old.map(rel => {
-                                    if (
-                                        rel[sourceOrTarget] &&
-                                        getIdFromKey(rel[sourceOrTarget]) ==
-                                            nodeId
-                                    ) {
-                                        return {
-                                            ...rel,
-                                            clickedHandle: sourceOrTarget,
-                                        };
-                                    } else {
-                                        return rel;
-                                    }
+    // Callback fired when handles are clicked
+    // - if handleType=target, call api with nodeId and filter on dest
+    // - if handleType=source, call api with nodeId and filter on source
+    const onConnectStart = useMemo(() => {
+        return (event, { nodeId, handleId, handleType }) => {
+            if (dataProvider) {
+                dataProvider
+                    .getLineage(handleId.split(':')[0], {
+                        id: nodeId,
+                        meta: { root },
+                    })
+                    .then(data => {
+                        if (data?.lineage) {
+                            const sourceOrTarget =
+                                handleType == 'target' ? 'dest' : 'source';
+                            const expansions = data.lineage
+                                .filter(
+                                    rel => rel[sourceOrTarget] !== undefined
+                                )
+                                .map(exp => ({ ...exp, expands: nodeId }));
+                            if (expansions.length === 0) {
+                                notify('messages.lineage.noExpansion', {
+                                    type: 'info',
                                 });
-                                return newRels;
-                            });
-                            notify('messages.lineage.noExpansion', {
-                                type: 'info',
-                            });
-                        } else {
-                            setRelationships(old => [...old, ...expansions]);
+                            } else {
+                                setRelationships(old => [
+                                    ...old,
+                                    ...expansions,
+                                ]);
+                            }
                         }
-                    } else {
-                        notify('ra.message.not_found', {
-                            type: 'error',
-                        });
-                    }
-                })
-                .catch(error => {
-                    const e =
-                        typeof error === 'string'
-                            ? error
-                            : error.message || 'error';
-                    notify(e);
-                });
-        }
-    };
+                    })
+                    .catch(error => {
+                        const e =
+                            typeof error === 'string'
+                                ? error
+                                : error.message || 'error';
+                        notify(e);
+                    });
+            }
+        };
+    }, [dataProvider, notify, root]);
+
+    // Callback fired when handles are clicked
+    // - if handleType=target, call api with nodeId and filter on dest
+    // - if handleType=source, call api with nodeId and filter on source
+    // const onConnectStart = useCallback((event, { nodeId, handleId, handleType }) => {
+    //     if (dataProvider) {
+    //         dataProvider
+    //             .getLineage(handleId.split(':')[0], {
+    //                 id: nodeId,
+    //                 meta: { root },
+    //             })
+    //             .then(data => {
+    //                 if (data?.lineage) {
+    //                     const sourceOrTarget =
+    //                         handleType == 'target' ? 'dest' : 'source';
+    //                     const expansions = data.lineage
+    //                         .filter(
+    //                             rel => rel[sourceOrTarget] !== undefined
+    //                         )
+    //                         .map(exp => ({ ...exp, expands: nodeId }));
+    //                     if (expansions.length === 0) {
+    //                         notify('messages.lineage.noExpansion', {
+    //                             type: 'info',
+    //                         });
+    //                     } else {
+    //                         setRelationships(old => [
+    //                             ...old,
+    //                             ...expansions,
+    //                         ]);
+    //                     }
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 const e =
+    //                     typeof error === 'string'
+    //                         ? error
+    //                         : error.message || 'error';
+    //                 notify(e);
+    //             });
+    //     }
+    //   }, [dataProvider, notify, root]);
 
     return (
         <Box
@@ -153,7 +177,8 @@ export const LineageTabComponent = () => {
     );
 };
 
-const getIdFromKey = (key: string) => {
+//TODO prendere da common/utils
+export const getIdFromKey = (key: string) => {
     return key.split(':').pop()?.split('/').pop() || '';
 };
 
@@ -221,20 +246,8 @@ export const Flow = (props: { relationships: any[]; onConnectStart: any }) => {
     const { fitView } = useReactFlow();
     const translate = useTranslate();
 
-    const { nodes: initialNodes, edges: initialEdges } = getNodesAndEdges(
-        relationships,
-        record,
-        translate
-    );
-
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-        initialNodes,
-        initialEdges,
-        'RL'
-    );
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(layoutedNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(layoutedEdges);
+    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
     useEffect(() => {
         const { nodes: newNodes, edges: newEdges } = getNodesAndEdges(
@@ -242,10 +255,10 @@ export const Flow = (props: { relationships: any[]; onConnectStart: any }) => {
             record,
             translate
         );
-        const { nodes: newLayoutedNodes, edges: newLayoutedEdges } =
+        const { nodes: layoutedNodes, edges: layoutedEdges } =
             getLayoutedElements(newNodes, newEdges, 'LR');
-        setNodes([...newLayoutedNodes]);
-        setEdges([...newLayoutedEdges]);
+        setNodes([...layoutedNodes]);
+        setEdges([...layoutedEdges]);
     }, [record, relationships, setEdges, setNodes, translate]);
 
     useEffect(() => {
