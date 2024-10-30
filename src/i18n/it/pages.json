@@ -79,11 +79,14 @@
         }
     },
     "lineage": {
-        "title": "Genealogia",
         "description": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca su un nodo per visualizzarne i dettagli. Clicca sui simboli + per espandere la genealogia del nodo.",
+        "projectDescription": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca su un nodo per visualizzarne i dettagli.",
+        "projectTitle": "Genealogia di %{projectId}",
         "relationships": {
             "consumes": "consumato da",
-            "producedBy": "produce"
-        }
+            "producedBy": "produce",
+            "runDiFunzione": "runDiFunzione"
+        },
+        "title": "Genealogia"
     }
 }

@@ -525,7 +525,7 @@ const springDataProvider = (
             );
         },
         //Lineage for Entities
-        getLineage: (resource,params) => {
+        getLineage: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
@@ -543,7 +543,57 @@ const springDataProvider = (
                     lineage: jsonBody,
                 };
             });
-        }
+        },
+        //Lineage for whole project
+        getProjectLineage: (resource, params) => {
+            const url = `${apiUrl}/${resource}/${params.id}/relationships`;
+            return new Promise((resolve, reject) => {
+                resolve({
+                    lineage: [
+                        {
+                            type: "consumes",
+                            dest: "store://prj2/dataitem/table/persone:le8ydlgde3b-9f72b-m2k7jn8a",
+                            source: "store://prj2/model/model/testm1:bvqbrtroqym-5d42f-m2k86it9"
+                        },
+                        {
+                            type: "consumes",
+                            dest: "store://prj2/dataitem/dataitem/cose:7aes6daq6dr-9a152-m2a9cxr0",
+                            source: "store://prj2/model/model/testm1:bvqbrtroqym-5d42f-m2k86it9"
+                        },
+                        {
+                            type: "producedBy",
+                            dest: "store://prj2/model/model/testm1:bvqbrtroqym-5d42f-m2k86it9",
+                            source: "store://prj2/dataitem/table/m1table:zx0vlofjx1r-63596-m2k88gqc"
+                        },
+                        {
+                            type: "producedBy",
+                            dest: "store://prj2/run/python+run/9aecbca6-37a0-404a-89e1-db96b4aa351e",
+                            source: "store://prj2/dataitem/table/persone:le8ydlgde3b-9f72b-m2k7jn8a"
+                        },
+                        {
+                            type: "runDiFunzione",
+                            dest: "store://prj2/function/python/f1:167a6185-0773-4196-9a22-cc77ab5ccecf",
+                            source: "store://prj2/run/python+run/9aecbca6-37a0-404a-89e1-db96b4aa351e",
+                        },
+                    ]
+                });
+            })
+            // return httpClient(url, {
+            //     method: 'POST',
+            //     body: JSON.stringify(params.data),
+            // }).then(({ status, body }) => {
+            //     if (status !== 200) {
+            //         throw new Error('Invalid response status ' + status);
+            //     }
+            //     if (!body) {
+            //         throw new Error('Resource not found');
+            //     }
+            //     const jsonBody = JSON.parse(body);
+            //     return {
+            //         lineage: jsonBody,
+            //     };
+            // });
+        },
     };
 };
 
