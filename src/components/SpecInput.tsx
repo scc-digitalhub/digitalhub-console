@@ -9,6 +9,7 @@ import {
 import { useWatch } from 'react-hook-form';
 import { useSchemaProvider } from '../provider/schemaProvider';
 import { JsonSchemaInput } from './JsonSchema';
+import { get } from 'lodash';
 
 export const SpecInput = (props: {
     source: string;
@@ -32,7 +33,7 @@ export const SpecInput = (props: {
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const eq = record?.source ? deepEqual(record[source], value) : false;
+    const eq = record ? deepEqual(get(record, source, {}), value) : false;
 
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
