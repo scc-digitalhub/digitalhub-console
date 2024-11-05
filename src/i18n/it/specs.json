@@ -48,7 +48,7 @@
     "title": "Huggingface"
   },
   "huggingfaceserve": {
-    "description": "Esecuzione modello Huggingface ",
+    "description": "Esecuzione modello Huggingface",
     "title": "Huggingface"
   },
   "kfp": {

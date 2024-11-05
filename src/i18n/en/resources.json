@@ -140,9 +140,9 @@
             "action": "Action",
             "end_time": "End",
             "function": "Function",
-            "key": "Chiave",
+            "key": "Key",
             "lang": "Language",
-            "name": "Nome",
+            "name": "Name",
             "run_id": "Run ID",
             "source": "Source",
             "start_time": "Start"

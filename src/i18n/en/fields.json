@@ -79,7 +79,7 @@
   },
   "createdBy": {
     "description": "Username for the resource author",
-    "title": "Created By"
+    "title": "Created by"
   },
   "datagrid": {
     "key": "Name",
@@ -101,7 +101,21 @@
     "description": "",
     "title": "Error Report"
   },
-  "events": "Events",
+  "events": {
+    "title": "Events",
+    "time": {
+      "title": "Time"
+    },
+    "status": {
+      "title": "Status"
+    },
+    "message": {
+      "title": "Message"
+    },
+    "details": {
+      "title": "Details"
+    }
+  },
   "example": {
     "description": "",
     "title": "Example"
@@ -127,6 +141,10 @@
   "framework": {
     "description": "",
     "title": "Framework"
+  },
+  "fsGroup": {
+    "title": "FS Group",
+    "description": "File System group ID"
   },
   "function": {
     "description": "Static reference to function",
@@ -428,6 +446,10 @@
     "description": "",
     "title": "Protocol"
   },
+  "provider": {
+    "title": "Provider",
+    "description": "Secret provider"
+  },
   "publish": {
     "description": "",
     "title": "Publish"
@@ -527,7 +549,10 @@
   },
   "spec": {
     "description": "",
-    "title": "Spec"
+    "title": "Spec",
+    "task": {
+      "title": "Function"
+    }
   },
   "srcPath": {
     "description": "URI pointing to the source",
@@ -564,7 +589,7 @@
   },
   "updatedBy": {
     "description": "Username of the last user modifying the resource",
-    "title": "Updated By"
+    "title": "Updated by"
   },
   "user": {
     "description": "Username",
