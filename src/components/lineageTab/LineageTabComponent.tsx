@@ -6,7 +6,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
     ReactFlow,
     Background,
@@ -22,6 +22,7 @@ import '@xyflow/react/dist/style.css';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { CardNode } from './CardNode';
 import { getLayoutedElements } from './layouting';
+import { keyParser } from '../../common/helper';
 
 export const NoLineage = () => {
     const translate = useTranslate();
@@ -70,86 +71,43 @@ export const LineageTabComponent = () => {
     // Callback fired when handles are clicked
     // - if handleType=target, call api with nodeId and filter on dest
     // - if handleType=source, call api with nodeId and filter on source
-    const onConnectStart = useMemo(() => {
-        return (event, { nodeId, handleId, handleType }) => {
-            if (dataProvider) {
-                dataProvider
-                    .getLineage(handleId.split(':')[0], {
-                        id: nodeId,
-                        meta: { root },
-                    })
-                    .then(data => {
-                        if (data?.lineage) {
-                            const sourceOrTarget =
-                                handleType == 'target' ? 'dest' : 'source';
-                            const expansions = data.lineage
-                                .filter(
-                                    rel => rel[sourceOrTarget] !== undefined
-                                )
-                                .map(exp => ({ ...exp, expands: nodeId }));
-                            if (expansions.length === 0) {
-                                notify('messages.lineage.noExpansion', {
-                                    type: 'info',
-                                });
-                            } else {
-                                setRelationships(old => [
-                                    ...old,
-                                    ...expansions,
-                                ]);
-                            }
+    const onConnectStart = useCallback((event, { nodeId, handleId, handleType }) => {
+        if (dataProvider) {
+            dataProvider
+                .getLineage(handleId.split(':')[0], {
+                    id: nodeId,
+                    meta: { root },
+                })
+                .then(data => {
+                    if (data?.lineage) {
+                        const sourceOrTarget =
+                            handleType == 'target' ? 'source' : 'dest';
+                        const expansions = data.lineage
+                            .filter(
+                                rel => rel[sourceOrTarget].endsWith(nodeId)
+                            )
+                            .map(exp => ({ ...exp, expands: nodeId }));
+                        if (expansions.length === 0) {
+                            notify('messages.lineage.noExpansion', {
+                                type: 'info',
+                            });
+                        } else {
+                            setRelationships(old => [
+                                ...old,
+                                ...expansions,
+                            ]);
                         }
-                    })
-                    .catch(error => {
-                        const e =
-                            typeof error === 'string'
-                                ? error
-                                : error.message || 'error';
-                        notify(e);
-                    });
-            }
-        };
-    }, [dataProvider, notify, root]);
-
-    // Callback fired when handles are clicked
-    // - if handleType=target, call api with nodeId and filter on dest
-    // - if handleType=source, call api with nodeId and filter on source
-    // const onConnectStart = useCallback((event, { nodeId, handleId, handleType }) => {
-    //     if (dataProvider) {
-    //         dataProvider
-    //             .getLineage(handleId.split(':')[0], {
-    //                 id: nodeId,
-    //                 meta: { root },
-    //             })
-    //             .then(data => {
-    //                 if (data?.lineage) {
-    //                     const sourceOrTarget =
-    //                         handleType == 'target' ? 'dest' : 'source';
-    //                     const expansions = data.lineage
-    //                         .filter(
-    //                             rel => rel[sourceOrTarget] !== undefined
-    //                         )
-    //                         .map(exp => ({ ...exp, expands: nodeId }));
-    //                     if (expansions.length === 0) {
-    //                         notify('messages.lineage.noExpansion', {
-    //                             type: 'info',
-    //                         });
-    //                     } else {
-    //                         setRelationships(old => [
-    //                             ...old,
-    //                             ...expansions,
-    //                         ]);
-    //                     }
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 const e =
-    //                     typeof error === 'string'
-    //                         ? error
-    //                         : error.message || 'error';
-    //                 notify(e);
-    //             });
-    //     }
-    //   }, [dataProvider, notify, root]);
+                    }
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
+        }
+      }, [dataProvider, notify, root]);
 
     return (
         <Box
@@ -177,11 +135,6 @@ export const LineageTabComponent = () => {
     );
 };
 
-//TODO prendere da common/utils
-export const getIdFromKey = (key: string) => {
-    return key.split(':').pop()?.split('/').pop() || '';
-};
-
 const getNodesAndEdges = (
     relationships: any[],
     record: any,
@@ -197,41 +150,47 @@ const getNodesAndEdges = (
             },
             data: { key: record.key, current: true },
         },
-        ...relationships.map(
-            (relationship: any): Node => ({
-                id: getIdFromKey(relationship.dest || relationship.source),
+        ...relationships.map((relationship: any): Node => {
+            const destParsed = keyParser(relationship.dest);
+            //the node that is being expanded, defaults to the current node
+            const relatedNode = relationship.expands || record.id;
+            //the node to create
+            const nodeKey =
+                destParsed.id == relatedNode ||
+                destParsed.name == relatedNode
+                    ? relationship.source
+                    : relationship.dest;
+            const keyParsed = keyParser(nodeKey);
+            return {
+                id: keyParsed.id || keyParsed.name || '',
                 type: 'cardNode',
                 position: {
                     x: 0,
                     y: 0,
                 },
                 data: {
-                    key: relationship.dest || relationship.source,
-                    clickedHandle: relationship.clickedHandle,
+                    key: nodeKey,
                 },
-            })
-        ),
+            };
+        }),
     ];
 
     const edges = relationships.map(
-        (relationship: any, index: number): Edge => ({
-            id: index.toString(),
-            source: relationship?.dest
-                ? getIdFromKey(relationship?.dest)
-                : relationship.expands
-                ? relationship.expands
-                : record.id,
-            target: relationship?.source
-                ? getIdFromKey(relationship?.source)
-                : relationship.expands
-                ? relationship.expands
-                : record.id,
-            type: 'default',
-            animated: true,
-            label: translate(
-                `pages.lineage.relationships.${relationship.type}`
-            ),
-        })
+        (relationship: any, index: number): Edge => {
+            //dest should always be present, source might be missing in metadata
+            const destParsed = keyParser(relationship.dest);
+            const sourceParsed = keyParser(relationship.source || record.key);
+            return {
+                id: index.toString(),
+                source: destParsed.id || destParsed.name || '',
+                target: sourceParsed.id || sourceParsed.name || '',
+                type: 'default',
+                animated: true,
+                label: translate(
+                    `pages.lineage.relationships.${relationship.type}`
+                ),
+            };
+        }
     );
     return { nodes, edges };
 };

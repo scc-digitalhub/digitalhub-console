@@ -84,8 +84,8 @@
         "projectTitle": "Lineage of %{projectId}",
         "relationships": {
             "consumes": "consumed by",
-            "producedBy": "produces",
-            "runDiFunzione": "runDiFunzione"
+            "produced_by": "produces",
+            "run_of": "run of"
         },
         "title": "Lineage"
     }

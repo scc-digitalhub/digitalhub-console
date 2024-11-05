@@ -84,8 +84,8 @@
         "projectTitle": "Genealogia di %{projectId}",
         "relationships": {
             "consumes": "consumato da",
-            "producedBy": "produce",
-            "runDiFunzione": "runDiFunzione"
+            "produced_by": "produce",
+            "run_of": "esecuzione di"
         },
         "title": "Genealogia"
     }

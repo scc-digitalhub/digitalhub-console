@@ -23,10 +23,11 @@ import {
     useNodesState,
     useReactFlow,
 } from '@xyflow/react';
-import { getIdFromKey, NoLineage } from '../../components/lineageTab/LineageTabComponent';
+import { NoLineage } from '../../components/lineageTab/LineageTabComponent';
 import { useEffect } from 'react';
 import { getLayoutedElements } from '../../components/lineageTab/layouting';
 import { CardNode } from '../../components/lineageTab/CardNode';
+import { keyParser } from '../../common/helper';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
@@ -97,10 +98,16 @@ const Lineage = () => {
                                 relationship: any,
                                 index: number
                             ) => {
+                                const destParsed = keyParser(relationship.dest);
+                                const destId = destParsed.id || destParsed.name || '';
+                                const sourceParsed = keyParser(relationship.source);
+                                const sourceId = sourceParsed.id || sourceParsed.name || '';
+
+                                //create edge
                                 initialEdges.push({
                                     id: index.toString(),
-                                    source: getIdFromKey(relationship.dest),
-                                    target: getIdFromKey(relationship.source),
+                                    source: destId,
+                                    target: sourceId,
                                     type: 'default',
                                     animated: true,
                                     label: translate(
@@ -108,9 +115,24 @@ const Lineage = () => {
                                     ),
                                 });
 
-                                if (relationship.type === 'runDiFunzione') {
+                                //add nodes if not already listed
+                                if (!initialNodes.some(n => n.id == destId)) {
                                     initialNodes.push({
-                                        id: getIdFromKey(relationship.source),
+                                        id: destId,
+                                        type: 'cardNode',
+                                        position: {
+                                            x: 0,
+                                            y: 0,
+                                        },
+                                        data: {
+                                            key: relationship.dest,
+                                            expandable: false,
+                                        },
+                                    })
+                                }
+                                if (!initialNodes.some(n => n.id == sourceId)) {
+                                    initialNodes.push({
+                                        id: sourceId,
                                         type: 'cardNode',
                                         position: {
                                             x: 0,
@@ -166,7 +188,7 @@ const Lineage = () => {
                 width: '100%',
             }}
         >
-            <div style={{ height: '400px', width: '100%' }}>
+            <div style={{ height: '600px', width: '100%' }}>
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}

@@ -34,22 +34,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FunctionIcon } from '../../resources/functions/icon';
-
-/**
- * Run key: store://prj1/run/python+run/cee60681-54a9-49b8-a69a-59ee079148a9
- * Other keys: store://prj1/model/model/testm1:4b32d511-b0bc-450a-bbdb-01b781d323c7
- */
-//TODO usare funzione in common/utils
-const parseKey = (key: string) => {
-    const [, , , resource, kind, nameAndId] = key.split('/');
-    const [nameOrId, id] = nameAndId.split(':');
-    return {
-        resource: resource + 's',
-        kind,
-        name: nameOrId,
-        id: id || nameOrId,
-    };
-};
+import { keyParser } from '../../common/helper';
 
 export const CardNode = memo(function CardNode(props: {
     data: any;
@@ -57,7 +42,7 @@ export const CardNode = memo(function CardNode(props: {
 }) {
     const [showInfo, setShowInfo] = useState(false);
     const { data } = props;
-    const { resource, kind, name, id } = parseKey(data.key);
+    const { resource = '', kind, name, id = name } = keyParser(data.key);
     const { data: record, error } = useGetOne(resource, { id });
     const recordRepresentation = useGetRecordRepresentation(resource);
     const edges = useEdges();
