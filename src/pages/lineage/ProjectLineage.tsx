@@ -94,14 +94,15 @@ const Lineage = () => {
                     if (data?.lineage) {
                         let initialEdges: Edge[] = [];
                         data.lineage.forEach(
-                            (
-                                relationship: any,
-                                index: number
-                            ) => {
+                            (relationship: any, index: number) => {
                                 const destParsed = keyParser(relationship.dest);
-                                const destId = destParsed.id || destParsed.name || '';
-                                const sourceParsed = keyParser(relationship.source);
-                                const sourceId = sourceParsed.id || sourceParsed.name || '';
+                                const destId =
+                                    destParsed.id || destParsed.name || '';
+                                const sourceParsed = keyParser(
+                                    relationship.source
+                                );
+                                const sourceId =
+                                    sourceParsed.id || sourceParsed.name || '';
 
                                 //create edge
                                 initialEdges.push({
@@ -128,7 +129,7 @@ const Lineage = () => {
                                             key: relationship.dest,
                                             expandable: false,
                                         },
-                                    })
+                                    });
                                 }
                                 if (!initialNodes.some(n => n.id == sourceId)) {
                                     initialNodes.push({
@@ -142,19 +143,17 @@ const Lineage = () => {
                                             key: relationship.source,
                                             expandable: false,
                                         },
-                                    })
+                                    });
                                 }
                             }
                         );
 
-                        const {
-                            nodes: layoutedNodes,
-                            edges: layoutedEdges,
-                        } = getLayoutedElements(
-                            initialNodes,
-                            initialEdges,
-                            'LR'
-                        );
+                        const { nodes: layoutedNodes, edges: layoutedEdges } =
+                            getLayoutedElements(
+                                initialNodes,
+                                initialEdges,
+                                'LR'
+                            );
 
                         setNodes([...layoutedNodes]);
                         setEdges([...layoutedEdges]);

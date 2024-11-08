@@ -71,43 +71,46 @@ export const LineageTabComponent = () => {
     // Callback fired when handles are clicked
     // - if handleType=target, call api with nodeId and filter on dest
     // - if handleType=source, call api with nodeId and filter on source
-    const onConnectStart = useCallback((event, { nodeId, handleId, handleType }) => {
-        if (dataProvider) {
-            dataProvider
-                .getLineage(handleId.split(':')[0], {
-                    id: nodeId,
-                    meta: { root },
-                })
-                .then(data => {
-                    if (data?.lineage) {
-                        const sourceOrTarget =
-                            handleType == 'target' ? 'source' : 'dest';
-                        const expansions = data.lineage
-                            .filter(
-                                rel => rel[sourceOrTarget].endsWith(nodeId)
-                            )
-                            .map(exp => ({ ...exp, expands: nodeId }));
-                        if (expansions.length === 0) {
-                            notify('messages.lineage.noExpansion', {
-                                type: 'info',
-                            });
-                        } else {
-                            setRelationships(old => [
-                                ...old,
-                                ...expansions,
-                            ]);
+    const onConnectStart = useCallback(
+        (event, { nodeId, handleId, handleType }) => {
+            if (dataProvider) {
+                dataProvider
+                    .getLineage(handleId.split(':')[0], {
+                        id: nodeId,
+                        meta: { root },
+                    })
+                    .then(data => {
+                        if (data?.lineage) {
+                            const sourceOrTarget =
+                                handleType == 'target' ? 'source' : 'dest';
+                            const expansions = data.lineage
+                                .filter(rel =>
+                                    rel[sourceOrTarget].endsWith(nodeId)
+                                )
+                                .map(exp => ({ ...exp, expands: nodeId }));
+                            if (expansions.length === 0) {
+                                notify('messages.lineage.noExpansion', {
+                                    type: 'info',
+                                });
+                            } else {
+                                setRelationships(old => [
+                                    ...old,
+                                    ...expansions,
+                                ]);
+                            }
                         }
-                    }
-                })
-                .catch(error => {
-                    const e =
-                        typeof error === 'string'
-                            ? error
-                            : error.message || 'error';
-                    notify(e);
-                });
-        }
-      }, [dataProvider, notify, root]);
+                    })
+                    .catch(error => {
+                        const e =
+                            typeof error === 'string'
+                                ? error
+                                : error.message || 'error';
+                        notify(e);
+                    });
+            }
+        },
+        [dataProvider, notify, root]
+    );
 
     return (
         <Box
@@ -156,8 +159,7 @@ const getNodesAndEdges = (
             const relatedNode = relationship.expands || record.id;
             //the node to create
             const nodeKey =
-                destParsed.id == relatedNode ||
-                destParsed.name == relatedNode
+                destParsed.id == relatedNode || destParsed.name == relatedNode
                     ? relationship.source
                     : relationship.dest;
             const keyParsed = keyParser(nodeKey);

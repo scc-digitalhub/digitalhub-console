@@ -218,7 +218,7 @@ const NodeInfo = (props: {
         );
     }
 
-    const toShow = (e) => {
+    const toShow = e => {
         e.stopPropagation();
         const path = createPath({
             resource,
