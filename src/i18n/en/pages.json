@@ -32,7 +32,11 @@
             "running": "Running"
         },
         "text": "Define, build and execute functions to manage artifacts and data items.",
-        "updated": "Updated"
+        "updated": "Updated",
+        "workflows": {
+            "empty": "No workflows yet",
+            "title": "Workflows"
+        }
     },
     "functions": {
         "show": {

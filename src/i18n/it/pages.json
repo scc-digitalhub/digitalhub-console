@@ -32,7 +32,11 @@
             "running": "In esecuzione"
         },
         "text": "Definisci, crea ed esegui funzioni per gestire artefatti e data items.",
-        "updated": "Aggiornamento"
+        "updated": "Aggiornamento",
+        "workflows": {
+            "empty": "Ancora nessun workflow",
+            "title": "Workflow"
+        }
     },
     "functions": {
         "show": {

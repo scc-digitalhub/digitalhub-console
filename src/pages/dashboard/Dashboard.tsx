@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import {
     ListButton,
     LoadingIndicator,
+    ResourceContextProvider,
     SortPayload,
     useDataProvider,
     useTranslate,
@@ -29,11 +30,14 @@ import { convertToDate } from './helper';
 import { RunIcon } from '../../resources/runs/icon';
 import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
+import { ShareButton } from '../../components/ShareButton';
+import { useProjectPermissions } from '../../provider/authProvider';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const { isAdmin } = useProjectPermissions();
 
     const [project, setProject] = useState<any>();
 
@@ -144,12 +148,20 @@ export const Dashboard = () => {
                 spacing={2}
                 sx={{ mb: 2 }}
             >
+                {isAdmin(project.id) && (
+                    <ResourceContextProvider value="projects">
+                        <ShareButton
+                            variant="contained"
+                            record={project}
+                        />
+                    </ResourceContextProvider>
+                )}
                 <CreateDropDownButton
                     resources={[
                         'functions',
                         'models',
                         'dataitems',
-                        'artifacts',
+                        'workflows',
                     ]}
                 />
             </Stack>
@@ -195,7 +207,7 @@ export const Dashboard = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
-                    <OverviewCard resource="artifacts" />
+                    <OverviewCard resource="workflows" />
                 </Grid>
             </Grid>
 
