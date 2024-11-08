@@ -79,7 +79,7 @@
   },
   "createdBy": {
     "description": "Username dell'autore della risorsa",
-    "title": "Creato Da"
+    "title": "Creato da"
   },
   "datagrid": {
     "key": "Nome",
@@ -101,7 +101,21 @@
     "description": "",
     "title": "Rapporto sugli Errori"
   },
-  "events": "Eventi",
+  "events": {
+    "title": "Eventi",
+    "time": {
+      "title": "Data e ora"
+    },
+    "status": {
+      "title": "Stato"
+    },
+    "message": {
+      "title": "Messaggio"
+    },
+    "details": {
+      "title": "Dettagli"
+    }
+  },
   "example": {
     "description": "",
     "title": "Esempio"
@@ -127,6 +141,10 @@
   "framework": {
     "description": "",
     "title": "Framework"
+  },
+  "fsGroup": {
+    "title": "Gruppo FS",
+    "description": "ID gruppo File System"
   },
   "function": {
     "description": "Riferimento statico alla funzione",
@@ -428,6 +446,10 @@
     "description": "",
     "title": "Protocollo"
   },
+  "provider": {
+    "title": "Fornitore",
+    "description": "Fornitore del segreto"
+  },
   "publish": {
     "description": "",
     "title": "Pubblicare"
@@ -527,7 +549,10 @@
   },
   "spec": {
     "description": "",
-    "title": "Spec"
+    "title": "Spec",
+    "task": {
+      "title": "Funzione"
+    }
   },
   "srcPath": {
     "description": "URI che punta alla sorgente",
@@ -563,8 +588,8 @@
     "title": "Aggiornamento"
   },
   "updatedBy": {
-    "description": "Username dell'autore che ha modificato per ultimo la risorsa",
-    "title": "Aggiornato Da"
+    "description": "Username dell'autore dell'ultima modifica",
+    "title": "Aggiornato da"
   },
   "user": {
     "description": "Username",

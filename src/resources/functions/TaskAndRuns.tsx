@@ -71,7 +71,7 @@ export const TaskAndRuns = (props: {
             <SimpleShowLayout>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="kind" />
+                        <TextField source="kind" label="fields.kind"/>
                     </Labeled>
                     <Labeled>
                         <TextField source="id" />
@@ -195,9 +195,9 @@ const TaskRunList = () => {
                 actions={<CreateActionButton record={partial} />}
             >
                 <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField source="metadata.created" showTime />
+                    <DateField source="metadata.created" showTime label="fields.metadata.created" />
                     <TextField source="id" sortable={false} />
-                    <StateChips source="status.state" sortable={false} />
+                    <StateChips source="status.state" sortable={false} label="fields.status.state" />
                     <RowButtonGroup label="⋮">
                         <DropDownButton>
                             <ShowButton />

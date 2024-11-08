@@ -68,7 +68,7 @@ export const ProjectConfig = () => {
 
                                 <Stack direction={'row'} spacing={3}>
                                     <Labeled>
-                                        <TextField source="kind" />
+                                        <TextField source="kind" label="fields.kind" />
                                     </Labeled>
 
                                     <Labeled>

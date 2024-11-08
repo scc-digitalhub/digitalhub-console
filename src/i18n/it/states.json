@@ -1,5 +1,5 @@
 {
-  "built": "Built",
+  "built": "Inizializzato",
   "completed": "Completato",
   "deleted": "Cancellato",
   "deleting": "In cancellazione",
@@ -7,7 +7,7 @@
   "ready": "Pronto",
   "running": "In esecuzione",
   "resume": "Ripreso",
-  "stopped": "Stoppato",
-  "stopping": "Stop in corso",
+  "stopped": "Interrotto",
+  "stopping": "Interruzione in corso",
   "stop": "Stop"
 }

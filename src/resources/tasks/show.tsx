@@ -32,7 +32,7 @@ export const TaskShowComponent = () => {
                 </Labeled>
 
                 <Labeled>
-                    <TextField source="kind" />
+                    <TextField source="kind" label="fields.kind" />
                 </Labeled>
             </Stack>
             <Labeled>
