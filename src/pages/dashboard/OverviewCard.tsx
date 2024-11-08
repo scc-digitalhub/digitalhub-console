@@ -24,7 +24,6 @@ import {
     ListButton,
     CreateButton,
     useCreatePath,
-    useGetResourceLabel,
 } from 'react-admin';
 import { ResourceIcon } from '../../components/ResourceIcon';
 import { EmptyList } from './EmptyList';
@@ -45,7 +44,6 @@ export const OverviewCard = (props: {
     const dataProvider = useDataProvider();
     const translate = useTranslate();
     const createPath = useCreatePath();
-    const getResourceLabel = useGetResourceLabel();
     const theme = useTheme();
 
     const [data, setData] = useState<GetListResult<any>>();
