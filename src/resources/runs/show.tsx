@@ -54,7 +54,7 @@ import { ResumeButton } from './ResumeButton';
 import { keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
-import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
+import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();

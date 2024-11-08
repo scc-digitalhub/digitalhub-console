@@ -34,7 +34,7 @@ import deepEqual from 'deep-is';
 import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
-import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
+import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 
 const ShowComponent = () => {
     const resource = useResourceContext();

@@ -43,7 +43,7 @@ import { MetadataField } from '../../components/MetadataField';
 // }));
 import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
-import { LineageTabComponent } from '../../components/lineageTab/LineageTabComponent';
+import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 
 const ShowComponent = () => {
     const record = useRecordContext();

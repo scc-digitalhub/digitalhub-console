@@ -23,10 +23,10 @@ import {
     useNodesState,
     useReactFlow,
 } from '@xyflow/react';
-import { NoLineage } from '../../components/lineageTab/LineageTabComponent';
+import { NoLineage } from '../../components/lineage/NoLineage';
 import { useEffect } from 'react';
-import { getLayoutedElements } from '../../components/lineageTab/layouting';
-import { CardNode } from '../../components/lineageTab/CardNode';
+import { getLayoutedElements } from '../../components/lineage/layouting';
+import { CardNode } from '../../components/lineage/CardNode';
 import { keyParser } from '../../common/helper';
 
 export const ProjectLineage = () => {
