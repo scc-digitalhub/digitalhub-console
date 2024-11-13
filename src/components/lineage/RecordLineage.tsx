@@ -1,18 +1,51 @@
-import { useTranslate } from 'react-admin';
-import { Node, Edge, OnConnectStart } from '@xyflow/react';
+import {
+    RaRecord,
+    useDataProvider,
+    useNotify,
+    useTranslate,
+} from 'react-admin';
+import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { keyParser } from '../../common/helper';
 import { set } from 'lodash';
 import { Flow } from './Flow';
+import { getNodesAndEdges, Relationship, RelationshipDirection } from './utils';
+import { useCallback, useEffect, useState } from 'react';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { keyParser } from '../../common/helper';
 
 export const RecordLineage = (props: {
-    relationships: any[];
-    record: any;
-    onConnectStart?: OnConnectStart;
+    relationships: Relationship[];
+    record: RaRecord;
+    expandable?: boolean;
 }) => {
-    const { relationships, record, onConnectStart } = props;
-    const translate = useTranslate();
+    const {
+        relationships: relFromProps = [],
+        record,
+        expandable = true,
+    } = props;
+    const [relationships, setRelationships] = useState<Relationship[]>([]);
 
+    const translate = useTranslate();
+    const dataProvider = useDataProvider();
+    const { root } = useRootSelector();
+    const notify = useNotify();
+
+    useEffect(() => {
+        if (relFromProps) {
+            //inject record as source if missing and store
+            setRelationships(
+                relFromProps.map(r => {
+                    if (r.source) {
+                        return r;
+                    }
+
+                    return { ...r, source: record?.key };
+                })
+            );
+        }
+    }, [JSON.stringify(relFromProps), setRelationships]);
+
+    //derive translations for rels
     const labels = {};
     relationships?.forEach(value =>
         set(
@@ -21,64 +54,97 @@ export const RecordLineage = (props: {
             translate(`pages.lineage.relationships.${value.type}`)
         )
     );
-    const { nodes, edges } = getNodesAndEdges(relationships, record, labels);
 
-    return <Flow nodes={nodes} edges={edges} onConnectStart={onConnectStart} />;
-};
+    //use reverse representation, we store rel on child side
+    const direction = RelationshipDirection.reverse;
 
-const getNodesAndEdges = (
-    relationships: any[],
-    record: any,
-    labels: any
-): { nodes: Node[]; edges: Edge[] } => {
-    const nodes = [
-        {
-            id: record.id,
-            type: 'cardNode',
-            position: {
-                x: 0,
-                y: 0,
-            },
-            data: { key: record.key, current: true },
+    // Callback fired when handles are clicked
+    // NOTE: handleType marks side of relation but we need to evaluate direction as well
+    const onConnectStart = useCallback(
+        (event, { nodeId, handleId, handleType }) => {
+            //we use reverse direction!
+            const as = handleType === 'dest' ? 'dest' : 'source';
+            const key = atob(handleId.split(':')[0]);
+            const { resource, id } = keyParser(key);
+
+            if (resource && id) {
+                dataProvider
+                    ?.getLineage(resource, {
+                        id,
+                        meta: { root },
+                    })
+                    .then(data => {
+                        if (data?.lineage) {
+                            //extract requested side from list of rels
+                            const rels = data.lineage
+                                .filter(r => r[as] == key)
+                                .map(exp => ({ ...exp, expands: nodeId }));
+                            if (rels.length == 0) {
+                                notify('messages.lineage.noExpansion', {
+                                    type: 'info',
+                                });
+                            } else {
+                                let adds = 0;
+                                //store if missing
+                                setRelationships(value => {
+                                    //add only missing
+                                    const toAdd = rels.filter(
+                                        r =>
+                                            !value.some(
+                                                x =>
+                                                    r.source == x.source &&
+                                                    r.dest == x.dest &&
+                                                    r.type &&
+                                                    x.type
+                                            )
+                                    );
+                                    adds = toAdd.length;
+
+                                    if (toAdd) {
+                                        return [...value, ...toAdd];
+                                    } else {
+                                        //return *the same* array to avoid flipping for no changes
+                                        return value;
+                                    }
+                                });
+
+                                if (adds == 0) {
+                                    //no new relationships discovered
+                                    notify('messages.lineage.noExpansion', {
+                                        type: 'info',
+                                    });
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        const e =
+                            typeof error === 'string'
+                                ? error
+                                : error.message || 'error';
+                        notify(e);
+                    });
+            }
         },
-        ...relationships.map((relationship: any): Node => {
-            const destParsed = keyParser(relationship.dest);
-            //the node that is being expanded, defaults to the current node
-            const relatedNode = relationship.expands || record.id;
-            //the node to create
-            const nodeKey =
-                destParsed.id == relatedNode || destParsed.name == relatedNode
-                    ? relationship.source
-                    : relationship.dest;
-            const keyParsed = keyParser(nodeKey);
-            return {
-                id: keyParsed.id || keyParsed.name || '',
-                type: 'cardNode',
-                position: {
-                    x: 0,
-                    y: 0,
-                },
-                data: {
-                    key: nodeKey,
-                },
-            };
-        }),
-    ];
-
-    const edges = relationships.map(
-        (relationship: any, index: number): Edge => {
-            //dest should always be present, source might be missing in metadata
-            const destParsed = keyParser(relationship.dest);
-            const sourceParsed = keyParser(relationship.source || record.key);
-            return {
-                id: index.toString(),
-                source: destParsed.id || destParsed.name || '',
-                target: sourceParsed.id || sourceParsed.name || '',
-                type: 'default',
-                animated: true,
-                label: labels[relationship.type] || relationship.type,
-            };
-        }
+        [dataProvider, notify, root, setRelationships]
     );
-    return { nodes, edges };
+
+    const { nodes, edges } = getNodesAndEdges(
+        relationships,
+        direction,
+        [record],
+        labels,
+        expandable
+    );
+
+    return (
+        <ReactFlowProvider>
+            <Flow
+                nodes={nodes}
+                edges={edges}
+                direction={direction}
+                onConnectStart={onConnectStart}
+            />
+        </ReactFlowProvider>
+    );
 };

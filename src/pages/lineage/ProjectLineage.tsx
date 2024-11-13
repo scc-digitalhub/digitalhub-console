@@ -25,8 +25,8 @@ import {
 } from '@xyflow/react';
 import { NoLineage } from '../../components/lineage/NoLineage';
 import { useEffect } from 'react';
-import { getLayoutedElements } from '../../components/lineage/layouting';
-import { CardNode } from '../../components/lineage/CardNode';
+import { getLayoutedElements } from '../../components/lineage/utils';
+import { ReverseCardNode } from '../../components/lineage/CardNode';
 import { keyParser } from '../../common/helper';
 
 export const ProjectLineage = () => {
@@ -193,7 +193,7 @@ const Lineage = () => {
                     edges={edges}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
-                    nodeTypes={{ cardNode: CardNode }}
+                    nodeTypes={{ cardNode: ReverseCardNode }}
                     fitView
                     onConnectStart={() => {}}
                     proOptions={{ hideAttribution: true }}

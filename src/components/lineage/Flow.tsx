@@ -12,12 +12,13 @@ import {
     OnConnectStart,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { CardNode } from './CardNode';
-import { getLayoutedElements } from './layouting';
+import { ForwardCardNode, ReverseCardNode } from './CardNode';
+import { getLayoutedElements, RelationshipDirection } from './utils';
 
 export const Flow = (props: {
     nodes: Node[];
     edges: Edge[];
+    direction?: RelationshipDirection;
     onConnectStart?: OnConnectStart;
     height?: string;
     width?: string;
@@ -26,6 +27,7 @@ export const Flow = (props: {
         nodes: nodesProp,
         edges: edgesProp,
         onConnectStart,
+        direction = RelationshipDirection.forward,
         height = '400px',
         width = '100%',
     } = props;
@@ -48,6 +50,8 @@ export const Flow = (props: {
         });
     }, [nodes, edges, fitView]);
 
+    console.log('flow', nodes, edges);
+
     return (
         <Box style={{ height, width }}>
             <ReactFlow
@@ -56,7 +60,10 @@ export const Flow = (props: {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 nodeTypes={{
-                    cardNode: CardNode,
+                    cardNode:
+                        direction == RelationshipDirection.reverse
+                            ? ReverseCardNode
+                            : ForwardCardNode,
                 }}
                 fitView
                 onConnectStart={onConnectStart}

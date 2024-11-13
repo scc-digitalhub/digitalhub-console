@@ -7,8 +7,6 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useCallback, useEffect, useState } from 'react';
-import { ReactFlowProvider } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { NoLineage } from './NoLineage';
 import { RecordLineage } from './RecordLineage';
@@ -100,13 +98,11 @@ export const LineageTabComponent = () => {
                 {translate('pages.lineage.description')}
             </Typography>
             {relationships.length !== 0 ? (
-                <ReactFlowProvider>
-                    <RecordLineage
-                        relationships={relationships}
-                        record={record}
-                        onConnectStart={onConnectStart}
-                    />
-                </ReactFlowProvider>
+                <RecordLineage
+                    relationships={relationships}
+                    record={record}
+                    onConnectStart={onConnectStart}
+                />
             ) : (
                 <NoLineage />
             )}

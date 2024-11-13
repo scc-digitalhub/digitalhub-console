@@ -29,29 +29,23 @@ import { ModelIcon } from '../../resources/models/icon';
 import { DataItemIcon } from '../../resources/dataitems/icon';
 import { RunIcon } from '../../resources/runs/icon';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { NODE_WIDTH } from './layouting';
+import { NODE_WIDTH, RelationshipDirection } from './utils';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FunctionIcon } from '../../resources/functions/icon';
 import { keyParser } from '../../common/helper';
 
-export const CardNode = memo(function CardNode(props: {
-    data: any;
-    isConnectable: boolean;
-}) {
-    const [showInfo, setShowInfo] = useState(false);
-    const { data } = props;
+// export const CardNode = memo(function CardNode(props: {
+const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
+    const { data, direction } = props;
     const { resource = '', kind, name, id = name } = keyParser(data.key);
+
+    const [showInfo, setShowInfo] = useState(false);
     const { data: record, error } = useGetOne(resource, { id });
     const recordRepresentation = useGetRecordRepresentation(resource);
     const edges = useEdges();
     const [theme] = useTheme();
-
-    let nodeClass = data?.current ? 'MeNode' : 'RegularNode';
-    if (showInfo) {
-        nodeClass += ' InfoOpen';
-    }
 
     const handleNodeClick = e => {
         setShowInfo(!showInfo);
@@ -62,6 +56,10 @@ export const CardNode = memo(function CardNode(props: {
         setShowInfo(false);
         e.stopPropagation();
     };
+
+    console.log(data);
+    console.log(edges);
+    const nodeClass = showInfo ? 'RegularNode InfoOpen' : 'RegularNode';
 
     const nodeContent =
         resource == 'runs' ? (
@@ -95,28 +93,45 @@ export const CardNode = memo(function CardNode(props: {
             />
         );
 
-    const clickableNode = data?.current ? (
-        nodeContent
-    ) : (
+    const clickableNode = (
         <CardActionArea onClick={handleNodeClick}>{nodeContent}</CardActionArea>
     );
 
+    const node =
+        resource == 'runs' ? (
+            <RoundNode elevation={0} className={nodeClass}>
+                {clickableNode}
+            </RoundNode>
+        ) : (
+            <SquareNode elevation={0} className={nodeClass}>
+                {clickableNode}
+            </SquareNode>
+        );
+
     // Manage handles:
-    // - if node is current resource and there are no edges on one side, hide handle
     // - if generic node has no connections one one side, show clickable "plus" handle
-    // - if generic node has no connections one one side and expandable=false, hide handle
-    const hideLeftHandle =
-        (data?.current && !edges.some(e => e.target == id)) ||
-        (data?.expandable === false && !edges.some(e => e.target == id));
-    const hideRightHandle =
-        (data?.current && !edges.some(e => e.source == id)) ||
-        (data?.expandable === false && !edges.some(e => e.source == id));
+    // - if generic node has expandable=false, hide handle
 
-    const isLeftHandleClickable = !edges.some(e => e.target == id);
-    const isRightHandleClickable = !edges.some(e => e.source == id);
+    const isLeftConnected = edges.some(e =>
+        direction == RelationshipDirection.reverse
+            ? e.target == id
+            : e.source == id
+    );
+    const isRightConnected = edges.some(e =>
+        direction == RelationshipDirection.reverse
+            ? e.source == id
+            : e.target == id
+    );
 
-    const leftPlusHandleStyle = {
-        left: -20,
+    const isLeftHandleClickable =
+        data?.expandable !== false && !isLeftConnected;
+    const isRightHandleClickable =
+        data?.expandable !== false && !isRightConnected;
+
+    const hideLeftHandle = !isLeftConnected && !isLeftHandleClickable;
+    const hideRightHandle = !isRightConnected && !isRightHandleClickable;
+
+    const handleStyle = {
         background: theme === 'dark' ? 'black' : 'white',
         minWidth: 20,
         height: 20,
@@ -124,25 +139,28 @@ export const CardNode = memo(function CardNode(props: {
         display: 'grid',
         zIndex: 2,
         border: 0,
+    };
+
+    const leftPlusHandleStyle = {
+        left: -20,
+        ...handleStyle,
     };
 
     const rightPlusHandleStyle = {
         right: -20,
-        background: theme === 'dark' ? 'black' : 'white',
-        minWidth: 20,
-        height: 20,
-        placeItems: 'center',
-        display: 'grid',
-        zIndex: 2,
-        border: 0,
+        ...handleStyle,
     };
-
+    console.log('ha', direction == RelationshipDirection.forward, resource, id);
     return (
         <>
             {!hideLeftHandle && (
                 <Handle
-                    type="target"
-                    id={`${resource}:${id}:target`}
+                    type={
+                        direction == RelationshipDirection.reverse
+                            ? 'target'
+                            : 'source'
+                    }
+                    id={`${btoa(data.key)}:left`}
                     position={Position.Left}
                     isConnectableStart={isLeftHandleClickable}
                     style={isLeftHandleClickable ? leftPlusHandleStyle : {}}
@@ -158,15 +176,7 @@ export const CardNode = memo(function CardNode(props: {
                     )}
                 </Handle>
             )}
-            {resource == 'runs' ? (
-                <RoundNode elevation={0} className={nodeClass}>
-                    {clickableNode}
-                </RoundNode>
-            ) : (
-                <SquareNode elevation={0} className={nodeClass}>
-                    {clickableNode}
-                </SquareNode>
-            )}
+            {node}
             {showInfo && (
                 <NodeInfo
                     resource={resource}
@@ -177,8 +187,12 @@ export const CardNode = memo(function CardNode(props: {
             )}
             {!hideRightHandle && (
                 <Handle
-                    type="source"
-                    id={`${resource}:${id}:source`}
+                    type={
+                        direction == RelationshipDirection.forward
+                            ? 'target'
+                            : 'source'
+                    }
+                    id={`${btoa(data.key)}:right`}
                     position={Position.Right}
                     isConnectableStart={isRightHandleClickable}
                     style={isRightHandleClickable ? rightPlusHandleStyle : {}}
@@ -196,6 +210,20 @@ export const CardNode = memo(function CardNode(props: {
             )}
         </>
     );
+};
+
+export const ForwardCardNode = memo(function n(props: { data: any }) {
+    return CardNode({
+        data: props.data,
+        direction: RelationshipDirection.forward,
+    });
+});
+
+export const ReverseCardNode = memo(function n(props: { data: any }) {
+    return CardNode({
+        data: props.data,
+        direction: RelationshipDirection.reverse,
+    });
 });
 
 const NodeInfo = (props: {
