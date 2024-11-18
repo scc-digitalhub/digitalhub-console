@@ -14,13 +14,26 @@ import { RecordLineage } from './RecordLineage';
 export const LineageTabComponent = () => {
     const record = useRecordContext();
     const translate = useTranslate();
-    const [relationships, setRelationships] = useState<any[]>(
-        record?.metadata?.relationships || []
-    );
+    const [relationships, setRelationships] = useState<any[]>([]);
     const dataProvider = useDataProvider();
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const notify = useNotify();
+
+    useEffect(() => {
+        if (record?.metadata?.relationships) {
+            //inject record as source if missing and store
+            setRelationships(
+                record.metadata.relationships.map(r => {
+                    if (r.source) {
+                        return r;
+                    }
+
+                    return { ...r, source: record.key };
+                })
+            );
+        }
+    }, [JSON.stringify(record?.metadata?.relationships), setRelationships]);
 
     useEffect(() => {
         if (dataProvider) {
@@ -54,10 +67,7 @@ export const LineageTabComponent = () => {
                 {translate('pages.lineage.description')}
             </Typography>
             {relationships.length !== 0 ? (
-                <RecordLineage
-                    relationships={relationships}
-                    record={record}
-                />
+                <RecordLineage relationships={relationships} record={record} />
             ) : (
                 <NoLineage />
             )}

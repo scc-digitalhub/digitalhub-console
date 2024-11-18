@@ -23,27 +23,14 @@ export const RecordLineage = (props: {
         record,
         expandable = true,
     } = props;
-    const [relationships, setRelationships] = useState<Relationship[]>([]);
+    const [relationships, setRelationships] = useState<Relationship[]>(
+        relFromProps || []
+    );
 
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
     const notify = useNotify();
-
-    useEffect(() => {
-        if (relFromProps) {
-            //inject record as source if missing and store
-            setRelationships(
-                relFromProps.map(r => {
-                    if (r.source) {
-                        return r;
-                    }
-
-                    return { ...r, source: record?.key };
-                })
-            );
-        }
-    }, [JSON.stringify(relFromProps), setRelationships]);
 
     //derive translations for rels
     const labels = {};
