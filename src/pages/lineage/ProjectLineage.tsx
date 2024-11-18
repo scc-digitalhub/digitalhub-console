@@ -1,6 +1,7 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import {
+    RaRecord,
     ResourceContextProvider,
     ShowBase,
     ShowView,
@@ -12,22 +13,15 @@ import {
 import { PageTitle } from '../../components/PageTitle';
 import { LineageIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import {
-    Background,
-    Controls,
-    Edge,
-    Node,
-    ReactFlow,
-    ReactFlowProvider,
-    useEdgesState,
-    useNodesState,
-    useReactFlow,
-} from '@xyflow/react';
+import { Edge, Node, ReactFlowProvider } from '@xyflow/react';
 import { NoLineage } from '../../components/lineage/NoLineage';
-import { useEffect } from 'react';
-import { getLayoutedElements } from '../../components/lineage/utils';
-import { ReverseCardNode } from '../../components/lineage/CardNode';
-import { keyParser } from '../../common/helper';
+import { useEffect, useState } from 'react';
+import {
+    getNodesAndEdges,
+    RelationshipDirection,
+} from '../../components/lineage/utils';
+import { Flow } from '../../components/lineage/Flow';
+import { set } from 'lodash';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
@@ -48,9 +42,7 @@ export const ProjectLineage = () => {
                             icon={<LineageIcon fontSize={'large'} />}
                         />
                         <ShowView actions={false} component={FlatCard}>
-                            <ReactFlowProvider>
-                                <Lineage />
-                            </ReactFlowProvider>
+                            <Lineage />
                         </ShowView>
                     </>
                 </ShowBase>
@@ -64,99 +56,45 @@ const Lineage = () => {
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const translate = useTranslate();
-    const { fitView } = useReactFlow();
 
-    const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+    //use reverse representation, we store rel on child side
+    const direction = RelationshipDirection.reverse;
+
+    const [nodesAndEdges, setNodesAndEdges] = useState<{
+        nodes: Node[];
+        edges: Edge[];
+    }>({ nodes: [], edges: [] });
 
     useEffect(() => {
         if (dataProvider && project) {
             const projectResources = Object.values(project.spec).flat();
-
-            const initialNodes = projectResources.map(
-                (res: any): Node => ({
-                    id: res.id,
-                    type: 'cardNode',
-                    position: {
-                        x: 0,
-                        y: 0,
-                    },
-                    data: {
-                        key: res.key,
-                        expandable: false,
-                    },
-                })
-            );
+            const records = projectResources as RaRecord[];
 
             dataProvider
                 .getProjectLineage('projects', { id: project.id })
                 .then(data => {
                     if (data?.lineage) {
-                        let initialEdges: Edge[] = [];
-                        data.lineage.forEach(
-                            (relationship: any, index: number) => {
-                                const destParsed = keyParser(relationship.dest);
-                                const destId =
-                                    destParsed.id || destParsed.name || '';
-                                const sourceParsed = keyParser(
-                                    relationship.source
-                                );
-                                const sourceId =
-                                    sourceParsed.id || sourceParsed.name || '';
-
-                                //create edge
-                                initialEdges.push({
-                                    id: index.toString(),
-                                    source: destId,
-                                    target: sourceId,
-                                    type: 'default',
-                                    animated: true,
-                                    label: translate(
-                                        `pages.lineage.relationships.${relationship.type}`
-                                    ),
-                                });
-
-                                //add nodes if not already listed
-                                if (!initialNodes.some(n => n.id == destId)) {
-                                    initialNodes.push({
-                                        id: destId,
-                                        type: 'cardNode',
-                                        position: {
-                                            x: 0,
-                                            y: 0,
-                                        },
-                                        data: {
-                                            key: relationship.dest,
-                                            expandable: false,
-                                        },
-                                    });
-                                }
-                                if (!initialNodes.some(n => n.id == sourceId)) {
-                                    initialNodes.push({
-                                        id: sourceId,
-                                        type: 'cardNode',
-                                        position: {
-                                            x: 0,
-                                            y: 0,
-                                        },
-                                        data: {
-                                            key: relationship.source,
-                                            expandable: false,
-                                        },
-                                    });
-                                }
-                            }
+                        //derive translations for rels
+                        const labels = {};
+                        data.lineage.forEach(value =>
+                            set(
+                                labels,
+                                value.type,
+                                translate(
+                                    `pages.lineage.relationships.${value.type}`
+                                )
+                            )
                         );
 
-                        const { nodes: layoutedNodes, edges: layoutedEdges } =
-                            getLayoutedElements(
-                                initialNodes,
-                                initialEdges,
-                                'LR'
-                            );
+                        const { nodes, edges } = getNodesAndEdges(
+                            data.lineage,
+                            direction,
+                            records,
+                            labels,
+                            false
+                        );
 
-                        setNodes([...layoutedNodes]);
-                        setEdges([...layoutedEdges]);
+                        setNodesAndEdges({ nodes: nodes, edges: edges });
                     } else {
                         notify('ra.message.not_found', {
                             type: 'error',
@@ -171,15 +109,9 @@ const Lineage = () => {
                     notify(e);
                 });
         }
-    }, [dataProvider, notify, project, setEdges, setNodes, translate]);
+    }, [dataProvider, notify, project, translate]);
 
-    useEffect(() => {
-        window.requestAnimationFrame(() => {
-            fitView();
-        });
-    }, [nodes, edges, fitView]);
-
-    if (nodes.length === 0) return <NoLineage />;
+    if (nodesAndEdges.nodes.length === 0) return <NoLineage />;
 
     return (
         <Box
@@ -187,23 +119,15 @@ const Lineage = () => {
                 width: '100%',
             }}
         >
-            <div style={{ height: '600px', width: '100%' }}>
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    nodeTypes={{ cardNode: ReverseCardNode }}
-                    fitView
-                    onConnectStart={() => {}}
-                    proOptions={{ hideAttribution: true }}
-                    nodesDraggable={false}
-                    maxZoom={1}
-                >
-                    <Background />
-                    <Controls />
-                </ReactFlow>
-            </div>
+            <ReactFlowProvider>
+                <Flow
+                    nodes={nodesAndEdges.nodes}
+                    edges={nodesAndEdges.edges}
+                    direction={direction}
+                    height="600px"
+                    width="100%"
+                />
+            </ReactFlowProvider>
         </Box>
     );
 };

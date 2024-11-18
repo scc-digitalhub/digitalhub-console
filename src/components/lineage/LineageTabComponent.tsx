@@ -6,7 +6,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { NoLineage } from './NoLineage';
 import { RecordLineage } from './RecordLineage';
@@ -41,50 +41,6 @@ export const LineageTabComponent = () => {
         }
     }, [dataProvider, notify, record.id, resource, root]);
 
-    // Callback fired when handles are clicked
-    // - if handleType=target, call api with nodeId and filter on dest
-    // - if handleType=source, call api with nodeId and filter on source
-    const onConnectStart = useCallback(
-        (event, { nodeId, handleId, handleType }) => {
-            if (dataProvider) {
-                dataProvider
-                    .getLineage(handleId.split(':')[0], {
-                        id: nodeId,
-                        meta: { root },
-                    })
-                    .then(data => {
-                        if (data?.lineage) {
-                            const sourceOrTarget =
-                                handleType == 'target' ? 'source' : 'dest';
-                            const expansions = data.lineage
-                                .filter(rel =>
-                                    rel[sourceOrTarget].endsWith(nodeId)
-                                )
-                                .map(exp => ({ ...exp, expands: nodeId }));
-                            if (expansions.length === 0) {
-                                notify('messages.lineage.noExpansion', {
-                                    type: 'info',
-                                });
-                            } else {
-                                setRelationships(old => [
-                                    ...old,
-                                    ...expansions,
-                                ]);
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        const e =
-                            typeof error === 'string'
-                                ? error
-                                : error.message || 'error';
-                        notify(e);
-                    });
-            }
-        },
-        [dataProvider, notify, root]
-    );
-
     return (
         <Box
             sx={{
@@ -101,7 +57,6 @@ export const LineageTabComponent = () => {
                 <RecordLineage
                     relationships={relationships}
                     record={record}
-                    onConnectStart={onConnectStart}
                 />
             ) : (
                 <NoLineage />
