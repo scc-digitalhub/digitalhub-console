@@ -60,7 +60,6 @@ const getUiSpec = (kind: string) => {
     uiSpec['parameters'] = {
         'ui:ObjectFieldTemplate': JsonParamsWidget,
         'ui:title': 'fields.parameters.title',
-        // 'ui:widget': 'parameters',
     };
     return uiSpec;
 };
