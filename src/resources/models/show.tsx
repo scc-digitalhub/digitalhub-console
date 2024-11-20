@@ -33,6 +33,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
 import { IdField } from '../../components/IdField';
+import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -56,7 +57,11 @@ const getUiSpec = (kind: string) => {
     uiSpec['metrics'] = {
         'ui:widget': 'hidden',
     };
-
+    uiSpec['parameters'] = {
+        'ui:ObjectFieldTemplate': JsonParamsWidget,
+        'ui:title': 'fields.parameters.title',
+        // 'ui:widget': 'parameters',
+    };
     return uiSpec;
 };
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
