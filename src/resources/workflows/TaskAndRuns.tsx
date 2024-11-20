@@ -3,8 +3,10 @@ import {
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
+    FunctionField,
     Labeled,
     List,
+    ShowButton,
     SimpleShowLayout,
     TextField,
     TopToolbar,
@@ -19,11 +21,12 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
 import InboxIcon from '@mui/icons-material/Inbox';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { WorkflowView } from './WorkflowView';
 import { useGetManySchemas } from '../../controllers/schemaController';
@@ -31,6 +34,8 @@ import { filterProps } from '../../common/schemas';
 import { LogsButton } from '../../components/LogsButton';
 import { Empty } from '../../components/Empty';
 import { RunCreateForm } from '../runs/create';
+import { DropDownButton } from '../../components/DropdownButton';
+import { StopButton } from '../runs/StopButton';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -95,13 +100,13 @@ const TaskRunList = () => {
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
     const [schema] = useState<any>();
-    const fn = record?.spec?.function || '';
+    const fn = record?.spec?.workflow || '';
     const url = new URL(fn);
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
         : '';
     url.protocol = record.kind + ':';
-    const key = url.toString();
+    const key = `${record.kind}://${record.project}/${record.id}`;
 
     const {
         data: schemas,
@@ -137,7 +142,7 @@ const TaskRunList = () => {
             ...record?.spec,
         },
     };
-
+    console.log('par', partial);
     const prepare = (r: any) => {
         return {
             ...r,
@@ -157,23 +162,32 @@ const TaskRunList = () => {
         return record.kind === 'kfp+pipeline';
     };
 
-    const CreateActionButton = () => (
-        <CreateInDialogButton
-            resource="runs"
-            record={partial}
-            fullWidth
-            maxWidth={'lg'}
-            transform={prepare}
-        >
-            {runSchema?.schema && taskSchema?.schema && (
-                <RunCreateForm
-                    runtime={runtime}
-                    runSchema={runSchema.schema}
-                    taskSchema={taskSchema.schema}
-                />
-            )}
-        </CreateInDialogButton>
-    );
+    const CreateActionButton = (props: {
+        record?: any;
+        label?: string;
+        icon?: ReactElement;
+    }) => {
+        const { record, label, icon } = props;
+        return (
+            <CreateInDialogButton
+                resource="runs"
+                label={label}
+                icon={icon}
+                record={record}
+                fullWidth
+                maxWidth={'lg'}
+                transform={prepare}
+            >
+                {runSchema?.schema && taskSchema?.schema && (
+                    <RunCreateForm
+                        runtime={runtime}
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                )}
+            </CreateInDialogButton>
+        );
+    };
 
     return (
         <>
@@ -188,63 +202,49 @@ const TaskRunList = () => {
                 disableSyncWithLocation
                 empty={
                     <Empty>
-                        <CreateActionButton />
+                        <CreateActionButton record={partial} />
                     </Empty>
                 }
-                actions={<CreateActionButton />}
+                actions={<CreateActionButton record={partial} />}
             >
-                <Datagrid
-                    expand={getExpandArea()}
-                    expandSingle={canExpand()}
-                    bulkActionButtons={false}
-                >
-                    <DateField source="metadata.created" />
-                    <TextField source="id" />
-                    <StateChips source="status.state" />
+                <Datagrid bulkActionButtons={false} rowClick={false}>
+                    <DateField
+                        source="metadata.created"
+                        showTime
+                        label="fields.metadata.created"
+                    />
+                    <TextField source="id" sortable={false} />
+                    <StateChips
+                        source="status.state"
+                        sortable={false}
+                        label="fields.status.state"
+                    />
                     <RowButtonGroup label="⋮">
-                        <ShowInDialogButton>
-                            <SimpleShowLayout>
-                                <Stack direction={'row'} spacing={3}>
-                                    <Labeled>
-                                        <TextField source="name" />
-                                    </Labeled>
-
-                                    <Labeled>
-                                        <TextField source="kind" />
-                                    </Labeled>
-                                </Stack>
-                                <Labeled>
-                                    <TextField source="key" />
-                                </Labeled>
-                                <Divider />
-                                <Stack direction={'row'} spacing={3}>
-                                    <Labeled>
-                                        <DateField
-                                            source="metadata.created"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-
-                                    <Labeled>
-                                        <DateField
-                                            source="metadata.updated"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-                                </Stack>
-                                <Labeled>
-                                    <TextField source="spec.task" />
-                                </Labeled>
-                                <Labeled>
-                                    <StateChips source="status.state" />
-                                </Labeled>
-                            </SimpleShowLayout>
-                        </ShowInDialogButton>
-                        <LogsButton />
-                        <InspectButton fullWidth />
-                        <DeleteWithConfirmButton redirect={false} />
+                        <DropDownButton>
+                            <ShowButton />
+                            <LogsButton />
+                            <InspectButton fullWidth />
+                            <FunctionField
+                                render={record => (
+                                    <CreateActionButton
+                                        record={{
+                                            ...partial,
+                                            spec: record.spec,
+                                        }}
+                                        label="ra.action.clone"
+                                        icon={<ContentCopyIcon />}
+                                    />
+                                )}
+                            />
+                            <FunctionField
+                                render={record =>
+                                    record.status?.state == 'RUNNING' ? (
+                                        <StopButton record={record} />
+                                    ) : null
+                                }
+                            />
+                            <DeleteWithConfirmButton redirect={false} />
+                        </DropDownButton>
                     </RowButtonGroup>
                 </Datagrid>
             </List>

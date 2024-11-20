@@ -78,7 +78,7 @@ const getLayoutedElements = (nodes, edges) => {
 };
 export const WorkflowView = (props: WorkflowViewProps) => {
     const translate = useTranslate();
-    const record = useRecordContext();
+    const record = useRecordContext(props);
     const createPath = useCreatePath();
     const dataProvider = useDataProvider();
 

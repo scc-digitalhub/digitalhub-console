@@ -71,7 +71,7 @@ export const TaskAndRuns = (props: {
             <SimpleShowLayout>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="kind" label="fields.kind"/>
+                        <TextField source="kind" label="fields.kind" />
                     </Labeled>
                     <Labeled>
                         <TextField source="id" />
@@ -98,7 +98,7 @@ const TaskRunList = () => {
         ? url.protocol.substring(0, url.protocol.length - 1)
         : '';
     url.protocol = record.kind + ':';
-    const key = url.toString();
+    const key = `${record.kind}://${record.project}/${record.id}`;
 
     const {
         data: schemas,
@@ -195,9 +195,17 @@ const TaskRunList = () => {
                 actions={<CreateActionButton record={partial} />}
             >
                 <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField source="metadata.created" showTime label="fields.metadata.created" />
+                    <DateField
+                        source="metadata.created"
+                        showTime
+                        label="fields.metadata.created"
+                    />
                     <TextField source="id" sortable={false} />
-                    <StateChips source="status.state" sortable={false} label="fields.status.state" />
+                    <StateChips
+                        source="status.state"
+                        sortable={false}
+                        label="fields.status.state"
+                    />
                     <RowButtonGroup label="⋮">
                         <DropDownButton>
                             <ShowButton />

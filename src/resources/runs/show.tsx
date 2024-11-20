@@ -53,6 +53,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
 import { keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
+import { WorkflowView } from '../workflows/WorkflowView';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -85,19 +86,33 @@ export const RunShowComponent = () => {
 
     const [schema, setSchema] = useState<any>();
 
-    const uri = record?.spec?.function ? new URL(record.spec.function) : null;
+    const uri = record?.spec?.function
+        ? new URL(record.spec.function)
+        : record?.spec?.workflow
+        ? new URL(record.spec.workflow)
+        : null;
 
     const kind = uri
         ? uri.protocol.substring(0, uri.protocol.length - 1)
         : null;
 
-    const functionId = uri ? uri.pathname.split(':')[1] : null;
+    const functionId =
+        record?.spec?.function && uri ? uri.pathname.split(':')[1] : null;
+    const workflowId =
+        record?.spec?.workflow && uri ? uri.pathname.split(':')[1] : null;
 
     useEffect(() => {
         if (kind) {
-            schemaProvider.get('functions', kind).then(res => {
-                setSchema(res || null);
-            });
+            if (functionId) {
+                schemaProvider.get('functions', kind).then(res => {
+                    setSchema(res || null);
+                });
+            }
+            if (workflowId) {
+                schemaProvider.get('workflows', kind).then(res => {
+                    setSchema(res || null);
+                });
+            }
         }
     }, [kind]);
 
@@ -122,7 +137,10 @@ export const RunShowComponent = () => {
 
                 <Stack direction={'row'}>
                     <Labeled>
-                        <TextField source="spec.task" label="fields.spec.task.title"/>
+                        <TextField
+                            source="spec.task"
+                            label="fields.spec.task.title"
+                        />
                     </Labeled>
                     {functionId && (
                         <IconButtonWithTooltip
@@ -142,13 +160,39 @@ export const RunShowComponent = () => {
                             <OpenInNewIcon fontSize="small" />
                         </IconButtonWithTooltip>
                     )}
+                    {workflowId && (
+                        <IconButtonWithTooltip
+                            label="ra.action.show"
+                            color="primary"
+                            sx={{ mt: 1 }}
+                            onClick={() => {
+                                const path = createPath({
+                                    resource: 'workflows',
+                                    id: workflowId,
+                                    type: 'show',
+                                });
+
+                                navigate(path);
+                            }}
+                        >
+                            <OpenInNewIcon fontSize="small" />
+                        </IconButtonWithTooltip>
+                    )}
                 </Stack>
 
                 <Labeled>
-                    <StateChips source="status.state" label="fields.status.state"/>
+                    <StateChips
+                        source="status.state"
+                        label="fields.status.state"
+                    />
                 </Labeled>
                 {record?.status?.transitions && <EventsList record={record} />}
             </TabbedShowLayout.Tab>
+            {record?.spec?.workflow && schema && (
+                <TabbedShowLayout.Tab label={'fields.workflow.title'}>
+                    <WorkflowView record={record} />
+                </TabbedShowLayout.Tab>
+            )}
             <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
                 <AceEditorField
                     source="spec"
@@ -164,7 +208,7 @@ export const RunShowComponent = () => {
                         spec={schema}
                     />
                 </TabbedShowLayout.Tab>
-            )}{' '}
+            )}
             {record?.spec?.inputs && (
                 <TabbedShowLayout.Tab label={'fields.inputs.title'}>
                     <InputsList record={record} />
@@ -201,10 +245,26 @@ const EventsList = (props: { record: any }) => {
         <Labeled label="fields.events.title">
             <ListContextProvider value={listContext}>
                 <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField showTime source="time" label="fields.events.time.title" />
-                    <StateChips source="status" sortable={false} label="fields.events.status.title" />
-                    <TextField source="message" sortable={false} label="fields.events.message.title" />
-                    <TextField source="details" sortable={false} label="fields.events.details.title" />
+                    <DateField
+                        showTime
+                        source="time"
+                        label="fields.events.time.title"
+                    />
+                    <StateChips
+                        source="status"
+                        sortable={false}
+                        label="fields.events.status.title"
+                    />
+                    <TextField
+                        source="message"
+                        sortable={false}
+                        label="fields.events.message.title"
+                    />
+                    <TextField
+                        source="details"
+                        sortable={false}
+                        label="fields.events.details.title"
+                    />
                 </Datagrid>
             </ListContextProvider>
         </Labeled>

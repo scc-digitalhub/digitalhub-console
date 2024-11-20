@@ -103,7 +103,7 @@ const ShowComponent = () => {
                     pagination: { page: 1, perPage: 100 },
                     sort: { field: 'kind', order: 'ASC' },
                     filter: {
-                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                        workflow: `${record.kind}://${record.project}/${record.name}:${record.id}`,
                     },
                 }),
             ])
@@ -138,7 +138,7 @@ const ShowComponent = () => {
                                     project: record.project,
                                     kind: k,
                                     spec: {
-                                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                                        workflow: `${record.kind}://${record.project}/${record.name}:${record.id}`,
                                     },
                                 },
                             });
