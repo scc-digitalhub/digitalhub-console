@@ -37,10 +37,8 @@ export const SpecInput = (props: InputProps & {
     const value = useWatch({ name: source });
     const eq = record?.source ? deepEqual(record[source], value) : false;
     const kindValue = useWatch({ name: kindSource });
-
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
-    const eq = record ? deepEqual(record[source], value) : undefined;
     const kind = kindProp || kindValue || (record ? record[kindSource] : null);
 
     useEffect(() => {
