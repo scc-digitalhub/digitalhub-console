@@ -37,7 +37,6 @@ export const SpecInput = (props: InputProps & {
     const record = useRecordContext();
     const value = useWatch({ name: source });
     const kindValue = useWatch({ name: kindSource });
-
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
     const kind = kindProp || kindValue || record ? get(record, kindSource) : null;
