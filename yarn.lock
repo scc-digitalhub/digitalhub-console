@@ -363,6 +363,7 @@
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.1.5.tgz#43e8322d1da093e50c58a8ba432537e449372550"
   integrity sha512-IVv8y08PwZhtYtzUNy+ordKtHVVz4YQ6bHZP1XfRFtMOI1resU0idjUiSXnD+JeWuAdW3Vq2wYr4myFY5J6FTw==
+  dependencies:
     ra-core "^4.11.0"
 
 "@emotion/babel-plugin@^11.11.0":
