@@ -26,6 +26,7 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperToolbar } from '../../components/StepperToolbar';
+import { TemplateList } from '../../components/TemplateList';
 
 const CreateToolbar = () => {
     return (
@@ -79,6 +80,10 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
+                                {/* TODO tradurre */}
+                                <StepperForm.Step label={'Templates'}>
+                                    <TemplateList />
+                                </StepperForm.Step>
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
