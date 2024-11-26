@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { GetListParams, useDataProvider } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
+import { useFormContext } from 'react-hook-form';
 
 type Template = {
     name: string;
@@ -28,8 +29,11 @@ export const TemplateList = () => {
     const [templates, setTemplates] = useState<Template[]>([]);
     const dataProvider = useDataProvider();
 
+    const { reset } = useFormContext();
+
     const selectTemplate = (template: Template) => {
         setSelectedTemplate(template);
+        reset(template);
     };
 
     const startFromScratch = e => {
@@ -56,7 +60,7 @@ export const TemplateList = () => {
     }, [dataProvider]);
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ paddingY: '16px' }}>
             <Grid item xs={12} md={4}>
                 <StyledTemplate
                     className={selectedTemplate === false ? 'selected' : ''}
