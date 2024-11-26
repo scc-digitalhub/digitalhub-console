@@ -93,7 +93,7 @@ export const TemplateList = () => {
             {templates.map((template, index) => (
                 <TemplateCard
                     template={template}
-                    key={index}
+                    key={'template_' + index}
                     selectTemplate={selectTemplate}
                     selected={
                         typeof selectedTemplate == 'object' &&

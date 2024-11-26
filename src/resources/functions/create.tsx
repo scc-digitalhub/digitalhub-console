@@ -2,7 +2,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-    CreateActionsProps,
     CreateBase,
     CreateView,
     FormDataConsumer,
@@ -21,7 +20,7 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
-import { StepperForm, useStepper } from '@dslab/ra-stepper';
+import { StepperForm } from '@dslab/ra-stepper';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
@@ -80,8 +79,7 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
-                                {/* TODO tradurre */}
-                                <StepperForm.Step label={'Templates'}>
+                                <StepperForm.Step label={'fields.templates'}>
                                     <TemplateList />
                                 </StepperForm.Step>
                                 <StepperForm.Step label={'fields.base'}>
