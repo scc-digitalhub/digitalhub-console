@@ -1,26 +1,20 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container, Stack } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import {
     CreateBase,
     CreateView,
     FormDataConsumer,
     ListButton,
-    SimpleForm,
     TextInput,
     TopToolbar,
     required,
-    regex,
     useInput,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
-import {
-    ALPHANUMERIC_REGEX,
-    isAlphaNumeric,
-    randomId,
-} from '../../common/helper';
+import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
-import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
@@ -33,6 +27,10 @@ import {
 import { KindSelector } from '../../components/KindSelector';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { SpecInput } from '../../components/SpecInput';
+import { StepperForm } from '@dslab/ra-stepper';
+import { StepperToolbar } from '../../components/StepperToolbar';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 
 const CreateToolbar = () => {
     return (
@@ -44,6 +42,7 @@ const CreateToolbar = () => {
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
+    const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
@@ -70,7 +69,7 @@ export const ArtifactCreate = () => {
             <CreateBase
                 transform={transform}
                 redirect="list"
-                record={{ id: id.current }}
+                record={{ id: id.current, spec: { path: null } }}
             >
                 <>
                     <CreatePageTitle
@@ -79,9 +78,7 @@ export const ArtifactCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
-                                <ArtifactCreateForm uploader={uploader} />
-                            </SimpleForm>
+                            <ArtifactForm uploader={uploader} />
                         </FlatCard>
                     </CreateView>
                 </>
@@ -90,7 +87,45 @@ export const ArtifactCreate = () => {
     );
 };
 
-const ArtifactCreateForm = (props: { uploader?: UploadController }) => {
+export const ArtifactForm = (props: { uploader?: UploadController }) => {
+    const { uploader } = props;
+    const translate = useTranslate();
+
+    return (
+        <StepperForm toolbar={<StepperToolbar />}>
+            <StepperForm.Step label={'fields.base'}>
+                <TextInput
+                    source="name"
+                    validate={[required(), isAlphaNumeric()]}
+                />
+                <MetadataInput />
+            </StepperForm.Step>
+            <StepperForm.Step label={'fields.spec.title'}>
+                <SpecCreateStep uploader={uploader} />
+            </StepperForm.Step>
+            <StepperForm.Step label={'fields.recap'} optional>
+                <FormDataConsumer>
+                    {({ formData }) => {
+                        //read-only view
+                        const r = {
+                            spec: btoa(toYaml(formData?.spec)),
+                        };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                                parse={atob}
+                            />
+                        );
+                    }}
+                </FormDataConsumer>
+            </StepperForm.Step>
+        </StepperForm>
+    );
+};
+
+const SpecCreateStep = (props: { uploader?: UploadController }) => {
     const { uploader } = props;
     const resource = useResourceContext();
 
@@ -142,15 +177,7 @@ const ArtifactCreateForm = (props: { uploader?: UploadController }) => {
 
     return (
         <>
-            <FormLabel label="fields.base" />
-            <Stack direction={'row'} spacing={3} pt={4}>
-                <TextInput
-                    source="name"
-                    validate={[required(), isAlphaNumeric()]}
-                />
-                <KindSelector kinds={kinds} />
-            </Stack>
-            <MetadataInput />
+            <KindSelector kinds={kinds} />
             <FormDataConsumer<{ kind: string }>>
                 {({ formData }) => (
                     <>

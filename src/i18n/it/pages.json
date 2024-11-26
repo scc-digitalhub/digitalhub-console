@@ -88,5 +88,10 @@
             "run_of": "esecuzione di"
         },
         "title": "Genealogia"
+    },
+    "stepperTitles": {
+        "base": "Base",
+        "spec": "Specifiche",
+        "recap": "Riepilogo"
     }
 }

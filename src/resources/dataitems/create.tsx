@@ -1,20 +1,19 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container, Stack } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import {
     CreateBase,
     CreateView,
     FormDataConsumer,
     ListButton,
-    SimpleForm,
     TextInput,
     TopToolbar,
     required,
     useInput,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
-import { FormLabel } from '../../components/FormLabel';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
@@ -28,6 +27,10 @@ import {
 import { FileInput } from '../../components/FileInput';
 import { KindSelector } from '../../components/KindSelector';
 import { SpecInput } from '../../components/SpecInput';
+import { StepperForm } from '@dslab/ra-stepper';
+import { StepperToolbar } from '../../components/StepperToolbar';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 
 const CreateToolbar = () => {
     return (
@@ -39,6 +42,7 @@ const CreateToolbar = () => {
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
+    const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
@@ -65,7 +69,7 @@ export const DataItemCreate = () => {
             <CreateBase
                 transform={transform}
                 redirect="list"
-                record={{ id: id.current }}
+                record={{ id: id.current, spec: { path: null } }}
             >
                 <>
                     <CreatePageTitle
@@ -74,9 +78,7 @@ export const DataItemCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm>
-                                <DataItemCreateForm uploader={uploader} />
-                            </SimpleForm>
+                            <DataItemForm uploader={uploader} />
                         </FlatCard>
                     </CreateView>
                 </>
@@ -85,7 +87,45 @@ export const DataItemCreate = () => {
     );
 };
 
-const DataItemCreateForm = (props: { uploader?: UploadController }) => {
+export const DataItemForm = (props: { uploader?: UploadController }) => {
+    const { uploader } = props;
+    const translate = useTranslate();
+
+    return (
+        <StepperForm toolbar={<StepperToolbar />}>
+            <StepperForm.Step label={'fields.base'}>
+                <TextInput
+                    source="name"
+                    validate={[required(), isAlphaNumeric()]}
+                />
+                <MetadataInput />
+            </StepperForm.Step>
+            <StepperForm.Step label={'fields.spec.title'}>
+                <SpecCreateStep uploader={uploader} />
+            </StepperForm.Step>
+            <StepperForm.Step label={'fields.recap'} optional>
+                <FormDataConsumer>
+                    {({ formData }) => {
+                        //read-only view
+                        const r = {
+                            spec: btoa(toYaml(formData?.spec)),
+                        };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                                parse={atob}
+                            />
+                        );
+                    }}
+                </FormDataConsumer>
+            </StepperForm.Step>
+        </StepperForm>
+    );
+};
+
+const SpecCreateStep = (props: { uploader?: UploadController }) => {
     const { uploader } = props;
     const resource = useResourceContext();
 
@@ -137,15 +177,7 @@ const DataItemCreateForm = (props: { uploader?: UploadController }) => {
 
     return (
         <>
-            <FormLabel label="fields.base" />
-            <Stack direction={'row'} spacing={3} pt={4}>
-                <TextInput
-                    source="name"
-                    validate={[required(), isAlphaNumeric()]}
-                />
-                <KindSelector kinds={kinds} />
-            </Stack>
-            <MetadataInput />
+            <KindSelector kinds={kinds} />
             <FormDataConsumer<{ kind: string }>>
                 {({ formData }) => (
                     <>

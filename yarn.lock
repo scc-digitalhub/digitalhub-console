@@ -359,10 +359,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-stepper@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.1.1.tgz#d9404eebe8a192cb37a1839f92332611bf92673d"
-  integrity sha512-CrgbzioCvemqHLcku0Jy/SOLZd/l5dHtXh8iEekGpY8eOsPZ+coPBWSoXYz8lzdATpe48RVFTYQIMviio6J95w==
+"@dslab/ra-stepper@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-1.1.5.tgz#43e8322d1da093e50c58a8ba432537e449372550"
+  integrity sha512-IVv8y08PwZhtYtzUNy+ordKtHVVz4YQ6bHZP1XfRFtMOI1resU0idjUiSXnD+JeWuAdW3Vq2wYr4myFY5J6FTw==
   dependencies:
     ra-core "^4.11.0"
 

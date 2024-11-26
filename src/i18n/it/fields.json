@@ -476,6 +476,7 @@
     },
     "title": "Relazione"
   },
+  "recap": "Riepilogo",
   "replicas": {
     "description": "Numero di repliche per il task attuale",
     "title": "Repliche"
