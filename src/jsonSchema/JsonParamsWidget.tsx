@@ -41,7 +41,7 @@ export const JsonParamsWidget = function <
                     backgroundColor: '#002b36',
                     px: 2,
                     py: 0,
-                    minHeight: '20vw',
+                     minHeight: '20px',
                 }}
             >
                 <JSONTree data={formData} hideRoot />
