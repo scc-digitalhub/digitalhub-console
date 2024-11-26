@@ -8,7 +8,8 @@ import {
     styled,
     alpha,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GetListParams, useDataProvider } from 'react-admin';
 
 type Template = {
     name: string;
@@ -19,6 +20,8 @@ export const TemplateList = () => {
     const [selectedTemplate, setSelectedTemplate] = useState<
         Template | null | boolean
     >(null);
+    const [templates, setTemplates] = useState<Template[]>([]);
+    const dataProvider = useDataProvider();
 
     const selectTemplate = (template: Template) => {
         setSelectedTemplate(template);
@@ -28,50 +31,25 @@ export const TemplateList = () => {
         setSelectedTemplate(false);
         e.stopPropagation();
     };
+    useEffect(() => {
+        if (dataProvider) {
+            const params: GetListParams = {
+                pagination: {
+                    perPage: 10,
+                    page: 1,
+                },
+                sort: { field: 'created', order: 'DESC' },
+                filter: {
+                },
+            };
+            dataProvider.getList('functions', params).then(res => {
+                if (res.data && res.total) {
+                    setTemplates(res.data);
+                }
+            });
+        }
 
-    const templates: Template[] = [
-        {
-            name: 'T1',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T2',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T3',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T4',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T5',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T6',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T7',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-        {
-            name: 'T8',
-            description:
-                'somethinggggggggggggbsfsdfdsfdsfdsfdsfdsfdsfdsfsdfdsfdsf',
-        },
-    ];
-
+    }, [dataProvider]);
     return (
         <Stack
             spacing={{ xs: 1, sm: 2 }}
