@@ -3,17 +3,22 @@ import {
     CardContent,
     CardHeader,
     Typography,
-    Stack,
     CardActionArea,
     styled,
     alpha,
+    Grid,
+    Avatar,
+    Stack,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { GetListParams, useDataProvider } from 'react-admin';
+import AddIcon from '@mui/icons-material/Add';
 
 type Template = {
     name: string;
-    description: string;
+    metadata: {
+        description?: string;
+    };
 };
 
 export const TemplateList = () => {
@@ -31,6 +36,7 @@ export const TemplateList = () => {
         setSelectedTemplate(false);
         e.stopPropagation();
     };
+
     useEffect(() => {
         if (dataProvider) {
             const params: GetListParams = {
@@ -39,8 +45,7 @@ export const TemplateList = () => {
                     page: 1,
                 },
                 sort: { field: 'created', order: 'DESC' },
-                filter: {
-                },
+                filter: {},
             };
             dataProvider.getList('functions', params).then(res => {
                 if (res.data && res.total) {
@@ -48,38 +53,55 @@ export const TemplateList = () => {
                 }
             });
         }
-
     }, [dataProvider]);
+
     return (
-        <Stack
-            spacing={{ xs: 1, sm: 2 }}
-            direction="row"
-            useFlexGap
-            sx={{ flexWrap: 'wrap' }}
-        >
-            <StyledTemplate
-                className={selectedTemplate === false ? 'selected' : ''}
-            >
-                <CardActionArea onClick={startFromScratch}>
-                    <CardContent>
-                        <Typography variant="body2">
-                            {'+ Start from scratch'}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </StyledTemplate>
+        <Grid container spacing={2}>
+            <Grid item xs={12} md={4}>
+                <StyledTemplate
+                    className={selectedTemplate === false ? 'selected' : ''}
+                >
+                    <CardActionArea
+                        onClick={startFromScratch}
+                        sx={{ height: '250px' }}
+                    >
+                        <CardContent>
+                            <Stack
+                                justifyContent="center"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                                <Avatar
+                                    sx={theme => ({
+                                        backgroundColor:
+                                            selectedTemplate === false
+                                                ? theme.palette?.primary?.main
+                                                : theme.palette.grey[500],
+                                    })}
+                                >
+                                    <AddIcon fontSize="small" />
+                                </Avatar>
+                                <Typography variant="h6">
+                                    {'Start from scratch'}
+                                </Typography>
+                            </Stack>
+                        </CardContent>
+                    </CardActionArea>
+                </StyledTemplate>
+            </Grid>
             {templates.map((template, index) => (
-                <TemplateCard
-                    template={template}
-                    key={'template_' + index}
-                    selectTemplate={selectTemplate}
-                    selected={
-                        typeof selectedTemplate == 'object' &&
-                        selectedTemplate?.name == template.name
-                    }
-                />
+                <Grid item xs={12} md={4} key={'template_' + index}>
+                    <TemplateCard
+                        template={template}
+                        selectTemplate={selectTemplate}
+                        selected={
+                            typeof selectedTemplate == 'object' &&
+                            selectedTemplate?.name == template.name
+                        }
+                    />
+                </Grid>
             ))}
-        </Stack>
+        </Grid>
     );
 };
 
@@ -97,11 +119,14 @@ export const TemplateCard = (props: {
 
     return (
         <StyledTemplate className={selected ? 'selected' : ''}>
-            <CardActionArea onClick={select}>
+            <CardActionArea onClick={select} sx={{ height: '250px' }}>
                 <CardHeader title={template.name} />
                 <CardContent>
-                    <Typography variant="body2">
-                        {template.description}
+                    <Typography
+                        variant="body2"
+                        sx={{ height: '150px', overflowY: 'auto' }}
+                    >
+                        {template.metadata?.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>
