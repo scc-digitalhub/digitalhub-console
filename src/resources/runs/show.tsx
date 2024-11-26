@@ -54,6 +54,7 @@ import { ResumeButton } from './ResumeButton';
 import { keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
+import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -233,6 +234,9 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };

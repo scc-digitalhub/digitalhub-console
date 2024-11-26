@@ -8,6 +8,7 @@ import { ProjectIcon } from '../resources/projects/icon';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Box, Divider } from '@mui/material';
+import { LineageIcon } from '../pages/lineage/icon';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -34,6 +35,11 @@ export const MyMenu = () => {
                     leftIcon={<SettingsIcon />}
                     to={`${basename}/config`}
                     primaryText={'pages.config.title'}
+                />
+                <MenuItemLink
+                    leftIcon={<LineageIcon />}
+                    to={`${basename}/lineage`}
+                    primaryText={'pages.lineage.title'}
                 />
                 <MenuItemLink
                     leftIcon={<ProjectIcon />}

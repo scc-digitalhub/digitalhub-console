@@ -34,6 +34,7 @@ import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
 import { IdField } from '../../components/IdField';
 import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
+import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -125,6 +126,9 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     <MetricsTabComponent record={record} />
                 </TabbedShowLayout.Tab>
             )}
+             <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent  />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 }, arePropsEqual);

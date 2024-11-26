@@ -77,5 +77,16 @@
             "label": "Reset identifiers",
             "helperText": "Clear identifiers on import. Enable to avoid ID collisions"
         }
+    },
+    "lineage": {
+        "description": "Click and drag anywhere inside the viewport to move the flow. Explore it by zooming in or out. Click on a node to view its details. Click on + symbols to expand the node lineage.",
+        "projectDescription": "Click and drag anywhere inside the viewport to move the flow. Explore it by zooming in or out. Click on a node to view its details.",
+        "projectTitle": "Lineage of %{projectId}",
+        "relationships": {
+            "consumes": "consumed by",
+            "produced_by": "produces",
+            "run_of": "run of"
+        },
+        "title": "Lineage"
     }
 }

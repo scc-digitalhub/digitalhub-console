@@ -89,6 +89,10 @@
     "description": "",
     "title": "Descrizione"
   },
+  "dest": {
+    "description": "",
+    "title": "Dest"
+  },
   "destination": {
     "description": "",
     "title": "Destinazione"
@@ -463,6 +467,14 @@
       "description": "Versione maggiore del linguaggio",
       "title": "Versione di Python"
     }
+  },
+  "relationships": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Relazioni"
+    },
+    "title": "Relazione"
   },
   "replicas": {
     "description": "Numero di repliche per il task attuale",

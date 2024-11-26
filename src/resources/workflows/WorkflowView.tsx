@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Box, borderColor } from '@mui/system';
+import { Box } from '@mui/system';
 
 import {
     Node,
@@ -12,30 +12,26 @@ import {
     applyNodeChanges,
     MarkerType,
     ReactFlowInstance,
-} from 'reactflow';
+    Position,
+} from '@xyflow/react';
+
+import '@xyflow/react/dist/style.css';
 
 import {
     Labeled,
     TextField,
     DateField,
     ChipField,
-    ReferenceField,
     RecordContextProvider,
-    useTranslate,
     useRecordContext,
     useDataProvider,
     Link,
     useCreatePath,
     Datagrid,
 } from 'react-admin';
-import { Grid, Typography, Divider } from '@mui/material';
-
-import { StateChips } from '../../components/StateChips';
-
-import 'reactflow/dist/style.css';
+import { Grid, Divider } from '@mui/material';
 
 import dagre from 'dagre';
-import { stat } from 'fs';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -46,7 +42,8 @@ const nodeHeight = 36;
 export type WorkflowViewProps = {
     record?: any;
 };
-const getLayoutedElements = (nodes, edges) => {
+
+const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
     dagreGraph.setGraph({ rankdir: 'TB' });
 
     nodes.forEach(node => {
@@ -61,8 +58,8 @@ const getLayoutedElements = (nodes, edges) => {
 
     nodes.forEach(node => {
         const nodeWithPosition = dagreGraph.node(node.id);
-        node.targetPosition = 'top';
-        node.sourcePosition = 'bottom';
+        node.targetPosition = Position.Top;
+        node.sourcePosition = Position.Bottom;
 
         // We are shifting the dagre node position (anchor=center center) to the top left
         // so it matches the React Flow node anchor point (top left).
@@ -77,7 +74,6 @@ const getLayoutedElements = (nodes, edges) => {
     return { nodes, edges };
 };
 export const WorkflowView = (props: WorkflowViewProps) => {
-    const translate = useTranslate();
     const record = useRecordContext(props);
     const createPath = useCreatePath();
     const dataProvider = useDataProvider();
@@ -139,13 +135,14 @@ export const WorkflowView = (props: WorkflowViewProps) => {
         changes => setEdges((eds: any) => applyEdgeChanges(changes, eds)),
         [setEdges]
     );
-    const [activeNode, setActiveNode] = useState();
+    const [activeNode, setActiveNode] = useState<any>();
     const [reactFlowInstance, setReactFlowInstance] =
         useState<ReactFlowInstance | null>(null);
 
-    const onNodeClick = (event, node) => {
+    const onNodeClick = (event, node: Node) => {
         setActiveNode(node.data);
         setTimeout(() => reactFlowInstance?.fitView());
+        event.stopPropagation();
     };
 
     return (
@@ -295,9 +292,8 @@ export const WorkflowView = (props: WorkflowViewProps) => {
 };
 
 function computeGraph(graph) {
-    let nodes: any[] = [];
-    let edges: any[] = [];
-    let y = 0;
+    let nodes: Node[] = [];
+    let edges: Edge[] = [];
     let nodeMap = {};
     let root: any = null;
 
@@ -314,7 +310,13 @@ function computeGraph(graph) {
     return { nodes, edges };
 }
 
-function processChildren(nodeMap, list, level, nodes, edges) {
+function processChildren(
+    nodeMap,
+    list,
+    level: number,
+    nodes: Node[],
+    edges: Edge[]
+) {
     if (list.length > 0) {
         let node = list.shift();
         nodes.push({
@@ -342,7 +344,7 @@ function processChildren(nodeMap, list, level, nodes, edges) {
                     },
                     type: 'smoothstep',
                     deletable: false,
-                    updatable: false,
+                    reconnectable: false,
                     focusable: false,
                 });
                 nodeMap[c].level = level + 1;

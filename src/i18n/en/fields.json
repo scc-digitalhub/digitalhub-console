@@ -89,6 +89,10 @@
     "description": "",
     "title": "Description"
   },
+  "dest": {
+    "description": "",
+    "title": "Dest"
+  },
   "destination": {
     "description": "",
     "title": "Destination"
@@ -463,6 +467,14 @@
       "description": "Major version of language",
       "title": "Python Version"
     }
+  },
+  "relationships": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Relationship"
+    },
+    "title": "Relationships"
   },
   "replicas": {
     "description": "Number of replicas for the current task",

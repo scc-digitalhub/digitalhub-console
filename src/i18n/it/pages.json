@@ -77,5 +77,16 @@
             "label": "Resetta identificatori",
             "helperText": "Rimuovi gli identificatori durante l'import. Abilita per evitare collisioni di ID"
         }
+    },
+    "lineage": {
+        "description": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca su un nodo per visualizzarne i dettagli. Clicca sui simboli + per espandere la genealogia del nodo.",
+        "projectDescription": "Clicca e trascina qualunque punto all'interno dell'area per spostare il flusso. Esploralo ingrandendone o diminuendone le dimensioni. Clicca su un nodo per visualizzarne i dettagli.",
+        "projectTitle": "Genealogia di %{projectId}",
+        "relationships": {
+            "consumes": "consumato da",
+            "produced_by": "produce",
+            "run_of": "esecuzione di"
+        },
+        "title": "Genealogia"
     }
 }
