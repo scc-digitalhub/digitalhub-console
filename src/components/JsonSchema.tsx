@@ -23,13 +23,18 @@ import ArrayFieldItemTemplate from '../jsonSchema/ArrayFieldItemTemplate';
 import ObjectFieldTemplate from '../jsonSchema/ObjectFieldTemplate';
 import WrapIfAdditionalTemplate from '../jsonSchema/WrapIfAdditionalTemplate';
 import TitleField from '../jsonSchema/TitleField';
-import { useTranslate } from 'react-admin';
+import {  useTranslate } from 'react-admin';
 import { ReactNode, useMemo } from 'react';
 import { get, set } from 'lodash';
+import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
+import React from 'react';
+import { FieldProps } from '@rjsf/utils';
+import { JsonParamsWidget } from '../jsonSchema/JsonParamsWidget';
 
 // import { JsonSchemaFieldProps,JsonSchemaField as RaJsonSchemaField } from './JsonSchemaField';
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
+    parameters: JsonParamsWidget,
     'java+base64': AceEditorWidget,
     'javascript+base64': AceEditorWidget,
     markdown: AceEditorWidget,
