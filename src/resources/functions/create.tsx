@@ -2,7 +2,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-    CreateActionsProps,
     CreateBase,
     CreateView,
     FormDataConsumer,
@@ -11,7 +10,6 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
@@ -21,11 +19,12 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
-import { StepperForm, useStepper } from '@dslab/ra-stepper';
+import { StepperForm } from '@dslab/ra-stepper';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperToolbar } from '../../components/StepperToolbar';
+import { TemplateList } from '../../components/TemplateList';
 
 const CreateToolbar = () => {
     return (
@@ -37,7 +36,6 @@ const CreateToolbar = () => {
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
@@ -79,6 +77,9 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
+                                <StepperForm.Step label={'fields.templates'}>
+                                    <TemplateList />
+                                </StepperForm.Step>
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
