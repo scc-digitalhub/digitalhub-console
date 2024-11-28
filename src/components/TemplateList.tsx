@@ -13,31 +13,28 @@ import {
 import { useEffect, useState } from 'react';
 import { GetListParams, useDataProvider } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
-import { useFormContext } from 'react-hook-form';
 
-type Template = {
+export type Template = {
     name: string;
     metadata: {
         description?: string;
     };
 };
 
-export const TemplateList = () => {
-    const [selectedTemplate, setSelectedTemplate] = useState<
-        Template | null | boolean
-    >(null);
+type TemplateListProps = {
+    selectTemplate: (template: Template | false) => void;
+    getSelectedTemplate: () => false | Template | null;
+};
+
+export const TemplateList = (props: TemplateListProps) => {
+    const { selectTemplate, getSelectedTemplate } = props;
     const [templates, setTemplates] = useState<Template[]>([]);
     const dataProvider = useDataProvider();
 
-    const { reset } = useFormContext();
-
-    const selectTemplate = (template: Template) => {
-        setSelectedTemplate(template);
-        reset(template);
-    };
+    const currentTemplate = getSelectedTemplate();
 
     const startFromScratch = e => {
-        setSelectedTemplate(false);
+        selectTemplate(false);
         e.stopPropagation();
     };
 
@@ -63,7 +60,7 @@ export const TemplateList = () => {
         <Grid container spacing={2} sx={{ paddingY: '16px' }}>
             <Grid item xs={12} md={4}>
                 <StyledTemplate
-                    className={selectedTemplate === false ? 'selected' : ''}
+                    className={currentTemplate === false ? 'selected' : ''}
                 >
                     <CardActionArea
                         onClick={startFromScratch}
@@ -78,7 +75,7 @@ export const TemplateList = () => {
                                 <Avatar
                                     sx={theme => ({
                                         backgroundColor:
-                                            selectedTemplate === false
+                                        currentTemplate === false
                                                 ? theme.palette?.primary?.main
                                                 : theme.palette.grey[500],
                                     })}
@@ -99,8 +96,8 @@ export const TemplateList = () => {
                         template={template}
                         selectTemplate={selectTemplate}
                         selected={
-                            typeof selectedTemplate == 'object' &&
-                            selectedTemplate?.name == template.name
+                            typeof currentTemplate == 'object' &&
+                            currentTemplate?.name == template.name
                         }
                     />
                 </Grid>
@@ -109,7 +106,7 @@ export const TemplateList = () => {
     );
 };
 
-export const TemplateCard = (props: {
+const TemplateCard = (props: {
     template: Template;
     selectTemplate: any;
     selected: boolean;

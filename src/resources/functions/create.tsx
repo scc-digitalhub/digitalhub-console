@@ -19,12 +19,13 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
-import { StepperForm } from '@dslab/ra-stepper';
+import { StepperForm, useStepper } from '@dslab/ra-stepper';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperToolbar } from '../../components/StepperToolbar';
-import { TemplateList } from '../../components/TemplateList';
+import { Template, TemplateList } from '../../components/TemplateList';
+import { useFormContext } from 'react-hook-form';
 
 const CreateToolbar = () => {
     return (
@@ -34,11 +35,40 @@ const CreateToolbar = () => {
     );
 };
 
+const FunctionStepperToolbar = (props: { getSelectedTemplate: () => false | Template | null }) => {
+    const { getSelectedTemplate } = props;
+    const { reset } = useFormContext();
+    const { steps, currentStep } = useStepper();
+
+    const applyTemplate = () => {
+        const template = getSelectedTemplate();
+        console.log('steps', steps, currentStep);
+        if (template && currentStep === 0) {
+            console.log('applying', template);
+            reset(template);
+        }
+    };
+
+    return <StepperToolbar onNext={e => applyTemplate()} />;
+};
+
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+
+    const [selectedTemplate, setSelectedTemplate] = useState<
+        Template | null | false
+    >(null);
+
+    const selectTemplate = (template: Template | false) => {
+        setSelectedTemplate(template);
+    };
+
+    const getSelectedTemplate = () => {
+        return selectedTemplate;
+    };
 
     const transform = data => ({
         ...data,
@@ -76,9 +106,22 @@ export const FunctionCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <StepperForm toolbar={<StepperToolbar />}>
+                            <StepperForm
+                                toolbar={
+                                    <FunctionStepperToolbar
+                                        getSelectedTemplate={
+                                            getSelectedTemplate
+                                        }
+                                    />
+                                }
+                            >
                                 <StepperForm.Step label={'fields.templates'}>
-                                    <TemplateList />
+                                    <TemplateList
+                                        selectTemplate={selectTemplate}
+                                        getSelectedTemplate={
+                                            getSelectedTemplate
+                                        }
+                                    />
                                 </StepperForm.Step>
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
