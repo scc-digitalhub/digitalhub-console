@@ -39,7 +39,7 @@ export const SpecInput = (props: InputProps & {
     const kindValue = useWatch({ name: kindSource });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
-    const kind = kindProp || kindValue || record ? get(record, kindSource) : null;
+    const kind = kindProp || kindValue || (record ? get(record, kindSource) : null);
 
     useEffect(() => {
         if (!kind) {
