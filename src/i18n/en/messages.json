@@ -29,5 +29,8 @@
     "lineage": {
         "noLineage": "No lineage information available",
         "noExpansion": "There are no further relationships to display"
+    },
+    "templates": {
+        "noTemplates": "No templates available"
     }
 }

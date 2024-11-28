@@ -9,13 +9,25 @@ import {
     Grid,
     Avatar,
     Stack,
+    Box,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { GetListParams, useDataProvider } from 'react-admin';
+import {
+    List,
+    LoadingIndicator,
+    Pagination,
+    SelectInput,
+    TextInput,
+    useListContext,
+    useNotify,
+    useTranslate,
+} from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
+import { useSchemaProvider } from '../provider/schemaProvider';
 
 export type Template = {
     name: string;
+    kind: string;
     metadata: {
         description?: string;
     };
@@ -27,9 +39,67 @@ type TemplateListProps = {
 };
 
 export const TemplateList = (props: TemplateListProps) => {
+    const schemaProvider = useSchemaProvider();
+    const [kinds, setKinds] = useState<any[]>();
+
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.kinds('functions').then(res => {
+                if (res) {
+                    const values = res.map(s => ({
+                        id: s,
+                        name: s,
+                    }));
+
+                    setKinds(values);
+                }
+            });
+        }
+    }, [schemaProvider, setKinds]);
+
+    const postFilters = kinds
+        ? [
+              <TextInput
+                  label="fields.name.title"
+                  source="q"
+                  alwaysOn
+                  resettable
+                  key={1}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={2}
+                  label="fields.kind"
+                  source="kind"
+                  choices={kinds}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+          ]
+        : [];
+
+    const perPage = 5;
+
+    return (
+        <List
+            resource="functions"
+            actions={false}
+            component={Box}
+            sort={{ field: 'name', order: 'ASC' }}
+            perPage={perPage}
+            storeKey={false}
+            pagination={<Pagination rowsPerPageOptions={[perPage]} />}
+            filters={postFilters}
+        >
+            <TemplateGrid {...props} />
+        </List>
+    );
+};
+
+const TemplateGrid = (props: TemplateListProps) => {
+    const notify = useNotify();
+    const translate = useTranslate();
+    const { data: templates, total, isLoading } = useListContext();
     const { selectTemplate, getSelectedTemplate } = props;
-    const [templates, setTemplates] = useState<Template[]>([]);
-    const dataProvider = useDataProvider();
 
     const currentTemplate = getSelectedTemplate();
 
@@ -38,23 +108,13 @@ export const TemplateList = (props: TemplateListProps) => {
         e.stopPropagation();
     };
 
-    useEffect(() => {
-        if (dataProvider) {
-            const params: GetListParams = {
-                pagination: {
-                    perPage: 10,
-                    page: 1,
-                },
-                sort: { field: 'created', order: 'DESC' },
-                filter: {},
-            };
-            dataProvider.getList('functions', params).then(res => {
-                if (res.data && res.total) {
-                    setTemplates(res.data);
-                }
-            });
-        }
-    }, [dataProvider]);
+    if (isLoading) {
+        return <LoadingIndicator />;
+    }
+
+    if (!templates) {
+        notify(translate('messages.templates.noTemplates'));
+    }
 
     return (
         <Grid container spacing={2} sx={{ paddingY: '16px' }}>
@@ -75,7 +135,7 @@ export const TemplateList = (props: TemplateListProps) => {
                                 <Avatar
                                     sx={theme => ({
                                         backgroundColor:
-                                        currentTemplate === false
+                                            currentTemplate === false
                                                 ? theme.palette?.primary?.main
                                                 : theme.palette.grey[500],
                                     })}
@@ -90,7 +150,7 @@ export const TemplateList = (props: TemplateListProps) => {
                     </CardActionArea>
                 </StyledTemplate>
             </Grid>
-            {templates.map((template, index) => (
+            {templates && templates.map((template, index) => (
                 <Grid item xs={12} md={4} key={'template_' + index}>
                     <TemplateCard
                         template={template}
@@ -121,11 +181,11 @@ const TemplateCard = (props: {
     return (
         <StyledTemplate className={selected ? 'selected' : ''}>
             <CardActionArea onClick={select} sx={{ height: '250px' }}>
-                <CardHeader title={template.name} />
+                <CardHeader title={template.name} subheader={template.kind} />
                 <CardContent>
                     <Typography
                         variant="body2"
-                        sx={{ height: '150px', overflowY: 'auto' }}
+                        sx={{ height: '120px', overflowY: 'auto' }}
                     >
                         {template.metadata?.description}
                     </Typography>
