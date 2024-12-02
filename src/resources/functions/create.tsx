@@ -35,21 +35,30 @@ const CreateToolbar = () => {
     );
 };
 
-const FunctionStepperToolbar = (props: { getSelectedTemplate: () => false | Template | null }) => {
+const FunctionStepperToolbar = (props: {
+    getSelectedTemplate: () => false | Template | null;
+}) => {
     const { getSelectedTemplate } = props;
     const { reset } = useFormContext();
-    const { steps, currentStep } = useStepper();
+    const { currentStep } = useStepper();
 
     const applyTemplate = () => {
         const template = getSelectedTemplate();
-        console.log('steps', steps, currentStep);
         if (template && currentStep === 0) {
-            console.log('applying', template);
             reset(template);
         }
     };
 
-    return <StepperToolbar onNext={e => applyTemplate()} />;
+    return (
+        <StepperToolbar
+            onNext={e => applyTemplate()}
+            saveProps={
+                typeof getSelectedTemplate() == 'object'
+                    ? { alwaysEnable: true }
+                    : {}
+            }
+        />
+    );
 };
 
 export const FunctionCreate = () => {

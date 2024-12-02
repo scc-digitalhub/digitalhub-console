@@ -26,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useSchemaProvider } from '../provider/schemaProvider';
 
 export type Template = {
+    id: string;
     name: string;
     kind: string;
     metadata: {
@@ -81,7 +82,7 @@ export const TemplateList = (props: TemplateListProps) => {
 
     return (
         <List
-            resource="functions"
+            resource="functions/templates"
             actions={false}
             component={Box}
             sort={{ field: 'name', order: 'ASC' }}
@@ -174,7 +175,8 @@ const TemplateCard = (props: {
     const { template, selectTemplate, selected } = props;
 
     const select = e => {
-        selectTemplate(template);
+        const { id, ...templ } = template;
+        selectTemplate(templ);
         e.stopPropagation();
     };
 
