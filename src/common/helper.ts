@@ -53,7 +53,7 @@ export const randomId = () => {
     let p3 = Date.now().toString(36);
     let p2 = Math.random().toString(16).substring(2, 7);
     let p1 = Math.random().toString(36).substring(2);
-    return p1 + '-' + p2 + '-' + p3;
+    return p1 + p2 + p3;
 };
 
 export const keyParser = (
