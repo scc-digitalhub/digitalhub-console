@@ -206,6 +206,7 @@ const CoreApp = () => {
                                 layout={WrappedLayout}
                                 loginPage={MyLoginPage}
                                 requireAuth={!!authProvider}
+                                disableTelemetry
                             >
                                 <Resource
                                     name="functions"
@@ -330,6 +331,7 @@ const InitialWrapper = () => {
                 loginPage={MyLoginPage}
                 requireAuth={!!authProvider}
                 store={localStorageStore('dh')}
+                disableTelemetry
             >
                 <Resource
                     name="projects"
