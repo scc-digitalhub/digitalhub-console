@@ -41,6 +41,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import React from 'react';
 import purify from 'dompurify';
 import { useProjectPermissions } from '../../provider/authProvider';
+import { Empty } from '../../components/Empty';
 
 export const ProjectSelectorList = props => {
     const perPage = 12;
@@ -85,6 +86,11 @@ export const ProjectSelectorList = props => {
             storeKey={false}
             pagination={<Pagination rowsPerPageOptions={[perPage]} />}
             filters={filters}
+            empty={
+                <Empty>
+                    <CreateButton />
+                </Empty>
+            }
         >
             <GridList linkType={false}>
                 <ProjectsGridItem />
@@ -93,7 +99,7 @@ export const ProjectSelectorList = props => {
     );
 };
 
-const Toolbar = () => {
+const CreateButton = () => {
     const authProvider = useAuthProvider();
     const notify = useNotify();
     const refresh = useRefresh();
@@ -104,31 +110,37 @@ const Toolbar = () => {
     });
 
     return (
+        <CreateInDialogButton
+            fullWidth
+            maxWidth={'md'}
+            transform={transform}
+            variant="contained"
+            mutationOptions={{
+                onSuccess: () => {
+                    notify('ra.notification.created', {
+                        type: 'info',
+                        messageArgs: { smart_count: 1 },
+                    });
+
+                    if (authProvider) {
+                        //refresh permissions
+                        authProvider.refreshUser().then(user => {
+                            refresh();
+                        });
+                    }
+                },
+            }}
+        >
+            <ProjectCreateForm />
+        </CreateInDialogButton>
+    );
+};
+
+const Toolbar = () => {
+    return (
         <TopToolbar>
             <SortButton fields={['updated', 'name']} />
-            <CreateInDialogButton
-                fullWidth
-                maxWidth={'md'}
-                transform={transform}
-                variant="contained"
-                mutationOptions={{
-                    onSuccess: () => {
-                        notify('ra.notification.created', {
-                            type: 'info',
-                            messageArgs: { smart_count: 1 },
-                        });
-
-                        if (authProvider) {
-                            //refresh permissions
-                            authProvider.refreshUser().then(user => {
-                                refresh();
-                            });
-                        }
-                    },
-                }}
-            >
-                <ProjectCreateForm />
-            </CreateInDialogButton>
+            <CreateButton />
         </TopToolbar>
     );
 };
