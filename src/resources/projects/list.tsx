@@ -130,6 +130,7 @@ const CreateButton = () => {
                     }
                 },
             }}
+            closeOnClickOutside={false}
         >
             <ProjectCreateForm />
         </CreateInDialogButton>
