@@ -63,6 +63,7 @@ export const TaskAndRuns = (props: {
                             if (task && data) onEdit(task, data);
                         },
                     }}
+                    closeOnClickOutside={false}
                 >
                     <TaskEditComponent />
                 </EditInDialogButton>
@@ -163,6 +164,8 @@ const TaskRunList = () => {
                 fullWidth
                 maxWidth={'lg'}
                 transform={prepare}
+                closeOnClickOutside={false}
+
             >
                 {runSchema?.schema && taskSchema?.schema && (
                     <RunCreateForm

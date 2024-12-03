@@ -126,6 +126,7 @@ const Toolbar = () => {
                         }
                     },
                 }}
+                closeOnClickOutside={false}
             >
                 <ProjectCreateForm />
             </CreateInDialogButton>
