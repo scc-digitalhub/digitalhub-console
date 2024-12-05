@@ -4,12 +4,13 @@ import { MouseEventHandler } from 'react';
 import { Toolbar, SaveButton, SaveButtonProps } from 'react-admin';
 
 type StepperToolbarProps = {
-    onNext?: MouseEventHandler<HTMLButtonElement>;
+    beforeNext?: MouseEventHandler<HTMLButtonElement>;
+    disableNext?: boolean;
     saveProps?: SaveButtonProps;
 };
 
 export const StepperToolbar = (props: StepperToolbarProps) => {
-    const { onNext, saveProps } = props;
+    const { beforeNext, saveProps, disableNext = false } = props;
     const { steps, currentStep } = useStepper();
 
     return (
@@ -21,8 +22,13 @@ export const StepperToolbar = (props: StepperToolbarProps) => {
                 />
             </Box>
             <Box>
-                <StepperForm.NextButton onClick={onNext} />
-                {steps && currentStep === steps.length - 1 && <SaveButton {...saveProps} />}
+                <StepperForm.NextButton
+                    onClick={beforeNext}
+                    disabled={disableNext}
+                />
+                {steps && currentStep === steps.length - 1 && (
+                    <SaveButton {...saveProps} />
+                )}
             </Box>
         </Toolbar>
     );

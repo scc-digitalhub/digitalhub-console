@@ -25,7 +25,6 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperToolbar } from '../../components/StepperToolbar';
 import { Template, TemplateList } from '../../components/TemplateList';
-import { useFormContext } from 'react-hook-form';
 
 const CreateToolbar = () => {
     return (
@@ -39,19 +38,11 @@ const FunctionStepperToolbar = (props: {
     getSelectedTemplate: () => false | Template | null;
 }) => {
     const { getSelectedTemplate } = props;
-    const { reset } = useFormContext();
     const { currentStep } = useStepper();
-
-    const applyTemplate = () => {
-        const template = getSelectedTemplate();
-        if (template && currentStep === 0) {
-            reset(template);
-        }
-    };
 
     return (
         <StepperToolbar
-            onNext={e => applyTemplate()}
+            disableNext={currentStep === 0 && getSelectedTemplate() === null}
             saveProps={
                 typeof getSelectedTemplate() == 'object'
                     ? { alwaysEnable: true }

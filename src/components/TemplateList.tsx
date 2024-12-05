@@ -11,19 +11,18 @@ import {
     Stack,
     Box,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
+    Confirm,
     List,
     LoadingIndicator,
     Pagination,
-    SelectInput,
-    TextInput,
     useListContext,
     useNotify,
     useTranslate,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
-import { useSchemaProvider } from '../provider/schemaProvider';
+import { useFormState, useFormContext } from 'react-hook-form';
+import { useRef, useState } from 'react';
 
 export type Template = {
     id: string;
@@ -40,56 +39,18 @@ type TemplateListProps = {
 };
 
 export const TemplateList = (props: TemplateListProps) => {
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('functions').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider, setKinds]);
-
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
-
     const perPage = 5;
 
     return (
         <List
-            resource="functions/templates"
+            resource="templates"
+            queryOptions={{ meta: { entity: 'function' } }}
             actions={false}
             component={Box}
             sort={{ field: 'name', order: 'ASC' }}
             perPage={perPage}
             storeKey={false}
             pagination={<Pagination rowsPerPageOptions={[perPage]} />}
-            filters={postFilters}
         >
             <TemplateGrid {...props} />
         </List>
@@ -100,13 +61,45 @@ const TemplateGrid = (props: TemplateListProps) => {
     const notify = useNotify();
     const translate = useTranslate();
     const { data: templates, total, isLoading } = useListContext();
+    const [open, setOpen] = useState(false);
+    const { isDirty } = useFormState();
+    const { reset } = useFormContext();
     const { selectTemplate, getSelectedTemplate } = props;
 
     const currentTemplate = getSelectedTemplate();
+    const clickedTemplate = useRef<Template | false>(false);
 
-    const startFromScratch = e => {
-        selectTemplate(false);
-        e.stopPropagation();
+    const handleSelection = (event, template: Template | false) => {
+        if (!isDirty) {
+            //first selection, set selected template
+            selectTemplate(template);
+            if (typeof template === 'object') {
+                const { id, name, ...templ } = template;
+                reset(templ);
+            }
+        } else if (
+            typeof currentTemplate != typeof template ||
+            (typeof currentTemplate == 'object' &&
+                typeof template == 'object' &&
+                currentTemplate?.name != template.name)
+        ) {
+            //ask confirmation
+            clickedTemplate.current = template;
+            setOpen(true);
+        }
+        event.stopPropagation();
+    };
+
+    const handleDialogClose = () => setOpen(false);
+    const handleConfirm = () => {
+        selectTemplate(clickedTemplate.current);
+        if (clickedTemplate.current === false) {
+            reset({ name: '' });
+        } else {
+            const { id, name, ...templ } = clickedTemplate.current;
+            reset(templ);
+        }
+        setOpen(false);
     };
 
     if (isLoading) {
@@ -124,7 +117,7 @@ const TemplateGrid = (props: TemplateListProps) => {
                     className={currentTemplate === false ? 'selected' : ''}
                 >
                     <CardActionArea
-                        onClick={startFromScratch}
+                        onClick={e => handleSelection(e, false)}
                         sx={{ height: '250px' }}
                     >
                         <CardContent>
@@ -151,49 +144,59 @@ const TemplateGrid = (props: TemplateListProps) => {
                     </CardActionArea>
                 </StyledTemplate>
             </Grid>
-            {templates && templates.map((template, index) => (
-                <Grid item xs={12} md={4} key={'template_' + index}>
-                    <TemplateCard
-                        template={template}
-                        selectTemplate={selectTemplate}
-                        selected={
-                            typeof currentTemplate == 'object' &&
-                            currentTemplate?.name == template.name
-                        }
-                    />
-                </Grid>
-            ))}
+            {templates &&
+                templates.map((template, index) => (
+                    <Grid item xs={12} md={4} key={'template_' + index}>
+                        <TemplateCard
+                            template={template}
+                            selected={
+                                typeof currentTemplate == 'object' &&
+                                currentTemplate?.name == template.name
+                            }
+                            onSelected={handleSelection}
+                        />
+                    </Grid>
+                ))}
+            <Confirm
+                isOpen={open}
+                title={translate('resources.common.reset.title')}
+                content={translate('resources.common.reset.content')}
+                onConfirm={handleConfirm}
+                onClose={handleDialogClose}
+            />
         </Grid>
     );
 };
 
 const TemplateCard = (props: {
     template: Template;
-    selectTemplate: any;
     selected: boolean;
+    onSelected: (event, template: Template) => void;
 }) => {
-    const { template, selectTemplate, selected } = props;
-
-    const select = e => {
-        const { id, ...templ } = template;
-        selectTemplate(templ);
-        e.stopPropagation();
-    };
+    const { template, selected, onSelected } = props;
 
     return (
-        <StyledTemplate className={selected ? 'selected' : ''}>
-            <CardActionArea onClick={select} sx={{ height: '250px' }}>
-                <CardHeader title={template.name} subheader={template.kind} />
-                <CardContent>
-                    <Typography
-                        variant="body2"
-                        sx={{ height: '120px', overflowY: 'auto' }}
-                    >
-                        {template.metadata?.description}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </StyledTemplate>
+        <>
+            <StyledTemplate className={selected ? 'selected' : ''}>
+                <CardActionArea
+                    onClick={e => onSelected(e, template)}
+                    sx={{ height: '250px' }}
+                >
+                    <CardHeader
+                        title={template.name}
+                        subheader={template.kind}
+                    />
+                    <CardContent>
+                        <Typography
+                            variant="body2"
+                            sx={{ height: '120px', overflowY: 'auto' }}
+                        >
+                            {template.metadata?.description}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </StyledTemplate>
+        </>
     );
 };
 

@@ -88,8 +88,12 @@ const springDataProvider = (
                 size: perPage,
             };
             let prefix = '';
-            if (resource !== 'projects' && params.meta?.root) {
+            if (resource !== 'projects' && resource !== 'templates' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
+            }
+            let entity = '';
+            if (resource === 'templates' && params.meta?.entity) {
+                entity = '/' + params.meta.entity;
             }
             let url = '';
             if (allVersion && record) {
@@ -97,7 +101,7 @@ const springDataProvider = (
                     record.name
                 }?${stringify(query)}`;
             } else {
-                url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
+                url = `${apiUrl}${prefix}/${resource}${entity}?${stringify(query)}`;
             }
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
