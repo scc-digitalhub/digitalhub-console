@@ -20,7 +20,7 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
-import { TemplatesSelector } from '../../components/TemplateList';
+import { TemplatesSelector } from '../../components/TemplatesSelector';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
 const CreateToolbar = () => {
