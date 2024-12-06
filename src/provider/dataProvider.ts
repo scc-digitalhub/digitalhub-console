@@ -91,17 +91,13 @@ const springDataProvider = (
             if (resource !== 'projects' && resource !== 'templates' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            let entity = '';
-            if (resource === 'templates' && params.meta?.entity) {
-                entity = '/' + params.meta.entity;
-            }
             let url = '';
             if (allVersion && record) {
                 url = `${apiUrl}${prefix}/${resource}/${
                     record.name
                 }?${stringify(query)}`;
             } else {
-                url = `${apiUrl}${prefix}/${resource}${entity}?${stringify(query)}`;
+                url = `${apiUrl}${prefix}/${resource}?${stringify(query)}`;
             }
             return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {

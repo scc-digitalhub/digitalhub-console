@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
     CreateBase,
     CreateView,
-    FormDataConsumer,
     ListButton,
     LoadingIndicator,
     TextInput,
@@ -19,12 +18,10 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
-import { StepperForm, useStepper } from '@dslab/ra-stepper';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
+import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
+import { TemplatesSelector } from '../../components/TemplateList';
 import { StepperToolbar } from '../../components/StepperToolbar';
-import { Template, TemplateList } from '../../components/TemplateList';
 
 const CreateToolbar = () => {
     return (
@@ -34,41 +31,17 @@ const CreateToolbar = () => {
     );
 };
 
-const FunctionStepperToolbar = (props: {
-    getSelectedTemplate: () => false | Template | null;
-}) => {
-    const { getSelectedTemplate } = props;
-    const { currentStep } = useStepper();
-
-    return (
-        <StepperToolbar
-            disableNext={currentStep === 0 && getSelectedTemplate() === null}
-            saveProps={
-                typeof getSelectedTemplate() == 'object'
-                    ? { alwaysEnable: true }
-                    : {}
-            }
-        />
-    );
-};
-
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+    const [template, setTemplate] = useState<string | null>(null);
 
-    const [selectedTemplate, setSelectedTemplate] = useState<
-        Template | null | false
-    >(null);
-
-    const selectTemplate = (template: Template | false) => {
-        setSelectedTemplate(template);
-    };
-
-    const getSelectedTemplate = () => {
-        return selectedTemplate;
-    };
+    const isLoading = !schemas?.length;
+    const kinds = schemas?.map(s => ({
+        id: s.kind,
+        name: s.kind,
+    }));
 
     const transform = data => ({
         ...data,
@@ -76,23 +49,20 @@ export const FunctionCreate = () => {
     });
 
     useEffect(() => {
-        if (schemaProvider) {
+        if (schemaProvider && !schemas?.length) {
             schemaProvider.list('functions').then(res => {
                 if (res) {
                     setSchemas(res);
-
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-
-                    setKinds(values);
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
 
-    if (!kinds) {
+    const selectTemplate = selected => {
+        setTemplate(selected);
+    };
+
+    if (isLoading) {
         return <LoadingIndicator />;
     }
 
@@ -106,23 +76,15 @@ export const FunctionCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <StepperForm
-                                toolbar={
-                                    <FunctionStepperToolbar
-                                        getSelectedTemplate={
-                                            getSelectedTemplate
-                                        }
-                                    />
-                                }
-                            >
-                                <StepperForm.Step label={'fields.templates'}>
-                                    <TemplateList
-                                        selectTemplate={selectTemplate}
-                                        getSelectedTemplate={
-                                            getSelectedTemplate
-                                        }
+                            <StepperForm toolbar={<StepperToolbar />}>
+                                <StepperForm.Step label={'fields.kind'}>
+                                    <TemplatesSelector
+                                        kinds={kinds}
+                                        template={template}
+                                        onSelected={selectTemplate}
                                     />
                                 </StepperForm.Step>
+
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
@@ -134,34 +96,11 @@ export const FunctionCreate = () => {
                                     <MetadataInput />
                                 </StepperForm.Step>
                                 <StepperForm.Step label={'fields.spec.title'}>
-                                    <KindSelector kinds={kinds} />
+                                    <KindSelector kinds={kinds} readOnly />
                                     <SpecInput
                                         source="spec"
                                         getUiSchema={getFunctionUiSpec}
                                     />
-                                </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={'fields.recap'}
-                                    optional
-                                >
-                                    <FormDataConsumer>
-                                        {({ formData }) => {
-                                            //read-only view
-                                            const r = {
-                                                spec: btoa(
-                                                    toYaml(formData?.spec)
-                                                ),
-                                            };
-                                            return (
-                                                <AceEditorField
-                                                    mode="yaml"
-                                                    source="spec"
-                                                    record={r}
-                                                    parse={atob}
-                                                />
-                                            );
-                                        }}
-                                    </FormDataConsumer>
                                 </StepperForm.Step>
                             </StepperForm>
                         </FlatCard>

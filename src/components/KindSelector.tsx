@@ -10,8 +10,11 @@ import {
 import { isValidKind } from '../common/helper';
 import { useFormState } from 'react-hook-form';
 
-export const KindSelector = (props: { kinds: any[] }) => {
-    const { kinds } = props;
+export const KindSelector = (props: {
+    kinds: any[] | undefined;
+    readOnly?: boolean;
+}) => {
+    const { kinds = [], readOnly = false } = props;
     const resource = useResourceContext();
     const { dirtyFields } = useFormState();
     const { field } = useInput({ resource, source: 'spec' });
@@ -45,6 +48,7 @@ export const KindSelector = (props: { kinds: any[] }) => {
     return (
         <>
             <SelectInput
+                readOnly={readOnly}
                 source="kind"
                 choices={kinds}
                 validate={[required(), isValidKind(kinds)]}
