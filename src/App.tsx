@@ -283,6 +283,7 @@ const CoreApp = () => {
                                     icon={SecretIcon}
                                 ></Resource>
                                 <Resource name="labels" />
+                                <Resource name="templates" />
                                 <CustomRoutes>
                                     <Route
                                         path="/config"

@@ -88,7 +88,7 @@ const springDataProvider = (
                 size: perPage,
             };
             let prefix = '';
-            if (resource !== 'projects' && params.meta?.root) {
+            if (resource !== 'projects' && resource !== 'templates' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
             let url = '';

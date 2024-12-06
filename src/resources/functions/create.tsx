@@ -2,16 +2,13 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-    CreateActionsProps,
     CreateBase,
     CreateView,
-    FormDataConsumer,
     ListButton,
     LoadingIndicator,
     TextInput,
     TopToolbar,
     required,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
@@ -21,10 +18,9 @@ import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
-import { StepperForm, useStepper } from '@dslab/ra-stepper';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
+import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
+import { TemplatesSelector } from '../../components/TemplatesSelector';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
 const CreateToolbar = () => {
@@ -37,10 +33,15 @@ const CreateToolbar = () => {
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
+    const [template, setTemplate] = useState<string | null>(null);
+
+    const isLoading = !schemas?.length;
+    const kinds = schemas?.map(s => ({
+        id: s.kind,
+        name: s.kind,
+    }));
 
     const transform = data => ({
         ...data,
@@ -48,23 +49,20 @@ export const FunctionCreate = () => {
     });
 
     useEffect(() => {
-        if (schemaProvider) {
+        if (schemaProvider && !schemas?.length) {
             schemaProvider.list('functions').then(res => {
                 if (res) {
                     setSchemas(res);
-
-                    const values = res.map(s => ({
-                        id: s.kind,
-                        name: s.kind,
-                    }));
-
-                    setKinds(values);
                 }
             });
         }
-    }, [schemaProvider, setKinds]);
+    }, [schemaProvider]);
 
-    if (!kinds) {
+    const selectTemplate = selected => {
+        setTemplate(selected);
+    };
+
+    if (isLoading) {
         return <LoadingIndicator />;
     }
 
@@ -79,6 +77,14 @@ export const FunctionCreate = () => {
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <StepperForm toolbar={<StepperToolbar />}>
+                                <StepperForm.Step label={'fields.kind'}>
+                                    <TemplatesSelector
+                                        kinds={kinds}
+                                        template={template}
+                                        onSelected={selectTemplate}
+                                    />
+                                </StepperForm.Step>
+
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
@@ -90,34 +96,11 @@ export const FunctionCreate = () => {
                                     <MetadataInput />
                                 </StepperForm.Step>
                                 <StepperForm.Step label={'fields.spec.title'}>
-                                    <KindSelector kinds={kinds} />
+                                    <KindSelector kinds={kinds} readOnly />
                                     <SpecInput
                                         source="spec"
                                         getUiSchema={getFunctionUiSpec}
                                     />
-                                </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={'fields.recap'}
-                                    optional
-                                >
-                                    <FormDataConsumer>
-                                        {({ formData }) => {
-                                            //read-only view
-                                            const r = {
-                                                spec: btoa(
-                                                    toYaml(formData?.spec)
-                                                ),
-                                            };
-                                            return (
-                                                <AceEditorField
-                                                    mode="yaml"
-                                                    source="spec"
-                                                    record={r}
-                                                    parse={atob}
-                                                />
-                                            );
-                                        }}
-                                    </FormDataConsumer>
                                 </StepperForm.Step>
                             </StepperForm>
                         </FlatCard>

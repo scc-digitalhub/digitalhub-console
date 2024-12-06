@@ -1,8 +1,16 @@
-import { useStepper, StepperForm } from "@dslab/ra-stepper";
-import { Box } from "@mui/material";
-import { Toolbar, SaveButton } from "react-admin";
+import { useStepper, StepperForm } from '@dslab/ra-stepper';
+import { Box } from '@mui/material';
+import { MouseEventHandler } from 'react';
+import { Toolbar, SaveButton, SaveButtonProps } from 'react-admin';
 
-export const StepperToolbar = () => {
+type StepperToolbarProps = {
+    beforeNext?: MouseEventHandler<HTMLButtonElement>;
+    disableNext?: boolean;
+    saveProps?: SaveButtonProps;
+};
+
+export const StepperToolbar = (props: StepperToolbarProps) => {
+    const { beforeNext, saveProps, disableNext = false } = props;
     const { steps, currentStep } = useStepper();
 
     return (
@@ -14,8 +22,13 @@ export const StepperToolbar = () => {
                 />
             </Box>
             <Box>
-                <StepperForm.NextButton />
-                {steps && currentStep === steps.length - 1 && <SaveButton />}
+                <StepperForm.NextButton
+                    onClick={beforeNext}
+                    disabled={disableNext}
+                />
+                {steps && currentStep === steps.length - 1 && (
+                    <SaveButton {...saveProps} />
+                )}
             </Box>
         </Toolbar>
     );

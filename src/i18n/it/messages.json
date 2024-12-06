@@ -29,5 +29,9 @@
     "lineage": {
         "noLineage": "Nessuna informazione disponibile sulla genealogia",
         "noExpansion": "Non ci sono altre relazioni da mostrare"
+    },
+    "templates": {
+        "noTemplates": "Nessun template disponibile",
+        "start_from_scratch": "Inizia da zero"
     }
 }
