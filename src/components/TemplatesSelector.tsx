@@ -9,10 +9,12 @@ import {
     Grid,
     Avatar,
     Stack,
+    Box,
 } from '@mui/material';
 import {
     Confirm,
     LoadingIndicator,
+    RecordContextProvider,
     ResourceContextProvider,
     useGetList,
     useRecordContext,
@@ -23,6 +25,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useFormState, useFormContext } from 'react-hook-form';
 import { useRef, useState } from 'react';
 import { KindSelector } from './KindSelector';
+import { ChipsField } from './ChipsField';
 
 export type Template = {
     id: string;
@@ -30,6 +33,8 @@ export type Template = {
     kind: string;
     metadata: {
         description?: string;
+        version?: string;
+        labels: string[];
     };
     spec: any;
 };
@@ -194,7 +199,7 @@ const TemplateCard = (props: {
     const { template, selected, onSelected } = props;
 
     return (
-        <>
+        <RecordContextProvider value={template}>
             <StyledTemplate className={selected ? 'selected' : ''}>
                 <CardActionArea
                     onClick={e => onSelected(e, template)}
@@ -204,6 +209,16 @@ const TemplateCard = (props: {
                         title={template.name}
                         subheader={template.kind}
                     />
+                    {template.metadata?.labels && (
+                        <Box py={0} px={1}>
+                            <ChipsField
+                                label="fields.labels.title"
+                                source="metadata.labels"
+                                sortable={false}
+                            />
+                        </Box>
+                    )}
+
                     <CardContent>
                         <Typography
                             variant="body2"
@@ -214,7 +229,7 @@ const TemplateCard = (props: {
                     </CardContent>
                 </CardActionArea>
             </StyledTemplate>
-        </>
+        </RecordContextProvider>
     );
 };
 
