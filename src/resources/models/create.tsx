@@ -30,8 +30,6 @@ import { SpecInput } from '../../components/SpecInput';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/StepperToolbar';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
 
 const CreateToolbar = (props: CreateActionsProps) => {
     return (
@@ -101,24 +99,6 @@ export const ModelForm = (props: { uploader?: UploadController }) => {
             </StepperForm.Step>
             <StepperForm.Step label="fields.spec.title">
                 <SpecCreateStep uploader={uploader} />
-            </StepperForm.Step>
-            <StepperForm.Step label={'fields.recap'} optional>
-                <FormDataConsumer>
-                    {({ formData }) => {
-                        //read-only view
-                        const r = {
-                            spec: btoa(toYaml(formData?.spec)),
-                        };
-                        return (
-                            <AceEditorField
-                                mode="yaml"
-                                source="spec"
-                                record={r}
-                                parse={atob}
-                            />
-                        );
-                    }}
-                </FormDataConsumer>
             </StepperForm.Step>
         </StepperForm>
     );

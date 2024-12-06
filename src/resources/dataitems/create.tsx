@@ -29,8 +29,6 @@ import { KindSelector } from '../../components/KindSelector';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/StepperToolbar';
-import { toYaml } from '@dslab/ra-export-record-button';
-import { AceEditorField } from '@dslab/ra-ace-editor';
 
 const CreateToolbar = () => {
     return (
@@ -102,24 +100,6 @@ export const DataItemForm = (props: { uploader?: UploadController }) => {
             </StepperForm.Step>
             <StepperForm.Step label={'fields.spec.title'}>
                 <SpecCreateStep uploader={uploader} />
-            </StepperForm.Step>
-            <StepperForm.Step label={'fields.recap'} optional>
-                <FormDataConsumer>
-                    {({ formData }) => {
-                        //read-only view
-                        const r = {
-                            spec: btoa(toYaml(formData?.spec)),
-                        };
-                        return (
-                            <AceEditorField
-                                mode="yaml"
-                                source="spec"
-                                record={r}
-                                parse={atob}
-                            />
-                        );
-                    }}
-                </FormDataConsumer>
             </StepperForm.Step>
         </StepperForm>
     );

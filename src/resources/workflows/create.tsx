@@ -23,8 +23,6 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
-import { toYaml } from '@dslab/ra-export-record-button';
-import { AceEditorField } from '@dslab/ra-ace-editor';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
 const CreateToolbar = () => {
@@ -114,29 +112,6 @@ export const WorkflowCreate = () => {
                                                 getUiSchema={getWorkflowUiSpec}
                                             />
                                         )}
-                                    </FormDataConsumer>
-                                </StepperForm.Step>
-                                <StepperForm.Step
-                                    label={'fields.recap'}
-                                    optional
-                                >
-                                    <FormDataConsumer>
-                                        {({ formData }) => {
-                                            //read-only view
-                                            const r = {
-                                                spec: btoa(
-                                                    toYaml(formData?.spec)
-                                                ),
-                                            };
-                                            return (
-                                                <AceEditorField
-                                                    mode="yaml"
-                                                    source="spec"
-                                                    record={r}
-                                                    parse={atob}
-                                                />
-                                            );
-                                        }}
                                     </FormDataConsumer>
                                 </StepperForm.Step>
                             </StepperForm>
