@@ -267,7 +267,7 @@ const NodeInfo = (props: {
                 <OpenInNewIcon fontSize="small" />
             </IconButtonWithTooltip>
             <IconButtonWithTooltip
-                label={'ra.action.delete'}
+                label={'ra.action.close'}
                 color="primary"
                 onClick={close}
             >
