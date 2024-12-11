@@ -27,8 +27,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const record = useRecordContext(props);
     const dataProvider = useDataProvider();
     const notify = useNotify();
-
-    if (!record) {
+    if (!record || record?.status?.files?.length>1) {
         return <></>;
     }
 
@@ -62,6 +61,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     };
 
     return (
+
         <Button label={label} color={color} onClick={handleDownload}>
             {icon}
         </Button>
