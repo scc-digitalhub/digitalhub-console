@@ -81,7 +81,6 @@ export const TemplatesSelector = (props: {
         const r = template
             ? {
                   ...record,
-                  name: template.name,
                   kind: template.kind,
                   metadata: {
                       ...record?.metadata,
@@ -94,6 +93,8 @@ export const TemplatesSelector = (props: {
 
         //reset whole form to new defaults
         reset(r);
+        //make form dirty to enable saving
+        setValue("name", template?.name || record?.name || '', { shouldDirty: true })
 
         if (onSelected) {
             onSelected(template?.id);
