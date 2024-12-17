@@ -9,7 +9,7 @@ import '@xyflow/react/dist/style.css';
 import { set } from 'lodash';
 import { Flow } from './Flow';
 import { getNodesAndEdges, Relationship, RelationshipDirection } from './utils';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { keyParser } from '../../common/helper';
 
@@ -17,11 +17,17 @@ export const RecordLineage = (props: {
     relationships: Relationship[];
     record: RaRecord;
     expandable?: boolean;
+    addRecordNode?: boolean;
+    viewportHeight?: string;
+    viewportWidth?: string;
 }) => {
     const {
         relationships: relFromProps = [],
         record,
         expandable = true,
+        addRecordNode = true,
+        viewportHeight,
+        viewportWidth,
     } = props;
     const [relationships, setRelationships] = useState<Relationship[]>(
         relFromProps || []
@@ -119,7 +125,7 @@ export const RecordLineage = (props: {
     const { nodes, edges } = getNodesAndEdges(
         relationships,
         direction,
-        [record],
+        addRecordNode ? [record] : [],
         labels,
         expandable
     );
@@ -131,6 +137,8 @@ export const RecordLineage = (props: {
                 edges={edges}
                 direction={direction}
                 onConnectStart={onConnectStart}
+                height={viewportHeight}
+                width={viewportWidth}
             />
         </ReactFlowProvider>
     );

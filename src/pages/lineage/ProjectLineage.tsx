@@ -8,20 +8,17 @@ import {
     useDataProvider,
     useNotify,
     useRecordContext,
+    useResourceDefinitions,
     useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../components/PageTitle';
 import { LineageIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import { Edge, Node, ReactFlowProvider } from '@xyflow/react';
 import { NoLineage } from '../../components/lineage/NoLineage';
 import { useEffect, useState } from 'react';
-import {
-    getNodesAndEdges,
-    RelationshipDirection,
-} from '../../components/lineage/utils';
-import { Flow } from '../../components/lineage/Flow';
-import { set } from 'lodash';
+import { RecordLineage } from '../../components/lineage/RecordLineage';
+import { Relationship } from '../../components/lineage';
+import { keyParser } from '../../common/helper';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
@@ -55,51 +52,99 @@ const Lineage = () => {
     const project = useRecordContext();
     const dataProvider = useDataProvider();
     const notify = useNotify();
-    const translate = useTranslate();
-
-    //use reverse representation, we store rel on child side
-    const direction = RelationshipDirection.reverse;
-
-    const [nodesAndEdges, setNodesAndEdges] = useState<{
-        nodes: Node[];
-        edges: Edge[];
-    }>({ nodes: [], edges: [] });
+    const resources = useResourceDefinitions();
+    const [relationships, setRelationships] = useState<any[]>([]);
 
     useEffect(() => {
         if (dataProvider && project) {
-            const projectResources = Object.values(project.spec).flat();
-            const records = projectResources as RaRecord[];
+            //collect project resources (except runs)
+            let nodesToBe: { resource: string; record: RaRecord }[] = [];
+            for (const [resource, v] of Object.entries(resources)) {
+                if (Object.keys(project.spec).includes(resource)) {
+                    const records = project.spec[resource] as RaRecord[];
+                    records.forEach(r => {
+                        nodesToBe.push({ resource: resource, record: r });
+                    });
+                }
+            }
 
-            dataProvider
-                .getProjectLineage('projects', { id: project.id })
-                .then(data => {
-                    if (data?.lineage) {
-                        //derive translations for rels
-                        const labels = {};
-                        data.lineage.forEach(value =>
-                            set(
-                                labels,
-                                value.type,
-                                translate(
-                                    `pages.lineage.relationships.${value.type}`
-                                )
-                            )
-                        );
+            //get lineage of each resource and collect responses
+            let promises: Promise<{ lineage: Relationship[] }>[] =
+                nodesToBe.map(n =>
+                    dataProvider.getLineage(n.resource, {
+                        id: n.record.id,
+                        meta: { root: project.id },
+                    })
+                );
 
-                        const { nodes, edges } = getNodesAndEdges(
-                            data.lineage,
-                            direction,
-                            records,
-                            labels,
-                            false
-                        );
+            //wait for results and set relationships
+            Promise.all(promises)
+                .then(values => {
+                    let rels: Relationship[] = [];
+                    let runs: any[] = [];
+                    values.forEach((data, index) => {
+                        //if this resource has relationships, add them avoiding duplicates
+                        //otherwise add resource as disconnected node
+                        if (data?.lineage && data.lineage.length !== 0) {
+                            data.lineage.forEach(l => {
+                                if (
+                                    !rels.some(
+                                        r =>
+                                            r.dest == l.dest &&
+                                            r.type == l.type &&
+                                            r.source == l.source
+                                    )
+                                ) {
+                                    rels.push(l);
+                                }
+                                //if this relationship involves a run, track it to get its lineage
+                                const dest = keyParser(l.dest);
+                                if (dest.resource == 'runs') {
+                                    runs.push(dest);
+                                }
+                                if (l.source) {
+                                    const source = keyParser(l.source);
+                                    if (source.resource == 'runs') {
+                                        runs.push(source);
+                                    }
+                                }
+                            });
+                        } else {
+                            rels.push({
+                                dest: nodesToBe[index].record.key,
+                                type: '',
+                            });
+                        }
+                    });
 
-                        setNodesAndEdges({ nodes: nodes, edges: edges });
-                    } else {
-                        notify('ra.message.not_found', {
-                            type: 'error',
+                    //get runs lineage
+                    Promise.all(
+                        runs.map(r =>
+                            dataProvider.getLineage('runs', {
+                                id: r.id,
+                                meta: { root: project.id },
+                            })
+                        )
+                    ).then(results => {
+                        results.forEach(data => {
+                            if (data?.lineage && data.lineage.length !== 0) {
+                                data.lineage.forEach(l => {
+                                    if (
+                                        !rels.some(
+                                            r =>
+                                                r.dest == l.dest &&
+                                                r.type == l.type &&
+                                                r.source == l.source
+                                        )
+                                    ) {
+                                        rels.push(l);
+                                    }
+                                });
+                            }
                         });
-                    }
+                        //finally set relationships
+                        setRelationships([...rels]);
+                    });
                 })
                 .catch(error => {
                     const e =
@@ -109,9 +154,7 @@ const Lineage = () => {
                     notify(e);
                 });
         }
-    }, [dataProvider, notify, project, translate]);
-
-    if (nodesAndEdges.nodes.length === 0) return <NoLineage />;
+    }, [dataProvider, notify, project, resources]);
 
     return (
         <Box
@@ -119,15 +162,17 @@ const Lineage = () => {
                 width: '100%',
             }}
         >
-            <ReactFlowProvider>
-                <Flow
-                    nodes={nodesAndEdges.nodes}
-                    edges={nodesAndEdges.edges}
-                    direction={direction}
-                    height="600px"
-                    width="100%"
+            {relationships.length !== 0 ? (
+                <RecordLineage
+                    relationships={relationships}
+                    record={project}
+                    expandable={false}
+                    addRecordNode={false}
+                    viewportHeight="500px"
                 />
-            </ReactFlowProvider>
+            ) : (
+                <NoLineage />
+            )}
         </Box>
     );
 };
