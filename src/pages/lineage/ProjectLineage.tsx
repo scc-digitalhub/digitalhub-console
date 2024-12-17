@@ -8,6 +8,7 @@ import {
     useDataProvider,
     useNotify,
     useRecordContext,
+    useResourceDefinitions,
     useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../components/PageTitle';
@@ -51,17 +52,20 @@ const Lineage = () => {
     const project = useRecordContext();
     const dataProvider = useDataProvider();
     const notify = useNotify();
+    const resources = useResourceDefinitions();
     const [relationships, setRelationships] = useState<any[]>([]);
 
     useEffect(() => {
         if (dataProvider && project) {
             //collect project resources (except runs)
             let nodesToBe: { resource: string; record: RaRecord }[] = [];
-            for (const [resource, v] of Object.entries(project.spec)) {
-                const records = v as RaRecord[];
-                records.forEach(r => {
-                    nodesToBe.push({ resource: resource, record: r });
-                });
+            for (const [resource, v] of Object.entries(resources)) {
+                if (Object.keys(project.spec).includes(resource)) {
+                    const records = project.spec[resource] as RaRecord[];
+                    records.forEach(r => {
+                        nodesToBe.push({ resource: resource, record: r });
+                    });
+                }
             }
 
             //get lineage of each resource and collect responses
@@ -150,7 +154,7 @@ const Lineage = () => {
                     notify(e);
                 });
         }
-    }, [dataProvider, notify, project]);
+    }, [dataProvider, notify, project, resources]);
 
     return (
         <Box
