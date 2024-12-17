@@ -62,6 +62,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     };
 
     return (
+
         <Button label={label} color={color} onClick={handleDownload}>
             {icon}
         </Button>

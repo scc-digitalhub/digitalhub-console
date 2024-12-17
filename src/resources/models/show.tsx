@@ -42,16 +42,21 @@ const ShowComponent = () => {
     return <ModelShowLayout record={record} />;
 };
 
-const ShowToolbar = () => (
+const ShowToolbar = () => {
+    const record = useRecordContext();
+    return (
     <TopToolbar>
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
-        <DownloadButton source="spec.path" />
+        {record?.status?.files?.length === 1 && (
+            <DownloadButton source="spec.path" />
+        )}
         <InspectButton fullWidth />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
-);
+    )}
+;
 const getUiSpec = (kind: string) => {
     const uiSpec = getModelSpecUiSchema(kind) || {};
     //hide metrics field

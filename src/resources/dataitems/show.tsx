@@ -37,16 +37,21 @@ const ShowComponent = () => {
     return <DataItemShowLayout record={record} />;
 };
 
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <DownloadButton source="spec.path" />
-        <InspectButton fullWidth />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
+const ShowToolbar = () => {
+    const record = useRecordContext();
+    return (
+        <TopToolbar>
+            <BackButton />
+            <EditButton style={{ marginLeft: 'auto' }} />
+            {record?.status?.files?.length === 1 && (
+                <DownloadButton source="spec.path" />
+            )}
+            <InspectButton fullWidth />
+            <ExportRecordButton language="yaml" color="info" />
+            <DeleteWithConfirmButton />
+        </TopToolbar>
+    );
+};
 
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     record: any;
@@ -117,8 +122,8 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                     <PreviewTabComponent record={props.record} />
                 </TabbedShowLayout.Tab>
             )}
-             <TabbedShowLayout.Tab label="pages.lineage.title">
-                <LineageTabComponent  />
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );

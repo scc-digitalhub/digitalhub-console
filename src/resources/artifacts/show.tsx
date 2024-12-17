@@ -51,17 +51,21 @@ const ShowComponent = () => {
     return <ArtifactShowLayout record={record} />;
 };
 
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <DownloadButton source="spec.path" />
-        <InspectButton fullWidth />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
-
+const ShowToolbar = () => {
+    const record = useRecordContext();
+    return (
+        <TopToolbar>
+            <BackButton />
+            <EditButton style={{ marginLeft: 'auto' }} />
+            {record?.status?.files?.length === 1 && (
+                <DownloadButton source="spec.path" />
+            )}
+            <InspectButton fullWidth />
+            <ExportRecordButton language="yaml" color="info" />
+            <DeleteWithConfirmButton />
+        </TopToolbar>
+    );
+};
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
@@ -120,7 +124,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 <FileInfo />
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="pages.lineage.title">
-                <LineageTabComponent  />
+                <LineageTabComponent />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
