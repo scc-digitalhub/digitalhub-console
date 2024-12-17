@@ -9,7 +9,6 @@ import * as states from './en/states.json';
 import * as messages from './en/messages.json';
 import * as actions from './en/actions.json';
 
-console.log('fields', fields);
 const translations = {
     ...englishMessages,
     fields: fields && 'default' in fields ? fields['default'] : fields,
