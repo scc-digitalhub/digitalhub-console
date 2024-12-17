@@ -20,7 +20,7 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
-import { TemplatesSelector } from '../../components/TemplatesSelector';
+import { Template, TemplatesSelector } from '../../components/TemplatesSelector';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
 const CreateToolbar = () => {
@@ -35,7 +35,7 @@ export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
-    const [template, setTemplate] = useState<string | null>(null);
+    const [template, setTemplate] = useState<Template | null>(null);
 
     const isLoading = !schemas?.length;
     const kinds = schemas?.map(s => ({
@@ -80,7 +80,7 @@ export const FunctionCreate = () => {
                                 <StepperForm.Step label={'fields.kind'}>
                                     <TemplatesSelector
                                         kinds={kinds}
-                                        template={template}
+                                        template={template?.id || null}
                                         onSelected={selectTemplate}
                                     />
                                 </StepperForm.Step>
@@ -88,6 +88,7 @@ export const FunctionCreate = () => {
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
+                                        placeholder={template?.name}
                                         validate={[
                                             required(),
                                             isAlphaNumeric(),
