@@ -149,6 +149,10 @@
     "description": "",
     "title": "Python"
   },
+  "python+run": {
+    "description": "Definizione dell'operazione di run del codice Python",
+    "title": "Run di codice Python"
+},
   "python+build": {
     "description": "Definizione dell'operazione di build del codice Python",
     "title": "Build di codice Python"
