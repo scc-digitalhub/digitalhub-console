@@ -149,6 +149,10 @@
         "description": "",
         "title": "Python"
     },
+    "python+run": {
+        "description": "Python run definition",
+        "title": "Python run"
+    },
     "python+build": {
         "description": "Python build definition",
         "title": "Python build"
