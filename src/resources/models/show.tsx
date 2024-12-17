@@ -49,8 +49,9 @@ const ShowToolbar = () => {
         <BackButton />
         <EditButton style={{ marginLeft: 'auto' }} />
         {record?.status?.files?.length === 1 && (
-                <DownloadButton source="spec.path" />
-            )}        <InspectButton fullWidth />
+            <DownloadButton source="spec.path" />
+        )}
+        <InspectButton fullWidth />
         <ExportRecordButton language="yaml" color="info" />
         <DeleteWithConfirmButton />
     </TopToolbar>
