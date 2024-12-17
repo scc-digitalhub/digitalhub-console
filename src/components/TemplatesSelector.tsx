@@ -42,13 +42,13 @@ export type Template = {
 export const TemplatesSelector = (props: {
     template: string | null;
     kinds?: any[] | undefined;
-    onSelected?: (template: string | null) => void;
+    onSelected?: (template: Template | null) => void;
 }) => {
     const { template: selected, onSelected, kinds } = props;
     const resource = useResourceContext();
     const translate = useTranslate();
     const record = useRecordContext(props);
-    const { reset, setValue } = useFormContext();
+    const { reset } = useFormContext();
     const [open, setOpen] = useState(false);
     const cur = useRef<Template | null>(null);
     const { isDirty } = useFormState();
@@ -56,7 +56,6 @@ export const TemplatesSelector = (props: {
     const {
         data: templates,
         isLoading,
-        error,
     } = useGetList('templates', {
         pagination: { page: 1, perPage: 100 },
         sort: { field: 'name', order: 'ASC' },
@@ -81,7 +80,7 @@ export const TemplatesSelector = (props: {
         const r = template
             ? {
                   ...record,
-                  name: template.name,
+                  name: '',
                   kind: template.kind,
                   metadata: {
                       ...record?.metadata,
@@ -96,7 +95,7 @@ export const TemplatesSelector = (props: {
         reset(r);
 
         if (onSelected) {
-            onSelected(template?.id);
+            onSelected(template);
         }
     };
 
