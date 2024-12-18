@@ -287,7 +287,7 @@
   dependencies:
     oidc-client-ts "^2.2.3"
 
-"@dslab/ra-back-button@^1.0.0":
+"@dslab/ra-back-button@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@dslab/ra-back-button/-/ra-back-button-1.0.1.tgz#d25ba24df2253a0c4e94665299da84e094507c93"
   integrity sha512-hnERCSFiNtvTozCYIBzdVqmCcYbZ2C7XZ4acKE6YrP+HgWoYhGYMsIEH8W8CuIFdxdPu4wslqUritaXmhHUsXw==
@@ -345,17 +345,17 @@
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
 
-"@dslab/ra-language-italian@^1.0.0":
+"@dslab/ra-language-italian@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@dslab/ra-language-italian/-/ra-language-italian-1.0.2.tgz#60c84e50764c2b46b29dd17a00bd81c267724cfa"
   integrity sha512-efoSrVn/XxFN4SgEQK/YbUfCBQBGsBqerl2y//QLusqHqJgRG2EUdG1/85smEF2tt8wXMcnBSwi5pqQFZk3o7Q==
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-root-selector@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-1.0.1.tgz#06bcbf50e4972c8ee8ed3bfc435fc0253ebe903d"
-  integrity sha512-82CX8ruGQPeDus8AqlRCsPitL+3thGvJSe2S4mR+oRoXftGsqVxZrTKUQ6ppOJsyTpPkcWX2RpsCdiKYk0FWJg==
+"@dslab/ra-root-selector@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-1.0.3.tgz#7300bed38fd3ab72c0dc1d6e307b5ec30710a552"
+  integrity sha512-H4iUD4h22szr+f5rX0RJIjb50aal9WHgWOu0KTNkYATOpo6cdlEsLPnAQi018B579VInso/KN6C3NnJ3BseDWQ==
   dependencies:
     ra-core "^4.11.0"
 
