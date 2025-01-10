@@ -10,12 +10,19 @@ import {
 } from '@mui/material';
 import { enUS, itIT } from '@mui/x-data-grid';
 import { useLocaleState, useTranslate } from 'react-admin';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { CounterBadge } from '../../../components/CounterBadge';
+import { LossChart } from './charts/LossChart';
+import { AccuracyChart } from './charts/AccuracyChart';
+import { SingleValueChart } from './charts/SingleValueChart';
+import { MetricNotSupported } from './charts/MetricNotSupported';
 
 export type Metric = {
     name: string;
+    version: string;
     values: any;
+};
+export type Series = {
+    data: any;
+    label: string;
 };
 export const MetricsTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -47,7 +54,13 @@ export const MetricsTabComponent = (props: { record: any }) => {
                 <Grid container spacing={2} sx={{ paddingY: '16px' }}>
                     {Object.entries(tmpMetrics).map(([key, value], index) => (
                         <Grid item xs={12} md={4} key={'metric_' + index}>
-                            <MetricCard metric={{ name: key, values: value }} />
+                            <MetricCard
+                                metric={{
+                                    name: key,
+                                    version: record.id,
+                                    values: value,
+                                }}
+                            />
                         </Grid>
                     ))}
                 </Grid>
@@ -55,56 +68,30 @@ export const MetricsTabComponent = (props: { record: any }) => {
         </Box>
     );
 };
+const getChartByMetric = (metric: string, props: any) => {
+    if (metric === 'Loss') return <LossChart {...props} />;
+    if (metric === 'Accuracy') return <AccuracyChart {...props} />;
+    return <MetricNotSupported />; // metric not supported
+};
 const MetricCard = (props: { metric: Metric }) => {
     const { metric } = props;
-    const theme = useTheme();
-    const bgColor = alpha(theme.palette?.primary?.main, 0.08);
 
     return (
         <Card>
             <CardHeader title={metric.name} />
-
             <CardContent sx={{ paddingTop: 0 }}>
                 <Typography
                     variant="body2"
                     sx={{ height: '120px', overflowY: 'auto' }}
                 >
                     {typeof metric.values === 'number' ? (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                height: '100%',
-                            }}
-                        >
-                            <CounterBadge
-                                value={metric.values}
-                                color="secondary.main"
-                                backgroundColor={bgColor}
-                                size="large"
-                            />
-                        </Box>
+                        <SingleValueChart values={[{ data: metric.values, label: metric.version }]} />
                     ) : (
-                        <LineChart
-                            xAxis={[
-                                { data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
-                            ]}
-                            series={[
-                                {
-                                    data: metric.values,
-                                    label: metric.name,
-                                    showMark: false,
-                                },
-                            ]}
-                            slotProps={{ legend: { hidden: true } }}
-                            margin={{
-                                left: 24,
-                                right: 8,
-                                top: 8,
-                                bottom: 24,
-                            }}
-                        />
+                        getChartByMetric(metric.name, {
+                            series: [
+                                { data: metric.values, label: metric.version },
+                            ],
+                        })
                     )}
                 </Typography>
             </CardContent>

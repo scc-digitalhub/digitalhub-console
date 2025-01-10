@@ -55,6 +55,7 @@ import { keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { MetricsTabComponent } from '../../components/MetricsTabComponent';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -234,6 +235,11 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+             {/* {record?.status?.metrics && ( */}
+                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                    <MetricsTabComponent record={record} />
+                </TabbedShowLayout.Tab>
+            {/* )} */}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>

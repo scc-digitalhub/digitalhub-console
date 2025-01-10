@@ -27,7 +27,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
-import { MetricsTabComponent } from './metrics-table/MetricsTabComponent';
+import { MetricsTabComponent } from '../../components/MetricsTabComponent';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
