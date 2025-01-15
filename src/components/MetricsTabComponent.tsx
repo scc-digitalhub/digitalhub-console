@@ -17,21 +17,56 @@ import { enUS, itIT } from '@mui/x-data-grid';
 import { LoadingIndicator, useLocaleState, useTranslate } from 'react-admin';
 import { LossChart } from './charts/LossChart';
 import { AccuracyChart } from './charts/AccuracyChart';
-import { SingleValueChart } from './charts/SingleValueChart';
+import { SingleValue } from './charts/SingleValue';
 import { MetricNotSupported } from './charts/MetricNotSupported';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { Fragment, useCallback, useState } from 'react';
 import { maxWidth } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
-
-export type Metric = {
-    name: string;
-    version: string;
-    values: any;
+import { LineChart } from '@mui/x-charts';
+import React from 'react';
+import { ChartMap } from './charts';
+import { ComparisonTable } from './charts/ComparisonTable';
+const tmpMetrics = {
+    test_metric: 1,
+    accuracy: [
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    ],
+    loss: [
+        4.276995241525583e-5, 4.086726039531641e-5, 3.9092170482035726e-5,
+        3.740461033885367e-5, 3.582672434276901e-5, 3.433741949265823e-5,
+        3.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
+        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
+        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5,
+        2.3285425413632765e-5, 2.2473217541119084e-5, 2.1703201127820648e-5,
+        2.0981698980904184e-5, 2.0287623556214385e-5,
+    ],
+    val_accuracy: [
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    ],
+    val_loss: [
+        1.0851749721041415e-5, 1.0313289749319665e-5, 9.832376235863194e-6,
+        9.363789104099851e-6, 8.948638424044475e-6, 8.533485924999695e-6,
+        8.138883458741475e-6, 7.777164682920557e-6, 7.448328688042238e-6,
+        7.135934538382571e-6, 6.831759947090177e-6, 6.544026291521732e-6,
+        6.285066319833277e-6, 6.017883606546093e-6, 5.779475486633601e-6,
+        5.553397841140395e-6, 5.339651579561178e-6, 5.14234670845326e-6,
+        4.957373221259331e-6, 4.776510650117416e-6,
+    ],
+    ciccio: [10],
 };
+
+// a set of values related to a specific metric ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
 export type Series = {
     data: any;
     label: string;
+};
+// all set of values related to a specific metric ex: {name:'accuracy',serie:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
+export type Metric = {
+    name: string;
+    series: Series[];
 };
 export const MetricsTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -41,14 +76,7 @@ export const MetricsTabComponent = (props: { record: any }) => {
         locale && locale === 'it'
             ? itIT.components.MuiDataGrid.defaultProps.localeText
             : enUS.components.MuiDataGrid.defaultProps.localeText;
-    const tmpMetrics = {
-        Loss: 45,
-        Accuracy: Array.from({ length: 10 }, () => Math.random()),
-        Precision: Array.from({ length: 10 }, () => Math.random()),
-        Recall: Array.from({ length: 10 }, () => Math.random()),
-        CPU: 0.32,
-        RAM: 200,
-    };
+
     return (
         <Box
             sx={{
@@ -66,8 +94,7 @@ export const MetricsTabComponent = (props: { record: any }) => {
                             <MetricCard
                                 metric={{
                                     name: key,
-                                    version: record.id,
-                                    values: value,
+                                    series: [{ data: value, label: record.id },{ data: value, label: "v2"}],
                                 }}
                             />
                         </Grid>
@@ -77,26 +104,36 @@ export const MetricsTabComponent = (props: { record: any }) => {
         </Box>
     );
 };
+
 const getChartByMetric = (metric: string, props: any) => {
-    if (metric === 'Loss') return <LossChart {...props} />;
-    if (metric === 'Accuracy') return <AccuracyChart {...props} />;
-    return <MetricNotSupported />; // metric not supported
+    if (ChartMap[metric]) return React.createElement(ChartMap[metric], props);
+    return <MetricNotSupported />;
 };
 const MetricCard = (props: { metric: Metric }) => {
     const { metric } = props;
     const chart =
-        typeof metric.values === 'number' ? (
-            <SingleValueChart
-                values={[{ data: metric.values, label: metric.version }]}
-            />
+        metric.series.length === 1 &&
+        typeof metric.series[0].data === 'number' ? (
+            <SingleValue values={metric.series[0]} />
+        ) : metric.series.length > 1 &&
+          metric.series.every(item => typeof item.data === 'number') ? (
+            <ComparisonTable values={metric.series} />
         ) : (
             getChartByMetric(metric.name, {
-                series: [{ data: metric.values, label: metric.version }],
+                series: metric.series,
             })
         );
+    //missing table for single values comparison
     return (
         <Card>
-            <CardHeader title={metric.name} action={<FullScreenButton title={metric.name}  >{chart}</FullScreenButton>} />
+            <CardHeader
+                title={metric.name}
+                action={
+                    <FullScreenButton title={metric.name}>
+                        {chart}
+                    </FullScreenButton>
+                }
+            />
             <CardContent sx={{ paddingTop: 0 }}>
                 <Typography
                     variant="body2"

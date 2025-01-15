@@ -3,14 +3,14 @@ import { Series } from '../MetricsTabComponent';
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
 
-export const SingleValueChart = (props: { values: Series[] }) => {
+export const SingleValue = (props: { values: Series }) => {
     const { values } = props;
     const theme = useTheme();
     const bgColor = alpha(theme.palette?.primary?.main, 0.08);
 
     return (
         <>
-            {values && values.length == 1 ? (
+            {values &&  (
                 <Box
                     sx={{
                         display: 'flex',
@@ -20,15 +20,13 @@ export const SingleValueChart = (props: { values: Series[] }) => {
                     }}
                 >
                     <CounterBadge
-                        value={values[0].data}
+                        value={values.data}
                         color="secondary.main"
                         backgroundColor={bgColor}
                         size="large"
                     />
                 </Box>
-            ) : (
-                <div>ciao</div>
-            )}
+            ) }
         </>
     );
 };
