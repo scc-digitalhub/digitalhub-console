@@ -1,19 +1,24 @@
-import { LineChart } from '@mui/x-charts';
+import { LineChart,LineChartProps } from '@mui/x-charts';
 import { Series } from '../MetricsTabComponent';
 
-export const AccuracyChart = (props: { series: Series[] }) => {
-    const { series } = props;
+export const AccuracyChart = (props: AccuracyChartProps) => {
+    const { series,slotProps={ legend: { hidden: true } },margin={
+        left: 24,
+        right: 8,
+        top: 8,
+        bottom: 24,
+    },...rest } = props;
 
     return (
         <LineChart
             series={series}
-            slotProps={{ legend: { hidden: true } }}
-            margin={{
-                left: 24,
-                right: 8,
-                top: 8,
-                bottom: 24,
-            }}
+            slotProps={slotProps}
+            margin={margin}
+            {...rest}
         />
-    );
+    )
 };
+
+export type AccuracyChartProps = Omit<LineChartProps, 'series'> & {
+    series: Series[]
+}

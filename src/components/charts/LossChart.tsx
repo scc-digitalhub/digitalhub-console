@@ -1,11 +1,11 @@
-import { LineChart } from '@mui/x-charts';
+import { BarChart, LineChart } from '@mui/x-charts';
 import { Series } from '../MetricsTabComponent';
 
 export const LossChart = (props: { series: Series[] }) => {
     const { series } = props;
 
     return (
-        <LineChart
+        <BarChart
             series={series}
             slotProps={{ legend: { hidden: true } }}
             margin={{
