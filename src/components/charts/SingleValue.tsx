@@ -1,4 +1,3 @@
-import { LineChart } from '@mui/x-charts';
 import { Series } from '../MetricsTabComponent';
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
@@ -10,7 +9,7 @@ export const SingleValue = (props: { values: Series }) => {
 
     return (
         <>
-            {values &&  (
+            {values && (
                 <Box
                     sx={{
                         display: 'flex',
@@ -26,7 +25,7 @@ export const SingleValue = (props: { values: Series }) => {
                         size="large"
                     />
                 </Box>
-            ) }
+            )}
         </>
     );
 };
