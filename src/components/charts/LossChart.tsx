@@ -1,4 +1,4 @@
-import { BarChart, BarChartProps } from '@mui/x-charts';
+import { LineChart, LineChartProps } from '@mui/x-charts';
 import { Series } from '../MetricsTabComponent';
 
 export const LossChart = (props: LossChartProps) => {
@@ -15,7 +15,7 @@ export const LossChart = (props: LossChartProps) => {
     } = props;
 
     return (
-        <BarChart
+        <LineChart
             series={series}
             slotProps={slotProps}
             margin={margin}
@@ -24,6 +24,6 @@ export const LossChart = (props: LossChartProps) => {
     );
 };
 
-export type LossChartProps = Omit<BarChartProps, 'series'> & {
+export type LossChartProps = Omit<LineChartProps, 'series'> & {
     series: Series[];
 };
