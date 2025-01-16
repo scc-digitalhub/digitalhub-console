@@ -9,24 +9,17 @@ import {
     Grid,
     IconButton,
     Typography,
-    alpha,
     styled,
-    useTheme,
 } from '@mui/material';
-import { enUS, itIT } from '@mui/x-data-grid';
-import { LoadingIndicator, useLocaleState, useTranslate } from 'react-admin';
-import { LossChart } from './charts/LossChart';
-import { AccuracyChart } from './charts/AccuracyChart';
+import { useTranslate } from 'react-admin';
 import { SingleValue } from './charts/SingleValue';
 import { MetricNotSupported } from './charts/MetricNotSupported';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import { Fragment, useCallback, useState } from 'react';
-import { maxWidth } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
-import { LineChart } from '@mui/x-charts';
-import React from 'react';
-import { ChartMap } from './charts';
+import { chartMap } from './charts';
 import { ComparisonTable } from './charts/ComparisonTable';
+import React, { useCallback, useState } from 'react';
+
 const tmpMetrics = {
     test_metric: 1,
     accuracy: [
@@ -58,24 +51,23 @@ const tmpMetrics = {
     ciccio: [10],
 };
 
-// a set of values related to a specific metric ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
+// a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
 export type Series = {
     data: any;
     label: string;
 };
-// all set of values related to a specific metric ex: {name:'accuracy',serie:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
+
+// all sets of values related to a specific metric, ex: {name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
 export type Metric = {
     name: string;
     series: Series[];
 };
+
 export const MetricsTabComponent = (props: { record: any }) => {
+    //TODO lettura da API se non ci sono metriche in record
+    //TODO scelta runs per comparazione
     const { record } = props;
     const translate = useTranslate();
-    const [locale] = useLocaleState();
-    const localeText =
-        locale && locale === 'it'
-            ? itIT.components.MuiDataGrid.defaultProps.localeText
-            : enUS.components.MuiDataGrid.defaultProps.localeText;
 
     return (
         <Box
@@ -94,7 +86,10 @@ export const MetricsTabComponent = (props: { record: any }) => {
                             <MetricCard
                                 metric={{
                                     name: key,
-                                    series: [{ data: value, label: record.id },{ data: value, label: "v2"}],
+                                    series: [
+                                        { data: value, label: record.id },
+                                        { data: value, label: 'v2' },
+                                    ],
                                 }}
                             />
                         </Grid>
@@ -106,9 +101,11 @@ export const MetricsTabComponent = (props: { record: any }) => {
 };
 
 const getChartByMetric = (metric: string, props: any) => {
-    if (ChartMap[metric]) return React.createElement(ChartMap[metric], props);
+    //TODO ignore case of metrics
+    if (chartMap[metric]) return React.createElement(chartMap[metric], props);
     return <MetricNotSupported />;
 };
+
 const MetricCard = (props: { metric: Metric }) => {
     const { metric } = props;
     const chart =
@@ -123,7 +120,7 @@ const MetricCard = (props: { metric: Metric }) => {
                 series: metric.series,
             })
         );
-    //missing table for single values comparison
+
     return (
         <Card>
             <CardHeader
@@ -158,13 +155,16 @@ const FullScreenButton = (props: {
         setOpen(true);
         e.stopPropagation();
     };
+
     const handleDialogClose = e => {
         setOpen(false);
         e.stopPropagation();
     };
+
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
+
     return (
         <>
             <IconButton aria-label="fullscreen" onClick={handleDialogOpen}>
@@ -210,6 +210,7 @@ export const FullScreenDialogButtonClasses = {
     title: `${PREFIX}-title`,
     closeButton: `${PREFIX}-close-button`,
 };
+
 const FullScreenDialog = styled(Dialog, {
     name: PREFIX,
     overridesResolver: (_props, styles) => styles.root,
