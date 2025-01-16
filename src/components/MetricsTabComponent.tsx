@@ -19,7 +19,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { chartMap } from './charts';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-
 const tmpMetrics = {
     test_metric: 1,
     accuracy: [
@@ -50,6 +49,33 @@ const tmpMetrics = {
     ],
     ciccio: [10],
 };
+const tmpMetrics2 = {
+    test_metric: 4,
+    accuracy: [
+        0.7, 0.8,  0.85, 0.88, 0.9, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+        1.0
+    ],
+    loss: [
+        7.276995241525583e-5, 6.086726039531641e-5, 5.9092170482035726e-5,
+        5.740461033885367e-5, 5.582672434276901e-5, 4.433741949265823e-5,
+        4.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
+        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
+        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5
+
+    ],
+    val_accuracy: [
+        0.7, 0.8,  0.85, 0.88, 0.9, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+        1.0
+    ],
+    val_loss: [
+        7.276995241525583e-5, 6.086726039531641e-5, 5.9092170482035726e-5,
+        5.740461033885367e-5, 5.582672434276901e-5, 4.433741949265823e-5,
+        4.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
+        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
+        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5
+    ],
+    ciccio: [10],
+};
 
 // a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
 export type Series = {
@@ -68,7 +94,7 @@ export const MetricsTabComponent = (props: { record: any }) => {
     //TODO scelta runs per comparazione
     const { record } = props;
     const translate = useTranslate();
-
+    const metricsData = mergedData([tmpMetrics,tmpMetrics2]);
     return (
         <Box
             sx={{
@@ -81,16 +107,10 @@ export const MetricsTabComponent = (props: { record: any }) => {
 
             {tmpMetrics && (
                 <Grid container spacing={2} sx={{ paddingY: '16px' }}>
-                    {Object.entries(tmpMetrics).map(([key, value], index) => (
+                    {metricsData && metricsData.map((metric:Metric, index) => (
                         <Grid item xs={12} md={4} key={'metric_' + index}>
                             <MetricCard
-                                metric={{
-                                    name: key,
-                                    series: [
-                                        { data: value, label: record.id },
-                                        { data: value, label: 'v2' },
-                                    ],
-                                }}
+                                metric={metric}
                             />
                         </Grid>
                     ))}
@@ -99,7 +119,40 @@ export const MetricsTabComponent = (props: { record: any }) => {
         </Box>
     );
 };
+    /**
+     * @function
+     * @param {any[]} versions - an array of versions objects, each containing metrics
+     * @returns {object} - an object with all the metrics from the versions, merged together
+     * @description
+     * The function takes an array of versions objects, each containing metrics like 'accuracy' and 'loss'.
+     * It then merges all the metrics together, so that the returned object will have the same structure as the input,
+     * but with all the values from all the versions merged.
+     * For example, if the input is [{accuracy:1,loss:2},{accuracy:3,loss:4}], the output will be {accuracy:[1,3],loss:[2,4]}
+     */
+const mergedData = (versions: any[]) => {
+    //[{name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]},{name:'loss',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}]
+    let merged:any[] = [];
+    let metricNames: string[] =[];
+    if (versions && versions.length > 0) {
+        versions.forEach(version => {
+            Object.keys(version).forEach((key,index) => {
+                if (merged.filter(item => item.name === key).length===0){
+                    let obj = {
+                        name: key,
+                        series:[{label:index+"",data:version[key]}]
+                    }
+                    merged.push(obj);
+                    // metricNames.push(key);
+                } else {
+                    merged[merged.findIndex(item => item.name === key)].series.push({label:index+"",data:version[key]})
+                }
+            })
 
+        })
+        
+    }
+    return merged;
+}
 const getChartByMetric = (metric: string, props: any) => {
     //TODO ignore case of metrics
     if (chartMap[metric]) return React.createElement(chartMap[metric], props);
@@ -115,7 +168,8 @@ const MetricCard = (props: { metric: Metric }) => {
         ) : metric.series.length > 1 &&
           metric.series.every(item => typeof item.data === 'number') ? (
             <ComparisonTable values={metric.series} />
-        ) : (
+        ) : 
+        (
             getChartByMetric(metric.name, {
                 series: metric.series,
             })
