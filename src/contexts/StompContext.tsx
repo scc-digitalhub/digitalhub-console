@@ -130,6 +130,10 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     const onReceive = message => {
         let notification = JSON.parse(message.body);
 
+        if (message.project !== root) {
+            return;
+        }
+
         if (onReceiveTransformer) {
             //let callback transform or filter
             notification = onReceiveTransformer(notification);
