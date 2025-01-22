@@ -14,18 +14,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
 import { MetricCard } from './MetricCard';
 
-// a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
-export type Series = {
-    data: any;
-    label: string;
-};
-
-// all sets of values related to a specific metric, ex: {name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
-export type Metric = {
-    name: string;
-    series: Series[];
-};
-
 export const MetricsGrid = (props: { record: any }) => {
     const { record } = props;
     const translate = useTranslate();
@@ -126,28 +114,28 @@ export const MetricsGrid = (props: { record: any }) => {
     );
 };
 
-const mergedData = (versions: any[]) => {
-    //[{name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]},{name:'loss',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}]
-    let merged: any[] = [];
-    if (versions && versions.length > 0) {
-        versions.forEach((version, index) => {
-            Object.keys(version).forEach(key => {
-                if (merged.filter(item => item.name === key).length === 0) {
-                    let obj = {
-                        name: key,
-                        series: [{ label: index + '', data: version[key] }],
-                    };
-                    merged.push(obj);
-                } else {
-                    merged[
-                        merged.findIndex(item => item.name === key)
-                    ].series.push({ label: index + '', data: version[key] });
-                }
-            });
-        });
-    }
-    return merged;
-};
+// const mergedData = (versions: any[]) => {
+//     //[{name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]},{name:'loss',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}]
+//     let merged: any[] = [];
+//     if (versions && versions.length > 0) {
+//         versions.forEach((version, index) => {
+//             Object.keys(version).forEach(key => {
+//                 if (merged.filter(item => item.name === key).length === 0) {
+//                     let obj = {
+//                         name: key,
+//                         series: [{ label: index + '', data: version[key] }],
+//                     };
+//                     merged.push(obj);
+//                 } else {
+//                     merged[
+//                         merged.findIndex(item => item.name === key)
+//                     ].series.push({ label: index + '', data: version[key] });
+//                 }
+//             });
+//         });
+//     }
+//     return merged;
+// };
 
 const mergedData2 = (input: any) => {
     let merged = {};
