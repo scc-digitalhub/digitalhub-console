@@ -11,71 +11,21 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { useTranslate } from 'react-admin';
+import {
+    useDataProvider,
+    useNotify,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
 import { SingleValue } from './charts/SingleValue';
 import { MetricNotSupported } from './charts/MetricNotSupported';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
 import { chartMap } from './charts';
 import { ComparisonTable } from './charts/ComparisonTable';
-import React, { useCallback, useState } from 'react';
-const tmpMetrics = {
-    test_metric: 1,
-    accuracy: [
-        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    ],
-    loss: [
-        4.276995241525583e-5, 4.086726039531641e-5, 3.9092170482035726e-5,
-        3.740461033885367e-5, 3.582672434276901e-5, 3.433741949265823e-5,
-        3.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
-        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
-        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5,
-        2.3285425413632765e-5, 2.2473217541119084e-5, 2.1703201127820648e-5,
-        2.0981698980904184e-5, 2.0287623556214385e-5,
-    ],
-    val_accuracy: [
-        1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    ],
-    val_loss: [
-        1.0851749721041415e-5, 1.0313289749319665e-5, 9.832376235863194e-6,
-        9.363789104099851e-6, 8.948638424044475e-6, 8.533485924999695e-6,
-        8.138883458741475e-6, 7.777164682920557e-6, 7.448328688042238e-6,
-        7.135934538382571e-6, 6.831759947090177e-6, 6.544026291521732e-6,
-        6.285066319833277e-6, 6.017883606546093e-6, 5.779475486633601e-6,
-        5.553397841140395e-6, 5.339651579561178e-6, 5.14234670845326e-6,
-        4.957373221259331e-6, 4.776510650117416e-6,
-    ],
-    ciccio: [10],
-};
-const tmpMetrics2 = {
-    test_metric: 4,
-    accuracy: [
-        0.7, 0.8,  0.85, 0.88, 0.9, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-        1.0
-    ],
-    loss: [
-        7.276995241525583e-5, 6.086726039531641e-5, 5.9092170482035726e-5,
-        5.740461033885367e-5, 5.582672434276901e-5, 4.433741949265823e-5,
-        4.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
-        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
-        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5
-
-    ],
-    val_accuracy: [
-        0.7, 0.8,  0.85, 0.88, 0.9, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-        1.0
-    ],
-    val_loss: [
-        7.276995241525583e-5, 6.086726039531641e-5, 5.9092170482035726e-5,
-        5.740461033885367e-5, 5.582672434276901e-5, 4.433741949265823e-5,
-        4.293671034043655e-5, 3.160770938848145e-5, 3.0351478926604614e-5,
-        2.9160639314795844e-5, 2.80457352346275e-5, 2.6982508643413894e-5,
-        2.5982562874560244e-5, 2.503640644135885e-5, 2.4141932954080403e-5
-    ],
-    ciccio: [10],
-};
+import React, { useCallback, useEffect, useState } from 'react';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { Spinner } from './Spinner';
 
 // a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
 export type Series = {
@@ -90,11 +40,67 @@ export type Metric = {
 };
 
 export const MetricsTabComponent = (props: { record: any }) => {
-    //TODO lettura da API se non ci sono metriche in record
-    //TODO scelta runs per comparazione
     const { record } = props;
     const translate = useTranslate();
-    const metricsData = mergedData([tmpMetrics,tmpMetrics2]);
+    const notify = useNotify();
+    const resource = useResourceContext();
+    const dataProvider = useDataProvider();
+    const { root } = useRootSelector();
+    const [metricsMap, setMetricsMap] = useState<any>({});
+    let isLoading = false;
+
+    /**
+     * Initialize metrics map with metrics of the current record,
+     * either getting them from the record or from the API
+     */
+    useEffect(() => {
+        isLoading = true;
+        if (record && dataProvider) {
+            //TODO verify path
+            if (record.status?.metrics) {
+                if (isLoading) {
+                    setMetricsMap(prev => {
+                        const value = { ...prev };
+                        value[record.id] = record.status.metrics;
+                        return value;
+                    });
+                }
+            } else {
+                dataProvider
+                    .getMetrics(resource, { id: record.id, meta: { root } })
+                    .then(data => {
+                        if (isLoading) {
+                            if (data?.metrics) {
+                                setMetricsMap(prev => {
+                                    const value = { ...prev };
+                                    value[record.id] = data.metrics;
+                                    return value;
+                                });
+                            } else {
+                                notify('ra.message.not_found', {
+                                    type: 'error',
+                                });
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        const e =
+                            typeof error === 'string'
+                                ? error
+                                : error.message || 'error';
+                        notify(e);
+                    });
+            }
+
+            return () => {
+                isLoading = false;
+            };
+        }
+    }, [dataProvider, notify, record, resource, root]);
+
+    //TODO memoize?
+    const mergedMetrics = mergedData2(metricsMap);
+
     return (
         <Box
             sx={{
@@ -105,54 +111,77 @@ export const MetricsTabComponent = (props: { record: any }) => {
                 {translate('resources.models.metrics.title')}
             </Typography>
 
-            {tmpMetrics && (
+            {isLoading ? (
+                <Spinner />
+            ) : (
                 <Grid container spacing={2} sx={{ paddingY: '16px' }}>
-                    {metricsData && metricsData.map((metric:Metric, index) => (
-                        <Grid item xs={12} md={4} key={'metric_' + index}>
-                            <MetricCard
-                                metric={metric}
-                            />
-                        </Grid>
-                    ))}
+                    {mergedMetrics &&
+                        Object.entries(mergedMetrics).map(
+                            ([metricName, series]: [string, any], index) => (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                    key={'metric_' + index}
+                                >
+                                    <MetricCard
+                                        metric={{
+                                            name: metricName,
+                                            series: series,
+                                        }}
+                                    />
+                                </Grid>
+                            )
+                        )}
                 </Grid>
             )}
         </Box>
     );
 };
-    /**
-     * @function
-     * @param {any[]} versions - an array of versions objects, each containing metrics
-     * @returns {object} - an object with all the metrics from the versions, merged together
-     * @description
-     * The function takes an array of versions objects, each containing metrics like 'accuracy' and 'loss'.
-     * It then merges all the metrics together, so that the returned object will have the same structure as the input,
-     * but with all the values from all the versions merged.
-     * For example, if the input is [{accuracy:1,loss:2},{accuracy:3,loss:4}], the output will be {accuracy:[1,3],loss:[2,4]}
-     */
+
 const mergedData = (versions: any[]) => {
     //[{name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]},{name:'loss',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}]
-    let merged:any[] = [];
-    let metricNames: string[] =[];
+    let merged: any[] = [];
     if (versions && versions.length > 0) {
-        versions.forEach(version => {
-            Object.keys(version).forEach((key,index) => {
-                if (merged.filter(item => item.name === key).length===0){
+        versions.forEach((version, index) => {
+            Object.keys(version).forEach(key => {
+                if (merged.filter(item => item.name === key).length === 0) {
                     let obj = {
                         name: key,
-                        series:[{label:index+"",data:version[key]}]
-                    }
+                        series: [{ label: index + '', data: version[key] }],
+                    };
                     merged.push(obj);
-                    // metricNames.push(key);
                 } else {
-                    merged[merged.findIndex(item => item.name === key)].series.push({label:index+"",data:version[key]})
+                    merged[
+                        merged.findIndex(item => item.name === key)
+                    ].series.push({ label: index + '', data: version[key] });
                 }
-            })
-
-        })
-        
+            });
+        });
     }
     return merged;
-}
+};
+
+const mergedData2 = (input: any) => {
+    let merged = {};
+    Object.entries(input).forEach(([id, metricsSet]: [string, any]) => {
+        Object.keys(metricsSet).forEach(metricName => {
+            if (metricName in merged) {
+                merged[metricName].push({
+                    label: id,
+                    data: metricsSet[metricName],
+                });
+            } else {
+                merged[metricName] = [
+                    { label: id, data: metricsSet[metricName] },
+                ];
+            }
+        });
+    });
+
+    return merged;
+};
+
 const getChartByMetric = (metric: string, props: any) => {
     //TODO ignore case of metrics
     if (chartMap[metric]) return React.createElement(chartMap[metric], props);
@@ -168,8 +197,7 @@ const MetricCard = (props: { metric: Metric }) => {
         ) : metric.series.length > 1 &&
           metric.series.every(item => typeof item.data === 'number') ? (
             <ComparisonTable values={metric.series} />
-        ) : 
-        (
+        ) : (
             getChartByMetric(metric.name, {
                 series: metric.series,
             })
@@ -186,12 +214,7 @@ const MetricCard = (props: { metric: Metric }) => {
                 }
             />
             <CardContent sx={{ paddingTop: 0 }}>
-                <Typography
-                    variant="body2"
-                    sx={{ height: '120px', overflowY: 'auto' }}
-                >
-                    {chart}
-                </Typography>
+                <Box sx={{ height: '120px', overflowY: 'auto' }}>{chart}</Box>
             </CardContent>
         </Card>
     );
