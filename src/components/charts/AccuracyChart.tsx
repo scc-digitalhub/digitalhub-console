@@ -1,5 +1,5 @@
 import { LineChart, LineChartProps } from '@mui/x-charts';
-import { Series } from '../MetricsGrid';
+import { Series } from '../MetricCard';
 
 export const AccuracyChart = (props: AccuracyChartProps) => {
     const {

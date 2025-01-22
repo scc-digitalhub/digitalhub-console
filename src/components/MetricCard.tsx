@@ -17,7 +17,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import { chartMap } from './charts';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-import { Metric } from './MetricsGrid';
+
+// a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
+export type Series = {
+    data: any;
+    label: string;
+};
+
+// all sets of values related to a specific metric, ex: {name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
+export type Metric = {
+    name: string;
+    series: Series[];
+};
 
 const getChartByMetric = (metric: string, props: any) => {
     //TODO ignore case of metrics
