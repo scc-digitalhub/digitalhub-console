@@ -1,5 +1,5 @@
 import { LineChart, LineChartProps } from '@mui/x-charts';
-import { Series } from '../MetricsTabComponent';
+import { Series } from '../MetricsGrid';
 
 export const LossChart = (props: LossChartProps) => {
     const {

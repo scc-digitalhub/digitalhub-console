@@ -1,4 +1,4 @@
-import { Series } from '../MetricsTabComponent';
+import { Series } from '../MetricsGrid';
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
 

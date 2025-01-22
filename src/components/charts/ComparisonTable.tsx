@@ -1,5 +1,5 @@
 import { DataGrid, enUS, gridClasses, GridColDef, itIT } from '@mui/x-data-grid';
-import { Series } from '../MetricsTabComponent';
+import { Series } from '../MetricsGrid';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
 

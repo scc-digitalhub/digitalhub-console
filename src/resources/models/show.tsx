@@ -1,7 +1,7 @@
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { Container, Paper, Stack } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DeleteWithConfirmButton,
@@ -16,10 +16,6 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import {
-    MetadataSchema,
-    createMetadataViewUiSchema,
-} from '../../common/schemas';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
@@ -27,8 +23,6 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
-import { MetricsTabComponent } from '../../components/MetricsTabComponent';
-import { useGetSchemas } from '../../controllers/schemaController';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { DownloadButton } from '../../components/DownloadButton';
@@ -126,11 +120,6 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
-            {kind && (
-                <TabbedShowLayout.Tab label="resources.models.tab.metrics">
-                    <MetricsTabComponent record={record} />
-                </TabbedShowLayout.Tab>
-            )}
              <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent  />
             </TabbedShowLayout.Tab>
