@@ -7,7 +7,6 @@ import {
     Labeled,
     ListContextProvider,
     LoadingIndicator,
-    Show,
     ShowBase,
     ShowButton,
     ShowView,
@@ -27,7 +26,6 @@ import {
     Grid,
     Stack,
     Typography,
-    styled,
     Box,
 } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
@@ -37,10 +35,8 @@ import { RunIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { StateChips } from '../../components/StateChips';
-import { LogsButton, LogsView } from '../../components/LogsButton';
+import { LogsView } from '../../components/LogsButton';
 import { StopButton } from './StopButton';
-import { useGetSchema } from '../../controllers/schemaController';
-import { JsonSchemaField } from '../../components/JsonSchema';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
 import { SourceCodeTab } from '../functions/show';
@@ -55,7 +51,7 @@ import { keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { MetricsTabComponent } from '../../components/MetricsTabComponent';
+import { MetricsGrid } from '../../components/MetricsGrid';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -237,7 +233,7 @@ export const RunShowComponent = () => {
             )}
              {/* {record?.status?.metrics && ( */}
                 <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                    <MetricsTabComponent record={record} />
+                    <MetricsGrid record={record} />
                 </TabbedShowLayout.Tab>
             {/* )} */}
             <TabbedShowLayout.Tab label="pages.lineage.title">
