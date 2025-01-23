@@ -1,18 +1,17 @@
+import { Box, Dialog, Grid, Stack, Typography } from '@mui/material';
 import {
-    Box,
-    Grid,
-    Typography,
-} from '@mui/material';
-import {
+    Button,
     useDataProvider,
     useNotify,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
 import { MetricCard } from './MetricCard';
+import CompareIcon from '@mui/icons-material/Compare';
+import { MetricsComparisonSelector } from './MetricsComparisonSelector';
 
 export const MetricsGrid = (props: { record: any }) => {
     const { record } = props;
@@ -22,6 +21,8 @@ export const MetricsGrid = (props: { record: any }) => {
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
+    const [open, setOpen] = useState(false);
+    const [compareWith, setCompareWith] = useState<string[]>([]);
     let isLoading = false;
 
     /**
@@ -73,8 +74,82 @@ export const MetricsGrid = (props: { record: any }) => {
         }
     }, [dataProvider, notify, record, resource, root]);
 
+    /**
+     * Update metrics map with metrics of comparison records,
+     * fetching each one from the API,
+     * whenever the list of IDs to compare with is updated
+     */
+    useEffect(() => {
+        console.log('compareWith now is', compareWith.join());
+        isLoading = true;
+        if (dataProvider) {
+            //for each id, if !metricsMap[id] then call API
+            const toBeAdded = compareWith.filter(id => !(id in metricsMap));
+            const promises = toBeAdded.map(id =>
+                dataProvider.getMetrics(resource, { id, meta: { root } })
+            );
+
+            Promise.all(promises)
+                .then(values => {
+                    console.log('results', values);
+                    let newMetrics = {};
+                    values.forEach((v, index) => {
+                        if (v?.metrics) {
+                            newMetrics[toBeAdded[index]] = v?.metrics;
+                        }
+                    });
+                    setMetricsMap(prev => {
+                        let prevsToKeep = {};
+                        Object.keys(prev).forEach(p => {
+                            if (p == record.id || compareWith.includes(p)) {
+                                prevsToKeep[p] = prev[p];
+                            }
+                        });
+                        return { ...prevsToKeep, ...newMetrics };
+                    });
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
+
+            return () => {
+                isLoading = false;
+            };
+        }
+    }, [compareWith]);
+
+    console.log('metricsMap', metricsMap);
+
     //TODO memoize?
     const mergedMetrics = mergedData2(metricsMap);
+
+    const handleDialogOpen = e => {
+        e.stopPropagation();
+        setOpen(true);
+    };
+
+    const handleDialogClose = e => {
+        e.stopPropagation();
+        setOpen(false);
+    };
+
+    const handleClick = useCallback(e => {
+        e.stopPropagation();
+    }, []);
+
+    const startComparison = (ids: string[]) => {
+        setOpen(false);
+        setCompareWith(ids);
+    };
+
+    const getPreviousAndClose = () => {
+        setOpen(false);
+        return compareWith;
+    };
 
     return (
         <Box
@@ -82,9 +157,38 @@ export const MetricsGrid = (props: { record: any }) => {
                 width: '100%',
             }}
         >
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.models.metrics.title')}
-            </Typography>
+            <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+                <Typography variant="h6" gutterBottom>
+                    {translate('resources.models.metrics.title')}
+                </Typography>
+                <Button
+                    label="actions.compare"
+                    onClick={handleDialogOpen}
+                    color="info"
+                    variant="contained"
+                >
+                    <CompareIcon />
+                </Button>
+            </Stack>
+            <Dialog
+                open={open}
+                onClose={handleDialogClose}
+                onClick={handleClick}
+                fullWidth
+                maxWidth="md"
+                sx={{
+                    '& .MuiDialog-paper': {
+                        paddingX: '24px',
+                    },
+                }}
+            >
+                <MetricsComparisonSelector
+                    toolbarProps={{
+                        startComparison,
+                        getPreviousAndClose,
+                    }}
+                />
+            </Dialog>
 
             {isLoading ? (
                 <Spinner />
@@ -104,6 +208,7 @@ export const MetricsGrid = (props: { record: any }) => {
                                             name: metricName,
                                             series: series,
                                         }}
+                                        comparison={compareWith.length > 0}
                                     />
                                 </Grid>
                             )
