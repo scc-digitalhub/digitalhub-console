@@ -8,5 +8,7 @@
     "stop": "Stop",
     "resume": "Resume",
     "revoke": "Revoke",
-    "toggle_x": "Show/Hide %{el}"
+    "toggle_x": "Show/Hide %{el}",
+    "compare": "Compare",
+    "apply": "Apply"
 }

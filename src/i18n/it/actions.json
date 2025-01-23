@@ -8,5 +8,7 @@
     "stop": "Interrompi",
     "resume": "Riprendi",
     "revoke": "Revoca",
-    "toggle_x": "Mostra/Nascondi %{el}"
+    "toggle_x": "Mostra/Nascondi %{el}",
+    "compare": "Confronta",
+    "apply": "Applica"
 }

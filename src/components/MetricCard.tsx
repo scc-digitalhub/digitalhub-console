@@ -31,25 +31,23 @@ export type Metric = {
 };
 
 const getChartByMetric = (metric: string, props: any) => {
-    //TODO ignore case of metrics
-    if (chartMap[metric]) return React.createElement(chartMap[metric], props);
+    const lowerCaseMetric = metric.toLowerCase();
+    if (chartMap[lowerCaseMetric])
+        return React.createElement(chartMap[lowerCaseMetric], props);
     return <MetricNotSupported />;
 };
 
-export const MetricCard = (props: { metric: Metric }) => {
-    const { metric } = props;
-    const chart =
-        metric.series.length === 1 &&
-        typeof metric.series[0].data === 'number' ? (
-            <SingleValue values={metric.series[0]} />
-        ) : metric.series.length > 1 &&
-          metric.series.every(item => typeof item.data === 'number') ? (
-            <ComparisonTable values={metric.series} />
-        ) : (
-            getChartByMetric(metric.name, {
-                series: metric.series,
-            })
-        );
+export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
+    const { metric, comparison } = props;
+    const useChart = metric.series.some(s => typeof s.data !== 'number');
+
+    const chart = useChart ? (
+        getChartByMetric(metric.name, { series: metric.series })
+    ) : comparison ? (
+        <ComparisonTable values={metric.series} />
+    ) : (
+        <SingleValue values={metric.series[0]} />
+    );
 
     return (
         <Card>
