@@ -3,19 +3,24 @@ import {
     Button,
     Datagrid,
     DateField,
-    ListBase,
+    InfiniteListControllerResult,
+    InfinitePagination,
+    InfinitePaginationContext,
+    ListContextProvider,
     ListView,
     SelectInput,
     TextField,
     TextInput,
     Toolbar,
+    useInfiniteListController,
     useListContext,
-    useResourceContext,
+    useRecordContext,
     useTranslate,
 } from 'react-admin';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { StateColors } from './StateChips';
+import { functionParser } from '../common/helper';
 
 type ListToolbarProps = {
     startComparison: (ids: any[]) => void;
@@ -50,14 +55,31 @@ const ListToolbar = (props: ListToolbarProps) => {
     );
 };
 
-type MetricsComparisonSelectorProps = {
-    toolbarProps: ListToolbarProps;
+type MetricsComparisonSelectorProps = ListToolbarProps & {
+    functionName: string;
 };
 
-export const MetricsComparisonSelector = (props: MetricsComparisonSelectorProps) => {
-    const { toolbarProps } = props;
+export const MetricsComparisonSelector = (
+    props: MetricsComparisonSelectorProps
+) => {
+    const { functionName, ...toolbarProps } = props;
     const translate = useTranslate();
-    const resource = useResourceContext();
+    const record = useRecordContext();
+    const listContext: InfiniteListControllerResult = useInfiniteListController(
+        {
+            disableSyncWithLocation: true,
+            storeKey: false,
+        }
+    );
+
+    const filteredListContext = {
+        ...listContext,
+        data: listContext.data?.filter(
+            res =>
+                functionParser(res.spec.function).functionName ==
+                    functionName && res.id != record?.id
+        ),
+    };
 
     const states: any[] = [];
     for (const c in StateColors) {
@@ -83,27 +105,48 @@ export const MetricsComparisonSelector = (props: MetricsComparisonSelectorProps)
     ];
 
     return (
-        <ListBase resource={resource} disableSyncWithLocation storeKey={false}>
-            <ListView component={Box} actions={false} filters={postFilters}>
-                <Datagrid bulkActionButtons={<span />}>
-                    <TextField
-                        source="name"
-                        label="fields.name.title"
-                        sortable={false}
-                    />
-                    <DateField
-                        source="metadata.created"
-                        showTime
-                        label="fields.metadata.created"
-                    />
-                    <TextField
-                        source="spec.task"
-                        label="fields.task.title"
-                        sortable={false}
-                    />
-                </Datagrid>
-            </ListView>
-            <ListToolbar {...toolbarProps} />
-        </ListBase>
+        <ListContextProvider value={filteredListContext}>
+            <InfinitePaginationContext.Provider
+                value={{
+                    hasNextPage: filteredListContext.hasNextPage,
+                    fetchNextPage: filteredListContext.fetchNextPage,
+                    isFetchingNextPage: filteredListContext.isFetchingNextPage,
+                    hasPreviousPage: filteredListContext.hasPreviousPage,
+                    fetchPreviousPage: filteredListContext.fetchPreviousPage,
+                    isFetchingPreviousPage:
+                        filteredListContext.isFetchingPreviousPage,
+                }}
+            >
+                <ListView
+                    component={Box}
+                    actions={false}
+                    filters={postFilters}
+                    pagination={<InfinitePagination />}
+                >
+                    <Datagrid bulkActionButtons={<EmptyBulkActions />}>
+                        <TextField
+                            source="name"
+                            label="fields.name.title"
+                            sortable={false}
+                        />
+                        <DateField
+                            source="metadata.created"
+                            showTime
+                            label="fields.metadata.created"
+                        />
+                        <TextField
+                            source="spec.task"
+                            label="fields.task.title"
+                            sortable={false}
+                        />
+                    </Datagrid>
+                </ListView>
+                <ListToolbar {...toolbarProps} />
+            </InfinitePaginationContext.Provider>
+        </ListContextProvider>
     );
+};
+
+const EmptyBulkActions = () => {
+    return <span />;
 };
