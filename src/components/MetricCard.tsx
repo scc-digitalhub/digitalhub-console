@@ -11,12 +11,11 @@ import {
 } from '@mui/material';
 import { useTranslate } from 'react-admin';
 import { SingleValue } from './charts/SingleValue';
-import { MetricNotSupported } from './charts/MetricNotSupported';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
-import { chartMap } from './charts';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
+import { AccuracyChart } from './charts/AccuracyChart';
 
 // a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
 export type Series = {
@@ -31,10 +30,11 @@ export type Metric = {
 };
 
 const getChartByMetric = (metric: string, props: any) => {
-    const lowerCaseMetric = metric.toLowerCase();
-    if (chartMap[lowerCaseMetric])
-        return React.createElement(chartMap[lowerCaseMetric], props);
-    return <MetricNotSupported />;
+    // const lowerCaseMetric = metric.toLowerCase();
+    // if (chartMap[lowerCaseMetric])
+    //     return React.createElement(chartMap[lowerCaseMetric], props);
+    // return <MetricNotSupported />;
+    return <AccuracyChart {...props} />
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
