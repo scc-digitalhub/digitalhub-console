@@ -124,7 +124,7 @@ export const MetricsGrid = (props: { record: any }) => {
     }, [compareWith]);
 
     //TODO memoize?
-    const mergedMetrics = mergedData2(metricsMap);
+    const mergedMetrics = mergeData(metricsMap);
 
     const handleDialogOpen = e => {
         e.stopPropagation();
@@ -217,30 +217,7 @@ export const MetricsGrid = (props: { record: any }) => {
     );
 };
 
-// const mergedData = (versions: any[]) => {
-//     //[{name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]},{name:'loss',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}]
-//     let merged: any[] = [];
-//     if (versions && versions.length > 0) {
-//         versions.forEach((version, index) => {
-//             Object.keys(version).forEach(key => {
-//                 if (merged.filter(item => item.name === key).length === 0) {
-//                     let obj = {
-//                         name: key,
-//                         series: [{ label: index + '', data: version[key] }],
-//                     };
-//                     merged.push(obj);
-//                 } else {
-//                     merged[
-//                         merged.findIndex(item => item.name === key)
-//                     ].series.push({ label: index + '', data: version[key] });
-//                 }
-//             });
-//         });
-//     }
-//     return merged;
-// };
-
-const mergedData2 = (input: any) => {
+const mergeData = (input: any) => {
     let merged = {};
     Object.entries(input).forEach(([id, metricsSet]: [string, any]) => {
         Object.keys(metricsSet).forEach(metricName => {

@@ -14,9 +14,13 @@ export const LossChart = (props: LossChartProps) => {
         ...rest
     } = props;
 
+    const arraySeries = series.map(s =>
+        typeof s.data === 'number' ? { ...s, data: [s.data] } : s
+    );
+
     return (
         <LineChart
-            series={series}
+            series={arraySeries}
             slotProps={slotProps}
             margin={margin}
             {...rest}
