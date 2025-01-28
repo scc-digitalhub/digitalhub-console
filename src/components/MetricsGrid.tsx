@@ -12,6 +12,7 @@ import { Spinner } from './Spinner';
 import { MetricCard } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
 import { MetricsComparisonSelector } from './MetricsComparisonSelector';
+import { functionParser } from '../common/helper';
 
 export const MetricsGrid = (props: { record: any }) => {
     const { record } = props;
@@ -122,8 +123,6 @@ export const MetricsGrid = (props: { record: any }) => {
         }
     }, [compareWith]);
 
-    console.log('metricsMap', metricsMap);
-
     //TODO memoize?
     const mergedMetrics = mergedData2(metricsMap);
 
@@ -183,10 +182,9 @@ export const MetricsGrid = (props: { record: any }) => {
                 }}
             >
                 <MetricsComparisonSelector
-                    toolbarProps={{
-                        startComparison,
-                        getPreviousAndClose,
-                    }}
+                    startComparison={startComparison}
+                    getPreviousAndClose={getPreviousAndClose}
+                    functionName={functionParser(record?.spec?.function).functionName}
                 />
             </Dialog>
 
