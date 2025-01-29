@@ -18,10 +18,9 @@ import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { InspectButton } from '@dslab/ra-inspect-button';
-import { LogsButton } from '../../components/LogsButton';
 import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 const ListToolbar = () => {
     return <TopToolbar />;
@@ -107,7 +106,7 @@ export const RunList = () => {
                         >
                             <Datagrid
                                 rowClick={'show'}
-                                bulkActionButtons={false}
+                                bulkActionButtons={<BulkDeleteAllVersions />}
                             >
                                 <TextField source="id" label="fields.id" />
                                 <DateField
