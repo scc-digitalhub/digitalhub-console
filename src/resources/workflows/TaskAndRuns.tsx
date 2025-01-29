@@ -14,7 +14,7 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -22,10 +22,8 @@ import {
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ReactElement, useState } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
-import InboxIcon from '@mui/icons-material/Inbox';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { WorkflowView } from './WorkflowView';
@@ -36,6 +34,7 @@ import { Empty } from '../../components/Empty';
 import { RunCreateForm } from '../runs/create';
 import { DropDownButton } from '../../components/DropdownButton';
 import { StopButton } from '../runs/StopButton';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -207,7 +206,10 @@ const TaskRunList = () => {
                 }
                 actions={<CreateActionButton record={partial} />}
             >
-                <Datagrid bulkActionButtons={false} rowClick={false}>
+                <Datagrid
+                    bulkActionButtons={<BulkDeleteAllVersions />}
+                    rowClick={false}
+                >
                     <DateField
                         source="metadata.created"
                         showTime

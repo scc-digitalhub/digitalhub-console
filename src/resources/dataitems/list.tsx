@@ -1,12 +1,11 @@
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Chip, Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     CreateButton,
     Datagrid,
     DateField,
     EditButton,
-    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -29,6 +28,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
 import { ImportButton } from '../../components/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 const ListToolbar = () => {
     return (
@@ -118,7 +118,9 @@ export const DataItemList = () => {
                                 rowClick="show"
                                 expand={<VersionsList />}
                                 expandSingle={true}
-                                bulkActionButtons={false}
+                                bulkActionButtons={
+                                    <BulkDeleteAllVersions deleteAll />
+                                }
                             >
                                 <TextField
                                     source="name"

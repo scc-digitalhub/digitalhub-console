@@ -16,6 +16,7 @@ import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfir
 import { ListPageTitle } from '../../components/PageTitle';
 import { FlatCard } from '../../components/FlatCard';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 const ListToolbar = () => {
     return (
@@ -48,7 +49,10 @@ export const SecretList = () => {
                             component={Box}
                             sx={{ pb: 2 }}
                         >
-                            <Datagrid rowClick="show" bulkActionButtons={false}>
+                            <Datagrid
+                                rowClick="show"
+                                bulkActionButtons={<BulkDeleteAllVersions />}
+                            >
                                 <TextField source="name" />
 
                                 <RowActions />

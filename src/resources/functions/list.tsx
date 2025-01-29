@@ -28,6 +28,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { ImportButton } from '../../components/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 const ListToolbar = () => {
     return (
@@ -115,7 +116,9 @@ export const FunctionList = () => {
                                 rowClick="show"
                                 expand={VersionsList}
                                 expandSingle={true}
-                                bulkActionButtons={false}
+                                bulkActionButtons={
+                                    <BulkDeleteAllVersions deleteAll />
+                                }
                             >
                                 <TextField
                                     source="name"
