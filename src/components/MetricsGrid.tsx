@@ -13,8 +13,10 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
 import { MetricCard, Series } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
-import { MetricsComparisonSelector } from './MetricsComparisonSelector';
-import { functionParser } from '../common/helper';
+import {
+    MetricsComparisonSelector,
+    SelectorProps,
+} from './MetricsComparisonSelector';
 
 /**
  * Format the labels of the given series according to the resource type.
@@ -44,11 +46,25 @@ const formatLabels = (
         });
     }
 
+    if (resource === 'models') {
+        return series.map(s => {
+            const record = records.find(r => r.id === s.label);
+            return {
+                ...s,
+                label: record ? record.name : s.label,
+            };
+        });
+    }
+
     return series;
 };
 
-export const MetricsGrid = (props: { record: RaRecord<Identifier> }) => {
-    const { record } = props;
+type MetricsGridProps = SelectorProps & {
+    record: RaRecord<Identifier>;
+};
+
+export const MetricsGrid = (props: MetricsGridProps) => {
+    const { record, filters, datagridFields, postFetchFilter } = props;
     const translate = useTranslate();
     const notify = useNotify();
     const resource = useResourceContext();
@@ -66,7 +82,6 @@ export const MetricsGrid = (props: { record: RaRecord<Identifier> }) => {
     useEffect(() => {
         isLoading = true;
         if (record && dataProvider) {
-            //TODO verify path
             if (record.status?.metrics) {
                 if (isLoading) {
                     setMetricsMap(prev => {
@@ -193,7 +208,7 @@ export const MetricsGrid = (props: { record: RaRecord<Identifier> }) => {
         >
             <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                 <Typography variant="h6" gutterBottom>
-                    {translate('resources.models.metrics.title')}
+                    {translate('fields.metrics.title')}
                 </Typography>
                 <Button
                     label="actions.compare"
@@ -219,9 +234,9 @@ export const MetricsGrid = (props: { record: RaRecord<Identifier> }) => {
                 <MetricsComparisonSelector
                     startComparison={startComparison}
                     getPreviousAndClose={getPreviousAndClose}
-                    functionName={
-                        functionParser(record?.spec?.function).functionName
-                    }
+                    filters={filters}
+                    datagridFields={datagridFields}
+                    postFetchFilter={postFetchFilter}
                 />
             </Dialog>
 
