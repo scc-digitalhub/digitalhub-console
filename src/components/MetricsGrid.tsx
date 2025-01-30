@@ -64,7 +64,7 @@ type MetricsGridProps = SelectorProps & {
 };
 
 export const MetricsGrid = (props: MetricsGridProps) => {
-    const { record, filters, datagridFields, postFetchFilter } = props;
+    const { record, ...rest } = props;
     const translate = useTranslate();
     const notify = useNotify();
     const resource = useResourceContext();
@@ -234,9 +234,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 <MetricsComparisonSelector
                     startComparison={startComparison}
                     getPreviousAndClose={getPreviousAndClose}
-                    filters={filters}
-                    datagridFields={datagridFields}
-                    postFetchFilter={postFetchFilter}
+                    {...rest}
                 />
             </Dialog>
 
