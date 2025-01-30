@@ -8,19 +8,15 @@ import {
     InfinitePaginationContext,
     ListContextProvider,
     ListView,
-    SelectInput,
     TextField,
-    TextInput,
     Toolbar,
     useInfiniteListController,
     useListContext,
     useRecordContext,
-    useTranslate,
 } from 'react-admin';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import CloseIcon from '@mui/icons-material/Close';
-import { StateColors } from './StateChips';
-import { functionParser } from '../common/helper';
+import React from 'react';
 
 type ListToolbarProps = {
     startComparison: (ids: any[]) => void;
@@ -59,15 +55,39 @@ const ListToolbar = (props: ListToolbarProps) => {
     );
 };
 
-type MetricsComparisonSelectorProps = ListToolbarProps & {
-    functionName: string;
+export type SelectorProps = {
+    /**
+     * The filter inputs to display in the comparison selector.
+     *
+     * @see https://marmelab.com/react-admin/List.html#filters-filter-inputs
+     */
+    filters?:
+        | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+        | React.ReactElement<any, string | React.JSXElementConstructor<any>>[];
+    /**
+     * The content of the datagrid in the comparison selector. Must be an array of nodes.
+     * Defaults to filtering on name and metadata.created
+     */
+    datagridFields?: React.ReactNode;
+    /**
+     * Filter function that will be applied to comparison selector data after fetching them.
+     * Must match the predicate expected by Array.filter
+     * Defaults to filtering out the current record.
+     */
+    postFetchFilter?: (value: any, index?: number, array?: any[]) => boolean;
 };
+
+type MetricsComparisonSelectorProps = ListToolbarProps & SelectorProps;
 
 export const MetricsComparisonSelector = (
     props: MetricsComparisonSelectorProps
 ) => {
-    const { functionName, ...toolbarProps } = props;
-    const translate = useTranslate();
+    const {
+        filters,
+        datagridFields = defaultDatagridFields,
+        postFetchFilter = res => res.id != record?.id,
+        ...toolbarProps
+    } = props;
     const record = useRecordContext();
     const listContext: InfiniteListControllerResult = useInfiniteListController(
         {
@@ -78,35 +98,8 @@ export const MetricsComparisonSelector = (
 
     const filteredListContext = {
         ...listContext,
-        data: listContext.data?.filter(
-            res =>
-                functionParser(res.spec.function).functionName ==
-                    functionName && res.id != record?.id
-        ),
+        data: listContext.data?.filter(postFetchFilter),
     };
-
-    const states: any[] = [];
-    for (const c in StateColors) {
-        states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
-    }
-
-    const postFilters = [
-        <TextInput
-            label="fields.name.title"
-            source="q"
-            alwaysOn
-            resettable
-            key={1}
-        />,
-        <SelectInput
-            alwaysOn
-            key={3}
-            label="fields.status.state"
-            source="state"
-            choices={states}
-            sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-        />,
-    ];
 
     return (
         <ListContextProvider value={filteredListContext}>
@@ -124,25 +117,12 @@ export const MetricsComparisonSelector = (
                 <ListView
                     component={Box}
                     actions={false}
-                    filters={postFilters}
+                    filters={filters}
                     pagination={<InfinitePagination />}
+                    sx={{ paddingTop: filters ? 0 : '16px' }}
                 >
                     <Datagrid bulkActionButtons={<EmptyBulkActions />}>
-                        <TextField
-                            source="name"
-                            label="fields.name.title"
-                            sortable={false}
-                        />
-                        <DateField
-                            source="metadata.created"
-                            showTime
-                            label="fields.metadata.created"
-                        />
-                        <TextField
-                            source="spec.task"
-                            label="fields.task.title"
-                            sortable={false}
-                        />
+                        {datagridFields}
                     </Datagrid>
                 </ListView>
                 <ListToolbar {...toolbarProps} />
@@ -154,3 +134,18 @@ export const MetricsComparisonSelector = (
 const EmptyBulkActions = () => {
     return <span />;
 };
+
+const defaultDatagridFields: React.ReactNode = [
+    <TextField
+        source="name"
+        label="fields.name.title"
+        sortable={false}
+        key={'df1'}
+    />,
+    <DateField
+        source="metadata.created"
+        showTime
+        label="fields.metadata.created"
+        key={'df2'}
+    />,
+];

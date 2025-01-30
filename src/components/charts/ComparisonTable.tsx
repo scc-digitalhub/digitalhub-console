@@ -15,7 +15,7 @@ export const ComparisonTable = (props: { values: Series[] }) => {
     const columns: GridColDef[] = [
         {
             field: 'label',
-            headerName: 'ID',
+            headerName: translate('fields.datagrid.key'),
             flex: 3,
         },
         {
