@@ -100,8 +100,6 @@ export const MetricsComparisonSelector = (
         }
     );
 
-    console.log('list context', listContext);
-
     const filteredListContext = {
         ...listContext,
         data: listContext.data?.filter(postFetchFilter),

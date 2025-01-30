@@ -99,7 +99,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const metricsDatagridFields = [
         <TextField
             source="id"
-            label="fields.name.id"
+            label="fields.id"
             sortable={false}
             key={'df1'}
         />,
