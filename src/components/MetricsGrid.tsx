@@ -1,6 +1,8 @@
 import { Box, Dialog, Grid, Stack, Typography } from '@mui/material';
 import {
     Button,
+    Identifier,
+    RaRecord,
     useDataProvider,
     useNotify,
     useResourceContext,
@@ -9,12 +11,43 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
-import { MetricCard } from './MetricCard';
+import { MetricCard, Series } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
 import { MetricsComparisonSelector } from './MetricsComparisonSelector';
 import { functionParser } from '../common/helper';
 
-export const MetricsGrid = (props: { record: any }) => {
+/**
+ * Format the labels of the given series according to the resource type.
+ * Run labels are formatted as: "<run.name> [run.metadata.created]".
+ *
+ * @param series
+ * @param records
+ * @param resource
+ * @returns
+ */
+const formatLabels = (
+    series: Series[],
+    records: RaRecord<Identifier>[],
+    resource: string
+): Series[] => {
+    if (resource === 'runs') {
+        return series.map(s => {
+            const record = records.find(r => r.id === s.label);
+            return {
+                ...s,
+                label: record
+                    ? `${record.name} [${new Date(
+                          record.metadata.created
+                      ).toLocaleString()}]`
+                    : s.label,
+            };
+        });
+    }
+
+    return series;
+};
+
+export const MetricsGrid = (props: { record: RaRecord<Identifier> }) => {
     const { record } = props;
     const translate = useTranslate();
     const notify = useNotify();
@@ -23,7 +56,7 @@ export const MetricsGrid = (props: { record: any }) => {
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
     const [open, setOpen] = useState(false);
-    const [compareWith, setCompareWith] = useState<string[]>([]);
+    const [compareWith, setCompareWith] = useState<any[]>([]);
     let isLoading = false;
 
     /**
@@ -78,34 +111,36 @@ export const MetricsGrid = (props: { record: any }) => {
     /**
      * Update metrics map with metrics of comparison records,
      * fetching each one from the API,
-     * whenever the list of IDs to compare with is updated
+     * whenever the list of records to compare with is updated
      */
     useEffect(() => {
-        console.log('compareWith now is', compareWith.join());
         isLoading = true;
         if (dataProvider) {
             //for each id, if !metricsMap[id] then call API
-            const toBeAdded = compareWith.filter(id => !(id in metricsMap));
-            const promises = toBeAdded.map(id =>
-                dataProvider.getMetrics(resource, { id, meta: { root } })
+            const toBeAdded = compareWith.filter(r => !(r.id in metricsMap));
+            const promises = toBeAdded.map(t =>
+                dataProvider.getMetrics(resource, { id: t.id, meta: { root } })
             );
 
             Promise.all(promises)
                 .then(values => {
-                    console.log('results', values);
                     let newMetrics = {};
                     values.forEach((v, index) => {
                         if (v?.metrics) {
-                            newMetrics[toBeAdded[index]] = v?.metrics;
+                            newMetrics[toBeAdded[index].id] = v?.metrics;
                         }
                     });
                     setMetricsMap(prev => {
                         let prevsToKeep = {};
                         Object.keys(prev).forEach(p => {
-                            if (p == record.id || compareWith.includes(p)) {
+                            if (
+                                p == record.id ||
+                                compareWith.some(v => v.id == p)
+                            ) {
                                 prevsToKeep[p] = prev[p];
                             }
                         });
+                        console.log(prevsToKeep, newMetrics);
                         return { ...prevsToKeep, ...newMetrics };
                     });
                 })
@@ -140,9 +175,9 @@ export const MetricsGrid = (props: { record: any }) => {
         e.stopPropagation();
     }, []);
 
-    const startComparison = (ids: string[]) => {
+    const startComparison = (records: any[]) => {
         setOpen(false);
-        setCompareWith(ids);
+        setCompareWith(records);
     };
 
     const getPreviousAndClose = () => {
@@ -184,7 +219,9 @@ export const MetricsGrid = (props: { record: any }) => {
                 <MetricsComparisonSelector
                     startComparison={startComparison}
                     getPreviousAndClose={getPreviousAndClose}
-                    functionName={functionParser(record?.spec?.function).functionName}
+                    functionName={
+                        functionParser(record?.spec?.function).functionName
+                    }
                 />
             </Dialog>
 
@@ -204,7 +241,11 @@ export const MetricsGrid = (props: { record: any }) => {
                                     <MetricCard
                                         metric={{
                                             name: metricName,
-                                            series: series,
+                                            series: formatLabels(
+                                                series,
+                                                [record, ...compareWith],
+                                                resource
+                                            ),
                                         }}
                                         comparison={compareWith.length > 0}
                                     />
