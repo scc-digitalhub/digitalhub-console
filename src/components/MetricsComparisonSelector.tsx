@@ -29,14 +29,18 @@ type ListToolbarProps = {
 
 const ListToolbar = (props: ListToolbarProps) => {
     const { startComparison, getPreviousAndClose } = props;
-    const { selectedIds, onSelect } = useListContext();
+    const { data, selectedIds, onSelect } = useListContext();
+
+    const selectedData = data
+        ? data.filter(d => selectedIds.includes(d.id))
+        : [];
 
     const applySelection = () => {
-        startComparison(selectedIds);
+        startComparison(selectedData);
     };
 
     const reset = () => {
-        onSelect(getPreviousAndClose());
+        onSelect(getPreviousAndClose().map(d => d.id));
     };
 
     return (
