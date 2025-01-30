@@ -4,6 +4,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
+    DateField,
     DeleteWithConfirmButton,
     EditButton,
     Labeled,
@@ -11,6 +12,7 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
+    TextInput,
     TopToolbar,
     useRecordContext,
     useResourceContext,
@@ -29,6 +31,8 @@ import { DownloadButton } from '../../components/DownloadButton';
 import { IdField } from '../../components/IdField';
 import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { MetricsGrid } from '../../components/MetricsGrid';
+import { ChipsField } from '../../components/ChipsField';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -82,6 +86,37 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
         }
     }, [record, schemaProvider, resource]);
 
+    const metricsComparisonFilters = [
+        <TextInput
+            label="fields.name.title"
+            source="q"
+            alwaysOn
+            resettable
+            key={1}
+        />,
+    ];
+
+    const metricsDatagridFields = [
+        <TextField
+            source="id"
+            label="fields.name.id"
+            sortable={false}
+            key={'df1'}
+        />,
+        <DateField
+            source="metadata.created"
+            showTime
+            label="fields.metadata.created"
+            key={'df2'}
+        />,
+        <ChipsField
+            label="fields.labels.title"
+            source="metadata.labels"
+            sortable={false}
+            key={'df3'}
+        />,
+    ];
+
     if (!record) return <></>;
     return (
         <TabbedShowLayout
@@ -119,6 +154,14 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                <MetricsGrid
+                    record={record}
+                    filter={{ name: record?.name, versions: 'all' }}
+                    filters={metricsComparisonFilters}
+                    datagridFields={metricsDatagridFields}
+                />
             </TabbedShowLayout.Tab>
              <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent  />

@@ -3,6 +3,7 @@ import {
     Button,
     Datagrid,
     DateField,
+    FilterPayload,
     InfiniteListControllerResult,
     InfinitePagination,
     InfinitePaginationContext,
@@ -56,6 +57,7 @@ const ListToolbar = (props: ListToolbarProps) => {
 };
 
 export type SelectorProps = {
+    filter?: FilterPayload,
     /**
      * The filter inputs to display in the comparison selector.
      *
@@ -83,6 +85,7 @@ export const MetricsComparisonSelector = (
     props: MetricsComparisonSelectorProps
 ) => {
     const {
+        filter,
         filters,
         datagridFields = defaultDatagridFields,
         postFetchFilter = res => res.id != record?.id,
@@ -93,8 +96,11 @@ export const MetricsComparisonSelector = (
         {
             disableSyncWithLocation: true,
             storeKey: false,
+            filter: filter,
         }
     );
+
+    console.log('list context', listContext);
 
     const filteredListContext = {
         ...listContext,
