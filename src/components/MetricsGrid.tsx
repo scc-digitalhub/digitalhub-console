@@ -51,7 +51,11 @@ const formatLabels = (
             const record = records.find(r => r.id === s.label);
             return {
                 ...s,
-                label: record ? record.name : s.label,
+                label: record
+                    ? `${record.name} [${new Date(
+                          record.metadata.created
+                      ).toLocaleString()}]`
+                    : s.label,
             };
         });
     }
@@ -76,46 +80,50 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     let isLoading = false;
 
     /**
-     * Initialize metrics map with metrics of the current record,
-     * either getting them from the record or from the API
+     * Initialize metrics map with metrics of the current record
+     */
+    useEffect(() => {
+        if (record?.status?.metrics) {
+            setMetricsMap(prev => {
+                if (record.id in prev)
+                    return prev;
+                const value = { ...prev };
+                value[record.id] = record.status.metrics;
+                return value;
+            });
+        }
+    }, [JSON.stringify(record?.status?.metrics)]);
+
+    /**
+     * Read record metrics from the API
      */
     useEffect(() => {
         isLoading = true;
         if (record && dataProvider) {
-            if (record.status?.metrics) {
-                if (isLoading) {
-                    setMetricsMap(prev => {
-                        const value = { ...prev };
-                        value[record.id] = record.status.metrics;
-                        return value;
-                    });
-                }
-            } else {
-                dataProvider
-                    .getMetrics(resource, { id: record.id, meta: { root } })
-                    .then(data => {
-                        if (isLoading) {
-                            if (data?.metrics) {
-                                setMetricsMap(prev => {
-                                    const value = { ...prev };
-                                    value[record.id] = data.metrics;
-                                    return value;
-                                });
-                            } else {
-                                notify('ra.message.not_found', {
-                                    type: 'error',
-                                });
-                            }
+            dataProvider
+                .getMetrics(resource, { id: record.id, meta: { root } })
+                .then(data => {
+                    if (isLoading) {
+                        if (data?.metrics) {
+                            setMetricsMap(prev => {
+                                const value = { ...prev };
+                                value[record.id] = data.metrics;
+                                return value;
+                            });
+                        } else {
+                            notify('ra.message.not_found', {
+                                type: 'error',
+                            });
                         }
-                    })
-                    .catch(error => {
-                        const e =
-                            typeof error === 'string'
-                                ? error
-                                : error.message || 'error';
-                        notify(e);
-                    });
-            }
+                    }
+                })
+                .catch(error => {
+                    const e =
+                        typeof error === 'string'
+                            ? error
+                            : error.message || 'error';
+                    notify(e);
+                });
 
             return () => {
                 isLoading = false;
@@ -130,7 +138,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
      */
     useEffect(() => {
         isLoading = true;
-        if (dataProvider) {
+        if (dataProvider && compareWith.length > 0) {
             //for each id, if !metricsMap[id] then call API
             const toBeAdded = compareWith.filter(r => !(r.id in metricsMap));
             const promises = toBeAdded.map(t =>
@@ -155,7 +163,6 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                                 prevsToKeep[p] = prev[p];
                             }
                         });
-                        console.log(prevsToKeep, newMetrics);
                         return { ...prevsToKeep, ...newMetrics };
                     });
                 })
