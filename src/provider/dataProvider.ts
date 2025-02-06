@@ -88,7 +88,11 @@ const springDataProvider = (
                 size: perPage,
             };
             let prefix = '';
-            if (resource !== 'projects' && resource !== 'templates' && params.meta?.root) {
+            if (
+                resource !== 'projects' &&
+                resource !== 'templates' &&
+                params.meta?.root
+            ) {
                 prefix = '/-/' + params.meta.root;
             }
             let url = '';
@@ -279,14 +283,23 @@ const springDataProvider = (
             }
             const url = `${apiUrl}${prefix}/${resource}`;
 
+            const promises =
+                params.meta?.deleteAll === true && params.meta?.names
+                    ? params.meta.names.map(name =>
+                          httpClient(`${url}?name=${name}`, {
+                              method: 'DELETE',
+                          })
+                      )
+                    : params.ids.map(id =>
+                          httpClient(`${url}/${id}`, {
+                              method: 'DELETE',
+                          })
+                      );
+
             //make a distinct call for every entry
-            return Promise.all(
-                params.ids.map(id =>
-                    httpClient(`${url}/${id}`, {
-                        method: 'DELETE',
-                    })
-                )
-            ).then(responses => ({ data: responses.map(({ json }) => json) }));
+            return Promise.all(promises).then(responses => ({
+                data: responses.map(({ json }) => json),
+            }));
         },
         readSecretData: (name: string, params) => {
             let prefix = '';

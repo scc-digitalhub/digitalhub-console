@@ -32,6 +32,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { StopButton } from '../runs/StopButton';
 import { DropDownButton } from '../../components/DropdownButton';
 import { RunCreateForm } from '../runs/create';
+import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -194,7 +195,10 @@ const TaskRunList = () => {
                 }
                 actions={<CreateActionButton record={partial} />}
             >
-                <Datagrid bulkActionButtons={false} rowClick={false}>
+                <Datagrid
+                    bulkActionButtons={<BulkDeleteAllVersions />}
+                    rowClick={false}
+                >
                     <DateField
                         source="metadata.created"
                         showTime
