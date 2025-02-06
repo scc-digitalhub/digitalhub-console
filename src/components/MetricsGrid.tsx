@@ -7,6 +7,7 @@ import {
     useNotify,
     useResourceContext,
     useTranslate,
+    useUnselectAll,
 } from 'react-admin';
 import { useCallback, useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -72,6 +73,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const translate = useTranslate();
     const notify = useNotify();
     const resource = useResourceContext();
+    const unselectAll = useUnselectAll(resource);
     const dataProvider = useDataProvider();
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
@@ -81,18 +83,20 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 
     /**
      * Initialize metrics map with metrics of the current record
+     * and reset compareWith, in case record changes (i.e. versions)
      */
     useEffect(() => {
-        if (record?.status?.metrics) {
-            setMetricsMap(prev => {
-                if (record.id in prev)
-                    return prev;
-                const value = { ...prev };
+        setCompareWith([]);
+        setMetricsMap(prev => {
+            let value = {};
+            if (record.id in prev) {
+                value[record.id] = prev[record.id];
+            } else if (record?.status?.metrics) {
                 value[record.id] = record.status.metrics;
-                return value;
-            });
-        }
-    }, [JSON.stringify(record?.status?.metrics)]);
+            }
+            return value;
+        });
+    }, [record]);
 
     /**
      * Read record metrics from the API
@@ -185,6 +189,10 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 
     const handleDialogOpen = e => {
         e.stopPropagation();
+        if (compareWith.length === 0) {
+            //unselect all records possibly left over due to shared selection
+            unselectAll();
+        }
         setOpen(true);
     };
 
