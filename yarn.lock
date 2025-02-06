@@ -301,10 +301,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-dialog-crud@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-1.0.1.tgz#da28f87bc4ca944a5d0aa7de07c7253f20cd59e9"
-  integrity sha512-WVvG5MILpdsJR9IdONTv6YcM1biJSwu18K4YldSYtFLjlGuuj8lxl38LYHB7aG0+0EJu46l3HS7ViXg+AhG+Jw==
+"@dslab/ra-dialog-crud@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-1.0.3.tgz#d74313f06ca308c03d99955ee6f61ec5051d1e88"
+  integrity sha512-OgvC0Vp5G1OflgePP8U+feLD58H3yaasiQJmJXV+FGEJYCasJ+XiiRxm5GQKjY9odlHYuizFApiOUq+WCopZCA==
   dependencies:
     ra-core "^4.11.0"
 
