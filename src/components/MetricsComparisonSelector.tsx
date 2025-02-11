@@ -17,16 +17,16 @@ import {
 } from 'react-admin';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type ListToolbarProps = {
     startComparison: (ids: any[]) => void;
-    getPreviousAndClose: () => any[];
+    close: (e: any) => void;
 };
 
 const ListToolbar = (props: ListToolbarProps) => {
-    const { startComparison, getPreviousAndClose } = props;
-    const { data, selectedIds, onSelect } = useListContext();
+    const { startComparison, close } = props;
+    const { data, selectedIds } = useListContext();
 
     const selectedData = data
         ? data.filter(d => selectedIds.includes(d.id))
@@ -34,10 +34,6 @@ const ListToolbar = (props: ListToolbarProps) => {
 
     const applySelection = () => {
         startComparison(selectedData);
-    };
-
-    const reset = () => {
-        onSelect(getPreviousAndClose().map(d => d.id));
     };
 
     return (
@@ -49,15 +45,40 @@ const ListToolbar = (props: ListToolbarProps) => {
             >
                 <KeyboardArrowRightIcon />
             </Button>
-            <Button label="ra.action.cancel" onClick={reset}>
+            <Button label="ra.action.cancel" onClick={close}>
                 <CloseIcon />
             </Button>
         </Toolbar>
     );
 };
 
+type ActualDatagridProps = {
+    getCurrentlySelected: () => any[];
+    /**
+     * The content of the datagrid in the comparison selector. Must be an array of nodes.
+     * Defaults to filtering on name and metadata.created
+     */
+    datagridFields?: React.ReactNode;
+};
+
+const ActualDatagrid = (props: ActualDatagridProps) => {
+    const { getCurrentlySelected, datagridFields = defaultDatagridFields } =
+        props;
+    const { onSelect } = useListContext();
+
+    useEffect(() => {
+        onSelect(getCurrentlySelected().map(d => d.id));
+    }, []);
+
+    return (
+        <Datagrid bulkActionButtons={<EmptyBulkActions />}>
+            {datagridFields}
+        </Datagrid>
+    );
+};
+
 export type SelectorProps = {
-    filter?: FilterPayload,
+    filter?: FilterPayload;
     /**
      * The filter inputs to display in the comparison selector.
      *
@@ -67,11 +88,6 @@ export type SelectorProps = {
         | React.ReactElement<any, string | React.JSXElementConstructor<any>>
         | React.ReactElement<any, string | React.JSXElementConstructor<any>>[];
     /**
-     * The content of the datagrid in the comparison selector. Must be an array of nodes.
-     * Defaults to filtering on name and metadata.created
-     */
-    datagridFields?: React.ReactNode;
-    /**
      * Filter function that will be applied to comparison selector data after fetching them.
      * Must match the predicate expected by Array.filter
      * Defaults to filtering out the current record.
@@ -79,7 +95,9 @@ export type SelectorProps = {
     postFetchFilter?: (value: any, index?: number, array?: any[]) => boolean;
 };
 
-type MetricsComparisonSelectorProps = ListToolbarProps & SelectorProps;
+type MetricsComparisonSelectorProps = ActualDatagridProps &
+    ListToolbarProps &
+    SelectorProps;
 
 export const MetricsComparisonSelector = (
     props: MetricsComparisonSelectorProps
@@ -87,8 +105,9 @@ export const MetricsComparisonSelector = (
     const {
         filter,
         filters,
-        datagridFields = defaultDatagridFields,
         postFetchFilter = res => res.id != record?.id,
+        getCurrentlySelected,
+        datagridFields,
         ...toolbarProps
     } = props;
     const record = useRecordContext();
@@ -125,9 +144,10 @@ export const MetricsComparisonSelector = (
                     pagination={<InfinitePagination />}
                     sx={{ paddingTop: filters ? 0 : '16px' }}
                 >
-                    <Datagrid bulkActionButtons={<EmptyBulkActions />}>
-                        {datagridFields}
-                    </Datagrid>
+                    <ActualDatagrid
+                        getCurrentlySelected={getCurrentlySelected}
+                        datagridFields={datagridFields}
+                    />
                 </ListView>
                 <ListToolbar {...toolbarProps} />
             </InfinitePaginationContext.Provider>

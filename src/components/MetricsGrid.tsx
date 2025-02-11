@@ -79,7 +79,8 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const [metricsMap, setMetricsMap] = useState<any>({});
     const [open, setOpen] = useState(false);
     const [compareWith, setCompareWith] = useState<any[]>([]);
-    let isLoading = false;
+    let isLoading1 = false;
+    let isLoading2 = false;
 
     /**
      * Initialize metrics map with metrics of the current record
@@ -102,12 +103,12 @@ export const MetricsGrid = (props: MetricsGridProps) => {
      * Read record metrics from the API
      */
     useEffect(() => {
-        isLoading = true;
         if (record && dataProvider) {
+            isLoading1 = true;
             dataProvider
                 .getMetrics(resource, { id: record.id, meta: { root } })
                 .then(data => {
-                    if (isLoading) {
+                    if (isLoading1) {
                         if (data?.metrics) {
                             setMetricsMap(prev => {
                                 const value = { ...prev };
@@ -130,7 +131,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 });
 
             return () => {
-                isLoading = false;
+                isLoading1 = false;
             };
         }
     }, [dataProvider, notify, record, resource, root]);
@@ -141,8 +142,8 @@ export const MetricsGrid = (props: MetricsGridProps) => {
      * whenever the list of records to compare with is updated
      */
     useEffect(() => {
-        isLoading = true;
         if (dataProvider && compareWith.length > 0) {
+            isLoading2 = true;
             //for each id, if !metricsMap[id] then call API
             const toBeAdded = compareWith.filter(r => !(r.id in metricsMap));
             const promises = toBeAdded.map(t =>
@@ -151,24 +152,26 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 
             Promise.all(promises)
                 .then(values => {
-                    let newMetrics = {};
-                    values.forEach((v, index) => {
-                        if (v?.metrics) {
-                            newMetrics[toBeAdded[index].id] = v?.metrics;
-                        }
-                    });
-                    setMetricsMap(prev => {
-                        let prevsToKeep = {};
-                        Object.keys(prev).forEach(p => {
-                            if (
-                                p == record.id ||
-                                compareWith.some(v => v.id == p)
-                            ) {
-                                prevsToKeep[p] = prev[p];
+                    if (isLoading2) {
+                        let newMetrics = {};
+                        values.forEach((v, index) => {
+                            if (v?.metrics) {
+                                newMetrics[toBeAdded[index].id] = v?.metrics;
                             }
                         });
-                        return { ...prevsToKeep, ...newMetrics };
-                    });
+                        setMetricsMap(prev => {
+                            let prevsToKeep = {};
+                            Object.keys(prev).forEach(p => {
+                                if (
+                                    p == record.id ||
+                                    compareWith.some(v => v.id == p)
+                                ) {
+                                    prevsToKeep[p] = prev[p];
+                                }
+                            });
+                            return { ...prevsToKeep, ...newMetrics };
+                        });
+                    }
                 })
                 .catch(error => {
                     const e =
@@ -179,8 +182,17 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 });
 
             return () => {
-                isLoading = false;
+                isLoading2 = false;
             };
+        } else {
+            //compareWith has been emptied, reset metricsMap
+            setMetricsMap(prev => {
+                let prevsToKeep = {};
+                if (prev[record.id]) {
+                    prevsToKeep[record.id] = prev[record.id];
+                }
+                return prevsToKeep;
+            });
         }
     }, [compareWith]);
 
@@ -189,16 +201,13 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 
     const handleDialogOpen = e => {
         e.stopPropagation();
-        if (compareWith.length === 0) {
-            //unselect all records possibly left over due to shared selection
-            unselectAll();
-        }
         setOpen(true);
     };
 
     const handleDialogClose = e => {
         e.stopPropagation();
         setOpen(false);
+        unselectAll();
     };
 
     const handleClick = useCallback(e => {
@@ -208,10 +217,10 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const startComparison = (records: any[]) => {
         setOpen(false);
         setCompareWith(records);
+        unselectAll();
     };
 
-    const getPreviousAndClose = () => {
-        setOpen(false);
+    const getCurrentlySelected = () => {
         return compareWith;
     };
 
@@ -248,12 +257,13 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             >
                 <MetricsComparisonSelector
                     startComparison={startComparison}
-                    getPreviousAndClose={getPreviousAndClose}
+                    close={handleDialogClose}
+                    getCurrentlySelected={getCurrentlySelected}
                     {...rest}
                 />
             </Dialog>
 
-            {isLoading ? (
+            {isLoading1 ? (
                 <Spinner />
             ) : (
                 <Grid container spacing={2} sx={{ paddingY: '16px' }}>
