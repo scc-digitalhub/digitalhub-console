@@ -7,13 +7,14 @@ import {
     Labeled,
     ListContextProvider,
     LoadingIndicator,
-    Show,
+    SelectInput,
     ShowBase,
     ShowButton,
     ShowView,
     SimpleShowLayout,
     TabbedShowLayout,
     TextField,
+    TextInput,
     TopToolbar,
     useCreatePath,
     useList,
@@ -27,7 +28,6 @@ import {
     Grid,
     Stack,
     Typography,
-    styled,
     Box,
 } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
@@ -36,11 +36,9 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { RunIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { StateChips } from '../../components/StateChips';
-import { LogsButton, LogsView } from '../../components/LogsButton';
+import { StateChips, StateColors } from '../../components/StateChips';
+import { LogsView } from '../../components/LogsButton';
 import { StopButton } from './StopButton';
-import { useGetSchema } from '../../controllers/schemaController';
-import { JsonSchemaField } from '../../components/JsonSchema';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
 import { SourceCodeTab } from '../functions/show';
@@ -51,10 +49,11 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
-import { keyParser } from '../../common/helper';
+import { functionParser, keyParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { MetricsGrid } from '../../components/MetricsGrid';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -116,6 +115,52 @@ export const RunShowComponent = () => {
             }
         }
     }, [kind]);
+
+    const states: any[] = [];
+    for (const c in StateColors) {
+        states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
+    }
+
+    const metricsComparisonFilters = [
+        <TextInput
+            label="fields.name.title"
+            source="q"
+            alwaysOn
+            resettable
+            key={1}
+        />,
+        <SelectInput
+            alwaysOn
+            key={2}
+            label="fields.status.state"
+            source="state"
+            choices={states}
+            sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+        />,
+    ];
+
+    const metricsDatagridFields = [
+        <TextField
+            source="name"
+            label="fields.name.title"
+            sortable={false}
+            key={'df1'}
+        />,
+        <DateField
+            source="metadata.created"
+            showTime
+            label="fields.metadata.created"
+            key={'df2'}
+        />,
+        <TextField
+            source="spec.task"
+            label="fields.task.title"
+            sortable={false}
+            key={'df3'}
+        />,
+    ];
+
+    const functionName = functionParser(record?.spec?.function).functionName;
 
     if (!record) return <LoadingIndicator />;
 
@@ -234,6 +279,17 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+            <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                <MetricsGrid
+                    record={record}
+                    filters={metricsComparisonFilters}
+                    datagridFields={metricsDatagridFields}
+                    postFetchFilter={v =>
+                        functionParser(v.spec.function).functionName ==
+                            functionName && v.id != record?.id
+                    }
+                />
+            </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
