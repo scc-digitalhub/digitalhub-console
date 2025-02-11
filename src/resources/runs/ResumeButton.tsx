@@ -4,7 +4,6 @@ import {
     RaRecord,
     useDataProvider,
     useRecordContext,
-    useRefresh,
 } from 'react-admin';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -23,7 +22,6 @@ export const ResumeButton = (props: ResumeButtonProps) => {
     } = props;
     const { root: projectId } = useRootSelector();
     const dataProvider = useDataProvider();
-    const refresh = useRefresh();
 
     const recordContext = useRecordContext();
     const record = recordProp || recordContext;
@@ -31,11 +29,7 @@ export const ResumeButton = (props: ResumeButtonProps) => {
 
     const onClick = () => {
         const url = '/-/' + projectId + '/runs/' + id + '/resume';
-        dataProvider
-            .invoke({ path: url, options: { method: 'POST' } })
-            .then(() => {
-                refresh();
-            });
+        dataProvider.invoke({ path: url, options: { method: 'POST' } });
     };
 
     return (
