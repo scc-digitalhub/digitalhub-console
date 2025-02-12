@@ -47,6 +47,7 @@ export const SecretEdit = () => {
     const notify = useNotify();
     const dataProvider = useDataProvider();
     const redirect = useRedirect();
+
     const validator = data => {
         const errors: any = {};
 
@@ -62,16 +63,12 @@ export const SecretEdit = () => {
         }
         return errors;
     };
+
     const postSave = data => {
-        const obj = { project: root || '' };
-        Object.defineProperty(obj, data.name, {
-            value: data.value,
-            writable: true,
-            configurable: true,
-            enumerable: true,
-        });
+        const obj = { name: data?.name, value: data?.value };
+
         dataProvider
-            .createSecret(obj)
+            .writeSecretData(obj, { root })
             .then(() => {
                 notify('ra.notification.updated', {
                     type: 'info',
@@ -80,11 +77,12 @@ export const SecretEdit = () => {
                 redirect('show', 'secrets', data.id);
             })
             .catch(error => {
-                notify(`Error creating secret: ${error.message}`, {
+                notify(`Error updating secret: ${error.message}`, {
                     type: 'error',
                 });
             });
     };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase redirect="show">

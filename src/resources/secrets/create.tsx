@@ -1,6 +1,5 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    CreateActionsProps,
     CreateBase,
     CreateView,
     ListButton,
@@ -24,7 +23,7 @@ import { SecretUiSchema } from './types';
 import { SpecInput } from '../../components/SpecInput';
 import { useRef } from 'react';
 
-const CreateToolbar = (props: CreateActionsProps) => {
+const CreateToolbar = () => {
     return (
         <TopToolbar>
             <ListButton />
@@ -40,12 +39,6 @@ export const SecretCreate = () => {
     const resource = useResourceContext();
     const value = useRef<string>();
     const { data: schemas } = useGetSchemas(resource);
-    const kinds = schemas
-        ? schemas.map(s => ({
-              id: s.kind,
-              name: s.kind,
-          }))
-        : [];
 
     //hardcoded: only 1 kind supported
     const kind = 'secret';
@@ -53,19 +46,6 @@ export const SecretCreate = () => {
     const schema = schemas ? schemas.find(s => s.kind == kind)?.schema : {};
 
     const record = { kind };
-
-    const validator = data => {
-        const errors: any = {};
-
-        if (!('name' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-        if (!('value' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        return errors;
-    };
 
     //TODO move to server or refactor
     const checkDuplicates = data => {
@@ -90,7 +70,6 @@ export const SecretCreate = () => {
     };
 
     const save = data => {
-        console.log('settled data', data);
         if (data?.name && value.current) {
             const obj = { name: data?.name, value: value.current };
 
