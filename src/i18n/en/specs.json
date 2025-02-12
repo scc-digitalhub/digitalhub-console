@@ -173,6 +173,9 @@
         "description": "SKLearn model serving",
         "title": "SKLearn"
     },
+    "secret": {
+        "description": ""
+    },
     "table": {
         "description": "",
         "title": "Table"
