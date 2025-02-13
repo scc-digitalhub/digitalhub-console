@@ -48,6 +48,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import TableChart from '@mui/icons-material/TableChart';
 import { DownloadButton } from './DownloadButton';
 import { PreviewButton } from './PreviewButton';
+import { NoContent } from './NoContent';
 
 const MAX_TREE_DEPTH = 50;
 
@@ -281,23 +282,9 @@ export const FileInfo = () => {
                     )}
                 </Grid>
             ) : (
-                <EmptyResult />
+                <NoContent message={'fields.info.empty'} />
             )}
         </Box>
-    );
-};
-
-const EmptyResult = () => {
-    const translate = useTranslate();
-
-    return (
-        <Typography
-            variant="body1"
-            color={'gray'}
-            sx={{ textAlign: 'center', pt: 5 }}
-        >
-            {translate('fields.info.empty')}
-        </Typography>
     );
 };
 

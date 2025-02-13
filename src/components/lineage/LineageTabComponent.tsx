@@ -8,8 +8,8 @@ import {
 } from 'react-admin';
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { NoLineage } from './NoLineage';
 import { RecordLineage } from './RecordLineage';
+import { NoContent } from '../NoContent';
 
 export const LineageTabComponent = () => {
     const record = useRecordContext();
@@ -69,7 +69,7 @@ export const LineageTabComponent = () => {
             {relationships.length !== 0 ? (
                 <RecordLineage relationships={relationships} record={record} />
             ) : (
-                <NoLineage />
+                <NoContent message={'messages.lineage.noLineage'} />
             )}
         </Box>
     );

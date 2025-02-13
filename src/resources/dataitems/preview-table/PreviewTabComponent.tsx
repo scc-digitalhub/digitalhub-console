@@ -3,6 +3,7 @@ import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
 import { usePreviewDataGridController } from './usePreviewDataGridController';
+import { NoContent } from '../../../components/NoContent';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -88,16 +89,9 @@ export const PreviewTabComponent = (props: { record: any }) => {
                     </Typography>
                 </>
             ) : (
-                <Box
-                    height={160}
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Typography variant="body1">
-                        {translate('resources.dataitems.preview.notAvailable')}
-                    </Typography>
-                </Box>
+                <NoContent
+                    message={'resources.dataitems.preview.notAvailable'}
+                />
             )}
         </Box>
     );
