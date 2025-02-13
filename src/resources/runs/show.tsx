@@ -160,8 +160,6 @@ export const RunShowComponent = () => {
         />,
     ];
 
-    const functionName = functionParser(record?.spec?.function).functionName;
-
     if (!record) return <LoadingIndicator />;
 
     return (
@@ -267,7 +265,7 @@ export const RunShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label={translate('fields.logs')}>
-                <LogsView id={record.id} resource={resource} />
+                {record?.id && <LogsView id={record.id} resource={resource} />}
             </TabbedShowLayout.Tab>
             {record?.status?.k8s && (
                 <TabbedShowLayout.Tab label={'fields.k8s.title'}>
@@ -279,17 +277,42 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                <MetricsGrid
-                    record={record}
-                    filters={metricsComparisonFilters}
-                    datagridFields={metricsDatagridFields}
-                    postFetchFilter={v =>
-                        functionParser(v.spec.function).functionName ==
-                            functionName && v.id != record?.id
-                    }
-                />
-            </TabbedShowLayout.Tab>
+            {record?.spec?.function && (
+                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                    <MetricsGrid
+                        record={record}
+                        filters={metricsComparisonFilters}
+                        datagridFields={metricsDatagridFields}
+                        postFetchFilter={v =>
+                            //TODO refactor properly
+                            {
+                                if (!v.spec?.function) {
+                                    return false;
+                                }
+
+                                if (v.id == record.id) {
+                                    return false;
+                                }
+
+                                if (!v.kind || v.kind != record.kind) {
+                                    return false;
+                                }
+
+                                if (
+                                    functionParser(v.spec.function)
+                                        .functionName !=
+                                    functionParser(record.spec.function)
+                                        .functionName
+                                ) {
+                                    return false;
+                                }
+
+                                return true;
+                            }
+                        }
+                    />
+                </TabbedShowLayout.Tab>
+            )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
