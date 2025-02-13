@@ -18,6 +18,7 @@ import {
     MetricsComparisonSelector,
     SelectorProps,
 } from './MetricsComparisonSelector';
+import { NoContent } from './NoContent';
 
 /**
  * Format the labels of the given series according to the resource type.
@@ -112,7 +113,9 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                         if (data?.metrics) {
                             setMetricsMap(prev => {
                                 const value = { ...prev };
-                                value[record.id] = data.metrics;
+                                if (Object.keys(data.metrics).length !== 0) {
+                                    value[record.id] = data.metrics;
+                                }
                                 return value;
                             });
                         } else {
@@ -196,8 +199,33 @@ export const MetricsGrid = (props: MetricsGridProps) => {
         }
     }, [compareWith]);
 
-    //TODO memoize?
     const mergedMetrics = mergeData(metricsMap);
+
+    const grid =
+        Object.keys(metricsMap).length !== 0 ? (
+            <Grid container spacing={2} sx={{ paddingY: '16px' }}>
+                {mergedMetrics &&
+                    Object.entries(mergedMetrics).map(
+                        ([metricName, series]: [string, any], index) => (
+                            <Grid item xs={12} md={4} key={'metric_' + index}>
+                                <MetricCard
+                                    metric={{
+                                        name: metricName,
+                                        series: formatLabels(
+                                            series,
+                                            [record, ...compareWith],
+                                            resource
+                                        ),
+                                    }}
+                                    comparison={compareWith.length > 0}
+                                />
+                            </Grid>
+                        )
+                    )}
+            </Grid>
+        ) : (
+            <NoContent message={'fields.info.empty'} />
+        );
 
     const handleDialogOpen = e => {
         e.stopPropagation();
@@ -234,14 +262,16 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 <Typography variant="h6" gutterBottom>
                     {translate('fields.metrics.title')}
                 </Typography>
-                <Button
-                    label="actions.compare"
-                    onClick={handleDialogOpen}
-                    color="info"
-                    variant="contained"
-                >
-                    <CompareIcon />
-                </Button>
+                {Object.keys(metricsMap).length !== 0 && (
+                    <Button
+                        label="actions.compare"
+                        onClick={handleDialogOpen}
+                        color="info"
+                        variant="contained"
+                    >
+                        <CompareIcon />
+                    </Button>
+                )}
             </Stack>
             <Dialog
                 open={open}
@@ -263,35 +293,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 />
             </Dialog>
 
-            {isLoading1 ? (
-                <Spinner />
-            ) : (
-                <Grid container spacing={2} sx={{ paddingY: '16px' }}>
-                    {mergedMetrics &&
-                        Object.entries(mergedMetrics).map(
-                            ([metricName, series]: [string, any], index) => (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={4}
-                                    key={'metric_' + index}
-                                >
-                                    <MetricCard
-                                        metric={{
-                                            name: metricName,
-                                            series: formatLabels(
-                                                series,
-                                                [record, ...compareWith],
-                                                resource
-                                            ),
-                                        }}
-                                        comparison={compareWith.length > 0}
-                                    />
-                                </Grid>
-                            )
-                        )}
-                </Grid>
-            )}
+            {isLoading1 ? <Spinner /> : grid}
         </Box>
     );
 };

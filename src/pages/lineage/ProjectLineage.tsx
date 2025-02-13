@@ -14,11 +14,11 @@ import {
 import { PageTitle } from '../../components/PageTitle';
 import { LineageIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import { NoLineage } from '../../components/lineage/NoLineage';
 import { useEffect, useState } from 'react';
 import { RecordLineage } from '../../components/lineage/RecordLineage';
 import { Relationship } from '../../components/lineage';
 import { keyParser } from '../../common/helper';
+import { NoContent } from '../../components/NoContent';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
@@ -171,7 +171,7 @@ const Lineage = () => {
                     viewportHeight="500px"
                 />
             ) : (
-                <NoLineage />
+                <NoContent message={'messages.lineage.noLineage'} />
             )}
         </Box>
     );
