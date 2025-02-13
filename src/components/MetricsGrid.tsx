@@ -1,4 +1,4 @@
-import { Box, Dialog, Grid, Stack, Typography } from '@mui/material';
+import { Box, Chip, Dialog, Grid, Stack, Typography } from '@mui/material';
 import {
     Button,
     Identifier,
@@ -34,35 +34,32 @@ const formatLabels = (
     records: RaRecord<Identifier>[],
     resource: string
 ): Series[] => {
+    return series.map(s => {
+        const record = records.find(r => r.id === s.label);
+        return {
+            ...s,
+            label: record ? formatLabel(record, resource) : s.label,
+        };
+    });
+};
+
+const formatLabel = (
+    record: RaRecord<Identifier>,
+    resource: string
+): string => {
     if (resource === 'runs') {
-        return series.map(s => {
-            const record = records.find(r => r.id === s.label);
-            return {
-                ...s,
-                label: record
-                    ? `${record.name} [${new Date(
-                          record.metadata.created
-                      ).toLocaleString()}]`
-                    : s.label,
-            };
-        });
+        return `${record.name} [${new Date(
+            record.metadata.created
+        ).toLocaleString()}]`;
     }
 
     if (resource === 'models') {
-        return series.map(s => {
-            const record = records.find(r => r.id === s.label);
-            return {
-                ...s,
-                label: record
-                    ? `${record.name} [${new Date(
-                          record.metadata.created
-                      ).toLocaleString()}]`
-                    : s.label,
-            };
-        });
+        return `${record.name} [${new Date(
+            record.metadata.created
+        ).toLocaleString()}]`;
     }
 
-    return series;
+    return '' + record.id;
 };
 
 type MetricsGridProps = SelectorProps & {
@@ -252,6 +249,12 @@ export const MetricsGrid = (props: MetricsGridProps) => {
         return compareWith;
     };
 
+    const removeFromComparison = r => {
+        setCompareWith(prev => {
+            return prev.filter(p => p.id != r.id);
+        });
+    };
+
     return (
         <Box
             sx={{
@@ -292,6 +295,18 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                     {...rest}
                 />
             </Dialog>
+            {compareWith.length > 0 && (
+                <Box>
+                    {compareWith.map(r => (
+                        <Chip
+                            key={'compare-chip-' + r.id}
+                            label={formatLabel(r, resource)}
+                            sx={{ mr: '5px', mb: '5px' }}
+                            onDelete={() => removeFromComparison(r)}
+                        />
+                    ))}
+                </Box>
+            )}
 
             {isLoading1 ? <Spinner /> : grid}
         </Box>
