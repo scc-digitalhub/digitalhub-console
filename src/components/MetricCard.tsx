@@ -34,12 +34,12 @@ const getChartByMetric = (metric: string, props: any) => {
     // if (chartMap[lowerCaseMetric])
     //     return React.createElement(chartMap[lowerCaseMetric], props);
     // return <MetricNotSupported />;
-    return <AccuracyChart {...props} />
+    return <AccuracyChart {...props} />;
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
     const { metric, comparison } = props;
-    const useChart = metric.series.some(s => typeof s.data !== 'number');
+    const useChart = metric.series.some(s => Array.isArray(s.data));
 
     const chart = useChart ? (
         getChartByMetric(metric.name, { series: metric.series })

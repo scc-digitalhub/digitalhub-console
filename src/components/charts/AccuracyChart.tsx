@@ -15,7 +15,7 @@ export const AccuracyChart = (props: AccuracyChartProps) => {
     } = props;
 
     const arraySeries = series.map(s =>
-        typeof s.data === 'number' ? { ...s, data: [s.data] } : s
+        !Array.isArray(s.data) ? { ...s, data: [s.data] } : s
     );
 
     return (

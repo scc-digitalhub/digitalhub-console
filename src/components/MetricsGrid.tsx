@@ -9,7 +9,7 @@ import {
     useTranslate,
     useUnselectAll,
 } from 'react-admin';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
 import { MetricCard, Series } from './MetricCard';
@@ -196,7 +196,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
         }
     }, [compareWith]);
 
-    const mergedMetrics = mergeData(metricsMap);
+    const mergedMetrics = useMemo(() => mergeData(metricsMap), [metricsMap]);
 
     const grid =
         Object.keys(metricsMap).length !== 0 ? (
@@ -297,6 +297,10 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             </Dialog>
             {compareWith.length > 0 && (
                 <Box>
+                    <Chip
+                        label={formatLabel(record, resource)}
+                        sx={{ mr: '5px', mb: '5px' }}
+                    />
                     {compareWith.map(r => (
                         <Chip
                             key={'compare-chip-' + r.id}
@@ -314,18 +318,26 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 };
 
 const mergeData = (input: any) => {
-    let merged = {};
+    let merged: { [s: string]: any[] } = {};
+    let ids: string[] = [];
     Object.entries(input).forEach(([id, metricsSet]: [string, any]) => {
-        Object.keys(metricsSet).forEach(metricName => {
+        ids.push(id);
+        Object.entries(metricsSet).forEach(([metricName, val]) => {
             if (metricName in merged) {
                 merged[metricName].push({
                     label: id,
-                    data: metricsSet[metricName],
+                    data: val,
                 });
             } else {
-                merged[metricName] = [
-                    { label: id, data: metricsSet[metricName] },
-                ];
+                merged[metricName] = [{ label: id, data: val }];
+            }
+        });
+    });
+    //add missing values as null to always display every series
+    Object.values(merged).forEach((series: any[]) => {
+        ids.forEach(id => {
+            if (!series.some(s => s.label == id)) {
+                series.push({ label: id, data: null });
             }
         });
     });
