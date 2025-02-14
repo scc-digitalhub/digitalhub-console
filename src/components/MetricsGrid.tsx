@@ -1,4 +1,12 @@
-import { Box, Chip, Dialog, Grid, Stack, Typography } from '@mui/material';
+import {
+    Box,
+    Chip,
+    Dialog,
+    Grid,
+    Stack,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import {
     Button,
     Identifier,
@@ -12,55 +20,20 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from './Spinner';
-import { MetricCard, Series } from './MetricCard';
+import { MetricCard } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
 import {
     MetricsComparisonSelector,
     SelectorProps,
 } from './MetricsComparisonSelector';
 import { NoContent } from './NoContent';
-
-/**
- * Format the labels of the given series according to the resource type.
- * Run labels are formatted as: "<run.name> [run.metadata.created]".
- *
- * @param series
- * @param records
- * @param resource
- * @returns
- */
-const formatLabels = (
-    series: Series[],
-    records: RaRecord<Identifier>[],
-    resource: string
-): Series[] => {
-    return series.map(s => {
-        const record = records.find(r => r.id === s.label);
-        return {
-            ...s,
-            label: record ? formatLabel(record, resource) : s.label,
-        };
-    });
-};
-
-const formatLabel = (
-    record: RaRecord<Identifier>,
-    resource: string
-): string => {
-    if (resource === 'runs') {
-        return `${record.name} [${new Date(
-            record.metadata.created
-        ).toLocaleString()}]`;
-    }
-
-    if (resource === 'models') {
-        return `${record.name} [${new Date(
-            record.metadata.created
-        ).toLocaleString()}]`;
-    }
-
-    return '' + record.id;
-};
+import {
+    chartPalette,
+    formatLabel,
+    formatLabels,
+    mergeData,
+    Series,
+} from './charts';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;
@@ -69,6 +42,7 @@ type MetricsGridProps = SelectorProps & {
 export const MetricsGrid = (props: MetricsGridProps) => {
     const { record, ...rest } = props;
     const translate = useTranslate();
+    const theme = useTheme();
     const notify = useNotify();
     const resource = useResourceContext();
     const unselectAll = useUnselectAll(resource);
@@ -203,13 +177,16 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             <Grid container spacing={2} sx={{ paddingY: '16px' }}>
                 {mergedMetrics &&
                     Object.entries(mergedMetrics).map(
-                        ([metricName, series]: [string, any], index) => (
+                        ([metricName, series]: [string, Series[]], index) => (
                             <Grid item xs={12} md={4} key={'metric_' + index}>
                                 <MetricCard
                                     metric={{
                                         name: metricName,
                                         series: formatLabels(
-                                            series,
+                                            sortRecordFirst(
+                                                series,
+                                                record.id.toString()
+                                            ),
                                             [record, ...compareWith],
                                             resource
                                         ),
@@ -299,16 +276,34 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                 <Box>
                     <Chip
                         label={formatLabel(record, resource)}
-                        sx={{ mr: '5px', mb: '5px' }}
+                        variant="outlined"
+                        sx={{
+                            mr: '5px',
+                            mb: '5px',
+                            borderColor: chartPalette(theme.palette.mode)[0],
+                        }}
                     />
-                    {compareWith.map(r => (
-                        <Chip
-                            key={'compare-chip-' + r.id}
-                            label={formatLabel(r, resource)}
-                            sx={{ mr: '5px', mb: '5px' }}
-                            onDelete={() => removeFromComparison(r)}
-                        />
-                    ))}
+                    {compareWith
+                        .toSorted((a, b) => {
+                            if (a.id.toString() < b.id.toString()) return -1;
+                            if (a.id.toString() > b.id.toString()) return 1;
+                            return 0;
+                        })
+                        .map((r, i) => (
+                            <Chip
+                                key={'compare-chip-' + r.id}
+                                label={formatLabel(r, resource)}
+                                variant="outlined"
+                                sx={{
+                                    mr: '5px',
+                                    mb: '5px',
+                                    borderColor: chartPalette(
+                                        theme.palette.mode
+                                    )[i + 1],
+                                }}
+                                onDelete={() => removeFromComparison(r)}
+                            />
+                        ))}
                 </Box>
             )}
 
@@ -317,30 +312,14 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     );
 };
 
-const mergeData = (input: any) => {
-    let merged: { [s: string]: any[] } = {};
-    let ids: string[] = [];
-    Object.entries(input).forEach(([id, metricsSet]: [string, any]) => {
-        ids.push(id);
-        Object.entries(metricsSet).forEach(([metricName, val]) => {
-            if (metricName in merged) {
-                merged[metricName].push({
-                    label: id,
-                    data: val,
-                });
-            } else {
-                merged[metricName] = [{ label: id, data: val }];
-            }
+const sortRecordFirst = (arr: Series[], recordId: string): any[] => {
+    const sorted = arr.filter(s => s.label == recordId);
+    const rest = arr
+        .filter(s => s.label != recordId)
+        .toSorted((a, b) => {
+            if (a.label == recordId || a.label < b.label) return -1;
+            if (b.label == recordId || a.label > b.label) return 1;
+            return 0;
         });
-    });
-    //add missing values as null to always display every series
-    Object.values(merged).forEach((series: any[]) => {
-        ids.forEach(id => {
-            if (!series.some(s => s.label == id)) {
-                series.push({ label: id, data: null });
-            }
-        });
-    });
-
-    return merged;
+    return [...sorted, ...rest];
 };

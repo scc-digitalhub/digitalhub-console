@@ -1,5 +1,5 @@
 import { LineChart, LineChartProps } from '@mui/x-charts';
-import { Series } from '../MetricCard';
+import { chartPalette, Series } from './utils';
 
 export const AccuracyChart = (props: AccuracyChartProps) => {
     const {
@@ -23,6 +23,7 @@ export const AccuracyChart = (props: AccuracyChartProps) => {
             series={arraySeries}
             slotProps={slotProps}
             margin={margin}
+            colors={chartPalette}
             {...rest}
         />
     );

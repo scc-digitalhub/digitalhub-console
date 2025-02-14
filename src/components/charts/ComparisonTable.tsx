@@ -5,9 +5,9 @@ import {
     GridColDef,
     itIT,
 } from '@mui/x-data-grid';
-import { Series } from '../MetricCard';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
+import { Series } from './utils';
 
 export const ComparisonTable = (props: { values: Series[] }) => {
     const { values } = props;
