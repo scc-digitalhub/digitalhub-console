@@ -1,6 +1,6 @@
-import { Series } from '../MetricCard';
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
+import { Series } from './utils';
 
 export const SingleValue = (props: { values: Series }) => {
     const { values } = props;

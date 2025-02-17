@@ -1,7 +1,13 @@
-import { DataGrid, enUS, gridClasses, GridColDef, itIT } from '@mui/x-data-grid';
-import { Series } from '../MetricCard';
+import {
+    DataGrid,
+    enUS,
+    gridClasses,
+    GridColDef,
+    itIT,
+} from '@mui/x-data-grid';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
+import { Series } from './utils';
 
 export const ComparisonTable = (props: { values: Series[] }) => {
     const { values } = props;
@@ -22,6 +28,12 @@ export const ComparisonTable = (props: { values: Series[] }) => {
             field: 'data',
             headerName: translate('fields.datagrid.value'),
             flex: 1,
+            valueFormatter: params => {
+                if (params.value == null) {
+                    return '-';
+                }
+                return params.value;
+            },
         },
     ];
 

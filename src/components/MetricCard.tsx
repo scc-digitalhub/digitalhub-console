@@ -16,30 +16,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
 import { AccuracyChart } from './charts/AccuracyChart';
-
-// a set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}
-export type Series = {
-    data: any;
-    label: string;
-};
-
-// all sets of values related to a specific metric, ex: {name:'accuracy',series:[{label:'v1',data:1},{label:'v2',data:[1,2,3]}]}
-export type Metric = {
-    name: string;
-    series: Series[];
-};
+import { Metric } from './charts';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();
     // if (chartMap[lowerCaseMetric])
     //     return React.createElement(chartMap[lowerCaseMetric], props);
     // return <MetricNotSupported />;
-    return <AccuracyChart {...props} />
+    return <AccuracyChart {...props} />;
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
     const { metric, comparison } = props;
-    const useChart = metric.series.some(s => typeof s.data !== 'number');
+    const useChart = metric.series.some(s => Array.isArray(s.data));
 
     const chart = useChart ? (
         getChartByMetric(metric.name, { series: metric.series })
@@ -60,7 +49,7 @@ export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
                 }
             />
             <CardContent sx={{ paddingTop: 0 }}>
-                <Box sx={{ height: '120px', overflowY: 'auto' }}>{chart}</Box>
+                <Box sx={{ height: '180px', overflowY: 'auto' }}>{chart}</Box>
             </CardContent>
         </Card>
     );
