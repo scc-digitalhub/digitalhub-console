@@ -9,7 +9,7 @@ import '@xyflow/react/dist/style.css';
 import { set } from 'lodash';
 import { Flow } from './Flow';
 import { getNodesAndEdges, Relationship, RelationshipDirection } from './utils';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { keyParser } from '../../common/helper';
 
@@ -32,6 +32,11 @@ export const RecordLineage = (props: {
     const [relationships, setRelationships] = useState<Relationship[]>(
         relFromProps || []
     );
+
+    useEffect(() => {
+        //update relationships if new ones are passed from parent
+        setRelationships(relFromProps);
+    }, [relFromProps]);
 
     const translate = useTranslate();
     const dataProvider = useDataProvider();

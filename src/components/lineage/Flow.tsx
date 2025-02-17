@@ -50,8 +50,6 @@ export const Flow = (props: {
         });
     }, [nodes, edges, fitView]);
 
-    console.log('flow', nodes, edges);
-
     return (
         <Box style={{ height, width }}>
             <ReactFlow

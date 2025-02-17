@@ -57,8 +57,6 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
         e.stopPropagation();
     };
 
-    console.log(data);
-    console.log(edges);
     const nodeClass = showInfo ? 'RegularNode InfoOpen' : 'RegularNode';
 
     const nodeContent =
@@ -150,7 +148,7 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
         right: -20,
         ...handleStyle,
     };
-    console.log('ha', direction == RelationshipDirection.forward, resource, id);
+
     return (
         <>
             {!hideLeftHandle && (
