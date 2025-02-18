@@ -1,19 +1,16 @@
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
-import { Container, Stack } from '@mui/material';
+import {
+    Container,
+    Stack,
+} from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DateField,
-    DeleteWithConfirmButton,
-    EditButton,
     Labeled,
     ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
     TextInput,
-    TopToolbar,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
@@ -27,12 +24,12 @@ import { getModelSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
-import { DownloadButton } from '../../components/DownloadButton';
 import { IdField } from '../../components/IdField';
 import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
+import { ShowToolbar } from '../../components/ShowToolbar';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -40,21 +37,6 @@ const ShowComponent = () => {
     return <ModelShowLayout record={record} />;
 };
 
-const ShowToolbar = () => {
-    const record = useRecordContext();
-    return (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        {record?.status?.files?.length === 1 && (
-            <DownloadButton source="spec.path" />
-        )}
-        <InspectButton fullWidth />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-    )}
-;
 const getUiSpec = (kind: string) => {
     const uiSpec = getModelSpecUiSchema(kind) || {};
     //hide metrics field
@@ -163,8 +145,8 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     datagridFields={metricsDatagridFields}
                 />
             </TabbedShowLayout.Tab>
-             <TabbedShowLayout.Tab label="pages.lineage.title">
-                <LineageTabComponent  />
+            <TabbedShowLayout.Tab label="pages.lineage.title">
+                <LineageTabComponent />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );

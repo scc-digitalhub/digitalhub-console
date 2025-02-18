@@ -2,8 +2,6 @@ import { JsonSchemaField } from '../../components/JsonSchema';
 import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
-    DeleteWithConfirmButton,
-    EditButton,
     Labeled,
     LoadingIndicator,
     RecordContextProvider,
@@ -23,8 +21,6 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { TaskAndRuns } from './TaskAndRuns';
 import { getWorkflowUiSpec } from './types';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { WorkflowIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -35,6 +31,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { ShowToolbar } from '../../components/ShowToolbar';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -297,16 +294,6 @@ const SourceCodeView = (props: { sourceCode: any }) => {
         </RecordContextProvider>
     );
 };
-
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton fullWidth />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
 
 export const WorkflowShow = () => {
     return (

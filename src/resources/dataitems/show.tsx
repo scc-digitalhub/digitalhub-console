@@ -1,17 +1,11 @@
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
-    DeleteWithConfirmButton,
-    EditButton,
     Labeled,
     ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
-    TopToolbar,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
@@ -27,30 +21,14 @@ import { getDataItemSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
-import { DownloadButton } from '../../components/DownloadButton';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { ShowToolbar } from '../../components/ShowToolbar';
 
 const ShowComponent = () => {
     const record = useRecordContext();
 
     return <DataItemShowLayout record={record} />;
-};
-
-const ShowToolbar = () => {
-    const record = useRecordContext();
-    return (
-        <TopToolbar>
-            <BackButton />
-            <EditButton style={{ marginLeft: 'auto' }} />
-            {record?.status?.files?.length === 1 && (
-                <DownloadButton source="spec.path" />
-            )}
-            <InspectButton fullWidth />
-            <ExportRecordButton language="yaml" color="info" />
-            <DeleteWithConfirmButton />
-        </TopToolbar>
-    );
 };
 
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {

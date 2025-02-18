@@ -10,7 +10,7 @@ export const DeleteWithConfirmButtonByName = <
 >(
     props: DeleteWithConfirmButtonProps<RecordType> & { deleteAll?: boolean }
 ) => {
-    const { deleteAll = false, ...rest } = props;
+    const { deleteAll = false, translateOptions, ...rest } = props;
     const record = useRecordContext(rest);
     if (!record) return <></>;
 
@@ -23,7 +23,7 @@ export const DeleteWithConfirmButtonByName = <
 
     return (
         <DeleteWithConfirmButton
-            translateOptions={{ id: record.name }}
+            translateOptions={translateOptions ?? { id: record.name }}
             {...rest}
             mutationOptions={mutationsOptions}
         />
