@@ -52,13 +52,8 @@ const ListToolbar = (props: ListToolbarProps) => {
     );
 };
 
-type ActualDatagridProps = {
+type ActualDatagridProps = Pick<SelectorProps, 'datagridFields'> & {
     getCurrentlySelected: () => any[];
-    /**
-     * The content of the datagrid in the comparison selector. Must be an array of nodes.
-     * Defaults to filtering on name and metadata.created
-     */
-    datagridFields?: React.ReactNode;
 };
 
 const ActualDatagrid = (props: ActualDatagridProps) => {
@@ -93,6 +88,11 @@ export type SelectorProps = {
      * Defaults to filtering out the current record.
      */
     postFetchFilter?: (value: any, index?: number, array?: any[]) => boolean;
+    /**
+     * The content of the datagrid in the comparison selector. Must be an array of nodes.
+     * Defaults to filtering on name and metadata.created
+     */
+    datagridFields?: React.ReactNode;
 };
 
 type MetricsComparisonSelectorProps = ActualDatagridProps &
