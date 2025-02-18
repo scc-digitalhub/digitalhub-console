@@ -1,19 +1,13 @@
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
 
 import {
-    DeleteWithConfirmButton,
-    EditButton,
     Labeled,
     ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
-    TopToolbar,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
@@ -24,26 +18,11 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { getArtifactSpecUiSchema } from './types';
 import { ArtifactIcon } from './icon';
-import { DownloadButton } from '../../components/DownloadButton';
 import { MetadataField } from '../../components/MetadataField';
-
-// const Accordion = styled((props: AccordionProps) => (
-//     <MuiAccordion disableGutters elevation={0} square {...props} />
-// ))(({ theme }) => ({
-//     border: `1px solid ${theme.palette.divider}`,
-//     '&:not(:last-child)': {
-//         borderBottom: 0,
-//     },
-//     '&::before': {
-//         display: 'none',
-//     },
-//     '& .MuiAccordionSummary-expandIconWrapper': {
-//         color: '#E0701B',
-//     },
-// }));
 import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { ShowToolbar } from '../../components/ShowToolbar';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -51,21 +30,6 @@ const ShowComponent = () => {
     return <ArtifactShowLayout record={record} />;
 };
 
-const ShowToolbar = () => {
-    const record = useRecordContext();
-    return (
-        <TopToolbar>
-            <BackButton />
-            <EditButton style={{ marginLeft: 'auto' }} />
-            {record?.status?.files?.length === 1 && (
-                <DownloadButton source="spec.path" />
-            )}
-            <InspectButton fullWidth />
-            <ExportRecordButton language="yaml" color="info" />
-            <DeleteWithConfirmButton />
-        </TopToolbar>
-    );
-};
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
 }) {
