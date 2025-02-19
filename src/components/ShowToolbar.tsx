@@ -80,7 +80,7 @@ export const ShowToolbar = () => {
                 confirmContent={confirmContent}
                 deleteAll={checked}
                 redirect={redirect}
-                translateOptions={{ id: record.id }}
+                translateOptions={{ id: record?.id }}
             />
         </TopToolbar>
     );

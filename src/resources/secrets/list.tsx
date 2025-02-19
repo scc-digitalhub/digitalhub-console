@@ -9,6 +9,7 @@ import {
     ShowButton,
     TextField,
     TopToolbar,
+    useResourceContext,
 } from 'react-admin';
 
 import { SecretIcon } from './icon';
@@ -17,6 +18,7 @@ import { ListPageTitle } from '../../components/PageTitle';
 import { FlatCard } from '../../components/FlatCard';
 import { RowButtonGroup } from '../../components/RowButtonGroup';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 const ListToolbar = () => {
     return (
@@ -37,9 +39,15 @@ const RowActions = () => {
 };
 
 export const SecretList = () => {
+    const resource = useResourceContext();
+    const { root } = useRootSelector();
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase exporter={yamlExporter}>
+            <ListBase
+                exporter={yamlExporter}
+                storeKey={`${root}.${resource}.listParams`}
+            >
                 <>
                     <ListPageTitle icon={<SecretIcon fontSize={'large'} />} />
                     <ListToolbar />

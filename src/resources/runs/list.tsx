@@ -9,6 +9,7 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Container } from '@mui/material';
@@ -21,6 +22,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 const ListToolbar = () => {
     return <TopToolbar />;
@@ -37,6 +39,8 @@ const RowActions = () => {
 
 export const RunList = () => {
     const translate = useTranslate();
+    const resource = useResourceContext();
+    const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
 
@@ -86,11 +90,13 @@ export const RunList = () => {
               />,
           ]
         : [];
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
+                storeKey={`${root}.${resource}.listParams`}
             >
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />

@@ -17,7 +17,6 @@ import {
     useExpanded,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
@@ -29,6 +28,7 @@ import { ArtifactIcon } from './icon';
 import { ImportButton } from '../../components/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 const ListToolbar = () => {
     return (
@@ -58,7 +58,8 @@ const RowActions = () => {
 };
 
 export const ArtifactList = () => {
-    const translate = useTranslate();
+    const resource = useResourceContext();
+    const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
 
@@ -101,6 +102,7 @@ export const ArtifactList = () => {
             <ListBase
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
+                storeKey={`${root}.${resource}.listParams`}
             >
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
