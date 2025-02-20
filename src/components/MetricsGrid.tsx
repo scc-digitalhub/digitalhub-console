@@ -14,6 +14,7 @@ import {
     useDataProvider,
     useNotify,
     useResourceContext,
+    useStore,
     useTranslate,
     useUnselectAll,
 } from 'react-admin';
@@ -50,21 +51,25 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
     const [open, setOpen] = useState(false);
-    const [compareWith, setCompareWith] = useState<any[]>([]);
+    const [compareWith, setCompareWith] = useStore<any[]>(
+        `${resource}.${record?.id}.metrics`,
+        []
+    );
     let isLoading1 = false;
     let isLoading2 = false;
 
     /**
      * Initialize metrics map with metrics of the current record
-     * and reset compareWith, in case record changes (i.e. versions)
      */
     useEffect(() => {
-        setCompareWith([]);
         setMetricsMap(prev => {
             let value = {};
             if (record.id in prev) {
                 value[record.id] = prev[record.id];
-            } else if (record?.status?.metrics) {
+            } else if (
+                record?.status?.metrics &&
+                Object.keys(record?.status?.metrics).length !== 0
+            ) {
                 value[record.id] = record.status.metrics;
             }
             return value;
@@ -272,18 +277,18 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                     {...rest}
                 />
             </Dialog>
-            {compareWith.length > 0 && (
-                <Box>
-                    <Chip
-                        label={formatLabel(record, resource)}
-                        variant="outlined"
-                        sx={{
-                            mr: '5px',
-                            mb: '5px',
-                            borderColor: chartPalette(theme.palette.mode)[0],
-                        }}
-                    />
-                    {compareWith
+            <Box>
+                <Chip
+                    label={formatLabel(record, resource)}
+                    variant="outlined"
+                    sx={{
+                        mr: '5px',
+                        mb: '5px',
+                        borderColor: chartPalette(theme.palette.mode)[0],
+                    }}
+                />
+                {compareWith.length > 0 &&
+                    compareWith
                         .toSorted((a, b) => {
                             if (a.id.toString() < b.id.toString()) return -1;
                             if (a.id.toString() > b.id.toString()) return 1;
@@ -304,8 +309,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                                 onDelete={() => removeFromComparison(r)}
                             />
                         ))}
-                </Box>
-            )}
+            </Box>
 
             {isLoading1 ? <Spinner /> : grid}
         </Box>

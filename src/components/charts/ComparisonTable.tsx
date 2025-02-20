@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
-import { Series } from './utils';
+import { Series, valueFormatter } from './utils';
 
 export const ComparisonTable = (props: { values: Series[] }) => {
     const { values } = props;
@@ -32,7 +32,7 @@ export const ComparisonTable = (props: { values: Series[] }) => {
                 if (params.value == null) {
                     return '-';
                 }
-                return params.value;
+                return valueFormatter(params.value);
             },
         },
     ];
