@@ -1,8 +1,34 @@
 import { Identifier, RaRecord } from 'react-admin';
-import { cheerfulFiestaPalette } from '@mui/x-charts';
+import {
+    ChartsColorPaletteCallback,
+    blueberryTwilightPaletteLight,
+    blueberryTwilightPaletteDark,
+    mangoFusionPaletteLight,
+    mangoFusionPaletteDark,
+    cheerfulFiestaPaletteLight,
+    cheerfulFiestaPaletteDark,
+} from '@mui/x-charts';
+import { union, round } from 'lodash';
 
-//TODO handle limited number of colors to avoid index out of bounds (merge palettes?)
-export const chartPalette = cheerfulFiestaPalette;
+export const chartPalette: ChartsColorPaletteCallback = mode => {
+    if (mode == 'light') {
+        return union(
+            blueberryTwilightPaletteLight,
+            mangoFusionPaletteLight,
+            cheerfulFiestaPaletteLight
+        );
+    } else {
+        return union(
+            blueberryTwilightPaletteDark,
+            mangoFusionPaletteDark,
+            cheerfulFiestaPaletteDark
+        );
+    }
+};
+
+export const valueFormatter = v => {
+    return v ? round(v, 3) : v;
+};
 
 /**
  * A set of values related to a specific metric, ex: {label:'v1',data:1},{label:'v2',data:[1,2,3]}

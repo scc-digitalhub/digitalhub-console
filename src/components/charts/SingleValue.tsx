@@ -1,6 +1,6 @@
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
-import { Series } from './utils';
+import { Series, valueFormatter } from './utils';
 
 export const SingleValue = (props: { values: Series }) => {
     const { values } = props;
@@ -19,7 +19,7 @@ export const SingleValue = (props: { values: Series }) => {
                     }}
                 >
                     <CounterBadge
-                        value={values.data}
+                        value={valueFormatter(values.data)}
                         color="secondary.main"
                         backgroundColor={bgColor}
                         size="large"

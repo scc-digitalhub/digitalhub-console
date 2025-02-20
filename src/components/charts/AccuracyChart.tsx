@@ -1,5 +1,5 @@
 import { LineChart, LineChartProps } from '@mui/x-charts';
-import { chartPalette, Series } from './utils';
+import { chartPalette, Series, valueFormatter } from './utils';
 
 export const AccuracyChart = (props: AccuracyChartProps) => {
     const {
@@ -15,7 +15,9 @@ export const AccuracyChart = (props: AccuracyChartProps) => {
     } = props;
 
     const arraySeries = series.map(s =>
-        !Array.isArray(s.data) ? { ...s, data: [s.data] } : s
+        !Array.isArray(s.data)
+            ? { ...s, data: [s.data], valueFormatter }
+            : { ...s, valueFormatter }
     );
 
     return (
