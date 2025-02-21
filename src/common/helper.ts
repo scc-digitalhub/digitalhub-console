@@ -96,22 +96,79 @@ export const keyParser = (
     return result;
 };
 
+// export const functionParser = (
+//     key: string
+// ): {
+//     kind: string;
+//     project: string;
+//     functionName: string;
+//     id: string;
+// } => {
+//     // python://prj2/f1:f4a21377-fb59-41fe-a16e-157ee5598f28
+//     const lv1 = key.split(':');
+//     const lv2 = lv1[1].split('/');
+
+//     return {
+//         kind: lv1[0],
+//         project: lv2[-2],
+//         functionName: lv2[lv2.length - 1],
+//         id: lv1[2],
+//     };
+// };
+
 export const functionParser = (
     key: string
 ): {
-    kind: string;
-    project: string;
-    functionName: string;
-    id: string;
+    project: string | undefined;
+    kind: string | undefined;
+    name: string | undefined;
+    id: string | undefined;
 } => {
-    // python://prj2/f1:f4a21377-fb59-41fe-a16e-157ee5598f28
-    const lv1 = key.split(':');
-    const lv2 = lv1[1].split('/');
-
-    return {
-        kind: lv1[0],
-        project: lv2[-2],
-        functionName: lv2[lv2.length - 1],
-        id: lv1[2],
+    // python+run://prj2/f4a21377-fb59-41fe-a16e-157ee5598f28
+    const rgx =
+        /([a-zA-Z\+\-\_0-9]+):\/\/([a-zA-Z\-\_0-9]+)\/([a-zA-Z\-\_0-9]+):([a-zA-Z\-\_0-9]+)/;
+    const result = {
+        project: undefined as string | undefined,
+        kind: undefined as string | undefined,
+        name: undefined as string | undefined,
+        id: undefined as string | undefined,
     };
+
+    if (key) {
+        const pp = key.match(rgx);
+
+        result.kind = pp && pp[1] ? pp[1] : undefined;
+        result.project = pp && pp[2] ? pp[2] : undefined;
+        result.name = pp && pp[3] ? pp[3] : undefined;
+        result.id = pp && pp[4] ? pp[4] : undefined;
+    }
+
+    return result;
+};
+
+export const taskParser = (
+    key: string
+): {
+    project: string | undefined;
+    kind: string | undefined;
+    id: string | undefined;
+} => {
+    // python+run://prj2/f4a21377-fb59-41fe-a16e-157ee5598f28
+    const rgx =
+        /([a-zA-Z\+\-\_0-9]+):\/\/([a-zA-Z\-\_0-9]+)\/([a-zA-Z\-\_0-9]+)/;
+    const result = {
+        project: undefined as string | undefined,
+        kind: undefined as string | undefined,
+        id: undefined as string | undefined,
+    };
+
+    if (key) {
+        const pp = key.match(rgx);
+
+        result.kind = pp && pp[1] ? pp[1] : undefined;
+        result.project = pp && pp[2] ? pp[2] : undefined;
+        result.id = pp && pp[3] ? pp[3] : undefined;
+    }
+
+    return result;
 };

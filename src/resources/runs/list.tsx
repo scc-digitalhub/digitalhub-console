@@ -2,6 +2,7 @@ import {
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
+    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -23,6 +24,7 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { functionParser, keyParser, taskParser } from '../../common/helper';
 
 const ListToolbar = () => {
     return <TopToolbar />;
@@ -127,12 +129,58 @@ export const RunList = () => {
                                     showDate
                                     showTime
                                 />
+                                <FunctionField
+                                    source="spec.function"
+                                    label="fields.function.title"
+                                    sortable={false}
+                                    render={record => {
+                                        if (record?.spec?.function) {
+                                            return (
+                                                <>
+                                                    {
+                                                        functionParser(
+                                                            record.spec.function
+                                                        ).name
+                                                    }
+                                                </>
+                                            );
+                                        }
+
+                                        if (record?.spec?.workflow) {
+                                            return (
+                                                <>
+                                                    {
+                                                        functionParser(
+                                                            record.spec.workflow
+                                                        ).name
+                                                    }
+                                                </>
+                                            );
+                                        }
+
+                                        return <></>;
+                                    }}
+                                />
                                 <TextField source="kind" label="fields.kind" />
-                                <TextField
+
+                                <FunctionField
                                     source="spec.task"
                                     label="fields.task.title"
                                     sortable={false}
+                                    render={record =>
+                                        record?.spec?.task ? (
+                                            <>
+                                                {
+                                                    taskParser(record.spec.task)
+                                                        .kind
+                                                }
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
                                 />
+
                                 <StateChips
                                     source="status.state"
                                     label="fields.status.state"

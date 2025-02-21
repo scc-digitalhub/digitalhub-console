@@ -299,10 +299,8 @@ export const RunShowComponent = () => {
                                 }
 
                                 if (
-                                    functionParser(v.spec.function)
-                                        .functionName !=
-                                    functionParser(record.spec.function)
-                                        .functionName
+                                    functionParser(v.spec.function).name !=
+                                    functionParser(record.spec.function).name
                                 ) {
                                     return false;
                                 }
