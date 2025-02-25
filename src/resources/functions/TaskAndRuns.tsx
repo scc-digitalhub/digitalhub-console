@@ -5,7 +5,7 @@ import {
     DeleteWithConfirmButton,
     FunctionField,
     Labeled,
-    List,
+    ListView,
     ShowButton,
     SimpleShowLayout,
     TextField,
@@ -33,6 +33,7 @@ import { StopButton } from '../runs/StopButton';
 import { DropDownButton } from '../../components/DropdownButton';
 import { RunCreateForm } from '../runs/create';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { ListBaseLive } from '../../components/ListBaseLive';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -182,63 +183,66 @@ const TaskRunList = () => {
                 {label}
             </Typography>
 
-            <List
-                component={Box}
+            <ListBaseLive
                 resource="runs"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
-                empty={
-                    <Empty>
-                        <CreateActionButton record={partial} />
-                    </Empty>
-                }
-                actions={<CreateActionButton record={partial} />}
             >
-                <Datagrid
-                    bulkActionButtons={<BulkDeleteAllVersions />}
-                    rowClick={false}
+                <ListView
+                    component={Box}
+                    empty={
+                        <Empty>
+                            <CreateActionButton record={partial} />
+                        </Empty>
+                    }
+                    actions={<CreateActionButton record={partial} />}
                 >
-                    <DateField
-                        source="metadata.created"
-                        showTime
-                        label="fields.metadata.created"
-                    />
-                    <TextField source="id" sortable={false} />
-                    <StateChips
-                        source="status.state"
-                        sortable={false}
-                        label="fields.status.state"
-                    />
-                    <RowButtonGroup label="⋮">
-                        <DropDownButton>
-                            <ShowButton />
-                            <LogsButton />
-                            <InspectButton fullWidth />
-                            <FunctionField
-                                render={record => (
-                                    <CreateActionButton
-                                        record={{
-                                            ...partial,
-                                            spec: record.spec,
-                                        }}
-                                        label="ra.action.clone"
-                                        icon={<ContentCopyIcon />}
-                                    />
-                                )}
-                            />
-                            <FunctionField
-                                render={record =>
-                                    record.status?.state == 'RUNNING' ? (
-                                        <StopButton record={record} />
-                                    ) : null
-                                }
-                            />
-                            <DeleteWithConfirmButton redirect={false} />
-                        </DropDownButton>
-                    </RowButtonGroup>
-                </Datagrid>
-            </List>
+                    <Datagrid
+                        bulkActionButtons={<BulkDeleteAllVersions />}
+                        rowClick={false}
+                    >
+                        <DateField
+                            source="metadata.created"
+                            showTime
+                            label="fields.metadata.created"
+                        />
+                        <TextField source="id" sortable={false} />
+                        <StateChips
+                            source="status.state"
+                            sortable={false}
+                            label="fields.status.state"
+                        />
+                        <RowButtonGroup label="⋮">
+                            <DropDownButton>
+                                <ShowButton />
+                                <LogsButton />
+                                <InspectButton fullWidth />
+                                <FunctionField
+                                    render={record => (
+                                        <CreateActionButton
+                                            record={{
+                                                ...partial,
+                                                spec: record.spec,
+                                            }}
+                                            label="ra.action.clone"
+                                            icon={<ContentCopyIcon />}
+                                        />
+                                    )}
+                                />
+                                <FunctionField
+                                    render={record =>
+                                        record.status?.state == 'RUNNING' ? (
+                                            <StopButton record={record} />
+                                        ) : null
+                                    }
+                                />
+                                <DeleteWithConfirmButton redirect={false} />
+                            </DropDownButton>
+                        </RowButtonGroup>
+                    </Datagrid>
+                </ListView>
+            </ListBaseLive>
         </>
     );
 };

@@ -8,7 +8,6 @@ import {
     ListContextProvider,
     LoadingIndicator,
     SelectInput,
-    ShowBase,
     ShowButton,
     ShowView,
     SimpleShowLayout,
@@ -54,6 +53,7 @@ import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
+import { ShowBaseLive } from '../../components/ShowBaseLive';
 
 export const RunShowLayout = () => {
     const translate = useTranslate();
@@ -535,7 +535,7 @@ const ShowToolbar = () => (
 export const RunShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
+            <ShowBaseLive>
                 <>
                     <ShowPageTitle icon={<RunIcon fontSize={'large'} />} />
                     <ShowView
@@ -548,7 +548,7 @@ export const RunShow = () => {
                         <RunShowComponent />
                     </ShowView>
                 </>
-            </ShowBase>
+            </ShowBaseLive>
         </Container>
     );
 };
