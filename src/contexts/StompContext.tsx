@@ -23,10 +23,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 
 interface StompContextValue {
     client: StompClient;
-    // connect: () => void;
-    // disconnect: () => Promise<void>;
     messages: any[];
-    // setMessages: React.Dispatch<React.SetStateAction<any[]>>;
     remove: (message: any) => void;
     removeAll: (message: any[]) => void;
     markAsRead: (message: any) => void;
@@ -251,8 +248,6 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
 
         return {
             client: stompClientRef.current,
-            connect: stompClientRef.current.activate,
-            disconnect: stompClientRef.current.deactivate,
             remove: removeMessage,
             removeAll: removeAllMessages,
             markAsRead: (msg: any) =>

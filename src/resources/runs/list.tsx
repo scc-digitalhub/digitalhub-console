@@ -3,7 +3,6 @@ import {
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
-    ListBase,
     ListView,
     SelectInput,
     ShowButton,
@@ -24,7 +23,8 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, keyParser, taskParser } from '../../common/helper';
+import { functionParser, taskParser } from '../../common/helper';
+import { ListBaseLive } from '../../components/ListBaseLive';
 
 const ListToolbar = () => {
     return <TopToolbar />;
@@ -95,7 +95,7 @@ export const RunList = () => {
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase
+            <ListBaseLive
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
@@ -191,7 +191,7 @@ export const RunList = () => {
                         </ListView>
                     </FlatCard>
                 </>
-            </ListBase>
+            </ListBaseLive>
         </Container>
     );
 };
