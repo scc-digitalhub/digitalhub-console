@@ -1,16 +1,11 @@
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     AppBar,
     AutocompleteArrayInput,
     CheckboxGroupInput,
     ReferenceArrayInput,
     TextInput,
-    ToggleThemeButton,
-    useRedirect,
-    useTranslate,
 } from 'react-admin';
 import { Button, Typography } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
@@ -175,25 +170,18 @@ const filters = [
 ];
 
 export const MyAppBar = () => {
-    const { root: projectId } = useRootSelector();
-    const redirect = useRedirect();
-
-    const translate = useTranslate();
-
     const enableSearch = useContext(SearchEnabledContext);
     const { client } = useStompContext();
 
     return (
         <AppBar color="primary" elevation={0}>
             <Typography
-                flex="1"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
                 overflow="hidden"
                 variant="h6"
                 color="inherit"
             >
-                {/* {projectId} */}
                 <RootResourceSelectorMenu
                     source="name"
                     showSelected={true}
@@ -206,6 +194,8 @@ export const MyAppBar = () => {
                     to="searchresults"
                     filters={filters}
                     filterSeparator=":"
+                    flex="1"
+                    sx={{ marginLeft: '50px' }}
                 />
             )}
 
