@@ -15,6 +15,7 @@ import {
     Menu,
     MenuItem,
     useTheme,
+    BoxProps,
 } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
@@ -51,7 +52,7 @@ const isEmpty = value => {
     );
 };
 
-export type SearchBarParams = {
+export type SearchBarProps = BoxProps & {
     hintText?: string;
     to?: string;
     filters?:
@@ -61,8 +62,8 @@ export type SearchBarParams = {
     filterSeparator?: string;
 };
 
-export const SearchBar = (props: SearchBarParams) => {
-    const { hintText = 'Search', to, filters, filterSeparator = ':' } = props;
+export const SearchBar = (props: SearchBarProps) => {
+    const { hintText = 'Search', to, filters, filterSeparator = ':', ...boxProps } = props;
     const { setParams } = useSearch();
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
@@ -152,7 +153,7 @@ export const SearchBar = (props: SearchBarParams) => {
     };
 
     return (
-        <Box sx={{ marginRight: '50px' }}>
+        <Box {...boxProps}>
             <RecordContextProvider value={record}>
                 <Stack>
                     <Form defaultValues={defaultValues}>
