@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { useEffect } from 'react';
 import {
     ReactFlow,
@@ -32,6 +32,7 @@ export const Flow = (props: {
         width = '100%',
     } = props;
     const { fitView } = useReactFlow();
+    const theme = useTheme();
 
     const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -51,7 +52,14 @@ export const Flow = (props: {
     }, [nodes, edges, fitView]);
 
     return (
-        <Box style={{ height, width }}>
+        <Box
+            style={{ height, width }}
+            sx={{
+                '.react-flow__edge-path': {
+                    stroke: '#ccc',
+                },
+            }}
+        >
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -68,6 +76,7 @@ export const Flow = (props: {
                 proOptions={{ hideAttribution: true }}
                 nodesDraggable={false}
                 maxZoom={1}
+                colorMode={theme.palette.mode}
             >
                 <Background />
                 <Controls />
