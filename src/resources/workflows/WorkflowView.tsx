@@ -85,8 +85,8 @@ export const WorkflowView = (props: WorkflowViewProps) => {
 
     const buildGraph = run => {
         const graph =
-            run && run.status && run.status.results && run.status.results.status
-                ? run.status.results.status.graph
+            run && run.status && run.status.nodes 
+                ? run.status.nodes
                 : [];
         // const graph = [
         //     {type:'DAG', id: 'root', display_name: 'root', children: ['1'], state: 'Error'},
