@@ -6,7 +6,7 @@ export const AccuracyChart = (props: AccuracyChartProps) => {
         series,
         slotProps = { legend: { hidden: true } },
         margin = {
-            left: 24,
+            left: 48,
             right: 8,
             top: 8,
             bottom: 24,
