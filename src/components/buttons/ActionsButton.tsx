@@ -27,7 +27,7 @@ export const ActionsButtons = () => {
     }
 
     return (
-        <RowButtonGroup label="⋮">
+        <RowButtonGroup>
             <DropDownButton>
                 {definition?.hasShow && <ShowButton disabled={expanded} />}
                 {definition?.hasEdit && <EditButton disabled={expanded} />}

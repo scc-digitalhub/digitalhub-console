@@ -30,7 +30,7 @@ const ListToolbar = () => {
 
 const RowActions = () => {
     return (
-        <RowButtonGroup label="⋮">
+        <RowButtonGroup>
             <ShowButton />
             <EditButton />
             <DeleteWithConfirmButtonByName />

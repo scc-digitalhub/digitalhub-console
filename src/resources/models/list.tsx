@@ -49,7 +49,7 @@ const RowActions = () => {
         context && context.expandSingle
     );
     return (
-        <RowButtonGroup label="⋮">
+        <RowButtonGroup>
             <ShowButton disabled={expanded} />
             <EditButton disabled={expanded} />
             <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
