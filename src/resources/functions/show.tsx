@@ -19,7 +19,6 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { TaskAndRuns } from './TaskAndRuns';
 import { getFunctionUiSpec } from './types';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { FunctionIcon } from './icon';
@@ -28,6 +27,7 @@ import deepEqual from 'deep-is';
 import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/ShowToolbar';
+import { TaskAndRuns } from '../../components/TaskAndRuns';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -99,9 +99,6 @@ const ShowComponent = () => {
                 }),
             ])
                 .then(([kinds, list]) => {
-                    // console.log('kinds', kinds);
-                    // console.log('list', list);
-
                     if (!kinds || !list || !list.data) {
                         return;
                     }
@@ -110,7 +107,6 @@ const ShowComponent = () => {
                     const missing = kinds.filter(
                         k => !list.data.find(t => t.kind == k)
                     );
-                    // console.log('missing', missing);
                     if (missing.length == 0) {
                         //all tasks defined
                         list.data.sort((a, b) => {
@@ -227,7 +223,11 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns task={task.id} onEdit={editTask} />
+                            <TaskAndRuns
+                                task={task.id}
+                                onEdit={editTask}
+                                runOf="function"
+                            />
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
