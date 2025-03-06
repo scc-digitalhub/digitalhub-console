@@ -13,11 +13,11 @@ import {
 } from 'react-admin';
 
 import { SecretIcon } from './icon';
-import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
 import { ListPageTitle } from '../../components/PageTitle';
 import { FlatCard } from '../../components/FlatCard';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 
 const ListToolbar = () => {
@@ -59,7 +59,7 @@ export const SecretList = () => {
                         >
                             <Datagrid
                                 rowClick="show"
-                                bulkActionButtons={<BulkDeleteAllVersions />}
+                                bulkActionButtons={<BulkDeleteAllVersionsButton />}
                             >
                                 <TextField source="name" />
 

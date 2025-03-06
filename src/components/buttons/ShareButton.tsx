@@ -12,7 +12,6 @@ import {
     RaRecord,
     Identifier,
     useRecordContext,
-    useResourceContext,
     useTranslate,
     useDataProvider,
     useList,
@@ -23,7 +22,6 @@ import {
     Toolbar,
     Create,
     SaveButton,
-    useRefresh,
     Form,
     FunctionField,
 } from 'react-admin';
@@ -46,26 +44,18 @@ const defaultIcon = <ShareIcon />;
 
 export const ShareButton = (props: ShareButtonProps) => {
     const {
-        id: idFromProps,
         label = 'actions.share',
         icon = defaultIcon,
         fullWidth = true,
         maxWidth = 'md',
         color = 'info',
         record: recordFromProps,
-        resource: resourceFromProps,
         ...rest
     } = props;
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
-
-    const resourceContext = useResourceContext();
     const recordContext = useRecordContext();
-
-    const resource = resourceFromProps || resourceContext;
     const record = recordFromProps || recordContext;
-
-    const id = idFromProps || record?.id;
 
     const isLoading = !record;
 
@@ -78,6 +68,7 @@ export const ShareButton = (props: ShareButtonProps) => {
         e.stopPropagation();
         setOpen(false);
     };
+
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
@@ -123,7 +114,7 @@ export const ShareButton = (props: ShareButtonProps) => {
                     {isLoading ? (
                         <LoadingIndicator />
                     ) : (
-                        <ShareList record={record} resource={resource} />
+                        <ShareList record={record} />
                     )}
                 </DialogContent>
             </ShareDialog>
@@ -131,64 +122,10 @@ export const ShareButton = (props: ShareButtonProps) => {
     );
 };
 
-const ShareCreateForm = (props: {
-    record?: any;
-    resource?: string;
-    reload: () => void;
-}) => {
-    const { record: recordFromProps, reload } = props;
-    const recordContext = useRecordContext();
-    const resource = useResourceContext(props);
-    const dataProvider = useDataProvider();
-
-    const record = recordFromProps || recordContext;
-    const onSubmit = data => {
-        if (record) {
-            const url = '/projects/' + record.id + '/share';
-
-            dataProvider
-                .invoke({
-                    path: url,
-                    options: { method: 'POST' },
-                    params: { user: data.user },
-                })
-                .then(json => {
-                    reload();
-                });
-        }
-    };
-    return (
-        <Create record={{}} component={Toolbar}>
-            <Form onSubmit={onSubmit}>
-                {/* <Stack direction={'row'}> */}
-                <Grid container>
-                    <Grid item xs={10}>
-                        <TextInput
-                            source="user"
-                            label="fields.user.title"
-                            helperText="fields.user.description"
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={2} pt={1}>
-                        <SaveButton
-                            label="ra.action.add"
-                            variant="text"
-                            icon={<AddIcon />}
-                        />
-                    </Grid>
-                </Grid>
-                {/* </Stack> */}
-            </Form>
-        </Create>
-    );
-};
-const ShareList = (props: { record?: any; resource?: string }) => {
+const ShareList = (props: { record?: any }) => {
     const { record: recordFromProps } = props;
     const recordContext = useRecordContext();
-    const resource = useResourceContext(props);
     const dataProvider = useDataProvider();
-    const refresh = useRefresh();
     const translate = useTranslate();
 
     const record = recordFromProps || recordContext;
@@ -238,11 +175,7 @@ const ShareList = (props: { record?: any; resource?: string }) => {
             <Typography variant="body2" paragraph>
                 {translate('pages.share.description')}
             </Typography>
-            <ShareCreateForm
-                record={record}
-                resource={resource}
-                reload={reload}
-            />
+            <ShareCreateForm record={record} reload={reload} />
             <ListContextProvider value={listContext}>
                 <Datagrid bulkActionButtons={false}>
                     <TextField source="user" sortable={false} />
@@ -261,6 +194,53 @@ const ShareList = (props: { record?: any; resource?: string }) => {
         </>
     );
 };
+
+const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
+    const { record: recordFromProps, reload } = props;
+    const recordContext = useRecordContext();
+    const dataProvider = useDataProvider();
+
+    const record = recordFromProps || recordContext;
+    const onSubmit = data => {
+        if (record) {
+            const url = '/projects/' + record.id + '/share';
+
+            dataProvider
+                .invoke({
+                    path: url,
+                    options: { method: 'POST' },
+                    params: { user: data.user },
+                })
+                .then(json => {
+                    reload();
+                });
+        }
+    };
+    return (
+        <Create record={{}} component={Toolbar}>
+            <Form onSubmit={onSubmit}>
+                <Grid container>
+                    <Grid item xs={10}>
+                        <TextInput
+                            source="user"
+                            label="fields.user.title"
+                            helperText="fields.user.description"
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={2} pt={1}>
+                        <SaveButton
+                            label="ra.action.add"
+                            variant="text"
+                            icon={<AddIcon />}
+                        />
+                    </Grid>
+                </Grid>
+            </Form>
+        </Create>
+    );
+};
+
 const PREFIX = 'ShareDialogButton';
 
 export const ShareDialogButtonClasses = {

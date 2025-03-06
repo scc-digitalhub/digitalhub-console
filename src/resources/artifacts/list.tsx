@@ -18,16 +18,16 @@ import {
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
-import { ImportButton } from '../../components/ImportButton';
+import { ImportButton } from '../../components/buttons/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 
 const ListToolbar = () => {
@@ -121,7 +121,7 @@ export const ArtifactList = () => {
                                 expand={VersionsList}
                                 expandSingle={true}
                                 bulkActionButtons={
-                                    <BulkDeleteAllVersions deleteAll />
+                                    <BulkDeleteAllVersionsButton deleteAll />
                                 }
                             >
                                 <TextField

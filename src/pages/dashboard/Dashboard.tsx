@@ -30,7 +30,7 @@ import { convertToDate } from './helper';
 import { RunIcon } from '../../resources/runs/icon';
 import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
-import { ShareButton } from '../../components/ShareButton';
+import { ShareButton } from '../../components/buttons/ShareButton';
 import { useProjectPermissions } from '../../provider/authProvider';
 
 export const Dashboard = () => {
