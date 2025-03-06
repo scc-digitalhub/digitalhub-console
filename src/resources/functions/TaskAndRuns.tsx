@@ -214,7 +214,7 @@ const TaskRunList = () => {
                             sortable={false}
                             label="fields.status.state"
                         />
-                        <RowButtonGroup label="⋮">
+                        <RowButtonGroup>
                             <DropDownButton>
                                 <ShowButton />
                                 <LogsButton />
