@@ -12,7 +12,6 @@ import {
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
-    useTranslate,
 } from 'react-admin';
 import { Box, Stack, Typography } from '@mui/material';
 import {
@@ -21,20 +20,18 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { ReactElement, useState } from 'react';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-
-import { WorkflowView } from './WorkflowView';
-import { useGetManySchemas } from '../../controllers/schemaController';
+import { LogsButton } from '../../components/buttons/LogsButton';
 import { filterProps } from '../../common/schemas';
-import { LogsButton } from '../../components/LogsButton';
+import { useGetManySchemas } from '../../controllers/schemaController';
 import { Empty } from '../../components/Empty';
-import { RunCreateForm } from '../runs/create';
-import { DropDownButton } from '../../components/DropdownButton';
+import { ReactElement } from 'react';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { StopButton } from '../runs/StopButton';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { DropDownButton } from '../../components/buttons/DropdownButton';
+import { RunCreateForm } from '../runs/create';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
 export const TaskAndRuns = (props: {
@@ -42,7 +39,6 @@ export const TaskAndRuns = (props: {
     onEdit: (id: string, data: any) => void;
 }) => {
     const { task, onEdit } = props;
-    const getResourceLabel = useGetResourceLabel();
 
     const prepare = (r: any) => {
         return {
@@ -96,10 +92,9 @@ export const TaskAndRuns = (props: {
 
 const TaskRunList = () => {
     const record = useRecordContext();
-    const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [schema] = useState<any>();
+
     const fn = record?.spec?.workflow || '';
     const url = new URL(fn);
     const runtime = url.protocol
@@ -132,6 +127,7 @@ const TaskRunList = () => {
                 runSchema.schema = filterProps(runSchema.schema, s.schema);
             });
     }
+
     const partial = {
         project: record?.project,
         kind: runSchema ? runSchema.kind : 'run',
@@ -142,7 +138,7 @@ const TaskRunList = () => {
             ...record?.spec,
         },
     };
-    console.log('par', partial);
+
     const prepare = (r: any) => {
         return {
             ...r,
@@ -153,13 +149,6 @@ const TaskRunList = () => {
                 ...r.spec,
             },
         };
-    };
-
-    const getExpandArea = () => {
-        return record.kind === 'kfp+pipeline' ? <WorkflowView /> : <></>;
-    };
-    const canExpand = () => {
-        return record.kind === 'kfp+pipeline';
     };
 
     const CreateActionButton = (props: {
@@ -211,7 +200,7 @@ const TaskRunList = () => {
                     actions={<CreateActionButton record={partial} />}
                 >
                     <Datagrid
-                        bulkActionButtons={<BulkDeleteAllVersions />}
+                        bulkActionButtons={<BulkDeleteAllVersionsButton />}
                         rowClick={false}
                     >
                         <DateField

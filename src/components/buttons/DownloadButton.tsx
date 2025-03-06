@@ -11,7 +11,6 @@ import {
 } from 'react-admin';
 import DownloadIcon from '@mui/icons-material/GetApp';
 import { ReactElement } from 'react';
-import { get } from 'lodash';
 const defaultIcon = <DownloadIcon />;
 
 export const DownloadButton = (props: DownloadButtonProps) => {
@@ -62,7 +61,6 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     };
 
     return (
-
         <Button label={label} color={color} onClick={handleDownload}>
             {icon}
         </Button>

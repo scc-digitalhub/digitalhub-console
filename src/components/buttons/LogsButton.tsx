@@ -21,7 +21,6 @@ import {
     useRecordContext,
     useResourceContext,
     useTranslate,
-    Toolbar,
     TopToolbar,
     ToolbarClasses,
 } from 'react-admin';
@@ -185,7 +184,6 @@ export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
 
 export const LogsView = (props: LogsButtonProps) => {
     const { id, resource } = props;
-    const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const [cur, setCur] = useState<any>(undefined);
 
@@ -200,7 +198,7 @@ export const LogsView = (props: LogsButtonProps) => {
     }, [resource, id]);
 
     //TODO handle pagination?
-    const { data, page, total, setPage, isLoading } = useListController({
+    const { data } = useListController({
         resource: 'logs',
         sort: { field: 'created', order: 'DESC' },
         filter,
@@ -250,36 +248,6 @@ export const LogsView = (props: LogsButtonProps) => {
             </Box>
         </Stack>
     );
-
-    // return (
-    //     <List
-    //         component={Box}
-    //         resource={'logs'}
-    //         actions={false}
-    //         sort={{ field: 'created', order: 'DESC' }}
-    //         filter={filter}
-    //         perPage={100}
-    //         pagination={false}
-    //         disableSyncWithLocation
-    //         storeKey={false}
-    //         aside={<LogsDetail />}
-    //     >
-    //         <SimpleList
-    //             linkType={false}
-    //             key={resource + ':logs:'}
-    //             primaryText={item => {
-    //                 const value = item.metadata?.updated
-    //                     ? new Date(item.metadata.updated).toLocaleString()
-    //                     : item.id;
-
-    //                 return <Typography color={'primary'}>{value}</Typography>;
-    //             }}
-    //             secondaryText={item => {
-    //                 return <> {item.status?.pod} </>;
-    //             }}
-    //         />
-    //     </List>
-    // );
 };
 
 const LogsDetail = (props: { record?: any }) => {

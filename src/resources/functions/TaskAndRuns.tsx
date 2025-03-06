@@ -20,19 +20,18 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
-
-import { LogsButton } from '../../components/LogsButton';
+import { LogsButton } from '../../components/buttons/LogsButton';
 import { filterProps } from '../../common/schemas';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { Empty } from '../../components/Empty';
 import { ReactElement } from 'react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { StopButton } from '../runs/StopButton';
-import { DropDownButton } from '../../components/DropdownButton';
+import { DropDownButton } from '../../components/buttons/DropdownButton';
 import { RunCreateForm } from '../runs/create';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
 export const TaskAndRuns = (props: {
@@ -40,6 +39,7 @@ export const TaskAndRuns = (props: {
     onEdit: (id: string, data: any) => void;
 }) => {
     const { task, onEdit } = props;
+
     const prepare = (r: any) => {
         return {
             ...r,
@@ -49,6 +49,7 @@ export const TaskAndRuns = (props: {
             },
         };
     };
+
     return (
         <>
             <TopToolbar>
@@ -62,6 +63,7 @@ export const TaskAndRuns = (props: {
                     mutationMode="pessimistic"
                     mutationOptions={{
                         onSuccess: (data, variables, context) => {
+                            //data is updated
                             if (task && data) onEdit(task, data);
                         },
                     }}
@@ -90,7 +92,6 @@ export const TaskAndRuns = (props: {
 
 const TaskRunList = () => {
     const record = useRecordContext();
-
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
 
@@ -199,7 +200,7 @@ const TaskRunList = () => {
                     actions={<CreateActionButton record={partial} />}
                 >
                     <Datagrid
-                        bulkActionButtons={<BulkDeleteAllVersions />}
+                        bulkActionButtons={<BulkDeleteAllVersionsButton />}
                         rowClick={false}
                     >
                         <DateField

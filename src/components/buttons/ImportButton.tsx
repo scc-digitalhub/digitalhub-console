@@ -34,10 +34,10 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import yaml from 'yaml';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { get } from 'lodash';
-import { isValidAgainstSchema } from '../common/helper';
+import { isValidAgainstSchema } from '../../common/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { useGetManySchemas } from '../controllers/schemaController';
+import { useGetManySchemas } from '../../controllers/schemaController';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 const defaultIcon = <UploadIcon />;

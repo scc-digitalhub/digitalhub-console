@@ -5,8 +5,6 @@ import {
     useTranslate,
     RaRecord,
     ShowButtonProps,
-    useRecordContext,
-    useResourceContext,
 } from 'react-admin';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -14,15 +12,11 @@ export const DropDownButton = (props: DrodownButtonProps) => {
     const {
         icon,
         label = 'actions.actions',
-        record: recordProp,
-        resource: resourceProp,
         children,
         color = 'primary',
         variant = 'contained',
         ...rest
     } = props;
-    const resource = useResourceContext(props);
-    const record = useRecordContext(props);
     const translate = useTranslate();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

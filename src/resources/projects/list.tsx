@@ -36,7 +36,7 @@ import { grey } from '@mui/material/colors';
 import { GridList } from '../../components/GridList';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { ProjectCreateForm } from './create';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import React from 'react';
 import purify from 'dompurify';

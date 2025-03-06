@@ -22,7 +22,7 @@ import { MetadataSchema } from '../../common/schemas';
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 import { ProjectMetadataViewUiSchema } from './types';
-import { ShareButton } from '../../components/ShareButton';
+import { ShareButton } from '../../components/buttons/ShareButton';
 import { useProjectPermissions } from '../../provider/authProvider';
 import { IdField } from '../../components/IdField';
 

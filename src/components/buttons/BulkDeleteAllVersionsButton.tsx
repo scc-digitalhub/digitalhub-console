@@ -4,7 +4,7 @@ import {
     useListContext,
 } from 'react-admin';
 
-export const BulkDeleteAllVersions = (
+export const BulkDeleteAllVersionsButton = (
     props: BulkDeleteButtonProps & { deleteAll?: boolean }
 ) => {
     const { deleteAll = false, mutationMode = 'pessimistic', ...rest } = props;
