@@ -1,4 +1,4 @@
-import { TaskEditComponent, TaskShowComponent } from '../tasks';
+import { TaskEditComponent, TaskShowComponent } from '../resources/tasks';
 import {
     Datagrid,
     DateField,
@@ -20,25 +20,26 @@ import {
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { StateChips } from '../../components/StateChips';
-import { LogsButton } from '../../components/buttons/LogsButton';
-import { filterProps } from '../../common/schemas';
-import { useGetManySchemas } from '../../controllers/schemaController';
-import { Empty } from '../../components/Empty';
+import { RowButtonGroup } from './buttons/RowButtonGroup';
+import { StateChips } from './StateChips';
+import { LogsButton } from './buttons/LogsButton';
+import { filterProps } from '../common/schemas';
+import { useGetManySchemas } from '../controllers/schemaController';
+import { Empty } from './Empty';
 import { ReactElement } from 'react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { StopButton } from '../runs/StopButton';
-import { DropDownButton } from '../../components/buttons/DropdownButton';
-import { RunCreateForm } from '../runs/create';
-import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { StopButton } from '../resources/runs/StopButton';
+import { DropDownButton } from './buttons/DropdownButton';
+import { RunCreateForm } from '../resources/runs/create';
+import { BulkDeleteAllVersionsButton } from './buttons/BulkDeleteAllVersionsButton';
+import { ListBaseLive } from './ListBaseLive';
 
 export const TaskAndRuns = (props: {
     task?: string;
     onEdit: (id: string, data: any) => void;
+    runOf: 'function' | 'workflow';
 }) => {
-    const { task, onEdit } = props;
+    const { task, onEdit, runOf } = props;
 
     const prepare = (r: any) => {
         return {
@@ -85,17 +86,17 @@ export const TaskAndRuns = (props: {
                     <TextField source="key" />
                 </Labeled>
             </SimpleShowLayout>
-            <TaskRunList />
+            <TaskRunList runOf={runOf} />
         </>
     );
 };
 
-const TaskRunList = () => {
+const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     const record = useRecordContext();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
 
-    const fn = record?.spec?.function || '';
+    const fn = record?.spec?.[runOf] || '';
     const url = new URL(fn);
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
@@ -108,7 +109,7 @@ const TaskRunList = () => {
         isLoading,
         error,
     } = useGetManySchemas([
-        { resource: 'functions', runtime },
+        { resource: runOf + 's', runtime },
         { resource: 'tasks', runtime },
         { resource: 'runs', runtime },
     ]);
