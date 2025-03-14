@@ -631,5 +631,13 @@
   "runAsGroup": {
     "description": "ID gruppo per l'esecuzione del container",
     "title": "Esegui come gruppo"
+  },
+  "initParameters": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Parametro"
+    },
+    "title": "Parametri di Inizializzazione"
   }
 }

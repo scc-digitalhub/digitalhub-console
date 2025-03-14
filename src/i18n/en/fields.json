@@ -631,5 +631,17 @@
   "runAsGroup": {
     "description": "Group ID for the container",
     "title": "Run As Group"
-  } 
+  },
+  "runAsNonRoot": {
+    "description": "Run as non-root user",
+    "title": "Run As Non Root"
+  },
+  "initParameters": {
+    "description": "",
+    "item": {
+      "description": "",
+      "title": "Parameter"
+    },
+    "title": "Init Parameters"
+  }
 }
