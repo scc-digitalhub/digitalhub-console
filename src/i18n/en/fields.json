@@ -623,5 +623,13 @@
   "workflow": {
     "description": "Static reference to workflow",
     "title": "Workflow"
-  }
+  },
+  "runAsUser": {
+    "description": "User ID for the container",
+    "title": "Run As User"
+  },
+  "runAsGroup": {
+    "description": "Group ID for the container",
+    "title": "Run As Group"
+  } 
 }
