@@ -132,7 +132,11 @@
     "description": "",
     "empty": "No files available",
     "tab": "Files",
-    "title": "Files"
+    "title": "Files",
+    "item": {
+      "description": "",
+      "title": "File"
+    }
   },
   "forceBuild": {
     "description": "",
@@ -373,6 +377,109 @@
     "signatureparams": {
       "description": "",
       "title": "Model Signature Parameters"
+    }
+  },
+  "kubeai": {
+
+    "filepath": {
+      "description": "",
+      "title": "File Path"
+    },
+    "filecontent": {
+      "description": "",
+      "title": "File Content"
+    },
+    "strategy": {
+      "description": "",
+      "title": "Load Balancing Strategy"
+    },
+    "prefixhash": {
+      "description": "",
+      "title": "Prefix Hash"
+    },
+    "url": {
+      "description": "URL to the model (s3://, hf://, store://, ollama://)",
+      "title": "Model URL"
+    },
+    "image":{
+      "description": "",
+      "title": "Inference Server Base Image"
+    },
+    "adapters": {
+      "description": "",
+      "title": "LoRA Adapters"
+    },
+    "features": {
+      "description": "",
+      "title": "Supported Model Features"
+    },
+    "engine": {
+      "description": "",
+      "title": "Inference Engine"
+    },
+    "args": {
+      "description": "",
+      "title": "Inference Server Arguments"
+    },
+    "resourceprofile": {
+      "description": "",
+      "title": "Resource Profile"
+    },
+    "cacheprofile": {
+      "description": "",
+      "title": "Cache Profile"
+    },
+    "env": {
+      "description": "",
+      "title": "Environment Variables"
+    },
+    "replicas": {
+      "description": "number of Pod replicas that should be actively serving the model",
+      "title": "Number of Replicas"
+    },
+    "minreplicas": {
+      "description": "minimum number of Pod replicas that the model can scale down to.",
+      "title": "Minimum Replicas"
+    },
+    "maxreplicas": {
+      "description": "maximum number of Pod replicas that the model can scale up to.",
+      "title": "Maximum Replicas"
+    },
+    "autoscalingdisabled": {
+      "description": "will stop the controller from managing the replicas for the Model",
+      "title": "Disable Autoscaling"
+    },
+    "targetrequests": {
+      "description": "average number of active requests that the autoscaler will try to maintain on model server Pods.",
+      "title": "Target Requests"
+    },
+    "scaledowndelayseconds": {
+      "description": "minimum time before a deployment is scaled down after the autoscaling algorithm determines that it should be scaled down",
+      "title": "Scale Down Delay Seconds"
+    },
+    "loadbalancing": {
+      "description": "",
+      "title": "Load Balancing Configuration"
+    },
+    "files": {
+      "description": "Files to be mounted in the model Pods",
+      "title": "Files"
+    },
+    "meanloadfactor": {
+      "description": "Percentage that any given endpoint's load must not exceed over the mean load of all endpoints in the hash ring",
+      "title": "Mean Load Factor"
+    },
+    "replication": {
+      "description": "Number of replicas of each endpoint on the hash ring",
+      "title": "Replication"
+    },
+    "prefixcharlength": {
+      "description": "Number of characters to use for the prefix hash",
+      "title": "Prefix Char Length"
+    },
+    "scaling": {
+      "description": "Scaling configuration",
+      "title": "Scaling Configuration"
     }
   },
   "modelserve": {
@@ -643,5 +750,23 @@
       "title": "Parameter"
     },
     "title": "Init Parameters"
+  },
+  "adapters": {
+    "item": {
+      "description": "",
+      "title": "Adapter"
+    }
+  },
+  "features":{
+    "item": {
+      "description": "",
+      "title": "Feature"
+    }
+  },
+  "env": {
+    "item": {
+      "description": "",
+      "title": "Environment Variable"
+    }
   }
 }

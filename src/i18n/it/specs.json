@@ -101,6 +101,18 @@
     "description": "Esecuzione modello MLFlow",
     "title": "MLFlow"
   },
+  "kubeaiserve": {
+    "description": "Esecuzione modello LLM con KubeAI",
+    "title": "KubeAI"
+  },
+  "kubeaiserve+serve": {
+    "description": "Definizione di KubeAI serve task",
+    "title": "KubeAI serve task"
+  },
+  "kubeaiserve+run": {
+    "description": "Definizione dell'esecuzione di KubeAI serve",
+    "title": "Esecuzione di KubeAI serve"
+  },
   "mlrun": {
     "description": "",
     "title": "MLRun"
