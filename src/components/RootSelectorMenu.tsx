@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { ReactNode, useEffect, useState, MouseEvent } from 'react';
-import { useDataProvider, SortPayload, useTranslate } from 'react-admin';
+import { useEffect, useState, MouseEvent } from 'react';
+import { useDataProvider, useTranslate } from 'react-admin';
 import { Box, Button, MenuItem, Menu, ListItemText } from '@mui/material';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

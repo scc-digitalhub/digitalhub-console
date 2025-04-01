@@ -19,7 +19,6 @@ import {
     useGetResourceLabel,
     useGetRecordRepresentation,
 } from 'react-admin';
-import { useRootSelector } from '@dslab/ra-root-selector';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export const Notification = (props: NotificationProps) => {
@@ -34,7 +33,6 @@ export const Notification = (props: NotificationProps) => {
     const translate = useTranslate();
     const ref = useRef(null);
     const timer = useRef<any | null>(null);
-    const { root } = useRootSelector();
     const definition = useResourceDefinition({ resource: message.resource });
     const getResourceLabel = useGetResourceLabel();
     const recordRepresentation = useGetRecordRepresentation(message.resource);

@@ -23,13 +23,10 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import React, { Fragment } from 'react';
-export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
-    const { schema, uiSchema, formData, properties, formContext, registry } =
-        props;
+import { Fragment } from 'react';
 
-    let lang = '';
-    const readonly = props.readonly;
+export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
+    const { formData, properties, formContext } = props;
 
     //explode struct
     const source = {
@@ -112,17 +109,7 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
 };
 
 export const SourceCodeEditorWidget = function (props: WidgetProps) {
-    const {
-        id,
-        value,
-        disabled,
-        readonly,
-        options,
-        onBlur,
-        onChange,
-        onFocus,
-        formContext,
-    } = props;
+    const { id, value, readonly, onChange, formContext } = props;
 
     //extract language hint from context
     const lang = formContext.sourceLang ? formContext.sourceLang : undefined;

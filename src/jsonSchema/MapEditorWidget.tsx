@@ -1,18 +1,12 @@
 import {
     ObjectFieldTemplateProps,
-    ObjectFieldTemplatePropertyType,
     WidgetProps,
-    FormContextType,
-    RJSFSchema,
-    StrictRJSFSchema,
-    canExpand,
     descriptionId,
     getTemplate,
     getUiOptions,
     titleId,
 } from '@rjsf/utils';
-import { FormLabel } from '../components/FormLabel';
-import { Box, Grid, SelectChangeEvent, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';
@@ -31,12 +25,7 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import React, {
-    Fragment,
-    JSXElementConstructor,
-    ReactElement,
-    useState,
-} from 'react';
+import { Fragment, JSXElementConstructor, ReactElement } from 'react';
 import { useTranslate } from 'react-admin';
 
 export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
@@ -45,16 +34,11 @@ export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
         title,
         properties,
         required,
-        disabled,
-        readonly,
         uiSchema,
         idSchema,
         schema,
-        formData,
-        onAddClick,
         registry,
     } = props;
-    console.log('p', props);
     const translate = useTranslate();
     const uiOptions = getUiOptions(uiSchema);
     const TitleFieldTemplate = getTemplate(
@@ -67,10 +51,7 @@ export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
         registry,
         uiOptions
     );
-    // Button templates are not overridden in the uiSchema
-    const {
-        ButtonTemplates: { AddButton },
-    } = registry.templates;
+
     const titleText = title || '';
     const descriptionText = description || '';
     function childrenTranslated(
@@ -127,23 +108,7 @@ export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
 };
 
 export const MapEditorWidget = function (props: WidgetProps) {
-    const {
-        id,
-        value,
-        disabled,
-        readonly,
-        options,
-        onBlur,
-        onChange,
-        onFocus,
-        formContext,
-    } = props;
-
-    const [lang, setLang] = useState<string>('json');
-
-    const handleSelect = (event: SelectChangeEvent) => {
-        setLang(event.target.value as string);
-    };
+    const { id, value, readonly, onChange } = props;
 
     const handleChange = (data: string) => {
         const json = JSON.parse(data);
@@ -151,11 +116,11 @@ export const MapEditorWidget = function (props: WidgetProps) {
     };
 
     const code = value ? JSON.stringify(value) : '{}';
-    console.log('c', code);
+
     return (
         <Fragment key={id}>
             <AceEditor
-                mode={lang}
+                mode={'json'}
                 readOnly={readonly}
                 theme={'github'}
                 wrapEnabled

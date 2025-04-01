@@ -5,9 +5,9 @@ import { useRecordContext } from 'react-admin';
 import { JsonSchemaField } from './JsonSchema';
 import { Fragment } from 'react/jsx-runtime';
 
-export const MetadataField = ({ prompt }: any) => {
+export const MetadataField = () => {
     const record = useRecordContext();
-    const { data: schemas, isLoading, error } = useGetSchemas('metadatas');
+    const { data: schemas } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
               .map(s => ({

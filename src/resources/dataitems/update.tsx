@@ -70,7 +70,6 @@ export const DataItemUpdate = () => {
 
 const DataItemEditForm = (props: { record: any }) => {
     const { record } = props;
-    const kind = record?.kind || undefined;
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
     const kinds = schemas

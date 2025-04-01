@@ -77,7 +77,6 @@ export const ModelUpdate = () => {
 
 const ModelEditForm = (props: { record: any }) => {
     const { record } = props;
-    const kind = record?.kind || undefined;
     console.log('record', record);
     return (
         <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>

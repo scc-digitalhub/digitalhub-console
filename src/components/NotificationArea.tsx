@@ -1,6 +1,5 @@
 import {
     Menu,
-    Typography,
     Badge,
     MenuItem,
     Box,
@@ -13,7 +12,6 @@ import {
     IconButtonWithTooltip,
     Error,
     useCreatePath,
-    Button,
 } from 'react-admin';
 import { Notification } from './Notification';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStompContext } from '../contexts/StompContext';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 
-export const NotificationArea = (props: NotificationAreaProps) => {
+export const NotificationArea = () => {
     const {
         messages,
         markAllAsRead,
@@ -177,5 +175,3 @@ export const NotificationArea = (props: NotificationAreaProps) => {
         </Box>
     );
 };
-
-export type NotificationAreaProps = {};

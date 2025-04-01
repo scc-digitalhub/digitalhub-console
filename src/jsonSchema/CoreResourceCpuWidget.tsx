@@ -1,19 +1,9 @@
 import { Grid, Typography, MenuItem, Select, TextField } from '@mui/material';
-import { fontSize } from '@mui/system';
 import { WidgetProps } from '@rjsf/utils';
 import { useState } from 'react';
 
 export const CoreResourceCpuWidget = function (props: WidgetProps) {
-    const {
-        id,
-        value,
-        disabled,
-        readonly,
-        options,
-        onBlur,
-        onChange,
-        onFocus,
-    } = props;
+    const { id, value, readonly, options, onChange } = props;
     const [stringValue, setStringValue] = useState<string>(value ? value : '');
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
@@ -113,10 +103,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
         </div>
     );
 };
-interface RequestType {
-    value: string;
-    label: string;
-}
+
 const RequestTypes = [
     {
         value: 'm',
@@ -127,6 +114,7 @@ const RequestTypes = [
         label: 'cpu',
     },
 ];
+
 function getValueCpu(value: string) {
     if (!value) return 0;
     const converter = {

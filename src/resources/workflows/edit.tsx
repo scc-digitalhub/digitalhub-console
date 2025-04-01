@@ -22,7 +22,6 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { MetadataEditUiSchema, MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -133,31 +132,8 @@ export const WorkflowEdit = () => {
         return <LoadingIndicator />;
     }
 
-    const validator = data => {
-        const errors: any = {};
-        console.log(data);
-        console.log(kinds);
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!kinds.find(k => k.id === data.kind)) {
-            errors.kind = 'messages.validation.invalid';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'messages.validation.wrongChar';
-        }
-
-        return errors;
-    };
-
-    const onSuccess = (data, variables, context) => {
-        console.log('success', data, variables);
-    };
+    const onSuccess = (data, variables, context) => {};
     const onSettled = (data, variables, context) => {
-        console.log('settled', data, variables);
-
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },

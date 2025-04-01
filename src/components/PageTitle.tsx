@@ -1,4 +1,4 @@
-import { Typography, Paper, Box, SxProps, Theme } from '@mui/material';
+import { Typography, Box, SxProps, Theme } from '@mui/material';
 import { isValidElement, ReactElement } from 'react';
 import {
     Identifier,
@@ -123,7 +123,7 @@ export const CreatePageTitle = (props: RecordPageTitleProps) => {
         record: recordFromProps,
         ...rest
     } = props;
-    const { resource, record } = useCreateContext({
+    const { resource } = useCreateContext({
         resource: resourceFromProps,
         record: recordFromProps,
     });

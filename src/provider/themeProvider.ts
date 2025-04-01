@@ -3,12 +3,9 @@ import {
     defaultTheme,
     houseLightTheme,
     houseDarkTheme,
-    nanoLightTheme,
-    radiantLightTheme,
     RaThemeOptions,
 } from 'react-admin';
 import { alpha } from '@mui/material';
-// import { palette } from '@mui/system';
 
 const componentsOverrides = (theme: Theme) => ({
     ...theme.components,

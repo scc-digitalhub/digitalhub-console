@@ -38,15 +38,14 @@ import {
     ImageListItem,
     Stack,
     styled,
-    Typography,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
+import { NoContent } from '../NoContent';
 
 const defaultIcon = <PreviewIcon />;
 
 export const PreviewButton = (props: PreviewButtonProps) => {
     const {
-        source,
         color = 'info',
         label = 'fields.preview',
         icon = defaultIcon,
@@ -314,7 +313,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                     disableRowSelectionOnClick
                 />
             )}
-            {!content && <EmptyResult />}
+            {!content && <NoContent message={'fields.info.empty'} />}
         </Box>
     );
 };
@@ -329,19 +328,6 @@ const LogViewer = styled(Box, {
     },
 }));
 
-const EmptyResult = () => {
-    const translate = useTranslate();
-
-    return (
-        <Typography
-            variant="body1"
-            color={'gray'}
-            sx={{ textAlign: 'center', pt: 5 }}
-        >
-            {translate('fields.info.empty')}
-        </Typography>
-    );
-};
 export type CSVViewerProps<RecordType extends RaRecord = any> = FieldProps & {
     url: string;
 };

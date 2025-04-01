@@ -10,7 +10,6 @@ import {
     TextInput,
     TopToolbar,
     required,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
 import { BlankSchema } from '../../common/schemas';
@@ -35,7 +34,6 @@ const CreateToolbar = () => {
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();

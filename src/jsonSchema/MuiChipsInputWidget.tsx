@@ -1,11 +1,4 @@
-import {
-    Chip,
-    FormControl,
-    FormLabel,
-    InputLabel,
-    Stack,
-    TextField,
-} from '@mui/material';
+import { Chip, FormControl, InputLabel, Stack } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { MuiChipsInput } from 'mui-chips-input';
 import { useState, FocusEvent } from 'react';
@@ -57,7 +50,7 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
             </InputLabel>
 
             <Stack direction={'row'} id={id} paddingTop={3}>
-                {list.map((item, index) => {
+                {list.map(item => {
                     return <Chip label={item} key={item} sx={{ mr: 1 }} />;
                 })}
             </Stack>

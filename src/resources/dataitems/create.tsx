@@ -10,7 +10,6 @@ import {
     required,
     useInput,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
@@ -40,7 +39,6 @@ const CreateToolbar = () => {
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
@@ -87,7 +85,6 @@ export const DataItemCreate = () => {
 
 export const DataItemForm = (props: { uploader?: UploadController }) => {
     const { uploader } = props;
-    const translate = useTranslate();
 
     return (
         <StepperForm toolbar={<StepperToolbar />}>

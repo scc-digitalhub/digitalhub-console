@@ -2,7 +2,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import {
-    CreateActionsProps,
     CreateBase,
     CreateView,
     FormDataConsumer,
@@ -12,7 +11,6 @@ import {
     required,
     useInput,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
@@ -31,7 +29,7 @@ import { useGetSchemas } from '../../controllers/schemaController';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/StepperToolbar';
 
-const CreateToolbar = (props: CreateActionsProps) => {
+const CreateToolbar = () => {
     return (
         <TopToolbar>
             <ListButton />
@@ -41,7 +39,6 @@ const CreateToolbar = (props: CreateActionsProps) => {
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
@@ -86,7 +83,6 @@ export const ModelCreate = () => {
 
 export const ModelForm = (props: { uploader?: UploadController }) => {
     const { uploader } = props;
-    const translate = useTranslate();
 
     return (
         <StepperForm toolbar={<StepperToolbar />}>

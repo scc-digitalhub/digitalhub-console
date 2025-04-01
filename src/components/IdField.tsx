@@ -25,7 +25,6 @@ export const IdField = <
     const {
         className,
         source,
-        emptyText,
         copy = true,
         format = v => v,
         label,

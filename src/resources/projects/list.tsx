@@ -4,7 +4,6 @@ import {
     Pagination,
     TopToolbar,
     useRecordContext,
-    useGetResourceLabel,
     DateField,
     Labeled,
     TextField,
@@ -45,7 +44,6 @@ import { Empty } from '../../components/Empty';
 
 export const ProjectSelectorList = props => {
     const perPage = 12;
-    const getResourceLabel = useGetResourceLabel();
 
     //check if auth is required to redirect to login
     useAuthenticated();
@@ -144,13 +142,6 @@ const Toolbar = () => {
         </TopToolbar>
     );
 };
-
-function convertToDate(value) {
-    if (typeof value === 'string' || typeof value === 'number') {
-        return new Date(value);
-    }
-    return value;
-}
 
 const ProjectsGridItem = (props: any) => {
     const project = useRecordContext(props);

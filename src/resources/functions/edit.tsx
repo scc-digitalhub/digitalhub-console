@@ -27,7 +27,6 @@ import { EditPageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import ClearIcon from '@mui/icons-material/Clear';
 import { MetadataInput } from '../../components/MetadataInput';
@@ -128,41 +127,15 @@ export const FunctionEdit = () => {
         return <LoadingIndicator />;
     }
 
-    const validator = data => {
-        const errors: any = {};
-        console.log(data);
-        console.log(kinds);
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!kinds.find(k => k.id === data.kind)) {
-            errors.kind = 'messages.validation.invalid';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'messages.validation.wrongChar';
-        }
-
-        return errors;
-    };
-
-    const onSuccess = (data, variables, context) => {
-        console.log('success', data, variables);
-    };
+    const onSuccess = (data, variables, context) => {};
     const onSettled = (data, variables, context) => {
-        console.log('settled', data, variables);
-
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
         });
         redirect('show', resource, data.id, data);
     };
-    const onChange = (e: any, id?: string) => {
-        console.log('called', e);
-        console.log('id', id);
-    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase

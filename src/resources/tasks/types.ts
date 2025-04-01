@@ -1,12 +1,8 @@
 import { mergeUiTemplate } from '../../common/schemas';
-import AccordionArrayFieldTemplate from '../../jsonSchema/AccordionArrayFieldTemplate';
-import { AccordionFieldTemplate } from '../../jsonSchema/AccordionFieldTemplate';
 import { CoreResourceCpuWidget } from '../../jsonSchema/CoreResourceCpuWidget';
 import { CoreResourceFieldTemplate } from '../../jsonSchema/CoreResourceFieldTemplate';
 import { CoreResourceGpuWidget } from '../../jsonSchema/CoreResourceGpuWidget';
 import { CoreResourceMemWidget } from '../../jsonSchema/CoreResourceMemWidget';
-import { KeyValueFieldTemplate } from '../../jsonSchema/KeyValueFieldTemplate';
-import { VolumeResourceFieldTemplate } from '../../jsonSchema/VolumeResourceFieldTemplate';
 
 export const getTaskUiSpec = (schema: any | undefined) => {
     //filter and merge with template
