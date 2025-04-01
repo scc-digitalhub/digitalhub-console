@@ -26,10 +26,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
-const ListToolbar = () => {
-    return <TopToolbar />;
-};
-
 const RowActions = () => {
     return (
         <RowButtonGroup>
@@ -103,7 +99,7 @@ export const RunList = () => {
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
 
-                    <ListToolbar />
+                    <TopToolbar />
 
                     <FlatCard>
                         <ListView
@@ -114,7 +110,9 @@ export const RunList = () => {
                         >
                             <Datagrid
                                 rowClick={'show'}
-                                bulkActionButtons={<BulkDeleteAllVersionsButton />}
+                                bulkActionButtons={
+                                    <BulkDeleteAllVersionsButton />
+                                }
                             >
                                 <TextField source="id" label="fields.id" />
                                 <DateField

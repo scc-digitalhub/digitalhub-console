@@ -2,7 +2,6 @@ import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-    CreateButton,
     Datagrid,
     DateField,
     EditButton,
@@ -12,7 +11,6 @@ import {
     ShowButton,
     TextField,
     TextInput,
-    TopToolbar,
     useDatagridContext,
     useExpanded,
     useRecordContext,
@@ -25,19 +23,10 @@ import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { DataItemIcon } from './icon';
-import { ImportButton } from '../../components/buttons/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-
-const ListToolbar = () => {
-    return (
-        <TopToolbar>
-            <CreateButton />
-            <ImportButton />
-        </TopToolbar>
-    );
-};
+import { ListToolbar } from '../../components/toolbars/ListToolbar';
 
 const RowActions = () => {
     const resource = useResourceContext();
