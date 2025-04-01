@@ -4,9 +4,6 @@ import {
     SimpleForm,
     TextInput,
     SelectInput,
-    Button,
-    SaveButton,
-    Toolbar,
     Create,
     LoadingIndicator,
     useDataProvider,
@@ -14,10 +11,9 @@ import {
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
 import { ArtifactTypes } from './types';
-import { useNavigate } from 'react-router-dom';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 import { RecordTitle } from '../../components/RecordTitle';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 const kinds = Object.values(ArtifactTypes).map(v => {
     return {
@@ -26,25 +22,6 @@ const kinds = Object.values(ArtifactTypes).map(v => {
     };
 });
 
-const PostCreateToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
 export const ArtifactUpdate = () => {
     const { id } = useParams();
     const dataProvider = useDataProvider();
@@ -77,7 +54,7 @@ export const ArtifactUpdate = () => {
 const ArtifactEditForm = (props: { record: any }) => {
     const { record } = props;
     return (
-        <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>
+        <SimpleForm defaultValues={record} toolbar={<EditToolbar />}>
             <TextInput source="name" disabled />
             <SelectInput source="kind" choices={kinds} disabled />
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />

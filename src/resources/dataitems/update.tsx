@@ -4,41 +4,18 @@ import {
     SimpleForm,
     TextInput,
     SelectInput,
-    Button,
-    SaveButton,
-    Toolbar,
     Create,
     LoadingIndicator,
     useDataProvider,
 } from 'react-admin';
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
-import { useNavigate } from 'react-router-dom';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import { RecordTitle } from '../../components/RecordTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
-const EditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
 export const DataItemUpdate = () => {
     const { id } = useParams();
     const dataProvider = useDataProvider();
@@ -108,12 +85,6 @@ const DataItemEditForm = (props: { record: any }) => {
             </Grid>
 
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            {/* <JsonSchemaInput
-                source="spec"
-                schema={getDataItemSpec(kind)}
-                uiSchema={getDataItemSpecUiSchema(kind)}
-                label={false}
-            /> */}
         </SimpleForm>
     );
 };

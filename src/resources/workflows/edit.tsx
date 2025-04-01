@@ -1,19 +1,15 @@
-import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Container, Stack } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
-    Button,
     EditBase,
     EditView,
     LoadingIndicator,
-    SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
-    Toolbar,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -21,36 +17,15 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
-import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { MetadataInput } from '../../components/MetadataInput';
-
-export const WorkflowEditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 const SpecInput = (props: {
     source: string;
@@ -157,7 +132,7 @@ export const WorkflowEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm toolbar={<WorkflowEditToolbar />}>
+                            <SimpleForm toolbar={<EditToolbar />}>
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>

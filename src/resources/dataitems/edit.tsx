@@ -1,21 +1,15 @@
-import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
-    Button,
     EditBase,
     EditView,
-    SaveButton,
     SimpleForm,
     TextInput,
-    Toolbar,
     useInput,
     useNotify,
     useRedirect,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
-import { useNavigate } from 'react-router';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
@@ -29,26 +23,7 @@ import {
 } from '../../controllers/uploadController';
 import { SpecInput } from '../../components/SpecInput';
 import { randomId } from '../../common/helper';
-
-const DataItemEditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 export const DataItemEdit = () => {
     const resource = useResourceContext();
@@ -98,7 +73,7 @@ export const DataItemEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm toolbar={<DataItemEditToolbar />}>
+                            <SimpleForm toolbar={<EditToolbar />}>
                                 <DataItemEditForm
                                     onSpecDirty={setIsSpecDirty}
                                     uploader={uploader}
