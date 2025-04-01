@@ -5,11 +5,7 @@ import {
     JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
 import {
-    CustomValidator,
     RJSFSchema,
-    RJSFValidationError,
-    RegistryFieldsType,
-    RegistryWidgetsType,
     UiSchema,
 } from '@rjsf/utils';
 
@@ -18,20 +14,12 @@ import { CoreResourceFieldTemplate } from '../jsonSchema/CoreResourceFieldTempla
 import { KeyValueFieldTemplate } from '../jsonSchema/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from '../jsonSchema/VolumeResourceFieldTemplate';
 import { AceEditorWidget } from '../jsonSchema/AceEditorWidget';
-import ArrayFieldTemplate from '../jsonSchema/ArrayFieldTemplate';
-import ArrayFieldItemTemplate from '../jsonSchema/ArrayFieldItemTemplate';
-import ObjectFieldTemplate from '../jsonSchema/ObjectFieldTemplate';
-import WrapIfAdditionalTemplate from '../jsonSchema/WrapIfAdditionalTemplate';
 import TitleField from '../jsonSchema/TitleField';
 import {  useTranslate } from 'react-admin';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { get, set } from 'lodash';
-import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
-import React from 'react';
-import { FieldProps } from '@rjsf/utils';
 import { JsonParamsWidget } from '../jsonSchema/JsonParamsWidget';
 
-// import { JsonSchemaFieldProps,JsonSchemaField as RaJsonSchemaField } from './JsonSchemaField';
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
     parameters: JsonParamsWidget,

@@ -15,7 +15,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import AccountTree from '@mui/icons-material/AccountTree';
 import Inbox from '@mui/icons-material/Inbox';
-import { RowButtonGroup } from '../components/RowButtonGroup';
+import { RowButtonGroup } from '../components/buttons/RowButtonGroup';
 import { Box, Chip, Container, Tooltip, Typography } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';

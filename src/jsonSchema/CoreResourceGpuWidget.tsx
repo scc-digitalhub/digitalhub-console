@@ -1,26 +1,9 @@
-import {
-    Chip,
-    Grid,
-    Typography,
-    MenuItem,
-    Select,
-    TextField,
-} from '@mui/material';
+import { Grid, Typography, TextField } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
-import { useState, FocusEvent } from 'react';
-import { useTranslate } from 'react-admin';
+import { useState } from 'react';
 
 export const CoreResourceGpuWidget = function (props: WidgetProps) {
-    const {
-        id,
-        value,
-        disabled,
-        readonly,
-        options,
-        onBlur,
-        onChange,
-        onFocus,
-    } = props;
+    const { id, value, readonly, options, onChange } = props;
     const [stringValue, setStringValue] = useState<string>(value ? value : '');
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
@@ -32,10 +15,6 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
         onChange(event.target.value);
     };
 
-    const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-        onBlur(id, target.value);
-    const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-        onFocus(id, target.value);
     return (
         <div>
             <Grid item xs={12} sm={12} md={12}>
@@ -50,7 +29,6 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                             alignItems: 'center',
                             paddingTop: readonly ? '10px' : '0px',
                             paddingBottom: readonly ? '10px' : '0px',
-                            // direction: 'rtl',
                         }}
                     >
                         <Typography
@@ -92,10 +70,7 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
         </div>
     );
 };
-interface RequestType {
-    value: string;
-    label: string;
-}
+
 export function checkGpuRequestError(formData: any) {
     return false;
     //     if (formData.transform_spec.k8s.resources.gpu.requests && formData.transform_spec.k8s.resources.gpu.limits ===undefined)

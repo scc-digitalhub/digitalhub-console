@@ -1,7 +1,6 @@
 import {
     AccordionSummary,
     AccordionDetails,
-    Grid,
     Typography,
 } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';

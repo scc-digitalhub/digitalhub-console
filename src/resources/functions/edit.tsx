@@ -4,15 +4,12 @@ import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
-    Button,
     EditBase,
     EditView,
     LoadingIndicator,
-    SaveButton,
     SelectInput,
     SimpleForm,
     TextInput,
-    Toolbar,
     useNotify,
     useRecordContext,
     useRedirect,
@@ -20,17 +17,15 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { EditPageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { alphaNumericName } from '../../common/helper';
 import { JsonSchemaInput } from '../../components/JsonSchema';
-import ClearIcon from '@mui/icons-material/Clear';
 import { MetadataInput } from '../../components/MetadataInput';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 const SpecInput = (props: {
     source: string;
@@ -80,25 +75,7 @@ const SpecInput = (props: {
         />
     );
 };
-export const FunctionEditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
+
 export const FunctionEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
@@ -128,41 +105,15 @@ export const FunctionEdit = () => {
         return <LoadingIndicator />;
     }
 
-    const validator = data => {
-        const errors: any = {};
-        console.log(data);
-        console.log(kinds);
-        if (!('kind' in data)) {
-            errors.kind = 'messages.validation.required';
-        }
-
-        if (!kinds.find(k => k.id === data.kind)) {
-            errors.kind = 'messages.validation.invalid';
-        }
-
-        if (!alphaNumericName(data.name)) {
-            errors.name = 'messages.validation.wrongChar';
-        }
-
-        return errors;
-    };
-
-    const onSuccess = (data, variables, context) => {
-        console.log('success', data, variables);
-    };
+    const onSuccess = (data, variables, context) => {};
     const onSettled = (data, variables, context) => {
-        console.log('settled', data, variables);
-
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
         });
         redirect('show', resource, data.id, data);
     };
-    const onChange = (e: any, id?: string) => {
-        console.log('called', e);
-        console.log('id', id);
-    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
@@ -179,7 +130,7 @@ export const FunctionEdit = () => {
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <SimpleForm toolbar={<FunctionEditToolbar />}>
+                            <SimpleForm toolbar={<EditToolbar />}>
                                 <FormLabel label="fields.base" />
 
                                 <Stack direction={'row'} spacing={3} pt={4}>

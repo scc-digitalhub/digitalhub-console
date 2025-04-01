@@ -1,6 +1,5 @@
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import inflection from 'inflection';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslate } from 'react-admin';
 
 export const useDataGridController = (props: {

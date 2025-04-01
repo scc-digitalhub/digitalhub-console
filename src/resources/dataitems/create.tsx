@@ -4,13 +4,10 @@ import {
     CreateBase,
     CreateView,
     FormDataConsumer,
-    ListButton,
     TextInput,
-    TopToolbar,
     required,
     useInput,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
@@ -28,19 +25,11 @@ import { FileInput } from '../../components/FileInput';
 import { KindSelector } from '../../components/KindSelector';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperForm } from '@dslab/ra-stepper';
-import { StepperToolbar } from '../../components/StepperToolbar';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const id = useRef(randomId());
     const uploader = useUploadController({
         id: id.current,
@@ -87,7 +76,6 @@ export const DataItemCreate = () => {
 
 export const DataItemForm = (props: { uploader?: UploadController }) => {
     const { uploader } = props;
-    const translate = useTranslate();
 
     return (
         <StepperForm toolbar={<StepperToolbar />}>

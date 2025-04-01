@@ -96,26 +96,6 @@ export const keyParser = (
     return result;
 };
 
-// export const functionParser = (
-//     key: string
-// ): {
-//     kind: string;
-//     project: string;
-//     functionName: string;
-//     id: string;
-// } => {
-//     // python://prj2/f1:f4a21377-fb59-41fe-a16e-157ee5598f28
-//     const lv1 = key.split(':');
-//     const lv2 = lv1[1].split('/');
-
-//     return {
-//         kind: lv1[0],
-//         project: lv2[-2],
-//         functionName: lv2[lv2.length - 1],
-//         id: lv1[2],
-//     };
-// };
-
 export const functionParser = (
     key: string
 ): {

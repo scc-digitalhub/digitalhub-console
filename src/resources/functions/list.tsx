@@ -2,7 +2,6 @@ import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-    CreateButton,
     Datagrid,
     DateField,
     EditButton,
@@ -12,32 +11,22 @@ import {
     ShowButton,
     TextField,
     TextInput,
-    TopToolbar,
     useDatagridContext,
     useExpanded,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { DeleteWithConfirmButtonByName } from '../../components/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
-import { ImportButton } from '../../components/ImportButton';
 import { ChipsField } from '../../components/ChipsField';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-
-const ListToolbar = () => {
-    return (
-        <TopToolbar>
-            <CreateButton />
-            <ImportButton />
-        </TopToolbar>
-    );
-};
+import { ListToolbar } from '../../components/toolbars/ListToolbar';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -49,7 +38,7 @@ const RowActions = () => {
         context && context.expandSingle
     );
     return (
-        <RowButtonGroup label="⋮">
+        <RowButtonGroup>
             <ShowButton disabled={expanded} />
             <EditButton disabled={expanded} />
             <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
@@ -119,7 +108,7 @@ export const FunctionList = () => {
                                 expand={VersionsList}
                                 expandSingle={true}
                                 bulkActionButtons={
-                                    <BulkDeleteAllVersions deleteAll />
+                                    <BulkDeleteAllVersionsButton deleteAll />
                                 }
                             >
                                 <TextField

@@ -5,42 +5,16 @@ import {
     useDataProvider,
     useNotify,
     useRedirect,
-    useTranslate,
     EditBase,
     EditView,
-    Toolbar,
-    SaveButton,
-    Button,
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
 import { Box, Container, Grid } from '@mui/material';
 import { EditPageTitle } from '../../components/PageTitle';
 import { SecretIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import { useNavigate } from 'react-router';
-import ClearIcon from '@mui/icons-material/Clear';
 import { FormLabel } from '../../components/FormLabel';
-
-export const SecretsEditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 export const SecretEdit = () => {
     const { root } = useRootSelector();
@@ -92,7 +66,7 @@ export const SecretEdit = () => {
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm
-                                toolbar={<SecretsEditToolbar />}
+                                toolbar={<EditToolbar />}
                                 validate={validator}
                                 onSubmit={postSave}
                                 resetOptions={{ keepDirtyValues: false }}

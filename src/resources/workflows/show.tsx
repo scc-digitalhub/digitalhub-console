@@ -19,7 +19,6 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { TaskAndRuns } from './TaskAndRuns';
 import { getWorkflowUiSpec } from './types';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { WorkflowIcon } from './icon';
@@ -31,7 +30,8 @@ import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { ShowToolbar } from '../../components/ShowToolbar';
+import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { TaskAndRuns } from '../../components/TaskAndRuns';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -67,7 +67,6 @@ const ShowComponent = () => {
 
         if (cur.current != null && !deepEqual(cur.current, record)) {
             //reloading, reset
-            console.log('reloading');
             cur.current = null;
             if (isInitializing()) {
                 initializing.current = false;
@@ -87,13 +86,11 @@ const ShowComponent = () => {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
-                console.log('spec', s);
                 setSpec(s);
             });
 
             Promise.all([
                 schemaProvider.list('tasks', record.kind).then(schemas => {
-                    console.log('schema  for ' + record.kind, schemas);
                     return schemas?.map(s => s.kind);
                 }),
 
@@ -106,9 +103,6 @@ const ShowComponent = () => {
                 }),
             ])
                 .then(([kinds, list]) => {
-                    console.log('kinds', kinds);
-                    console.log('list', list);
-
                     if (!kinds || !list || !list.data) {
                         return;
                     }
@@ -117,7 +111,6 @@ const ShowComponent = () => {
                     const missing = kinds.filter(
                         k => !list.data.find(t => t.kind == k)
                     );
-                    console.log('missing', missing);
                     if (missing.length == 0) {
                         //all tasks defined
                         list.data.sort((a, b) => {
@@ -161,10 +154,6 @@ const ShowComponent = () => {
                 });
         }
     }, [record, schemaProvider, dataProvider]);
-
-    // if (isLoading) {
-    //   return <></>;
-    // }
 
     if (!record) {
         return <LoadingIndicator />;
@@ -238,7 +227,11 @@ const ShowComponent = () => {
                 >
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
-                            <TaskAndRuns key={task.id} onEdit={editTask} />
+                            <TaskAndRuns
+                                task={task.id}
+                                onEdit={editTask}
+                                runOf="workflow"
+                            />
                         </RecordContextProvider>
                     </ResourceContextProvider>
                 </TabbedShowLayout.Tab>
@@ -252,12 +245,6 @@ const ShowComponent = () => {
 
 const SourceCodeView = (props: { sourceCode: any }) => {
     const { sourceCode } = props;
-    console.log('source', sourceCode);
-    const code = sourceCode.code
-        ? sourceCode.code
-        : sourceCode.base64
-        ? atob(sourceCode.base64)
-        : '';
 
     const values = {
         ...{ sourceCode },

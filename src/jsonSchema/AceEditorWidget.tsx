@@ -1,20 +1,13 @@
 import {
-    ObjectFieldTemplateProps,
-    ObjectFieldTemplatePropertyType,
     WidgetProps,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
-    canExpand,
-    descriptionId,
     getTemplate,
-    getUiOptions,
     titleId,
 } from '@rjsf/utils';
 import { useTranslate } from 'react-admin';
 
-import { FormLabel } from '../components/FormLabel';
-import { Box, Grid, SelectChangeEvent, Stack } from '@mui/material';
 // import 'ace-builds/esm-resolver';
 import AceEditor from 'react-ace';
 
@@ -42,12 +35,7 @@ import 'ace-builds/src-noconflict/worker-json.js';
 import 'ace-builds/src-noconflict/worker-xml.js';
 import 'ace-builds/src-noconflict/worker-yaml.js';
 
-import React, {
-    Fragment,
-    JSXElementConstructor,
-    ReactElement,
-    useState,
-} from 'react';
+import { Fragment } from 'react';
 
 const lightTheme = ['yaml', 'json', 'text', 'markdown', 'css'];
 
@@ -59,20 +47,15 @@ export const AceEditorWidget = function <
     const {
         id,
         value,
-        disabled,
         readonly,
         options,
-        onBlur,
         onChange,
-        onFocus,
-        formContext,
         schema,
         label,
         registry,
         required,
     } = props;
     const translate = useTranslate();
-    console.log('p', props);
 
     const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
         'TitleFieldTemplate',
@@ -89,7 +72,6 @@ export const AceEditorWidget = function <
             : false;
     const theme = lightTheme.includes(lang) ? 'github' : 'monokai';
 
-    console.log('ace lang', lang);
     const handleChange = (data: string) => {
         const encodedValue = useBase64 ? btoa(data) : data;
         onChange(encodedValue);

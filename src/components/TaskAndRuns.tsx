@@ -1,4 +1,4 @@
-import { TaskEditComponent, TaskShowComponent } from '../tasks';
+import { TaskEditComponent, TaskShowComponent } from '../resources/tasks';
 import {
     Datagrid,
     DateField,
@@ -12,37 +12,34 @@ import {
     TopToolbar,
     useGetResourceLabel,
     useRecordContext,
-    useTranslate,
 } from 'react-admin';
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography, Box } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
     ShowInDialogButton,
 } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { ReactElement, useState } from 'react';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
-import { StateChips } from '../../components/StateChips';
+import { RowButtonGroup } from './buttons/RowButtonGroup';
+import { StateChips } from './StateChips';
+import { LogsButton } from './buttons/LogsButton';
+import { filterProps } from '../common/schemas';
+import { useGetManySchemas } from '../controllers/schemaController';
+import { Empty } from './Empty';
+import { ReactElement } from 'react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-
-import { WorkflowView } from './WorkflowView';
-import { useGetManySchemas } from '../../controllers/schemaController';
-import { filterProps } from '../../common/schemas';
-import { LogsButton } from '../../components/LogsButton';
-import { Empty } from '../../components/Empty';
-import { RunCreateForm } from '../runs/create';
-import { DropDownButton } from '../../components/DropdownButton';
-import { StopButton } from '../runs/StopButton';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { StopButton } from '../resources/runs/StopButton';
+import { DropDownButton } from './buttons/DropdownButton';
+import { RunCreateForm } from '../resources/runs/create';
+import { BulkDeleteAllVersionsButton } from './buttons/BulkDeleteAllVersionsButton';
+import { ListBaseLive } from './ListBaseLive';
 
 export const TaskAndRuns = (props: {
     task?: string;
     onEdit: (id: string, data: any) => void;
+    runOf: 'function' | 'workflow';
 }) => {
-    const { task, onEdit } = props;
-    const getResourceLabel = useGetResourceLabel();
+    const { task, onEdit, runOf } = props;
 
     const prepare = (r: any) => {
         return {
@@ -66,7 +63,7 @@ export const TaskAndRuns = (props: {
                     transform={prepare}
                     mutationMode="pessimistic"
                     mutationOptions={{
-                        onSuccess: (data, variables, context) => {
+                        onSuccess: data => {
                             //data is updated
                             if (task && data) onEdit(task, data);
                         },
@@ -79,7 +76,7 @@ export const TaskAndRuns = (props: {
             <SimpleShowLayout>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="kind" />
+                        <TextField source="kind" label="fields.kind" />
                     </Labeled>
                     <Labeled>
                         <TextField source="id" />
@@ -89,18 +86,17 @@ export const TaskAndRuns = (props: {
                     <TextField source="key" />
                 </Labeled>
             </SimpleShowLayout>
-            <TaskRunList />
+            <TaskRunList runOf={runOf} />
         </>
     );
 };
 
-const TaskRunList = () => {
+const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     const record = useRecordContext();
-    const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
-    const [schema] = useState<any>();
-    const fn = record?.spec?.workflow || '';
+
+    const fn = record?.spec?.[runOf] || '';
     const url = new URL(fn);
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
@@ -108,12 +104,8 @@ const TaskRunList = () => {
     url.protocol = record.kind + ':';
     const key = `${record.kind}://${record.project}/${record.id}`;
 
-    const {
-        data: schemas,
-        isLoading,
-        error,
-    } = useGetManySchemas([
-        { resource: 'workflows', runtime },
+    const { data: schemas } = useGetManySchemas([
+        { resource: runOf + 's', runtime },
         { resource: 'tasks', runtime },
         { resource: 'runs', runtime },
     ]);
@@ -132,6 +124,7 @@ const TaskRunList = () => {
                 runSchema.schema = filterProps(runSchema.schema, s.schema);
             });
     }
+
     const partial = {
         project: record?.project,
         kind: runSchema ? runSchema.kind : 'run',
@@ -142,7 +135,7 @@ const TaskRunList = () => {
             ...record?.spec,
         },
     };
-    console.log('par', partial);
+
     const prepare = (r: any) => {
         return {
             ...r,
@@ -153,13 +146,6 @@ const TaskRunList = () => {
                 ...r.spec,
             },
         };
-    };
-
-    const getExpandArea = () => {
-        return record.kind === 'kfp+pipeline' ? <WorkflowView /> : <></>;
-    };
-    const canExpand = () => {
-        return record.kind === 'kfp+pipeline';
     };
 
     const CreateActionButton = (props: {
@@ -211,7 +197,7 @@ const TaskRunList = () => {
                     actions={<CreateActionButton record={partial} />}
                 >
                     <Datagrid
-                        bulkActionButtons={<BulkDeleteAllVersions />}
+                        bulkActionButtons={<BulkDeleteAllVersionsButton />}
                         rowClick={false}
                     >
                         <DateField
@@ -225,7 +211,7 @@ const TaskRunList = () => {
                             sortable={false}
                             label="fields.status.state"
                         />
-                        <RowButtonGroup label="⋮">
+                        <RowButtonGroup>
                             <DropDownButton>
                                 <ShowButton />
                                 <LogsButton />

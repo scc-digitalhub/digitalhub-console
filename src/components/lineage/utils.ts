@@ -66,40 +66,6 @@ export const getNodesAndEdges = (
         },
     }));
 
-    // const nodes2 = [
-    //     {
-    //         id: record.id,
-    //         type: 'cardNode',
-    //         position: {
-    //             x: 0,
-    //             y: 0,
-    //         },
-    //         data: { key: record.key, current: true },
-    //     },
-    //     ...relationships.map((relationship: any): Node => {
-    //         const destParsed = keyParser(relationship.dest);
-    //         //the node that is being expanded, defaults to the current node
-    //         const relatedNode = relationship.expands || record.id;
-    //         //the node to create
-    //         const nodeKey =
-    //             destParsed.id == relatedNode || destParsed.name == relatedNode
-    //                 ? relationship.source
-    //                 : relationship.dest;
-    //         const keyParsed = keyParser(nodeKey);
-    //         return {
-    //             id: keyParsed.id || keyParsed.name || '',
-    //             type: 'cardNode',
-    //             position: {
-    //                 x: 0,
-    //                 y: 0,
-    //             },
-    //             data: {
-    //                 key: nodeKey,
-    //             },
-    //         };
-    //     }),
-    // ];
-
     //build edges from relationships
     const edges: Edge[] = [];
 

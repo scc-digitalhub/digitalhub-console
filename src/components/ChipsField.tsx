@@ -12,15 +12,7 @@ export const ChipsField = <
         format?: (value: any) => any;
     }
 ) => {
-    const {
-        className,
-        source,
-        emptyText,
-        copy = true,
-        format = v => v,
-        label,
-        ...rest
-    } = props;
+    const { source } = props;
     const record = useRecordContext(props);
 
     const value = get(record, source) as string | string[];

@@ -4,9 +4,6 @@ import {
     SimpleForm,
     TextInput,
     SelectInput,
-    Button,
-    SaveButton,
-    Toolbar,
     Create,
     LoadingIndicator,
     useDataProvider,
@@ -14,11 +11,10 @@ import {
 import { useParams } from 'react-router-dom';
 import { MetadataSchema } from '../../common/schemas';
 import { ModelTypes } from './types';
-import { useNavigate } from 'react-router-dom';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import { RecordTitle } from '../../components/RecordTitle';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 const kinds = Object.values(ModelTypes).map(v => {
     return {
@@ -27,25 +23,6 @@ const kinds = Object.values(ModelTypes).map(v => {
     };
 });
 
-const PostCreateToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
 export const ModelUpdate = () => {
     const { id } = useParams();
     const dataProvider = useDataProvider();
@@ -77,10 +54,9 @@ export const ModelUpdate = () => {
 
 const ModelEditForm = (props: { record: any }) => {
     const { record } = props;
-    const kind = record?.kind || undefined;
-    console.log('record', record);
+
     return (
-        <SimpleForm defaultValues={record} toolbar={<PostCreateToolbar />}>
+        <SimpleForm defaultValues={record} toolbar={<EditToolbar />}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={4}>
                     <TextInput
@@ -100,12 +76,6 @@ const ModelEditForm = (props: { record: any }) => {
             </Grid>
 
             <JsonSchemaInput source="metadata" schema={MetadataSchema} />
-            {/* <JsonSchemaInput
-                source="spec"
-                schema={getModelSpec(kind)}
-                uiSchema={getModelSpecUiSchema(kind)}
-                label={false}
-            /> */}
         </SimpleForm>
     );
 };

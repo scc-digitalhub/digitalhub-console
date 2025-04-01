@@ -46,8 +46,8 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ArticleIcon from '@mui/icons-material/Article';
 import PublicIcon from '@mui/icons-material/Public';
 import TableChart from '@mui/icons-material/TableChart';
-import { DownloadButton } from './DownloadButton';
-import { PreviewButton } from './PreviewButton';
+import { DownloadButton } from './buttons/DownloadButton';
+import { PreviewButton } from './buttons/PreviewButton';
 import { NoContent } from './NoContent';
 
 const MAX_TREE_DEPTH = 50;

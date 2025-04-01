@@ -5,12 +5,9 @@ import {
     CreateBase,
     CreateView,
     FormDataConsumer,
-    ListButton,
     LoadingIndicator,
     TextInput,
-    TopToolbar,
     required,
-    useTranslate,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
 import { BlankSchema } from '../../common/schemas';
@@ -23,19 +20,11 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
-import { StepperToolbar } from '../../components/StepperToolbar';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();
-    const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();

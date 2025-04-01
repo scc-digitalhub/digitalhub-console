@@ -1,14 +1,11 @@
-import { StepperForm, useStepper } from '@dslab/ra-stepper';
+import { StepperForm } from '@dslab/ra-stepper';
 import {
     FormDataConsumer,
     required,
-    SaveButton,
-    Toolbar,
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import { getTaskUiSpec } from '../tasks/types';
-import { Box } from '@mui/system';
 import { getRunUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { JsonSchemaInput } from '../../components/JsonSchema';
@@ -18,6 +15,7 @@ import yaml from 'yaml';
 import { isValidAgainstSchema } from '../../common/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -36,7 +34,9 @@ export const RunCreateForm = (props: {
     const schema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
 
     return (
-        <StepperForm toolbar={<StepperToolbar />}>
+        <StepperForm
+            toolbar={<StepperToolbar saveProps={{ alwaysEnable: true }} />}
+        >
             <StepperForm.Step label={getResourceLabel('tasks', 1)}>
                 <JsonSchemaInput
                     source="spec"
@@ -88,26 +88,5 @@ export const RunCreateForm = (props: {
                 </FormDataConsumer>
             </StepperForm.Step>
         </StepperForm>
-    );
-};
-
-const StepperToolbar = () => {
-    const { steps, currentStep } = useStepper();
-
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box>
-                <StepperForm.PreviousButton
-                    variant={'text'}
-                    color="secondary"
-                />
-            </Box>
-            <Box>
-                <StepperForm.NextButton />
-                {steps && currentStep === steps.length - 1 && (
-                    <SaveButton alwaysEnable />
-                )}
-            </Box>
-        </Toolbar>
     );
 };

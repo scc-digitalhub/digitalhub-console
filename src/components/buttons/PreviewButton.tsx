@@ -13,27 +13,20 @@ import {
 } from 'react-admin';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
-
-import {
+import React, {
     Fragment,
     ReactElement,
     useCallback,
     useEffect,
     useState,
 } from 'react';
-
-import { get } from 'lodash';
-
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
-
 import { LazyLog } from '@melloware/react-logviewer';
 import { usePapaParse } from 'react-papaparse';
-
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-
+import { DataGrid } from '@mui/x-data-grid';
 import {
     Box,
     Breakpoint,
@@ -45,16 +38,14 @@ import {
     ImageListItem,
     Stack,
     styled,
-    Typography,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import React from 'react';
+import { NoContent } from '../NoContent';
 
 const defaultIcon = <PreviewIcon />;
 
 export const PreviewButton = (props: PreviewButtonProps) => {
     const {
-        source,
         color = 'info',
         label = 'fields.preview',
         icon = defaultIcon,
@@ -85,6 +76,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         e.stopPropagation();
         setOpen(false);
     };
+
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
@@ -175,7 +167,6 @@ const PreviewView = (props: PreviewButtonProps) => {
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);
-                    // url = data.url;
                     if (
                         fileType &&
                         ['yaml', 'json', 'markdown'].indexOf(fileType) !== -1
@@ -200,6 +191,7 @@ const PreviewView = (props: PreviewButtonProps) => {
                 notify(e);
             });
     };
+
     useEffect(() => {
         handlePreview();
     }, [url]);
@@ -321,7 +313,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                     disableRowSelectionOnClick
                 />
             )}
-            {!content && <EmptyResult />}
+            {!content && <NoContent message={'fields.info.empty'} />}
         </Box>
     );
 };
@@ -336,19 +328,6 @@ const LogViewer = styled(Box, {
     },
 }));
 
-const EmptyResult = () => {
-    const translate = useTranslate();
-
-    return (
-        <Typography
-            variant="body1"
-            color={'gray'}
-            sx={{ textAlign: 'center', pt: 5 }}
-        >
-            {translate('fields.info.empty')}
-        </Typography>
-    );
-};
 export type CSVViewerProps<RecordType extends RaRecord = any> = FieldProps & {
     url: string;
 };

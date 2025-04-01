@@ -17,22 +17,18 @@ import yamlExporter from '@dslab/ra-export-yaml';
 import { useState, useEffect } from 'react';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/RowButtonGroup';
+import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
-import { BulkDeleteAllVersions } from '../../components/BulkDeleteAllVersions';
+import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
-const ListToolbar = () => {
-    return <TopToolbar />;
-};
-
 const RowActions = () => {
     return (
-        <RowButtonGroup label="⋮">
+        <RowButtonGroup>
             <ShowButton />
             <DeleteWithConfirmButton redirect={false} />
         </RowButtonGroup>
@@ -103,7 +99,7 @@ export const RunList = () => {
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
 
-                    <ListToolbar />
+                    <TopToolbar />
 
                     <FlatCard>
                         <ListView
@@ -114,7 +110,9 @@ export const RunList = () => {
                         >
                             <Datagrid
                                 rowClick={'show'}
-                                bulkActionButtons={<BulkDeleteAllVersions />}
+                                bulkActionButtons={
+                                    <BulkDeleteAllVersionsButton />
+                                }
                             >
                                 <TextField source="id" label="fields.id" />
                                 <DateField

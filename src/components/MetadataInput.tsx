@@ -2,17 +2,13 @@ import {
     AccordionSummary,
     Typography,
     AccordionDetails,
-    Box,
     Grid,
 } from '@mui/material';
-import {
-    MetadataCreateUiSchema,
-    createMetadataViewUiSchema,
-} from '../common/schemas';
+import { MetadataCreateUiSchema } from '../common/schemas';
 import { useGetSchemas } from '../controllers/schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useRecordContext, useTranslate } from 'react-admin';
+import { useTranslate } from 'react-admin';
 import { styled } from '@mui/material/styles';
 import { JsonSchemaInput } from './JsonSchema';
 
@@ -31,10 +27,10 @@ const Accordion = styled((props: AccordionProps) => (
         color: '#E0701B',
     },
 }));
-export const MetadataInput = ({ prompt }: any) => {
-    const record = useRecordContext();
+
+export const MetadataInput = () => {
     const translate = useTranslate();
-    const { data: schemas, isLoading, error } = useGetSchemas('metadatas');
+    const { data: schemas } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
               .map(s => ({
@@ -50,6 +46,7 @@ export const MetadataInput = ({ prompt }: any) => {
                       : a.id.localeCompare(b.id)
               )
         : [];
+
     return (
         <Grid container={true} alignItems="top">
             {metadataKinds?.map(r => {
@@ -75,7 +72,6 @@ export const MetadataInput = ({ prompt }: any) => {
                         ) : (
                             <Accordion
                                 elevation={0}
-                                // square
                                 disableGutters
                                 defaultExpanded={r.id === 'metadata.base'}
                             >

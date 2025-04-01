@@ -14,10 +14,10 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { DownloadButton } from './DownloadButton';
+import { DownloadButton } from '../buttons/DownloadButton';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { DeleteWithConfirmButtonByName } from './DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../buttons/DeleteWithConfirmButtonByName';
 import { useRootSelector } from '@dslab/ra-root-selector';
 
 /**

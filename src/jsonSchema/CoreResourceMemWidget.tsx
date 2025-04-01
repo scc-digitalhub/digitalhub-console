@@ -1,26 +1,19 @@
 import {
-    Chip,
     Grid,
-    InputLabel,
     MenuItem,
     Select,
     TextField,
     Typography,
 } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
-import { useState, FocusEvent } from 'react';
-import { useTranslate } from 'react-admin';
+import { useState } from 'react';
 
 export const CoreResourceMemWidget = function (props: WidgetProps) {
     const {
         id,
         value,
-        disabled,
         readonly,
-        onBlur,
-        rawErrors,
         onChange,
-        onFocus,
         options,
     } = props;
     const [stringValue, setStringValue] = useState<string>(value ? value : '');
@@ -30,7 +23,6 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
     const [inputUnit, setInputUnit] = useState<string>(
         value ? value.replace(/[0-9]/g, '') : RequestTypes[0].value
     );
-    const translate = useTranslate();
 
     const handleInputChange = event => {
         setInputValue(event.target.value);
@@ -42,10 +34,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
         setStringValue(inputValue + event.target.value);
         onChange(inputValue + event.target.value);
     };
-    const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-        onBlur(id, target.value);
-    const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-        onFocus(id, target.value);
+
     return (
         <div>
             <Grid item xs={12} sm={12} md={12}>
@@ -129,10 +118,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
         </div>
     );
 };
-interface RequestType {
-    value: string;
-    label: string;
-}
+
 const RequestTypes = [
     {
         value: 'Ki',

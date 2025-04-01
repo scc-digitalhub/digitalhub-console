@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Grid, GridProps, styled } from '@mui/material';
-import PropTypes from 'prop-types';
 import {
     sanitizeListRestProps,
     useListContext,
@@ -8,7 +7,6 @@ import {
     RaRecord,
     RecordContextProvider,
     RecordRepresentation,
-    ComponentPropType,
     useCreatePath,
 } from 'ra-core';
 
@@ -43,9 +41,6 @@ export const GridList = (props: GridListProps) => {
         }
 
         return null;
-    }
-
-    if (typeof create === 'boolean') {
     }
 
     const createChildren =

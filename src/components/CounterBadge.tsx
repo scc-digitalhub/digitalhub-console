@@ -1,5 +1,4 @@
-import { Grid, Paper, Typography, useTheme } from '@mui/material';
-import { fontSize, fontWeight, textAlign } from '@mui/system';
+import { Paper, Typography, useTheme } from '@mui/material';
 
 export const CounterBadge = (props: {
     value: number | undefined;
@@ -61,8 +60,6 @@ export const CounterBadge = (props: {
     };
 
     return (
-        // <Grid container justifyContent="center">
-        //     <Grid item md={4} zeroMinWidth key={1} textAlign={'center'}>
         <Paper
             elevation={elevation}
             variant={variant}
@@ -73,7 +70,5 @@ export const CounterBadge = (props: {
                 {value}
             </Typography>
         </Paper>
-        //     </Grid>
-        // </Grid>
     );
 };
