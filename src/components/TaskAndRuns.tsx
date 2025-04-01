@@ -63,7 +63,7 @@ export const TaskAndRuns = (props: {
                     transform={prepare}
                     mutationMode="pessimistic"
                     mutationOptions={{
-                        onSuccess: (data, variables, context) => {
+                        onSuccess: data => {
                             //data is updated
                             if (task && data) onEdit(task, data);
                         },
@@ -104,11 +104,7 @@ const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     url.protocol = record.kind + ':';
     const key = `${record.kind}://${record.project}/${record.id}`;
 
-    const {
-        data: schemas,
-        isLoading,
-        error,
-    } = useGetManySchemas([
+    const { data: schemas } = useGetManySchemas([
         { resource: runOf + 's', runtime },
         { resource: 'tasks', runtime },
         { resource: 'runs', runtime },

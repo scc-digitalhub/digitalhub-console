@@ -228,7 +228,7 @@ const ShowComponent = () => {
                     <ResourceContextProvider value="tasks">
                         <RecordContextProvider value={task}>
                             <TaskAndRuns
-                                key={task.id}
+                                task={task.id}
                                 onEdit={editTask}
                                 runOf="workflow"
                             />
