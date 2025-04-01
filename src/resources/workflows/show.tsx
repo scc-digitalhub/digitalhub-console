@@ -30,7 +30,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { ShowToolbar } from '../../components/ShowToolbar';
+import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { TaskAndRuns } from '../../components/TaskAndRuns';
 
 const ShowComponent = () => {

@@ -4,9 +4,7 @@ import {
     CreateBase,
     CreateView,
     FormDataConsumer,
-    ListButton,
     TextInput,
-    TopToolbar,
     required,
     useInput,
     useResourceContext,
@@ -27,15 +25,8 @@ import { FileInput } from '../../components/FileInput';
 import { KindSelector } from '../../components/KindSelector';
 import { SpecInput } from '../../components/SpecInput';
 import { StepperForm } from '@dslab/ra-stepper';
-import { StepperToolbar } from '../../components/StepperToolbar';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();

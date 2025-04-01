@@ -2,11 +2,9 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     CreateBase,
     CreateView,
-    ListButton,
     required,
     SimpleForm,
     TextInput,
-    TopToolbar,
     useDataProvider,
     useNotify,
     useRedirect,
@@ -22,14 +20,7 @@ import { useGetSchemas } from '../../controllers/schemaController';
 import { SecretUiSchema } from './types';
 import { SpecInput } from '../../components/SpecInput';
 import { useRef } from 'react';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const SecretCreate = () => {
     const { root } = useRootSelector();

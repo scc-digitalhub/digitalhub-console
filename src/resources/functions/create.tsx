@@ -4,10 +4,8 @@ import { useEffect, useState } from 'react';
 import {
     CreateBase,
     CreateView,
-    ListButton,
     LoadingIndicator,
     TextInput,
-    TopToolbar,
     required,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
@@ -21,15 +19,8 @@ import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
 import { Template, TemplatesSelector } from '../../components/TemplatesSelector';
-import { StepperToolbar } from '../../components/StepperToolbar';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();

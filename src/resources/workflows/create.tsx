@@ -5,10 +5,8 @@ import {
     CreateBase,
     CreateView,
     FormDataConsumer,
-    ListButton,
     LoadingIndicator,
     TextInput,
-    TopToolbar,
     required,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
@@ -22,15 +20,8 @@ import { MetadataInput } from '../../components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../components/SpecInput';
-import { StepperToolbar } from '../../components/StepperToolbar';
-
-const CreateToolbar = () => {
-    return (
-        <TopToolbar>
-            <ListButton />
-        </TopToolbar>
-    );
-};
+import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();

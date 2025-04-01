@@ -29,7 +29,7 @@ import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
-import { ShowToolbar } from '../../components/ShowToolbar';
+import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 
 const ShowComponent = () => {
     const record = useRecordContext();

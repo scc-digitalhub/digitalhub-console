@@ -26,7 +26,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
 import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
-import { ShowToolbar } from '../../components/ShowToolbar';
+import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { TaskAndRuns } from '../../components/TaskAndRuns';
 
 const ShowComponent = () => {
