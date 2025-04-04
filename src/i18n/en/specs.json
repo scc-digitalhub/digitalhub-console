@@ -101,6 +101,18 @@
         "description": "MLFlow model serving",
         "title": "MLFlow"
     },
+    "kubeaiserve": {
+        "description": "KubeAI model serving",
+        "title": "KubeAI"
+    },
+    "kubeaiserve+serve": {
+        "description": "KubeAI serve task definition",
+        "title": "KubeAI serve task"
+    },
+    "kubeaiserve+run": {
+        "description": "KubeAI serve run definition",
+        "title": "KubeAI Run"
+    },
     "mlrun": {
         "description": "",
         "title": "MLRun"
