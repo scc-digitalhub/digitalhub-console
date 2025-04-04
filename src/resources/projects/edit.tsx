@@ -1,20 +1,13 @@
 import {
-    Button,
     EditBase,
     EditView,
-    SaveButton,
     SimpleForm,
     TextInput,
-    Toolbar,
     useBasename,
     useNotify,
-    useRecordContext,
     useRedirect,
-    useResourceContext,
-    useTranslate,
+    useResourceDefinitions,
 } from 'react-admin';
-import { useNavigate } from 'react-router';
-import ClearIcon from '@mui/icons-material/Clear';
 import { Container, Box, Stack } from '@mui/system';
 import { MetadataSchema } from '../../common/schemas';
 import { FlatCard } from '../../components/FlatCard';
@@ -23,33 +16,16 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
-
-export const EditToolbar = () => {
-    const translate = useTranslate();
-    const navigate = useNavigate();
-    const handleClick = () => {
-        navigate(-1);
-    };
-    return (
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <SaveButton />
-            <Button
-                color="info"
-                label={translate('actions.cancel')}
-                onClick={handleClick}
-            >
-                <ClearIcon />
-            </Button>
-        </Toolbar>
-    );
-};
+import { SpecInput } from '../../components/SpecInput';
+import { useState } from 'react';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 export const ProjectEdit = () => {
-    const resource = useResourceContext();
-    const record = useRecordContext();
     const notify = useNotify();
     const redirect = useRedirect();
     const basename = useBasename();
+    const resources = useResourceDefinitions();
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     const onSuccess = (data, variables, context) => {
         notify('ra.notification.updated', {
@@ -57,6 +33,18 @@ export const ProjectEdit = () => {
             messageArgs: { smart_count: 1 },
         });
         redirect(`${basename}/config`);
+    };
+
+    const getUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+
+        let uiSchema = {};
+        for (const resource of Object.keys(resources)) {
+            uiSchema[resource] = { 'ui:widget': 'hidden' };
+        }
+        return uiSchema as any;
     };
 
     return (
@@ -81,6 +69,11 @@ export const ProjectEdit = () => {
                                     source="metadata"
                                     schema={MetadataSchema}
                                     uiSchema={ProjectMetadataEditUiSchema}
+                                />
+                                <SpecInput
+                                    source="spec"
+                                    onDirty={setIsSpecDirty}
+                                    getUiSchema={getUiSchema}
                                 />
                             </SimpleForm>
                         </FlatCard>

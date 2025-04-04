@@ -145,6 +145,9 @@
         "description": "Nefertem validate task definition",
         "title": "Nefertem validate task"
     },
+    "project": {
+        "description": ""
+    },
     "python": {
         "description": "",
         "title": "Python"
