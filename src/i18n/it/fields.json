@@ -739,6 +739,10 @@
     "description": "ID gruppo per l'esecuzione del container",
     "title": "Esegui come gruppo"
   },
+  "runAsNonRoot": {
+    "description": "Eseguire come utente non-root",
+    "title": "Eseguire come non root"
+  },
   "initParameters": {
     "description": "",
     "item": {
@@ -765,5 +769,4 @@
       "title": "Variabile di Ambiente"
     }
   }
-
 }

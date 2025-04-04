@@ -185,7 +185,10 @@
     "description": "Esecuzione modello SKLearn",
     "title": "SKLearn"
   },
-  "table": {
+  "secret": {
+    "description": ""
+},
+"table": {
     "description": "",
     "title": "Tabella"
   }

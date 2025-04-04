@@ -137,6 +137,7 @@
       "description": "",
       "title": "File"
     }
+
   },
   "forceBuild": {
     "description": "",
@@ -380,7 +381,6 @@
     }
   },
   "kubeai": {
-
     "filepath": {
       "description": "",
       "title": "File Path"
