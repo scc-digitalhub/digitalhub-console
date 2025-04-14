@@ -1,62 +1,52 @@
+import { JsonSchemaField } from '../../components/JsonSchema';
+import { Container, Stack } from '@mui/material';
+import { memo, useEffect, useState } from 'react';
+
 import {
-    Container,
-    Stack,
-} from '@mui/material';
-import { ReactNode, memo, useEffect, useState } from 'react';
-import {
-    DateField,
     Labeled,
     ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
-    TextInput,
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
 import { arePropsEqual } from '../../common/helper';
-import { JsonSchemaField } from '../../components/JsonSchema';
+import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { ModelIcon } from './icon';
-import { getModelSpecUiSchema } from './types';
-import { FlatCard } from '../../components/FlatCard';
+import { getReportSpecUiSchema } from './types';
+import { ReportIcon } from './icon';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
-import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { MetricsGrid } from '../../components/MetricsGrid';
-import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
-import { Reports } from '../../components/Reports';
 
 const ShowComponent = () => {
     const record = useRecordContext();
 
-    return <ModelShowLayout record={record} />;
+    return <ReportShowLayout record={record} />;
 };
 
-const getUiSpec = (kind: string) => {
-    const uiSpec = getModelSpecUiSchema(kind) || {};
-    //hide metrics field
-    uiSpec['metrics'] = {
-        'ui:widget': 'hidden',
-    };
-    uiSpec['parameters'] = {
-        'ui:ObjectFieldTemplate': JsonParamsWidget,
-        'ui:title': 'fields.parameters.title',
-    };
-    return uiSpec;
-};
-const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
+const ReportShowLayout = memo(function ReportShowLayout(props: {
+    record: any;
+}) {
     const { record } = props;
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-
+    // const translate = useTranslate();
+    // const { data: schemas, isLoading, error } = useGetSchemas('metadata');
+    // const metadataKinds = schemas
+    //     ? schemas.map(s => ({
+    //           id: s.kind,
+    //           name: s.kind,
+    //           schema: s.schema,
+    //       }))
+    //     : [];
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -69,48 +59,9 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
         }
     }, [record, schemaProvider, resource]);
 
-    const metricsComparisonFilters = [
-        <TextInput
-            label="fields.name.title"
-            source="q"
-            alwaysOn
-            resettable
-            key={1}
-        />,
-    ];
-
-    const metricsDatagridFields = [
-        <TextField
-            source="id"
-            label="fields.id"
-            sortable={false}
-            key={'df1'}
-        />,
-        <DateField
-            source="metadata.created"
-            showTime
-            label="fields.metadata.created"
-            key={'df2'}
-        />,
-        <ChipsField
-            label="fields.labels.title"
-            source="metadata.labels"
-            sortable={false}
-            key={'df3'}
-        />,
-    ];
-
     if (!record) return <></>;
     return (
-        <TabbedShowLayout
-            syncWithLocation={false}
-            record={record}
-            sx={{
-                '& .RaTabbedShowLayout-content': {
-                    pb: 2,
-                },
-            }}
-        >
+        <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
@@ -123,14 +74,12 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 </Stack>
 
                 <IdField source="key" />
-
                 <MetadataField />
-
                 {spec && (
                     <JsonSchemaField
                         source="spec"
                         schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
+                        uiSchema={getReportSpecUiSchema(kind)}
                         label={false}
                     />
                 )}
@@ -138,49 +87,20 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                <MetricsGrid
-                    record={record}
-                    filter={{ name: record?.name, versions: 'all' }}
-                    filters={metricsComparisonFilters}
-                    datagridFields={metricsDatagridFields}
-                />
-            </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="pages.reports.title">
-                <Reports />
-            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
-}, arePropsEqual);
+},
+arePropsEqual);
 
-/**
- * This component overrides ShowView's default main area container.
- *
- * The max-width and min-width CSS properties play a critical role in determining
- * the width of the data grids contained within the schema and preview tabs.
- */
-const StyledFlatCard = (props: { children: ReactNode }) => {
-    const { children } = props;
-
-    return (
-        <FlatCard
-            // Set the max width to 70vw and min width to 100%
-            sx={{ maxWidth: '70vw', minWidth: '100%' }}
-        >
-            {children}
-        </FlatCard>
-    );
-};
-
-export const ModelShow = () => {
+export const ArtifactShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
-                    <ShowPageTitle icon={<ModelIcon fontSize={'large'} />} />
+                    <ShowPageTitle icon={<ReportIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{
@@ -195,7 +115,7 @@ export const ModelShow = () => {
                                 gap: 2,
                             },
                         }}
-                        component={StyledFlatCard}
+                        component={FlatCard}
                         aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />

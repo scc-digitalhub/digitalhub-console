@@ -275,6 +275,7 @@ const CoreApp = () => {
                                     />
                                     <Resource name="schemas" />
                                     <Resource name="logs" />
+                                    <Resource name="reports" />
                                     <Resource name="metadatas" />
                                     <Resource
                                         name="secrets"

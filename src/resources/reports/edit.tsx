@@ -1,0 +1,152 @@
+import { Box, Container, Stack } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import {
+    EditBase,
+    EditView,
+    SimpleForm,
+    TextInput,
+    useInput,
+    useNotify,
+    useRecordContext,
+    useRedirect,
+    useResourceContext,
+} from 'react-admin';
+import { FlatCard } from '../../components/FlatCard';
+import { FormLabel } from '../../components/FormLabel';
+import { EditPageTitle } from '../../components/PageTitle';
+import { ReportIcon } from './icon';
+import { getReportSpecUiSchema } from './types';
+import { MetadataInput } from '../../components/MetadataInput';
+import {
+    UploadController,
+    useUploadController,
+} from '../../controllers/uploadController';
+import { FileInput } from '../../components/FileInput';
+import { SpecInput } from '../../components/SpecInput';
+import { randomId } from '../../common/helper';
+import { EditToolbar } from '../../components/toolbars/EditToolbar';
+
+export const ReportEdit = () => {
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    
+    const notify = useNotify();
+    const redirect = useRedirect();
+    const id = useRef(randomId());
+    const uploader = useUploadController({
+        id: id.current,
+    });
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+
+    const onSuccess = (data, variables, context) => {};
+    const onSettled = (data, variables, context) => {
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        // redirect('show', resource, data.id, data);
+    };
+
+    const transform = async data => {
+        await uploader.upload();
+
+        //strip path tl which is a transient field
+        const { path, ...rest } = data;
+
+        return {
+            ...rest,
+            status: {
+                files: uploader.files.map(f => f.info),
+            },
+        };
+    };
+
+    return (
+        <FlatCard sx={{ paddingBottom: '12px' }}>
+            <SimpleForm toolbar={<EditToolbar />}>
+                <ReportEditForm
+                    onSpecDirty={setIsSpecDirty}
+                    uploader={uploader}
+                />
+            </SimpleForm>
+        </FlatCard>
+    );
+
+    // return (
+    //     <Container maxWidth={false} sx={{ pb: 2 }}>
+    //         <EditBase
+    //             resource={resource}
+    //             id={record.id}
+    //             mutationMode="optimistic"
+    //             transform={transform}
+    //             redirect={false}
+    //             mutationOptions={{
+    //                 meta: { update: !isSpecDirty, id: id.current },
+    //                 // onSuccess: onSuccess,
+    //                 // onSettled: onSettled,
+    //             }}
+    //         >
+    //             <>
+    //                 <EditPageTitle icon={<ReportIcon fontSize={'large'} />} />
+
+    //                 <EditView component={Box}>
+    //                     <FlatCard sx={{ paddingBottom: '12px' }}>
+    //                         <SimpleForm toolbar={<EditToolbar />}>
+    //                             <ReportEditForm
+    //                                 onSpecDirty={setIsSpecDirty}
+    //                                 uploader={uploader}
+    //                             />
+    //                         </SimpleForm>
+    //                     </FlatCard>
+    //                 </EditView>
+    //             </>
+    //         </EditBase>
+    //     </Container>
+    // );
+};
+
+const ReportEditForm = (props: {
+    onSpecDirty?: (state: boolean) => void;
+    uploader?: UploadController;
+}) => {
+    const { onSpecDirty, uploader } = props;
+    const resource = useResourceContext();
+
+    //update path in spec depending on upload
+    //we need to watch it here because path is nested in spec
+    const { field } = useInput({ resource, source: 'spec' });
+    useEffect(() => {
+        if (uploader && field) {
+            field.onChange({ ...field.value, path: uploader.path });
+        }
+    }, [uploader?.path]);
+
+    const getUiSchema = (kind: string | undefined) => {
+        if (!kind) {
+            return undefined;
+        }
+        const uiSchema = getReportSpecUiSchema(kind) as any;
+        if (uiSchema && uploader?.path != null) {
+            uiSchema['path'] = { 'ui:readonly': true };
+        }
+
+        return uiSchema;
+    };
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+            <Stack direction={'row'} spacing={3} pt={4}>
+                <TextInput source="name" readOnly />
+                <TextInput source="kind" readOnly />
+            </Stack>
+            <MetadataInput />
+            {/* <SpecInput
+                source="spec"
+                onDirty={onSpecDirty}
+                getUiSchema={getUiSchema}
+            />
+            {uploader && <FileInput uploader={uploader} source="path" />} */}
+        </>
+    );
+};

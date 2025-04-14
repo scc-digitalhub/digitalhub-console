@@ -23,6 +23,7 @@ import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { Reports } from '../../components/Reports';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -89,6 +90,9 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
+            </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label="pages.reports.title">
+                <Reports entity_type='ARTIFACT'/>
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
