@@ -59,6 +59,7 @@ export const TaskAndRuns = (props: {
                 </ShowInDialogButton>
                 <EditInDialogButton
                     fullWidth
+                    closeOnClickOutside={false}
                     maxWidth={'lg'}
                     transform={prepare}
                     mutationMode="pessimistic"
@@ -163,6 +164,7 @@ const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                 fullWidth
                 maxWidth={'lg'}
                 transform={prepare}
+                closeOnClickOutside={false}
             >
                 {runSchema?.schema && taskSchema?.schema && (
                     <RunCreateForm

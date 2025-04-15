@@ -113,6 +113,7 @@ const CreateButton = () => {
             maxWidth={'md'}
             transform={transform}
             variant="contained"
+            closeOnClickOutside={false}
             mutationOptions={{
                 onSuccess: () => {
                     notify('ra.notification.created', {
