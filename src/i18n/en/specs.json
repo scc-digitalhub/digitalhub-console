@@ -67,6 +67,21 @@
         "description": "Kubeflow Pipeline run definition",
         "title": "Kubeflow Pipeline run"
     },
+    "kubeai": {
+        "description": ""
+    },
+    "kubeaiserve": {
+        "description": "KubeAI model serving",
+        "title": "KubeAI"
+    },
+    "kubeai+serve": {
+        "description": "KubeAI serve task definition",
+        "title": "KubeAI serve task"
+    },
+    "kubeai+run": {
+        "description": "KubeAI serve run definition",
+        "title": "KubeAI Run"
+    },
     "metadata": {
         "audit": {
             "description": "",

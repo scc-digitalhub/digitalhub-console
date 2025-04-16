@@ -132,7 +132,12 @@
     "description": "",
     "empty": "Nessuna informazione disponibile",
     "tab": "File",
-    "title": "File"
+    "title": "File",
+    "item": {
+      "description": "",
+      "title": "File"
+    }
+
   },
   "forceBuild": {
     "description": "",
@@ -375,6 +380,108 @@
       "title": "Parametri del Signature"
     }
   },
+  "kubeai": {
+    "filepath": {
+      "description": "",
+      "title": "Percorso del File"
+    },
+    "filecontent": {
+      "description": "",
+      "title": "Contenuto del File"
+    },
+    "strategy": {
+      "description": "",
+      "title": "Strategia di Load Balancing"
+    },
+    "prefixhash": {
+      "description": "",
+      "title": "Prefix Hash"
+    },
+    "url": {
+      "description": "URL to the model (s3://, hf://, store://, ollama://)",
+      "title": "Model URL"
+    },
+    "image":{
+      "description": "",
+      "title": "Inference Server Base Image"
+    },
+    "adapters": {
+      "description": "",
+      "title": "LoRA Adapter"
+    },
+    "features": {
+      "description": "",
+      "title": "Features supportate"
+    },
+    "engine": {
+      "description": "",
+      "title": "Inference Engine"
+    },
+    "args": {
+      "description": "",
+      "title": "Argomenti di Inference Server"
+    },
+    "resourceprofile": {
+      "description": "",
+      "title": "Resource Profile"
+    },
+    "cacheprofile": {
+      "description": "",
+      "title": "Cache Profile"
+    },
+    "env": {
+      "description": "",
+      "title": "Variabili di Ambiente"
+    },
+    "replicas": {
+      "description": "Numero di repliche dei Pod che devono essere srvite",
+      "title": "Numero di Repliche"
+    },
+    "minreplicas": {
+      "description": "numero minimo di repliche di Pod a cui il modello può essere adattato.",
+      "title": "Numero minimi di Repliche"
+    },
+    "maxreplicas": {
+      "description": "numero massimo di repliche Pod che il modello può supportare.",
+      "title": "Numero massimo di Repliche"
+    },
+    "autoscalingdisabled": {
+      "description": "impedirà al controller di gestire le repliche per il modello",
+      "title": "Disabilita Autoscaling"
+    },
+    "targetrequests": {
+      "description": "numero medio di richieste attive che l'autoscaler proverà a gestire sui Pod del modello server.",
+      "title": "Richieste Target"
+    },
+    "scaledowndelayseconds": {
+      "description": "tempo minimo prima che una distribuzione venga ridotta dopo che l'algoritmo di ridimensionamento automatico determina che deve essere ridotta",
+      "title": "Tempo di attesa per lo spegnimento in secondi"
+    },
+    "loadbalancing": {
+      "description": "",
+      "title": "Configurazione di Load Balancing"
+    },
+    "files": {
+      "description": "File da montare nei Pod modello",
+      "title": "Files"
+    },
+    "meanloadfactor": {
+      "description": "Percentuale che il carico di un dato endpoint non deve superare rispetto al carico medio di tutti gli endpoint nell'hash ring",
+      "title": "Mean Load Factor"
+    },
+    "replication": {
+      "description": "Numero di repliche di ciascun endpoint sull'hash ring",
+      "title": "Replication"
+    },
+    "prefixcharlength": {
+      "description": "Numero di caratteri da utilizzare per l'hash del prefisso",
+      "title": "Prefix Char Length"
+    },
+    "scaling": {
+      "description": "Configurazione di scalabilità",
+      "title": "Configurazione di Scalabilità"
+    }
+  },
   "modelserve": {
     "image": {
       "description": "",
@@ -467,6 +574,10 @@
       "description": "Versione maggiore del linguaggio",
       "title": "Versione di Python"
     }
+  },
+  "ref": {
+    "description": "",
+    "title": "Ref"
   },
   "relationships": {
     "description": "",
@@ -632,6 +743,10 @@
     "description": "ID gruppo per l'esecuzione del container",
     "title": "Esegui come gruppo"
   },
+  "runAsNonRoot": {
+    "description": "Eseguire come utente non-root",
+    "title": "Eseguire come non root"
+  },
   "initParameters": {
     "description": "",
     "item": {
@@ -639,5 +754,23 @@
       "title": "Parametro"
     },
     "title": "Parametri di Inizializzazione"
+  },
+  "adapters": {
+    "item": {
+      "description": "",
+      "title": "Adapter"
+    }
+  },
+  "features":{
+    "item": {
+      "description": "",
+      "title": "Feature"
+    }
+  },
+  "env": {
+    "item": {
+      "description": "",
+      "title": "Variabile di Ambiente"
+    }
   }
 }
