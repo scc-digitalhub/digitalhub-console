@@ -181,6 +181,7 @@ export const MyAppBar = () => {
                 overflow="hidden"
                 variant="h6"
                 color="inherit"
+                flex={enableSearch ? undefined : '1'}
             >
                 <RootResourceSelectorMenu
                     source="name"
