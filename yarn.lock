@@ -352,10 +352,10 @@
   dependencies:
     ra-core "^4.11.0"
 
-"@dslab/ra-root-selector@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-1.0.1.tgz#06bcbf50e4972c8ee8ed3bfc435fc0253ebe903d"
-  integrity sha512-82CX8ruGQPeDus8AqlRCsPitL+3thGvJSe2S4mR+oRoXftGsqVxZrTKUQ6ppOJsyTpPkcWX2RpsCdiKYk0FWJg==
+"@dslab/ra-root-selector@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-1.0.5.tgz#69689becc1011866bc2b34b96fafd695ef5c0744"
+  integrity sha512-YBzp/XLk2feAzp/YEfgAKvJ7blT2NwzXKT34uUsJcIMmQcRJtyqlf5yBL9kHudIV22f+OAw7sY0T9WiKkwCjEQ==
   dependencies:
     ra-core "^4.11.0"
 

@@ -323,7 +323,6 @@ const InitialWrapper = () => {
             selector={<ProjectSelectorList />}
         >
             <Admin
-                dashboard={Dashboard}
                 layout={LayoutProjects}
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
