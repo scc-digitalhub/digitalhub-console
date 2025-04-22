@@ -35,18 +35,21 @@ export const DataItemEdit = () => {
     });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
+    //override onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = (data, variables, context) => {};
-    const onSettled = (data, variables, context) => {
-        notify('ra.notification.updated', {
-            type: 'info',
-            messageArgs: { smart_count: 1 },
-        });
-        redirect('show', resource, data.id, data);
+    const onSettled = async (data, error, variables, context) => {
+        //upload and notify only if success, otherwise onError will handle notify
+        if (!error) {
+            await uploader.upload();
+            notify('ra.notification.updated', {
+                type: 'info',
+                messageArgs: { smart_count: 1 },
+            });
+            redirect('show', resource, data.id, data);
+        }
     };
 
-    const transform = async data => {
-        await uploader.upload();
-
+    const transform = data => {
         //strip path tl which is a transient field
         const { path, ...rest } = data;
 
@@ -57,6 +60,7 @@ export const DataItemEdit = () => {
             },
         };
     };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
@@ -86,6 +90,7 @@ export const DataItemEdit = () => {
         </Container>
     );
 };
+
 const DataItemEditForm = (props: {
     onSpecDirty?: (state: boolean) => void;
     uploader?: UploadController;

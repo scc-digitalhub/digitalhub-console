@@ -8,6 +8,8 @@ import {
     TextInput,
     required,
     useInput,
+    useNotify,
+    useRedirect,
     useResourceContext,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
@@ -31,19 +33,19 @@ import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 export const ModelCreate = () => {
     const { root } = useRootSelector();
     const id = useRef(randomId());
+    const notify = useNotify();
+    const redirect = useRedirect();
+    const resource = useResourceContext();
     const uploader = useUploadController({
         id: id.current,
     });
 
-    const transform = async data => {
-        await uploader.upload();
-
+    const transform = data => {
         //strip path tl which is a transient field
         const { path, ...rest } = data;
 
         return {
             ...rest,
-            id: id.current,
             project: root,
             status: {
                 files: uploader.files.map(f => f.info),
@@ -51,10 +53,17 @@ export const ModelCreate = () => {
         };
     };
 
+    const onSuccess = async data => {
+        await uploader.upload();
+        notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
+        redirect('list', resource);
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
                 transform={transform}
+                mutationOptions={{ onSuccess }}
                 redirect="list"
                 record={{ id: id.current, spec: { path: null } }}
             >
