@@ -27,6 +27,14 @@
     "description": "",
     "title": "Commands"
   },
+  "config": {
+    "title": "Configuration",
+    "description": "",
+    "defaultFilesStore" : {
+      "title": "Default File Store",
+      "description": ""
+    }
+  },
   "constraints": {
     "description": "Constraints object",
     "item": {
@@ -127,6 +135,14 @@
   "execArgs": {
     "description": "Arguments passed to command for execution",
     "title": "Execution Args"
+  },
+  "fields": {
+    "title": "Fields",
+    "description": "",
+    "item": {
+      "title": "Field",
+      "description": ""
+    }
   },
   "files": {
     "description": "",
