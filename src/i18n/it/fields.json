@@ -27,6 +27,14 @@
     "description": "",
     "title": "Comandi"
   },
+  "config": {
+    "title": "Configurazione",
+    "description": "",
+    "defaultFilesStore" : {
+      "title": "File Store di Default",
+      "description": ""
+    }
+  },
   "constraints": {
     "description": "Oggetto di constraint",
     "item": {
@@ -127,6 +135,14 @@
   "execArgs": {
     "description": "Argomenti passati al comando per l'esecuzione",
     "title": "Argomenti di Esecuzione"
+  },
+  "fields": {
+    "title": "Campi",
+    "description": "",
+    "item": {
+      "title": "Campo",
+      "description": ""
+    }
   },
   "files": {
     "description": "",

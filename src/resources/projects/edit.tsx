@@ -17,15 +17,26 @@ import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
 import { SpecInput } from '../../components/SpecInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
+import { useSchemaProvider } from '../../provider/schemaProvider';
 
 export const ProjectEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const basename = useBasename();
     const resources = useResourceDefinitions();
+    const schemaProvider = useSchemaProvider();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [schema, setSchema] = useState<any>();
+
+    useEffect(() => {
+        if (schemaProvider) {
+            schemaProvider.get('projects', 'project').then(s => {
+                setSchema(s.schema);
+            });
+        }
+    }, [schemaProvider]);
 
     const onSuccess = (data, variables, context) => {
         notify('ra.notification.updated', {
@@ -70,11 +81,15 @@ export const ProjectEdit = () => {
                                     schema={MetadataSchema}
                                     uiSchema={ProjectMetadataEditUiSchema}
                                 />
-                                <SpecInput
-                                    source="spec"
-                                    onDirty={setIsSpecDirty}
-                                    getUiSchema={getUiSchema}
-                                />
+                                {schema && (
+                                    <SpecInput
+                                        source="spec"
+                                        kind="project"
+                                        schema={schema}
+                                        onDirty={setIsSpecDirty}
+                                        getUiSchema={getUiSchema}
+                                    />
+                                )}
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
