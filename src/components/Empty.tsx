@@ -12,7 +12,7 @@ import { CreateButton } from 'react-admin';
 import { isValidElement } from 'react';
 
 export const Empty = (props: EmptyProps) => {
-    const { className, children } = props;
+    const { className, children, showIcon = true } = props;
     const { hasCreate } = useResourceDefinition(props);
     const resource = useResourceContext(props);
     const translate = useTranslate();
@@ -29,7 +29,7 @@ export const Empty = (props: EmptyProps) => {
     return (
         <Root className={className}>
             <div className={EmptyClasses.message}>
-                <Inbox className={EmptyClasses.icon} />
+                {showIcon && <Inbox className={EmptyClasses.icon} />}
                 <Typography variant="h4" paragraph>
                     {translate(`resources.${resource}.empty`, {
                         _: emptyMessage,
@@ -61,6 +61,7 @@ export interface EmptyProps {
     hasCreate?: boolean;
     className?: string;
     children?: React.ReactElement;
+    showIcon?: boolean;
 }
 
 const PREFIX = 'RaEmpty';

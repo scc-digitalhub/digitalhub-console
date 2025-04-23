@@ -10,7 +10,6 @@ import {
     SelectInput,
     ShowButton,
     ShowView,
-    SimpleShowLayout,
     TabbedShowLayout,
     TextField,
     TextInput,
@@ -21,14 +20,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import {
-    Container,
-    Divider,
-    Grid,
-    Stack,
-    Typography,
-    Box,
-} from '@mui/material';
+import { Container, Divider, Stack, Box } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -54,27 +46,6 @@ import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
-
-export const RunShowLayout = () => {
-    const translate = useTranslate();
-
-    return (
-        <Grid>
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.run.title')}
-            </Typography>
-            <SimpleShowLayout>
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid item xs={6}>
-                        <Labeled label={translate('resources.run.labelName')}>
-                            <TextField source="name" />
-                        </Labeled>
-                    </Grid>
-                </Grid>
-            </SimpleShowLayout>
-        </Grid>
-    );
-};
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();

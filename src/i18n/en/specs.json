@@ -183,6 +183,10 @@
         "description": "Python serve definition",
         "title": "Python serve"
     },
+    "scheduler": {
+        "description": "",
+        "title": "Scheduler"
+    },
     "sklearn": {
         "description": "SKLearn model definition",
         "title": "SKLearn"

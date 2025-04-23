@@ -135,6 +135,17 @@
         },
         "name": "Task |||| Tasks"
     },
+    "triggers": {
+        "create": "Create a new trigger",
+        "empty": "No triggers yet",
+        "fields": {
+            "key": "Key",
+            "name": "Name"
+        },
+        "labelName": "Name",
+        "list": "List and search triggers",
+        "name": "Trigger |||| Triggers"
+    },
     "workflows": {
         "fields": {
             "action": "Action",

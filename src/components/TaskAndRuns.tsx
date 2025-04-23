@@ -5,7 +5,6 @@ import {
     DeleteWithConfirmButton,
     FunctionField,
     Labeled,
-    ListToolbar,
     ListView,
     ShowButton,
     SimpleShowLayout,
@@ -195,7 +194,7 @@ const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                 <ListView
                     component={Box}
                     empty={
-                        <Empty>
+                        <Empty showIcon={false}>
                             <CreateActionButton record={partial} />
                         </Empty>
                     }
@@ -351,7 +350,7 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
 
     return (
         <>
-            <Typography variant="h5" color={'secondary.main'}>
+            <Typography variant="h4" color={'secondary.main'}>
                 {label}
             </Typography>
 
@@ -364,9 +363,9 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                 <ListView
                     component={Box}
                     empty={
-                        <TopToolbar style={{ width: '100%' }}>
+                        <Empty showIcon={false}>
                             <CreateActionButton record={partial} />
-                        </TopToolbar>
+                        </Empty>
                     }
                     actions={<CreateActionButton record={partial} />}
                 >

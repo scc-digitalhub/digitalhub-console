@@ -135,6 +135,17 @@
         },
         "name": "Task |||| Tasks"
     },
+    "triggers": {
+        "create": "Crea un nuovo trigger",
+        "empty": "Nessun trigger",
+        "fields": {
+            "key": "Chiave",
+            "name": "Nome"
+        },
+        "labelName": "Nome",
+        "list": "Elenco e ricerca di trigger",
+        "name": "Trigger |||| Trigger"
+    },
     "workflows": {
         "fields": {
             "action": "Azione",

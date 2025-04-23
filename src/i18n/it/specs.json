@@ -183,6 +183,10 @@
     "description": "Definizione dell'operazione di serve del codice Python",
     "title": "Serve di codice Python"
   },
+  "scheduler": {
+      "description": "",
+      "title": "Scheduler"
+  },
   "sklearn": {
     "description": "Definizione modello SKLearn",
     "title": "SKLearn"
