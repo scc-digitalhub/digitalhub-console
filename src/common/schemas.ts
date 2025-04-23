@@ -264,3 +264,9 @@ export const filterProps = (first: any, second: any) => {
         allOf: allOf ? JSON.parse(JSON.stringify(allOf)) : [],
     };
 };
+
+export const SchemaIdPrefixes = {
+    artifacts: 'ARTIFACT:',
+    dataitems: 'DATAITEM:',
+    models: 'MODEL:',
+};
