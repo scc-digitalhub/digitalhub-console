@@ -56,8 +56,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
             return undefined;
         }
         let uiSchema = getSpecUiSchema(kind) as any;
-        if (!uiSchema)
-            uiSchema = {};
+        if (!uiSchema) uiSchema = {};
 
         if (uploader?.path != null) {
             uiSchema['path'] = { 'ui:readonly': true };
