@@ -10,7 +10,7 @@ import {
 } from 'react-admin';
 import { Uppy } from 'uppy';
 import { UploadResult } from '@uppy/core';
-import AwsS3 from '@uppy/aws-s3-multipart';
+import AwsS3 from '@uppy/aws-s3';
 
 /**
  * private helpers
@@ -47,7 +47,7 @@ export type UploadController = {
     uppy: Uppy;
     files: any[];
     path: string | null;
-    upload: () => Promise<UploadResult>;
+    upload: () => Promise<UploadResult<any, any> | undefined>;
 };
 
 export const useUploadController = (
@@ -121,7 +121,8 @@ export const useUploadController = (
             new Uppy(uppyConfig)
                 .use(AwsS3, {
                     id: 'AwsS3',
-                    shouldUseMultipart: file => file.size > 100 * MiB,
+                    shouldUseMultipart: file =>
+                        file.size !== null && file.size > 100 * MiB,
                     getChunkSize: file => 100 * MiB,
                     getUploadParameters: async file => {
                         return {
@@ -140,7 +141,7 @@ export const useUploadController = (
                         return {
                             // uploadId: uploadId.current,
                             uploadId: file['s3']?.uploadId,
-                            key: file.name,
+                            key: file.name || '',
                         };
                     },
 
