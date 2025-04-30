@@ -161,6 +161,7 @@ import {
 } from './resources/models';
 import { ModelIcon } from './resources/models/icon';
 import runDefinition from './resources/runs';
+import triggerDefinition from './resources/triggers';
 import { StompContextProvider } from './contexts/StompContext';
 import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
@@ -267,6 +268,7 @@ const CoreApp = () => {
                                     </Resource>
                                     <Resource name="tasks" />
                                     <Resource {...runDefinition} />
+                                    <Resource {...triggerDefinition} />
                                     <Resource
                                         name="projects"
                                         list={ProjectSelectorList}
