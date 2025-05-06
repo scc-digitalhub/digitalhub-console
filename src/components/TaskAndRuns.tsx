@@ -13,7 +13,7 @@ import {
     useGetResourceLabel,
     useRecordContext,
 } from 'react-admin';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Typography, Box, alpha } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -41,63 +41,7 @@ export const TaskAndRuns = (props: {
     runOf: 'function' | 'workflow';
 }) => {
     const { task, onEdit, runOf } = props;
-
-    const prepare = (r: any) => {
-        return {
-            ...r,
-            spec: {
-                task,
-                ...r.spec,
-            },
-        };
-    };
-
-    return (
-        <>
-            <TopToolbar>
-                <ShowInDialogButton fullWidth maxWidth={'lg'}>
-                    <TaskShowComponent />
-                </ShowInDialogButton>
-                <EditInDialogButton
-                    fullWidth
-                    closeOnClickOutside={false}
-                    maxWidth={'lg'}
-                    transform={prepare}
-                    mutationMode="pessimistic"
-                    mutationOptions={{
-                        onSuccess: data => {
-                            //data is updated
-                            if (task && data) onEdit(task, data);
-                        },
-                    }}
-                >
-                    <TaskEditComponent />
-                </EditInDialogButton>
-                <InspectButton fullWidth />
-            </TopToolbar>
-            <SimpleShowLayout>
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" label="fields.kind" />
-                    </Labeled>
-                    <Labeled>
-                        <TextField source="id" />
-                    </Labeled>
-                </Stack>
-                <Labeled>
-                    <TextField source="key" />
-                </Labeled>
-            </SimpleShowLayout>
-            <TaskTriggerList runOf={runOf} />
-            <TaskRunList runOf={runOf} />
-        </>
-    );
-};
-
-const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     const record = useRecordContext();
-    const getResourceLabel = useGetResourceLabel();
-    const label = getResourceLabel('runs', 2);
 
     const fn = record?.spec?.[runOf] || '';
     const url = new URL(fn);
@@ -127,6 +71,126 @@ const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                 runSchema.schema = filterProps(runSchema.schema, s.schema);
             });
     }
+
+    const prepareTask = (r: any) => {
+        return {
+            ...r,
+            spec: {
+                task,
+                ...r.spec,
+            },
+        };
+    };
+
+    const partialTrigger = {
+        project: record?.project,
+        spec: {
+            task: key,
+            function: fn,
+            template: {
+                function: fn,
+                task: key,
+                local_execution: false,
+            },
+        },
+    };
+
+    const prepareTrigger = (r: any) => {
+        const v = {
+            ...r,
+            spec: {
+                task: key,
+                function: fn,
+                //copy the task spec  (using form)
+                ...r.spec,
+            },
+        };
+
+        //clear values from template
+        if (v.spec.template) {
+            if (v.spec.template.function) {
+                delete v.spec.template.function;
+            }
+            if (v.spec.template.task) {
+                delete v.spec.template.task;
+            }
+            v.spec.template.local_execution = false;
+        }
+
+        return v;
+    };
+
+    return (
+        <>
+            <TopToolbar>
+                <ShowInDialogButton fullWidth maxWidth={'lg'}>
+                    <TaskShowComponent />
+                </ShowInDialogButton>
+                <EditInDialogButton
+                    fullWidth
+                    closeOnClickOutside={false}
+                    maxWidth={'lg'}
+                    transform={prepareTask}
+                    mutationMode="pessimistic"
+                    mutationOptions={{
+                        onSuccess: data => {
+                            //data is updated
+                            if (task && data) onEdit(task, data);
+                        },
+                    }}
+                >
+                    <TaskEditComponent />
+                </EditInDialogButton>
+                <InspectButton fullWidth />
+                <CreateTriggerActionButton
+                    record={partialTrigger}
+                    runSchema={runSchema}
+                    taskSchema={taskSchema}
+                    prepare={prepareTrigger}
+                />
+            </TopToolbar>
+            <SimpleShowLayout>
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="kind" label="fields.kind" />
+                    </Labeled>
+                    <Labeled>
+                        <TextField source="id" />
+                    </Labeled>
+                </Stack>
+                <Labeled>
+                    <TextField source="key" />
+                </Labeled>
+            </SimpleShowLayout>
+            <TaskTriggerList
+                fn={fn}
+                taskKey={key}
+                runSchema={runSchema}
+                taskSchema={taskSchema}
+            />
+            <TaskRunList
+                taskKey={key}
+                runSchema={runSchema}
+                taskSchema={taskSchema}
+                runtime={runtime}
+            />
+        </>
+    );
+};
+
+type ListProps = {
+    fn?: any;
+    taskKey: string;
+    runSchema: any;
+    taskSchema: any;
+    runtime?: string;
+};
+
+const TaskRunList = (props: ListProps) => {
+    const { taskKey: key, runSchema, taskSchema, runtime = '' } = props;
+    const record = useRecordContext();
+    const getResourceLabel = useGetResourceLabel();
+    const label = getResourceLabel('runs', 2);
 
     const partial = {
         project: record?.project,
@@ -249,39 +313,11 @@ const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     );
 };
 
-const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
+const TaskTriggerList = (props: ListProps) => {
+    const { fn, taskKey: key, runSchema, taskSchema } = props;
     const record = useRecordContext();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('triggers', 2);
-
-    const fn = record?.spec?.[runOf] || '';
-    const url = new URL(fn);
-    const runtime = url.protocol
-        ? url.protocol.substring(0, url.protocol.length - 1)
-        : '';
-    url.protocol = record.kind + ':';
-    const key = `${record.kind}://${record.project}/${record.id}`;
-
-    const { data: schemas } = useGetManySchemas([
-        { resource: runOf + 's', runtime },
-        { resource: 'tasks', runtime },
-        { resource: 'runs', runtime },
-    ]);
-
-    //filter run and task schema
-    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
-    const taskSchema = schemas
-        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
-        : null;
-
-    if (runSchema && schemas) {
-        //filter out embedded props from spec
-        schemas
-            .filter(s => s.entity != 'RUN')
-            .forEach(s => {
-                runSchema.schema = filterProps(runSchema.schema, s.schema);
-            });
-    }
 
     const partial = {
         project: record?.project,
@@ -349,8 +385,16 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
     };
 
     return (
-        <>
-            <Typography variant="h4" color={'secondary.main'}>
+        <Box sx={{ paddingX: '18px', paddingY: '9px' }}>
+            <Typography
+                variant="h6"
+                sx={theme => ({
+                    color: alpha(theme.palette.common.black, 0.6),
+                    ...theme.applyStyles('dark', {
+                        color: alpha(theme.palette.common.white, 0.7),
+                    }),
+                })}
+            >
                 {label}
             </Typography>
 
@@ -362,23 +406,24 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
             >
                 <ListView
                     component={Box}
-                    empty={
-                        <Empty showIcon={false}>
-                            <CreateActionButton record={partial} />
-                        </Empty>
-                    }
-                    actions={<CreateActionButton record={partial} />}
+                    empty={false}
+                    actions={false}
                 >
                     <Datagrid
                         bulkActionButtons={<BulkDeleteAllVersionsButton />}
                         rowClick={false}
+                        sx={{ marginTop: '12px' }}
                     >
                         <DateField
                             source="metadata.created"
                             showTime
                             label="fields.metadata.created"
                         />
-                        <TextField source="id" sortable={false} />
+                        <TextField
+                            source="name"
+                            label="fields.name.title"
+                            sortable={false}
+                        />
                         <StateChips
                             source="status.state"
                             sortable={false}
@@ -414,6 +459,43 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                     </Datagrid>
                 </ListView>
             </ListBaseLive>
-        </>
+        </Box>
+    );
+};
+
+const CreateTriggerActionButton = (props: {
+    record?: any;
+    label?: string;
+    icon?: ReactElement;
+    runSchema: any;
+    taskSchema: any;
+    prepare: (r: any) => any;
+}) => {
+    const {
+        record,
+        label = 'actions.createTrigger',
+        icon,
+        runSchema,
+        taskSchema,
+        prepare,
+    } = props;
+    return (
+        <CreateInDialogButton
+            resource="triggers"
+            label={label}
+            icon={icon}
+            record={record}
+            fullWidth
+            maxWidth={'lg'}
+            transform={prepare}
+            closeOnClickOutside={false}
+        >
+            {runSchema?.schema && taskSchema?.schema && (
+                <TriggerCreateForm
+                    runSchema={runSchema.schema}
+                    taskSchema={taskSchema.schema}
+                />
+            )}
+        </CreateInDialogButton>
     );
 };
