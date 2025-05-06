@@ -2,6 +2,7 @@ import { StepperForm } from '@dslab/ra-stepper';
 import {
     FormDataConsumer,
     required,
+    TextInput,
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
@@ -9,20 +10,16 @@ import { getTaskUiSpec } from '../tasks/types';
 import { getTriggerUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { JsonSchemaInput } from '../../components/JsonSchema';
-import {
-    useGetManySchemas,
-    useGetSchema,
-    useGetSchemas,
-} from '../../controllers/schemaController';
+import { useGetSchemas } from '../../controllers/schemaController';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
-import { isValidAgainstSchema } from '../../common/helper';
+import { isAlphaNumeric, isValidAgainstSchema } from '../../common/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { getRunUiSpec } from '../runs/types';
 import { KindSelector } from '../../components/KindSelector';
-import { SpecInput } from '../../components/SpecInput';
+import { Stack } from '@mui/material';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -65,7 +62,13 @@ export const TriggerCreateForm = (props: {
             toolbar={<StepperToolbar saveProps={{ alwaysEnable: true }} />}
         >
             <StepperForm.Step label={getResourceLabel('triggers', 1)}>
-                <KindSelector kinds={kinds} />
+                <Stack direction={'row'} spacing={3} pt={4}>
+                    <TextInput
+                        source="name"
+                        validate={[required(), isAlphaNumeric()]}
+                    />
+                    <KindSelector kinds={kinds} />
+                </Stack>
                 <FormDataConsumer<{ kind: string }>>
                     {({ formData }) => {
                         if (formData?.kind) {
