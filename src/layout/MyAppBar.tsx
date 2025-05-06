@@ -14,6 +14,7 @@ import { SearchEnabledContext } from '../App';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
 import { useStompContext } from '../contexts/StompContext';
 import { NotificationArea } from '../components/NotificationArea';
+import { UploadArea } from '../components/upload/UploadArea';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -199,6 +200,8 @@ export const MyAppBar = () => {
                     sx={{ marginLeft: '50px' }}
                 />
             )}
+
+            <UploadArea />
 
             {client && <NotificationArea />}
 

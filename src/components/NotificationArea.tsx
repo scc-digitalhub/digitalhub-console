@@ -1,10 +1,4 @@
-import {
-    Menu,
-    Badge,
-    MenuItem,
-    Box,
-    CardHeader,
-} from '@mui/material';
+import { Menu, Badge, MenuItem, Box, CardHeader } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useState, useEffect } from 'react';
 import {

@@ -4,7 +4,9 @@
     "type_and_press_enter": "Type and press ENTER to add",
     "upload": {
         "file_too_big": "File exceeds the maximum allowed size of 100 GiB",
-        "upload_error": "Error during upload of %{fileName} %{error}"
+        "upload_error": "Error during upload of %{fileName} %{error}",
+        "header": "Uploads",
+        "subheader": "%{uploading} files uploading"
     },
     "validation": {
         "duplicated": "Duplicated, already exists",

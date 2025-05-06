@@ -11,6 +11,7 @@ import {
 import { Uppy } from 'uppy';
 import { UploadResult } from '@uppy/core';
 import AwsS3 from '@uppy/aws-s3';
+import { useUploadStatusContext } from '../contexts/UploadStatusContext';
 
 /**
  * private helpers
@@ -63,6 +64,8 @@ export const useUploadController = (
     const { root } = useRootSelector();
     const notify = useNotify();
     const translate = useTranslate();
+
+    const { updateUploads } = useUploadStatusContext();
 
     //keep files info
     const [files, setFiles] = useState<any[]>([]);
@@ -262,6 +265,13 @@ export const useUploadController = (
                 })
                 .on('upload-progress', file => {
                     if (file) {
+                        updateUploads({
+                            id: file.id,
+                            filename: file.name,
+                            progress: file.progress,
+                            resource: resource,
+                            resourceId: id,
+                        });
                         setFiles(prev => {
                             let p = prev.find(f => f.id === file.id);
                             if (p) {
@@ -283,7 +293,7 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-error', () => {
-                    //using default informer of dashboard. More powerfull and automatic. It must be styled and i18n
+                    //using default informer of dashboard. More powerful and automatic. It must be styled and i18n
                     // notify(translate('upload_error',{
                     //     fileName:file?.name,
                     //     error: error.message
