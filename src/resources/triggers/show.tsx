@@ -31,7 +31,7 @@ import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
-import { RunButton } from './ResumeButton';
+import { RunButton } from './RunButton';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
