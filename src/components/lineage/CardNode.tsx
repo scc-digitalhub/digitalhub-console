@@ -77,6 +77,9 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
                         sx={theme => ({
                             textAlign: 'center',
                             color: alpha(theme.palette.common.black, 0.6),
+                            ...theme.applyStyles('dark', {
+                                color: alpha(theme.palette.common.white, 0.7),
+                            }),
                         })}
                     >
                         {kind}

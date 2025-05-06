@@ -2,6 +2,7 @@
     "actions": "Actions",
     "cancel": "Cancel",
     "click_to_copy": "Click to copy",
+    "createTrigger": "Create trigger",
     "delete_all_versions": "Delete all versions",
     "download": "Download",
     "import_one": "Import",
@@ -9,6 +10,7 @@
     "stop": "Stop",
     "resume": "Resume",
     "revoke": "Revoke",
+    "run": "Run",
     "toggle_x": "Show/Hide %{el}",
     "compare": "Compare",
     "apply": "Apply"
