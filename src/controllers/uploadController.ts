@@ -271,6 +271,7 @@ export const useUploadController = (
                             progress: file.progress,
                             resource: resource,
                             resourceId: id,
+                            remove: () => uppy?.removeFile(file.id),
                         });
                         setFiles(prev => {
                             let p = prev.find(f => f.id === file.id);

@@ -1,7 +1,7 @@
 import { Badge, Box, CardHeader, Menu, MenuItem } from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { IconButtonWithTooltip, useTranslate } from 'react-admin';
+import { Confirm, IconButtonWithTooltip, useTranslate } from 'react-admin';
 import { UploadProgress } from './UploadProgress';
 import { useUploadStatusContext } from '../../contexts/UploadStatusContext';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { useState } from 'react';
 export const UploadArea = () => {
     const translate = useTranslate();
     const { uploads, removeUploads } = useUploadStatusContext();
+    const [openConfirm, setOpenConfirm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handleOpen = (event): void => {
@@ -33,6 +34,31 @@ export const UploadArea = () => {
               0
           )
         : 0;
+
+    const deleteAll = () => {
+        if (
+            uploads.some(
+                u => u.progress.percentage && u.progress.percentage < 100
+            )
+        ) {
+            //open confirmation dialog
+            setOpenConfirm(true);
+        } else {
+            //remove all upload notifications
+            removeUploads();
+        }
+    };
+
+    const handleConfirm = () => {
+        //cancel all uploads and remove notifications
+        uploads.forEach(u => u.remove());
+        removeUploads();
+        setOpenConfirm(false);
+    };
+
+    const handleDialogClose = () => {
+        setOpenConfirm(false);
+    };
 
     const icon = (
         <Badge
@@ -84,7 +110,7 @@ export const UploadArea = () => {
                             sx={{ width: '100%', py: '5px' }}
                             action={
                                 <IconButtonWithTooltip
-                                    onClick={() => removeUploads()}
+                                    onClick={deleteAll}
                                     label="ra.action.clear_array_input"
                                 >
                                     <ClearAllIcon fontSize="small" />
@@ -96,6 +122,19 @@ export const UploadArea = () => {
                                 uploading: uploadCount,
                             })}
                             subheaderTypographyProps={{ variant: 'subtitle2' }}
+                        />
+                        <Confirm
+                            isOpen={openConfirm}
+                            title={translate(
+                                'messages.upload.cancelUpload.title',
+                                { smart_count: 2 }
+                            )}
+                            content={translate(
+                                'messages.upload.cancelUpload.content',
+                                { smart_count: 2 }
+                            )}
+                            onConfirm={handleConfirm}
+                            onClose={handleDialogClose}
                         />
                     </MenuItem>
                 ) : (

@@ -8,6 +8,7 @@ export type Upload = {
     progress: FileProgress;
     resource: string;
     resourceId?: Identifier;
+    remove: () => void;
 };
 
 interface UploadStatusContextValue {

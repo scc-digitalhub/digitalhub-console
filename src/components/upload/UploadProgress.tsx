@@ -11,6 +11,7 @@ import { Upload } from '../../contexts/UploadStatusContext';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
+    Confirm,
     DateField,
     IconButtonWithTooltip,
     useGetOne,
@@ -18,11 +19,19 @@ import {
     useResourceDefinition,
     useTranslate,
 } from 'react-admin';
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
+import { B } from '@wtfcode/byte-converter';
+import { round } from 'lodash';
+
+const scaleBytes = (bytes: number) => {
+    const unit = B.value(bytes).autoScale({ type: 'decimal' });
+    return `${round(unit.value, 1)} ${unit.unit.unit}`;
+};
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads } = props;
     const translate = useTranslate();
+    const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
     const definition = useResourceDefinition({ resource: upload.resource });
     const { data: record } = useGetOne(upload.resource, {
@@ -44,6 +53,27 @@ export const UploadProgress = (props: UploadProgressProps) => {
         <FileUploadIcon fontSize="small" />
     );
 
+    const deleteUpload = () => {
+        if (upload.progress.percentage && upload.progress.percentage < 100) {
+            //open confirmation dialog
+            setOpen(true);
+        } else {
+            //remove upload notification
+            removeUploads(upload);
+        }
+    };
+
+    const handleConfirm = () => {
+        //cancel upload and remove notification
+        upload.remove();
+        removeUploads(upload);
+        setOpen(false);
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);
+    };
+
     return (
         <UploadProgressCard elevation={0} square>
             <CardHeader
@@ -59,7 +89,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 action={
                     <IconButtonWithTooltip
                         label={'ra.action.delete'}
-                        onClick={() => removeUploads(upload)}
+                        onClick={deleteUpload}
                     >
                         <ClearIcon fontSize="small" />
                     </IconButtonWithTooltip>
@@ -69,6 +99,16 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {upload.filename}
                 </Typography>
+                {upload.progress.bytesUploaded &&
+                    upload.progress.bytesTotal && (
+                        <Typography
+                            variant="body2"
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            {scaleBytes(upload.progress.bytesUploaded)} -{' '}
+                            {scaleBytes(upload.progress.bytesTotal)}
+                        </Typography>
+                    )}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ width: '100%', mr: 1 }}>
                         <LinearProgress
@@ -90,6 +130,13 @@ export const UploadProgress = (props: UploadProgressProps) => {
                     </Box>
                 </Box>
             </CardContent>
+            <Confirm
+                isOpen={open}
+                title={translate('messages.upload.cancelUpload.title')}
+                content={translate('messages.upload.cancelUpload.content')}
+                onConfirm={handleConfirm}
+                onClose={handleDialogClose}
+            />
         </UploadProgressCard>
     );
 };
