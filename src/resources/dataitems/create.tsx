@@ -48,8 +48,8 @@ export const DataItemCreate = () => {
         };
     };
 
-    const onSuccess = async data => {
-        await uploader.upload();
+    const onSuccess = data => {
+        uploader.upload();
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };

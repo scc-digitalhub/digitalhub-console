@@ -29,10 +29,10 @@ export const ModelEdit = () => {
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = (data, variables, context) => {};
-    const onSettled = async (data, error, variables, context) => {
+    const onSettled = (data, error, variables, context) => {
         //upload and notify only if success, otherwise onError will handle notify
         if (!error) {
-            await uploader.upload();
+            uploader.upload();
             notify('ra.notification.updated', {
                 type: 'info',
                 messageArgs: { smart_count: 1 },

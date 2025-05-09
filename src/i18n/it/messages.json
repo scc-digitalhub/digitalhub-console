@@ -4,7 +4,13 @@
     "type_and_press_enter": "Digita e premi INVIO per aggiungere",
     "upload": {
         "file_too_big": "Il file supera il limite di 100 GiB",
-        "upload_error": "Errore durante l'upload del file %{fileName}. %{error}"
+        "upload_error": "Errore durante l'upload del file %{fileName}. %{error}",
+        "header": "Upload",
+        "subheader": "%{uploading} upload in corso",
+        "cancelUpload": {
+            "title": "Interrompi upload |||| Interrompi gli upload",
+            "content": "L'upload del file è ancora in corso. Vuoi interromperlo? |||| L'upload di alcuni file è ancora in corso. Vuoi interrompere tutti gli upload?"
+        }
     },
     "validation": {
         "duplicated": "Duplicato, già esistente",

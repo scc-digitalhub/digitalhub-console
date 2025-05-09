@@ -4,7 +4,13 @@
     "type_and_press_enter": "Type and press ENTER to add",
     "upload": {
         "file_too_big": "File exceeds the maximum allowed size of 100 GiB",
-        "upload_error": "Error during upload of %{fileName} %{error}"
+        "upload_error": "Error during upload of %{fileName} %{error}",
+        "header": "Uploads",
+        "subheader": "%{uploading} files uploading",
+        "cancelUpload": {
+            "title": "Cancel the upload |||| Cancel all uploads",
+            "content": "The file is still uploading. Do you want to cancel the upload? |||| Some files are still uploading. Do you want to cancel all the uploads?"
+        }
     },
     "validation": {
         "duplicated": "Duplicated, already exists",

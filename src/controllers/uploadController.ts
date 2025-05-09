@@ -10,7 +10,8 @@ import {
 } from 'react-admin';
 import { Uppy } from 'uppy';
 import { UploadResult } from '@uppy/core';
-import AwsS3 from '@uppy/aws-s3-multipart';
+import AwsS3 from '@uppy/aws-s3';
+import { useUploadStatusContext } from '../contexts/UploadStatusContext';
 
 /**
  * private helpers
@@ -47,7 +48,7 @@ export type UploadController = {
     uppy: Uppy;
     files: any[];
     path: string | null;
-    upload: () => Promise<UploadResult>;
+    upload: () => Promise<UploadResult<any, any> | undefined>;
 };
 
 export const useUploadController = (
@@ -63,6 +64,8 @@ export const useUploadController = (
     const { root } = useRootSelector();
     const notify = useNotify();
     const translate = useTranslate();
+
+    const { updateUploads } = useUploadStatusContext();
 
     //keep files info
     const [files, setFiles] = useState<any[]>([]);
@@ -121,7 +124,8 @@ export const useUploadController = (
             new Uppy(uppyConfig)
                 .use(AwsS3, {
                     id: 'AwsS3',
-                    shouldUseMultipart: file => file.size > 100 * MiB,
+                    shouldUseMultipart: file =>
+                        file.size !== null && file.size > 100 * MiB,
                     getChunkSize: file => 100 * MiB,
                     getUploadParameters: async file => {
                         return {
@@ -140,7 +144,7 @@ export const useUploadController = (
                         return {
                             // uploadId: uploadId.current,
                             uploadId: file['s3']?.uploadId,
-                            key: file.name,
+                            key: file.name || '',
                         };
                     },
 
@@ -261,36 +265,49 @@ export const useUploadController = (
                 })
                 .on('upload-progress', file => {
                     if (file) {
+                        updateUploads({
+                            id: file.id,
+                            filename: file.name,
+                            progress: file.progress,
+                            resource: resource,
+                            resourceId: id,
+                            remove: () => uppy?.removeFile(file.id),
+                        });
                         setFiles(prev => {
-                            let p = prev.find(f => f.id === file.id);
-                            if (p) {
-                                p['file'] = file;
-                            }
-                            return prev;
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
                         });
                     }
                 })
-                .on('upload-success', (file, response) => {
+                .on('upload-success', file => {
                     if (file) {
                         setFiles(prev => {
-                            let p = prev.find(f => f.id === file.id);
-                            if (p) {
-                                p['file'] = file;
-                            }
-                            return prev;
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
                         });
                     }
                 })
-                .on('upload-error', () => {
-                    //using default informer of dashboard. More powerfull and automatic. It must be styled and i18n
-                    // notify(translate('upload_error',{
-                    //     fileName:file?.name,
-                    //     error: error.message
-                    // }), {
-                    //     type: 'error',
-                    // });
+                .on('upload-error', (file, error) => {
+                    if (file) {
+                        updateUploads({
+                            id: file.id,
+                            filename: file.name,
+                            progress: file.progress,
+                            resource: resource,
+                            resourceId: id,
+                            remove: () => uppy?.removeFile(file.id),
+                            error,
+                        });
+                        setFiles(prev => {
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
+                        });
+                    }
                 }),
-        [dataProvider, setFiles]
+        [dataProvider, setFiles, updateUploads]
     );
 
     const path = useMemo(() => {
