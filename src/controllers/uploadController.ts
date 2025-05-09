@@ -274,35 +274,40 @@ export const useUploadController = (
                             remove: () => uppy?.removeFile(file.id),
                         });
                         setFiles(prev => {
-                            let p = prev.find(f => f.id === file.id);
-                            if (p) {
-                                p['file'] = file;
-                            }
-                            return prev;
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
                         });
                     }
                 })
-                .on('upload-success', (file, response) => {
+                .on('upload-success', file => {
                     if (file) {
                         setFiles(prev => {
-                            let p = prev.find(f => f.id === file.id);
-                            if (p) {
-                                p['file'] = file;
-                            }
-                            return prev;
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
                         });
                     }
                 })
-                .on('upload-error', () => {
-                    //using default informer of dashboard. More powerful and automatic. It must be styled and i18n
-                    // notify(translate('upload_error',{
-                    //     fileName:file?.name,
-                    //     error: error.message
-                    // }), {
-                    //     type: 'error',
-                    // });
+                .on('upload-error', (file, error) => {
+                    if (file) {
+                        updateUploads({
+                            id: file.id,
+                            filename: file.name,
+                            progress: file.progress,
+                            resource: resource,
+                            resourceId: id,
+                            remove: () => uppy?.removeFile(file.id),
+                            error,
+                        });
+                        setFiles(prev => {
+                            return prev.map(f =>
+                                f.id === file.id ? { ...f, file: file } : f
+                            );
+                        });
+                    }
                 }),
-        [dataProvider, setFiles]
+        [dataProvider, setFiles, updateUploads]
     );
 
     const path = useMemo(() => {

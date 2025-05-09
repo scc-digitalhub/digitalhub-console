@@ -34,12 +34,17 @@ export const UploadProgress = (props: UploadProgressProps) => {
     const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
     const definition = useResourceDefinition({ resource: upload.resource });
-    const { data: record } = useGetOne(upload.resource, {
+    const { data: record, error } = useGetOne(upload.resource, {
         id: upload.resourceId,
     });
 
     if (!definition) {
         return <></>;
+    }
+
+    if (error) {
+        //TODO
+        console.log('ERROR, TODO: manage upload notification when record is not found');
     }
 
     const subtitle = translate('pages.pageTitle.show.title', {
@@ -109,6 +114,14 @@ export const UploadProgress = (props: UploadProgressProps) => {
                             {scaleBytes(upload.progress.bytesTotal)}
                         </Typography>
                     )}
+                {upload.error && (
+                    <Typography
+                        variant="body2"
+                        sx={{ color: 'text.secondary' }}
+                    >
+                        Failed - {upload.error.message}
+                    </Typography>
+                )}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ width: '100%', mr: 1 }}>
                         <LinearProgress
@@ -118,6 +131,8 @@ export const UploadProgress = (props: UploadProgressProps) => {
                                 upload.progress.percentage &&
                                 upload.progress.percentage === 100
                                     ? 'success'
+                                    : upload.error
+                                    ? 'error'
                                     : 'primary'
                             }
                         />
@@ -132,8 +147,8 @@ export const UploadProgress = (props: UploadProgressProps) => {
             </CardContent>
             <Confirm
                 isOpen={open}
-                title={translate('messages.upload.cancelUpload.title')}
-                content={translate('messages.upload.cancelUpload.content')}
+                title={translate('messages.upload.cancelUpload.title', { smart_count: 1 })}
+                content={translate('messages.upload.cancelUpload.content', { smart_count: 1 })}
                 onConfirm={handleConfirm}
                 onClose={handleDialogClose}
             />

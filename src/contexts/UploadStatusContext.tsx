@@ -8,6 +8,7 @@ export type Upload = {
     progress: FileProgress;
     resource: string;
     resourceId?: Identifier;
+    error?: any;
     remove: () => void;
 };
 
@@ -30,7 +31,14 @@ export const UploadStatusContextProvider = (
 
     const updateUploads = (upload: Upload) => {
         setUploads(prev => {
-            return [upload, ...prev.filter(p => p.id != upload.id)];
+            const oldIndex = prev.findIndex(p => p.id === upload.id);
+            if (oldIndex < 0) {
+                return [upload, ...prev.filter(p => p.id !== upload.id)];
+            } else {
+                return prev.map((u, index) =>
+                    index === oldIndex ? upload : u
+                );
+            }
         });
     };
 
