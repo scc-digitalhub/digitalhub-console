@@ -1,4 +1,8 @@
 {
+    "cascade_warning": {
+        "no_undone": "Questa azione non può essere annullata",
+        "no_undone_files": "Questa azione eliminerà i file dallo store e non può essere annullata"
+    },
     "content_copied_x": "%{x} copiato",
     "double_click_to_edit": "Doppio click per modificare",
     "type_and_press_enter": "Digita e premi INVIO per aggiungere",

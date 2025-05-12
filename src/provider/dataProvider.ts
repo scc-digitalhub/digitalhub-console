@@ -266,10 +266,14 @@ const springDataProvider = (
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            let url = `${apiUrl}${prefix}/${resource}/${params.id}?cascade=true`;
+            let url = `${apiUrl}${prefix}/${resource}/${params.id}${
+                params.meta?.cascade ? '?cascade=true' : ''
+            }`;
 
             if (params.meta?.deleteAll === true && params.meta?.name) {
-                url = `${apiUrl}${prefix}/${resource}?name=${params.meta.name}`;
+                url = `${apiUrl}${prefix}/${resource}?name=${params.meta.name}${
+                    params.meta?.cascade ? '&cascade=true' : ''
+                }`;
             }
 
             return httpClient(url, {
@@ -286,14 +290,24 @@ const springDataProvider = (
             const promises =
                 params.meta?.deleteAll === true && params.meta?.names
                     ? params.meta.names.map(name =>
-                          httpClient(`${url}?name=${name}`, {
-                              method: 'DELETE',
-                          })
+                          httpClient(
+                              `${url}?name=${name}${
+                                  params.meta?.cascade ? '&cascade=true' : ''
+                              }`,
+                              {
+                                  method: 'DELETE',
+                              }
+                          )
                       )
                     : params.ids.map(id =>
-                          httpClient(`${url}/${id}`, {
-                              method: 'DELETE',
-                          })
+                          httpClient(
+                              `${url}/${id}${
+                                  params.meta?.cascade ? '?cascade=true' : ''
+                              }`,
+                              {
+                                  method: 'DELETE',
+                              }
+                          )
                       );
 
             //make a distinct call for every entry

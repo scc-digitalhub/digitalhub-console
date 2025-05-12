@@ -1,4 +1,8 @@
 {
+    "cascade_warning": {
+        "no_undone": "This action cannot be undone",
+        "no_undone_files": "This action will delete files from the store and cannot be undone"
+    },
     "content_copied_x": "%{x} copied",
     "double_click_to_edit": "Double click to edit",
     "type_and_press_enter": "Type and press ENTER to add",
