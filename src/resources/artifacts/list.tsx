@@ -27,6 +27,7 @@ import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
+import { StateChips } from '../../components/StateChips';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -67,6 +68,13 @@ export const ArtifactList = () => {
         }
     }, [schemaProvider]);
 
+    const states: any[] = [];
+    for (const c of ['CREATED', 'UPLOADING', 'ERROR', 'READY']) {
+        states.push({
+            id: c,
+            name: 'states.' + c.toLowerCase(),
+        });
+    }
     const postFilters = kinds
         ? [
               <TextInput
@@ -82,6 +90,23 @@ export const ArtifactList = () => {
                   label="fields.kind"
                   source="kind"
                   choices={kinds}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={3}
+                  label="fields.status.state"
+                  source="state"
+                  choices={states}
+                  optionText={(choice: any) => {
+                      return (
+                          <StateChips
+                              record={choice}
+                              source="id"
+                              label="name"
+                          />
+                      );
+                  }}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
               />,
           ]
@@ -130,6 +155,10 @@ export const ArtifactList = () => {
                                     label="fields.labels.title"
                                     source="metadata.labels"
                                     sortable={false}
+                                />
+                                <StateChips
+                                    source="status.state"
+                                    label="fields.status.state"
                                 />
 
                                 <RowActions />

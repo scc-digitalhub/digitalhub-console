@@ -10,5 +10,6 @@
     "resume": "Resume",
     "stopped": "Stopped",
     "stopping": "Stopping",
-    "stop": "Stop"
+    "stop": "Stop",
+    "uploading": "Uploading"
 }
