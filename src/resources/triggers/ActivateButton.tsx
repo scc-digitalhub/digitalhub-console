@@ -12,9 +12,9 @@ import { ReactElement } from 'react';
 
 const defaultIcon = <PlayCircleIcon />;
 
-export const RunButton = (props: RunButtonProps) => {
+export const ActivateButton = (props: ActivateButtonProps) => {
     const {
-        label = 'actions.run',
+        label = 'actions.activate',
         icon = defaultIcon,
         id: idProp,
         record: recordProp,
@@ -37,7 +37,7 @@ export const RunButton = (props: RunButtonProps) => {
     );
 };
 
-export type RunButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
+export type ActivateButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     id?: string;
     record?: RecordType;
     icon?: ReactElement;

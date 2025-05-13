@@ -12,9 +12,9 @@ import { ReactElement } from 'react';
 
 const defaultIcon = <StopCircleIcon />;
 
-export const StopButton = (props: StopButtonProps) => {
+export const DeactivateButton = (props: DeactivateButtonProps) => {
     const {
-        label = 'actions.stop',
+        label = 'actions.deactivate',
         icon = defaultIcon,
         id: idProp,
         record: recordProp,
@@ -38,7 +38,7 @@ export const StopButton = (props: StopButtonProps) => {
     );
 };
 
-export type StopButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
+export type DeactivateButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     id?: string;
     record?: RecordType;
     icon?: ReactElement;

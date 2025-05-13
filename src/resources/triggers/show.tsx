@@ -24,14 +24,14 @@ import { TriggerIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { StateChips, StateColors } from '../../components/StateChips';
-import { StopButton } from './StopButton';
+import { DeactivateButton } from './DeactivateButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
-import { RunButton } from './RunButton';
+import { ActivateButton } from './ActivateButton';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
@@ -210,9 +210,9 @@ const ShowToolbar = () => (
         <FunctionField
             render={record =>
                 record.status?.state == 'RUNNING' ? (
-                    <StopButton record={record} />
+                    <DeactivateButton record={record} />
                 ) : record.status?.state == 'STOPPED' ? (
-                    <RunButton record={record} />
+                    <ActivateButton record={record} />
                 ) : null
             }
         />
@@ -221,7 +221,7 @@ const ShowToolbar = () => (
     </TopToolbar>
 );
 
-export const RunShow = () => {
+export const TriggerShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBaseLive>
