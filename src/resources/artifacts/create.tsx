@@ -93,7 +93,8 @@ export const ArtifactCreate = () => {
                     error => {
                         console.log('upload error', error);
                         data.status.state = 'ERROR';
-                        data.status.message = error;
+                        //TODO: extract or syntesize the error message
+                        data.status.message = 'Upload failed';
 
                         dataProvider.update(resource, {
                             id: data.id,
