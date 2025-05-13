@@ -7,6 +7,7 @@ import {
     Labeled,
     ListContextProvider,
     LoadingIndicator,
+    ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
@@ -34,7 +35,6 @@ import { useNavigate } from 'react-router-dom';
 import { ActivateButton } from './ActivateButton';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { ShowBaseLive } from '../../components/ShowBaseLive';
 
 export const TriggerShowComponent = () => {
     const record = useRecordContext();
@@ -224,7 +224,7 @@ const ShowToolbar = () => (
 export const TriggerShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBaseLive>
+            <ShowBase>
                 <>
                     <ShowPageTitle icon={<TriggerIcon fontSize={'large'} />} />
                     <ShowView
@@ -237,7 +237,7 @@ export const TriggerShow = () => {
                         <TriggerShowComponent />
                     </ShowView>
                 </>
-            </ShowBaseLive>
+            </ShowBase>
         </Container>
     );
 };

@@ -4,6 +4,7 @@ import {
     RaRecord,
     useDataProvider,
     useRecordContext,
+    useRefresh,
 } from 'react-admin';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -22,6 +23,7 @@ export const ActivateButton = (props: ActivateButtonProps) => {
     } = props;
     const { root: projectId } = useRootSelector();
     const dataProvider = useDataProvider();
+    const refresh = useRefresh();
 
     const recordContext = useRecordContext();
     const record = recordProp || recordContext;
@@ -29,7 +31,11 @@ export const ActivateButton = (props: ActivateButtonProps) => {
 
     const onClick = () => {
         const url = '/-/' + projectId + '/triggers/' + id + '/run';
-        dataProvider.invoke({ path: url, options: { method: 'POST' } });
+        dataProvider
+            .invoke({ path: url, options: { method: 'POST' } })
+            .then(() => {
+                refresh();
+            });
     };
 
     return (
@@ -37,8 +43,9 @@ export const ActivateButton = (props: ActivateButtonProps) => {
     );
 };
 
-export type ActivateButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
-    id?: string;
-    record?: RecordType;
-    icon?: ReactElement;
-};
+export type ActivateButtonProps<RecordType extends RaRecord = any> =
+    ButtonProps & {
+        id?: string;
+        record?: RecordType;
+        icon?: ReactElement;
+    };

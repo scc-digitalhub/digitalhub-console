@@ -4,6 +4,7 @@ import {
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
+    InfiniteListBase,
     Labeled,
     ListView,
     ShowButton,
@@ -11,9 +12,10 @@ import {
     TextField,
     TopToolbar,
     useGetResourceLabel,
+    useInfinitePaginationContext,
     useRecordContext,
 } from 'react-admin';
-import { Stack, Typography, Box, alpha } from '@mui/material';
+import { Stack, Typography, Box, alpha, Button } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -322,13 +324,18 @@ const TaskTriggerList = (props: { taskKey: string }) => {
                 {label}
             </Typography>
 
-            <ListBaseLive
+            <InfiniteListBase
                 resource="triggers"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
             >
-                <ListView component={Box} empty={false} actions={false}>
+                <ListView
+                    component={Box}
+                    empty={false}
+                    actions={false}
+                    pagination={<LoadMore />}
+                >
                     <Datagrid
                         bulkActionButtons={false}
                         rowClick={false}
@@ -365,7 +372,7 @@ const TaskTriggerList = (props: { taskKey: string }) => {
                         </RowButtonGroup>
                     </Datagrid>
                 </ListView>
-            </ListBaseLive>
+            </InfiniteListBase>
         </Box>
     );
 };
@@ -418,4 +425,21 @@ const CreateActionButton = (props: {
                 ))}
         </CreateInDialogButton>
     );
+};
+
+const LoadMore = () => {
+    const { hasNextPage, fetchNextPage, isFetchingNextPage } =
+        useInfinitePaginationContext();
+    return hasNextPage ? (
+        <Box mt={1} textAlign="center">
+            <Button
+                color="info"
+                size="small"
+                disabled={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
+            >
+                Load more...
+            </Button>
+        </Box>
+    ) : null;
 };
