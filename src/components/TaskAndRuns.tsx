@@ -34,6 +34,7 @@ import { RunCreateForm } from '../resources/runs/create';
 import { BulkDeleteAllVersionsButton } from './buttons/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from './ListBaseLive';
 import { TriggerCreateForm } from '../resources/triggers/create';
+import { DeactivateButton } from '../resources/triggers/DeactivateButton';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -142,7 +143,9 @@ export const TaskAndRuns = (props: {
                     <TaskEditComponent />
                 </EditInDialogButton>
                 <InspectButton fullWidth />
-                <CreateTriggerActionButton
+                <CreateActionButton
+                    label="actions.createTrigger"
+                    resource="triggers"
                     record={partialTrigger}
                     runSchema={runSchema}
                     taskSchema={taskSchema}
@@ -162,12 +165,7 @@ export const TaskAndRuns = (props: {
                     <TextField source="key" />
                 </Labeled>
             </SimpleShowLayout>
-            <TaskTriggerList
-                fn={fn}
-                taskKey={key}
-                runSchema={runSchema}
-                taskSchema={taskSchema}
-            />
+            <TaskTriggerList taskKey={key} />
             <TaskRunList
                 taskKey={key}
                 runSchema={runSchema}
@@ -179,15 +177,14 @@ export const TaskAndRuns = (props: {
 };
 
 type ListProps = {
-    fn?: any;
     taskKey: string;
     runSchema: any;
     taskSchema: any;
-    runtime?: string;
+    runtime: string;
 };
 
 const TaskRunList = (props: ListProps) => {
-    const { taskKey: key, runSchema, taskSchema, runtime = '' } = props;
+    const { taskKey: key, runSchema, taskSchema, runtime } = props;
     const record = useRecordContext();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
@@ -215,34 +212,6 @@ const TaskRunList = (props: ListProps) => {
         };
     };
 
-    const CreateActionButton = (props: {
-        record?: any;
-        label?: string;
-        icon?: ReactElement;
-    }) => {
-        const { record, label, icon } = props;
-        return (
-            <CreateInDialogButton
-                resource="runs"
-                label={label}
-                icon={icon}
-                record={record}
-                fullWidth
-                maxWidth={'lg'}
-                transform={prepare}
-                closeOnClickOutside={false}
-            >
-                {runSchema?.schema && taskSchema?.schema && (
-                    <RunCreateForm
-                        runtime={runtime}
-                        runSchema={runSchema.schema}
-                        taskSchema={taskSchema.schema}
-                    />
-                )}
-            </CreateInDialogButton>
-        );
-    };
-
     return (
         <>
             <Typography variant="h4" color={'secondary.main'}>
@@ -259,10 +228,26 @@ const TaskRunList = (props: ListProps) => {
                     component={Box}
                     empty={
                         <Empty showIcon={false}>
-                            <CreateActionButton record={partial} />
+                            <CreateActionButton
+                                record={partial}
+                                resource="runs"
+                                runSchema={runSchema}
+                                taskSchema={taskSchema}
+                                prepare={prepare}
+                                runtime={runtime}
+                            />
                         </Empty>
                     }
-                    actions={<CreateActionButton record={partial} />}
+                    actions={
+                        <CreateActionButton
+                            record={partial}
+                            resource="runs"
+                            runSchema={runSchema}
+                            taskSchema={taskSchema}
+                            prepare={prepare}
+                            runtime={runtime}
+                        />
+                    }
                 >
                     <Datagrid
                         bulkActionButtons={<BulkDeleteAllVersionsButton />}
@@ -293,6 +278,11 @@ const TaskRunList = (props: ListProps) => {
                                             }}
                                             label="ra.action.clone"
                                             icon={<ContentCopyIcon />}
+                                            resource="runs"
+                                            runSchema={runSchema}
+                                            taskSchema={taskSchema}
+                                            prepare={prepare}
+                                            runtime={runtime}
                                         />
                                     )}
                                 />
@@ -313,76 +303,10 @@ const TaskRunList = (props: ListProps) => {
     );
 };
 
-const TaskTriggerList = (props: ListProps) => {
-    const { fn, taskKey: key, runSchema, taskSchema } = props;
-    const record = useRecordContext();
+const TaskTriggerList = (props: { taskKey: string }) => {
+    const { taskKey: key } = props;
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('triggers', 2);
-
-    const partial = {
-        project: record?.project,
-        spec: {
-            task: key,
-            function: fn,
-            template: {
-                function: fn,
-                task: key,
-                local_execution: false,
-            },
-        },
-    };
-
-    const prepare = (r: any) => {
-        const v = {
-            ...r,
-            spec: {
-                task: key,
-                function: fn,
-                //copy the task spec  (using form)
-                ...r.spec,
-            },
-        };
-
-        //clear values from template
-        if (v.spec.template) {
-            if (v.spec.template.function) {
-                delete v.spec.template.function;
-            }
-            if (v.spec.template.task) {
-                delete v.spec.template.task;
-            }
-            v.spec.template.local_execution = false;
-        }
-
-        return v;
-    };
-
-    const CreateActionButton = (props: {
-        record?: any;
-        label?: string;
-        icon?: ReactElement;
-    }) => {
-        const { record, label, icon } = props;
-        return (
-            <CreateInDialogButton
-                resource="triggers"
-                label={label}
-                icon={icon}
-                record={record}
-                fullWidth
-                maxWidth={'lg'}
-                transform={prepare}
-                closeOnClickOutside={false}
-            >
-                {runSchema?.schema && taskSchema?.schema && (
-                    <TriggerCreateForm
-                        runSchema={runSchema.schema}
-                        taskSchema={taskSchema.schema}
-                    />
-                )}
-            </CreateInDialogButton>
-        );
-    };
 
     return (
         <Box sx={{ paddingX: '18px', paddingY: '9px' }}>
@@ -404,13 +328,9 @@ const TaskTriggerList = (props: ListProps) => {
                 filter={{ task: key }}
                 disableSyncWithLocation
             >
-                <ListView
-                    component={Box}
-                    empty={false}
-                    actions={false}
-                >
+                <ListView component={Box} empty={false} actions={false}>
                     <Datagrid
-                        bulkActionButtons={<BulkDeleteAllVersionsButton />}
+                        bulkActionButtons={false}
                         rowClick={false}
                         sx={{ marginTop: '12px' }}
                     >
@@ -432,24 +352,11 @@ const TaskTriggerList = (props: ListProps) => {
                         <RowButtonGroup>
                             <DropDownButton>
                                 <ShowButton />
-                                <LogsButton />
                                 <InspectButton fullWidth />
-                                <FunctionField
-                                    render={record => (
-                                        <CreateActionButton
-                                            record={{
-                                                ...partial,
-                                                spec: record.spec,
-                                            }}
-                                            label="ra.action.clone"
-                                            icon={<ContentCopyIcon />}
-                                        />
-                                    )}
-                                />
                                 <FunctionField
                                     render={record =>
                                         record.status?.state == 'RUNNING' ? (
-                                            <StopButton record={record} />
+                                            <DeactivateButton record={record} />
                                         ) : null
                                     }
                                 />
@@ -463,25 +370,30 @@ const TaskTriggerList = (props: ListProps) => {
     );
 };
 
-const CreateTriggerActionButton = (props: {
+const CreateActionButton = (props: {
     record?: any;
     label?: string;
     icon?: ReactElement;
+    resource: 'triggers' | 'runs';
+    runtime?: string;
     runSchema: any;
     taskSchema: any;
     prepare: (r: any) => any;
 }) => {
     const {
         record,
-        label = 'actions.createTrigger',
+        label,
         icon,
+        resource,
+        runtime = '',
         runSchema,
         taskSchema,
         prepare,
     } = props;
+
     return (
         <CreateInDialogButton
-            resource="triggers"
+            resource={resource}
             label={label}
             icon={icon}
             record={record}
@@ -490,12 +402,20 @@ const CreateTriggerActionButton = (props: {
             transform={prepare}
             closeOnClickOutside={false}
         >
-            {runSchema?.schema && taskSchema?.schema && (
-                <TriggerCreateForm
-                    runSchema={runSchema.schema}
-                    taskSchema={taskSchema.schema}
-                />
-            )}
+            {runSchema?.schema &&
+                taskSchema?.schema &&
+                (resource === 'triggers' ? (
+                    <TriggerCreateForm
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                ) : (
+                    <RunCreateForm
+                        runtime={runtime}
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                ))}
         </CreateInDialogButton>
     );
 };
