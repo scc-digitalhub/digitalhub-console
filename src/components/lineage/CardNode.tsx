@@ -35,6 +35,8 @@ import { StateChips } from '../StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FunctionIcon } from '../../resources/functions/icon';
 import { keyParser } from '../../common/helper';
+import { TriggerIcon } from '../../resources/triggers/icon';
+import { WorkflowIcon } from '../../resources/workflows/icon';
 
 // export const CardNode = memo(function CardNode(props: {
 const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
@@ -371,6 +373,8 @@ const icons = {
     models: <ModelIcon />,
     dataitems: <DataItemIcon />,
     functions: <FunctionIcon />,
+    workflows: <WorkflowIcon />,
+    triggers: <TriggerIcon />,
 };
 
 const Node = styled(Card, {
