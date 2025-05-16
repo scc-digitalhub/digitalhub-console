@@ -266,7 +266,7 @@ export const useUploadController = (
                 .on('upload-progress', file => {
                     if (file) {
                         updateUploads({
-                            id: file.id,
+                            id: file.id + `_${id}`,
                             filename: file.name,
                             progress: file.progress,
                             resource: resource,
@@ -292,7 +292,7 @@ export const useUploadController = (
                 .on('upload-error', (file, error) => {
                     if (file) {
                         updateUploads({
-                            id: file.id,
+                            id: file.id + `_${id}`,
                             filename: file.name,
                             progress: file.progress,
                             resource: resource,
