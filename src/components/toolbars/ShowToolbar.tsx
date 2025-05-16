@@ -1,10 +1,5 @@
 import { BackButton } from '@dslab/ra-back-button';
-import {
-    Box,
-    DialogContentText,
-    FormControlLabel,
-    Switch,
-} from '@mui/material';
+import { Box, FormControlLabel, Switch } from '@mui/material';
 import { useState } from 'react';
 import {
     EditButton,
@@ -55,11 +50,8 @@ export const ShowToolbar = () => {
         }
     }
 
-    const confirmContent = (
+    const additionalConfirmContent = (
         <Box>
-            <DialogContentText>
-                {translate('ra.message.delete_content')}
-            </DialogContentText>
             <FormControlLabel
                 control={<Switch checked={checked} onChange={handleChange} />}
                 label={translate('actions.delete_all_versions')}
@@ -77,10 +69,11 @@ export const ShowToolbar = () => {
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
             <DeleteWithConfirmButtonByName
-                confirmContent={confirmContent}
+                additionalContent={additionalConfirmContent}
                 deleteAll={checked}
                 redirect={redirect}
                 translateOptions={{ id: record?.id }}
+                askForCascade
             />
         </TopToolbar>
     );

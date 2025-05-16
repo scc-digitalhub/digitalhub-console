@@ -39,7 +39,10 @@ const ShowToolbar = () => {
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
             {isAdmin(record.id) && <ShareButton />}
-            <DeleteWithDialogButton redirect="/projects" />
+            <DeleteWithDialogButton
+                redirect="/projects"
+                mutationOptions={{ meta: { cascade: true } }}
+            />
         </TopToolbar>
     );
 };
@@ -67,7 +70,10 @@ export const ProjectConfig = () => {
 
                                 <Stack direction={'row'} spacing={3}>
                                     <Labeled>
-                                        <TextField source="kind" label="fields.kind" />
+                                        <TextField
+                                            source="kind"
+                                            label="fields.kind"
+                                        />
                                     </Labeled>
 
                                     <Labeled>

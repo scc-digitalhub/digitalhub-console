@@ -3,6 +3,7 @@
     "activate": "Attiva",
     "apply": "Applica",
     "cancel": "Annulla",
+    "cascade_delete": "Elimina a cascata",
     "click_to_copy": "Clicca per copiare",
     "compare": "Confronta",
     "createTrigger": "Crea trigger",

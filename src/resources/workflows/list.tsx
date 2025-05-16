@@ -41,7 +41,11 @@ const RowActions = () => {
         <RowButtonGroup>
             <ShowButton disabled={expanded} />
             <EditButton disabled={expanded} />
-            <DeleteWithConfirmButtonByName deleteAll disabled={expanded} />
+            <DeleteWithConfirmButtonByName
+                deleteAll
+                disabled={expanded}
+                askForCascade
+            />
         </RowButtonGroup>
     );
 };
@@ -108,7 +112,10 @@ export const WorkflowList = () => {
                                 expand={VersionsList}
                                 expandSingle={true}
                                 bulkActionButtons={
-                                    <BulkDeleteAllVersionsButton deleteAll />
+                                    <BulkDeleteAllVersionsButton
+                                        deleteAll
+                                        askForCascade
+                                    />
                                 }
                             >
                                 <TextField
