@@ -114,7 +114,7 @@ export const TriggerList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField source="id" label="fields.id" />
+                                <TextField source="name" label="fields.name.title" />
                                 <DateField
                                     source="metadata.created"
                                     label="fields.created.title"

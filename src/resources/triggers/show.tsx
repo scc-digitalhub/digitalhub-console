@@ -7,6 +7,9 @@ import {
     Labeled,
     ListContextProvider,
     LoadingIndicator,
+    Pagination,
+    ResourceContextProvider,
+    ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
@@ -16,7 +19,7 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
-import { Container, Divider, Stack } from '@mui/material';
+import { Container, Divider, Stack, Typography } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -24,26 +27,24 @@ import { TriggerIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { StateChips, StateColors } from '../../components/StateChips';
-import { StopButton } from './StopButton';
+import { DeactivateButton } from './DeactivateButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
-import { useEffect, useState } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
-import { RunButton } from './ResumeButton';
+import { ActivateButton } from './ActivateButton';
 import { IdField } from '../../components/IdField';
-import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { ShowBaseLive } from '../../components/ShowBaseLive';
+import { functionParser, taskParser } from '../../common/helper';
+import {
+    useGetRunIds,
+    useTriggerRunsController,
+} from '../../controllers/triggerRunsController';
 
 export const TriggerShowComponent = () => {
     const record = useRecordContext();
     const translate = useTranslate();
-    const schemaProvider = useSchemaProvider();
     const createPath = useCreatePath();
     const navigate = useNavigate();
-
-    const [schema, setSchema] = useState<any>();
 
     const uri = record?.spec?.function
         ? new URL(record.spec.function)
@@ -51,29 +52,10 @@ export const TriggerShowComponent = () => {
         ? new URL(record.spec.workflow)
         : null;
 
-    const kind = uri
-        ? uri.protocol.substring(0, uri.protocol.length - 1)
-        : null;
-
     const functionId =
         record?.spec?.function && uri ? uri.pathname.split(':')[1] : null;
     const workflowId =
         record?.spec?.workflow && uri ? uri.pathname.split(':')[1] : null;
-
-    useEffect(() => {
-        if (kind) {
-            if (functionId) {
-                schemaProvider.get('functions', kind).then(res => {
-                    setSchema(res || null);
-                });
-            }
-            if (workflowId) {
-                schemaProvider.get('workflows', kind).then(res => {
-                    setSchema(res || null);
-                });
-            }
-        }
-    }, [kind]);
 
     const states: any[] = [];
     for (const c in StateColors) {
@@ -162,10 +144,81 @@ export const TriggerShowComponent = () => {
                 />
             </TabbedShowLayout.Tab>
 
-            <TabbedShowLayout.Tab label="pages.lineage.title">
-                <LineageTabComponent />
+            <TabbedShowLayout.Tab
+                label={translate('resources.runs.name', { smart_count: 2 })}
+            >
+                <GeneratedRunsList />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
+    );
+};
+
+const GeneratedRunsList = () => {
+    const translate = useTranslate();
+    const result = useGetRunIds();
+    const listContext = useTriggerRunsController(result);
+
+    const renderFunctionName = record => {
+        if (record?.spec?.function) {
+            return <>{functionParser(record.spec.function).name}</>;
+        }
+
+        if (record?.spec?.workflow) {
+            return <>{functionParser(record.spec.workflow).name}</>;
+        }
+
+        return <></>;
+    };
+
+    return (
+        <ListContextProvider value={listContext}>
+            <Typography variant="h6" gutterBottom>
+                {translate('resources.runs.name', { smart_count: 2 })}
+            </Typography>
+            <ResourceContextProvider value="runs">
+                <>
+                    <Datagrid bulkActionButtons={false} rowClick="show">
+                        <TextField source="id" label="fields.id" />
+                        <DateField
+                            source="metadata.created"
+                            label="fields.created.title"
+                            showDate
+                            showTime
+                        />
+                        <DateField
+                            source="metadata.updated"
+                            label="fields.updated.title"
+                            showDate
+                            showTime
+                        />
+                        <FunctionField
+                            source="spec.function"
+                            label="fields.function.title"
+                            sortable={false}
+                            render={renderFunctionName}
+                        />
+                        <TextField source="kind" label="fields.kind" />
+                        <FunctionField
+                            source="spec.task"
+                            label="fields.task.title"
+                            sortable={false}
+                            render={record =>
+                                record?.spec?.task ? (
+                                    <>{taskParser(record.spec.task).kind}</>
+                                ) : (
+                                    <></>
+                                )
+                            }
+                        />
+                        <StateChips
+                            source="status.state"
+                            label="fields.status.state"
+                        />
+                    </Datagrid>
+                    <Pagination />
+                </>
+            </ResourceContextProvider>
+        </ListContextProvider>
     );
 };
 
@@ -210,9 +263,9 @@ const ShowToolbar = () => (
         <FunctionField
             render={record =>
                 record.status?.state == 'RUNNING' ? (
-                    <StopButton record={record} />
+                    <DeactivateButton record={record} />
                 ) : record.status?.state == 'STOPPED' ? (
-                    <RunButton record={record} />
+                    <ActivateButton record={record} />
                 ) : null
             }
         />
@@ -221,10 +274,10 @@ const ShowToolbar = () => (
     </TopToolbar>
 );
 
-export const RunShow = () => {
+export const TriggerShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBaseLive>
+            <ShowBase>
                 <>
                     <ShowPageTitle icon={<TriggerIcon fontSize={'large'} />} />
                     <ShowView
@@ -237,7 +290,7 @@ export const RunShow = () => {
                         <TriggerShowComponent />
                     </ShowView>
                 </>
-            </ShowBaseLive>
+            </ShowBase>
         </Container>
     );
 };

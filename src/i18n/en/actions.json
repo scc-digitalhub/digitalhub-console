@@ -1,7 +1,12 @@
 {
     "actions": "Actions",
+    "activate": "Activate",
+    "apply": "Apply",
     "cancel": "Cancel",
     "click_to_copy": "Click to copy",
+    "compare": "Compare",
+    "createTrigger": "Create trigger",
+    "deactivate": "Deactivate",
     "delete_all_versions": "Delete all versions",
     "download": "Download",
     "import_one": "Import",
@@ -9,7 +14,5 @@
     "stop": "Stop",
     "resume": "Resume",
     "revoke": "Revoke",
-    "toggle_x": "Show/Hide %{el}",
-    "compare": "Compare",
-    "apply": "Apply"
+    "toggle_x": "Show/Hide %{el}"
 }

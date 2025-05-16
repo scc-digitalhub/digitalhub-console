@@ -1,11 +1,11 @@
 import { TriggerIcon } from './icon';
 import { TriggerList } from './list';
-import { RunShow } from './show';
+import { TriggerShow } from './show';
 
 export default {
     name: 'triggers',
     list: TriggerList,
     icon: TriggerIcon,
-    show: RunShow,
+    show: TriggerShow,
     recordRepresentation: record => record?.kind || record.id,
 };

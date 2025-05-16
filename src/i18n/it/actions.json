@@ -1,7 +1,12 @@
 {
     "actions": "Azioni",
+    "activate": "Attiva",
+    "apply": "Applica",
     "cancel": "Annulla",
     "click_to_copy": "Clicca per copiare",
+    "compare": "Confronta",
+    "createTrigger": "Crea trigger",
+    "deactivate": "Disattiva",
     "delete_all_versions": "Rimuovi tutte le versioni",
     "download": "Scarica",
     "import_one": "Importa",
@@ -9,7 +14,5 @@
     "stop": "Interrompi",
     "resume": "Riprendi",
     "revoke": "Revoca",
-    "toggle_x": "Mostra/Nascondi %{el}",
-    "compare": "Confronta",
-    "apply": "Applica"
+    "toggle_x": "Mostra/Nascondi %{el}"
 }

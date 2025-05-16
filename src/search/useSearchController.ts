@@ -11,15 +11,13 @@ export const useSearchController = ({
     resultsPerPage = 5,
     sortField = 'id',
     sortOrder = 'ASC',
-}: SearchControllerProps = {}): SearchcontrollerResult => {
+}: SearchControllerProps = {}): SearchControllerResult => {
     const { params: searchParams, provider } = useSearch();
     const isLoading = useRef(true);
     const [response, setResponse] = useState<Response>({
         total: 0,
         results: [],
     });
-
-    console.log('context', searchParams);
 
     const [query, queryModifiers] = useListParams({
         perPage: resultsPerPage,
@@ -114,6 +112,6 @@ export type SearchControllerProps = {
     sortOrder?: string;
 };
 
-export type SearchcontrollerResult = {
+export type SearchControllerResult = {
     listContext: ListControllerResult;
 };

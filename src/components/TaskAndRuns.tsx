@@ -4,6 +4,7 @@ import {
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
+    InfiniteListBase,
     Labeled,
     ListView,
     ShowButton,
@@ -11,9 +12,10 @@ import {
     TextField,
     TopToolbar,
     useGetResourceLabel,
+    useInfinitePaginationContext,
     useRecordContext,
 } from 'react-admin';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Typography, Box, alpha, Button } from '@mui/material';
 import {
     CreateInDialogButton,
     EditInDialogButton,
@@ -34,6 +36,7 @@ import { RunCreateForm } from '../resources/runs/create';
 import { BulkDeleteAllVersionsButton } from './buttons/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from './ListBaseLive';
 import { TriggerCreateForm } from '../resources/triggers/create';
+import { DeactivateButton } from '../resources/triggers/DeactivateButton';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -41,8 +44,38 @@ export const TaskAndRuns = (props: {
     runOf: 'function' | 'workflow';
 }) => {
     const { task, onEdit, runOf } = props;
+    const record = useRecordContext();
 
-    const prepare = (r: any) => {
+    const fn = record?.spec?.[runOf] || '';
+    const url = new URL(fn);
+    const runtime = url.protocol
+        ? url.protocol.substring(0, url.protocol.length - 1)
+        : '';
+    url.protocol = record.kind + ':';
+    const key = `${record.kind}://${record.project}/${record.id}`;
+
+    const { data: schemas } = useGetManySchemas([
+        { resource: runOf + 's', runtime },
+        { resource: 'tasks', runtime },
+        { resource: 'runs', runtime },
+    ]);
+
+    //filter run and task schema
+    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    const taskSchema = schemas
+        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
+        : null;
+
+    if (runSchema && schemas) {
+        //filter out embedded props from spec
+        schemas
+            .filter(s => s.entity != 'RUN')
+            .forEach(s => {
+                runSchema.schema = filterProps(runSchema.schema, s.schema);
+            });
+    }
+
+    const prepareTask = (r: any) => {
         return {
             ...r,
             spec: {
@@ -52,238 +85,7 @@ export const TaskAndRuns = (props: {
         };
     };
 
-    return (
-        <>
-            <TopToolbar>
-                <ShowInDialogButton fullWidth maxWidth={'lg'}>
-                    <TaskShowComponent />
-                </ShowInDialogButton>
-                <EditInDialogButton
-                    fullWidth
-                    closeOnClickOutside={false}
-                    maxWidth={'lg'}
-                    transform={prepare}
-                    mutationMode="pessimistic"
-                    mutationOptions={{
-                        onSuccess: data => {
-                            //data is updated
-                            if (task && data) onEdit(task, data);
-                        },
-                    }}
-                >
-                    <TaskEditComponent />
-                </EditInDialogButton>
-                <InspectButton fullWidth />
-            </TopToolbar>
-            <SimpleShowLayout>
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" label="fields.kind" />
-                    </Labeled>
-                    <Labeled>
-                        <TextField source="id" />
-                    </Labeled>
-                </Stack>
-                <Labeled>
-                    <TextField source="key" />
-                </Labeled>
-            </SimpleShowLayout>
-            <TaskTriggerList runOf={runOf} />
-            <TaskRunList runOf={runOf} />
-        </>
-    );
-};
-
-const TaskRunList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
-    const record = useRecordContext();
-    const getResourceLabel = useGetResourceLabel();
-    const label = getResourceLabel('runs', 2);
-
-    const fn = record?.spec?.[runOf] || '';
-    const url = new URL(fn);
-    const runtime = url.protocol
-        ? url.protocol.substring(0, url.protocol.length - 1)
-        : '';
-    url.protocol = record.kind + ':';
-    const key = `${record.kind}://${record.project}/${record.id}`;
-
-    const { data: schemas } = useGetManySchemas([
-        { resource: runOf + 's', runtime },
-        { resource: 'tasks', runtime },
-        { resource: 'runs', runtime },
-    ]);
-
-    //filter run and task schema
-    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
-    const taskSchema = schemas
-        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
-        : null;
-
-    if (runSchema && schemas) {
-        //filter out embedded props from spec
-        schemas
-            .filter(s => s.entity != 'RUN')
-            .forEach(s => {
-                runSchema.schema = filterProps(runSchema.schema, s.schema);
-            });
-    }
-
-    const partial = {
-        project: record?.project,
-        kind: runSchema ? runSchema.kind : 'run',
-        spec: {
-            task: key,
-            local_execution: false,
-            //copy the task spec  (using record)
-            ...record?.spec,
-        },
-    };
-
-    const prepare = (r: any) => {
-        return {
-            ...r,
-            spec: {
-                task: key,
-                local_execution: false,
-                //copy the task spec  (using form)
-                ...r.spec,
-            },
-        };
-    };
-
-    const CreateActionButton = (props: {
-        record?: any;
-        label?: string;
-        icon?: ReactElement;
-    }) => {
-        const { record, label, icon } = props;
-        return (
-            <CreateInDialogButton
-                resource="runs"
-                label={label}
-                icon={icon}
-                record={record}
-                fullWidth
-                maxWidth={'lg'}
-                transform={prepare}
-                closeOnClickOutside={false}
-            >
-                {runSchema?.schema && taskSchema?.schema && (
-                    <RunCreateForm
-                        runtime={runtime}
-                        runSchema={runSchema.schema}
-                        taskSchema={taskSchema.schema}
-                    />
-                )}
-            </CreateInDialogButton>
-        );
-    };
-
-    return (
-        <>
-            <Typography variant="h4" color={'secondary.main'}>
-                {label}
-            </Typography>
-
-            <ListBaseLive
-                resource="runs"
-                sort={{ field: 'created', order: 'DESC' }}
-                filter={{ task: key }}
-                disableSyncWithLocation
-            >
-                <ListView
-                    component={Box}
-                    empty={
-                        <Empty showIcon={false}>
-                            <CreateActionButton record={partial} />
-                        </Empty>
-                    }
-                    actions={<CreateActionButton record={partial} />}
-                >
-                    <Datagrid
-                        bulkActionButtons={<BulkDeleteAllVersionsButton />}
-                        rowClick={false}
-                    >
-                        <DateField
-                            source="metadata.created"
-                            showTime
-                            label="fields.metadata.created"
-                        />
-                        <TextField source="id" sortable={false} />
-                        <StateChips
-                            source="status.state"
-                            sortable={false}
-                            label="fields.status.state"
-                        />
-                        <RowButtonGroup>
-                            <DropDownButton>
-                                <ShowButton />
-                                <LogsButton />
-                                <InspectButton fullWidth />
-                                <FunctionField
-                                    render={record => (
-                                        <CreateActionButton
-                                            record={{
-                                                ...partial,
-                                                spec: record.spec,
-                                            }}
-                                            label="ra.action.clone"
-                                            icon={<ContentCopyIcon />}
-                                        />
-                                    )}
-                                />
-                                <FunctionField
-                                    render={record =>
-                                        record.status?.state == 'RUNNING' ? (
-                                            <StopButton record={record} />
-                                        ) : null
-                                    }
-                                />
-                                <DeleteWithConfirmButton redirect={false} />
-                            </DropDownButton>
-                        </RowButtonGroup>
-                    </Datagrid>
-                </ListView>
-            </ListBaseLive>
-        </>
-    );
-};
-
-const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
-    const record = useRecordContext();
-    const getResourceLabel = useGetResourceLabel();
-    const label = getResourceLabel('triggers', 2);
-
-    const fn = record?.spec?.[runOf] || '';
-    const url = new URL(fn);
-    const runtime = url.protocol
-        ? url.protocol.substring(0, url.protocol.length - 1)
-        : '';
-    url.protocol = record.kind + ':';
-    const key = `${record.kind}://${record.project}/${record.id}`;
-
-    const { data: schemas } = useGetManySchemas([
-        { resource: runOf + 's', runtime },
-        { resource: 'tasks', runtime },
-        { resource: 'runs', runtime },
-    ]);
-
-    //filter run and task schema
-    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
-    const taskSchema = schemas
-        ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
-        : null;
-
-    if (runSchema && schemas) {
-        //filter out embedded props from spec
-        schemas
-            .filter(s => s.entity != 'RUN')
-            .forEach(s => {
-                runSchema.schema = filterProps(runSchema.schema, s.schema);
-            });
-    }
-
-    const partial = {
+    const partialTrigger = {
         project: record?.project,
         spec: {
             task: key,
@@ -296,7 +98,7 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
         },
     };
 
-    const prepare = (r: any) => {
+    const prepareTrigger = (r: any) => {
         const v = {
             ...r,
             spec: {
@@ -321,31 +123,95 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
         return v;
     };
 
-    const CreateActionButton = (props: {
-        record?: any;
-        label?: string;
-        icon?: ReactElement;
-    }) => {
-        const { record, label, icon } = props;
-        return (
-            <CreateInDialogButton
-                resource="triggers"
-                label={label}
-                icon={icon}
-                record={record}
-                fullWidth
-                maxWidth={'lg'}
-                transform={prepare}
-                closeOnClickOutside={false}
-            >
-                {runSchema?.schema && taskSchema?.schema && (
-                    <TriggerCreateForm
-                        runSchema={runSchema.schema}
-                        taskSchema={taskSchema.schema}
-                    />
-                )}
-            </CreateInDialogButton>
-        );
+    return (
+        <>
+            <TopToolbar>
+                <ShowInDialogButton fullWidth maxWidth={'lg'}>
+                    <TaskShowComponent />
+                </ShowInDialogButton>
+                <EditInDialogButton
+                    fullWidth
+                    closeOnClickOutside={false}
+                    maxWidth={'lg'}
+                    transform={prepareTask}
+                    mutationMode="pessimistic"
+                    mutationOptions={{
+                        onSuccess: data => {
+                            //data is updated
+                            if (task && data) onEdit(task, data);
+                        },
+                    }}
+                >
+                    <TaskEditComponent />
+                </EditInDialogButton>
+                <InspectButton fullWidth />
+                <CreateActionButton
+                    label="actions.createTrigger"
+                    resource="triggers"
+                    record={partialTrigger}
+                    runSchema={runSchema}
+                    taskSchema={taskSchema}
+                    prepare={prepareTrigger}
+                />
+            </TopToolbar>
+            <SimpleShowLayout>
+                <Stack direction={'row'} spacing={3}>
+                    <Labeled>
+                        <TextField source="kind" label="fields.kind" />
+                    </Labeled>
+                    <Labeled>
+                        <TextField source="id" />
+                    </Labeled>
+                </Stack>
+                <Labeled>
+                    <TextField source="key" />
+                </Labeled>
+            </SimpleShowLayout>
+            <TaskTriggerList taskKey={key} />
+            <TaskRunList
+                taskKey={key}
+                runSchema={runSchema}
+                taskSchema={taskSchema}
+                runtime={runtime}
+            />
+        </>
+    );
+};
+
+type ListProps = {
+    taskKey: string;
+    runSchema: any;
+    taskSchema: any;
+    runtime: string;
+};
+
+const TaskRunList = (props: ListProps) => {
+    const { taskKey: key, runSchema, taskSchema, runtime } = props;
+    const record = useRecordContext();
+    const getResourceLabel = useGetResourceLabel();
+    const label = getResourceLabel('runs', 2);
+
+    const partial = {
+        project: record?.project,
+        kind: runSchema ? runSchema.kind : 'run',
+        spec: {
+            task: key,
+            local_execution: false,
+            //copy the task spec  (using record)
+            ...record?.spec,
+        },
+    };
+
+    const prepare = (r: any) => {
+        return {
+            ...r,
+            spec: {
+                task: key,
+                local_execution: false,
+                //copy the task spec  (using form)
+                ...r.spec,
+            },
+        };
     };
 
     return (
@@ -355,7 +221,7 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
             </Typography>
 
             <ListBaseLive
-                resource="triggers"
+                resource="runs"
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: key }}
                 disableSyncWithLocation
@@ -364,10 +230,26 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                     component={Box}
                     empty={
                         <Empty showIcon={false}>
-                            <CreateActionButton record={partial} />
+                            <CreateActionButton
+                                record={partial}
+                                resource="runs"
+                                runSchema={runSchema}
+                                taskSchema={taskSchema}
+                                prepare={prepare}
+                                runtime={runtime}
+                            />
                         </Empty>
                     }
-                    actions={<CreateActionButton record={partial} />}
+                    actions={
+                        <CreateActionButton
+                            record={partial}
+                            resource="runs"
+                            runSchema={runSchema}
+                            taskSchema={taskSchema}
+                            prepare={prepare}
+                            runtime={runtime}
+                        />
+                    }
                 >
                     <Datagrid
                         bulkActionButtons={<BulkDeleteAllVersionsButton />}
@@ -398,6 +280,11 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
                                             }}
                                             label="ra.action.clone"
                                             icon={<ContentCopyIcon />}
+                                            resource="runs"
+                                            runSchema={runSchema}
+                                            taskSchema={taskSchema}
+                                            prepare={prepare}
+                                            runtime={runtime}
                                         />
                                     )}
                                 />
@@ -416,4 +303,143 @@ const TaskTriggerList = ({ runOf }: { runOf: 'function' | 'workflow' }) => {
             </ListBaseLive>
         </>
     );
+};
+
+const TaskTriggerList = (props: { taskKey: string }) => {
+    const { taskKey: key } = props;
+    const getResourceLabel = useGetResourceLabel();
+    const label = getResourceLabel('triggers', 2);
+
+    return (
+        <Box sx={{ paddingX: '18px', paddingY: '9px' }}>
+            <Typography
+                variant="h6"
+                sx={theme => ({
+                    color: alpha(theme.palette.common.black, 0.6),
+                    ...theme.applyStyles('dark', {
+                        color: alpha(theme.palette.common.white, 0.7),
+                    }),
+                })}
+            >
+                {label}
+            </Typography>
+
+            <InfiniteListBase
+                resource="triggers"
+                sort={{ field: 'created', order: 'DESC' }}
+                filter={{ task: key }}
+                disableSyncWithLocation
+            >
+                <ListView
+                    component={Box}
+                    empty={false}
+                    actions={false}
+                    pagination={<LoadMore />}
+                >
+                    <Datagrid
+                        bulkActionButtons={false}
+                        rowClick={false}
+                        sx={{ marginTop: '12px' }}
+                    >
+                        <DateField
+                            source="metadata.created"
+                            showTime
+                            label="fields.metadata.created"
+                        />
+                        <TextField
+                            source="name"
+                            label="fields.name.title"
+                            sortable={false}
+                        />
+                        <StateChips
+                            source="status.state"
+                            sortable={false}
+                            label="fields.status.state"
+                        />
+                        <RowButtonGroup>
+                            <DropDownButton>
+                                <ShowButton />
+                                <InspectButton fullWidth />
+                                <FunctionField
+                                    render={record =>
+                                        record.status?.state == 'RUNNING' ? (
+                                            <DeactivateButton record={record} />
+                                        ) : null
+                                    }
+                                />
+                                <DeleteWithConfirmButton redirect={false} />
+                            </DropDownButton>
+                        </RowButtonGroup>
+                    </Datagrid>
+                </ListView>
+            </InfiniteListBase>
+        </Box>
+    );
+};
+
+const CreateActionButton = (props: {
+    record?: any;
+    label?: string;
+    icon?: ReactElement;
+    resource: 'triggers' | 'runs';
+    runtime?: string;
+    runSchema: any;
+    taskSchema: any;
+    prepare: (r: any) => any;
+}) => {
+    const {
+        record,
+        label,
+        icon,
+        resource,
+        runtime = '',
+        runSchema,
+        taskSchema,
+        prepare,
+    } = props;
+
+    return (
+        <CreateInDialogButton
+            resource={resource}
+            label={label}
+            icon={icon}
+            record={record}
+            fullWidth
+            maxWidth={'lg'}
+            transform={prepare}
+            closeOnClickOutside={false}
+        >
+            {runSchema?.schema &&
+                taskSchema?.schema &&
+                (resource === 'triggers' ? (
+                    <TriggerCreateForm
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                ) : (
+                    <RunCreateForm
+                        runtime={runtime}
+                        runSchema={runSchema.schema}
+                        taskSchema={taskSchema.schema}
+                    />
+                ))}
+        </CreateInDialogButton>
+    );
+};
+
+const LoadMore = () => {
+    const { hasNextPage, fetchNextPage, isFetchingNextPage } =
+        useInfinitePaginationContext();
+    return hasNextPage ? (
+        <Box mt={1} textAlign="center">
+            <Button
+                color="info"
+                size="small"
+                disabled={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
+            >
+                Load more...
+            </Button>
+        </Box>
+    ) : null;
 };
