@@ -1,6 +1,8 @@
 import {
+    alpha,
     Box,
     Card,
+    CardActions,
     CardContent,
     CardHeader,
     LinearProgress,
@@ -14,6 +16,7 @@ import {
     Confirm,
     DateField,
     IconButtonWithTooltip,
+    ShowButton,
     useGetOne,
     useGetResourceLabel,
     useResourceDefinition,
@@ -29,7 +32,7 @@ const scaleBytes = (bytes: number) => {
 };
 
 export const UploadProgress = (props: UploadProgressProps) => {
-    const { upload, removeUploads } = props;
+    const { upload, removeUploads, onShow } = props;
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
@@ -44,7 +47,9 @@ export const UploadProgress = (props: UploadProgressProps) => {
 
     if (error) {
         //TODO
-        console.log('ERROR, TODO: manage upload notification when record is not found');
+        console.log(
+            'ERROR, TODO: manage upload notification when record is not found'
+        );
     }
 
     const subtitle = translate('pages.pageTitle.show.title', {
@@ -58,8 +63,13 @@ export const UploadProgress = (props: UploadProgressProps) => {
         <FileUploadIcon fontSize="small" />
     );
 
+    const uploading =
+        upload.progress.percentage && upload.progress.percentage < 100
+            ? true
+            : false;
+
     const deleteUpload = () => {
-        if (upload.progress.percentage && upload.progress.percentage < 100) {
+        if (uploading) {
             //open confirmation dialog
             setOpen(true);
         } else {
@@ -79,8 +89,14 @@ export const UploadProgress = (props: UploadProgressProps) => {
         setOpen(false);
     };
 
+    const progressClass = upload.error
+        ? ProgressClasses.error
+        : uploading
+        ? ProgressClasses.uploading
+        : ProgressClasses.complete;
+
     return (
-        <UploadProgressCard elevation={0} square>
+        <UploadProgressCard elevation={0} square className={progressClass}>
             <CardHeader
                 avatar={icon}
                 title={subtitle}
@@ -122,33 +138,49 @@ export const UploadProgress = (props: UploadProgressProps) => {
                         Failed - {upload.error.message}
                     </Typography>
                 )}
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box sx={{ width: '100%', mr: 1 }}>
-                        <LinearProgress
-                            variant="determinate"
-                            value={upload.progress.percentage}
-                            color={
-                                upload.progress.percentage &&
-                                upload.progress.percentage === 100
-                                    ? 'success'
-                                    : upload.error
-                                    ? 'error'
-                                    : 'primary'
-                            }
-                        />
+                {!upload.error && uploading && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box sx={{ width: '100%', mr: 1 }}>
+                            <LinearProgress
+                                variant="determinate"
+                                value={upload.progress.percentage}
+                                color={
+                                    uploading
+                                        ? 'primary'
+                                        : upload.error
+                                        ? 'error'
+                                        : 'success'
+                                }
+                            />
+                        </Box>
+                        <Box sx={{ minWidth: 35 }}>
+                            <Typography
+                                variant="body2"
+                                sx={{ color: 'text.secondary' }}
+                            >{`${upload.progress.percentage}%`}</Typography>
+                        </Box>
                     </Box>
-                    <Box sx={{ minWidth: 35 }}>
-                        <Typography
-                            variant="body2"
-                            sx={{ color: 'text.secondary' }}
-                        >{`${upload.progress.percentage}%`}</Typography>
-                    </Box>
-                </Box>
+                )}
             </CardContent>
+            <CardActions disableSpacing>
+                {!error && onShow && (
+                    <ShowButton
+                        resource={upload.resource}
+                        record={record}
+                        variant="text"
+                        color="info"
+                        onClick={() => onShow(upload)}
+                    />
+                )}
+            </CardActions>
             <Confirm
                 isOpen={open}
-                title={translate('messages.upload.cancelUpload.title', { smart_count: 1 })}
-                content={translate('messages.upload.cancelUpload.content', { smart_count: 1 })}
+                title={translate('messages.upload.cancelUpload.title', {
+                    smart_count: 1,
+                })}
+                content={translate('messages.upload.cancelUpload.content', {
+                    smart_count: 1,
+                })}
                 onConfirm={handleConfirm}
                 onClose={handleDialogClose}
             />
@@ -156,15 +188,31 @@ export const UploadProgress = (props: UploadProgressProps) => {
     );
 };
 
+const ProgressClasses = {
+    complete: 'complete',
+    uploading: 'uploading',
+    error: 'error',
+};
+
 const UploadProgressCard = styled(Card, {
     name: 'UploadProgressCard',
     overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
+})(({ theme, className }) => ({
     width: '100%',
     boxSizing: 'border-box',
-    backgroundColor: theme.palette.common.white,
+    backgroundColor:
+        className == ProgressClasses.error
+            ? alpha(theme.palette?.error?.main, 0.2)
+            : className == ProgressClasses.uploading
+            ? alpha(theme.palette?.primary?.main, 0.2)
+            : alpha(theme.palette?.success?.main, 0.2),
     ...theme.applyStyles('dark', {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor:
+            className == ProgressClasses.error
+                ? alpha(theme.palette?.error?.main, 0.5)
+                : className == ProgressClasses.uploading
+                ? alpha(theme.palette?.primary?.main, 0.5)
+                : alpha(theme.palette?.success?.main, 0.5),
     }),
     color: 'inherit',
     ...theme.applyStyles('dark', {
@@ -186,4 +234,5 @@ const UploadProgressCard = styled(Card, {
 type UploadProgressProps = {
     upload: Upload;
     removeUploads: (toBeRemoved?: Upload) => void;
+    onShow?: (upload) => void;
 };

@@ -1,13 +1,31 @@
-import { Badge, Box, CardHeader, Menu, MenuItem } from '@mui/material';
+import {
+    Badge,
+    Box,
+    CardHeader,
+    Menu,
+    MenuItem,
+    Typography,
+} from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import { Confirm, IconButtonWithTooltip, useTranslate } from 'react-admin';
+import {
+    Confirm,
+    IconButtonWithTooltip,
+    useCreatePath,
+    useTranslate,
+} from 'react-admin';
 import { UploadProgress } from './UploadProgress';
-import { useUploadStatusContext } from '../../contexts/UploadStatusContext';
+import {
+    Upload,
+    useUploadStatusContext,
+} from '../../contexts/UploadStatusContext';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const UploadArea = () => {
     const translate = useTranslate();
+    const createPath = useCreatePath();
+    const navigate = useNavigate();
     const { uploads, removeUploads } = useUploadStatusContext();
     const [openConfirm, setOpenConfirm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -25,22 +43,30 @@ export const UploadArea = () => {
 
     const isOpen = Boolean(anchorEl);
 
-    const uploadCount = uploads
-        ? uploads.reduce(
-              (count, el) =>
-                  el.progress.percentage && el.progress.percentage < 100
-                      ? count + 1
-                      : count,
-              0
-          )
-        : 0;
+    const handleShow = (upload: Upload) => {
+        if (upload.resource && upload.resourceId) {
+            const path = createPath({
+                resource: upload.resource,
+                id: upload.resourceId,
+                type: 'show',
+            });
+
+            //navigate
+            navigate(path);
+
+            //close
+            handleClose();
+        }
+    };
+
+    const uploadCount = uploads.length;
+    const uploadingCount = uploads.filter(
+        u => u.progress.percentage && u.progress.percentage < 100
+    ).length;
+    const errorCount = uploads.filter(u => u.error).length;
 
     const deleteAll = () => {
-        if (
-            uploads.some(
-                u => u.progress.percentage && u.progress.percentage < 100
-            )
-        ) {
+        if (uploadingCount !== 0) {
             //open confirmation dialog
             setOpenConfirm(true);
         } else {
@@ -61,14 +87,7 @@ export const UploadArea = () => {
     };
 
     const icon = (
-        <Badge
-            badgeContent={
-                uploads?.filter(
-                    u => u.progress.percentage && u.progress.percentage < 100
-                ).length
-            }
-            color="error"
-        >
+        <Badge badgeContent={uploadCount} color="error">
             <FileUploadIcon />
         </Badge>
     );
@@ -118,10 +137,36 @@ export const UploadArea = () => {
                             }
                             title={translate('messages.upload.header')}
                             titleTypographyProps={{ variant: 'subtitle1' }}
-                            subheader={translate('messages.upload.subheader', {
-                                uploading: uploadCount,
-                            })}
-                            subheaderTypographyProps={{ variant: 'subtitle2' }}
+                            subheader={
+                                <>
+                                    <Typography variant="subtitle2">
+                                        {translate(
+                                            'messages.upload.subheader.total',
+                                            { val: uploadCount }
+                                        )}
+                                    </Typography>
+                                    {uploadingCount > 0 && (
+                                        <Typography variant="subtitle2">
+                                            {translate(
+                                                'messages.upload.subheader.uploading',
+                                                {
+                                                    val: uploadingCount,
+                                                }
+                                            )}
+                                        </Typography>
+                                    )}
+                                    {errorCount > 0 && (
+                                        <Typography variant="subtitle2">
+                                            {translate(
+                                                'messages.upload.subheader.error',
+                                                {
+                                                    val: errorCount,
+                                                }
+                                            )}
+                                        </Typography>
+                                    )}
+                                </>
+                            }
                         />
                         <Confirm
                             isOpen={openConfirm}
@@ -156,6 +201,7 @@ export const UploadArea = () => {
                             <UploadProgress
                                 upload={upl}
                                 removeUploads={removeUploads}
+                                onShow={handleShow}
                             />
                             {/* </ErrorBoundary> */}
                         </MenuItem>

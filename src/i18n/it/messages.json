@@ -10,7 +10,11 @@
         "file_too_big": "Il file supera il limite di 100 GiB",
         "upload_error": "Errore durante l'upload del file %{fileName}. %{error}",
         "header": "Upload",
-        "subheader": "%{uploading} upload in corso",
+        "subheader": {
+            "error": "%{val} errori",
+            "total": "%{val} upload",
+            "uploading": "%{val} in corso"
+        },
         "cancelUpload": {
             "title": "Interrompi upload |||| Interrompi gli upload",
             "content": "L'upload del file è ancora in corso. Vuoi interromperlo? |||| L'upload di alcuni file è ancora in corso. Vuoi interrompere tutti gli upload?"
