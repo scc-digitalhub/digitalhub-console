@@ -30,7 +30,8 @@ export const BulkDeleteAllVersionsButton = (
         ...rest
     } = props;
     const translate = useTranslate();
-    const [cascade, setCascade] = useState(false);
+    //if deleteAll, force cascade
+    const [cascade, setCascade] = useState(deleteAll);
     const { data, selectedIds } = useListContext();
 
     const selectedData = data.filter(d => selectedIds.includes(d.id));
@@ -52,11 +53,16 @@ export const BulkDeleteAllVersionsButton = (
             <DialogContentText>
                 {translate('ra.message.delete_content')}
             </DialogContentText>
+            {additionalContent}
             {askForCascade && (
                 <>
                     <FormControlLabel
                         control={
-                            <Switch checked={cascade} onChange={handleChange} />
+                            <Switch
+                                checked={cascade}
+                                onChange={handleChange}
+                                disabled={deleteAll}
+                            />
                         }
                         label={translate('actions.cascade_delete')}
                     />
@@ -87,7 +93,6 @@ export const BulkDeleteAllVersionsButton = (
                     )}
                 </>
             )}
-            {additionalContent}
         </Box>
     );
 

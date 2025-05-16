@@ -5,7 +5,7 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
     RaRecord,
     DeleteWithConfirmButton,
@@ -21,14 +21,12 @@ export const DeleteWithConfirmButtonByName = <
     props: DeleteWithConfirmButtonProps<RecordType> & {
         deleteAll?: boolean;
         askForCascade?: boolean;
-        cascadeByDefault?: boolean;
         additionalContent?: ReactNode;
     }
 ) => {
     const {
         deleteAll = false,
         askForCascade = false,
-        cascadeByDefault = false,
         additionalContent,
         translateOptions,
         confirmContent,
@@ -36,7 +34,12 @@ export const DeleteWithConfirmButtonByName = <
     } = props;
     const record = useRecordContext(rest);
     const translate = useTranslate();
-    const [cascade, setCascade] = useState(cascadeByDefault);
+    //if deleteAll, force cascade
+    const [cascade, setCascade] = useState(deleteAll);
+
+    useEffect(() => {
+        if (deleteAll) setCascade(true);
+    }, [deleteAll]);
 
     if (!record) return <></>;
 
@@ -62,7 +65,11 @@ export const DeleteWithConfirmButtonByName = <
                 <>
                     <FormControlLabel
                         control={
-                            <Switch checked={cascade} onChange={handleChange} />
+                            <Switch
+                                checked={cascade}
+                                onChange={handleChange}
+                                disabled={deleteAll}
+                            />
                         }
                         label={translate('actions.cascade_delete')}
                     />
