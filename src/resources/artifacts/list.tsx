@@ -5,7 +5,6 @@ import {
     Datagrid,
     DateField,
     EditButton,
-    ListBase,
     ListView,
     SelectInput,
     ShowButton,
@@ -28,6 +27,7 @@ import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDelete
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { StateChips } from '../../components/StateChips';
+import { ListBaseLive } from '../../components/ListBaseLive';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -79,6 +79,7 @@ export const ArtifactList = () => {
             name: 'states.' + c.toLowerCase(),
         });
     }
+
     const postFilters = kinds
         ? [
               <TextInput
@@ -118,7 +119,7 @@ export const ArtifactList = () => {
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase
+            <ListBaseLive
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
@@ -157,7 +158,6 @@ export const ArtifactList = () => {
                                     showDate={true}
                                     showTime={true}
                                 />
-
                                 <ChipsField
                                     label="fields.labels.title"
                                     source="metadata.labels"
@@ -167,13 +167,12 @@ export const ArtifactList = () => {
                                     source="status.state"
                                     label="fields.status.state"
                                 />
-
                                 <RowActions />
                             </Datagrid>
                         </ListView>
                     </FlatCard>
                 </>
-            </ListBase>
+            </ListBaseLive>
         </Container>
     );
 };

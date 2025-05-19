@@ -5,7 +5,6 @@ import {
     Datagrid,
     DateField,
     EditButton,
-    ListBase,
     ListView,
     SelectInput,
     ShowButton,
@@ -27,6 +26,8 @@ import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
+import { StateChips } from '../../components/StateChips';
+import { ListBaseLive } from '../../components/ListBaseLive';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -71,6 +72,14 @@ export const DataItemList = () => {
         }
     }, [schemaProvider]);
 
+    const states: any[] = [];
+    for (const c of ['CREATED', 'UPLOADING', 'ERROR', 'READY']) {
+        states.push({
+            id: c,
+            name: 'states.' + c.toLowerCase(),
+        });
+    }
+
     const postFilters = kinds
         ? [
               <TextInput
@@ -88,11 +97,29 @@ export const DataItemList = () => {
                   choices={kinds}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
               />,
+              <SelectInput
+                  alwaysOn
+                  key={3}
+                  label="fields.status.state"
+                  source="state"
+                  choices={states}
+                  optionText={(choice: any) => {
+                      return (
+                          <StateChips
+                              record={choice}
+                              source="id"
+                              label="name"
+                          />
+                      );
+                  }}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
           ]
         : [];
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ListBase
+            <ListBaseLive
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
@@ -131,19 +158,21 @@ export const DataItemList = () => {
                                     showDate={true}
                                     showTime={true}
                                 />
-
                                 <ChipsField
                                     label="fields.labels.title"
                                     source="metadata.labels"
                                     sortable={false}
                                 />
-
+                                <StateChips
+                                    source="status.state"
+                                    label="fields.status.state"
+                                />
                                 <RowActions />
                             </Datagrid>
                         </ListView>
                     </FlatCard>
                 </>
-            </ListBase>
+            </ListBaseLive>
         </Container>
     );
 };
