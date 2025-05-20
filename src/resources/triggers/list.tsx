@@ -84,6 +84,15 @@ export const TriggerList = () => {
                   label="fields.status.state"
                   source="state"
                   choices={states}
+                  optionText={(choice: any) => {
+                      return (
+                          <StateChips
+                              record={choice}
+                              source="id"
+                              label="name"
+                          />
+                      );
+                  }}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
               />,
           ]
