@@ -9,7 +9,6 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Uppy } from 'uppy';
-import { UploadResult } from '@uppy/core';
 import AwsS3 from '@uppy/aws-s3';
 import { useUploadStatusContext } from '../contexts/UploadStatusContext';
 
@@ -48,7 +47,12 @@ export type UploadController = {
     uppy: Uppy;
     files: any[];
     path: string | null;
-    upload: () => Promise<UploadResult<any, any> | undefined>;
+    /**
+     * Set resource state to UPLOADING, then start the upload.
+     * @param data record
+     * @returns
+     */
+    upload: (data: any) => void;
 };
 
 export const useUploadController = (
@@ -115,6 +119,45 @@ export const useUploadController = (
 
             return true;
         },
+    };
+
+    const upload = (data: any) => {
+        if (dataProvider) {
+            //update resource state to UPLOADING
+            data.status.state = 'UPLOADING';
+
+            dataProvider
+                .update(resource, {
+                    id: data.id,
+                    data: data,
+                    previousData: null,
+                })
+                .then(() => {
+                    uppy?.upload();
+                });
+        }
+    };
+
+    const retry = (fileId: string) => {
+        if (dataProvider) {
+            //update resource state to UPLOADING
+            dataProvider.getOne(resource, { id }).then(res => {
+                let data = res.data;
+                if (data) {
+                    data.status.state = 'UPLOADING';
+
+                    dataProvider
+                        .update(resource, {
+                            id: data.id,
+                            data: data,
+                            previousData: null,
+                        })
+                        .then(() => {
+                            uppy?.retryUpload(fileId);
+                        });
+                }
+            });
+        }
     };
 
     //memoize uppy instantiation
@@ -281,7 +324,20 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-success', file => {
-                    if (file) {
+                    if (file && dataProvider) {
+                        //update resource state to READY
+                        dataProvider.getOne(resource, { id }).then(res => {
+                            let data = res.data;
+                            if (data) {
+                                data.status.state = 'READY';
+
+                                dataProvider.update(resource, {
+                                    id: data.id,
+                                    data: data,
+                                    previousData: null,
+                                });
+                            }
+                        });
                         setFiles(prev => {
                             return prev.map(f =>
                                 f.id === file.id ? { ...f, file: file } : f
@@ -290,7 +346,21 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-error', (file, error) => {
-                    if (file) {
+                    if (file && dataProvider) {
+                        //update resource state to ERROR
+                        dataProvider.getOne(resource, { id }).then(res => {
+                            let data = res.data;
+                            if (data) {
+                                data.status.state = 'ERROR';
+
+                                dataProvider.update(resource, {
+                                    id: data.id,
+                                    data: data,
+                                    previousData: null,
+                                });
+                            }
+                        });
+
                         updateUploads({
                             id: file.id + `_${id}`,
                             filename: file.name,
@@ -299,6 +369,7 @@ export const useUploadController = (
                             resourceId: id,
                             remove: () => uppy?.removeFile(file.id),
                             error,
+                            retry: () => retry(file.id),
                         });
                         setFiles(prev => {
                             return prev.map(f =>
@@ -336,8 +407,6 @@ export const useUploadController = (
         uppy,
         files,
         path,
-        upload: () => {
-            return uppy?.upload();
-        },
+        upload,
     };
 };

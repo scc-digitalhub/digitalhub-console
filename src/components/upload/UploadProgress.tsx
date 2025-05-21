@@ -13,6 +13,7 @@ import { Upload } from '../../contexts/UploadStatusContext';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
+    Button,
     Confirm,
     DateField,
     IconButtonWithTooltip,
@@ -25,6 +26,7 @@ import {
 import { createElement, useState } from 'react';
 import { B } from '@wtfcode/byte-converter';
 import { round } from 'lodash';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 const scaleBytes = (bytes: number) => {
     const unit = B.value(bytes).autoScale({ type: 'decimal' });
@@ -37,7 +39,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
     const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
     const definition = useResourceDefinition({ resource: upload.resource });
-    const { data: record, error } = useGetOne(upload.resource, {
+    const { data: record } = useGetOne(upload.resource, {
         id: upload.resourceId,
     });
 
@@ -45,14 +47,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
         return <></>;
     }
 
-    if (error) {
-        //TODO
-        console.log(
-            'ERROR, TODO: manage upload notification when record is not found'
-        );
-    }
-
-    const subtitle = translate('pages.pageTitle.show.title', {
+    const title = translate('pages.pageTitle.show.title', {
         resource: getResourceLabel(upload.resource, 1),
         name: record?.name || upload.resourceId,
     });
@@ -99,7 +94,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
         <UploadProgressCard elevation={0} square className={progressClass}>
             <CardHeader
                 avatar={icon}
-                title={subtitle}
+                title={title}
                 subheader={
                     <DateField
                         record={upload.progress}
@@ -120,7 +115,8 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {upload.filename}
                 </Typography>
-                {upload.progress.bytesUploaded &&
+                {!upload.error &&
+                    upload.progress.bytesUploaded &&
                     upload.progress.bytesTotal && (
                         <Typography
                             variant="body2"
@@ -146,7 +142,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                                 value={upload.progress.percentage}
                                 color={
                                     uploading
-                                        ? 'primary'
+                                        ? 'info'
                                         : upload.error
                                         ? 'error'
                                         : 'success'
@@ -163,7 +159,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 )}
             </CardContent>
             <CardActions disableSpacing>
-                {!error && onShow && (
+                {onShow && (
                     <ShowButton
                         resource={upload.resource}
                         record={record}
@@ -171,6 +167,14 @@ export const UploadProgress = (props: UploadProgressProps) => {
                         color="info"
                         onClick={() => onShow(upload)}
                     />
+                )}
+                {upload.error && upload.retry && (
+                    <Button
+                        label="actions.retry"
+                        onClick={() => upload.retry()}
+                    >
+                        <ReplayIcon />
+                    </Button>
                 )}
             </CardActions>
             <Confirm
@@ -204,14 +208,14 @@ const UploadProgressCard = styled(Card, {
         className == ProgressClasses.error
             ? alpha(theme.palette?.error?.main, 0.2)
             : className == ProgressClasses.uploading
-            ? alpha(theme.palette?.primary?.main, 0.2)
+            ? alpha(theme.palette?.info?.main, 0.2)
             : alpha(theme.palette?.success?.main, 0.2),
     ...theme.applyStyles('dark', {
         backgroundColor:
             className == ProgressClasses.error
                 ? alpha(theme.palette?.error?.main, 0.5)
                 : className == ProgressClasses.uploading
-                ? alpha(theme.palette?.primary?.main, 0.5)
+                ? alpha(theme.palette?.info?.main, 0.5)
                 : alpha(theme.palette?.success?.main, 0.5),
     }),
     color: 'inherit',

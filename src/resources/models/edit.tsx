@@ -4,7 +4,6 @@ import {
     EditBase,
     EditView,
     SimpleForm,
-    useDataProvider,
     useNotify,
     useRedirect,
     useResourceContext,
@@ -26,7 +25,6 @@ export const ModelEdit = () => {
     const uploader = useUploadController({
         id: id.current,
     });
-    const dataProvider = useDataProvider();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
@@ -37,56 +35,9 @@ export const ModelEdit = () => {
             return;
         }
 
-        //post save we start uploading:
-        //if spec is not dirty, skip (same version, same state)
-        //if spec is dirty but there is nothing to upload, skip (new version, CREATED state)
-        //if there is something to upload, change states for new version
-        if (isSpecDirty && uploader.files.length > 0) {
-            data.status.state = 'UPLOADING';
-
-            dataProvider
-                .update(resource, {
-                    id: data.id,
-                    data: data,
-                    previousData: null,
-                })
-                .then(() => {
-                    uploader.upload().then(
-                        result => {
-                            //if the upload was successful, we update the resource
-                            const status =
-                                result?.successful &&
-                                result.successful?.length > 0 &&
-                                result.failed?.length === 0
-                                    ? 'READY'
-                                    : 'ERROR';
-
-                            data.status.state = status;
-
-                            dataProvider.update(resource, {
-                                id: data.id,
-                                data: data,
-                                previousData: null,
-                            });
-
-                            if (status === 'ERROR') {
-                                notify('ra.notification.error');
-                            }
-                        },
-                        error => {
-                            console.log('upload error', error);
-                            data.status.state = 'ERROR';
-                            //TODO: extract or syntesize the error message
-                            data.status.message = 'Upload failed';
-
-                            dataProvider.update(resource, {
-                                id: data.id,
-                                data: data,
-                                previousData: null,
-                            });
-                        }
-                    );
-                });
+        //post save we start uploading
+        if (uploader.files.length > 0) {
+            uploader.upload(data);
         }
 
         notify('ra.notification.updated', {
