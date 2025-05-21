@@ -1,7 +1,4 @@
-import {
-    Container,
-    Stack,
-} from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DateField,
@@ -25,11 +22,11 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
-import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { StateChips } from '../../components/StateChips';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -37,18 +34,6 @@ const ShowComponent = () => {
     return <ModelShowLayout record={record} />;
 };
 
-const getUiSpec = (kind: string) => {
-    const uiSpec = getModelSpecUiSchema(kind) || {};
-    //hide metrics field
-    uiSpec['metrics'] = {
-        'ui:widget': 'hidden',
-    };
-    uiSpec['parameters'] = {
-        'ui:ObjectFieldTemplate': JsonParamsWidget,
-        'ui:title': 'fields.parameters.title',
-    };
-    return uiSpec;
-};
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
     const schemaProvider = useSchemaProvider();
@@ -100,6 +85,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     ];
 
     if (!record) return <></>;
+
     return (
         <TabbedShowLayout
             syncWithLocation={false}
@@ -122,14 +108,13 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 </Stack>
 
                 <IdField source="key" />
-
+                <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-
                 {spec && (
                     <JsonSchemaField
                         source="spec"
                         schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
+                        uiSchema={getModelSpecUiSchema(kind)}
                         label={false}
                     />
                 )}

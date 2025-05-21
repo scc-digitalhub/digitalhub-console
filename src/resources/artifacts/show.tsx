@@ -23,6 +23,7 @@ import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { StateChips } from '../../components/StateChips';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -38,15 +39,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
-    // const translate = useTranslate();
-    // const { data: schemas, isLoading, error } = useGetSchemas('metadata');
-    // const metadataKinds = schemas
-    //     ? schemas.map(s => ({
-    //           id: s.kind,
-    //           name: s.kind,
-    //           schema: s.schema,
-    //       }))
-    //     : [];
+
     useEffect(() => {
         if (!schemaProvider) {
             return;
@@ -60,6 +53,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     }, [record, schemaProvider, resource]);
 
     if (!record) return <></>;
+
     return (
         <TabbedShowLayout syncWithLocation={false} record={record}>
             <TabbedShowLayout.Tab label="fields.summary">
@@ -74,6 +68,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 </Stack>
 
                 <IdField source="key" />
+                <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
                 {spec && (
                     <JsonSchemaField
