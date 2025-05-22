@@ -80,6 +80,10 @@
             "preview": "Preview"
         }
     },
+    "personalaccesstokens": {
+        "name": "Personal Access Token |||| Personal Access Tokens",
+        "description": "Personal Access Tokens (PAT) are long lasting credentials which can be used to access the platform and/or request store credentials"
+    },
     "projects": {
         "fields": {
             "key": "Key",
@@ -88,6 +92,10 @@
             "created": "Created date"
         },
         "name": "Project |||| Projects"
+    },
+    "refreshtokens": {
+        "name": "Refresh Token |||| Refresh Tokens",
+        "description": "Refresh tokens are issued at login to applications which need to maintain a session with the platform. Revoke them to force a disconnect by active applications."
     },
     "runs": {
         "create": "Create a new run",

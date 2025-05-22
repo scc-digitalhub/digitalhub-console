@@ -86,7 +86,7 @@ export const ProjectSelectorList = props => {
             filters={filters}
             empty={
                 <Empty>
-                    <CreateButton />
+                    <CreateProjectButton />
                 </Empty>
             }
         >
@@ -97,7 +97,7 @@ export const ProjectSelectorList = props => {
     );
 };
 
-const CreateButton = () => {
+export const CreateProjectButton = () => {
     const authProvider = useAuthProvider();
     const notify = useNotify();
     const refresh = useRefresh();
@@ -139,7 +139,7 @@ const Toolbar = () => {
     return (
         <TopToolbar>
             <SortButton fields={['updated', 'name']} />
-            <CreateButton />
+            <CreateProjectButton />
         </TopToolbar>
     );
 };

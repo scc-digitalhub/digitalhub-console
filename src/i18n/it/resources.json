@@ -80,6 +80,10 @@
             "preview": "Anteprima"
         }
     },
+    "personalaccesstokens": {
+        "name": "Token personali di accesso |||| Token personali di accesso",
+        "description": "I token personali di accesso (PAT) sono credenziali a lunga scadenza che permettono di accedere alla piattaforma e richiedere ulteriori credenziali per gli store"
+    },    
     "projects": {
         "fields": {
             "key": "Chiave",
@@ -89,6 +93,10 @@
         },
         "name": "Progetto |||| Progetti"
     },
+    "refreshtokens": {
+        "name": "Refresh Token |||| Refresh Tokens",
+        "description": "I token di refresh sono emesse al login alle applicazioni che hanno necessità di mantenere attiva una sessione utente con la piattaforma. Revocali per disconnettere l'applicazione"
+    },    
     "runs": {
         "create": "Crea una nuova esecuzione",
         "empty": "Nessuna esecuzione",

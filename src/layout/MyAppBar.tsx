@@ -15,6 +15,7 @@ import RootResourceSelectorMenu from '../components/RootSelectorMenu';
 import { useStompContext } from '../contexts/StompContext';
 import { NotificationArea } from '../components/NotificationArea';
 import { UploadArea } from '../components/upload/UploadArea';
+import { MyUserMenu } from './MyUserMenu';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -175,7 +176,7 @@ export const MyAppBar = () => {
     const { client } = useStompContext();
 
     return (
-        <AppBar color="primary" elevation={0}>
+        <AppBar color="primary" elevation={0} userMenu={<MyUserMenu />}>
             <Typography
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"

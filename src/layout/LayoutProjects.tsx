@@ -2,6 +2,7 @@ import { Layout, AppBar } from 'react-admin';
 import { Button, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
+import { MyUserMenu } from './MyUserMenu';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -12,7 +13,7 @@ const docsVersion = APP_VERSION
 
 const InitialAppBar = () => {
     return (
-        <AppBar color="primary" elevation={0}>
+        <AppBar color="primary" elevation={0} userMenu={<MyUserMenu />}>
             <Typography
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"

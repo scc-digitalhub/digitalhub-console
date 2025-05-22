@@ -166,6 +166,7 @@ import { StompContextProvider } from './contexts/StompContext';
 import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
 import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
+import { MyAccount } from './pages/account/MyAccount';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -295,21 +296,24 @@ const CoreApp = () => {
                                                 path="/config"
                                                 element={<ProjectConfig />}
                                             />
-                                        </CustomRoutes>
-                                        <CustomRoutes>
+
                                             <Route
                                                 path="/lineage"
                                                 element={<ProjectLineage />}
                                             />
-                                        </CustomRoutes>
-                                        {enableSearch && (
-                                            <CustomRoutes>
+
+                                            <Route
+                                                path="/account"
+                                                element={<MyAccount />}
+                                            />
+
+                                            {enableSearch && (
                                                 <Route
                                                     path="/searchresults"
                                                     element={<SearchList />}
                                                 />
-                                            </CustomRoutes>
-                                        )}
+                                            )}
+                                        </CustomRoutes>
                                     </AdminUI>
                                 </UploadStatusContextProvider>
                             </StompContextProvider>
@@ -347,7 +351,12 @@ const InitialWrapper = () => {
                     edit={ProjectEdit}
                     create={ProjectCreate}
                 />
+                <Resource name="tokens/refresh" />
+                <Resource name="tokens/personal" />
                 <Resource name="schemas" />
+                <CustomRoutes>
+                    <Route path="/account" element={<MyAccount />} />
+                </CustomRoutes>
             </Admin>
         </RootSelectorInitialWrapper>
     );

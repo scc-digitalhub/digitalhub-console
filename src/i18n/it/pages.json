@@ -93,5 +93,18 @@
         "base": "Base",
         "spec": "Specifiche",
         "recap": "Riepilogo"
+    },
+    "myaccount": {
+        "title": "Il mio account",
+        "remove": {
+            "title": "Cancellazione account",
+            "subtitle": "Rimuovi permanentemente il mio account e tutti i contenuti associati.",
+            "message": "Attenzione: questa operazione è irreversibile e tutti i contenuti verranno immediatamente eliminati!"
+        }
+    },
+    "personalaccesstokens": {
+        "create": {
+            "successMessage": "Token creato correttamente. Copia e salva il token prima di chiudere il dialogo: successivamente il valore non sarà più accessibile"
+        }
     }
 }
