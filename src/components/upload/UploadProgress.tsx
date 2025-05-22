@@ -171,7 +171,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 {upload.error && upload.retry && (
                     <Button
                         label="actions.retry"
-                        onClick={() => upload.retry()}
+                        onClick={() => upload.retry?.()}
                     >
                         <ReplayIcon />
                     </Button>

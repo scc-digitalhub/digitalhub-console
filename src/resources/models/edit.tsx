@@ -51,11 +51,10 @@ export const ModelEdit = () => {
         //strip path tl which is a transient field
         const { path, ...rest } = data;
 
+        //reset status if new version
         return {
             ...rest,
-            status: {
-                files: uploader.files.map(f => f.info),
-            },
+            status: isSpecDirty ? {} : rest.status,
         };
     };
 

@@ -124,6 +124,7 @@ export const useUploadController = (
     const upload = (data: any) => {
         if (dataProvider) {
             //update resource state to UPLOADING
+            if (!data.status) data.status = {};
             data.status.state = 'UPLOADING';
 
             dataProvider
@@ -153,7 +154,50 @@ export const useUploadController = (
                             previousData: null,
                         })
                         .then(() => {
-                            uppy?.retryUpload(fileId);
+                            //set final resource state here, as "complete" event is not fired
+                            uppy?.retryUpload(fileId).then(
+                                () => {
+                                    if (uppy?.getFiles().some(f => f.error)) {
+                                        //some upload is still failed, set ERROR
+                                        data.status.state = 'ERROR';
+                                    } else if (
+                                        uppy
+                                            ?.getFiles()
+                                            .every(
+                                                f =>
+                                                    !f.error &&
+                                                    f.progress.uploadComplete
+                                            )
+                                    ) {
+                                        //all files uploaded, set READY
+                                        data.status.state = 'READY';
+                                    }
+                                    //set successful files on status
+                                    data.status.files = uppy
+                                        ?.getFiles()
+                                        .filter(
+                                            f =>
+                                                !f.error &&
+                                                f.progress.uploadComplete
+                                        )
+                                        .map(f => extractInfo(f));
+                                    dataProvider.update(resource, {
+                                        id: data.id,
+                                        data: data,
+                                        previousData: null,
+                                    });
+                                },
+                                error => {
+                                    console.log('upload error', error);
+                                    data.status.state = 'ERROR';
+                                    data.status.message = error;
+                                    dataProvider.update(resource, {
+                                        id: data.id,
+                                        data: data,
+                                        previousData: null,
+                                    });
+                                }
+                            );
                         });
                 }
             });
@@ -324,20 +368,7 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-success', file => {
-                    if (file && dataProvider) {
-                        //update resource state to READY
-                        dataProvider.getOne(resource, { id }).then(res => {
-                            let data = res.data;
-                            if (data) {
-                                data.status.state = 'READY';
-
-                                dataProvider.update(resource, {
-                                    id: data.id,
-                                    data: data,
-                                    previousData: null,
-                                });
-                            }
-                        });
+                    if (file) {
                         setFiles(prev => {
                             return prev.map(f =>
                                 f.id === file.id ? { ...f, file: file } : f
@@ -346,21 +377,7 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-error', (file, error) => {
-                    if (file && dataProvider) {
-                        //update resource state to ERROR
-                        dataProvider.getOne(resource, { id }).then(res => {
-                            let data = res.data;
-                            if (data) {
-                                data.status.state = 'ERROR';
-
-                                dataProvider.update(resource, {
-                                    id: data.id,
-                                    data: data,
-                                    previousData: null,
-                                });
-                            }
-                        });
-
+                    if (file) {
                         updateUploads({
                             id: file.id + `_${id}`,
                             filename: file.name,
@@ -375,6 +392,32 @@ export const useUploadController = (
                             return prev.map(f =>
                                 f.id === file.id ? { ...f, file: file } : f
                             );
+                        });
+                    }
+                })
+                .on('complete', result => {
+                    if (dataProvider) {
+                        //update resource state to READY or ERROR
+                        dataProvider.getOne(resource, { id }).then(res => {
+                            let data = res.data;
+                            if (data) {
+                                const state =
+                                    result.successful &&
+                                    result.successful.length > 0 &&
+                                    result.failed?.length === 0
+                                        ? 'READY'
+                                        : 'ERROR';
+                                data.status.state = state;
+                                data.status.files = result.successful?.map(f =>
+                                    extractInfo(f)
+                                );
+
+                                dataProvider.update(resource, {
+                                    id: data.id,
+                                    data: data,
+                                    previousData: null,
+                                });
+                            }
                         });
                     }
                 }),

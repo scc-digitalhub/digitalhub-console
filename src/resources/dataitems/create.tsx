@@ -42,9 +42,6 @@ export const DataItemCreate = () => {
         return {
             ...rest,
             project: root,
-            status: {
-                files: uploader.files.map(f => f.info),
-            },
         };
     };
 

@@ -10,7 +10,7 @@ export type Upload = {
     resourceId?: Identifier;
     error?: any;
     remove: () => void;
-    retry?: any;
+    retry?: () => void;
 };
 
 interface UploadStatusContextValue {
