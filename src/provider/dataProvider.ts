@@ -212,7 +212,7 @@ const springDataProvider = (
                                   id: params.meta?.id,
                               }),
                 }).then(({ json }) => ({
-                    data: { ...params.data, id: json.id } as any,
+                    data: { ...json } as any,
                 }));
             }
 
@@ -258,7 +258,7 @@ const springDataProvider = (
                         ? params.data
                         : JSON.stringify(params.data),
             }).then(({ json }) => ({
-                data: { ...params.data, id: json.id } as any,
+                data: { ...json, id: json.id || '' } as any,
             }));
         },
         delete: (resource, params) => {
