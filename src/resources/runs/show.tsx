@@ -46,6 +46,11 @@ import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
+import { ServiceDetails } from './tabs/service';
+import { EventsList } from './tabs/events';
+import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
+import { K8sDetails } from './tabs/k8s';
+import { OpenAIDetails } from './tabs/openai';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -248,6 +253,11 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
+            {record?.status?.openai && (
+                <TabbedShowLayout.Tab label={'fields.openai.title'}>
+                    <OpenAIDetails record={record} />
+                </TabbedShowLayout.Tab>
+            )}
             {record?.spec?.function && (
                 <TabbedShowLayout.Tab label={'fields.metrics.title'}>
                     <MetricsGrid
@@ -286,202 +296,6 @@ export const RunShowComponent = () => {
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
-    );
-};
-
-const EventsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.status?.transitions ? record.status.transitions : [];
-    const listContext = useList({ data });
-    return (
-        <Labeled label="fields.events.title">
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField
-                        showTime
-                        source="time"
-                        label="fields.events.time.title"
-                    />
-                    <StateChips
-                        source="status"
-                        sortable={false}
-                        label="fields.events.status.title"
-                    />
-                    <TextField
-                        source="message"
-                        sortable={false}
-                        label="fields.events.message.title"
-                    />
-                    <TextField
-                        source="details"
-                        sortable={false}
-                        label="fields.events.details.title"
-                    />
-                </Datagrid>
-            </ListContextProvider>
-        </Labeled>
-    );
-};
-
-const ResultsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.status?.results
-        ? Object.keys(record.status.results).map(k => ({
-              id: k,
-              key: k,
-              value: JSON.stringify(record.status.results[k] || null),
-          }))
-        : [];
-    const listContext = useList({ data });
-    return (
-        <Labeled label="fields.results">
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <TextField source="key" label="fields.key.title" />
-                    <TextField
-                        source="value"
-                        label="fields.value.title"
-                        sortable={false}
-                    />
-                </Datagrid>
-            </ListContextProvider>
-        </Labeled>
-    );
-};
-
-const InputsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.spec?.inputs
-        ? Object.keys(record.spec.inputs).map(k => ({
-              key: record.spec.inputs[k],
-              name: k,
-              id: k,
-          }))
-        : [];
-
-    return (
-        <Labeled label={'fields.inputs.title'}>
-            <InputOutputsList data={data} />
-        </Labeled>
-    );
-};
-
-const OutputsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.status?.outputs
-        ? Object.keys(record.status.outputs).map(k => ({
-              key: record.status.outputs[k],
-              name: k,
-              id: k,
-          }))
-        : [];
-
-    return (
-        <Labeled label={'fields.outputs.title'}>
-            <InputOutputsList data={data} />
-        </Labeled>
-    );
-};
-
-const InputOutputsList = (props: { data: any[] }) => {
-    const { data } = props;
-    const { root: projectId } = useRootSelector();
-
-    const listContext = useList({ data: data || [] });
-    return (
-        <ListContextProvider value={listContext}>
-            <Datagrid bulkActionButtons={false} rowClick={false}>
-                <TextField source="name" label="fields.name.title" />
-                <FunctionField
-                    sortable={false}
-                    label="fields.kind"
-                    render={r => {
-                        try {
-                            if (
-                                r.key.startsWith('store://' + projectId + '/')
-                            ) {
-                                //local ref, build path
-                                const obj = keyParser(r.key);
-                                return (
-                                    <TextField record={obj} source={'kind'} />
-                                );
-                            }
-                        } catch (e) {}
-                        return null;
-                    }}
-                />
-                <TextField
-                    source="key"
-                    label="fields.key.title"
-                    sortable={false}
-                />
-
-                <FunctionField
-                    sortable={false}
-                    render={r => {
-                        try {
-                            if (
-                                r.key.startsWith('store://' + projectId + '/')
-                            ) {
-                                //local ref, build path
-                                const obj = keyParser(r.key);
-                                if (obj.id) {
-                                    return (
-                                        <ShowButton
-                                            resource={obj.resource}
-                                            record={{ id: obj.id }}
-                                        />
-                                    );
-                                }
-                            }
-                        } catch (e) {}
-                        return null;
-                    }}
-                />
-            </Datagrid>
-        </ListContextProvider>
-    );
-};
-
-const K8sDetails = (props: { record: any }) => {
-    const { record } = props;
-
-    const json = record?.status?.k8s || {};
-
-    return (
-        <Labeled label="fields.k8s.title" fullWidth>
-            <Box
-                sx={{
-                    backgroundColor: '#002b36',
-                    px: 2,
-                    py: 0,
-                    minHeight: '20vw',
-                }}
-            >
-                <JSONTree data={json} hideRoot />
-            </Box>
-        </Labeled>
-    );
-};
-
-const ServiceDetails = (props: { record: any }) => {
-    const { record } = props;
-
-    const json = record?.status?.service || {};
-
-    return (
-        <Labeled label="fields.service.title" fullWidth>
-            <Box
-                sx={{
-                    backgroundColor: '#002b36',
-                    px: 2,
-                    py: 0,
-                    minHeight: '20vw',
-                }}
-            >
-                <JSONTree data={json} hideRoot />
-            </Box>
-        </Labeled>
     );
 };
 

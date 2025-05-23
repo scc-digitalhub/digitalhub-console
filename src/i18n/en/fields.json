@@ -807,5 +807,8 @@
     },
     "token": {
         "title": "Token"
+    },
+    "openai":{
+        "title": "OpenAI"
     }
 }
