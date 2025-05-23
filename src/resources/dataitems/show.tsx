@@ -24,6 +24,7 @@ import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { StateChips } from '../../components/StateChips';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -53,6 +54,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     }, [record, schemaProvider, resource]);
 
     if (!record) return <></>;
+
     return (
         <TabbedShowLayout
             syncWithLocation={false}
@@ -75,9 +77,8 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 </Stack>
 
                 <IdField source="key" />
-
+                <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-
                 {spec && (
                     <JsonSchemaField
                         source="spec"

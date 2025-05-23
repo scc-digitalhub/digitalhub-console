@@ -9,7 +9,6 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Uppy } from 'uppy';
-import { UploadResult } from '@uppy/core';
 import AwsS3 from '@uppy/aws-s3';
 import { useUploadStatusContext } from '../contexts/UploadStatusContext';
 
@@ -48,7 +47,12 @@ export type UploadController = {
     uppy: Uppy;
     files: any[];
     path: string | null;
-    upload: () => Promise<UploadResult<any, any> | undefined>;
+    /**
+     * Set resource state to UPLOADING, then start the upload.
+     * @param data record
+     * @returns
+     */
+    upload: (data: any) => void;
 };
 
 export const useUploadController = (
@@ -115,6 +119,89 @@ export const useUploadController = (
 
             return true;
         },
+    };
+
+    const upload = (data: any) => {
+        if (dataProvider) {
+            //update resource state to UPLOADING
+            if (!data.status) data.status = {};
+            data.status.state = 'UPLOADING';
+
+            dataProvider
+                .update(resource, {
+                    id: data.id,
+                    data: data,
+                    previousData: null,
+                })
+                .then(() => {
+                    uppy?.upload();
+                });
+        }
+    };
+
+    const retry = (fileId: string) => {
+        if (dataProvider) {
+            //update resource state to UPLOADING
+            dataProvider.getOne(resource, { id }).then(res => {
+                let data = res.data;
+                if (data) {
+                    data.status.state = 'UPLOADING';
+
+                    dataProvider
+                        .update(resource, {
+                            id: data.id,
+                            data: data,
+                            previousData: null,
+                        })
+                        .then(() => {
+                            //set final resource state here, as "complete" event is not fired
+                            uppy?.retryUpload(fileId).then(
+                                () => {
+                                    if (uppy?.getFiles().some(f => f.error)) {
+                                        //some upload is still failed, set ERROR
+                                        data.status.state = 'ERROR';
+                                    } else if (
+                                        uppy
+                                            ?.getFiles()
+                                            .every(
+                                                f =>
+                                                    !f.error &&
+                                                    f.progress.uploadComplete
+                                            )
+                                    ) {
+                                        //all files uploaded, set READY
+                                        data.status.state = 'READY';
+                                    }
+                                    //set successful files on status
+                                    data.status.files = uppy
+                                        ?.getFiles()
+                                        .filter(
+                                            f =>
+                                                !f.error &&
+                                                f.progress.uploadComplete
+                                        )
+                                        .map(f => extractInfo(f));
+                                    dataProvider.update(resource, {
+                                        id: data.id,
+                                        data: data,
+                                        previousData: null,
+                                    });
+                                },
+                                error => {
+                                    console.log('upload error', error);
+                                    data.status.state = 'ERROR';
+                                    data.status.message = error;
+                                    dataProvider.update(resource, {
+                                        id: data.id,
+                                        data: data,
+                                        previousData: null,
+                                    });
+                                }
+                            );
+                        });
+                }
+            });
+        }
     };
 
     //memoize uppy instantiation
@@ -266,7 +353,7 @@ export const useUploadController = (
                 .on('upload-progress', file => {
                     if (file) {
                         updateUploads({
-                            id: file.id,
+                            id: file.id + `_${id}`,
                             filename: file.name,
                             progress: file.progress,
                             resource: resource,
@@ -292,18 +379,45 @@ export const useUploadController = (
                 .on('upload-error', (file, error) => {
                     if (file) {
                         updateUploads({
-                            id: file.id,
+                            id: file.id + `_${id}`,
                             filename: file.name,
                             progress: file.progress,
                             resource: resource,
                             resourceId: id,
                             remove: () => uppy?.removeFile(file.id),
                             error,
+                            retry: () => retry(file.id),
                         });
                         setFiles(prev => {
                             return prev.map(f =>
                                 f.id === file.id ? { ...f, file: file } : f
                             );
+                        });
+                    }
+                })
+                .on('complete', result => {
+                    if (dataProvider) {
+                        //update resource state to READY or ERROR
+                        dataProvider.getOne(resource, { id }).then(res => {
+                            let data = res.data;
+                            if (data) {
+                                const state =
+                                    result.successful &&
+                                    result.successful.length > 0 &&
+                                    result.failed?.length === 0
+                                        ? 'READY'
+                                        : 'ERROR';
+                                data.status.state = state;
+                                data.status.files = result.successful?.map(f =>
+                                    extractInfo(f)
+                                );
+
+                                dataProvider.update(resource, {
+                                    id: data.id,
+                                    data: data,
+                                    previousData: null,
+                                });
+                            }
                         });
                     }
                 }),
@@ -336,8 +450,6 @@ export const useUploadController = (
         uppy,
         files,
         path,
-        upload: () => {
-            return uppy?.upload();
-        },
+        upload,
     };
 };

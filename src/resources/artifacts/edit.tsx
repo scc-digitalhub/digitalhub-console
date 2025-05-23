@@ -28,28 +28,33 @@ export const ArtifactEdit = () => {
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
-    const onSuccess = (data, variables, context) => {};
-    const onSettled = (data, error, variables, context) => {
-        //upload and notify only if success, otherwise onError will handle notify
-        if (!error) {
-            uploader.upload();
-            notify('ra.notification.updated', {
-                type: 'info',
-                messageArgs: { smart_count: 1 },
-            });
-            redirect('show', resource, data.id, data);
+    const onSuccess = () => {};
+    const onSettled = (data, error) => {
+        if (error) {
+            //onError already handles notify
+            return;
         }
+
+        //post save we start uploading
+        if (uploader.files.length > 0) {
+            uploader.upload(data);
+        }
+
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        redirect('show', resource, data.id, data);
     };
 
     const transform = data => {
         //strip path tl which is a transient field
         const { path, ...rest } = data;
 
+        //reset status if new version
         return {
             ...rest,
-            status: {
-                files: uploader.files.map(f => f.info),
-            },
+            status: isSpecDirty ? {} : rest.status,
         };
     };
 
@@ -60,8 +65,8 @@ export const ArtifactEdit = () => {
                 transform={transform}
                 mutationOptions={{
                     meta: { update: !isSpecDirty, id: id.current },
-                    onSuccess: onSuccess,
-                    onSettled: onSettled,
+                    onSuccess,
+                    onSettled,
                 }}
             >
                 <>

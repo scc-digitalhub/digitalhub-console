@@ -42,14 +42,22 @@ export const DataItemCreate = () => {
         return {
             ...rest,
             project: root,
-            status: {
-                files: uploader.files.map(f => f.info),
-            },
         };
     };
 
-    const onSuccess = data => {
-        uploader.upload();
+    const onSuccess = () => {};
+
+    const onSettled = (data, error) => {
+        if (error) {
+            //onError already handles notify
+            return;
+        }
+
+        //post save we start uploading
+        if (uploader.files.length > 0) {
+            uploader.upload(data);
+        }
+
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };
@@ -58,8 +66,7 @@ export const DataItemCreate = () => {
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
                 transform={transform}
-                mutationOptions={{ onSuccess }}
-                redirect="list"
+                mutationOptions={{ onSuccess, onSettled }}
                 record={{ id: id.current, spec: { path: null } }}
             >
                 <>

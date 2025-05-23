@@ -34,7 +34,7 @@ export enum StateColors {
     ERROR = 'error',
     RUNNING = 'info',
     BUILT = 'warning',
-    READY = 'info',
+    READY = 'success',
     DELETED = 'secondary',
     DELETING = 'warning',
     STOP = 'warning',

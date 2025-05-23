@@ -1,7 +1,4 @@
-import {
-    Container,
-    Stack,
-} from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DateField,
@@ -30,6 +27,7 @@ import { LineageTabComponent } from '../../components/lineage/LineageTabComponen
 import { MetricsGrid } from '../../components/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { StateChips } from '../../components/StateChips';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -49,6 +47,7 @@ const getUiSpec = (kind: string) => {
     };
     return uiSpec;
 };
+
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
     const schemaProvider = useSchemaProvider();
@@ -100,6 +99,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     ];
 
     if (!record) return <></>;
+
     return (
         <TabbedShowLayout
             syncWithLocation={false}
@@ -122,9 +122,8 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 </Stack>
 
                 <IdField source="key" />
-
+                <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-
                 {spec && (
                     <JsonSchemaField
                         source="spec"
