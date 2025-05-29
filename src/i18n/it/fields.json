@@ -794,6 +794,10 @@
     "expiresAt": {
         "title": "Scade il"
     },
+    "expiresIn": {
+        "title": "Scade entro",
+        "value": "%{d} giorni, %{h} ore, %{m} minuti e %{s} secondi"
+    },
     "scopes": {
         "title": "Scope",
         "description": "Scope di access (permessi)"

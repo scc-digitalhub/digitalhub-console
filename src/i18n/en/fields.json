@@ -794,6 +794,10 @@
     "expiresAt": {
         "title": "Expires at"
     },
+    "expiresIn": {
+        "title": "Expires in",
+        "value": "%{d} days, %{h} hours, %{m} minutes and %{s} seconds"
+    },
     "scopes": {
         "title": "Scopes",
         "description": "Access scopes (permissions)"
