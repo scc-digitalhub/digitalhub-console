@@ -2,7 +2,6 @@ import { Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     Labeled,
-    ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
@@ -25,6 +24,7 @@ import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
+import { ShowBaseLive } from '../../components/ShowBaseLive';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -131,7 +131,7 @@ const StyledFlatCard = (props: { children: ReactNode }) => {
 export const DataItemShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
+            <ShowBaseLive>
                 <>
                     <ShowPageTitle icon={<DataItemIcon fontSize={'large'} />} />
                     <ShowView
@@ -154,7 +154,7 @@ export const DataItemShow = () => {
                         <ShowComponent />
                     </ShowView>
                 </>
-            </ShowBase>
+            </ShowBaseLive>
         </Container>
     );
 };

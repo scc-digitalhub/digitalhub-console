@@ -1,10 +1,8 @@
 import { JsonSchemaField } from '../../components/JsonSchema';
 import { Container, Stack } from '@mui/material';
 import { memo, useEffect, useState } from 'react';
-
 import {
     Labeled,
-    ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
@@ -24,6 +22,7 @@ import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
+import { ShowBaseLive } from '../../components/ShowBaseLive';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -93,7 +92,7 @@ arePropsEqual);
 export const ArtifactShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
+            <ShowBaseLive>
                 <>
                     <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
                     <ShowView
@@ -116,7 +115,7 @@ export const ArtifactShow = () => {
                         <ShowComponent />
                     </ShowView>
                 </>
-            </ShowBase>
+            </ShowBaseLive>
         </Container>
     );
 };
