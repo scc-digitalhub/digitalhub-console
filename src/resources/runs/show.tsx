@@ -1,26 +1,22 @@
 import {
-    Datagrid,
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
     IconButtonWithTooltip,
     Labeled,
-    ListContextProvider,
     LoadingIndicator,
     SelectInput,
-    ShowButton,
     ShowView,
     TabbedShowLayout,
     TextField,
     TextInput,
     TopToolbar,
     useCreatePath,
-    useList,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Container, Divider, Stack, Box } from '@mui/material';
+import { Container, Divider, Stack } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -35,12 +31,10 @@ import { MetadataField } from '../../components/MetadataField';
 import { SourceCodeTab } from '../functions/show';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { JSONTree } from 'react-json-tree';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { ResumeButton } from './ResumeButton';
-import { functionParser, keyParser } from '../../common/helper';
+import { functionParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';

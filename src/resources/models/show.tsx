@@ -3,7 +3,6 @@ import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DateField,
     Labeled,
-    ShowBase,
     ShowView,
     TabbedShowLayout,
     TextField,
@@ -28,6 +27,7 @@ import { MetricsGrid } from '../../components/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
+import { ShowBaseLive } from '../../components/ShowBaseLive';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -173,7 +173,7 @@ const StyledFlatCard = (props: { children: ReactNode }) => {
 export const ModelShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
+            <ShowBaseLive>
                 <>
                     <ShowPageTitle icon={<ModelIcon fontSize={'large'} />} />
                     <ShowView
@@ -196,7 +196,7 @@ export const ModelShow = () => {
                         <ShowComponent />
                     </ShowView>
                 </>
-            </ShowBase>
+            </ShowBaseLive>
         </Container>
     );
 };
