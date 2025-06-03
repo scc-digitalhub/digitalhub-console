@@ -1,0 +1,1133 @@
+{
+  "fields": {
+    "adapters": {
+      "item": {
+        "description": "",
+        "title": "adapters.item"
+      }
+    },
+    "affinity": {
+      "description": "",
+      "title": "affinity"
+    },
+    "algorithm": {
+      "description": "",
+      "title": "algorithm"
+    },
+    "args": {
+      "item": {
+        "description": "",
+        "title": "args.item"
+      }
+    },
+    "artifacts": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "artifacts.item"
+      },
+      "title": "artifacts"
+    },
+    "baseModel": {
+      "description": "",
+      "title": "baseModel"
+    },
+    "config": {
+      "defaultFilesStore": {
+        "description": "",
+        "title": "config.defaultFilesStore"
+      },
+      "description": "",
+      "title": "config"
+    },
+    "constraints": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "constraints.item"
+      },
+      "title": "constraints"
+    },
+    "container": {
+      "args": {
+        "description": "",
+        "title": "container.args"
+      },
+      "baseImage": {
+        "description": "",
+        "title": "container.baseImage"
+      },
+      "command": {
+        "description": "",
+        "title": "container.command"
+      },
+      "image": {
+        "description": "",
+        "title": "container.image"
+      },
+      "imagePullPolicy": {
+        "description": "",
+        "title": "container.imagePullPolicy"
+      },
+      "instructions": {
+        "description": "",
+        "title": "container.instructions"
+      },
+      "tag": {
+        "description": "",
+        "title": "container.tag"
+      }
+    },
+    "cpu": {
+      "description": "",
+      "title": "cpu"
+    },
+    "createdBy": {
+      "description": "",
+      "title": "createdBy"
+    },
+    "created": {
+      "description": "",
+      "title": "created"
+    },
+    "dataitems": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "dataitems.item"
+      },
+      "title": "dataitems"
+    },
+    "description": {
+      "description": "",
+      "title": "description"
+    },
+    "dest": {
+      "description": "",
+      "title": "dest"
+    },
+    "effect": {
+      "description": "",
+      "title": "effect"
+    },
+    "embedded": {
+      "description": "",
+      "title": "embedded"
+    },
+    "env": {
+      "item": {
+        "description": "",
+        "title": "env.item"
+      }
+    },
+    "envs": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "envs.item"
+      },
+      "title": "envs"
+    },
+    "example": {
+      "description": "",
+      "title": "example"
+    },
+    "features": {
+      "item": {
+        "description": "",
+        "title": "features.item"
+      }
+    },
+    "fields": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "fields.item"
+      },
+      "title": "fields"
+    },
+    "files": {
+      "item": {
+        "description": "",
+        "title": "files.item"
+      }
+    },
+    "format": {
+      "description": "",
+      "title": "format"
+    },
+    "framework": {
+      "description": "",
+      "title": "framework"
+    },
+    "fsGroup": {
+      "description": "",
+      "title": "fsGroup"
+    },
+    "function": {
+      "description": "",
+      "title": "function"
+    },
+    "functions": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "functions.item"
+      },
+      "title": "functions"
+    },
+    "gpu": {
+      "description": "",
+      "title": "gpu"
+    },
+    "huggingface": {
+      "backend": {
+        "description": "",
+        "title": "huggingface.backend"
+      },
+      "disablelogrequests": {
+        "description": "",
+        "title": "huggingface.disablelogrequests"
+      },
+      "disablelowercase": {
+        "description": "",
+        "title": "huggingface.disablelowercase"
+      },
+      "disablespecialtokens": {
+        "description": "",
+        "title": "huggingface.disablespecialtokens"
+      },
+      "dtype": {
+        "description": "",
+        "title": "huggingface.dtype"
+      },
+      "maxlength": {
+        "description": "",
+        "title": "huggingface.maxlength"
+      },
+      "maxloglen": {
+        "description": "",
+        "title": "huggingface.maxloglen"
+      },
+      "modelid": {
+        "description": "",
+        "title": "huggingface.modelid"
+      },
+      "modelrevision": {
+        "description": "",
+        "title": "huggingface.modelrevision"
+      },
+      "path": {
+        "description": ""
+      },
+      "returnprobabilities": {
+        "description": "",
+        "title": "huggingface.returnprobabilities"
+      },
+      "returntokentypeids": {
+        "description": "",
+        "title": "huggingface.returntokentypeids"
+      },
+      "task": {
+        "description": "",
+        "title": "huggingface.task"
+      },
+      "tensorinputnames": {
+        "description": "",
+        "title": "huggingface.tensorinputnames"
+      },
+      "tokenizerrevision": {
+        "description": "",
+        "title": "huggingface.tokenizerrevision"
+      },
+      "trustremotecode": {
+        "description": "",
+        "title": "huggingface.trustremotecode"
+      }
+    },
+    "id": {
+      "description": "",
+      "title": "id"
+    },
+    "initParameters": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "initParameters.item"
+      },
+      "title": "initParameters"
+    },
+    "inputDatasets": {
+      "item": {
+        "description": "",
+        "title": "inputDatasets.item"
+      }
+    },
+    "inputs": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "inputs.item"
+      },
+      "title": "inputs"
+    },
+    "instructions": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "instructions.item"
+      },
+      "title": "instructions"
+    },
+    "key": {
+      "description": "",
+      "title": "key"
+    },
+    "kind": {
+      "description": "",
+      "title": "kind"
+    },
+    "kubeai": {
+      "adapters": {
+        "description": "",
+        "title": "kubeai.adapters"
+      },
+      "args": {
+        "description": "",
+        "title": "kubeai.args"
+      },
+      "autoscalingdisabled": {
+        "description": "",
+        "title": "kubeai.autoscalingdisabled"
+      },
+      "cacheprofile": {
+        "description": "",
+        "title": "kubeai.cacheprofile"
+      },
+      "engine": {
+        "description": "",
+        "title": "kubeai.engine"
+      },
+      "env": {
+        "description": "",
+        "title": "kubeai.env"
+      },
+      "features": {
+        "description": "",
+        "title": "kubeai.features"
+      },
+      "filecontent": {
+        "description": "",
+        "title": "kubeai.filecontent"
+      },
+      "filepath": {
+        "description": "",
+        "title": "kubeai.filepath"
+      },
+      "files": {
+        "description": "",
+        "title": "kubeai.files"
+      },
+      "image": {
+        "description": "",
+        "title": "kubeai.image"
+      },
+      "loadbalancing": {
+        "description": "",
+        "title": "kubeai.loadbalancing"
+      },
+      "maxreplicas": {
+        "description": "",
+        "title": "kubeai.maxreplicas"
+      },
+      "meanloadfactor": {
+        "description": "",
+        "title": "kubeai.meanloadfactor"
+      },
+      "minreplicas": {
+        "description": "",
+        "title": "kubeai.minreplicas"
+      },
+      "prefixcharlength": {
+        "description": "",
+        "title": "kubeai.prefixcharlength"
+      },
+      "prefixhash": {
+        "description": "",
+        "title": "kubeai.prefixhash"
+      },
+      "processors": {
+        "description": "",
+        "title": "kubeai.processors"
+      },
+      "replicas": {
+        "description": "",
+        "title": "kubeai.replicas"
+      },
+      "replication": {
+        "description": "",
+        "title": "kubeai.replication"
+      },
+      "resourceprofile": {
+        "description": "",
+        "title": "kubeai.resourceprofile"
+      },
+      "scaledowndelayseconds": {
+        "description": "",
+        "title": "kubeai.scaledowndelayseconds"
+      },
+      "scaling": {
+        "description": "",
+        "title": "kubeai.scaling"
+      },
+      "strategy": {
+        "description": "",
+        "title": "kubeai.strategy"
+      },
+      "targetrequests": {
+        "description": "",
+        "title": "kubeai.targetrequests"
+      },
+      "url": {
+        "description": "",
+        "title": "kubeai.url"
+      }
+    },
+    "labels": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "labels.item"
+      },
+      "title": "labels"
+    },
+    "labelSelector": {
+      "description": "",
+      "title": "labelSelector"
+    },
+    "limits": {
+      "description": "",
+      "title": "limits"
+    },
+    "localExecution": {
+      "description": "",
+      "title": "localExecution"
+    },
+    "matchExpressions": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "matchExpressions.item"
+      },
+      "title": "matchExpressions"
+    },
+    "matchFields": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "matchFields.item"
+      },
+      "title": "matchFields"
+    },
+    "matchLabelKeys": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "matchLabelKeys.item"
+      },
+      "title": "matchLabelKeys"
+    },
+    "matchLabels": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "matchLabels.item"
+      },
+      "title": "matchLabels"
+    },
+    "mem": {
+      "description": "",
+      "title": "mem"
+    },
+    "metadata": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "metadata.item"
+      },
+      "title": "metadata"
+    },
+    "mismatchLabelKeys": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "mismatchLabelKeys.item"
+      },
+      "title": "mismatchLabelKeys"
+    },
+    "mlflow": {
+      "flavor": {
+        "description": "",
+        "title": "mlflow.flavor"
+      },
+      "inputdatasetdigest": {
+        "description": "",
+        "title": "mlflow.inputdatasetdigest"
+      },
+      "inputdatasetname": {
+        "description": "",
+        "title": "mlflow.inputdatasetname"
+      },
+      "inputdatasetprofile": {
+        "description": "",
+        "title": "mlflow.inputdatasetprofile"
+      },
+      "inputdatasetschema": {
+        "description": "",
+        "title": "mlflow.inputdatasetschema"
+      },
+      "inputdatasets": {
+        "description": "",
+        "title": "mlflow.inputdatasets"
+      },
+      "inputdatasetsource": {
+        "description": "",
+        "title": "mlflow.inputdatasetsource"
+      },
+      "inputdatasetsourcetype": {
+        "description": "",
+        "title": "mlflow.inputdatasetsourcetype"
+      },
+      "modelconfig": {
+        "description": "",
+        "title": "mlflow.modelconfig"
+      },
+      "path": {
+        "description": ""
+      },
+      "signature": {
+        "description": "",
+        "title": "mlflow.signature"
+      },
+      "signatureinputs": {
+        "description": "",
+        "title": "mlflow.signatureinputs"
+      },
+      "signatureoutputs": {
+        "description": "",
+        "title": "mlflow.signatureoutputs"
+      },
+      "signatureparams": {
+        "description": "",
+        "title": "mlflow.signatureparams"
+      }
+    },
+    "modelConfig": {
+      "item": {
+        "description": "",
+        "title": "modelConfig.item"
+      }
+    },
+    "models": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "models.item"
+      },
+      "title": "models"
+    },
+    "modelserve": {
+      "modelname": {
+        "description": "",
+        "title": "modelserve.modelname"
+      }
+    },
+    "mountPath": {
+      "description": "",
+      "title": "mountPath"
+    },
+    "name": {
+      "description": "",
+      "title": "name"
+    },
+    "namespaces": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "namespaces.item"
+      },
+      "title": "namespaces"
+    },
+    "namespaceSelector": {
+      "description": "",
+      "title": "namespaceSelector"
+    },
+    "nodeAffinity": {
+      "description": "",
+      "title": "nodeAffinity"
+    },
+    "nodeSelector": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "nodeSelector.item"
+      },
+      "title": "nodeSelector"
+    },
+    "nodeSelectorTerms": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "nodeSelectorTerms.item"
+      },
+      "title": "nodeSelectorTerms"
+    },
+    "openMetadata": {
+      "description": "",
+      "title": "openMetadata"
+    },
+    "operator": {
+      "description": "",
+      "title": "operator"
+    },
+    "outputs": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "outputs.item"
+      },
+      "title": "outputs"
+    },
+    "parameters": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "parameters.item"
+      },
+      "title": "parameters"
+    },
+    "path": {
+      "description": "",
+      "title": "path"
+    },
+    "podAffinity": {
+      "description": "",
+      "title": "podAffinity"
+    },
+    "podAffinityTerm": {
+      "description": "",
+      "title": "podAffinityTerm"
+    },
+    "podAntiAffinity": {
+      "description": "",
+      "title": "podAntiAffinity"
+    },
+    "port": {
+      "description": "",
+      "title": "port"
+    },
+    "preference": {
+      "description": "",
+      "title": "preference"
+    },
+    "preferredDuringSchedulingIgnoredDuringExecution": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "preferredDuringSchedulingIgnoredDuringExecution.item"
+      },
+      "title": "preferredDuringSchedulingIgnoredDuringExecution"
+    },
+    "priorityClass": {
+      "description": "",
+      "title": "priorityClass"
+    },
+    "profile": {
+      "description": "",
+      "title": "profile"
+    },
+    "project": {
+      "description": "",
+      "title": "project"
+    },
+    "provider": {
+      "description": "",
+      "title": "provider"
+    },
+    "publish": {
+      "description": "",
+      "title": "publish"
+    },
+    "python": {
+      "requirements": {
+        "description": "",
+        "title": "python.requirements"
+      },
+      "version": {
+        "description": "",
+        "title": "python.version"
+      }
+    },
+    "ref": {
+      "description": "",
+      "title": "ref"
+    },
+    "relationships": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "relationships.item"
+      },
+      "title": "relationships"
+    },
+    "replicas": {
+      "description": "",
+      "title": "replicas"
+    },
+    "requests": {
+      "description": "",
+      "title": "requests"
+    },
+    "requiredDuringSchedulingIgnoredDuringExecution": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "requiredDuringSchedulingIgnoredDuringExecution.item"
+      },
+      "title": "requiredDuringSchedulingIgnoredDuringExecution"
+    },
+    "requirements": {
+      "item": {
+        "description": "",
+        "title": "requirements.item"
+      }
+    },
+    "resources": {
+      "description": "",
+      "title": "resources"
+    },
+    "runAsGroup": {
+      "description": "",
+      "title": "runAsGroup"
+    },
+    "runAsUser": {
+      "description": "",
+      "title": "runAsUser"
+    },
+    "run": {
+      "description": "",
+      "title": "run"
+    },
+    "runtimeClass": {
+      "description": "",
+      "title": "runtimeClass"
+    },
+    "schedule": {
+      "description": "",
+      "title": "schedule"
+    },
+    "schema": {
+      "description": "",
+      "title": "schema"
+    },
+    "secrets": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "secrets.item"
+      },
+      "title": "secrets"
+    },
+    "servicePorts": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "servicePorts.item"
+      },
+      "title": "servicePorts"
+    },
+    "serviceType": {
+      "description": "",
+      "title": "serviceType"
+    },
+    "sklearn": {
+      "path": {
+        "description": ""
+      }
+    },
+    "sourceCode": {
+      "base64": {
+        "description": "",
+        "title": "sourceCode.base64"
+      },
+      "description": "",
+      "handler": {
+        "description": "",
+        "title": "sourceCode.handler"
+      },
+      "init_function": {
+        "description": "",
+        "title": "sourceCode.init_function"
+      },
+      "lang": {
+        "description": "",
+        "title": "sourceCode.lang"
+      },
+      "source": {
+        "description": "",
+        "title": "sourceCode.source"
+      },
+      "title": "sourceCode"
+    },
+    "source": {
+      "description": "",
+      "title": "source"
+    },
+    "spec": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "spec.item"
+      },
+      "title": "spec"
+    },
+    "srcPath": {
+      "description": "",
+      "title": "srcPath"
+    },
+    "states": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "states.item"
+      },
+      "title": "states"
+    },
+    "status": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "status.item"
+      },
+      "title": "status"
+    },
+    "targetPort": {
+      "description": "",
+      "title": "targetPort"
+    },
+    "task": {
+      "description": "",
+      "title": "task"
+    },
+    "template": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "template.item"
+      },
+      "title": "template"
+    },
+    "tensorInputNames": {
+      "item": {
+        "description": "",
+        "title": "tensorInputNames.item"
+      }
+    },
+    "timestamp": {
+      "description": "",
+      "title": "timestamp"
+    },
+    "title": {
+      "description": "",
+      "title": "title"
+    },
+    "tolerations": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "tolerations.item"
+      },
+      "title": "tolerations"
+    },
+    "tolerationSeconds": {
+      "description": "",
+      "title": "tolerationSeconds"
+    },
+    "topologyKey": {
+      "description": "",
+      "title": "topologyKey"
+    },
+    "type": {
+      "description": "",
+      "title": "type"
+    },
+    "updatedBy": {
+      "description": "",
+      "title": "updatedBy"
+    },
+    "updated": {
+      "description": "",
+      "title": "updated"
+    },
+    "user": {
+      "description": "",
+      "title": "user"
+    },
+    "value": {
+      "description": "",
+      "title": "value"
+    },
+    "values": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "values.item"
+      },
+      "title": "values"
+    },
+    "version": {
+      "description": "",
+      "title": "version"
+    },
+    "volumes": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "volumes.item"
+      },
+      "title": "volumes"
+    },
+    "volumeType": {
+      "description": "",
+      "title": "volumeType"
+    },
+    "weight": {
+      "description": "",
+      "title": "weight"
+    },
+    "workflow": {
+      "description": "",
+      "title": "workflow"
+    },
+    "workflows": {
+      "description": "",
+      "item": {
+        "description": "",
+        "title": "workflows.item"
+      },
+      "title": "workflows"
+    }
+  },
+  "specs": {
+    "artifact": {
+      "description": "",
+      "title": "artifact"
+    },
+    "container+build": {
+      "description": "",
+      "title": "container+build"
+    },
+    "container+deploy": {
+      "description": "",
+      "title": "container+deploy"
+    },
+    "container": {
+      "description": "",
+      "title": "container"
+    },
+    "container+job": {
+      "description": "",
+      "title": "container+job"
+    },
+    "container+run": {
+      "description": "",
+      "title": "container+run"
+    },
+    "container+serve": {
+      "description": "",
+      "title": "container+serve"
+    },
+    "dataitem": {
+      "description": "",
+      "title": "dataitem"
+    },
+    "dbt": {
+      "description": "",
+      "title": "dbt"
+    },
+    "dbt+run": {
+      "description": "",
+      "title": "dbt+run"
+    },
+    "dbt+transform": {
+      "description": "",
+      "title": "dbt+transform"
+    },
+    "huggingface": {
+      "description": "",
+      "title": "huggingface"
+    },
+    "huggingfaceserve": {
+      "description": "",
+      "title": "huggingfaceserve"
+    },
+    "huggingfaceserve+run": {
+      "description": "",
+      "title": "huggingfaceserve+run"
+    },
+    "huggingfaceserve+serve": {
+      "description": "",
+      "title": "huggingfaceserve+serve"
+    },
+    "kfp+build": {
+      "description": "",
+      "title": "kfp+build"
+    },
+    "kfp": {
+      "description": "",
+      "title": "kfp"
+    },
+    "kfp+pipeline": {
+      "description": "",
+      "title": "kfp+pipeline"
+    },
+    "kfp+run": {
+      "description": "",
+      "title": "kfp+run"
+    },
+    "kubeai-speech": {
+      "description": "",
+      "title": "kubeai-speech"
+    },
+    "kubeai-speech+run": {
+      "description": "",
+      "title": "kubeai-speech+run"
+    },
+    "kubeai-speech+serve": {
+      "description": "",
+      "title": "kubeai-speech+serve"
+    },
+    "kubeai-text": {
+      "description": "",
+      "title": "kubeai-text"
+    },
+    "kubeai-text+run": {
+      "description": "",
+      "title": "kubeai-text+run"
+    },
+    "kubeai-text+serve": {
+      "description": "",
+      "title": "kubeai-text+serve"
+    },
+    "lifecycle": {
+      "description": "",
+      "title": "lifecycle"
+    },
+    "log": {
+      "description": "",
+      "title": "log"
+    },
+    "metadata": {
+      "audit": {
+        "description": "",
+        "title": "metadata.audit"
+      },
+      "base": {
+        "description": "",
+        "title": "metadata.base"
+      },
+      "embedded": {
+        "description": "",
+        "title": "metadata.embedded"
+      },
+      "openmetadata": {
+        "description": "",
+        "title": "metadata.openmetadata"
+      },
+      "relationships": {
+        "description": "",
+        "title": "metadata.relationships"
+      },
+      "versioning": {
+        "description": "",
+        "title": "metadata.versioning"
+      }
+    },
+    "mlflow": {
+      "description": "",
+      "title": "mlflow"
+    },
+    "mlflowserve": {
+      "description": "",
+      "title": "mlflowserve"
+    },
+    "mlflowserve+run": {
+      "description": "",
+      "title": "mlflowserve+run"
+    },
+    "mlflowserve+serve": {
+      "description": "",
+      "title": "mlflowserve+serve"
+    },
+    "model": {
+      "description": "",
+      "title": "model"
+    },
+    "project": {
+      "description": "",
+      "title": "project"
+    },
+    "python+build": {
+      "description": "",
+      "title": "python+build"
+    },
+    "python": {
+      "description": "",
+      "title": "python"
+    },
+    "python+job": {
+      "description": "",
+      "title": "python+job"
+    },
+    "python+run": {
+      "description": "",
+      "title": "python+run"
+    },
+    "python+serve": {
+      "description": "",
+      "title": "python+serve"
+    },
+    "run": {
+      "description": "",
+      "title": "run"
+    },
+    "scheduler": {
+      "description": "",
+      "title": "scheduler"
+    },
+    "secret": {
+      "description": "",
+      "title": "secret"
+    },
+    "sklearn": {
+      "description": "",
+      "title": "sklearn"
+    },
+    "sklearnserve": {
+      "description": "",
+      "title": "sklearnserve"
+    },
+    "sklearnserve+run": {
+      "description": "",
+      "title": "sklearnserve+run"
+    },
+    "sklearnserve+serve": {
+      "description": "",
+      "title": "sklearnserve+serve"
+    },
+    "table": {
+      "description": "",
+      "title": "table"
+    }
+  }
+}
