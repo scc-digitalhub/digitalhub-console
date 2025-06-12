@@ -1,6 +1,6 @@
 {
     "name": "platformadmin",
-    "version": "0.7.0",
+    "version": "0.11.0",
     "private": true,
     "author": {
         "name": "Matteo Chini",
@@ -14,6 +14,10 @@
         {
             "name": "Claudio Ballardini",
             "email": "cballardini@fbk.eu"
+        },
+        {
+            "name": "Erica Tomaselli",
+            "email": "ertomaselli@fbk.eu"
         }
     ],
     "scripts": {
