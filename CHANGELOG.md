@@ -1,3 +1,25 @@
+# [0.11.0](https://github.com/scc-digitalhub/digitalhub-console/compare/0.7.0...0.11.0) (2025-06-04)
+
+
+### Features
+
+* support for personal access tokens ([9241f5f](https://github.com/scc-digitalhub/digitalhub-console/commit/9241f5f9ec3a345323008fa2b0e6f7c5fba18b4a))
+
+* detached file upload and migration to Uppy v4 ([a5e8476](https://github.com/scc-digitalhub/digitalhub-console/commit/a5e8476c529d1605cd13030ae48326bf3549a289))
+
+* support for triggers ([77fde95](https://github.com/scc-digitalhub/digitalhub-console/commit/77fde95eee6409e6ee284828875652ba19ca6447))
+
+* metrics tab ([6130650](https://github.com/scc-digitalhub/digitalhub-console/commit/613065035403631c5ec3400f5ca4126b59fa9e28))
+
+* templates for function creation ([4e80692](https://github.com/scc-digitalhub/digitalhub-console/commit/4e80692845c6f3a8eb2f421267b5991d21915aed))
+
+* create resources via stepper component ([d54a465](https://github.com/scc-digitalhub/digitalhub-console/commit/d54a465e0ed8529bb8255affdb32fd4c76ea3af3))
+
+* resource lineage ([e42ee37](https://github.com/scc-digitalhub/digitalhub-console/commit/e42ee37e835cae25c58d5fb79c947428c419900b))
+
+* websocket and notifications for live updates with StompJS client ([b098522](https://github.com/scc-digitalhub/digitalhub-console/commit/b09852217178d841e8354355a1f7bd102b107306))
+
+
 # [0.7.0](https://github.com/scc-digitalhub/digitalhub-console/compare/0.6.0...0.7.0) (2024-09-19)
 
 
