@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { useStepper, StepperForm } from '@dslab/ra-stepper';
 import { Box } from '@mui/material';
 import { MouseEventHandler } from 'react';

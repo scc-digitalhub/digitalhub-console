@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
 import { ReactElement, JSXElementConstructor } from 'react';
 import { useTranslate } from 'react-admin';

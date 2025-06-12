@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { ReactNode, createElement } from 'react';
 import { useResourceDefinition } from 'react-admin';
 import DefaultIcon from '@mui/icons-material/ViewList';

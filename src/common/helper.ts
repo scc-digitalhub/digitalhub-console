@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { isEmpty, regex } from 'react-admin';
 import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 import memoize from 'lodash/memoize';

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import en from '../i18n/english';
 import it from '../i18n/italian';

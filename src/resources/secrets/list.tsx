@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
 import {

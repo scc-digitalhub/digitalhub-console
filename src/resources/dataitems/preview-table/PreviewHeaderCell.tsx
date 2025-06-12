@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Box, Tooltip } from '@mui/material';
 import { useTranslate } from 'react-admin';
