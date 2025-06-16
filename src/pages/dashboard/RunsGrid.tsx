@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Grid, Typography, Button } from '@mui/material';
 import { useCreatePath, useTranslate } from 'react-admin';
 import { StateColors } from '../../components/StateChips';

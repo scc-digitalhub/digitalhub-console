@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Stack, Typography } from '@mui/material';
 import get from 'lodash/get';
 import { MouseEvent } from 'react';

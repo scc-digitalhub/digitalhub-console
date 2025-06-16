@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
 import { Series, valueFormatter } from './utils';

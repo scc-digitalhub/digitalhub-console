@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { BackButton } from '@dslab/ra-back-button';
 import { Box, FormControlLabel, Switch } from '@mui/material';
 import { useState } from 'react';

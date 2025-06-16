@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {
     GRID_DATETIME_COL_DEF,
     GRID_DATE_COL_DEF,

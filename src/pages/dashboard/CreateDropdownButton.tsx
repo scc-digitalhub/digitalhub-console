@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Menu, MenuItem, Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState, MouseEvent } from 'react';

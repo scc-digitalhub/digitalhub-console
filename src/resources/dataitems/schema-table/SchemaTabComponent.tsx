@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
 import { useLocaleState, useTranslate } from 'react-admin';

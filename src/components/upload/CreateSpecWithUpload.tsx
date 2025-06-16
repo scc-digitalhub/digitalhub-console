@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { useEffect } from 'react';
 import { FormDataConsumer, useInput, useResourceContext } from 'react-admin';
 import { FileInput } from '../../components/FileInput';

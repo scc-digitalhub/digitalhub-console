@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 export const MetadataSchema = {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     type: 'object',

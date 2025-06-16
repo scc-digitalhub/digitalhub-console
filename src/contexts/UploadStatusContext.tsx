@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { createContext, ReactElement, useContext, useState } from 'react';
 import { FileProgress } from '@uppy/utils/lib/FileProgress';
 import { Identifier } from 'react-admin';

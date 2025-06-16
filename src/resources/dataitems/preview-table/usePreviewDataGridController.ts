@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import * as changeCase from 'change-case';
 import { useEffect, useMemo, useRef, useState } from 'react';
