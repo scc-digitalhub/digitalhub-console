@@ -86,7 +86,7 @@ const ShowComponent = () => {
             setSourceCode(record.spec.source);
         }
 
-        if (record) {
+        if (record && resource) {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
@@ -157,7 +157,7 @@ const ShowComponent = () => {
                     console.log(error);
                 });
         }
-    }, [record, schemaProvider, dataProvider]);
+    }, [record, schemaProvider, dataProvider, resource]);
 
     if (!record) {
         return <LoadingIndicator />;

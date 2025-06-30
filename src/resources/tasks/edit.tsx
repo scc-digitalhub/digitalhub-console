@@ -58,10 +58,10 @@ export const TaskEditComponent = () => {
         return errors;
     }
     useEffect(() => {
-        if (schemaProvider && record) {
+        if (schemaProvider && record && resource) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
-    }, [record, schemaProvider]);
+    }, [record, schemaProvider, resource]);
 
     return (
         <SimpleForm toolbar={<TaskToolbar />}>

@@ -77,7 +77,7 @@ export const VersionsList = (props: VersionListProps) => {
             storeKey={false}
         >
             <SimpleList
-                linkType="show"
+                rowClick="show"
                 rowSx={rowSx}
                 key={resource + ':versions:'}
                 primaryText={item => {

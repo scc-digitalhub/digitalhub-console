@@ -8,7 +8,7 @@ import {
     getTemplate,
     getUiOptions,
     ArrayFieldTemplateProps,
-    ArrayFieldTemplateItemType,
+    ArrayFieldItemTemplateType,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
@@ -16,7 +16,7 @@ import {
 import { useTranslate } from 'react-admin';
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
     T = any,
@@ -84,13 +84,13 @@ export default function ArrayFieldTemplate<
                     ({
                         key,
                         ...itemProps
-                    }: ArrayFieldTemplateItemType<T, S, F>) => (
+                    }: ArrayFieldItemTemplateType<T, S, F>) => (
                         <ArrayFieldItemTemplate key={key} {...itemProps} />
                     )
                 )}
             {canAdd && !readonly && (
                 <Grid container justifyContent="right">
-                    <Grid item={true}>
+                    <Grid>
                         <Box>
                             <AddButton
                                 className="array-item-add"

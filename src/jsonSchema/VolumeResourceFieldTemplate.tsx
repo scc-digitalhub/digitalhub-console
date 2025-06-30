@@ -28,9 +28,12 @@ export const VolumeResourceFieldTemplate = (
                 </h3>
             </div>
             <div style={{ display: 'flex', width: '100%' }}>
-                {props.properties.map(element =>
+                {props.properties.map((element, index) =>
                     element.name != 'spec' ? (
-                        <div style={{ width: '100%', margin: '8px' }}>
+                        <div
+                            style={{ width: '100%', margin: '8px' }}
+                            key={'VolumeResourceField_nonspec' + index}
+                        >
                             {childrenTranslated(element.content)}
                         </div>
                     ) : (
@@ -39,9 +42,12 @@ export const VolumeResourceFieldTemplate = (
                 )}
             </div>
             <div style={{ display: 'flex', width: '100%' }}>
-                {props.properties.map(element =>
+                {props.properties.map((element, index) =>
                     element.name == 'spec' ? (
-                        <div style={{ width: '100%', margin: '8px' }}>
+                        <div
+                            style={{ width: '100%', margin: '8px' }}
+                            key={'VolumeResourceField_spec' + index}
+                        >
                             {childrenTranslated(element.content)}
                         </div>
                     ) : (

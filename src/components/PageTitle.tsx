@@ -5,8 +5,6 @@
 import { Typography, Box, SxProps, Theme } from '@mui/material';
 import { isValidElement, ReactElement } from 'react';
 import {
-    Identifier,
-    RaRecord,
     useCreateContext,
     useEditContext,
     useGetResourceLabel,
@@ -63,42 +61,26 @@ export type PageTitleProps = {
     sx?: SxProps<Theme>;
 };
 
-export type ListPageTitleProps = Omit<PageTitleProps, 'text'> & {
-    resource?: string;
-};
+export type ListPageTitleProps = Omit<PageTitleProps, 'text'>;
 
 export const ListPageTitle = (props: ListPageTitleProps) => {
-    const { resource: resourceFromProps, ...rest } = props;
-    const { resource } = useListContext({
-        resource: resourceFromProps,
-    });
+    const { resource } = useListContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
     const label = getResourceLabel(resource, 2);
     const secondaryText = translate('resources.' + resource + '.list');
 
-    return <PageTitle text={label} secondaryText={secondaryText} {...rest} />;
+    return <PageTitle text={label} secondaryText={secondaryText} {...props} />;
 };
 
 export type RecordPageTitleProps = Omit<
     PageTitleProps,
     'text' | 'secondaryText'
-> & {
-    resource?: string;
-    record?: RaRecord<Identifier>;
-};
+>;
 
 export const ShowPageTitle = (props: RecordPageTitleProps) => {
-    const {
-        resource: resourceFromProps,
-        record: recordFromProps,
-        ...rest
-    } = props;
-    const { resource, record } = useShowContext({
-        resource: resourceFromProps,
-        record: recordFromProps,
-    });
+    const { resource, record } = useShowContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
@@ -116,21 +98,13 @@ export const ShowPageTitle = (props: RecordPageTitleProps) => {
                 resource: label,
                 kind,
             })}
-            {...rest}
+            {...props}
         />
     );
 };
 
 export const CreatePageTitle = (props: RecordPageTitleProps) => {
-    const {
-        resource: resourceFromProps,
-        record: recordFromProps,
-        ...rest
-    } = props;
-    const { resource } = useCreateContext({
-        resource: resourceFromProps,
-        record: recordFromProps,
-    });
+    const { resource } = useCreateContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
@@ -144,21 +118,13 @@ export const CreatePageTitle = (props: RecordPageTitleProps) => {
             secondaryText={translate('pages.pageTitle.create.subtitle', {
                 resource: label,
             })}
-            {...rest}
+            {...props}
         />
     );
 };
 
 export const EditPageTitle = (props: RecordPageTitleProps) => {
-    const {
-        resource: resourceFromProps,
-        record: recordFromProps,
-        ...rest
-    } = props;
-    const { resource, record } = useEditContext({
-        resource: resourceFromProps,
-        record: recordFromProps,
-    });
+    const { resource, record } = useEditContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
@@ -176,7 +142,7 @@ export const EditPageTitle = (props: RecordPageTitleProps) => {
                 resource: label,
                 kind,
             })}
-            {...rest}
+            {...props}
         />
     );
 };

@@ -151,7 +151,7 @@ export const WorkflowView = (props: WorkflowViewProps) => {
 
     return (
         <Grid container spacing={2} sx={{ width: '100%' }}>
-            <Grid item xs>
+            <Grid size="grow">
                 <Box
                     sx={{
                         mt: '9px',
@@ -183,20 +183,20 @@ export const WorkflowView = (props: WorkflowViewProps) => {
             </Grid>
             <>
                 {activeNode && (
-                    <Grid item xs>
+                    <Grid size="grow">
                         <RecordContextProvider value={activeNode}>
                             <Grid container spacing={2} sx={{ width: '100%' }}>
-                                <Grid item xs={5}>
+                                <Grid size={5}>
                                     <Labeled label="resources.workflows.fields.function">
                                         <TextField source="function" />
                                     </Labeled>
                                 </Grid>
-                                <Grid item xs={4}>
+                                <Grid size={4}>
                                     <Labeled label="resources.workflows.fields.action">
                                         <TextField source="action" />
                                     </Labeled>
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid size={3}>
                                     <ChipField
                                         record={activeNode}
                                         source="state"
@@ -218,7 +218,7 @@ export const WorkflowView = (props: WorkflowViewProps) => {
                             </Labeled>
 
                             <Grid container spacing={2} sx={{ width: '100%' }}>
-                                <Grid item xs>
+                                <Grid size="grow">
                                     <Labeled label="resources.workflows.fields.start_time">
                                         <DateField
                                             source="start_time"
@@ -227,7 +227,7 @@ export const WorkflowView = (props: WorkflowViewProps) => {
                                         />
                                     </Labeled>
                                 </Grid>
-                                <Grid item xs>
+                                <Grid size="grow">
                                     <Labeled label="resources.workflows.fields.end_time">
                                         <DateField
                                             source="end_time"
@@ -254,6 +254,7 @@ export const WorkflowView = (props: WorkflowViewProps) => {
                                                     }
                                                     data={activeNode.inputs}
                                                     bulkActionButtons={false}
+                                                    rowClick={false}
                                                 >
                                                     <TextField source="name" />
                                                     <TextField source="value" />
@@ -279,6 +280,7 @@ export const WorkflowView = (props: WorkflowViewProps) => {
                                                     }
                                                     data={activeNode.outputs}
                                                     bulkActionButtons={false}
+                                                    rowClick={false}
                                                 >
                                                     <TextField source="name" />
                                                     <TextField source="value" />

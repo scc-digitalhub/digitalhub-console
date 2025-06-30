@@ -31,7 +31,7 @@ export const GridList = (props: GridListProps) => {
         direction = 'row',
         ...rest
     } = props;
-    const { data, total, isLoading } = useListContext(props);
+    const { data, total, isLoading } = useListContext();
     const resource = useResourceContext(props);
     const createPath = useCreatePath();
 
@@ -135,5 +135,5 @@ const Root = styled(Grid, {
     },
 }));
 
-const defaultComponent = <Grid item zeroMinWidth xs={3} />;
+const defaultComponent = <Grid size={3} />;
 const createComponent = <CreateButton />;

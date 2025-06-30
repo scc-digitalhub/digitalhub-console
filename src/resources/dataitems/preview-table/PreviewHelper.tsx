@@ -8,7 +8,6 @@ import {
     GridCellParams,
     GridComparatorFn,
     GridRenderCellParams,
-    GridValueFormatterParams,
     gridDateComparator,
     gridNumberComparator,
     gridStringOrNumberComparator,
@@ -140,7 +139,7 @@ export class PreviewHelper {
             renderHeader: () => (
                 <PreviewHeaderCell columnDescriptor={columnDescriptor} />
             ),
-            valueFormatter: (params: GridValueFormatterParams<any>) => {
+            valueFormatter: (params: any) => {
                 const row = params.api.getRow(params.id!);
                 if (PreviewHelper.isContentInvalid(row, params.field)) {
                     return translations.invalidValue;
@@ -205,7 +204,7 @@ export class PreviewHelper {
                     ...GRID_DATE_COL_DEF,
                     resizable: false,
                     type: 'date',
-                    valueFormatter: (params: GridValueFormatterParams<any>) => {
+                    valueFormatter: (params: any) => {
                         if (params.value === null || params.value === undefined)
                             return params.value;
                         if (
@@ -236,7 +235,7 @@ export class PreviewHelper {
                 return {
                     ...GRID_DATETIME_COL_DEF,
                     resizable: false,
-                    valueFormatter: (params: GridValueFormatterParams<any>) => {
+                    valueFormatter: (params: any) => {
                         if (params.value === null || params.value === undefined)
                             return params.value;
                         if (

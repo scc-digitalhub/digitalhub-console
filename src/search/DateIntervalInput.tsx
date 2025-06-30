@@ -147,11 +147,10 @@ export const DateIntervalInput = (props: DateIntervalInputProps) => {
                 onChange={e => setFrom(e.target.value)}
                 {...sharedProps}
                 label={<FieldTitle label={fromLabel} isRequired={isRequired} />}
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: { shrink: true } }}
                 helperText={
                     renderHelperText ? (
                         <InputHelperText
-                            touched={isTouched || isSubmitted}
                             error={error?.message}
                             helperText={helperText}
                         />
@@ -166,11 +165,10 @@ export const DateIntervalInput = (props: DateIntervalInputProps) => {
                 onChange={e => setTo(e.target.value)}
                 {...sharedProps}
                 label={<FieldTitle label={toLabel} isRequired={isRequired} />}
-                InputLabelProps={{ shrink: true }}
+                slotProps={{ inputLabel: { shrink: true } }}
                 helperText={
                     renderHelperText ? (
                         <InputHelperText
-                            touched={isTouched || isSubmitted}
                             error={error?.message}
                             helperText={helperText}
                         />

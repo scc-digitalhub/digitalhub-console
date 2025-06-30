@@ -26,23 +26,24 @@ import {
 } from 'react-admin';
 
 import { Spinner } from './Spinner';
-import { DataGrid, enUS, gridClasses, itIT } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useDataGridController } from '../controllers/useDataGridController';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import {
-    unstable_useTreeItem2 as useTreeItem2,
-    UseTreeItem2Parameters,
-} from '@mui/x-tree-view/useTreeItem2';
+    useTreeItem,
+    UseTreeItemParameters,
+} from '@mui/x-tree-view/useTreeItem';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 import {
-    TreeItem2Content,
-    TreeItem2Label,
-    TreeItem2Root,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+    TreeItemContent,
+    TreeItemLabel,
+    TreeItemRoot,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 
 import FolderRounded from '@mui/icons-material/FolderRounded';
 import ImageIcon from '@mui/icons-material/Image';
@@ -276,11 +277,11 @@ export const FileInfo = () => {
                 <Spinner />
             ) : data ? (
                 <Grid container spacing={2} sx={{ width: '100%' }}>
-                    <Grid item xs>
+                    <Grid size="grow">
                         <FileTree info={data} onItemClick={handleItemClick} />
                     </Grid>
                     {activeFile && (
-                        <Grid item xs>
+                        <Grid size="grow">
                             <FileInfoTable info={activeFile} />
                         </Grid>
                     )}
@@ -292,7 +293,7 @@ export const FileInfo = () => {
     );
 };
 
-const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
     color:
         theme.palette.mode === 'light'
             ? theme.palette.grey[800]
@@ -304,9 +305,9 @@ const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
     [`& .MuiCollapse-root`]: {
         paddingLeft: '1rem !important',
     },
-})) as unknown as typeof TreeItem2Root;
+})) as unknown as typeof TreeItemRoot;
 
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
     flexDirection: 'row-reverse',
     borderRadius: theme.spacing(0.7),
     marginBottom: theme.spacing(0.5),
@@ -378,7 +379,7 @@ function CustomLabel({
     ...other
 }: CustomLabelProps) {
     return (
-        <TreeItem2Label
+        <TreeItemLabel
             {...other}
             sx={{
                 display: 'flex',
@@ -395,7 +396,7 @@ function CustomLabel({
             )}
 
             <Typography variant="body2">{children}</Typography>
-        </TreeItem2Label>
+        </TreeItemLabel>
     );
 }
 
@@ -424,7 +425,7 @@ const getIconFromFileType = (fileType: string) => {
 };
 
 interface CustomTreeItemProps
-    extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+    extends Omit<UseTreeItemParameters, 'rootRef'>,
         Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -440,7 +441,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         getGroupTransitionProps,
         status,
         publicAPI,
-    } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+    } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
     const item = publicAPI.getItem(itemId);
     const expandable = isExpandable(children);
@@ -452,7 +453,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     }
 
     return (
-        <TreeItem2Provider itemId={itemId}>
+        <TreeItemProvider id={id} itemId={itemId}>
             <StyledTreeItemRoot {...getRootProps(other)}>
                 <CustomTreeItemContent
                     {...getContentProps({
@@ -475,7 +476,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
                     <TransitionComponent {...getGroupTransitionProps()} />
                 )}
             </StyledTreeItemRoot>
-        </TreeItem2Provider>
+        </TreeItemProvider>
     );
 });
 const FileTree = (props: any) => {
@@ -506,7 +507,7 @@ const FileInfoTable = (props: any) => {
         locale && locale === 'it'
             ? itIT.components.MuiDataGrid.defaultProps.localeText
             : enUS.components.MuiDataGrid.defaultProps.localeText;
-    const { data, isLoading } = useDataGridController({
+    const { data } = useDataGridController({
         fields: info.data,
     });
 
@@ -541,7 +542,6 @@ const FileInfoTable = (props: any) => {
                 <TopToolbar>
                     {info.fileType && info.data.path && (
                         <PreviewButton
-                            source="spec.path"
                             sub={info.data.path}
                             fileType={info.fileType}
                         />
@@ -549,33 +549,36 @@ const FileInfoTable = (props: any) => {
                     {info.data.path && <DownloadButton sub={info.data.path} />}
                 </TopToolbar>
             )}
-            <DataGrid
-                columns={columnsWithFormatter || []}
-                rows={data?.rows || []}
-                getRowHeight={() => 'auto'}
-                autoHeight
-                hideFooter={data?.rows && data.rows.length > 100 ? false : true}
-                localeText={localeText}
-                sx={theme => ({
-                    '& .MuiDataGrid-columnHeader': {
-                        backgroundColor: alpha(
-                            theme.palette?.primary?.main,
-                            0.12
-                        ),
-                    },
-                    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-                        '&:not(:last-child)': {
-                            borderRight: '1px solid rgba(224, 224, 224, 1)',
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <DataGrid
+                    columns={columnsWithFormatter || []}
+                    rows={data?.rows || []}
+                    getRowHeight={() => 'auto'}
+                    hideFooter={
+                        data?.rows && data.rows.length > 100 ? false : true
+                    }
+                    localeText={localeText}
+                    sx={theme => ({
+                        '& .MuiDataGrid-columnHeader': {
+                            backgroundColor: alpha(
+                                theme.palette?.primary?.main,
+                                0.12
+                            ),
                         },
-                    },
-                    '& .MuiDataGrid-columnHeaderTitle': {
-                        fontWeight: 'bold',
-                    },
-                    [`& .${gridClasses.cell}`]: {
-                        py: 2,
-                    },
-                })}
-            />
+                        '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+                            '&:not(:last-child)': {
+                                borderRight: '1px solid rgba(224, 224, 224, 1)',
+                            },
+                        },
+                        '& .MuiDataGrid-columnHeaderTitle': {
+                            fontWeight: 'bold',
+                        },
+                        [`& .${gridClasses.cell}`]: {
+                            py: 2,
+                        },
+                    })}
+                />
+            </div>
         </>
     );
 };

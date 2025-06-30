@@ -154,6 +154,8 @@ const ProjectsGridItem = (props: any) => {
     const notify = useNotify();
     const { hasAccess } = useProjectPermissions();
 
+    if (!project) return null;
+
     const isAccessible = hasAccess(project.id);
 
     const handleClick = e => {
@@ -195,9 +197,11 @@ const ProjectsGridItem = (props: any) => {
                             <LockIcon color="disabled" />
                         )
                     }
-                    titleTypographyProps={{
-                        variant: 'h6',
-                        color: 'secondary.main',
+                    slotProps={{
+                        title: {
+                            variant: 'h6',
+                            color: 'secondary.main',
+                        },
                     }}
                     // action={<RowActions />}
                 />

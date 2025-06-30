@@ -9,7 +9,7 @@ import {
     getTemplate,
     getUiOptions,
     ArrayFieldTemplateProps,
-    ArrayFieldTemplateItemType,
+    ArrayFieldItemTemplateType,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
@@ -35,7 +35,7 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function AccordionArrayFieldTemplate<
     T = any,
@@ -53,7 +53,6 @@ export default function AccordionArrayFieldTemplate<
         onAddClick,
         readonly,
         registry,
-        required,
         schema,
         title,
     } = props;
@@ -70,12 +69,6 @@ export default function AccordionArrayFieldTemplate<
         S,
         F
     >('ArrayFieldItemTemplate', registry, uiOptions);
-    const ArrayFieldTitleTemplate = getTemplate<
-        'ArrayFieldTitleTemplate',
-        T,
-        S,
-        F
-    >('ArrayFieldTitleTemplate', registry, uiOptions);
     // Button templates are not overridden in the uiSchema
     const {
         ButtonTemplates: { AddButton },
@@ -108,13 +101,13 @@ export default function AccordionArrayFieldTemplate<
                         ({
                             key,
                             ...itemProps
-                        }: ArrayFieldTemplateItemType<T, S, F>) => (
+                        }: ArrayFieldItemTemplateType<T, S, F>) => (
                             <ArrayFieldItemTemplate key={key} {...itemProps} />
                         )
                     )}
                 {canAdd && !readonly && (
                     <Grid container justifyContent="right">
-                        <Grid item={true}>
+                        <Grid>
                             <Box>
                                 <AddButton
                                     className="array-item-add"

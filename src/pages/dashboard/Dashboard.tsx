@@ -154,10 +154,7 @@ export const Dashboard = () => {
             >
                 {isAdmin(project.id) && (
                     <ResourceContextProvider value="projects">
-                        <ShareButton
-                            variant="contained"
-                            record={project}
-                        />
+                        <ShareButton variant="contained" record={project} />
                     </ResourceContextProvider>
                 )}
                 <CreateDropDownButton
@@ -170,14 +167,16 @@ export const Dashboard = () => {
                 />
             </Stack>
             <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={12} xl={12} zeroMinWidth>
+                <Grid size={{ xs: 12, sm: 12, md: 12, xl: 12 }}>
                     <Card sx={cardStyle}>
                         <CardHeader
                             title={translate('pages.dashboard.runs.title')}
                             avatar={<RunIcon />}
-                            titleTypographyProps={{
-                                variant: 'h5',
-                                color: 'secondary.main',
+                            slotProps={{
+                                title: {
+                                    variant: 'h5',
+                                    color: 'secondary.main',
+                                },
                             }}
                         />
                         <CardContent>
@@ -200,17 +199,17 @@ export const Dashboard = () => {
                         </CardActions>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
                     <OverviewCard resource="functions" />
                 </Grid>
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
                     <OverviewCard resource="models" />
                 </Grid>
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
                     <OverviewCard resource="dataitems" />
                 </Grid>
 
-                <Grid item xs={12} sm={12} md={6} xl={3} zeroMinWidth>
+                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
                     <OverviewCard resource="workflows" />
                 </Grid>
             </Grid>

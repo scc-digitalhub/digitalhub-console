@@ -10,7 +10,7 @@ import {
     ShowControllerProps,
     useResourceContext,
 } from 'react-admin';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useStompContext } from '../contexts/StompContext';
 import { useParams } from 'react-router-dom';
 

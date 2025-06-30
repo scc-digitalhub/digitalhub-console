@@ -6,7 +6,7 @@ import { CSSProperties } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import {
-    ArrayFieldTemplateItemType,
+    ArrayFieldItemTemplateType,
     FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
@@ -14,29 +14,33 @@ import {
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->(props: ArrayFieldTemplateItemType<T, S, F>) {
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
     const {
         children,
         disabled,
+        buttonsProps,
         hasToolbar,
-        hasCopy,
-        hasMoveDown,
-        hasMoveUp,
-        hasRemove,
         index,
-        onCopyIndexClick,
-        onDropIndexClick,
-        onReorderClick,
         readonly,
         uiSchema,
         registry,
     } = props;
+
+    const {
+        hasCopy,
+        hasMoveDown,
+        hasMoveUp,
+        hasRemove,
+        onCopyIndexClick,
+        onDropIndexClick,
+        onReorderClick,
+    } = buttonsProps;
 
     const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } =
         registry.templates.ButtonTemplates;
@@ -52,13 +56,13 @@ export default function ArrayFieldItemTemplate<
 
     return (
         <Grid container={true} alignItems="top">
-            <Grid item={true} xs style={{ overflow: 'auto' }}>
+            <Grid size="grow" style={{ overflow: 'auto' }}>
                 <Box>
                     <Box>{children}</Box>
                 </Box>
             </Grid>
             {hasToolbar && !readonly && (
-                <Grid item={true}>
+                <Grid>
                     {(hasMoveUp || hasMoveDown) && (
                         <MoveUpButton
                             style={btnStyle}

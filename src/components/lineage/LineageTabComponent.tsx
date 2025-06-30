@@ -40,7 +40,7 @@ export const LineageTabComponent = () => {
     }, [JSON.stringify(record?.metadata?.relationships), setRelationships]);
 
     useEffect(() => {
-        if (dataProvider) {
+        if (dataProvider && record) {
             dataProvider
                 .getLineage(resource, { id: record.id, meta: { root } })
                 .then(data => {
@@ -56,7 +56,7 @@ export const LineageTabComponent = () => {
                     notify(e);
                 });
         }
-    }, [dataProvider, notify, record.id, resource, root]);
+    }, [dataProvider, notify, record, resource, root]);
 
     return (
         <Box
@@ -70,7 +70,7 @@ export const LineageTabComponent = () => {
             <Typography variant="subtitle1" gutterBottom>
                 {translate('pages.lineage.description')}
             </Typography>
-            {relationships.length !== 0 ? (
+            {record && relationships.length !== 0 ? (
                 <RecordLineage relationships={relationships} record={record} />
             ) : (
                 <NoContent message={'messages.lineage.noLineage'} />

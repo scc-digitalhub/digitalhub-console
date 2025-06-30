@@ -84,7 +84,6 @@ export const SearchList = () => {
         );
     if (!listContext.data) return null;
 
-    console.log('results', listContext.total, listContext.data);
     listContext.data.forEach(res => {
         //replace metadata fields with highlights
         if (res.highlights && Object.keys(res.highlights).length !== 0) {
@@ -99,7 +98,11 @@ export const SearchList = () => {
             <Container maxWidth={false} sx={{ paddingTop: '18px', marginX: 0 }}>
                 <ResultsHeader />
                 <FlatCard sx={{ paddingY: '18px' }}>
-                    <Datagrid bulkActionButtons={false} empty={<NoResults />}>
+                    <Datagrid
+                        bulkActionButtons={false}
+                        empty={<NoResults />}
+                        resource="searchres"
+                    >
                         <IconResource />
                         <RichTextField
                             source="metadata.name"
@@ -144,12 +147,12 @@ export const SearchList = () => {
 
 const ShowResourceButton = () => {
     const record = useRecordContext();
-    return <ShowButton resource={mapTypes[record.type].plural} />;
+    return <ShowButton resource={mapTypes[record?.type].plural} />;
 };
 
 const IconResource = () => {
     const record = useRecordContext();
-    return mapTypes[record.type].icon;
+    return mapTypes[record?.type].icon;
 };
 
 const NoResults = () => {

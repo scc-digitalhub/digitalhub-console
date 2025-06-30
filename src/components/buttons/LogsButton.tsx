@@ -409,6 +409,7 @@ const LogMetrics = (props: { metrics: any[] }) => {
                 scaleType: 'linear',
                 label: keyToLabel[key],
                 min: 0,
+                position: key == 'cpu' ? 'left' : 'right',
             }))}
             series={Object.keys(keyToLabel).map(key => ({
                 dataKey: key,
@@ -423,8 +424,6 @@ const LogMetrics = (props: { metrics: any[] }) => {
                 },
             }}
             dataset={data}
-            leftAxis="cpu"
-            rightAxis="memory"
             height={300}
         />
     );

@@ -72,7 +72,7 @@ export default function WrapIfAdditionalTemplate<
             style={style}
             sx={{ padding: readonly ? '18px 0' : '0px' }}
         >
-            <Grid item xs>
+            <Grid size="grow">
                 <TextField
                     fullWidth={true}
                     required={required}
@@ -85,11 +85,9 @@ export default function WrapIfAdditionalTemplate<
                     type="text"
                 />
             </Grid>
-            <Grid item={true} xs>
-                {children}
-            </Grid>
+            <Grid size="grow">{children}</Grid>
             {!readonly && (
-                <Grid item={true}>
+                <Grid>
                     <RemoveButton
                         iconType="default"
                         style={btnStyle}

@@ -30,7 +30,7 @@ export const ShowToolbar = () => {
     const translate = useTranslate();
     const { root } = useRootSelector();
     const [checked, setChecked] = useState(false);
-    const { data } = useGetList(resource, {
+    const { data } = useGetList(resource || '', {
         pagination: { page: 1, perPage: 10 },
         sort: { field: 'created', order: 'DESC' },
         filter: { name: record?.name, versions: 'all' },
@@ -68,7 +68,7 @@ export const ShowToolbar = () => {
             <BackButton />
             <EditButton style={{ marginLeft: 'auto' }} />
             {record?.status?.files?.length === 1 && (
-                <DownloadButton source="spec.path" />
+                <DownloadButton />
             )}
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
@@ -76,7 +76,7 @@ export const ShowToolbar = () => {
                 additionalContent={additionalConfirmContent}
                 deleteAll={checked}
                 redirect={redirect}
-                translateOptions={{ id: record?.id }}
+                titleTranslateOptions={{ id: record?.id }}
                 askForCascade
             />
         </TopToolbar>

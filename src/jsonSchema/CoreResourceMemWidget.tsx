@@ -2,24 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    Grid,
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { useState } from 'react';
 
 export const CoreResourceMemWidget = function (props: WidgetProps) {
-    const {
-        id,
-        value,
-        readonly,
-        onChange,
-        options,
-    } = props;
+    const { id, value, readonly, onChange, options } = props;
     const [stringValue, setStringValue] = useState<string>(value ? value : '');
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
@@ -41,13 +29,10 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
 
     return (
         <div>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 4, sm: 4, md: 4 }}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -71,17 +56,14 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 4, sm: 4, md: 4 }}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <TextField
                             fullWidth
                             variant="outlined"
                             type="number"
-                            inputProps={{ min: 0, step: 1 }}
+                            slotProps={{ htmlInput: { min: 0, step: 1 } }}
                             disabled={readonly}
                             id={id}
                             name={id}
@@ -90,10 +72,7 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                         />
                     </Grid>
                     <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 4, sm: 4, md: 4 }}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <Select

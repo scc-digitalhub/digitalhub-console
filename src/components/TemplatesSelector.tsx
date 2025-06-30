@@ -57,10 +57,7 @@ export const TemplatesSelector = (props: {
     const cur = useRef<Template | null>(null);
     const { isDirty } = useFormState();
 
-    const {
-        data: templates,
-        isLoading,
-    } = useGetList('templates', {
+    const { data: templates, isLoading } = useGetList('templates', {
         pagination: { page: 1, perPage: 100 },
         sort: { field: 'name', order: 'ASC' },
         filter: { type: resource?.slice(0, -1) },
@@ -125,7 +122,7 @@ export const TemplatesSelector = (props: {
     return (
         <ResourceContextProvider value={'templates'}>
             <Grid container spacing={2} sx={{ paddingY: '16px' }}>
-                <Grid item xs={12} md={4} key={'template_scratch'}>
+                <Grid size={{ xs: 12, md: 4 }} key={'template_scratch'}>
                     <TemplateScratch
                         kinds={kinds}
                         selected={selected == null}
@@ -133,7 +130,7 @@ export const TemplatesSelector = (props: {
                     />
                 </Grid>
                 {templates?.map((template, index) => (
-                    <Grid item xs={12} md={4} key={'template_' + index}>
+                    <Grid size={{ xs: 12, md: 4 }} key={'template_' + index}>
                         <TemplateCard
                             template={template}
                             selected={template.id === selected}

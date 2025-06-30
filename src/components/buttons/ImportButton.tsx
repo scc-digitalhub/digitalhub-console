@@ -158,7 +158,7 @@ export const ImportButton = (props: ImportButtonProps) => {
 };
 
 const CreateContent = (props: {
-    title: string | ReactElement;
+    title: string | false | ReactElement;
     handleClose: MouseEventHandler;
 }) => {
     const { title, handleClose } = props;
@@ -166,8 +166,8 @@ const CreateContent = (props: {
     const { defaultTitle } = useCreateContext();
     const resource = useResourceContext();
     const getResourceLabel = useGetResourceLabel();
-    const resourceLabel = getResourceLabel(resource, 1);
-    const { data: schemas } = useGetManySchemas([{ resource }]);
+    const resourceLabel = getResourceLabel(resource || '', 1);
+    const { data: schemas } = useGetManySchemas([{ resource: resource || '' }]);
 
     const validate = data => {
         const errors: string[] = [];
@@ -308,6 +308,7 @@ export type ImportButtonProps<
     | 'hasShow'
     | 'redirect'
     | 'className'
+    | 'children'
 > & {
     maxWidth?: Breakpoint | false;
     fullWidth?: boolean;

@@ -294,9 +294,15 @@ const NodeInfo = (props: {
                                     ? '#' + recordRepresentation(record)
                                     : '#' + record.name
                             }
-                            titleTypographyProps={{ variant: 'h6' }}
                             subheader={record.kind}
-                            subheaderTypographyProps={{ variant: 'body2' }}
+                            slotProps={{
+                                title: {
+                                    variant: 'h6',
+                                },
+                                subheader: {
+                                    variant: 'body2',
+                                },
+                            }}
                             action={headerActions}
                         />
                         <CardContent sx={{ pt: 0, pb: '16px !important' }}>

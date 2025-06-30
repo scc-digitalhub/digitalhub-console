@@ -32,7 +32,7 @@ export const DeleteWithConfirmButtonByName = <
         deleteAll = false,
         askForCascade = false,
         additionalContent,
-        translateOptions,
+        titleTranslateOptions,
         confirmContent,
         ...rest
     } = props;
@@ -62,7 +62,7 @@ export const DeleteWithConfirmButtonByName = <
     const defaultConfirmContent = (
         <Box>
             <DialogContentText>
-                {translate('ra.message.delete_content')}
+                {translate('ra.message.delete_content', { name: 'item' })}
             </DialogContentText>
             {additionalContent}
             {askForCascade && (
@@ -107,7 +107,7 @@ export const DeleteWithConfirmButtonByName = <
 
     return (
         <DeleteWithConfirmButton
-            translateOptions={translateOptions ?? { id: record.name }}
+            titleTranslateOptions={titleTranslateOptions ?? { id: record.name }}
             {...rest}
             mutationOptions={mutationsOptions}
             confirmContent={confirmContent ?? defaultConfirmContent}

@@ -5,11 +5,7 @@
 import { Menu, Button, Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState, MouseEvent, ReactElement, FocusEvent } from 'react';
-import {
-    useTranslate,
-    RaRecord,
-    ShowButtonProps,
-} from 'react-admin';
+import { useTranslate, RaRecord, ShowButtonProps } from 'react-admin';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const DropDownButton = (props: DrodownButtonProps) => {
@@ -19,7 +15,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
         children,
         color = 'primary',
         variant = 'contained',
-        ...rest
     } = props;
     const translate = useTranslate();
 
@@ -78,6 +73,6 @@ export const DropDownButton = (props: DrodownButtonProps) => {
 };
 
 export type DrodownButtonProps<RecordType extends RaRecord = any> =
-    ShowButtonProps & {
+    ShowButtonProps<RecordType> & {
         children: ReactElement | ReactElement[];
     };

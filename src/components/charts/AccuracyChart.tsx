@@ -8,7 +8,7 @@ import { chartPalette, Series, valueFormatter } from './utils';
 export const AccuracyChart = (props: AccuracyChartProps) => {
     const {
         series,
-        slotProps = { legend: { hidden: true } },
+        slotProps,
         margin = {
             left: 48,
             right: 8,
@@ -27,6 +27,7 @@ export const AccuracyChart = (props: AccuracyChartProps) => {
     return (
         <LineChart
             series={arraySeries}
+            hideLegend
             slotProps={slotProps}
             margin={margin}
             colors={chartPalette}

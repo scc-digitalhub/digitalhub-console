@@ -37,10 +37,12 @@ const RowActions = () => {
     const record = useRecordContext();
     const context = useDatagridContext();
     const [expanded] = useExpanded(
-        resource,
-        record.id,
+        resource || '',
+        record?.id || '',
         context && context.expandSingle
     );
+    if (!resource || !record) return null;
+
     return (
         <RowButtonGroup>
             <ShowButton disabled={expanded} />

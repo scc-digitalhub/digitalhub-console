@@ -73,8 +73,14 @@ const springDataProvider = (
         },
         getList: (resource, params) => {
             //handle pagination request as pageable (page,size)
-            const { page, perPage } = params.pagination;
-            const { field: fieldParam, order } = params.sort;
+            const { page, perPage } = params.pagination || {
+                page: 1,
+                perPage: 10,
+            };
+            const { field: fieldParam, order } = params.sort || {
+                field: 'id',
+                order: 'ASC',
+            };
             //unbox metadata and status fields as tl params
             const field = !fieldParam
                 ? fieldParam
@@ -365,8 +371,14 @@ const springDataProvider = (
             searchParams: SearchParams,
             params: GetListParams
         ): Promise<SearchResults> => {
-            const { page, perPage } = params.pagination;
-            const { field, order } = params.sort;
+            const { page, perPage } = params.pagination || {
+                page: 1,
+                perPage: 10,
+            };
+            const { field, order } = params.sort || {
+                field: 'id',
+                order: 'ASC',
+            };
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
                 sort: field + ',' + order, //sorting

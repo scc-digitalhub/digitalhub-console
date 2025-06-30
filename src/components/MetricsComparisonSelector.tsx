@@ -70,7 +70,7 @@ const ActualDatagrid = (props: ActualDatagridProps) => {
     }, []);
 
     return (
-        <Datagrid bulkActionButtons={<EmptyBulkActions />}>
+        <Datagrid bulkActionButtons={<EmptyBulkActions />} rowClick={false}>
             {datagridFields}
         </Datagrid>
     );

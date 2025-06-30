@@ -48,7 +48,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             return;
         }
 
-        if (record) {
+        if (record && resource) {
             schemaProvider.get(resource, record.kind).then(s => {
                 setSpec(s);
             });

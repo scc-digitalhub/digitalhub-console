@@ -24,7 +24,7 @@ export const Empty = (props: EmptyProps) => {
     const getResourceLabel = useGetResourceLabel();
     const resourceName = translate(`resources.${resource}.forcedCaseName`, {
         smart_count: 0,
-        _: getResourceLabel(resource, 0),
+        _: getResourceLabel(resource || '', 0),
     });
 
     const emptyMessage = translate('ra.page.empty', { name: resourceName });

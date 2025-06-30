@@ -33,7 +33,7 @@ export const SecretCreate = () => {
     const redirect = useRedirect();
     const resource = useResourceContext();
     const value = useRef<string>();
-    const { data: schemas } = useGetSchemas(resource);
+    const { data: schemas } = useGetSchemas(resource || '');
 
     //hardcoded: only 1 kind supported
     const kind = 'secret';
@@ -123,7 +123,7 @@ export const SecretCreate = () => {
                                     helperText=""
                                 />
                                 <Grid container columnSpacing={1} pt={1}>
-                                    <Grid item xs={4}>
+                                    <Grid size={4}>
                                         <TextInput
                                             source="name"
                                             fullWidth
@@ -134,7 +134,7 @@ export const SecretCreate = () => {
                                             ]}
                                         />
                                     </Grid>
-                                    <Grid item xs={8}>
+                                    <Grid size={8}>
                                         <TextInput
                                             source="value"
                                             required

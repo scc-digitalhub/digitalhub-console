@@ -53,7 +53,7 @@ export const MyProjects = () => {
                     actions={<ProjectsToolbar />}
                     disableSyncWithLocation
                 >
-                    <Datagrid bulkActionButtons={false}>
+                    <Datagrid bulkActionButtons={false} rowClick={false}>
                         <TextField
                             source="name"
                             label="fields.name.title"

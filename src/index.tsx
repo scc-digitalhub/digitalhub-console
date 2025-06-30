@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/500.css';
@@ -16,7 +16,9 @@ document.title =
     import.meta.env.VITE_APP_NAME ||
     'DigitalHub';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(
     <React.StrictMode>
         <App />
     </React.StrictMode>

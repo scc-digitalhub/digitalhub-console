@@ -134,12 +134,18 @@ export const NotificationArea = () => {
                                 </IconButtonWithTooltip>
                             }
                             title={translate('messages.notifications.header')}
-                            titleTypographyProps={{ variant: 'subtitle1' }}
                             subheader={translate(
                                 'messages.notifications.subheader',
                                 { unread: unreadCount }
                             )}
-                            subheaderTypographyProps={{ variant: 'subtitle2' }}
+                            slotProps={{
+                                title: {
+                                    variant: 'subtitle1',
+                                },
+                                subheader: {
+                                    variant: 'subtitle2',
+                                },
+                            }}
                         />
                     </MenuItem>
                 ) : (
@@ -147,9 +153,17 @@ export const NotificationArea = () => {
                         <CardHeader
                             sx={{ width: '100%', py: '5px' }}
                             title={translate('messages.notifications.header')}
-                            titleTypographyProps={{ variant: 'subtitle1' }}
-                            subheader={translate('ra.navigation.no_results')}
-                            subheaderTypographyProps={{ variant: 'subtitle2' }}
+                            subheader={translate(
+                                'messages.notifications.subheader_no_results'
+                            )}
+                            slotProps={{
+                                title: {
+                                    variant: 'subtitle1',
+                                },
+                                subheader: {
+                                    variant: 'subtitle2',
+                                },
+                            }}
                         />
                     </MenuItem>
                 )}

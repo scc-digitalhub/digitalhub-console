@@ -181,35 +181,6 @@ export const MetricsGrid = (props: MetricsGridProps) => {
 
     const mergedMetrics = useMemo(() => mergeData(metricsMap), [metricsMap]);
 
-    const grid =
-        Object.keys(metricsMap).length !== 0 ? (
-            <Grid container spacing={2} sx={{ paddingY: '16px' }}>
-                {mergedMetrics &&
-                    Object.entries(mergedMetrics).map(
-                        ([metricName, series]: [string, Series[]], index) => (
-                            <Grid item xs={12} md={4} key={'metric_' + index}>
-                                <MetricCard
-                                    metric={{
-                                        name: metricName,
-                                        series: formatLabels(
-                                            sortRecordFirst(
-                                                series,
-                                                record.id.toString()
-                                            ),
-                                            [record, ...compareWith],
-                                            resource
-                                        ),
-                                    }}
-                                    comparison={compareWith.length > 0}
-                                />
-                            </Grid>
-                        )
-                    )}
-            </Grid>
-        ) : (
-            <NoContent message={'fields.info.empty'} />
-        );
-
     const handleDialogOpen = e => {
         e.stopPropagation();
         setOpen(true);
@@ -240,6 +211,40 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             return prev.filter(p => p.id != r.id);
         });
     };
+
+    if (!resource) return <></>;
+
+    const grid =
+        Object.keys(metricsMap).length !== 0 ? (
+            <Grid container spacing={2} sx={{ paddingY: '16px' }}>
+                {mergedMetrics &&
+                    Object.entries(mergedMetrics).map(
+                        ([metricName, series]: [string, Series[]], index) => (
+                            <Grid
+                                size={{ xs: 12, md: 4 }}
+                                key={'metric_' + index}
+                            >
+                                <MetricCard
+                                    metric={{
+                                        name: metricName,
+                                        series: formatLabels(
+                                            sortRecordFirst(
+                                                series,
+                                                record.id.toString()
+                                            ),
+                                            [record, ...compareWith],
+                                            resource
+                                        ),
+                                    }}
+                                    comparison={compareWith.length > 0}
+                                />
+                            </Grid>
+                        )
+                    )}
+            </Grid>
+        ) : (
+            <NoContent message={'fields.info.empty'} />
+        );
 
     return (
         <Box

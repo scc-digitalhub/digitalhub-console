@@ -239,7 +239,7 @@ export const RunShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label={translate('fields.logs')}>
-                {record?.id && <LogsView id={record.id} resource={resource} />}
+                {record?.id && <LogsView id={record.id as string} resource={resource} />}
             </TabbedShowLayout.Tab>
             {record?.status?.k8s && (
                 <TabbedShowLayout.Tab label={'fields.k8s.title'}>
