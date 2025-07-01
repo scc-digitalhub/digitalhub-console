@@ -263,53 +263,71 @@
     "@types/semver" "^7.5.5"
     semver "^7.5.2"
 
-"@dslab/ra-ace-editor@file:../react-admin-packages/packages/ra-ace-editor":
+"@dslab/ra-ace-editor@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-ace-editor/-/ra-ace-editor-2.0.0.tgz#49082805495aaf271b96a1691adcfcf78955ca5b"
+  integrity sha512-eNdkWHIpLrhSbjNR/ek85OhxnBRsB1JyP1NZnDevUEYj2TqW2YN8BWloltEFSL7LIB5mGr0/pOgqqKi1uwP/4A==
   dependencies:
     ace-builds "^1.14.0"
     react-ace "^10.1.0"
 
-"@dslab/ra-auth-oidc@file:../react-admin-packages/packages/ra-auth-oidc":
+"@dslab/ra-auth-oidc@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-auth-oidc/-/ra-auth-oidc-2.0.0.tgz#549006f961c37aee4d0d3d8ef247d303c48cb753"
+  integrity sha512-X49DvTto7+xsX+CVGGm36RwX6E7i9QQ8dBEqNqCFq/tXqKWiBHtfnSE2tHKn7rdsUH4chB8h+alAbIPIVewIQw==
   dependencies:
     oidc-client-ts "^2.2.3"
 
-"@dslab/ra-back-button@file:../react-admin-packages/packages/ra-back-button":
+"@dslab/ra-back-button@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-back-button/-/ra-back-button-2.0.0.tgz#4ee2dd20126a1bdc89a19be1923df47e5e17c6af"
+  integrity sha512-wOEZbo5sQUGpCGW8XUuiawqKg5xtPDK659WmWKtCmSw+WOTBMFbGSquq9GF1IfHQx9aBQHWClsZgrN//vVPkdw==
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/ra-delete-dialog-button@file:../react-admin-packages/packages/ra-delete-dialog-button":
+"@dslab/ra-delete-dialog-button@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-delete-dialog-button/-/ra-delete-dialog-button-2.0.0.tgz#3a0588246167b97913e7b040b531f56667933c5b"
+  integrity sha512-vMjTRqqbnSg5DizfmqBZa6K87ruY8+nW4Dw0LSUxWOTjg+FFreLWQ/nx0Ypy5oQrX+c5qxrcjleJKOeltyCt4g==
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/ra-dialog-crud@file:../react-admin-packages/packages/ra-dialog-crud":
+"@dslab/ra-dialog-crud@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-2.0.0.tgz#1ba57e832138886776d2a44d2440a19edcd07616"
+  integrity sha512-Bc1GRuJDmPZHiLJd578B2DzZJTJFViXNbQ7qwmIEC+lsmhNMwVSKkWYbNxhm6Bu7Milv6WTLJRV00Oif7/OB0Q==
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/ra-export-record-button@file:../react-admin-packages/packages/ra-export-record-button":
+"@dslab/ra-export-record-button@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-export-record-button/-/ra-export-record-button-2.0.0.tgz#1e7346da4ea0c1216e0649558658019592d1f424"
+  integrity sha512-nCWEEdxoly/90gpEPcgikZ2+YHgEq1qsYJlP4ebsDVS9qbN5AkwjbZEyGxd+Gg/HTlRAounhvp8YcS94IKo3+w==
   dependencies:
     ra-core "^5.8.3"
     yaml "^2.3.4"
 
-"@dslab/ra-export-yaml@file:../react-admin-packages/packages/ra-export-yaml":
+"@dslab/ra-export-yaml@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-export-yaml/-/ra-export-yaml-2.0.0.tgz#83888dcf08701ae1417667157a0e72b160fda05f"
+  integrity sha512-KUij+m/+8N1T0RUH6RMSnRUYW/AIA+nbtXE2pt/zeuc69ukDSZC39C82ybYkSLTptAsLRTbPqn3j8QIc6wNiCA==
   dependencies:
     ra-core "^5.8.3"
     yaml "^2.3.4"
 
-"@dslab/ra-inspect-button@file:../react-admin-packages/packages/ra-inspect-button":
+"@dslab/ra-inspect-button@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-inspect-button/-/ra-inspect-button-2.0.0.tgz#651d4983c0d94b4f80bc0c7e6128ca552825d324"
+  integrity sha512-caNsbLLz3lfgNZ9w4MK/VgFBKLKl5QDomvV2YSWFiU6gO7dQDfC/lja7tmQVMJobmGerhvkRg/IwAWtw12u9MQ==
   dependencies:
     ra-core "^5.8.3"
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@file:../react-admin-packages/packages/ra-jsonschema-input":
+"@dslab/ra-jsonschema-input@^3.0.0":
   version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.0.tgz#29cec9135120824c0a2a6172ced33c160ed42c8d"
+  integrity sha512-NK03Xq31+ds+2xb7JmUYbB0M65/7OldZpmUD4bY/KfSujoGzhTEm67CTHvkHjg5bxgM6sb4K/4Nm+DAf4OfGeQ==
   dependencies:
     "@rjsf/core" "^6.0.0-beta.11"
     "@rjsf/mui" "^6.0.0-beta.11"
@@ -318,18 +336,24 @@
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
 
-"@dslab/ra-language-italian@file:../react-admin-packages/packages/ra-italian-language":
+"@dslab/ra-language-italian@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-language-italian/-/ra-language-italian-2.0.0.tgz#b41f31f8d04b5ebb97c5a3caa2148de105fd7a84"
+  integrity sha512-i/9b3FD9xmHxU/tZzYS5LxCc7ai/dxffKGThOoPC1N24qskeaYa5PDHp4CYe0C+rDwo/Md9pU6q1t0UpzuyoRg==
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/ra-root-selector@file:../react-admin-packages/packages/ra-root-selector":
+"@dslab/ra-root-selector@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-2.0.0.tgz#82c25897948e3f1e2d35dd71a368b853b3563523"
+  integrity sha512-uhZ7QYGoBM5Rr8oVBYkx4pNTiccxGiO9HdeRBsPTnLx19njZEzqP9c0RPBYt0/LxK6ZwNl4pYCdt7SDQZeVT4w==
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/ra-stepper@file:../react-admin-packages/packages/ra-stepper":
+"@dslab/ra-stepper@^2.0.0":
   version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-2.0.0.tgz#1059ebdb84b4dc186ce3cac5c424d5d5ea5b03fc"
+  integrity sha512-oNmb2DQZcPem0mEWHsHeJzjxPMmEV2kEiA6K4gFJWbwctmj7WB3QgWQgFnFu00BebICadZNFZ31SbX0UETtBPw==
   dependencies:
     ra-core "^5.8.3"
 

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
     Labeled,
@@ -183,7 +183,7 @@ const ShowComponent = () => {
         });
     };
     return (
-        <TabbedShowLayout record={record}>
+        <TabbedShowLayout record={record} syncWithLocation={false}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>

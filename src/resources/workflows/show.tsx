@@ -187,7 +187,7 @@ const ShowComponent = () => {
         });
     };
     return (
-        <TabbedShowLayout record={record}>
+        <TabbedShowLayout record={record} syncWithLocation={false}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
