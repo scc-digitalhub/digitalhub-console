@@ -171,7 +171,7 @@ export const Notification = (props: NotificationProps) => {
                         record={message.record}
                         variant="text"
                         color="info"
-                        onClick={e => onShow(message)}
+                        onClick={() => onShow(message)}
                     />
                 )}
             </CardActions>

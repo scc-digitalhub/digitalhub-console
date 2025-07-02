@@ -10,7 +10,7 @@ import {
     RaRecord,
     useResourceContext,
 } from 'react-admin';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useStompContext } from '../contexts/StompContext';
 
 export const ListBaseLive = <RecordType extends RaRecord = any>({

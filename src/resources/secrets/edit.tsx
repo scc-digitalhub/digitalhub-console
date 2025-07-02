@@ -77,7 +77,7 @@ export const SecretEdit = () => {
                             >
                                 <FormLabel label="fields.secrets.title" />
                                 <Grid container columnSpacing={1} pt={1}>
-                                    <Grid item xs={4}>
+                                    <Grid size={4}>
                                         <TextInput
                                             source="name"
                                             required
@@ -85,7 +85,7 @@ export const SecretEdit = () => {
                                             fullWidth
                                         />
                                     </Grid>
-                                    <Grid item xs={8}>
+                                    <Grid size={8}>
                                         <TextInput
                                             source="value"
                                             required

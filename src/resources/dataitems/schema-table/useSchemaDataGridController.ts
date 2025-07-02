@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import inflection from 'inflection';
+import { transform } from 'inflection';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslate } from 'react-admin';
 
@@ -51,7 +51,7 @@ export const useSchemaDataGridController = (props: {
 
                     filteredKeys.forEach(key => {
                         if (!acc.some(r => r.field === key)) {
-                            const label = inflection.transform(
+                            const label = transform(
                                 key.replace(/\./g, ' '),
                                 ['underscore', 'humanize']
                             );

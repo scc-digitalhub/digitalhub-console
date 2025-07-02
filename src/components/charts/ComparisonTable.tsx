@@ -2,13 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    DataGrid,
-    enUS,
-    gridClasses,
-    GridColDef,
-    itIT,
-} from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
+import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Series, valueFormatter } from './utils';
@@ -32,40 +27,41 @@ export const ComparisonTable = (props: { values: Series[] }) => {
             field: 'data',
             headerName: translate('fields.datagrid.value'),
             flex: 1,
-            valueFormatter: params => {
-                if (params.value == null) {
+            valueFormatter: (value: any) => {
+                if (value == null) {
                     return '-';
                 }
-                return valueFormatter(params.value);
+                return valueFormatter(value);
             },
         },
     ];
 
     return (
-        <DataGrid
-            columns={columns}
-            rows={values}
-            getRowId={row => row.label}
-            getRowHeight={() => 'auto'}
-            autoHeight
-            hideFooter
-            localeText={localeText}
-            sx={theme => ({
-                '& .MuiDataGrid-columnHeader': {
-                    backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
-                },
-                '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-                    '&:not(:last-child)': {
-                        borderRight: '1px solid rgba(224, 224, 224, 1)',
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <DataGrid
+                columns={columns}
+                rows={values}
+                getRowId={row => row.label}
+                getRowHeight={() => 'auto'}
+                hideFooter
+                localeText={localeText}
+                sx={theme => ({
+                    '& .MuiDataGrid-columnHeader': {
+                        backgroundColor: alpha(theme.palette?.primary?.main, 0.12),
                     },
-                },
-                '& .MuiDataGrid-columnHeaderTitle': {
-                    fontWeight: 'bold',
-                },
-                [`& .${gridClasses.cell}`]: {
-                    py: 1,
-                },
-            })}
-        />
+                    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
+                        '&:not(:last-child)': {
+                            borderRight: '1px solid rgba(224, 224, 224, 1)',
+                        },
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                        fontWeight: 'bold',
+                    },
+                    [`& .${gridClasses.cell}`]: {
+                        py: 1,
+                    },
+                })}
+            />
+        </div>
     );
 };

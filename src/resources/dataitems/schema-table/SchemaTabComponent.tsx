@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Typography, alpha } from '@mui/material';
-import { DataGrid, enUS, itIT } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { Spinner } from '../../../components/Spinner';
 import { useSchemaDataGridController } from './useSchemaDataGridController';

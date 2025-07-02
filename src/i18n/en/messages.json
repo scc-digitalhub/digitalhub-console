@@ -12,6 +12,7 @@
         "single_zip_file_supported": "Zip files must be uploaded individually",
         "upload_error": "Error during upload of %{fileName} %{error}",
         "header": "Uploads",
+        "subheader_no_results": "No uploads found",
         "subheader": {
             "error": "%{val} errors",
             "total": "%{val} uploads",
@@ -41,6 +42,7 @@
     "notifications": {
         "header": "Notifications",
         "subheader": "%{unread} unread messages",
+        "subheader_no_results": "No notifications found",
         "stateMessage": "%{resource} status changed to %{state}"
     },
     "lineage": {

@@ -8,7 +8,6 @@ import {
     GridCellParams,
     GridComparatorFn,
     GridRenderCellParams,
-    GridValueFormatterParams,
     gridDateComparator,
     gridNumberComparator,
     gridStringOrNumberComparator,
@@ -140,12 +139,11 @@ export class PreviewHelper {
             renderHeader: () => (
                 <PreviewHeaderCell columnDescriptor={columnDescriptor} />
             ),
-            valueFormatter: (params: GridValueFormatterParams<any>) => {
-                const row = params.api.getRow(params.id!);
-                if (PreviewHelper.isContentInvalid(row, params.field)) {
+            valueFormatter: (value, row, column) => {
+                if (PreviewHelper.isContentInvalid(row, column.field)) {
                     return translations.invalidValue;
                 }
-                return params.value;
+                return value;
             },
             sortComparator: PreviewHelper.stringComparator,
             renderCell: (params: GridRenderCellParams<any>) => (
@@ -205,27 +203,26 @@ export class PreviewHelper {
                     ...GRID_DATE_COL_DEF,
                     resizable: false,
                     type: 'date',
-                    valueFormatter: (params: GridValueFormatterParams<any>) => {
-                        if (params.value === null || params.value === undefined)
-                            return params.value;
+                    valueFormatter: (value, row, column) => {
+                        if (value === null || value === undefined) return value;
                         if (
                             PreviewHelper.isContentInvalid(
-                                params.api.getRow(params.id!),
-                                params.field,
+                                row,
+                                column.field,
                                 Type.InvalidValue
                             )
                         )
                             return translations.invalidValue;
                         if (
                             PreviewHelper.isContentInvalid(
-                                params.api.getRow(params.id!),
-                                params.field,
+                                row,
+                                column.field,
                                 Type.InvalidDate
                             )
                         )
                             return translations.invalidDate;
                         //manage date properly (UTC time offsets, right locale)
-                        return params.value.toLocaleDateString();
+                        return value.toLocaleDateString();
                     },
                     minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
@@ -236,27 +233,27 @@ export class PreviewHelper {
                 return {
                     ...GRID_DATETIME_COL_DEF,
                     resizable: false,
-                    valueFormatter: (params: GridValueFormatterParams<any>) => {
-                        if (params.value === null || params.value === undefined)
-                            return params.value;
+                    valueFormatter: (value, row, column) => {
+                        if (value === null || value === undefined)
+                            return value;
                         if (
                             PreviewHelper.isContentInvalid(
-                                params.api.getRow(params.id!),
-                                params.field,
+                                row,
+                                column.field,
                                 Type.InvalidValue
                             )
                         )
                             return translations.invalidValue;
                         if (
                             PreviewHelper.isContentInvalid(
-                                params.api.getRow(params.id!),
-                                params.field,
+                                row,
+                                column.field,
                                 Type.InvalidDatetime
                             )
                         )
                             return translations.invalidDatetime;
                         //manage datetime properly (UTC time offsets, right locale)
-                        return params.value.toLocaleString();
+                        return value.toLocaleString();
                     },
                     minWidth: 120,
                     sortComparator: PreviewHelper.dateComparator,
@@ -462,7 +459,8 @@ export class Value {
     invalidityType?: Type;
 
     constructor(value: any, isValid = true, invalidityType?: Type) {
-        this.value = value && typeof value === 'string' ? value.slice(0, 10000) : value;
+        this.value =
+            value && typeof value === 'string' ? value.slice(0, 10000) : value;
         this.isValid = isValid;
         if (invalidityType) this.invalidityType = invalidityType;
     }

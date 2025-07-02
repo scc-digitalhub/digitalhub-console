@@ -12,6 +12,7 @@
         "single_zip_file_supported": "I file zip devono essere caricati singolarmente",
         "upload_error": "Errore durante l'upload del file %{fileName}. %{error}",
         "header": "Upload",
+        "subheader_no_results": "Nessun upload trovato",
         "subheader": {
             "error": "%{val} errori",
             "total": "%{val} upload",
@@ -41,6 +42,7 @@
     "notifications": {
         "header": "Notifiche",
         "subheader": "%{unread} messaggi non letti",
+        "subheader_no_results": "Nessuna notifica trovata",
         "statusMessage": "Stato %{resource} passato a %{state}"
     },
     "lineage": {

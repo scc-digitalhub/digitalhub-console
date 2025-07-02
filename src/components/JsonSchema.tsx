@@ -285,42 +285,42 @@ const useTranslator = (
  * Deep translator
  * DISABLED
  */
-const translate = (
-    schema: string | object | UiSchema | RJSFSchema | undefined
-) => {
-    if (schema && schema instanceof Object) {
-        const u = {};
-        for (const e in schema as Object) {
-            if (schema[e] instanceof Object) {
-                u[e] = deepTranslate(schema[e], [e]);
-            } else {
-                u[e] = schema[e];
-            }
-        }
+// const translate = (
+//     schema: string | object | UiSchema | RJSFSchema | undefined
+// ) => {
+//     if (schema && schema instanceof Object) {
+//         const u = {};
+//         for (const e in schema as Object) {
+//             if (schema[e] instanceof Object) {
+//                 u[e] = deepTranslate(schema[e], [e]);
+//             } else {
+//                 u[e] = schema[e];
+//             }
+//         }
 
-        return u;
-    }
+//         return u;
+//     }
 
-    return schema ?? {};
-};
+//     return schema ?? {};
+// };
 
-const deepTranslate = (obj: object, path: string[]) => {
-    const translate = useTranslate();
-    for (const e in obj) {
-        //translate titles and descriptions
-        if (
-            (e === 'ui:title' ||
-                e === 'ui:description' ||
-                e === 'title' ||
-                e === 'description') &&
-            typeof obj[e] === 'string'
-        ) {
-            obj[e] = translate(obj[e] as string);
-        } else if (obj[e] instanceof Object) {
-            //recursive on objects
-            obj[e] = deepTranslate(obj[e], [...path, e]);
-        }
-    }
+// const deepTranslate = (obj: object, path: string[]) => {
+//     const translate = useTranslate();
+//     for (const e in obj) {
+//         //translate titles and descriptions
+//         if (
+//             (e === 'ui:title' ||
+//                 e === 'ui:description' ||
+//                 e === 'title' ||
+//                 e === 'description') &&
+//             typeof obj[e] === 'string'
+//         ) {
+//             obj[e] = translate(obj[e] as string);
+//         } else if (obj[e] instanceof Object) {
+//             //recursive on objects
+//             obj[e] = deepTranslate(obj[e], [...path, e]);
+//         }
+//     }
 
-    return obj;
-};
+//     return obj;
+// };

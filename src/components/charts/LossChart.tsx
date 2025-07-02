@@ -8,7 +8,7 @@ import { Series } from './utils';
 export const LossChart = (props: LossChartProps) => {
     const {
         series,
-        slotProps = { legend: { hidden: true } },
+        slotProps,
         margin = {
             left: 56,
             right: 8,
@@ -25,6 +25,7 @@ export const LossChart = (props: LossChartProps) => {
     return (
         <LineChart
             series={arraySeries}
+            hideLegend
             slotProps={slotProps}
             margin={margin}
             {...rest}

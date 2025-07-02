@@ -81,8 +81,10 @@ export const useSearchController = ({
         hideFilter: hideFilter,
         isFetching: isLoading.current, //TODO ?
         isLoading: isLoading.current,
+        isPending: false,
         onSelect: () => {},
         onToggleItem: () => {},
+        onSelectAll: () => {},
         onUnselectItems: () => {},
         page: query.page,
         perPage: query.perPage,

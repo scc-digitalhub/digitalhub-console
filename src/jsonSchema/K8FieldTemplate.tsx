@@ -31,7 +31,7 @@ export const K8FieldTemplate = (props: ObjectFieldTemplateProps) => {
                     element.hidden ? (
                         element.content
                     ) : (
-                        <Grid item={true} xs={12} key={index}>
+                        <Grid size={12} key={index}>
                             {element.content}
                         </Grid>
                     )

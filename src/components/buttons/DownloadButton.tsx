@@ -71,6 +71,8 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     );
 };
 
-export type DownloadButtonProps<RecordType extends RaRecord = any> =
-    FieldProps &
-        ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };
+export type DownloadButtonProps<RecordType extends RaRecord = any> = Omit<
+    FieldProps<RecordType>,
+    'source'
+> &
+    ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };

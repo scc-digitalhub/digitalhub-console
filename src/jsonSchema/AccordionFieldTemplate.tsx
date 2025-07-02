@@ -2,11 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    AccordionSummary,
-    AccordionDetails,
-    Typography,
-} from '@mui/material';
+import { AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
@@ -32,7 +28,7 @@ const Accordion = styled((props: AccordionProps) => (
 export const AccordionFieldTemplate = (props: ObjectFieldTemplateProps) => {
     const translate = useTranslate();
     const titleText = props.title || '';
-    const descriptionText = props.description || '';
+
     return (
         <Accordion elevation={0} square disableGutters>
             <AccordionSummary
@@ -43,8 +39,10 @@ export const AccordionFieldTemplate = (props: ObjectFieldTemplateProps) => {
                 <Typography variant="h5">{translate(titleText)}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                {props.description && (
-                    <Typography>{translate(descriptionText)}</Typography>
+                {props.description && typeof props.description === 'string' ? (
+                    <Typography>{translate(props.description)}</Typography>
+                ) : (
+                    props.description
                 )}
                 {props.properties.map((element, index) => (
                     <div style={{ width: '100%' }} key={index}>

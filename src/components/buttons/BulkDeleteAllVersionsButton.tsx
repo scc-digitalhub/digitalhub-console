@@ -38,6 +38,8 @@ export const BulkDeleteAllVersionsButton = (
     const [cascade, setCascade] = useState(deleteAll);
     const { data, selectedIds } = useListContext();
 
+    if (!data) return <></>;
+
     const selectedData = data.filter(d => selectedIds.includes(d.id));
 
     const mutationOptions = {
@@ -55,7 +57,10 @@ export const BulkDeleteAllVersionsButton = (
     const defaultConfirmContent = (
         <Box>
             <DialogContentText>
-                {translate('ra.message.delete_content')}
+                {translate('ra.message.bulk_delete_content', {
+                    name: 'item',
+                    smart_count: selectedIds.length,
+                })}
             </DialogContentText>
             {additionalContent}
             {askForCascade && (

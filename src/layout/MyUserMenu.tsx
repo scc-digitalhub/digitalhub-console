@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    AppBar,
     UserMenu,
     MenuItemLink,
     UserMenuProps,

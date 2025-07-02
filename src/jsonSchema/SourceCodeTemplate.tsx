@@ -79,7 +79,7 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
             <FormLabel label={props.title} />
             <div style={{ display: 'flex', width: '100%' }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} key={'sctw-0'}>
+                    <Grid size={12} key={'sctw-0'}>
                         <Stack spacing={2}>
                             <Box>
                                 <div style={{ width: '100%' }} key={'lang'}>
@@ -88,19 +88,19 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
                             </Box>
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} key={'sctw-1'}>
+                    <Grid size={12} key={'sctw-1'}>
                         <Stack spacing={2} direction={'row'}>
                             <Box>{language.prop.content}</Box>
                             <Box>{handler.prop.content}</Box>
                         </Stack>
                     </Grid>
 
-                    <Grid item xs={12} key={'sctw-2'}>
+                    <Grid size={12} key={'sctw-2'}>
                         {base64.prop.content}
                     </Grid>
 
                     {rest.map((element, index) => (
-                        <Grid item xs={12} key={'sctw-r-' + index}>
+                        <Grid size={12} key={'sctw-r-' + index}>
                             <div style={{ width: '100%' }} key={index}>
                                 {element.content}
                             </div>

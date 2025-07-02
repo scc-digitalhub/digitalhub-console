@@ -62,14 +62,14 @@ const ModelEditForm = (props: { record: any }) => {
     return (
         <SimpleForm defaultValues={record} toolbar={<EditToolbar />}>
             <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid item xs={4}>
+                <Grid size={4}>
                     <TextInput
                         source="name"
                         label="resources.functions.name"
                         disabled
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                     <SelectInput
                         source="kind"
                         label="resources.functions.kind"

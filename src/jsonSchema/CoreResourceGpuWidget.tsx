@@ -21,13 +21,10 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
 
     return (
         <div>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 12, sm: 4, md: 4 }}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -51,17 +48,14 @@ export const CoreResourceGpuWidget = function (props: WidgetProps) {
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={6}
+                        size={{ xs: 12, sm: 6, md: 6 }}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <TextField
                             fullWidth
                             variant="outlined"
                             type="number"
-                            inputProps={{ min: 0, step: 1 }}
+                            slotProps={{ htmlInput: { min: 0, step: 1 } }}
                             disabled={readonly}
                             id={id}
                             name={id}

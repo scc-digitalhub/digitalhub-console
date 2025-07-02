@@ -50,7 +50,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
             return;
         }
 
-        if (record) {
+        if (record && resource) {
             schemaProvider.get(resource, record.kind).then(s => {
                 setSpec(s);
             });

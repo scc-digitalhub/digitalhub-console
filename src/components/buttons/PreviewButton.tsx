@@ -67,10 +67,6 @@ export const PreviewButton = (props: PreviewButtonProps) => {
 
     const isLoading = !record;
 
-    if (!record) {
-        return <></>;
-    }
-
     const handleDialogOpen = e => {
         setOpen(true);
         e.stopPropagation();
@@ -84,6 +80,10 @@ export const PreviewButton = (props: PreviewButtonProps) => {
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
+
+    if (!record) {
+        return <></>;
+    }
 
     return (
         <Fragment>
@@ -167,7 +167,7 @@ const PreviewView = (props: PreviewButtonProps) => {
         if (url) return;
 
         dataProvider
-            .download(resource, { id: record.id, meta: { root }, sub })
+            .download(resource, { id: record?.id, meta: { root }, sub })
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);
@@ -285,7 +285,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                         setContent(res);
                     }
                 },
-                error: err => {
+                error: () => {
                     notify('ra.message.not_found', {
                         type: 'error',
                     });
@@ -332,11 +332,17 @@ const LogViewer = styled(Box, {
     },
 }));
 
-export type CSVViewerProps<RecordType extends RaRecord = any> = FieldProps & {
+export type CSVViewerProps<RecordType extends RaRecord = any> = Omit<
+    FieldProps<RecordType>,
+    'source'
+> & {
     url: string;
 };
 
-export type PreviewButtonProps<RecordType extends RaRecord = any> = FieldProps &
+export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
+    FieldProps<RecordType>,
+    'source'
+> &
     ButtonProps & {
         icon?: ReactElement;
         sub?: string;

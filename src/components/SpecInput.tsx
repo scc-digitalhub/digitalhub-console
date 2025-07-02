@@ -51,10 +51,10 @@ export const SpecInput = (props: InputProps & {
         }
         if (schemaProp) {
             setSchema(schemaProp);
-        } else if (schemaProvider) {
+        } else if (schemaProvider && resource) {
             schemaProvider.get(resource, kind).then(s => setSchema(s.schema));
         }
-    }, [kind, schemaProvider, schemaProp]);
+    }, [kind, schemaProvider, schemaProp, resource]);
 
     useEffect(() => {
         if (onDirty && record) {

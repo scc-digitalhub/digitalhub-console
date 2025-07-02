@@ -20,7 +20,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
     const { uploader, getSpecUiSchema } = props;
     const resource = useResourceContext();
 
-    const { data: schemas } = useGetSchemas(resource);
+    const { data: schemas } = useGetSchemas(resource || '');
     const kinds = schemas
         ? schemas.map(s => ({
               id: s.kind,
@@ -50,8 +50,9 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
 
     const getSpecSchema = (kind: string | undefined) => {
         return schemas
-            ? schemas.find(s => s.id === SchemaIdPrefixes[resource] + kind)
-                  ?.schema
+            ? schemas.find(
+                  s => resource && s.id === SchemaIdPrefixes[resource] + kind
+              )?.schema
             : undefined;
     };
 

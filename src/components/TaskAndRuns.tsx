@@ -55,8 +55,8 @@ export const TaskAndRuns = (props: {
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
         : '';
-    url.protocol = record.kind + ':';
-    const key = `${record.kind}://${record.project}/${record.id}`;
+    url.protocol = record?.kind + ':';
+    const key = `${record?.kind}://${record?.project}/${record?.id}`;
 
     const { data: schemas } = useGetManySchemas([
         { resource: runOf + 's', runtime },
@@ -220,7 +220,7 @@ const TaskRunList = (props: ListProps) => {
 
     return (
         <>
-            <Typography variant="h4" color={'secondary.main'}>
+            <Typography variant="h4" sx={{ color: 'secondary.main' }}>
                 {label}
             </Typography>
 

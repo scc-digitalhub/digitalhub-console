@@ -85,7 +85,11 @@ export default function ObjectFieldTemplate<
             {description && (
                 <DescriptionFieldTemplate
                     id={descriptionId<T>(idSchema)}
-                    description={translate(descriptionText)}
+                    description={
+                        typeof descriptionText === 'string'
+                            ? translate(descriptionText)
+                            : descriptionText
+                    }
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
@@ -99,8 +103,7 @@ export default function ObjectFieldTemplate<
                         element.content
                     ) : (
                         <Grid
-                            item={true}
-                            xs={12}
+                            size={12}
                             key={index}
                             style={{ marginBottom: '10px' }}
                         >
@@ -111,7 +114,7 @@ export default function ObjectFieldTemplate<
                 {canExpand<T, S, F>(schema, uiSchema, formData) &&
                     !readonly && (
                         <Grid container justifyContent="flex-end">
-                            <Grid item={true}>
+                            <Grid>
                                 <AddButton
                                     className="object-property-expand"
                                     onClick={onAddClick(schema)}

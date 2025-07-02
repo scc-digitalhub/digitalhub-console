@@ -161,7 +161,7 @@ const ShareList = (props: { record?: any }) => {
                         options: { method: 'DELETE' },
                         params: { id: data.id },
                     })
-                    .then(json => {
+                    .then(() => {
                         reload();
                     });
             }
@@ -181,7 +181,7 @@ const ShareList = (props: { record?: any }) => {
             </Typography>
             <ShareCreateForm record={record} reload={reload} />
             <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false}>
+                <Datagrid bulkActionButtons={false} rowClick={false}>
                     <TextField source="user" sortable={false} />
                     <FunctionField
                         render={r => (
@@ -215,16 +215,17 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
                     options: { method: 'POST' },
                     params: { user: data.user },
                 })
-                .then(json => {
+                .then(() => {
                     reload();
                 });
         }
     };
+
     return (
         <Create record={{}} component={Toolbar}>
             <Form onSubmit={onSubmit}>
                 <Grid container>
-                    <Grid item xs={10}>
+                    <Grid size={10}>
                         <TextInput
                             source="user"
                             label="fields.user.title"
@@ -232,7 +233,7 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
                             fullWidth
                         />
                     </Grid>
-                    <Grid item xs={2} pt={1}>
+                    <Grid size={2} pt={1}>
                         <SaveButton
                             label="ra.action.add"
                             variant="text"

@@ -126,7 +126,7 @@ export const useUploadController = (
     };
 
     const upload = (data: any) => {
-        if (dataProvider) {
+        if (dataProvider && resource) {
             //update resource state to UPLOADING
             if (!data.status) data.status = {};
             data.status.state = 'UPLOADING';
@@ -144,7 +144,7 @@ export const useUploadController = (
     };
 
     const retry = (fileId: string) => {
-        if (dataProvider) {
+        if (dataProvider && resource) {
             //update resource state to UPLOADING
             dataProvider.getOne(resource, { id }).then(res => {
                 let data = res.data;
@@ -355,7 +355,7 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-progress', file => {
-                    if (file) {
+                    if (file && resource) {
                         updateUploads({
                             id: file.id + `_${id}`,
                             filename: file.name,
@@ -381,7 +381,7 @@ export const useUploadController = (
                     }
                 })
                 .on('upload-error', (file, error) => {
-                    if (file) {
+                    if (file && resource) {
                         updateUploads({
                             id: file.id + `_${id}`,
                             filename: file.name,
@@ -400,7 +400,7 @@ export const useUploadController = (
                     }
                 })
                 .on('complete', result => {
-                    if (dataProvider) {
+                    if (dataProvider && resource) {
                         //update resource state to READY or ERROR
                         dataProvider.getOne(resource, { id }).then(res => {
                             let data = res.data;
@@ -425,7 +425,7 @@ export const useUploadController = (
                         });
                     }
                 }),
-        [dataProvider, setFiles, updateUploads]
+        [dataProvider, setFiles, updateUploads, resource]
     );
 
     const path = useMemo(() => {

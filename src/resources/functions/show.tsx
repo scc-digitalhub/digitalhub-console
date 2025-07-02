@@ -82,7 +82,7 @@ const ShowComponent = () => {
             setSourceCode(record.spec.source);
         }
 
-        if (record) {
+        if (record && resource) {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
@@ -153,7 +153,7 @@ const ShowComponent = () => {
                     console.log(error);
                 });
         }
-    }, [record, schemaProvider, dataProvider]);
+    }, [record, schemaProvider, dataProvider, resource]);
 
     if (!record) {
         return <LoadingIndicator />;
@@ -183,7 +183,7 @@ const ShowComponent = () => {
         });
     };
     return (
-        <TabbedShowLayout record={record}>
+        <TabbedShowLayout record={record} syncWithLocation={false}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
@@ -243,7 +243,7 @@ const ShowComponent = () => {
 export const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
     const { sourceCode, spec } = props;
     const record = useRecordContext();
-    const uiSchema = getFunctionUiSpec(record.kind) || {};
+    const uiSchema = getFunctionUiSpec(record?.kind) || {};
     const values = { spec: { source: sourceCode } };
     const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
     if ('properties' in schema) {

@@ -44,7 +44,7 @@ export const MyAccount = () => {
                 icon={<AccountIcon fontSize={'large'} />}
             />
             <Grid container spacing={2} pb={1}>
-                <Grid item xs={12} md={12}>
+                <Grid size={{ xs: 12, md: 12 }}>
                     <RecordContextProvider value={identity}>
                         <Card>
                             <CardHeader
@@ -71,19 +71,19 @@ export const MyAccount = () => {
                     </RecordContextProvider>
                 </Grid>
 
-                <Grid item xs={12} md={12}>
+                <Grid size={{ xs: 12, md: 12 }}>
                     <MyProjects />
                 </Grid>
 
-                <Grid item xs={12} md={12}>
+                <Grid size={{ xs: 12, md: 12 }}>
                     <MyPersonalTokens />
                 </Grid>
 
-                <Grid item xs={12} md={12}>
+                <Grid size={{ xs: 12, md: 12 }}>
                     <MyRefreshTokens />
                 </Grid>
 
-                <Grid item xs={12} md={12}>
+                <Grid size={{ xs: 12, md: 12 }}>
                     <RecordContextProvider value={identity}>
                         <Card>
                             <CardHeader

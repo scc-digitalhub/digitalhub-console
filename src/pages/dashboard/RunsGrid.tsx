@@ -31,8 +31,7 @@ export const RunsGrid = (props: {
                     encodeURIComponent(JSON.stringify(filter));
                 return (
                     <Grid
-                        item
-                        xs={true}
+                        size="grow"
                         key={k}
                         textAlign={'center'}
                         minWidth={'5em'}

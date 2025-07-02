@@ -91,9 +91,11 @@ export const OverviewCard = (props: {
             <CardHeader
                 title={translate(title)}
                 avatar={icon}
-                titleTypographyProps={{
-                    variant: 'h5',
-                    color: 'secondary.main',
+                slotProps={{
+                    title: {
+                        variant: 'h5',
+                        color: 'secondary.main',
+                    },
                 }}
             />
             <CardContent>

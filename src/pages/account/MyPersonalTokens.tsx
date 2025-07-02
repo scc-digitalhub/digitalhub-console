@@ -97,7 +97,7 @@ export const MyPersonalTokens = () => {
                                 <RowButtonGroup>
                                     <DeleteWithConfirmButton
                                         redirect="/account"
-                                        translateOptions={{
+                                        titleTranslateOptions={{
                                             name: getResourceLabel(
                                                 'personalaccesstokens',
                                                 1

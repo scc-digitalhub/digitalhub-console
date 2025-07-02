@@ -77,7 +77,7 @@ export const VersionsList = (props: VersionListProps) => {
             storeKey={false}
         >
             <SimpleList
-                linkType="show"
+                rowClick="show"
                 rowSx={rowSx}
                 key={resource + ':versions:'}
                 primaryText={item => {
@@ -85,7 +85,7 @@ export const VersionsList = (props: VersionListProps) => {
                         ? new Date(item.metadata.updated).toLocaleString()
                         : item.id;
 
-                    return <Typography color={'primary'}>{value}</Typography>;
+                    return <Typography sx={{ color: 'primary' }}>{value}</Typography>;
                 }}
                 secondaryText={item => {
                     return item.metadata?.version &&

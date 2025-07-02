@@ -64,7 +64,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             return;
         }
 
-        if (record) {
+        if (record && resource) {
             schemaProvider.get(resource, record.kind).then(s => {
                 setSpec(s);
             });

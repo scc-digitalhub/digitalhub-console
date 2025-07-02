@@ -55,12 +55,7 @@ export const MetadataInput = () => {
         <Grid container={true} alignItems="top">
             {metadataKinds?.map(r => {
                 return (
-                    <Grid
-                        item={true}
-                        xs={12}
-                        style={{ overflow: 'auto' }}
-                        key={r.id}
-                    >
+                    <Grid size={12} style={{ overflow: 'auto' }} key={r.id}>
                         {r.id === 'metadata.base' ? (
                             <>
                                 <Typography variant="h5">

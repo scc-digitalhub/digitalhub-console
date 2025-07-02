@@ -23,10 +23,10 @@ export const TaskShowComponent = () => {
     const kind = record?.kind || null;
 
     useEffect(() => {
-        if (schemaProvider && record) {
+        if (schemaProvider && record && resource) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
-    }, [record, schemaProvider]);
+    }, [record, schemaProvider, resource]);
 
     return (
         <SimpleShowLayout>

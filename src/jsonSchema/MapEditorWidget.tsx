@@ -83,7 +83,11 @@ export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
             {description && (
                 <DescriptionFieldTemplate
                     id={descriptionId(idSchema)}
-                    description={translate(descriptionText)}
+                    description={
+                        typeof descriptionText === 'string'
+                            ? translate(descriptionText)
+                            : descriptionText
+                    }
                     schema={schema}
                     uiSchema={uiSchema}
                     registry={registry}
@@ -97,8 +101,7 @@ export const MapEditorFieldTemplate = (props: ObjectFieldTemplateProps) => {
                         element.content
                     ) : (
                         <Grid
-                            item={true}
-                            xs={12}
+                            size={12}
                             key={index}
                             style={{ marginBottom: '10px' }}
                         >

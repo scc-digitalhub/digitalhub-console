@@ -40,16 +40,16 @@ const SpecInput = (props: {
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const eq = deepEqual(record[source], value);
+    const eq = deepEqual(record?.[source], value);
     const schemaProvider = useSchemaProvider();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || null;
 
     useEffect(() => {
-        if (schemaProvider && record) {
+        if (schemaProvider && record && resource) {
             schemaProvider.get(resource, kind).then(s => setSpec(s));
         }
-    }, [record, schemaProvider]);
+    }, [record, schemaProvider, resource]);
 
     useEffect(() => {
         if (onDirty) {
@@ -86,15 +86,12 @@ export const FunctionEdit = () => {
     const resource = useResourceContext();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
-    const [schemas, setSchemas] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
 
     useEffect(() => {
         if (schemaProvider) {
             schemaProvider.list('functions').then(res => {
                 if (res) {
-                    setSchemas(res);
-
                     const values = res.map(s => ({
                         id: s.kind,
                         name: s.kind,

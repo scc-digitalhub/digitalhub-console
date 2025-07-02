@@ -67,7 +67,7 @@ export const MyRefreshTokens = () => {
                         <RowButtonGroup>
                             <DeleteWithConfirmButton
                                 redirect="/account"
-                                translateOptions={{
+                                titleTranslateOptions={{
                                     name: getResourceLabel('refreshtokens', 1),
                                 }}
                             />

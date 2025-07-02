@@ -24,15 +24,13 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
         setStringValue(inputValue + event.target.value);
         onChange(inputValue + event.target.value);
     };
+
     return (
         <div>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid size={{ xs: 12, sm: 6, md: 12 }}>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 4, sm: 4, md: 4 }}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
@@ -56,10 +54,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 12, sm: 4, md: 4 }}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <TextField
@@ -67,7 +62,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                             variant="outlined"
                             type="number"
                             disabled={readonly}
-                            inputProps={{ min: 0, step: 1 }}
+                            slotProps={{ htmlInput: { min: 0, step: 1 } }}
                             id={id}
                             name={id}
                             value={inputValue}
@@ -75,10 +70,7 @@ export const CoreResourceCpuWidget = function (props: WidgetProps) {
                         />
                     </Grid>
                     <Grid
-                        item
-                        xs={12}
-                        sm={4}
-                        md={4}
+                        size={{ xs: 12, sm: 4, md: 4 }}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <Select
