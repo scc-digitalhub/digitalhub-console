@@ -67,7 +67,13 @@ export type SearchBarProps = BoxProps & {
 };
 
 export const SearchBar = (props: SearchBarProps) => {
-    const { hintText = 'Search', to, filters, filterSeparator = ':', ...boxProps } = props;
+    const {
+        hintText = 'Search',
+        to,
+        filters,
+        filterSeparator = ':',
+        ...boxProps
+    } = props;
     const { setParams } = useSearch();
     const navigate = useNavigate();
     const [record, setRecord] = useState({ id: '1', q: '' });
@@ -206,39 +212,41 @@ const ActualSearchBar = (props: any) => {
                 if (e.key === 'Enter' && field.value)
                     handleEnter(formContext.getValues());
             }}
-            InputProps={{
-                sx: {
-                    width: '50ch',
-                    backgroundColor: theme.palette.background.paper,
-                    '& .MuiInputBase-input': {
-                        padding: '8px 0',
+            slotProps={{
+                input: {
+                    sx: {
+                        width: '50ch',
+                        backgroundColor: theme.palette.background.paper,
+                        '& .MuiInputBase-input': {
+                            padding: '8px 0',
+                        },
                     },
-                },
-                startAdornment: (
-                    <InputAdornment position="start">
-                        <SearchIcon />
-                    </InputAdornment>
-                ),
-                endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="cancel search input"
-                            onClick={handleClickClear}
-                            edge="end"
-                        >
-                            <ClearIcon />
-                        </IconButton>
-                        {showFiltersIcon && (
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <SearchIcon />
+                        </InputAdornment>
+                    ),
+                    endAdornment: (
+                        <InputAdornment position="end">
                             <IconButton
-                                aria-label="toggle filters visibility"
-                                onClick={handleClickShowFilters}
+                                aria-label="cancel search input"
+                                onClick={handleClickClear}
                                 edge="end"
                             >
-                                <TuneIcon />
+                                <ClearIcon />
                             </IconButton>
-                        )}
-                    </InputAdornment>
-                ),
+                            {showFiltersIcon && (
+                                <IconButton
+                                    aria-label="toggle filters visibility"
+                                    onClick={handleClickShowFilters}
+                                    edge="end"
+                                >
+                                    <TuneIcon />
+                                </IconButton>
+                            )}
+                        </InputAdornment>
+                    ),
+                },
             }}
         />
     );

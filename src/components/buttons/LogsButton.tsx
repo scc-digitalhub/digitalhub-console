@@ -414,7 +414,7 @@ const LogMetrics = (props: { metrics: any[] }) => {
             series={Object.keys(keyToLabel).map(key => ({
                 dataKey: key,
                 label: keyToLabel[key],
-                yAxisKey: key,
+                yAxisId: key,
                 showMark: false,
             }))}
             margin={{ top: 50, right: 50, bottom: 50, left: 65 }}

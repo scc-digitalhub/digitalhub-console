@@ -512,21 +512,21 @@ const FileInfoTable = (props: any) => {
     });
 
     const valueFormatter = (value?: any) => {
-        if (!value.value) {
+        if (!value) {
             return '';
         }
-        if (!isNaN(value.value)) {
-            return value.value;
+        if (!isNaN(value)) {
+            return value;
         }
-        const toDate = new Date(value.value);
+        const toDate = new Date(value);
         if (!isNaN(toDate.getTime())) {
             return toDate.toLocaleString();
         }
 
-        if (typeof value.value === 'object') {
-            return JSON.stringify(value.value);
+        if (typeof value === 'object') {
+            return JSON.stringify(value);
         }
-        return value.value;
+        return value;
     };
 
     const columnsWithFormatter = data?.columns.map(col => {

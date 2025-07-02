@@ -27,11 +27,11 @@ export const ComparisonTable = (props: { values: Series[] }) => {
             field: 'data',
             headerName: translate('fields.datagrid.value'),
             flex: 1,
-            valueFormatter: (params: any) => {
-                if (params.value == null) {
+            valueFormatter: (value: any) => {
+                if (value == null) {
                     return '-';
                 }
-                return valueFormatter(params.value);
+                return valueFormatter(value);
             },
         },
     ];

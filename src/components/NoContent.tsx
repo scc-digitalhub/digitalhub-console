@@ -12,8 +12,7 @@ export const NoContent = (props: { message: string }) => {
     return (
         <Typography
             variant="body1"
-            color={'gray'}
-            sx={{ textAlign: 'center', paddingY: 4 }}
+            sx={{ textAlign: 'center', paddingY: 4, color: 'gray' }}
         >
             {translate(message)}
         </Typography>

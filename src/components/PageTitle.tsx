@@ -31,13 +31,18 @@ export const PageTitle = (props: PageTitleProps) => {
             <Box sx={{ textAlign: 'left', flexGrow: 1 }}>
                 <Typography
                     variant="h4"
-                    color={'secondary.main'}
-                    sx={{ pb: secondaryText ? 1 : 0 }}
+                    sx={{ pb: secondaryText ? 1 : 0, color: 'secondary.main' }}
                 >
                     {text}
                 </Typography>
                 {secondaryText && (
-                    <Typography variant="h6" color={'secondary.light'}>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            pb: secondaryText ? 1 : 0,
+                            color: 'secondary.light',
+                        }}
+                    >
                         {secondaryText}
                     </Typography>
                 )}
@@ -45,7 +50,9 @@ export const PageTitle = (props: PageTitleProps) => {
             {icon && isValidElement(icon) ? (
                 <Box sx={{ pt: 2, pb: 2, textAlign: 'right' }}>
                     {' '}
-                    <Typography color={'secondary.main'}>{icon} </Typography>
+                    <Typography sx={{ color: 'secondary.main' }}>
+                        {icon}{' '}
+                    </Typography>
                 </Box>
             ) : (
                 ''

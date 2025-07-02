@@ -47,7 +47,6 @@ export const TaskAndRuns = (props: {
     onEdit: (id: string, data: any) => void;
     runOf: 'function' | 'workflow';
 }) => {
-    console.log('taskandruns')
     const { task, onEdit, runOf } = props;
     const record = useRecordContext();
 
@@ -221,7 +220,7 @@ const TaskRunList = (props: ListProps) => {
 
     return (
         <>
-            <Typography variant="h4" color={'secondary.main'}>
+            <Typography variant="h4" sx={{ color: 'secondary.main' }}>
                 {label}
             </Typography>
 
