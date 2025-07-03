@@ -198,7 +198,7 @@ export const MyAppBar = () => {
             {enableSearch && (
                 <SearchBar
                     hintText="Search"
-                    to="searchresults"
+                    to="../searchresults"
                     filters={filters}
                     filterSeparator=":"
                     flex="1"

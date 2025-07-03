@@ -52,5 +52,9 @@
     "templates": {
         "noTemplates": "No templates available",
         "start_from_scratch": "Start from scratch"
+    },
+    "search": {
+        "no_results": "Your search gave no results",
+        "current_filters": "Current search filters:"
     }
 }
