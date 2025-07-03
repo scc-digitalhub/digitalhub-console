@@ -13,11 +13,8 @@ import {
     useRecordContext,
     DateField,
     RichTextField,
+    useTranslate,
 } from 'react-admin';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import AccountTree from '@mui/icons-material/AccountTree';
 import Inbox from '@mui/icons-material/Inbox';
 import { RowButtonGroup } from '../components/buttons/RowButtonGroup';
 import { Box, Chip, Container, Tooltip, Typography } from '@mui/material';
@@ -25,14 +22,18 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
 import { useSearchController } from './useSearchController';
 import { useSearch } from './searchbar/SearchContext';
-import ModelTraining from '@mui/icons-material/ModelTraining';
+import { FunctionIcon } from '../resources/functions/icon';
+import { ArtifactIcon } from '../resources/artifacts/icon';
+import { DataItemIcon } from '../resources/dataitems/icon';
+import { WorkflowIcon } from '../resources/workflows/icon';
+import { ModelIcon } from '../resources/models/icon';
 
 const mapTypes = {
     function: {
         plural: 'functions',
         icon: (
             <Tooltip title="function">
-                <ElectricBoltIcon />
+                <FunctionIcon />
             </Tooltip>
         ),
     },
@@ -40,7 +41,7 @@ const mapTypes = {
         plural: 'artifacts',
         icon: (
             <Tooltip title="artifact">
-                <TableChartIcon />
+                <ArtifactIcon />
             </Tooltip>
         ),
     },
@@ -48,7 +49,7 @@ const mapTypes = {
         plural: 'dataitems',
         icon: (
             <Tooltip title="dataitem">
-                <InsertDriveFileIcon />
+                <DataItemIcon />
             </Tooltip>
         ),
     },
@@ -56,7 +57,7 @@ const mapTypes = {
         plural: 'workflows',
         icon: (
             <Tooltip title="workflow">
-                <AccountTree />
+                <WorkflowIcon />
             </Tooltip>
         ),
     },
@@ -64,7 +65,7 @@ const mapTypes = {
         plural: 'models',
         icon: (
             <Tooltip title="model">
-                <ModelTraining />
+                <ModelIcon />
             </Tooltip>
         ),
     },
@@ -102,36 +103,28 @@ export const SearchList = () => {
                         bulkActionButtons={false}
                         empty={<NoResults />}
                         resource="searchres"
+                        sx={{
+                            '& em': {
+                                backgroundColor: alpha(
+                                    theme.palette?.primary?.main,
+                                    0.3
+                                ),
+                            },
+                        }}
                     >
                         <IconResource />
                         <RichTextField
                             source="metadata.name"
-                            label="Name"
-                            sx={{
-                                '& em': {
-                                    backgroundColor: alpha(
-                                        theme.palette?.primary?.main,
-                                        0.3
-                                    ),
-                                },
-                            }}
+                            label="fields.name.title"
                         />
-                        <TextField source="kind" label="Kind" />
+                        <TextField source="kind" label="fields.kind" />
                         <RichTextField
                             source="metadata.description"
-                            label="Description"
-                            sx={{
-                                '& em': {
-                                    backgroundColor: alpha(
-                                        theme.palette?.primary?.main,
-                                        0.3
-                                    ),
-                                },
-                            }}
+                            label="fields.description.title"
                         />
                         <DateField
                             source="metadata.updated"
-                            label="Updated"
+                            label="fields.updated.title"
                             showTime
                         />
                         <RowButtonGroup>
@@ -156,14 +149,18 @@ const IconResource = () => {
 };
 
 const NoResults = () => {
-    const emptyMessage = 'Your search gave no results';
+    const translate = useTranslate();
 
     return (
         <Root className="RaList-noResults">
             <div className={EmptyClasses.message}>
                 <Inbox className={EmptyClasses.icon} />
-                <Typography variant="h4" paragraph>
-                    {emptyMessage}
+                <Typography
+                    variant="h4"
+                    component="p"
+                    sx={{ marginBottom: '16px' }}
+                >
+                    {translate('messages.search.no_results')}
                 </Typography>
             </div>
         </Root>
@@ -172,6 +169,7 @@ const NoResults = () => {
 
 const ResultsHeader = () => {
     const { params: searchParams } = useSearch();
+    const translate = useTranslate();
     let current: string[] = [];
 
     searchParams.fq?.forEach(sf => {
@@ -182,7 +180,7 @@ const ResultsHeader = () => {
         <Box sx={{ pb: 2, display: 'flex', alignItems: 'center' }}>
             <Box sx={{ textAlign: 'left' }}>
                 <Typography variant="h6" color={'secondary.light'}>
-                    {'Current search filters:'}
+                    {translate('messages.search.current_filters')}
                 </Typography>
             </Box>
             <Box>

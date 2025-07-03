@@ -10,6 +10,7 @@ import {
     SelectInput,
     required,
     Confirm,
+    useRecordContext,
 } from 'react-admin';
 import { isValidKind } from '../common/helper';
 import { useFormState } from 'react-hook-form';
@@ -27,9 +28,12 @@ export const KindSelector = (props: {
     const translate = useTranslate();
     const kind = useRef<string | null>(null);
     const kindEvent = useRef<string | null>(null);
+    const record = useRecordContext();
+
     const handleConfirm = () => {
         kind.current = kindEvent.current;
-        field.onChange({});
+        //reset to original spec
+        field.onChange(record?.spec || {});
         setOpen(false);
     };
     const handleDialogClose = () => {
