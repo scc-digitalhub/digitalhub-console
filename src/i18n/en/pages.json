@@ -99,7 +99,8 @@
         "remove": {
             "title": "Account removal",
             "subtitle": "Permanently remove my account and all the content associated.",
-            "message": "Warning: this action can not be undone and all content will be immediately deleted!"
+            "message": "Warning: this action can not be undone and all content will be immediately deleted!",
+            "success": "Your account and all your content has been successfully removed."
         }
     },
     "personalaccesstokens": {

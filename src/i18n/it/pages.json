@@ -99,7 +99,8 @@
         "remove": {
             "title": "Cancellazione account",
             "subtitle": "Rimuovi permanentemente il mio account e tutti i contenuti associati.",
-            "message": "Attenzione: questa operazione è irreversibile e tutti i contenuti verranno immediatamente eliminati!"
+            "message": "Attenzione: questa operazione è irreversibile e tutti i contenuti verranno immediatamente eliminati!",
+            "success": "Il tuo account e tutti i tuoi contenuti sono stati rimossi con successo."
         }
     },
     "personalaccesstokens": {
