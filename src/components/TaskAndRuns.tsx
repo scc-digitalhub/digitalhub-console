@@ -41,6 +41,7 @@ import { BulkDeleteAllVersionsButton } from './buttons/BulkDeleteAllVersionsButt
 import { ListBaseLive } from './ListBaseLive';
 import { TriggerCreateForm } from '../resources/triggers/create';
 import { DeactivateButton } from '../resources/triggers/DeactivateButton';
+import { Spinner } from './Spinner';
 
 export const TaskAndRuns = (props: {
     task?: string;
@@ -58,11 +59,17 @@ export const TaskAndRuns = (props: {
     url.protocol = record?.kind + ':';
     const key = `${record?.kind}://${record?.project}/${record?.id}`;
 
-    const { data: schemas } = useGetManySchemas([
+    const {
+        data: schemas,
+        isLoading,
+        error,
+    } = useGetManySchemas([
         { resource: runOf + 's', runtime },
         { resource: 'tasks', runtime },
         { resource: 'runs', runtime },
     ]);
+
+    if (isLoading && !error) return <Spinner />;
 
     //filter run and task schema
     let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
@@ -93,9 +100,9 @@ export const TaskAndRuns = (props: {
         project: record?.project,
         spec: {
             task: key,
-            function: fn,
+            [runOf]: fn,
             template: {
-                function: fn,
+                [runOf]: fn,
                 task: key,
                 local_execution: false,
             },
@@ -107,7 +114,7 @@ export const TaskAndRuns = (props: {
             ...r,
             spec: {
                 task: key,
-                function: fn,
+                [runOf]: fn,
                 //copy the task spec  (using form)
                 ...r.spec,
             },
@@ -115,8 +122,8 @@ export const TaskAndRuns = (props: {
 
         //clear values from template
         if (v.spec.template) {
-            if (v.spec.template.function) {
-                delete v.spec.template.function;
+            if (v.spec.template[runOf]) {
+                delete v.spec.template[runOf];
             }
             if (v.spec.template.task) {
                 delete v.spec.template.task;
