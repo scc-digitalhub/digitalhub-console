@@ -49,6 +49,7 @@ import { EventsList } from './tabs/events';
 import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
 import { K8sDetails } from './tabs/k8s';
 import { OpenAIDetails } from './tabs/openai';
+import { CloneButton } from './CloneButton';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -310,6 +311,7 @@ const ShowToolbar = () => (
                 ) : null
             }
         />
+        <CloneButton />
         <ExportRecordButton language="yaml" />
         <DeleteWithConfirmButton />
     </TopToolbar>
