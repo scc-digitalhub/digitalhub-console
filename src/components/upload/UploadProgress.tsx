@@ -28,14 +28,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { createElement, useState } from 'react';
-import { B } from '@wtfcode/byte-converter';
-import { round } from 'lodash';
 import ReplayIcon from '@mui/icons-material/Replay';
-
-const scaleBytes = (bytes: number) => {
-    const unit = B.value(bytes).autoScale({ type: 'decimal' });
-    return `${round(unit.value, 1)} ${unit.unit.unit}`;
-};
+import { scaleBytes } from '../../common/helper';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;

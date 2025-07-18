@@ -54,6 +54,7 @@ import TableChart from '@mui/icons-material/TableChart';
 import { DownloadButton } from './buttons/DownloadButton';
 import { PreviewButton } from './buttons/PreviewButton';
 import { NoContent } from './NoContent';
+import { scaleBytes } from '../common/helper';
 
 const MAX_TREE_DEPTH = 50;
 
@@ -198,6 +199,16 @@ const convertFiles = (data: any[]): any[] => {
     return [rootElem];
 };
 
+const getStats = (
+    data: any[]
+): { count: number; size: number; approx: boolean } => {
+    return {
+        count: data.length,
+        size: data.reduce((acc, curr: any) => acc + (curr.size || 0), 0),
+        approx: data.some(f => !f.size),
+    };
+};
+
 export const FileInfo = () => {
     const record = useRecordContext();
     const dataProvider = useDataProvider();
@@ -206,6 +217,7 @@ export const FileInfo = () => {
     const notify = useNotify();
     const translate = useTranslate();
     const [data, setData] = useState<any[]>();
+    const [stats, setStats] = useState<any>();
     const [activeFile, setActiveFile] = useState<any>();
     let isLoading = false;
 
@@ -233,6 +245,7 @@ export const FileInfo = () => {
             if (record.status?.files?.length > 0) {
                 if (isLoading) {
                     setData(convertFiles(record.status.files));
+                    setStats(getStats(record.status.files));
                 }
             } else {
                 dataProvider
@@ -241,6 +254,7 @@ export const FileInfo = () => {
                         if (isLoading) {
                             if (data?.info) {
                                 setData(convertFiles(data.info));
+                                setStats(getStats(data.info));
                             } else {
                                 notify('ra.message.not_found', {
                                     type: 'error',
@@ -276,16 +290,32 @@ export const FileInfo = () => {
             {isLoading ? (
                 <Spinner />
             ) : data ? (
-                <Grid container spacing={2} sx={{ width: '100%' }}>
-                    <Grid size="grow">
-                        <FileTree info={data} onItemClick={handleItemClick} />
-                    </Grid>
-                    {activeFile && (
+                <>
+                    <Typography>
+                        {translate('pages.filetab.count', {
+                            count: stats.count,
+                        })}
+                    </Typography>
+                    <Typography gutterBottom>
+                        {translate('pages.filetab.size', {
+                            size: scaleBytes(stats.size, 3),
+                            smart_count: stats.approx ? 2 : 1,
+                        })}
+                    </Typography>
+                    <Grid container spacing={2} sx={{ width: '100%' }}>
                         <Grid size="grow">
-                            <FileInfoTable info={activeFile} />
+                            <FileTree
+                                info={data}
+                                onItemClick={handleItemClick}
+                            />
                         </Grid>
-                    )}
-                </Grid>
+                        {activeFile && (
+                            <Grid size="grow">
+                                <FileInfoTable info={activeFile} />
+                            </Grid>
+                        )}
+                    </Grid>
+                </>
             ) : (
                 <NoContent message={'fields.info.empty'} />
             )}
@@ -511,9 +541,13 @@ const FileInfoTable = (props: any) => {
         fields: info.data,
     });
 
-    const valueFormatter = (value?: any) => {
+    const valueFormatter = (value?: any, row?) => {
         if (!value) {
             return '';
+        }
+        // if value is bytes, format
+        if (row && row.key == 'size') {
+            return scaleBytes(value, 10);
         }
         if (!isNaN(value)) {
             return value;
@@ -540,13 +574,19 @@ const FileInfoTable = (props: any) => {
         <>
             {!(info.children && info.children.length > 0) && (
                 <TopToolbar>
-                    {info.fileType && info.data.path && (
+                    {info.fileType && info.data.path ? (
                         <PreviewButton
                             sub={info.data.path}
                             fileType={info.fileType}
                         />
+                    ) : (
+                        <PreviewButton fileType={info.fileType} />
                     )}
-                    {info.data.path && <DownloadButton sub={info.data.path} />}
+                    {info.data.path ? (
+                        <DownloadButton sub={info.data.path} />
+                    ) : (
+                        <DownloadButton />
+                    )}
                 </TopToolbar>
             )}
             <div style={{ display: 'flex', flexDirection: 'column' }}>

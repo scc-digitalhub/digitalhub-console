@@ -38,6 +38,10 @@
             "title": "Workflows"
         }
     },
+    "filetab": {
+        "count": "Number of files: %{count}",
+        "size": "Size: %{size} |||| Approximate size: %{size}"
+    },
     "functions": {
         "show": {
             "subtitle": "%{kind} function",
