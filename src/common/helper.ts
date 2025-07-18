@@ -5,6 +5,8 @@
 import { isEmpty, regex } from 'react-admin';
 import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 import memoize from 'lodash/memoize';
+import { B } from '@wtfcode/byte-converter';
+import { round } from 'lodash';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
@@ -155,4 +157,9 @@ export const taskParser = (
     }
 
     return result;
+};
+
+export const scaleBytes = (bytes: number, precision: number = 1) => {
+    const unit = B.value(bytes).autoScale({ type: 'decimal' });
+    return `${round(unit.value, precision)} ${unit.unit.unit}`;
 };
