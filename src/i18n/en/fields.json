@@ -555,7 +555,7 @@
         "description": "Port number for incoming traffic to service",
         "title": "Port"
     },
-    "preview": "File Preview",
+    "preview": "Preview",
     "priorityClass": {
         "description": "Priority for pods deployed for task execution",
         "title": "Priority Class"

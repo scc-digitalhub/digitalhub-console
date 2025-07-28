@@ -111,5 +111,9 @@
         "create": {
             "successMessage": "Token creato correttamente. Copia e salva il token prima di chiudere il dialogo: successivamente il valore non sarà più accessibile"
         }
+    },
+    "files": {
+        "title": "Esplora file",
+        "helperText": "Esplora e gestisci i file del progetto"
     }
 }

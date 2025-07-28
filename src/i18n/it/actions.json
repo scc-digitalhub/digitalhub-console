@@ -16,5 +16,6 @@
     "resume": "Riprendi",
     "retry": "Riprova",
     "revoke": "Revoca",
-    "toggle_x": "Mostra/Nascondi %{el}"
+    "toggle_x": "Mostra/Nascondi %{el}",
+    "upload": "Carica"    
 }

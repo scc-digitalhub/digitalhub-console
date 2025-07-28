@@ -16,5 +16,6 @@
     "resume": "Resume",
     "retry": "Retry",
     "revoke": "Revoke",
-    "toggle_x": "Show/Hide %{el}"
+    "toggle_x": "Show/Hide %{el}",
+    "upload": "Upload"
 }

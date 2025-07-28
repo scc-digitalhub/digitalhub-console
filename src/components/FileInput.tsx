@@ -56,7 +56,7 @@ export type FileInputProps = Omit<CommonInputProps, 'defaultValue'> & {
 };
 
 const PREFIX = 'UppyUploader';
-const Uploader = styled(Stack, {
+export const Uploader = styled(Stack, {
     name: PREFIX,
 })(({ theme }) => ({
     width: '100%',

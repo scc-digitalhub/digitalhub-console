@@ -59,7 +59,7 @@ import {
 } from './resources/secrets';
 
 import { Dashboard } from './pages/dashboard/Dashboard';
-
+import { Browser } from './files/Browser';
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -309,6 +309,10 @@ const CoreApp = () => {
                                             <Route
                                                 path="/account"
                                                 element={<MyAccount />}
+                                            />
+                                            <Route
+                                                path="/files"
+                                                element={<Browser />}
                                             />
 
                                             {enableSearch && (

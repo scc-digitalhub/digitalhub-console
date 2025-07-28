@@ -111,5 +111,9 @@
         "create": {
             "successMessage": "Token created successfully. Copy and save the token before closing the dialog, the value won't be readable afterwards."
         }
+    },
+    "files": {
+        "title": "Files explorer",
+        "helperText": "Explore and manage project files"
     }
 }
