@@ -298,7 +298,7 @@ export const FileInfo = () => {
                     </Typography>
                     <Typography gutterBottom>
                         {translate('pages.filetab.size', {
-                            size: scaleBytes(stats.size, 3),
+                            size: scaleBytes(stats.size, 2),
                             smart_count: stats.approx ? 2 : 1,
                         })}
                     </Typography>
@@ -547,7 +547,7 @@ const FileInfoTable = (props: any) => {
         }
         // if value is bytes, format
         if (row && row.key == 'size') {
-            return scaleBytes(value, 10);
+            return scaleBytes(value, 2);
         }
         if (!isNaN(value)) {
             return value;
