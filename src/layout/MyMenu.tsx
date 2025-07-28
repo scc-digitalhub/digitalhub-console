@@ -13,6 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Box, Divider } from '@mui/material';
 import { LineageIcon } from '../pages/lineage/icon';
+import BrowserIcon from '../files/icon';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -35,6 +36,11 @@ export const MyMenu = () => {
                 <Menu.ResourceItem name="runs" />
                 <Menu.ResourceItem name="triggers" />
                 <Menu.ResourceItem name="secrets" />
+                <MenuItemLink
+                    leftIcon={<BrowserIcon />}
+                    to={`${basename}/files`}
+                    primaryText={'fields.files.title'}
+                />
                 <Divider />
                 <MenuItemLink
                     leftIcon={<SettingsIcon />}

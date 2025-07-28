@@ -28,6 +28,7 @@ export const k8sSpec = {
     'ui:order': [
         'profile',
         'template',
+        'service_name',
         'service_type',
         'service_ports',
         'resources',
@@ -35,8 +36,8 @@ export const k8sSpec = {
         'secrets',
         'volumes',
         'node_selector',
-        'priorityClass',
-        'runtimeClass',
+        'priority_class',
+        'runtime_class',
         'tolerations',
         'affinity',
     ],
@@ -178,6 +179,7 @@ export const k8sSpec = {
             'ui:label': false,
         },
     },
-    priorityClass: {},
-    runtimeClass: {},
+    service_name: {},
+    priority_class: {},
+    runtime_class: {},
 };

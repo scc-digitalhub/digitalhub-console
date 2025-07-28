@@ -555,7 +555,7 @@
         "description": "Numero di porta per il traffico in ingresso al servizio",
         "title": "Porta"
     },
-    "preview": "Anteprima File",
+    "preview": "Anteprima",
     "priorityClass": {
         "description": "Priorità dei pod impiegati per l'esecuzione di task",
         "title": "Classe di Priorità"
