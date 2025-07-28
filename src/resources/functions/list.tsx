@@ -9,6 +9,7 @@ import {
     Datagrid,
     DateField,
     EditButton,
+    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -19,6 +20,7 @@ import {
     useExpanded,
     useRecordContext,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
@@ -31,6 +33,7 @@ import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
+import { RunBadges } from '../../components/RunBadges';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -60,6 +63,7 @@ export const FunctionList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
+    const translate = useTranslate();
     const [kinds, setKinds] = useState<any[]>();
 
     useEffect(() => {
@@ -96,6 +100,7 @@ export const FunctionList = () => {
               />,
           ]
         : [];
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase
@@ -115,7 +120,11 @@ export const FunctionList = () => {
                         >
                             <Datagrid
                                 rowClick="show"
-                                expand={VersionsList}
+                                expand={
+                                    <VersionsList
+                                        leftIcon={() => <RunBadges />}
+                                    />
+                                }
                                 expandSingle={true}
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
@@ -140,6 +149,17 @@ export const FunctionList = () => {
                                     label="fields.labels.title"
                                     source="metadata.labels"
                                     sortable={false}
+                                />
+                                <FunctionField
+                                    label={translate('resources.runs.name', {
+                                        smart_count: 0,
+                                    })}
+                                    render={() => (
+                                        <RunBadges
+                                            filterById={false}
+                                            direction="row"
+                                        />
+                                    )}
                                 />
                                 <RowActions />
                             </Datagrid>
