@@ -641,6 +641,10 @@
     "service": {
         "title": "Servizio"
     },
+    "serviceName": {
+        "description": "Nome del servizio da esporre",
+        "title": "Nome del Servizio"
+    },
     "servicePorts": {
         "description": "Definisci la mappatura delle porte per il servizio",
         "item": {

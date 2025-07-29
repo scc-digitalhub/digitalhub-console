@@ -641,6 +641,10 @@
     "service": {
         "title": "Service"
     },
+    "serviceName": {
+        "description": "Name of the service exposed",
+        "title": "Service Name"
+    },
     "servicePorts": {
         "description": "Define ports mapping for the service",
         "item": {
