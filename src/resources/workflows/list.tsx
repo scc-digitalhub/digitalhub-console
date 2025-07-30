@@ -9,6 +9,7 @@ import {
     Datagrid,
     DateField,
     EditButton,
+    FunctionField,
     ListBase,
     ListView,
     SelectInput,
@@ -31,6 +32,7 @@ import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
+import { RunStateBadge } from '../../components/RunStateBadge';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -96,6 +98,7 @@ export const WorkflowList = () => {
               />,
           ]
         : [];
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase
@@ -115,7 +118,11 @@ export const WorkflowList = () => {
                         >
                             <Datagrid
                                 rowClick="show"
-                                expand={VersionsList}
+                                expand={
+                                    <VersionsList
+                                        leftIcon={() => <RunStateBadge />}
+                                    />
+                                }
                                 expandSingle={true}
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
@@ -140,6 +147,12 @@ export const WorkflowList = () => {
                                     label="fields.labels.title"
                                     source="metadata.labels"
                                     sortable={false}
+                                />
+                                <FunctionField
+                                    label={'fields.activeRuns'}
+                                    render={() => (
+                                        <RunStateBadge filterById={false} />
+                                    )}
                                 />
                                 <RowActions />
                             </Datagrid>

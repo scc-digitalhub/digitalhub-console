@@ -9,12 +9,15 @@ import {
     Theme,
     Typography,
     Tab as MuiTab,
+    useTheme,
+    alpha,
 } from '@mui/material';
 import {
     List,
     Pagination,
     ShowButton,
     SimpleList,
+    SimpleListProps,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -23,7 +26,7 @@ import {
 import { useMemo } from 'react';
 import { FlatCard } from './FlatCard';
 
-export type VersionListProps = {
+export type VersionListProps = VersionsListWrapperProps & {
     showActions?: boolean;
     usePagination?: boolean;
     perPage?: number;
@@ -36,10 +39,12 @@ export const VersionsList = (props: VersionListProps) => {
         showActions = true,
         usePagination = false,
         perPage = 10,
+        leftIcon,
         ...rest
     } = props;
     const record = useRecordContext(rest);
     const resource = useResourceContext();
+    const theme = useTheme();
     const filter = useMemo(() => {
         return { name: record?.name, versions: 'all' };
     }, [record]);
@@ -50,14 +55,14 @@ export const VersionsList = (props: VersionListProps) => {
 
     //TODO fetch latest and add label
 
-    const rowSx = (item, index) => {
+    const rowSx = item => {
         return record.id == item.id
             ? {
-                  //TODO pick style from theme rule
-                  backgroundColor: 'rgba(224, 112, 27, 0.08)',
+                  backgroundColor: alpha(theme.palette?.primary?.main, 0.08),
               }
             : {};
     };
+
     return (
         <List
             component={Box}
@@ -85,7 +90,11 @@ export const VersionsList = (props: VersionListProps) => {
                         ? new Date(item.metadata.updated).toLocaleString()
                         : item.id;
 
-                    return <Typography sx={{ color: 'primary' }}>{value}</Typography>;
+                    return (
+                        <Typography sx={{ color: 'primary' }}>
+                            {value}
+                        </Typography>
+                    );
                 }}
                 secondaryText={item => {
                     return item.metadata?.version &&
@@ -101,12 +110,20 @@ export const VersionsList = (props: VersionListProps) => {
                 rightIcon={item =>
                     showActions ? <ShowButton record={item} /> : undefined
                 }
+                leftIcon={leftIcon}
+                sx={{
+                    '& .MuiListItemIcon-root': {
+                        minWidth: 40,
+                    },
+                }}
             />
         </List>
     );
 };
 
-export const VersionsListWrapper = () => {
+export type VersionsListWrapperProps = Pick<SimpleListProps, 'leftIcon'>;
+
+export const VersionsListWrapper = (props: VersionsListWrapperProps) => {
     const translate = useTranslate();
 
     return (
@@ -121,7 +138,11 @@ export const VersionsListWrapper = () => {
                     padding: 0,
                 }}
             >
-                <VersionsList usePagination={true} showActions={false} />
+                <VersionsList
+                    usePagination={true}
+                    showActions={false}
+                    {...props}
+                />
             </CardContent>
         </FlatCard>
     );

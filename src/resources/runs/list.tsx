@@ -13,12 +13,13 @@ import {
     TextField,
     TextInput,
     TopToolbar,
+    useGetList,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Container } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
@@ -27,7 +28,7 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, taskParser } from '../../common/helper';
+import { taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
 const RowActions = () => {
@@ -45,6 +46,28 @@ export const RunList = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
+
+    const selectOption = useCallback(
+        d => ({
+            ...d,
+            data: d.data?.map(record => ({
+                name: record.name,
+                id: `${record.kind}://${record.project}/${record.name}`,
+            })),
+        }),
+        []
+    );
+
+    const { data: functions, isPending: isPendingF } = useGetList(
+        'functions',
+        { pagination: { page: 1, perPage: 100 } },
+        { select: selectOption }
+    );
+    const { data: workflows, isPending: isPendingW } = useGetList(
+        'workflows',
+        { pagination: { page: 1, perPage: 100 } },
+        { select: selectOption }
+    );
 
     useEffect(() => {
         if (schemaProvider) {
@@ -65,6 +88,7 @@ export const RunList = () => {
     for (const c in StateColors) {
         states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
     }
+
     const postFilters = kinds
         ? [
               <TextInput
@@ -99,6 +123,28 @@ export const RunList = () => {
                   }}
                   sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
               />,
+              <SelectInput
+                  alwaysOn
+                  key={4}
+                  label={translate('resources.functions.name', {
+                      smart_count: 1,
+                  })}
+                  source="function"
+                  choices={functions}
+                  isPending={isPendingF}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
+              <SelectInput
+                  alwaysOn
+                  key={5}
+                  label={translate('resources.workflows.name', {
+                      smart_count: 1,
+                  })}
+                  source="workflow"
+                  choices={workflows}
+                  isPending={isPendingW}
+                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+              />,
           ]
         : [];
 
@@ -127,7 +173,7 @@ export const RunList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField source="id" label="fields.id" />
+                                <TextField source="name" label="fields.name.title" />
                                 <DateField
                                     source="metadata.created"
                                     label="fields.created.title"
@@ -139,38 +185,6 @@ export const RunList = () => {
                                     label="fields.updated.title"
                                     showDate
                                     showTime
-                                />
-                                <FunctionField
-                                    source="spec.function"
-                                    label="fields.function.title"
-                                    sortable={false}
-                                    render={record => {
-                                        if (record?.spec?.function) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.function
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        if (record?.spec?.workflow) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.workflow
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        return <></>;
-                                    }}
                                 />
                                 <TextField source="kind" label="fields.kind" />
 
