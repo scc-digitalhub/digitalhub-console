@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material';
+import { Chip, SxProps, Theme } from '@mui/material';
 import { useMemo } from 'react';
 import {
     useCreatePath,
@@ -12,10 +12,17 @@ import { useNavigate } from 'react-router-dom';
 export type RunStateBadgeProps = {
     state?: string;
     filterById?: boolean;
+    sx?: SxProps<Theme>;
+    getListFilters?: any;
 };
 
 export const RunStateBadge = (props: RunStateBadgeProps) => {
-    const { state = 'RUNNING', filterById = true } = props;
+    const {
+        state = 'RUNNING',
+        filterById = true,
+        sx: sxProps = {},
+        getListFilters: additionalFilters = {},
+    } = props;
     const createPath = useCreatePath();
     const navigate = useNavigate();
     const resource = useResourceContext();
@@ -38,6 +45,7 @@ export const RunStateBadge = (props: RunStateBadgeProps) => {
         filter: {
             [singularResource || '']: resourceKey,
             state,
+            ...additionalFilters,
         },
     });
 
@@ -70,6 +78,7 @@ export const RunStateBadge = (props: RunStateBadgeProps) => {
                     paddingX: '6px',
                 },
                 height: '20px',
+                ...sxProps,
             }}
         />
     );

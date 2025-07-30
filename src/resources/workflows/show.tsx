@@ -226,7 +226,19 @@ const ShowComponent = () => {
 
             {tasks?.map(task => (
                 <TabbedShowLayout.Tab
-                    label={'resources.tasks.kinds.' + getKind(task.kind)}
+                    label={
+                        <Stack direction="row" sx={{ alignItems: 'center' }}>
+                            <RunStateBadge
+                                sx={{ marginRight: '9px' }}
+                                getListFilters={{
+                                    task: `${task.kind}://${task.project}/${task.id}`,
+                                }}
+                            />
+                            {translate(
+                                'resources.tasks.kinds.' + getKind(task.kind)
+                            )}
+                        </Stack>
+                    }
                     key={task.kind}
                     path={task.kind}
                 >
