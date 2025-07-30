@@ -655,7 +655,7 @@
         "title": "Service Ports"
     },
     "serviceType": {
-        "description": "Select the type used for service definition. Defaults to `NodePort`",
+        "description": "Select the type used for service definition",
         "title": "Service Type"
     },
     "sklearn": {

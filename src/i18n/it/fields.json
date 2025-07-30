@@ -655,7 +655,7 @@
         "title": "Porte del Servizio"
     },
     "serviceType": {
-        "description": "Seleziona il tipo da usare nella definizione del servizio. Il default è `NodePort`",
+        "description": "Seleziona il tipo da usare nella definizione del servizio",
         "title": "Tipo di Servizio"
     },
     "sklearn": {
