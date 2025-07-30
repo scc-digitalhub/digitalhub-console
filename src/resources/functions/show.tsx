@@ -32,7 +32,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { TaskAndRuns } from '../../components/TaskAndRuns';
-import { RunBadges } from '../../components/RunBadges';
+import { RunStateBadge } from '../../components/RunStateBadge';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -291,7 +291,7 @@ export const FunctionShow = () => {
                         component={FlatCard}
                         aside={
                             <VersionsListWrapper
-                                leftIcon={() => <RunBadges />}
+                                leftIcon={() => <RunStateBadge />}
                             />
                         }
                     >

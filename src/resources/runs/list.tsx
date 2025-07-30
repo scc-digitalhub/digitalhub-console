@@ -28,7 +28,7 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, taskParser } from '../../common/helper';
+import { taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 
 const RowActions = () => {
@@ -173,7 +173,7 @@ export const RunList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField source="id" label="fields.id" />
+                                <TextField source="name" label="fields.name.title" />
                                 <DateField
                                     source="metadata.created"
                                     label="fields.created.title"
@@ -185,38 +185,6 @@ export const RunList = () => {
                                     label="fields.updated.title"
                                     showDate
                                     showTime
-                                />
-                                <FunctionField
-                                    source="spec.function"
-                                    label="fields.function.title"
-                                    sortable={false}
-                                    render={record => {
-                                        if (record?.spec?.function) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.function
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        if (record?.spec?.workflow) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.workflow
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        return <></>;
-                                    }}
                                 />
                                 <TextField source="kind" label="fields.kind" />
 

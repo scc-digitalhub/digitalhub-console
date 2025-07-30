@@ -36,7 +36,7 @@ import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { TaskAndRuns } from '../../components/TaskAndRuns';
-import { RunBadges } from '../../components/RunBadges';
+import { RunStateBadge } from '../../components/RunStateBadge';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -310,7 +310,7 @@ export const WorkflowShow = () => {
                         component={FlatCard}
                         aside={
                             <VersionsListWrapper
-                                leftIcon={() => <RunBadges />}
+                                leftIcon={() => <RunStateBadge />}
                             />
                         }
                     >

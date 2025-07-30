@@ -20,7 +20,6 @@ import {
     useExpanded,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../components/FlatCard';
@@ -33,7 +32,7 @@ import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
-import { RunBadges } from '../../components/RunBadges';
+import { RunStateBadge } from '../../components/RunStateBadge';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -63,7 +62,6 @@ export const FunctionList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
-    const translate = useTranslate();
     const [kinds, setKinds] = useState<any[]>();
 
     useEffect(() => {
@@ -122,7 +120,7 @@ export const FunctionList = () => {
                                 rowClick="show"
                                 expand={
                                     <VersionsList
-                                        leftIcon={() => <RunBadges />}
+                                        leftIcon={() => <RunStateBadge />}
                                     />
                                 }
                                 expandSingle={true}
@@ -151,14 +149,9 @@ export const FunctionList = () => {
                                     sortable={false}
                                 />
                                 <FunctionField
-                                    label={translate('resources.runs.name', {
-                                        smart_count: 0,
-                                    })}
+                                    label={'fields.activeRuns'}
                                     render={() => (
-                                        <RunBadges
-                                            filterById={false}
-                                            direction="row"
-                                        />
+                                        <RunStateBadge filterById={false} />
                                     )}
                                 />
                                 <RowActions />
