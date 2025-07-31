@@ -4,7 +4,6 @@
 
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
@@ -24,7 +23,6 @@ import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
@@ -60,24 +58,7 @@ const RowActions = () => {
 export const FunctionList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
     const getFilters = useGetFilters();
-    const [kinds, setKinds] = useState<any[]>();
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('functions').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider, setKinds]);
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -91,7 +72,7 @@ export const FunctionList = () => {
                     <ListToolbar />
                     <FlatCard>
                         <ListView
-                            filters={kinds ? getFilters(kinds) : undefined}
+                            filters={getFilters()}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

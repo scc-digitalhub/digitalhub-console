@@ -13,16 +13,14 @@ import {
     TopToolbar,
     useGetList,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { Box, Container } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { StateChips, StateColors } from '../../components/StateChips';
+import { StateChips } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -40,12 +38,9 @@ const RowActions = () => {
 };
 
 export const RunList = () => {
-    const translate = useTranslate();
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
     const getFilters = useGetFilters();
-    const [kinds, setKinds] = useState<any[]>();
 
     const selectOption = useCallback(
         d => ({
@@ -69,26 +64,6 @@ export const RunList = () => {
         { select: selectOption }
     );
 
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('runs').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider]);
-
-    const states: any[] = [];
-    for (const c in StateColors) {
-        states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
-    }
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBaseLive
@@ -104,13 +79,8 @@ export const RunList = () => {
                     <FlatCard>
                         <ListView
                             filters={
-                                kinds && functions && workflows
-                                    ? getFilters(
-                                          kinds,
-                                          states,
-                                          functions,
-                                          workflows
-                                      )
+                                functions && workflows
+                                    ? getFilters(functions, workflows)
                                     : undefined
                             }
                             actions={false}

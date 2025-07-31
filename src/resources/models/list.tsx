@@ -4,7 +4,6 @@
 
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
@@ -22,7 +21,6 @@ import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
@@ -59,32 +57,7 @@ const RowActions = () => {
 export const ModelList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
     const getFilters = useGetFilters();
-    const [kinds, setKinds] = useState<any[]>();
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('models').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider]);
-
-    const states: any[] = [];
-    for (const c of ['CREATED', 'UPLOADING', 'ERROR', 'READY']) {
-        states.push({
-            id: c,
-            name: 'states.' + c.toLowerCase(),
-        });
-    }
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -100,9 +73,7 @@ export const ModelList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={
-                                kinds ? getFilters(kinds, states) : undefined
-                            }
+                            filters={getFilters()}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

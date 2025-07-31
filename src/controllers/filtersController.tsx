@@ -1,23 +1,70 @@
-import { SelectInput, TextInput, useTranslate } from 'react-admin';
-import { StateChips } from '../components/StateChips';
-import { ReactElement } from 'react';
+import {
+    SelectInput,
+    TextInput,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
+import { StateChips, StateColors } from '../components/StateChips';
+import { ReactElement, useEffect, useState } from 'react';
+import { useSchemaProvider } from '../provider/schemaProvider';
+
+const stateFilterValues = {
+    artifacts: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
+    dataitems: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
+    models: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
+    runs: Object.keys(StateColors),
+    triggers: Object.keys(StateColors),
+};
+
+const getChoices = (resource: string) => {
+    const states: any[] = [];
+
+    for (const c of stateFilterValues[resource]) {
+        states.push({
+            id: c,
+            name: 'states.' + c.toLowerCase(),
+        });
+    }
+
+    return states;
+};
 
 export type GetFiltersFunction = (
-    kinds?: any[],
-    states?: any[],
     functions?: any[],
     workflows?: any[]
-) => ReactElement[];
+) => ReactElement[] | undefined;
 
 export const useGetFilters = (): GetFiltersFunction => {
     const translate = useTranslate();
+    const resource = useResourceContext();
+    const schemaProvider = useSchemaProvider();
+    const [kinds, setKinds] = useState<any[]>();
 
-    const getFilters: GetFiltersFunction = (
-        kinds,
-        states,
-        functions,
-        workflows
-    ) => {
+    useEffect(() => {
+        if (schemaProvider && resource) {
+            schemaProvider.kinds(resource).then(res => {
+                if (res) {
+                    const values = res.map(s => ({
+                        id: s,
+                        name: s,
+                    }));
+
+                    setKinds(values);
+                }
+            });
+        }
+    }, [resource, schemaProvider, setKinds]);
+
+    const selectProps = {
+        alwaysOn: true,
+        sx: { '& .RaSelectInput-input': { margin: '0px' } },
+    };
+
+    const getFilters: GetFiltersFunction = (functions, workflows) => {
+        if (!kinds || !resource) {
+            return undefined;
+        }
+
         let filters = [
             <TextInput
                 label="fields.name.title"
@@ -26,29 +73,22 @@ export const useGetFilters = (): GetFiltersFunction => {
                 resettable
                 key={1}
             />,
+            <SelectInput
+                key={2}
+                label="fields.kind"
+                source="kind"
+                choices={kinds}
+                {...selectProps}
+            />,
         ];
 
-        if (kinds) {
+        if (Object.keys(stateFilterValues).includes(resource)) {
             filters.push(
                 <SelectInput
-                    alwaysOn
-                    key={2}
-                    label="fields.kind"
-                    source="kind"
-                    choices={kinds}
-                    sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-                />
-            );
-        }
-
-        if (states) {
-            filters.push(
-                <SelectInput
-                    alwaysOn
                     key={3}
                     label="fields.status.state"
                     source="state"
-                    choices={states}
+                    choices={getChoices(resource)}
                     optionText={(choice: any) => {
                         return (
                             <StateChips
@@ -58,7 +98,7 @@ export const useGetFilters = (): GetFiltersFunction => {
                             />
                         );
                     }}
-                    sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+                    {...selectProps}
                 />
             );
         }
@@ -66,14 +106,13 @@ export const useGetFilters = (): GetFiltersFunction => {
         if (functions) {
             filters.push(
                 <SelectInput
-                    alwaysOn
                     key={4}
                     label={translate('resources.functions.name', {
                         smart_count: 1,
                     })}
                     source="function"
                     choices={functions}
-                    sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+                    {...selectProps}
                 />
             );
         }
@@ -81,14 +120,13 @@ export const useGetFilters = (): GetFiltersFunction => {
         if (workflows) {
             filters.push(
                 <SelectInput
-                    alwaysOn
                     key={5}
                     label={translate('resources.workflows.name', {
                         smart_count: 1,
                     })}
                     source="workflow"
                     choices={workflows}
-                    sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
+                    {...selectProps}
                 />
             );
         }
