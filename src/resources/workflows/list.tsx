@@ -4,7 +4,6 @@
 
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
@@ -12,10 +11,8 @@ import {
     FunctionField,
     ListBase,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     useDatagridContext,
     useExpanded,
     useRecordContext,
@@ -26,13 +23,13 @@ import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { RunStateBadge } from '../../components/RunStateBadge';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -61,43 +58,7 @@ const RowActions = () => {
 export const WorkflowList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('workflows').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider, setKinds]);
-
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
+    const getFilters = useGetFilters();
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -111,7 +72,7 @@ export const WorkflowList = () => {
                     <ListToolbar />
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={getFilters()}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

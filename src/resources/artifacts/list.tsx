@@ -4,16 +4,13 @@
 
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
     Datagrid,
     DateField,
     EditButton,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     useDatagridContext,
     useExpanded,
     useRecordContext,
@@ -24,7 +21,6 @@ import { FlatCard } from '../../components/FlatCard';
 import { ListPageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { VersionsList } from '../../components/VersionsList';
-import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { ChipsField } from '../../components/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
@@ -32,6 +28,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { StateChips } from '../../components/StateChips';
 import { ListBaseLive } from '../../components/ListBaseLive';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -60,68 +57,7 @@ const RowActions = () => {
 export const ArtifactList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const schemaProvider = useSchemaProvider();
-    const [kinds, setKinds] = useState<any[]>();
-
-    useEffect(() => {
-        if (schemaProvider) {
-            schemaProvider.kinds('artifacts').then(res => {
-                if (res) {
-                    const values = res.map(s => ({
-                        id: s,
-                        name: s,
-                    }));
-
-                    setKinds(values);
-                }
-            });
-        }
-    }, [schemaProvider]);
-
-    const states: any[] = [];
-    for (const c of ['CREATED', 'UPLOADING', 'ERROR', 'READY']) {
-        states.push({
-            id: c,
-            name: 'states.' + c.toLowerCase(),
-        });
-    }
-
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={3}
-                  label="fields.status.state"
-                  source="state"
-                  choices={states}
-                  optionText={(choice: any) => {
-                      return (
-                          <StateChips
-                              record={choice}
-                              source="id"
-                              label="name"
-                          />
-                      );
-                  }}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
+    const getFilters = useGetFilters();
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -137,7 +73,7 @@ export const ArtifactList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={getFilters()}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}
