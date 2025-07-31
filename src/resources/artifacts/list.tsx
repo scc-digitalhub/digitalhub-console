@@ -10,10 +10,8 @@ import {
     DateField,
     EditButton,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     useDatagridContext,
     useExpanded,
     useRecordContext,
@@ -32,6 +30,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { StateChips } from '../../components/StateChips';
 import { ListBaseLive } from '../../components/ListBaseLive';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -61,6 +60,7 @@ export const ArtifactList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
+    const getFilters = useGetFilters();
     const [kinds, setKinds] = useState<any[]>();
 
     useEffect(() => {
@@ -86,43 +86,6 @@ export const ArtifactList = () => {
         });
     }
 
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={3}
-                  label="fields.status.state"
-                  source="state"
-                  choices={states}
-                  optionText={(choice: any) => {
-                      return (
-                          <StateChips
-                              record={choice}
-                              source="id"
-                              label="name"
-                          />
-                      );
-                  }}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBaseLive
@@ -137,7 +100,9 @@ export const ArtifactList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={
+                                kinds ? getFilters(kinds, states) : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

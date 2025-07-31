@@ -8,10 +8,8 @@ import {
     DeleteWithConfirmButton,
     FunctionField,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     TopToolbar,
     useGetList,
     useResourceContext,
@@ -30,6 +28,7 @@ import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDelete
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     return (
@@ -45,6 +44,7 @@ export const RunList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
+    const getFilters = useGetFilters();
     const [kinds, setKinds] = useState<any[]>();
 
     const selectOption = useCallback(
@@ -58,12 +58,12 @@ export const RunList = () => {
         []
     );
 
-    const { data: functions, isPending: isPendingF } = useGetList(
+    const { data: functions } = useGetList(
         'functions',
         { pagination: { page: 1, perPage: 100 } },
         { select: selectOption }
     );
-    const { data: workflows, isPending: isPendingW } = useGetList(
+    const { data: workflows } = useGetList(
         'workflows',
         { pagination: { page: 1, perPage: 100 } },
         { select: selectOption }
@@ -89,65 +89,6 @@ export const RunList = () => {
         states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
     }
 
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={3}
-                  label="fields.status.state"
-                  source="state"
-                  choices={states}
-                  optionText={(choice: any) => {
-                      return (
-                          <StateChips
-                              record={choice}
-                              source="id"
-                              label="name"
-                          />
-                      );
-                  }}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={4}
-                  label={translate('resources.functions.name', {
-                      smart_count: 1,
-                  })}
-                  source="function"
-                  choices={functions}
-                  isPending={isPendingF}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={5}
-                  label={translate('resources.workflows.name', {
-                      smart_count: 1,
-                  })}
-                  source="workflow"
-                  choices={workflows}
-                  isPending={isPendingW}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBaseLive
@@ -162,7 +103,16 @@ export const RunList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={
+                                kinds && functions && workflows
+                                    ? getFilters(
+                                          kinds,
+                                          states,
+                                          functions,
+                                          workflows
+                                      )
+                                    : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}
@@ -173,7 +123,10 @@ export const RunList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField source="name" label="fields.name.title" />
+                                <TextField
+                                    source="name"
+                                    label="fields.name.title"
+                                />
                                 <DateField
                                     source="metadata.created"
                                     label="fields.created.title"

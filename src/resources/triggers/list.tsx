@@ -8,10 +8,8 @@ import {
     DeleteWithConfirmButton,
     FunctionField,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     TopToolbar,
     useResourceContext,
     useTranslate,
@@ -29,6 +27,7 @@ import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDelete
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     return (
@@ -44,6 +43,7 @@ export const TriggerList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
+    const getFilters = useGetFilters();
     const [kinds, setKinds] = useState<any[]>();
 
     useEffect(() => {
@@ -65,42 +65,6 @@ export const TriggerList = () => {
     for (const c in StateColors) {
         states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
     }
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={3}
-                  label="fields.status.state"
-                  source="state"
-                  choices={states}
-                  optionText={(choice: any) => {
-                      return (
-                          <StateChips
-                              record={choice}
-                              source="id"
-                              label="name"
-                          />
-                      );
-                  }}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -116,7 +80,9 @@ export const TriggerList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={
+                                kinds ? getFilters(kinds, states) : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}
@@ -127,7 +93,10 @@ export const TriggerList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField source="name" label="fields.name.title" />
+                                <TextField
+                                    source="name"
+                                    label="fields.name.title"
+                                />
                                 <DateField
                                     source="metadata.created"
                                     label="fields.created.title"

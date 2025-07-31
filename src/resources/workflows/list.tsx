@@ -12,10 +12,8 @@ import {
     FunctionField,
     ListBase,
     ListView,
-    SelectInput,
     ShowButton,
     TextField,
-    TextInput,
     useDatagridContext,
     useExpanded,
     useRecordContext,
@@ -33,6 +31,7 @@ import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDelete
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { RunStateBadge } from '../../components/RunStateBadge';
+import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
     const resource = useResourceContext();
@@ -62,6 +61,7 @@ export const WorkflowList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
+    const getFilters = useGetFilters();
     const [kinds, setKinds] = useState<any[]>();
 
     useEffect(() => {
@@ -79,26 +79,6 @@ export const WorkflowList = () => {
         }
     }, [schemaProvider, setKinds]);
 
-    const postFilters = kinds
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="q"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.kind"
-                  source="kind"
-                  choices={kinds}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBase
@@ -111,7 +91,7 @@ export const WorkflowList = () => {
                     <ListToolbar />
                     <FlatCard>
                         <ListView
-                            filters={postFilters}
+                            filters={kinds ? getFilters(kinds) : undefined}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}
