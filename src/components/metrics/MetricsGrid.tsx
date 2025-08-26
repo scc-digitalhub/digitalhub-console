@@ -18,7 +18,6 @@ import {
     useDataProvider,
     useNotify,
     useResourceContext,
-    useStore,
     useTranslate,
     useUnselectAll,
 } from 'react-admin';
@@ -55,17 +54,16 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
     const [open, setOpen] = useState(false);
-    const [compareWith, setCompareWith] = useStore<any[]>(
-        `${resource}.${record?.id}.metrics`,
-        []
-    );
+    const [compareWith, setCompareWith] = useState<any[]>([]);
     let isLoading1 = false;
     let isLoading2 = false;
 
     /**
      * Initialize metrics map with metrics of the current record
+     * and reset comparison
      */
     useEffect(() => {
+        setCompareWith([]);
         setMetricsMap(prev => {
             let value = {};
             if (record.id in prev) {
@@ -167,15 +165,6 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             return () => {
                 isLoading2 = false;
             };
-        } else {
-            //compareWith has been emptied, reset metricsMap
-            setMetricsMap(prev => {
-                let prevsToKeep = {};
-                if (prev[record.id]) {
-                    prevsToKeep[record.id] = prev[record.id];
-                }
-                return prevsToKeep;
-            });
         }
     }, [compareWith]);
 
