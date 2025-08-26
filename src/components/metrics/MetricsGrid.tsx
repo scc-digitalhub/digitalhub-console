@@ -24,21 +24,21 @@ import {
 } from 'react-admin';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Spinner } from './Spinner';
+import { Spinner } from '../Spinner';
 import { MetricCard } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
 import {
     MetricsComparisonSelector,
     SelectorProps,
 } from './MetricsComparisonSelector';
-import { NoContent } from './NoContent';
+import { NoContent } from '../NoContent';
 import {
     chartPalette,
     formatLabel,
     formatLabels,
     mergeData,
     Series,
-} from './charts';
+} from '../charts';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;

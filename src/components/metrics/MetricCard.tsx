@@ -14,13 +14,13 @@ import {
     styled,
 } from '@mui/material';
 import { useTranslate } from 'react-admin';
-import { SingleValue } from './charts/SingleValue';
+import { SingleValue } from '../charts/SingleValue';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
-import { ComparisonTable } from './charts/ComparisonTable';
+import { ComparisonTable } from '../charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-import { AccuracyChart } from './charts/AccuracyChart';
-import { Metric } from './charts';
+import { AccuracyChart } from '../charts/AccuracyChart';
+import { Metric } from '../charts';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();

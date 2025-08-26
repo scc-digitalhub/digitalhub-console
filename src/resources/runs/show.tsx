@@ -42,7 +42,7 @@ import { functionParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { MetricsGrid } from '../../components/MetricsGrid';
+import { MetricsGrid } from '../../components/metrics/MetricsGrid';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
 import { EventsList } from './tabs/events';
