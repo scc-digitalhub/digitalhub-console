@@ -19,7 +19,7 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-import { MetricsLineChart } from './charts/MetricsLineChart';
+import { LineChart } from './charts/LineChart';
 import { Metric } from './utils';
 
 const getChartByMetric = (metric: string, props: any) => {
@@ -27,7 +27,7 @@ const getChartByMetric = (metric: string, props: any) => {
     // if (chartMap[lowerCaseMetric])
     //     return React.createElement(chartMap[lowerCaseMetric], props);
     // return <MetricNotSupported />;
-    return <MetricsLineChart {...props} />;
+    return <LineChart {...props} />;
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {

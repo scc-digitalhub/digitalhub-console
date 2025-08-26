@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { MetricsLineChart } from './MetricsLineChart';
+import { LineChart } from './LineChart';
 
 export const chartMap = {
-    accuracy: MetricsLineChart,
-    loss: MetricsLineChart,
+    accuracy: LineChart,
+    loss: LineChart,
 };

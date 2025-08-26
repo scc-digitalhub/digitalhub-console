@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { LineChart, LineChartProps } from '@mui/x-charts';
+import { LineChart as MuiLineChart, LineChartProps } from '@mui/x-charts';
 import { chartPalette, Series, valueFormatter } from '../utils';
 
-export const MetricsLineChart = (props: AccuracyChartProps) => {
+export const LineChart = (props: AccuracyChartProps) => {
     const {
         series,
         slotProps,
@@ -18,14 +18,15 @@ export const MetricsLineChart = (props: AccuracyChartProps) => {
         ...rest
     } = props;
 
-    const arraySeries = series.map(s =>
+    //do not display series with no data
+    const arraySeries = series.filter(s => s.data !== null).map(s =>
         !Array.isArray(s.data)
             ? { ...s, data: [s.data], valueFormatter }
             : { ...s, valueFormatter }
     );
 
     return (
-        <LineChart
+        <MuiLineChart
             series={arraySeries}
             hideLegend
             slotProps={slotProps}
