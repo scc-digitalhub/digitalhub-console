@@ -14,20 +14,20 @@ import {
     styled,
 } from '@mui/material';
 import { useTranslate } from 'react-admin';
-import { SingleValue } from '../charts/SingleValue';
+import { SingleValue } from './charts/SingleValue';
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
-import { ComparisonTable } from '../charts/ComparisonTable';
+import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-import { AccuracyChart } from '../charts/AccuracyChart';
-import { Metric } from '../charts';
+import { MetricsLineChart } from './charts/MetricsLineChart';
+import { Metric } from './utils';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();
     // if (chartMap[lowerCaseMetric])
     //     return React.createElement(chartMap[lowerCaseMetric], props);
     // return <MetricNotSupported />;
-    return <AccuracyChart {...props} />;
+    return <MetricsLineChart {...props} />;
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {

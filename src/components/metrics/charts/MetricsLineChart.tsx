@@ -3,14 +3,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { LineChart, LineChartProps } from '@mui/x-charts';
-import { Series } from './utils';
+import { chartPalette, Series, valueFormatter } from '../utils';
 
-export const LossChart = (props: LossChartProps) => {
+export const MetricsLineChart = (props: AccuracyChartProps) => {
     const {
         series,
         slotProps,
         margin = {
-            left: 56,
+            left: 48,
             right: 8,
             top: 8,
             bottom: 24,
@@ -19,7 +19,9 @@ export const LossChart = (props: LossChartProps) => {
     } = props;
 
     const arraySeries = series.map(s =>
-        typeof s.data === 'number' ? { ...s, data: [s.data] } : s
+        !Array.isArray(s.data)
+            ? { ...s, data: [s.data], valueFormatter }
+            : { ...s, valueFormatter }
     );
 
     return (
@@ -28,11 +30,12 @@ export const LossChart = (props: LossChartProps) => {
             hideLegend
             slotProps={slotProps}
             margin={margin}
+            colors={chartPalette}
             {...rest}
         />
     );
 };
 
-export type LossChartProps = Omit<LineChartProps, 'series'> & {
+export type AccuracyChartProps = Omit<LineChartProps, 'series'> & {
     series: Series[];
 };

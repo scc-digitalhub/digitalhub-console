@@ -37,7 +37,7 @@ import {
     formatLabels,
     mergeData,
     Series,
-} from '../charts';
+} from './utils';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;

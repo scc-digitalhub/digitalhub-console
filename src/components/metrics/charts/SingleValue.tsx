@@ -4,7 +4,7 @@
 
 import { Box, alpha, useTheme } from '@mui/material';
 import { CounterBadge } from '../CounterBadge';
-import { Series, valueFormatter } from './utils';
+import { Series, valueFormatter } from '../utils';
 
 export const SingleValue = (props: { values: Series }) => {
     const { values } = props;
