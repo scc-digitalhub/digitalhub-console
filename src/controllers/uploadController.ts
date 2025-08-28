@@ -80,14 +80,6 @@ export const useUploadController = (
 
     const uppyConfig = {
         onBeforeFileAdded: (currentFile, files) => {
-            //block files over max
-            if (currentFile.size > 1000 * MiB) {
-                notify(translate('messages.upload.file_too_big'), {
-                    type: 'error',
-                });
-                return false;
-            }
-
             //disallow all remote
             if (currentFile.isRemote) {
                 notify(translate('messages.upload.remote_files_unsupported'), {

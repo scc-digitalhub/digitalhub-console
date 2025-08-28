@@ -11,9 +11,11 @@ import {
     Typography,
 } from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
+import { ErrorBoundary } from 'react-error-boundary';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
     Confirm,
+    Error,
     IconButtonWithTooltip,
     useCreatePath,
     useTranslate,
@@ -213,13 +215,13 @@ export const UploadArea = () => {
                 {uploads?.length > 0 &&
                     uploads.map((upl, index) => (
                         <MenuItem key={'upl-' + index}>
-                            {/* <ErrorBoundary FallbackComponent={Error}> */}
-                            <UploadProgress
-                                upload={upl}
-                                removeUploads={removeUploads}
-                                onShow={handleShow}
-                            />
-                            {/* </ErrorBoundary> */}
+                            <ErrorBoundary FallbackComponent={Error}>
+                                <UploadProgress
+                                    upload={upl}
+                                    removeUploads={removeUploads}
+                                    onShow={handleShow}
+                                />
+                            </ErrorBoundary>
                         </MenuItem>
                     ))}
             </Menu>
