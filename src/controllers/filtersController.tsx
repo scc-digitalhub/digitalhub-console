@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {
     SelectInput,
     TextInput,
@@ -8,10 +12,12 @@ import { StateChips, StateColors } from '../components/StateChips';
 import { ReactElement, useEffect, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
 
+const fileRelatedStates = ['CREATED', 'UPLOADING', 'ERROR', 'READY'];
+
 const stateFilterValues = {
-    artifacts: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
-    dataitems: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
-    models: ['CREATED', 'UPLOADING', 'ERROR', 'READY'],
+    artifacts: fileRelatedStates,
+    dataitems: fileRelatedStates,
+    models: fileRelatedStates,
     runs: Object.keys(StateColors),
     triggers: Object.keys(StateColors),
 };

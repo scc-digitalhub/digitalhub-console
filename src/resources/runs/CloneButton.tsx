@@ -15,8 +15,8 @@ export const CloneButton = () => {
             ? 'function'
             : 'workflow'
         : '';
-    const fn = run?.spec?.[runOf] || '';
-    const url = new URL(fn);
+    const fn = run?.spec?.[runOf];
+    const url = fn ? new URL(fn) : { protocol: null };
     const runtime = url.protocol
         ? url.protocol.substring(0, url.protocol.length - 1)
         : '';
@@ -27,18 +27,20 @@ export const CloneButton = () => {
         { resource: 'runs', runtime },
     ]);
 
+    if (run === undefined) return null;
+
     //filter run and task schema
-    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    let runSchema = schemas ? schemas.find(s => s?.entity === 'RUN') : null;
     const taskSchema = schemas
-        ? schemas.find(s => s.entity === 'TASK' && s.kind === task.kind)
+        ? schemas.find(s => s?.entity === 'TASK' && s?.kind === task.kind)
         : null;
 
     if (runSchema && schemas) {
         //filter out embedded props from spec
         schemas
-            .filter(s => s.entity != 'RUN')
+            .filter(s => s?.entity != 'RUN')
             .forEach(s => {
-                runSchema.schema = filterProps(runSchema.schema, s.schema);
+                runSchema.schema = filterProps(runSchema?.schema, s?.schema);
             });
     }
 

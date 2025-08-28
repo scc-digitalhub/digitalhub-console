@@ -44,4 +44,5 @@ export enum StateColors {
     STOP = 'warning',
     STOPPED = 'warning',
     UPLOADING = 'info',
+    CREATED = 'default',
 }
