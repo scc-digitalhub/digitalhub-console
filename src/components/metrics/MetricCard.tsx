@@ -19,15 +19,15 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import CloseIcon from '@mui/icons-material/Close';
 import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
-import { AccuracyChart } from './charts/AccuracyChart';
-import { Metric } from './charts';
+import { LineChart } from './charts/LineChart';
+import { Metric } from './utils';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();
     // if (chartMap[lowerCaseMetric])
     //     return React.createElement(chartMap[lowerCaseMetric], props);
     // return <MetricNotSupported />;
-    return <AccuracyChart {...props} />;
+    return <LineChart {...props} />;
 };
 
 export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
@@ -35,7 +35,10 @@ export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
     const useChart = metric.series.some(s => Array.isArray(s.data));
 
     const chart = useChart ? (
-        getChartByMetric(metric.name, { series: metric.series })
+        getChartByMetric(metric.name, {
+            series: metric.series,
+            reverseSeries: true,
+        })
     ) : comparison ? (
         <ComparisonTable values={metric.series} />
     ) : (

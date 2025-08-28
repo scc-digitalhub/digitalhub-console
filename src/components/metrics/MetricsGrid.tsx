@@ -18,27 +18,26 @@ import {
     useDataProvider,
     useNotify,
     useResourceContext,
-    useStore,
     useTranslate,
     useUnselectAll,
 } from 'react-admin';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Spinner } from './Spinner';
+import { Spinner } from '../Spinner';
 import { MetricCard } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
 import {
     MetricsComparisonSelector,
     SelectorProps,
 } from './MetricsComparisonSelector';
-import { NoContent } from './NoContent';
+import { NoContent } from '../NoContent';
 import {
     chartPalette,
     formatLabel,
     formatLabels,
     mergeData,
     Series,
-} from './charts';
+} from './utils';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;
@@ -55,17 +54,16 @@ export const MetricsGrid = (props: MetricsGridProps) => {
     const { root } = useRootSelector();
     const [metricsMap, setMetricsMap] = useState<any>({});
     const [open, setOpen] = useState(false);
-    const [compareWith, setCompareWith] = useStore<any[]>(
-        `${resource}.${record?.id}.metrics`,
-        []
-    );
+    const [compareWith, setCompareWith] = useState<any[]>([]);
     let isLoading1 = false;
     let isLoading2 = false;
 
     /**
      * Initialize metrics map with metrics of the current record
+     * and reset comparison
      */
     useEffect(() => {
+        setCompareWith([]);
         setMetricsMap(prev => {
             let value = {};
             if (record.id in prev) {
@@ -167,15 +165,6 @@ export const MetricsGrid = (props: MetricsGridProps) => {
             return () => {
                 isLoading2 = false;
             };
-        } else {
-            //compareWith has been emptied, reset metricsMap
-            setMetricsMap(prev => {
-                let prevsToKeep = {};
-                if (prev[record.id]) {
-                    prevsToKeep[record.id] = prev[record.id];
-                }
-                return prevsToKeep;
-            });
         }
     }, [compareWith]);
 
@@ -330,8 +319,8 @@ const sortRecordFirst = (arr: Series[], recordId: string): any[] => {
     const rest = arr
         .filter(s => s.label != recordId)
         .toSorted((a, b) => {
-            if (a.label == recordId || a.label < b.label) return -1;
-            if (b.label == recordId || a.label > b.label) return 1;
+            if (a.label < b.label) return -1;
+            if (a.label > b.label) return 1;
             return 0;
         });
     return [...sorted, ...rest];

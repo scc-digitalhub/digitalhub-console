@@ -6,7 +6,7 @@ import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { alpha } from '@mui/material';
 import { useLocaleState, useTranslate } from 'react-admin';
-import { Series, valueFormatter } from './utils';
+import { Series, valueFormatter } from '../utils';
 
 export const ComparisonTable = (props: { values: Series[] }) => {
     const { values } = props;

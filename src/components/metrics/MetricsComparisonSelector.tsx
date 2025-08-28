@@ -120,6 +120,7 @@ export const MetricsComparisonSelector = (
             disableSyncWithLocation: true,
             storeKey: false,
             filter: filter,
+            sort: { field: 'created', order: 'DESC' },
         }
     );
 

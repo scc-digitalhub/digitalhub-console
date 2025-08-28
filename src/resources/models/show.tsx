@@ -27,7 +27,7 @@ import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { MetricsGrid } from '../../components/MetricsGrid';
+import { MetricsGrid } from '../../components/metrics/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
