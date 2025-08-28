@@ -319,8 +319,8 @@ const sortRecordFirst = (arr: Series[], recordId: string): any[] => {
     const rest = arr
         .filter(s => s.label != recordId)
         .toSorted((a, b) => {
-            if (a.label == recordId || a.label < b.label) return -1;
-            if (b.label == recordId || a.label > b.label) return 1;
+            if (a.label < b.label) return -1;
+            if (a.label > b.label) return 1;
             return 0;
         });
     return [...sorted, ...rest];

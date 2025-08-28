@@ -35,7 +35,10 @@ export const MetricCard = (props: { metric: Metric; comparison: boolean }) => {
     const useChart = metric.series.some(s => Array.isArray(s.data));
 
     const chart = useChart ? (
-        getChartByMetric(metric.name, { series: metric.series })
+        getChartByMetric(metric.name, {
+            series: metric.series,
+            reverseSeries: true,
+        })
     ) : comparison ? (
         <ComparisonTable values={metric.series} />
     ) : (
