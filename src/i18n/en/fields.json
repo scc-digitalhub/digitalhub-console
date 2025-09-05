@@ -496,6 +496,10 @@
         "scaling": {
             "description": "Scaling configuration",
             "title": "Scaling Configuration"
+        },
+        "processors": {
+            "description": "",
+            "title": "Number of processors"
         }
     },
     "modelserve": {
@@ -819,5 +823,77 @@
     },
     "openai":{
         "title": "OpenAI"
+    },
+    "flowerSourceCode": {
+        "source": {
+            "title": "Flower App Source Code Reference",
+            "description": ""
+        },
+        "clientapp": {
+            "title": "Client App object reference",
+            "description": ""
+        },
+        "serverapp": {
+            "title": "Server App object reference",
+            "description": ""
+        },
+        "clientbase64": {
+            "title": "Client Source Code",
+            "description": "Client Source Code"
+        },
+        "serverbase64": {
+            "title": "Server Source Code",
+            "description": "Server Source Code"
+        }
+    },
+    "flower": {
+        "sourceCode": {
+            "title": "Flower App Source Code",
+            "description": ""
+        },
+        "image" : {
+            "title": "Container image to use",
+            "description": ""
+        },
+        "baseImage": {
+            "title": "Base container image to use for build task",
+            "description": ""
+        },
+        "requirements": {
+            "title": "Python dependencies",
+            "description": ""
+        },
+        "federation": {
+            "title": "Name of the federation",
+            "description": ""
+        },
+        "superlink": {
+            "title": "Superlink endpoint",
+            "description": ""
+        },
+        "root_certificates": {
+            "title": "Root TLS certificate",
+            "description": ""
+        },
+        "nodeconfig": {
+            "title": "Client node configuration parameters",
+            "description": ""
+        },
+        "private_key_secret": {
+            "title": "Private key for client node authentication",
+            "description": ""
+        },
+        "public_key_secret": {
+            "title": "Public key for client node authentication",
+            "description": ""
+        },
+        "isolation": {
+            "title": "Client node isolation mode",
+            "description": ""
+        },
+        "auth_public_keys": {
+            "title": "List of public keys for client node authentication",
+            "description": ""
+        }
     }
 }

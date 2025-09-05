@@ -201,5 +201,17 @@
     "table": {
         "description": "",
         "title": "Table"
+    },
+    "flower-app": {
+        "description": "",
+        "title": "Flower Federated Learning App"
+    },
+    "flower-client": {
+        "description": "",
+        "title": "Flower Federated Learning Client Node"
+    },
+    "flower-server": {
+        "description": "",
+        "title": "Flower Federated Learning Server Node"
     }
 }
