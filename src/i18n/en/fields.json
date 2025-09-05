@@ -61,6 +61,10 @@
             "description": "Container image used for tasks",
             "title": "Image"
         },
+        "imagePullPolicy": {
+            "description": "Policy for image pulling",
+            "title": "Image Pull Policy"
+        },
         "instructions": {
             "description": "Instructions executed as RUN during build stage",
             "item": {

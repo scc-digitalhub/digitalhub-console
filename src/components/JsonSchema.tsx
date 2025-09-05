@@ -8,10 +8,7 @@ import {
     JSONSchemaFormatInputProps,
     JsonSchemaInput as RaJsonSchemaInput,
 } from '@dslab/ra-jsonschema-input';
-import {
-    RJSFSchema,
-    UiSchema,
-} from '@rjsf/utils';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 
 import { MuiChipsInputWidget } from '../jsonSchema/MuiChipsInputWidget';
 import { CoreResourceFieldTemplate } from '../jsonSchema/CoreResourceFieldTemplate';
@@ -19,10 +16,12 @@ import { KeyValueFieldTemplate } from '../jsonSchema/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from '../jsonSchema/VolumeResourceFieldTemplate';
 import { AceEditorWidget } from '../jsonSchema/AceEditorWidget';
 import TitleField from '../jsonSchema/TitleField';
-import {  useTranslate } from 'react-admin';
+import { useTranslate } from 'react-admin';
 import { useMemo } from 'react';
 import { get, set } from 'lodash';
 import { JsonParamsWidget } from '../jsonSchema/JsonParamsWidget';
+import MultiSchemaFieldTemplate from '../jsonSchema/MultiSchemaFieldTemplate';
+import WrapIfAdditionalTemplate from '../jsonSchema/WrapIfAdditionalTemplate';
 
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
@@ -43,11 +42,9 @@ const customTemplates = {
     CoreResourceFieldTemplate,
     KeyValueFieldTemplate,
     VolumeResourceFieldTemplate,
-    // ArrayFieldTemplate,
-    // ArrayFieldItemTemplate,
-    // ObjectFieldTemplate,
-    // WrapIfAdditionalTemplate,
     TitleFieldTemplate: TitleField,
+    MultiSchemaFieldTemplate,
+    WrapIfAdditionalTemplate,
 };
 
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
