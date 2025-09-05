@@ -139,7 +139,8 @@
             "profile": "Profila",
             "serve": "Servi",
             "transform": "Trasforma",
-            "validate": "Valida"
+            "validate": "Valida",
+            "train": "Train"
         },
         "name": "Task |||| Tasks"
     },

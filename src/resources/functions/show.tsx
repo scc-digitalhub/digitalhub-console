@@ -32,7 +32,6 @@ import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { TaskAndRuns } from '../../components/TaskAndRuns';
-import { RunStateBadge } from '../../components/RunStateBadge';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -45,6 +44,7 @@ const ShowComponent = () => {
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<any>([]);
     const [sourceCode, setSourceCode] = useState<any>();
+    const [fabSourceCode, setFabSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
 
@@ -81,6 +81,9 @@ const ShowComponent = () => {
 
         if (record?.spec?.source) {
             setSourceCode(record.spec.source);
+        }
+        if (record?.spec?.fab_source) {
+            setFabSourceCode(record.spec.fab_source);
         }
 
         if (record && resource) {
@@ -168,6 +171,12 @@ const ShowComponent = () => {
                 'ui:widget': 'hidden',
             };
         }
+        if (fabSourceCode) {
+            //hide source field
+            uiSpec['fab_source'] = {
+                'ui:widget': 'hidden',
+            };
+        }
 
         return uiSpec;
     };
@@ -219,22 +228,19 @@ const ShowComponent = () => {
                     <SourceCodeTab sourceCode={sourceCode} spec={spec} />
                 </TabbedShowLayout.Tab>
             )}
+            {fabSourceCode && (
+                <TabbedShowLayout.Tab
+                    label={'fields.code'}
+                    key={record.id + ':source_code'}
+                    path="code"
+                >
+                    <SourceCodeTab fabSourceCode={fabSourceCode} spec={spec} />
+                </TabbedShowLayout.Tab>
+            )}
 
             {tasks?.map(task => (
                 <TabbedShowLayout.Tab
-                    label={
-                        <Stack direction="row" sx={{ alignItems: 'center' }}>
-                            <RunStateBadge
-                                sx={{ marginRight: '9px' }}
-                                getListFilters={{
-                                    task: `${task.kind}://${task.project}/${task.id}`,
-                                }}
-                            />
-                            {translate(
-                                'resources.tasks.kinds.' + getKind(task.kind)
-                            )}
-                        </Stack>
-                    }
+                    label={'resources.tasks.kinds.' + getKind(task.kind)}
                     key={task.kind}
                     path={task.kind}
                 >
@@ -253,14 +259,15 @@ const ShowComponent = () => {
     );
 };
 
-export const SourceCodeTab = (props: { sourceCode: any; spec: any }) => {
-    const { sourceCode, spec } = props;
+export const SourceCodeTab = (props: { sourceCode?: any; fabSourceCode?: any; spec: any }) => {
+    const { sourceCode, fabSourceCode, spec } = props;
     const record = useRecordContext();
     const uiSchema = getFunctionUiSpec(record?.kind) || {};
-    const values = { spec: { source: sourceCode } };
+    const values = { spec: { source: sourceCode, fab_source: fabSourceCode } };
     const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
     if ('properties' in schema) {
         schema.properties = { source: spec?.schema.properties.source };
+        schema.properties = { fab_source: spec?.schema.properties.fab_source };
     }
 
     return (
@@ -301,11 +308,7 @@ export const FunctionShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={
-                            <VersionsListWrapper
-                                leftIcon={() => <RunStateBadge />}
-                            />
-                        }
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>
