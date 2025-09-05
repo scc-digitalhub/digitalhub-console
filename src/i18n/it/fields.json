@@ -61,6 +61,10 @@
             "description": "Immagine usata per i container dei task",
             "title": "Immagine"
         },
+        "imagePullPolicy": {
+            "description": "Policy per il recupero dell'immagine",
+            "title": "Policy per Pull Immagine"
+        },
         "instructions": {
             "description": "Istruzioni eseguite come RUN durante la fase di build",
             "item": {

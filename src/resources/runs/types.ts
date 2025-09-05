@@ -24,8 +24,16 @@ export const getRunUiSpec = (schema: any | undefined) => {
     return mergeUiTemplate(schema, base, template);
 };
 
+const parametersTemplate = {
+    additionalProperties: {
+        //TODO change to oneOf when core is fixed
+        anyOf: [{}, {}, { 'ui:options': { label: false } }, {}, {}],
+    },
+};
+
 const template = {
-    'ui:order': ['inputs', 'parameters'],
+    'ui:order': ['init_parameters', 'inputs', 'parameters'],
     inputs: {},
-    parameters: {},
+    parameters: parametersTemplate,
+    init_parameters: parametersTemplate,
 };
