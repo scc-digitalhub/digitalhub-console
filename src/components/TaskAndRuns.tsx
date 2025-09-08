@@ -72,7 +72,12 @@ export const TaskAndRuns = (props: {
     if (isLoading && !error) return <Spinner />;
 
     //filter run and task schema
-    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    //search task-specific first
+    let runSchema = schemas ? schemas.find(s => s.entity === 'RUN' && s.kind.startsWith(record?.kind)) : null;
+    if(!runSchema) {
+        //fallback to first matching 
+        runSchema = schemas ? schemas.find(s => s.entity === 'RUN' ) : null;
+    }
     const taskSchema = schemas
         ? schemas.find(s => s.entity === 'TASK' && s.kind === record?.kind)
         : null;
