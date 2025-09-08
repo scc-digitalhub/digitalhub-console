@@ -64,13 +64,18 @@ const ActualDatagrid = (props: ActualDatagridProps) => {
     const { getCurrentlySelected, datagridFields = defaultDatagridFields } =
         props;
     const { onSelect } = useListContext();
+    const record = useRecordContext();
 
     useEffect(() => {
         onSelect(getCurrentlySelected().map(d => d.id));
     }, []);
 
     return (
-        <Datagrid bulkActionButtons={<EmptyBulkActions />} rowClick={false}>
+        <Datagrid
+            bulkActionButtons={<EmptyBulkActions />}
+            rowClick={false}
+            isRowSelectable={r => r.id != record?.id}
+        >
             {datagridFields}
         </Datagrid>
     );
@@ -109,12 +114,11 @@ export const MetricsComparisonSelector = (
     const {
         filter,
         filters,
-        postFetchFilter = res => res.id != record?.id,
+        postFetchFilter = () => true,
         getCurrentlySelected,
         datagridFields,
         ...toolbarProps
     } = props;
-    const record = useRecordContext();
     const listContext: InfiniteListControllerResult = useInfiniteListController(
         {
             disableSyncWithLocation: true,

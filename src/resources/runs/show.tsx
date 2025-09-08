@@ -270,10 +270,6 @@ export const RunShowComponent = () => {
                                     return false;
                                 }
 
-                                if (v.id == record.id) {
-                                    return false;
-                                }
-
                                 if (!v.kind || v.kind != record.kind) {
                                     return false;
                                 }

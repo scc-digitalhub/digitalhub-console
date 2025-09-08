@@ -5,6 +5,27 @@
     },
     "content_copied_x": "%{x} copied",
     "double_click_to_edit": "Double click to edit",
+    "lineage": {
+        "noLineage": "No lineage information available",
+        "noExpansion": "There are no further relationships to display"
+    },
+    "metrics": {
+        "comparison_title": "Compare with #%{id}"
+    },
+    "notifications": {
+        "header": "Notifications",
+        "subheader": "%{unread} unread messages",
+        "subheader_no_results": "No notifications found",
+        "stateMessage": "%{resource} status changed to %{state}"
+    },
+    "search": {
+        "no_results": "Your search gave no results",
+        "current_filters": "Current search filters:"
+    },
+    "templates": {
+        "noTemplates": "No templates available",
+        "start_from_scratch": "Start from scratch"
+    },
     "type_and_press_enter": "Type and press ENTER to add",
     "upload": {
         "file_too_big": "File exceeds the maximum allowed size of 100 GiB",
@@ -38,23 +59,5 @@
         "required_field": "Required field: %{field}",
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
-    },
-    "notifications": {
-        "header": "Notifications",
-        "subheader": "%{unread} unread messages",
-        "subheader_no_results": "No notifications found",
-        "stateMessage": "%{resource} status changed to %{state}"
-    },
-    "lineage": {
-        "noLineage": "No lineage information available",
-        "noExpansion": "There are no further relationships to display"
-    },
-    "templates": {
-        "noTemplates": "No templates available",
-        "start_from_scratch": "Start from scratch"
-    },
-    "search": {
-        "no_results": "Your search gave no results",
-        "current_filters": "Current search filters:"
     }
 }
