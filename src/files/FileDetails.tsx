@@ -1,52 +1,21 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import {
-    Button,
-    Datagrid,
     DateField,
-    FileField,
     FunctionField,
     Labeled,
-    Link,
-    ListContextProvider,
-    ListView,
-    NumberField,
     RecordContextProvider,
-    ResourceContextProvider,
     TextField,
-    Toolbar,
-    TopToolbar,
     useDataProvider,
-    useList,
-    useTranslate,
 } from 'react-admin';
-import { useProjectPermissions } from '../provider/authProvider';
 import {
-    Box,
-    Breadcrumbs,
     CardContent,
-    Container,
     Divider,
-    Grid,
+    Popover,
     Stack,
     Typography,
 } from '@mui/material';
-import { PageTitle } from '../components/PageTitle';
-import BrowserIcon from '@mui/icons-material/Inventory2';
-import ReloadIcon from '@mui/icons-material/Replay';
-import UploadIcon from '@mui/icons-material/Upload';
-import { StateChips } from '../components/StateChips';
-
-import FolderRounded from '@mui/icons-material/FolderRounded';
-import ImageIcon from '@mui/icons-material/Image';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import DocumentFileIcon from '@mui/icons-material/Article';
-import PublicIcon from '@mui/icons-material/Public';
-import TableChart from '@mui/icons-material/TableChart';
-import VideoFileIcon from '@mui/icons-material/VideoFile';
-import GenericFileIcon from '@mui/icons-material/InsertDriveFile';
-import AudioFileIcon from '@mui/icons-material/AudioFile';
 
 import { PreviewButton } from './PreviewButton';
 import { FlatCard } from '../components/FlatCard';
@@ -58,6 +27,7 @@ import {
 } from './utils';
 import { DeleteButton } from './DeleteButton';
 import { FileIcon } from './FileIcon';
+import { IdField } from '../components/IdField';
 
 export const FileDetails = (props: {
     file: any | null;
@@ -70,6 +40,15 @@ export const FileDetails = (props: {
 
     const dataProvider = useDataProvider();
     const [info, setInfo] = useState<any | null>(null);
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const handlePopoverOpen = (event: MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+    const open = Boolean(anchorEl);
 
     useEffect(() => {
         if (dataProvider && file) {
@@ -140,8 +119,43 @@ export const FileDetails = (props: {
                                 <TextField source="name" />
                             </Labeled>
                             <Labeled>
-                                <TextField source="path" />
+                                <IdField
+                                    source="path"
+                                    noWrap
+                                    aria-owns={
+                                        open ? 'mouse-over-popover' : undefined
+                                    }
+                                    aria-haspopup="true"
+                                    onMouseEnter={handlePopoverOpen}
+                                    onMouseLeave={handlePopoverClose}
+                                />
                             </Labeled>
+                            <Popover
+                                id="mouse-over-popover"
+                                sx={{ pointerEvents: 'none' }}
+                                open={open}
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                onClose={handlePopoverClose}
+                                disableRestoreFocus
+                                slotProps={{
+                                    paper: {
+                                        variant: 'outlined',
+                                        square: true,
+                                    },
+                                }}
+                            >
+                                <Typography variant="body2" sx={{ p: 1 }}>
+                                    {info.path}
+                                </Typography>
+                            </Popover>
                             <Labeled>
                                 <TextField source="content_type" />
                             </Labeled>
