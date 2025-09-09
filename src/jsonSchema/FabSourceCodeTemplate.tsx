@@ -5,7 +5,6 @@
 import {
     ObjectFieldTemplateProps,
     ObjectFieldTemplatePropertyType,
-    WidgetProps,
 } from '@rjsf/utils';
 import { FormLabel } from '../components/FormLabel';
 import { Box, Grid, Stack } from '@mui/material';
@@ -38,7 +37,6 @@ export const FabSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
         value: formData ? formData['source'] || '' : '',
     };
 
-
     const clientapp = {
         prop: properties.find(
             element => element.name == 'clientapp'
@@ -51,7 +49,6 @@ export const FabSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
         ) as ObjectFieldTemplatePropertyType,
         value: formData ? formData['serverapp'] || '' : '',
     };
-
 
     const clientbase64 = {
         prop: properties.find(
@@ -120,4 +117,3 @@ export const FabSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
         </>
     );
 };
-
