@@ -197,9 +197,21 @@
   },
   "secret": {
     "description": ""
-},
-"table": {
+  },
+  "table": {
     "description": "",
     "title": "Tabella"
+  },
+  "flower-app": {
+      "description": "",
+      "title": "Applicazione di Flower Federated Learning"
+  },
+  "flower-client": {
+      "description": "",
+      "title": "Nodo client di Flower Federated Learning"
+  },
+  "flower-server": {
+      "description": "",
+      "title": "Nodo server di Flower Federated Learning"
   }
 }
