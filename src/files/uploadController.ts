@@ -4,14 +4,7 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useMemo, useState } from 'react';
-import {
-    RaRecord,
-    useDataProvider,
-    useNotify,
-    useRecordContext,
-    useResourceContext,
-    useTranslate,
-} from 'react-admin';
+import { useDataProvider, useNotify, useTranslate } from 'react-admin';
 import { Uppy } from 'uppy';
 import AwsS3 from '@uppy/aws-s3';
 
@@ -122,14 +115,6 @@ export const useUploadController = (
 
     const uppyConfig = {
         onBeforeFileAdded: (currentFile, files) => {
-            //block files over max
-            if (currentFile.size > 10000 * MiB) {
-                notify(translate('messages.upload.file_too_big'), {
-                    type: 'error',
-                });
-                return false;
-            }
-
             //disallow all remote
             if (currentFile.isRemote) {
                 notify(translate('messages.upload.remote_files_unsupported'), {

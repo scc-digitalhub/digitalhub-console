@@ -6,8 +6,12 @@ import {
     Box,
     Chip,
     Dialog,
+    DialogContent,
+    DialogTitle,
     Grid,
+    IconButton,
     Stack,
+    styled,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -26,6 +30,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { Spinner } from '../Spinner';
 import { MetricCard } from './MetricCard';
 import CompareIcon from '@mui/icons-material/Compare';
+import CloseIcon from '@mui/icons-material/Close';
 import {
     MetricsComparisonSelector,
     SelectorProps,
@@ -38,6 +43,7 @@ import {
     mergeData,
     Series,
 } from './utils';
+import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;
@@ -123,7 +129,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
      * whenever the list of records to compare with is updated
      */
     useEffect(() => {
-        if (dataProvider && compareWith.length > 0) {
+        if (dataProvider) {
             isLoading2 = true;
             //for each id, if !metricsMap[id] then call API
             const toBeAdded = compareWith.filter(r => !(r.id in metricsMap));
@@ -256,25 +262,43 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                     </Button>
                 )}
             </Stack>
-            <Dialog
+            <ComparisonDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth
                 maxWidth="md"
-                sx={{
-                    '& .MuiDialog-paper': {
-                        paddingX: '24px',
-                    },
-                }}
+                aria-labelledby="metrics-grid-dialog"
+                className={CreateInDialogButtonClasses.dialog}
             >
-                <MetricsComparisonSelector
-                    startComparison={startComparison}
-                    close={handleDialogClose}
-                    getCurrentlySelected={getCurrentlySelected}
-                    {...rest}
-                />
-            </Dialog>
+                <div className={CreateInDialogButtonClasses.header}>
+                    <DialogTitle
+                        id="metrics-grid-dialog-title"
+                        className={CreateInDialogButtonClasses.title}
+                    >
+                        {translate('messages.metrics.comparison_title', {
+                            id: record?.id,
+                        })}
+                    </DialogTitle>
+                    <IconButton
+                        className={CreateInDialogButtonClasses.closeButton}
+                        aria-label={translate('ra.action.close')}
+                        title={translate('ra.action.close')}
+                        onClick={handleDialogClose}
+                        size="small"
+                    >
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                </div>
+                <DialogContent>
+                    <MetricsComparisonSelector
+                        startComparison={startComparison}
+                        close={handleDialogClose}
+                        getCurrentlySelected={getCurrentlySelected}
+                        {...rest}
+                    />
+                </DialogContent>
+            </ComparisonDialog>
             <Box>
                 <Chip
                     label={formatLabel(record, resource)}
@@ -325,3 +349,21 @@ const sortRecordFirst = (arr: Series[], recordId: string): any[] => {
         });
     return [...sorted, ...rest];
 };
+
+const ComparisonDialog = styled(Dialog, {
+    name: 'RaCreateInDialogButton',
+    overridesResolver: (_props, styles) => styles.root,
+})(({ theme }) => ({
+    [`& .${CreateInDialogButtonClasses.title}`]: {
+        padding: theme.spacing(0),
+    },
+    [`& .${CreateInDialogButtonClasses.header}`]: {
+        padding: theme.spacing(2, 2, 0),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
+        height: 'fit-content',
+    },
+}));
