@@ -14,6 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Divider } from '@mui/material';
 import { LineageIcon } from '../pages/lineage/icon';
 import BrowserIcon from '../files/icon';
+import { ServiceIcon } from '../pages/services/icon';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -40,6 +41,11 @@ export const MyMenu = () => {
                     leftIcon={<BrowserIcon />}
                     to={`${basename}/files`}
                     primaryText={'fields.files.title'}
+                />{' '}
+                <MenuItemLink
+                    leftIcon={<ServiceIcon />}
+                    to={`${basename}/services`}
+                    primaryText={'pages.services.title'}
                 />
                 <Divider />
                 <MenuItemLink

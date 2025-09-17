@@ -171,6 +171,7 @@ import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
 import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
+import { ServiceList } from './pages/services/list';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -314,7 +315,10 @@ const CoreApp = () => {
                                                 path="/files"
                                                 element={<Browser />}
                                             />
-
+                                            <Route
+                                                path="/services"
+                                                element={<ServiceList />}
+                                            />
                                             {enableSearch && (
                                                 <Route
                                                     path="/searchresults"

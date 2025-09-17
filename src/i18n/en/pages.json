@@ -115,5 +115,9 @@
     "files": {
         "title": "Files explorer",
         "helperText": "Explore and manage project files"
+    },
+    "services": {
+        "title": "Services",
+        "helperText": "Explore and visualize runs exposing a service endpoint"
     }
 }

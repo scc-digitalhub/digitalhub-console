@@ -115,5 +115,9 @@
     "files": {
         "title": "Esplora file",
         "helperText": "Esplora e gestisci i file del progetto"
+    },
+    "services": {
+        "title": "Servizi",
+        "helperText": "Esplora e visualizza i servizi in esecuzione"
     }
 }
