@@ -172,6 +172,7 @@ import { StoreResetter } from './components/StoreResetter';
 import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
+import { HttpClient } from './pages/services/client';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -318,6 +319,10 @@ const CoreApp = () => {
                                             <Route
                                                 path="/services"
                                                 element={<ServiceList />}
+                                            />
+                                            <Route
+                                                path="/client"
+                                                element={<HttpClient />}
                                             />
                                             {enableSearch && (
                                                 <Route

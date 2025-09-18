@@ -50,6 +50,7 @@ import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
 import { K8sDetails } from './tabs/k8s';
 import { OpenAIDetails } from './tabs/openai';
 import { CloneButton } from './CloneButton';
+import { ClientTab } from './tabs/client';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -240,7 +241,9 @@ export const RunShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label={translate('fields.logs')}>
-                {record?.id && <LogsView id={record.id as string} resource={resource} />}
+                {record?.id && (
+                    <LogsView id={record.id as string} resource={resource} />
+                )}
             </TabbedShowLayout.Tab>
             {record?.status?.k8s && (
                 <TabbedShowLayout.Tab label={'fields.k8s.title'}>
@@ -250,6 +253,11 @@ export const RunShowComponent = () => {
             {record?.status?.service && (
                 <TabbedShowLayout.Tab label={'fields.service.title'}>
                     <ServiceDetails record={record} />
+                </TabbedShowLayout.Tab>
+            )}
+            {record?.status?.service?.url && (
+                <TabbedShowLayout.Tab label={'client'}>
+                    <ClientTab record={record} />
                 </TabbedShowLayout.Tab>
             )}
             {record?.status?.openai && (

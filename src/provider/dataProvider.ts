@@ -48,6 +48,7 @@ const springDataProvider = (
 ): DataProvider & SearchProvider => {
     return {
         apiUrl: async () => apiUrl,
+        client: (url, opts) => httpClient(url, opts),
         invoke: ({
             path,
             params,

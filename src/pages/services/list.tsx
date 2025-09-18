@@ -30,11 +30,15 @@ import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
+import { LogsButton } from '../../components/buttons/LogsButton';
+import { ClientButton } from './ClientButton';
 
 const RowActions = () => {
     return (
         <RowButtonGroup>
             <ShowButton />
+            <LogsButton />
+            <ClientButton />
         </RowButtonGroup>
     );
 };
@@ -71,7 +75,7 @@ export const ServiceList = () => {
             <ResourceContextProvider value="runs">
                 <ListBaseLive
                     exporter={yamlExporter}
-                    sort={{ field: 'metadata.updated', order: 'DESC' }}
+                    sort={{ field: 'metadata.created', order: 'DESC' }}
                     storeKey={`${root}.services.listParams`}
                     filter={{ action: 'serve' }}
                 >
@@ -161,6 +165,12 @@ export const ServiceList = () => {
                                                     <TextField
                                                         source="spec.url"
                                                         label="fields.url"
+                                                    />
+                                                )}
+                                                {record?.spec?.path && (
+                                                    <TextField
+                                                        source="spec.path"
+                                                        label="fields.path"
                                                     />
                                                 )}
                                                 {record?.status?.openai && (

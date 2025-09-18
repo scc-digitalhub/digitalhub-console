@@ -119,5 +119,12 @@
     "services": {
         "title": "Services",
         "helperText": "Explore and visualize runs exposing a service endpoint"
+    },
+    "http-client": {
+        "title": "Client",
+        "helperText": "Http/https basic client for testing and debugging. Only service urls bound to runs can be used as destination.",
+        "request": "Request",
+        "response": "Response",
+        "history": "History"
     }
 }

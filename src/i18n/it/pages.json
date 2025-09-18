@@ -119,5 +119,12 @@
     "services": {
         "title": "Servizi",
         "helperText": "Esplora e visualizza i servizi in esecuzione"
+    },
+    "http-client": {
+        "title": "Client",
+        "helperText": "Client http/https basico per testing e debugging. Solo i servizi esposti dalle run possono essere usati come indirizzo di destinazione.",
+        "request": "Richiesta",
+        "response": "Risposta",
+        "history": "Storico"
     }
 }
