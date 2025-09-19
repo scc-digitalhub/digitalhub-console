@@ -48,6 +48,13 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
         }
     }, [uploader?.path]);
 
+    //update name in controller
+    useEffect(() => {
+        if (uploader && nameField.value) {
+            uploader.setName(nameField.value);
+        }
+    }, [uploader, nameField?.value]);
+
     const getSpecSchema = (kind: string | undefined) => {
         return schemas
             ? schemas.find(

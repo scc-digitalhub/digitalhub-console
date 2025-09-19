@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
     RaRecord,
     useDataProvider,
@@ -13,18 +13,23 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Uppy } from 'uppy';
-import AwsS3 from '@uppy/aws-s3';
+import AwsS3, { AwsS3UploadParameters } from '@uppy/aws-s3';
 import { useUploadStatusContext } from '../contexts/UploadStatusContext';
 
 /**
  * private helpers
  */
 const MiB = 0x10_00_00;
+const sizeThreshold = 100;
+function partCount(file): number {
+    return file.size <= sizeThreshold * MiB
+        ? 1
+        : Math.ceil(file.size / (sizeThreshold * MiB));
+}
 function partSize(file): number {
-    if (file.size <= 100 * MiB) return 1;
-    else {
-        return Math.ceil(file.size / (100 * MiB));
-    }
+    return file.size <= sizeThreshold * MiB
+        ? file.size
+        : Math.ceil(file.size / partCount(file));
 }
 function extractInfo(file: any): any {
     return {
@@ -45,31 +50,36 @@ export type UploadControllerProps = {
     resource?: string;
     record?: RaRecord;
     id?: string;
+    name?: string;
 };
 
 export type UploadController = {
     uppy: Uppy;
     files: any[];
     path: string | null;
-    /**
-     * Set resource state to UPLOADING, then start the upload.
-     * @param data record
-     * @returns
-     */
+    setName: (name: string) => void;
     upload: (data: any) => void;
+};
+
+type UploadInfo = AwsS3UploadParameters & {
+    path: string;
+    expiration?: any;
+    uploadId?: string;
+    partNumber?: number;
 };
 
 export const useUploadController = (
     props: UploadControllerProps
 ): UploadController => {
-    const { id: idProps } = props;
+    const { id: idProps, name: nameProps = null } = props;
 
     const resource = useResourceContext(props);
     const record = useRecordContext(props);
     const id = record?.id || idProps;
+    const name = useRef(nameProps);
 
     const dataProvider = useDataProvider();
-    const { root } = useRootSelector();
+    const { root: projectId } = useRootSelector();
     const notify = useNotify();
     const translate = useTranslate();
 
@@ -77,6 +87,84 @@ export const useUploadController = (
 
     //keep files info
     const [files, setFiles] = useState<any[]>([]);
+
+    const doUpload = (file): UploadInfo => {
+        const dest = file.meta?.relativePath
+            ? file.meta.relativePath.substring(
+                  0,
+                  file.meta.relativePath.lastIndexOf('/')
+              )
+            : '';
+        const filename = file.name;
+
+        return dataProvider
+            .invoke({
+                path:
+                    `/-/${projectId}/${resource}/${id}/files/upload?filename=${
+                        dest + filename
+                    }` + (name.current ? `&name=${name.current}` : ''),
+                options: { method: 'POST' },
+            })
+            .then(json => {
+                return json;
+            });
+    };
+
+    const startMultipartUpload = (file): UploadInfo => {
+        const dest = file.meta?.relativePath
+            ? file.meta.relativePath.substring(
+                  0,
+                  file.meta.relativePath.lastIndexOf('/')
+              )
+            : '';
+        const filename = file.name;
+
+        return dataProvider
+            .invoke({
+                path:
+                    `/-/${projectId}/${resource}/${id}/files/multipart/start?filename=${
+                        dest + filename
+                    }` + (name.current ? `&name=${name.current}` : ''),
+                options: { method: 'POST' },
+            })
+            .then(json => {
+                return json;
+            });
+    };
+
+    const doMultipartUpload = (file, params): UploadInfo => {
+        const { s3: uploadInfo } = file;
+        if (!uploadInfo?.path) {
+            throw new Error('missing s3 path');
+        }
+        return dataProvider
+            .invoke({
+                path: `/-/${projectId}/${resource}/${id}/files/multipart/part?path=${uploadInfo.path}&filename=${file.name}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`,
+                options: { method: 'PUT' },
+            })
+            .then(json => {
+                return json;
+            });
+    };
+
+    const completeMultipartUpload = (file, params): UploadInfo => {
+        const { s3: uploadInfo } = file;
+        if (!uploadInfo?.path) {
+            throw new Error('missing s3 path');
+        }
+
+        const eTagPartList = params.eTagPartList
+            ? params.eTagPartList.map(etag => `partList=${etag}`).join('&')
+            : '';
+        return dataProvider
+            .invoke({
+                path: `/-/${projectId}/${resource}/${id}/files/multipart/complete?path=${uploadInfo.path}&filename=${file.name}&uploadId=${params.uploadId}&${eTagPartList}`,
+                options: { method: 'POST' },
+            })
+            .then(json => {
+                return json;
+            });
+    };
 
     const uppyConfig = {
         onBeforeFileAdded: (currentFile, files) => {
@@ -208,12 +296,12 @@ export const useUploadController = (
                 .use(AwsS3, {
                     id: 'AwsS3',
                     shouldUseMultipart: file =>
-                        file.size !== null && file.size > 100 * MiB,
-                    getChunkSize: file => 100 * MiB,
+                        file.size !== null && partCount(file) > 1,
+                    getChunkSize: file => partSize(file),
                     getUploadParameters: async file => {
                         return {
                             method: 'PUT',
-                            url: file['s3']?.uploadUrl,
+                            url: file['s3']?.url,
                             fields: {},
                             headers: file.type
                                 ? { 'Content-Type': file.type }
@@ -245,21 +333,11 @@ export const useUploadController = (
                     },
 
                     async signPart(file, options) {
-                        const { signal, uploadId } = options;
+                        const { signal } = options;
 
                         signal?.throwIfAborted();
 
-                        const data = await dataProvider.uploadMultipartPart(
-                            resource,
-                            {
-                                id: id,
-                                meta: { root },
-                                filename: file.name,
-                                uploadId: uploadId,
-                                partNumber: options.partNumber,
-                            }
-                        );
-
+                        const data = await doMultipartUpload(file, options);
                         return data;
                     },
 
@@ -285,18 +363,13 @@ export const useUploadController = (
                     ) {
                         //parts is array of part
                         try {
-                            await dataProvider.uploadMultipartComplete(
-                                resource,
-                                {
-                                    id: id,
-                                    meta: { root },
-                                    filename: file.name,
-                                    uploadId,
-                                    eTagPartList: parts.map(
-                                        (part: any) => part.etag
-                                    ),
-                                }
-                            );
+                            await completeMultipartUpload(file, {
+                                key,
+                                uploadId,
+                                eTagPartList: parts.map(
+                                    (part: any) => part.etag
+                                ),
+                            });
                         } catch (error) {
                             throw new Error('Unsuccessful request');
                         }
@@ -306,32 +379,18 @@ export const useUploadController = (
                 })
                 .on('file-added', async file => {
                     if (dataProvider) {
-                        const partSizeNumber = partSize(file);
-                        let res: any = null;
-                        if (partSizeNumber === 1) {
-                            res = await dataProvider.upload(resource, {
-                                id: id,
-                                meta: { root },
-                                filename: file.name,
-                            });
-                            file['s3'] = { uploadUrl: res?.url };
+                        const count = partCount(file);
+                        if (count === 1) {
+                            file['s3'] = await doUpload(file);
                         } else {
-                            res = await dataProvider.uploadMultipartStart(
-                                resource,
-                                {
-                                    id: id,
-                                    meta: { root },
-                                    filename: file.name,
-                                }
-                            );
-                            file['s3'] = { uploadId: res?.uploadId };
+                            file['s3'] = await startMultipartUpload(file);
                         }
 
                         const info = {
                             id: file.id,
                             info: extractInfo(file),
                             file: file,
-                            path: res?.path,
+                            path: file['s3']?.path,
                         };
                         setFiles(prev => {
                             const cur = prev.filter(f => f.id != file.id);
@@ -447,5 +506,8 @@ export const useUploadController = (
         files,
         path,
         upload,
+        setName: value => {
+            name.current = value;
+        },
     };
 };
