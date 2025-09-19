@@ -821,7 +821,7 @@
     "token": {
         "title": "Token"
     },
-    "openai":{
+    "openai": {
         "title": "OpenAI"
     },
     "flowerSourceCode": {
@@ -851,7 +851,7 @@
             "title": "Flower App Source Code",
             "description": ""
         },
-        "image" : {
+        "image": {
             "title": "Container image to use",
             "description": ""
         },
@@ -895,5 +895,9 @@
             "title": "List of public keys for client node authentication",
             "description": ""
         }
+    },
+    "duration": {
+        "title": "Duration",
+        "description": "Duration (in hours)"
     }
 }

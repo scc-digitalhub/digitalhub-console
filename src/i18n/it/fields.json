@@ -895,5 +895,9 @@
             "title": "List of public keys for client node authentication",
             "description": ""
         }
+    },
+    "duration": {
+        "title": "Durata",
+        "description": "Durata (in ore)"
     }
 }

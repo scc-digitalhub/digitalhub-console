@@ -28,6 +28,7 @@ import {
 import { DeleteButton } from './DeleteButton';
 import { FileIcon } from './FileIcon';
 import { IdField } from '../components/IdField';
+import { ShareButton } from './ShareButton';
 
 export const FileDetails = (props: {
     file: any | null;
@@ -103,13 +104,20 @@ export const FileDetails = (props: {
                 {info && (
                     <RecordContextProvider value={info}>
                         <Stack direction={'row'} gap={1} pb={2}>
-                            <DownloadButton size="small" color="success" />
+                            <DownloadButton
+                                size="small"
+                                label=""
+                                color="success"
+                            />
                             <PreviewButton
                                 size="small"
+                                label=""
                                 disabled={!isPreviewable}
                             />
+                            <ShareButton size="small" label="" />
                             <DeleteButton
                                 size="small"
+                                label=""
                                 onDelete={() => onDelete && onDelete(file)}
                             />
                         </Stack>

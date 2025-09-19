@@ -158,7 +158,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         id="logs-dialog-title"
                         className={CreateInDialogButtonClasses.title}
                     >
-                        {fileName}
+                        {translate(label || 'fields.preview')} {fileName}
                     </DialogTitle>
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}

@@ -72,7 +72,8 @@
         }
     },
     "share": {
-        "description": "Share with additional users by adding their username to the list"
+        "description": "Share with additional users by adding their username to the list",
+        "files": "Share file with external users via link"
     },
     "importer": {
         "title": "Import %{resource}",
