@@ -5,28 +5,16 @@
 import { Identifier, RaRecord } from 'react-admin';
 import {
     ChartsColorPaletteCallback,
-    blueberryTwilightPaletteLight,
-    blueberryTwilightPaletteDark,
     mangoFusionPaletteLight,
     mangoFusionPaletteDark,
-    cheerfulFiestaPaletteLight,
-    cheerfulFiestaPaletteDark,
 } from '@mui/x-charts';
-import { union, round } from 'lodash';
+import { round } from 'lodash';
 
 export const chartPalette: ChartsColorPaletteCallback = mode => {
     if (mode == 'light') {
-        return union(
-            blueberryTwilightPaletteLight,
-            mangoFusionPaletteLight,
-            cheerfulFiestaPaletteLight
-        );
+        return mangoFusionPaletteLight;
     } else {
-        return union(
-            blueberryTwilightPaletteDark,
-            mangoFusionPaletteDark,
-            cheerfulFiestaPaletteDark
-        );
+        return mangoFusionPaletteDark;
     }
 };
 
