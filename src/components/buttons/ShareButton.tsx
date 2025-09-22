@@ -176,7 +176,7 @@ const ShareList = (props: { record?: any }) => {
 
     return (
         <>
-            <Typography variant="body2" paragraph>
+            <Typography variant="body2">
                 {translate('pages.share.description')}
             </Typography>
             <ShareCreateForm record={record} reload={reload} />
