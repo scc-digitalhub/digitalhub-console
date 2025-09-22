@@ -140,7 +140,9 @@ export const SearchList = () => {
 
 const ShowResourceButton = () => {
     const record = useRecordContext();
-    return <ShowButton resource={mapTypes[record?.type].plural} />;
+    return (
+        <ShowButton resource={mapTypes[record?.type.toLowerCase()].plural} />
+    );
 };
 
 const IconResource = () => {
