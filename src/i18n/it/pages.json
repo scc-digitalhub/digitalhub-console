@@ -72,7 +72,7 @@
         }
     },
     "share": {
-        "description": "Condividi con altri utenti aggiungendo il loro username alla lista",
+        "description": "Condividi con altri utenti aggiungendo il loro username alla lista. Usa la wildcard * per condividere con tutti.",
         "files": "Condividi il file con utenti esterni tramite link"
     },
     "importer": {
