@@ -7,12 +7,15 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
     ADDITIONAL_PROPERTY_FLAG,
+    ANY_OF_KEY,
+    buttonId,
     FormContextType,
+    ONE_OF_KEY,
     RJSFSchema,
     StrictRJSFSchema,
-    TranslatableString,
     WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
+import { useTranslate } from 'react-admin';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -38,12 +41,31 @@ export default function WrapIfAdditionalTemplate<
         schema,
         uiSchema,
         registry,
+        hideError,
+        rawErrors,
     } = props;
-    const { templates, translateString } = registry;
+    const translate = useTranslate();
+    const { templates } = registry;
     // Button templates are not overridden in the uiSchema
     const { RemoveButton } = templates.ButtonTemplates;
-    const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
     const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+
+    const classNamesList = ['form-group', classNames];
+    if (!hideError && rawErrors && rawErrors.length > 0) {
+        classNamesList.push('has-error has-danger');
+    }
+    const uiClassNames = classNamesList.join(' ').trim();
+
+    if (!additional) {
+        return (
+            <div className={uiClassNames} style={style}>
+                {children}
+            </div>
+        );
+    }
+
+    const isMultiSchema = ANY_OF_KEY in schema || ONE_OF_KEY in schema;
+
     const btnStyle: CSSProperties = {
         flex: 1,
         paddingLeft: 6,
@@ -51,32 +73,26 @@ export default function WrapIfAdditionalTemplate<
         fontWeight: 'bold',
     };
 
-    if (!additional) {
-        return (
-            <div className={classNames} style={style}>
-                {children}
-            </div>
-        );
-    }
-
     const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-        onKeyChange(target.value);
+        onKeyChange(target && target.value);
 
     return (
         <Grid
             container
             key={`${id}-key`}
-            alignItems="center"
+            alignItems="start"
             spacing={2}
-            className={classNames}
+            className={uiClassNames}
             style={style}
-            sx={{ padding: readonly ? '18px 0' : '0px' }}
+            sx={{
+                padding: readonly ? '18px 0' : '0px',
+            }}
         >
-            <Grid size="grow">
+            <Grid size={isMultiSchema ? 3 : 'grow'}>
                 <TextField
                     fullWidth={true}
                     required={required}
-                    label={keyLabel}
+                    label={translate('fields.key.title')}
                     defaultValue={label}
                     disabled={disabled || readonly}
                     id={`${id}-key`}
@@ -85,10 +101,21 @@ export default function WrapIfAdditionalTemplate<
                     type="text"
                 />
             </Grid>
-            <Grid size="grow">{children}</Grid>
+            <Grid
+                size={isMultiSchema ? 8 : 'grow'}
+                sx={{
+                    //remove extra margins from children to align at the top
+                    '.MuiFormControl-marginDense:not(.MuiTextField-root)': {
+                        marginY: 0,
+                    },
+                }}
+            >
+                {children}
+            </Grid>
             {!readonly && (
-                <Grid>
+                <Grid size={1}>
                     <RemoveButton
+                        id={buttonId<T>(id, 'remove')}
                         iconType="default"
                         style={btnStyle}
                         disabled={disabled || readonly}
