@@ -32,6 +32,7 @@ import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { LogsButton } from '../../components/buttons/LogsButton';
 import { ClientButton } from './ClientButton';
+import { IdField } from '../../components/IdField';
 
 const RowActions = () => {
     return (
@@ -185,7 +186,9 @@ export const ServiceList = () => {
                                         )}
                                     />
 
-                                    <TextField
+                                    <IdField
+                                        noWrap
+                                        truncate={30}
                                         source="status.service.url"
                                         label="fields.url"
                                     />
