@@ -916,6 +916,10 @@
         "title": "workflows.item"
       },
       "title": "workflows"
+    },
+    "pods": {
+      "description": "",
+      "title": "Pods"
     }
   },
   "specs": {
