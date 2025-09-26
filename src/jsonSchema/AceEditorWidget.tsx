@@ -47,7 +47,7 @@ export const AceEditorWidget = function <
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->(props: WidgetProps) {
+>(props: WidgetProps<T, S, F>) {
     const {
         id,
         value,
@@ -56,6 +56,7 @@ export const AceEditorWidget = function <
         onChange,
         schema,
         label,
+        hideLabel,
         registry,
         required,
     } = props;
@@ -90,9 +91,10 @@ export const AceEditorWidget = function <
 
     return (
         <Fragment key={id}>
-            {label && (
+            {label && !hideLabel && (
                 <TitleFieldTemplate
                     id={titleId<T>(id)}
+                    schema={schema}
                     title={translate(label)}
                     required={required}
                     registry={registry}
@@ -103,7 +105,7 @@ export const AceEditorWidget = function <
                 readOnly={readonly}
                 theme={theme}
                 wrapEnabled
-                width={'50vw'}
+                height="20vh"
                 setOptions={{ showPrintMargin: false, useWorker: false }} //disable workers due to issue with esm module loading
                 value={code}
                 onChange={handleChange}

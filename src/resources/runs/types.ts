@@ -27,7 +27,16 @@ export const getRunUiSpec = (schema: any | undefined) => {
 const parametersTemplate = {
     additionalProperties: {
         //TODO change to oneOf when core is fixed
-        anyOf: [{}, {}, { 'ui:options': { label: false } }, {}, {}],
+        anyOf: [
+            {},
+            {},
+            { 'ui:label': false },
+            {
+                'ui:field': 'AceField',
+                'ui:label': false,
+            },
+            { 'ui:label': false },
+        ],
     },
 };
 
