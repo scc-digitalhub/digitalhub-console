@@ -24,7 +24,7 @@ import { ShareButton } from '../../components/buttons/ShareButton';
 import { ChipsField } from '../../components/ChipsField';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
-import { CreateProjectButton } from '../../resources/projects';
+import { CreateProjectButton } from '../../resources/projects/list';
 
 export const MyProjects = () => {
     const { data: identity, isLoading: identityLoading } = useGetIdentity();

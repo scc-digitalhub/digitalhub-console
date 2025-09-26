@@ -15,4 +15,7 @@ export default {
         record?.spec?.function
             ? record.spec.function.split('/')[3].split(':')[0]
             : record.id,
+    options: {
+        type: 'RUN',
+    },
 };

@@ -12,4 +12,7 @@ export default {
     icon: TriggerIcon,
     show: TriggerShow,
     recordRepresentation: record => record?.kind || record.id,
+    options: {
+        type: 'TRIGGER',
+    },
 };

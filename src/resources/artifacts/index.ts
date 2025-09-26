@@ -2,8 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from './list';
-export * from './edit';
-export * from './create';
-export * from './show';
-export * from './update';
+import { ArtifactCreate } from './create';
+import { ArtifactEdit } from './edit';
+import { ArtifactIcon } from './icon';
+import { ArtifactList } from './list';
+import { ArtifactShow } from './show';
+
+export default {
+    name: 'artifacts',
+    list: ArtifactList,
+    icon: ArtifactIcon,
+    show: ArtifactShow,
+    create: ArtifactCreate,
+    edit: ArtifactEdit,
+    options: {
+        type: 'ARTIFACT',
+    },
+};

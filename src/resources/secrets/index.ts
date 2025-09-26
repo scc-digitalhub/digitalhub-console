@@ -2,7 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from './list';
-export * from './edit';
-export * from './create';
-export * from './show';
+import { SecretCreate } from "./create";
+import { SecretEdit } from "./edit";
+import { SecretIcon } from "./icon";
+import { SecretList } from "./list";
+import { SecretShow } from "./show";
+
+export default {
+    name: 'secrets',
+    list: SecretList,
+    icon: SecretIcon,
+    show: SecretShow,
+    create: SecretCreate,
+    edit: SecretEdit,
+    options: {
+        type: 'SECRET',
+    },
+};
