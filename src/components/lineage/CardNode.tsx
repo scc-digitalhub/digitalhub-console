@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { memo, useState } from 'react';
+import { createElement, memo, useState } from 'react';
 import { Handle, NodeToolbar, Position, useEdges } from '@xyflow/react';
 import {
     Card,
@@ -25,24 +25,17 @@ import {
     useCreatePath,
     useGetOne,
     useGetRecordRepresentation,
+    useResourceDefinitions,
     useTheme,
 } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
-import { ArtifactIcon } from '../../resources/artifacts/icon';
-import { ModelIcon } from '../../resources/models/icon';
-import { DataItemIcon } from '../../resources/dataitems/icon';
-import { RunIcon } from '../../resources/runs/icon';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { NODE_WIDTH, RelationshipDirection } from './utils';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { FunctionIcon } from '../../resources/functions/icon';
 import { keyParser } from '../../common/helper';
-import { TriggerIcon } from '../../resources/triggers/icon';
-import { WorkflowIcon } from '../../resources/workflows/icon';
 
-// export const CardNode = memo(function CardNode(props: {
 const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
     const { data, direction } = props;
     const { resource = '', kind, name, id = name } = keyParser(data.key);
@@ -52,6 +45,7 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
     const recordRepresentation = useGetRecordRepresentation(resource);
     const edges = useEdges();
     const [theme] = useTheme();
+    const definitions = useResourceDefinitions();
 
     const handleNodeClick = e => {
         setShowInfo(!showInfo);
@@ -69,7 +63,9 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
         resource == 'runs' ? (
             <CardContent>
                 <Stack>
-                    <RunIcon sx={{ alignSelf: 'center' }} />
+                    {createElement(definitions['runs'].icon, {
+                        sx: { alignSelf: 'center' },
+                    })}
                     <Typography
                         component={'span'}
                         variant="body2"
@@ -94,7 +90,7 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
             </CardContent>
         ) : (
             <CardHeader
-                avatar={icons[resource]}
+                avatar={createElement(definitions[resource].icon)}
                 title={'#' + name}
                 subheader={kind}
             />
@@ -376,15 +372,6 @@ const NodeInfo = (props: {
             )}
         </NodeToolbar>
     );
-};
-
-const icons = {
-    artifacts: <ArtifactIcon />,
-    models: <ModelIcon />,
-    dataitems: <DataItemIcon />,
-    functions: <FunctionIcon />,
-    workflows: <WorkflowIcon />,
-    triggers: <TriggerIcon />,
 };
 
 const Node = styled(Card, {

@@ -14,6 +14,7 @@ import {
     DateField,
     RichTextField,
     useTranslate,
+    useResourceDefinitions,
 } from 'react-admin';
 import Inbox from '@mui/icons-material/Inbox';
 import { RowButtonGroup } from '../components/buttons/RowButtonGroup';
@@ -22,54 +23,7 @@ import { alpha, styled, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
 import { useSearchController } from './useSearchController';
 import { useSearch } from './searchbar/SearchContext';
-import { FunctionIcon } from '../resources/functions/icon';
-import { ArtifactIcon } from '../resources/artifacts/icon';
-import { DataItemIcon } from '../resources/dataitems/icon';
-import { WorkflowIcon } from '../resources/workflows/icon';
-import { ModelIcon } from '../resources/models/icon';
-
-const mapTypes = {
-    function: {
-        plural: 'functions',
-        icon: (
-            <Tooltip title="function">
-                <FunctionIcon />
-            </Tooltip>
-        ),
-    },
-    artifact: {
-        plural: 'artifacts',
-        icon: (
-            <Tooltip title="artifact">
-                <ArtifactIcon />
-            </Tooltip>
-        ),
-    },
-    dataitem: {
-        plural: 'dataitems',
-        icon: (
-            <Tooltip title="dataitem">
-                <DataItemIcon />
-            </Tooltip>
-        ),
-    },
-    workflow: {
-        plural: 'workflows',
-        icon: (
-            <Tooltip title="workflow">
-                <WorkflowIcon />
-            </Tooltip>
-        ),
-    },
-    model: {
-        plural: 'models',
-        icon: (
-            <Tooltip title="model">
-                <ModelIcon />
-            </Tooltip>
-        ),
-    },
-};
+import { createElement } from 'react';
 
 export const SearchList = () => {
     const theme = useTheme();
@@ -140,14 +94,24 @@ export const SearchList = () => {
 
 const ShowResourceButton = () => {
     const record = useRecordContext();
-    return (
-        <ShowButton resource={mapTypes[record?.type.toLowerCase()].plural} />
+    const definitions = useResourceDefinitions();
+    let def = Object.entries(definitions).find(
+        defPair => defPair[1].options.type == record?.type
     );
+    return <ShowButton resource={def?.[0]} />;
 };
 
 const IconResource = () => {
     const record = useRecordContext();
-    return mapTypes[record?.type].icon;
+    const definitions = useResourceDefinitions();
+    let definition = Object.values(definitions).find(
+        def => def.options.type == record?.type
+    );
+    return (
+        <Tooltip title={record?.type.toLowerCase()}>
+            {createElement(definition?.icon)}
+        </Tooltip>
+    );
 };
 
 const NoResults = () => {

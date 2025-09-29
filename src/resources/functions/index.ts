@@ -2,7 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from './list';
-export * from './edit';
-export * from './create';
-export * from './show';
+import { FunctionCreate } from "./create";
+import { FunctionEdit } from "./edit";
+import { FunctionIcon } from "./icon";
+import { FunctionList } from "./list";
+import { FunctionShow } from "./show";
+
+export default {
+    name: 'functions',
+    list: FunctionList,
+    icon: FunctionIcon,
+    show: FunctionShow,
+    create: FunctionCreate,
+    edit: FunctionEdit,
+    options: {
+        type: 'FUNCTION',
+    },
+};

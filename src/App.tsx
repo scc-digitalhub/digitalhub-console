@@ -22,41 +22,7 @@ import {
     RootSelectorContextProvider,
     RootSelectorInitialWrapper,
 } from '@dslab/ra-root-selector';
-import {
-    ProjectSelectorList,
-    ProjectEdit,
-    ProjectCreate,
-} from './resources/projects';
-import {
-    ArtifactList,
-    ArtifactEdit,
-    ArtifactCreate,
-    ArtifactShow,
-} from './resources/artifacts';
-import {
-    DataItemList,
-    DataItemEdit,
-    DataItemCreate,
-    DataItemShow,
-} from './resources/dataitems';
-import {
-    FunctionList,
-    FunctionEdit,
-    FunctionCreate,
-    FunctionShow,
-} from './resources/functions';
-import {
-    WorkflowList,
-    WorkflowEdit,
-    WorkflowCreate,
-    WorkflowShow,
-} from './resources/workflows';
-import {
-    SecretCreate,
-    SecretEdit,
-    SecretList,
-    SecretShow,
-} from './resources/secrets';
+import { ProjectSelectorList } from './resources/projects/list';
 
 import { Dashboard } from './pages/dashboard/Dashboard';
 import { Browser } from './files/Browser';
@@ -143,27 +109,19 @@ const enableSearch: boolean =
     (globalThis as any).REACT_APP_ENABLE_SOLR === 'true' ||
     (process.env.REACT_APP_ENABLE_SOLR as string) === 'true';
 
-import { DataItemUpdate } from './resources/dataitems/update';
-import { ArtifactUpdate } from './resources/artifacts/update';
 import { ResourceSchemaProvider } from './provider/schemaProvider';
-import { FunctionIcon } from './resources/functions/icon';
-import { DataItemIcon } from './resources/dataitems/icon';
-import { ArtifactIcon } from './resources/artifacts/icon';
-import { SecretIcon } from './resources/secrets/icon';
-import { WorkflowIcon } from './resources/workflows/icon';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { SearchList } from './search/SearchList';
 import { SearchContextProvider } from './search/searchbar/SearchContextProvider';
 import { createContext } from 'react';
-import {
-    ModelCreate,
-    ModelEdit,
-    ModelList,
-    ModelShow,
-    ModelUpdate,
-} from './resources/models';
-import { ModelIcon } from './resources/models/icon';
+import artifactDefinition from './resources/artifacts';
+import dataitemDefinition from './resources/dataitems';
+import functionDefinition from './resources/functions';
+import modelDefinition from './resources/models';
+import workflowDefinition from './resources/workflows';
+import secretDefinition from './resources/secrets';
+import projectDefinition from './resources/projects';
 import runDefinition from './resources/runs';
 import triggerDefinition from './resources/triggers';
 import { StompContextProvider } from './contexts/StompContext';
@@ -220,81 +178,19 @@ const CoreApp = () => {
                                         requireAuth={!!authProvider}
                                         disableTelemetry
                                     >
-                                        <Resource
-                                            name="functions"
-                                            list={FunctionList}
-                                            show={FunctionShow}
-                                            edit={FunctionEdit}
-                                            create={FunctionCreate}
-                                            icon={FunctionIcon}
-                                        />
-                                        <Resource
-                                            name="workflows"
-                                            list={WorkflowList}
-                                            show={WorkflowShow}
-                                            edit={WorkflowEdit}
-                                            create={WorkflowCreate}
-                                            icon={WorkflowIcon}
-                                        />
-                                        <Resource
-                                            name="dataitems"
-                                            list={DataItemList}
-                                            show={DataItemShow}
-                                            edit={DataItemEdit}
-                                            create={DataItemCreate}
-                                            icon={DataItemIcon}
-                                        >
-                                            <Route
-                                                path=":id/update"
-                                                element={<DataItemUpdate />}
-                                            />
-                                        </Resource>
-                                        <Resource
-                                            name="models"
-                                            list={ModelList}
-                                            show={ModelShow}
-                                            edit={ModelEdit}
-                                            create={ModelCreate}
-                                            icon={ModelIcon}
-                                        >
-                                            <Route
-                                                path=":id/update"
-                                                element={<ModelUpdate />}
-                                            />
-                                        </Resource>
-                                        <Resource
-                                            name="artifacts"
-                                            list={ArtifactList}
-                                            show={ArtifactShow}
-                                            edit={ArtifactEdit}
-                                            create={ArtifactCreate}
-                                            icon={ArtifactIcon}
-                                        >
-                                            <Route
-                                                path=":id/update"
-                                                element={<ArtifactUpdate />}
-                                            />
-                                        </Resource>
+                                        <Resource {...functionDefinition} />
+                                        <Resource {...workflowDefinition} />
+                                        <Resource {...dataitemDefinition} />
+                                        <Resource {...modelDefinition} />
+                                        <Resource {...artifactDefinition} />
                                         <Resource name="tasks" />
                                         <Resource {...runDefinition} />
                                         <Resource {...triggerDefinition} />
-                                        <Resource
-                                            name="projects"
-                                            list={ProjectSelectorList}
-                                            edit={ProjectEdit}
-                                            create={ProjectCreate}
-                                        />
+                                        <Resource {...projectDefinition} />
+                                        <Resource {...secretDefinition} />
                                         <Resource name="schemas" />
                                         <Resource name="logs" />
                                         <Resource name="metadatas" />
-                                        <Resource
-                                            name="secrets"
-                                            list={SecretList}
-                                            show={SecretShow}
-                                            edit={SecretEdit}
-                                            create={SecretCreate}
-                                            icon={SecretIcon}
-                                        />
                                         <Resource name="labels" />
                                         <Resource name="templates" />
                                         <CustomRoutes>
@@ -362,12 +258,7 @@ const InitialWrapper = () => {
                 store={localStorageStore('dh')}
                 disableTelemetry
             >
-                <Resource
-                    name="projects"
-                    list={ProjectSelectorList}
-                    edit={ProjectEdit}
-                    create={ProjectCreate}
-                />
+                <Resource {...projectDefinition} />
                 <Resource name="tokens/refresh" />
                 <Resource name="tokens/personal" />
                 <Resource name="schemas" />

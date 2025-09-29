@@ -2,8 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export * from './list';
-export * from './edit';
-export * from './create';
-export * from './show';
-export * from './update';
+import { ModelCreate } from "./create";
+import { ModelEdit } from "./edit";
+import { ModelIcon } from "./icon";
+import { ModelList } from "./list";
+import { ModelShow } from "./show";
+
+export default {
+    name: 'models',
+    list: ModelList,
+    icon: ModelIcon,
+    show: ModelShow,
+    create: ModelCreate,
+    edit: ModelEdit,
+    options: {
+        type: 'MODEL',
+    },
+};
