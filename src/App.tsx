@@ -109,9 +109,6 @@ const enableSearch: boolean =
     (globalThis as any).REACT_APP_ENABLE_SOLR === 'true' ||
     (process.env.REACT_APP_ENABLE_SOLR as string) === 'true';
 
-import { DataItemUpdate } from './resources/dataitems/update';
-import { ArtifactUpdate } from './resources/artifacts/update';
-import { ModelUpdate } from './resources/models/update';
 import { ResourceSchemaProvider } from './provider/schemaProvider';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
@@ -183,24 +180,9 @@ const CoreApp = () => {
                                     >
                                         <Resource {...functionDefinition} />
                                         <Resource {...workflowDefinition} />
-                                        <Resource {...dataitemDefinition}>
-                                            <Route
-                                                path=":id/update"
-                                                element={<DataItemUpdate />}
-                                            />
-                                        </Resource>
-                                        <Resource {...modelDefinition}>
-                                            <Route
-                                                path=":id/update"
-                                                element={<ModelUpdate />}
-                                            />
-                                        </Resource>
-                                        <Resource {...artifactDefinition}>
-                                            <Route
-                                                path=":id/update"
-                                                element={<ArtifactUpdate />}
-                                            />
-                                        </Resource>
+                                        <Resource {...dataitemDefinition} />
+                                        <Resource {...modelDefinition} />
+                                        <Resource {...artifactDefinition} />
                                         <Resource name="tasks" />
                                         <Resource {...runDefinition} />
                                         <Resource {...triggerDefinition} />
