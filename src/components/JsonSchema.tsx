@@ -18,7 +18,6 @@ import TitleField from '../jsonSchema/TitleField';
 import { JsonParamsWidget } from '../jsonSchema/JsonParamsWidget';
 import MultiSchemaFieldTemplate from '../jsonSchema/MultiSchemaFieldTemplate';
 import WrapIfAdditionalTemplate from '../jsonSchema/WrapIfAdditionalTemplate';
-import SchemaField from '../jsonSchema/SchemaField';
 import AceField from '../jsonSchema/AceField';
 
 const customWidgets = {
@@ -46,7 +45,6 @@ const customTemplates = {
     WrapIfAdditionalTemplate,
 };
 const customFields = {
-    SchemaField,
     AceField,
 };
 

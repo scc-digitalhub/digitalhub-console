@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { mergeUiTemplate } from '../../common/schemas';
+import { mergeUiTemplate, Serializable } from '../../common/schemas';
 
 export const getRunUiSpec = (schema: any | undefined) => {
     //filter and merge with template
@@ -24,25 +24,10 @@ export const getRunUiSpec = (schema: any | undefined) => {
     return mergeUiTemplate(schema, base, template);
 };
 
-const parametersTemplate = {
-    additionalProperties: {
-        //TODO change to oneOf when core is fixed
-        anyOf: [
-            {},
-            {},
-            { 'ui:label': false },
-            {
-                'ui:field': 'AceField',
-                'ui:label': false,
-            },
-            { 'ui:label': false },
-        ],
-    },
-};
-
 const template = {
-    'ui:order': ['init_parameters', 'inputs', 'parameters'],
+    'ui:order': ['init_parameters', 'inputs', 'parameters', 'node_config'],
     inputs: {},
-    parameters: parametersTemplate,
-    init_parameters: parametersTemplate,
+    parameters: Serializable,
+    init_parameters: Serializable,
+    node_config: Serializable,
 };

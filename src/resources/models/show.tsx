@@ -25,7 +25,6 @@ import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
-import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/metrics/MetricsGrid';
 import { ChipsField } from '../../components/ChipsField';
@@ -37,19 +36,6 @@ const ShowComponent = () => {
     const record = useRecordContext();
 
     return <ModelShowLayout record={record} />;
-};
-
-const getUiSpec = (kind: string) => {
-    const uiSpec = getModelSpecUiSchema(kind) || {};
-    //hide metrics field
-    uiSpec['metrics'] = {
-        'ui:widget': 'hidden',
-    };
-    uiSpec['parameters'] = {
-        'ui:ObjectFieldTemplate': JsonParamsWidget,
-        'ui:title': 'fields.parameters.title',
-    };
-    return uiSpec;
 };
 
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
@@ -132,7 +118,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     <JsonSchemaField
                         source="spec"
                         schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
+                        uiSchema={getModelSpecUiSchema(kind, true)}
                         label={false}
                     />
                 )}

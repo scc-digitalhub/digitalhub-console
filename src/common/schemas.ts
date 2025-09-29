@@ -274,3 +274,19 @@ export const SchemaIdPrefixes = {
     dataitems: 'DATAITEM:',
     models: 'MODEL:',
 };
+
+export const Serializable = {
+    additionalProperties: {
+        //TODO change to oneOf when core is fixed
+        anyOf: [
+            {},
+            {},
+            { 'ui:label': false },
+            {
+                'ui:field': 'AceField',
+                'ui:label': false,
+            },
+            { 'ui:label': false },
+        ],
+    },
+};
