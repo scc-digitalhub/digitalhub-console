@@ -149,6 +149,21 @@
             "title": "Dettagli"
         }
     },
+    "conditions": {
+        "title": "Condizioni",
+        "type": {
+            "title": "Tipo"
+        },
+        "lastTransitionTime": {
+            "title": "Ultimo Tempo di Transizione"
+        },
+        "status": {
+            "title": "Stato"
+        },
+        "reason": {
+            "title": "Motivo"
+        }
+    },
     "example": {
         "description": "",
         "title": "Esempio"
@@ -424,6 +439,18 @@
         "title": "Chiave"
     },
     "kind": "Tipologia",
+    "startTime": {
+        "description": "",
+        "title": "Ora di Inizio"
+    },
+    "phase": {
+        "description": "",
+        "title": "Fase"
+    },
+    "namespace": {
+        "description": "",
+        "title": "Spazio dei Nomice"
+    },
     "labels": {
         "description": "",
         "title": "Etichette"

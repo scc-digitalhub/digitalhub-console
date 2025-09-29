@@ -149,6 +149,21 @@
             "title": "Details"
         }
     },
+    "conditions": {
+        "title": "Conditions",
+        "type": {
+            "title": "Type"
+        },
+        "lastTransitionTime": {
+            "title": "Last Transition Time"
+        },
+        "status": {
+            "title": "Status"
+        },
+        "reason": {
+            "title": "Reason"
+        }
+    },
     "example": {
         "description": "",
         "title": "Example"
@@ -424,6 +439,18 @@
         "title": "Key"
     },
     "kind": "Kind",
+    "startTime": {
+        "description": "",
+        "title": "Start Time"
+    },
+    "phase": {
+        "description": "",
+        "title": "Phase"
+    },
+    "namespace": {
+        "description": "",
+        "title": "Namespace"
+    },
     "labels": {
         "description": "",
         "title": "Labels"
