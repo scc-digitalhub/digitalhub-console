@@ -2,10 +2,36 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export const getDataItemSpecUiSchema = (kind: string | undefined) => {
+import { Serializable } from '../../common/schemas';
+import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
+
+export const getDataItemSpecUiSchema = (
+    kind: string | undefined,
+    readonly?: boolean
+) => {
     if (!kind) {
         return undefined;
     }
+    if (kind == 'table') {
+        return getTableUiSchema(readonly);
+    }
 
     return undefined;
+};
+
+const getTableUiSchema = (readonly?: boolean) => {
+    return {
+        schema: {
+            fields: {
+                items: {
+                    constraints: readonly
+                        ? {
+                              'ui:ObjectFieldTemplate': JsonParamsWidget,
+                              'ui:title': 'fields.parameters.title',
+                          }
+                        : Serializable,
+                },
+            },
+        },
+    };
 };
