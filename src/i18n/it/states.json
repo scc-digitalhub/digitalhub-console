@@ -1,15 +1,15 @@
 {
-  "built": "Inizializzato",
-  "created": "Creato",
-  "completed": "Completato",
-  "deleted": "Cancellato",
-  "deleting": "In cancellazione",
-  "error": "Errore",
-  "ready": "Pronto",
-  "running": "In esecuzione",
-  "resume": "Ripreso",
-  "stopped": "Interrotto",
-  "stopping": "Interruzione in corso",
-  "stop": "Stop",
-  "uploading": "Caricamento in corso"
+    "built": "Inizializzato",
+    "created": "Creato",
+    "completed": "Completato",
+    "deleted": "Cancellato",
+    "deleting": "In cancellazione",
+    "error": "Errore",
+    "ready": "Pronto",
+    "running": "In esecuzione",
+    "resume": "Ripreso",
+    "stopped": "Interrotto",
+    "stopping": "Interruzione in corso",
+    "stop": "Stop",
+    "uploading": "Caricamento in corso"
 }
