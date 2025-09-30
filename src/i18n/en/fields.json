@@ -1,5 +1,11 @@
 {
     "activeRuns": "Active Runs",
+    "adapters": {
+        "item": {
+            "description": "",
+            "title": "Adapter"
+        }
+    },
     "algorithm": {
         "description": "",
         "title": "Algorithm"
@@ -110,9 +116,19 @@
         "description": "",
         "title": "Destination"
     },
+    "duration": {
+        "title": "Duration",
+        "description": "Duration (in hours)"
+    },
     "embedded": {
         "description": "",
         "title": "Embedded"
+    },
+    "env": {
+        "item": {
+            "description": "",
+            "title": "Environment Variable"
+        }
     },
     "errorReport": {
         "description": "",
@@ -141,6 +157,19 @@
         "description": "Arguments passed to command for execution",
         "title": "Execution Args"
     },
+    "expiresAt": {
+        "title": "Expires at"
+    },
+    "expiresIn": {
+        "title": "Expires in",
+        "value": "%{d} days, %{h} hours, %{m} minutes and %{s} seconds"
+    },
+    "features": {
+        "item": {
+            "description": "",
+            "title": "Feature"
+        }
+    },
     "fields": {
         "title": "Fields",
         "description": "",
@@ -157,6 +186,78 @@
         "item": {
             "description": "",
             "title": "File"
+        }
+    },
+    "flower": {
+        "sourceCode": {
+            "title": "Flower App Source Code",
+            "description": ""
+        },
+        "image": {
+            "title": "Container image to use",
+            "description": ""
+        },
+        "baseImage": {
+            "title": "Base container image to use for build task",
+            "description": ""
+        },
+        "requirements": {
+            "title": "Python dependencies",
+            "description": ""
+        },
+        "federation": {
+            "title": "Name of the federation",
+            "description": ""
+        },
+        "superlink": {
+            "title": "Superlink endpoint",
+            "description": ""
+        },
+        "root_certificates": {
+            "title": "Root TLS certificate",
+            "description": ""
+        },
+        "nodeconfig": {
+            "title": "Client node configuration parameters",
+            "description": ""
+        },
+        "private_key_secret": {
+            "title": "Private key for client node authentication",
+            "description": ""
+        },
+        "public_key_secret": {
+            "title": "Public key for client node authentication",
+            "description": ""
+        },
+        "isolation": {
+            "title": "Client node isolation mode",
+            "description": ""
+        },
+        "auth_public_keys": {
+            "title": "List of public keys for client node authentication",
+            "description": ""
+        }
+    },
+    "flowerSourceCode": {
+        "clientapp": {
+            "title": "Client App object reference",
+            "description": ""
+        },
+        "clientbase64": {
+            "title": "Client Source Code",
+            "description": "Client Source Code"
+        },
+        "serverapp": {
+            "title": "Server App object reference",
+            "description": ""
+        },
+        "serverbase64": {
+            "title": "Server Source Code",
+            "description": "Server Source Code"
+        },
+        "source": {
+            "title": "Flower App Source Code Reference",
+            "description": ""
         }
     },
     "forceBuild": {
@@ -249,6 +350,14 @@
         "empty": "No info available",
         "tab": "Info"
     },
+    "initParameters": {
+        "description": "",
+        "item": {
+            "description": "",
+            "title": "Parameter"
+        },
+        "title": "Init Parameters"
+    },
     "inputDatasets": {
         "item": {
             "description": "",
@@ -270,6 +379,12 @@
             "title": "Title"
         },
         "title": "Instructions"
+    },
+    "ipAddress": {
+        "title": "Ip Address"
+    },
+    "issuedAt": {
+        "title": "Issued at"
     },
     "k8s": {
         "description": "Define resources required for task execution in K8s",
@@ -532,6 +647,9 @@
         "description": "",
         "title": "Number of Workers"
     },
+    "openai": {
+        "title": "OpenAI"
+    },
     "openMetadata": {
         "description": "",
         "title": "Open Metadata"
@@ -627,6 +745,18 @@
         }
     },
     "results": "Results",
+    "runAsGroup": {
+        "description": "Group ID for the container",
+        "title": "Run As Group"
+    },
+    "runAsNonRoot": {
+        "description": "Run as non-root user",
+        "title": "Run As Non Root"
+    },
+    "runAsUser": {
+        "description": "User ID for the container",
+        "title": "Run As User"
+    },
     "runtimeClass": {
         "description": "Runtime class name for pods",
         "title": "Runtime Class"
@@ -638,6 +768,10 @@
     "schema": {
         "description": "",
         "title": "Schema"
+    },
+    "scopes": {
+        "title": "Scopes",
+        "description": "Access scopes (permissions)"
     },
     "secrets": {
         "description": "",
@@ -731,6 +865,9 @@
         "description": "",
         "title": "Title"
     },
+    "token": {
+        "title": "Token"
+    },
     "type": {
         "description": "",
         "title": "Type"
@@ -747,6 +884,10 @@
         "description": "Username",
         "title": "User"
     },
+    "validity": {
+        "title": "Validity",
+        "description": "Period of validity of the token"
+    },
     "value": {
         "description": "",
         "title": "Value"
@@ -762,146 +903,5 @@
     "workflow": {
         "description": "Static reference to workflow",
         "title": "Workflow"
-    },
-    "runAsUser": {
-        "description": "User ID for the container",
-        "title": "Run As User"
-    },
-    "runAsGroup": {
-        "description": "Group ID for the container",
-        "title": "Run As Group"
-    },
-    "runAsNonRoot": {
-        "description": "Run as non-root user",
-        "title": "Run As Non Root"
-    },
-    "initParameters": {
-        "description": "",
-        "item": {
-            "description": "",
-            "title": "Parameter"
-        },
-        "title": "Init Parameters"
-    },
-    "adapters": {
-        "item": {
-            "description": "",
-            "title": "Adapter"
-        }
-    },
-    "features": {
-        "item": {
-            "description": "",
-            "title": "Feature"
-        }
-    },
-    "env": {
-        "item": {
-            "description": "",
-            "title": "Environment Variable"
-        }
-    },
-    "issuedAt": {
-        "title": "Issued at"
-    },
-    "expiresAt": {
-        "title": "Expires at"
-    },
-    "expiresIn": {
-        "title": "Expires in",
-        "value": "%{d} days, %{h} hours, %{m} minutes and %{s} seconds"
-    },
-    "scopes": {
-        "title": "Scopes",
-        "description": "Access scopes (permissions)"
-    },
-    "validity": {
-        "title": "Validity",
-        "description": "Period of validity of the token"
-    },
-    "ipAddress": {
-        "title": "Ip Address"
-    },
-    "token": {
-        "title": "Token"
-    },
-    "openai": {
-        "title": "OpenAI"
-    },
-    "flowerSourceCode": {
-        "source": {
-            "title": "Flower App Source Code Reference",
-            "description": ""
-        },
-        "clientapp": {
-            "title": "Client App object reference",
-            "description": ""
-        },
-        "serverapp": {
-            "title": "Server App object reference",
-            "description": ""
-        },
-        "clientbase64": {
-            "title": "Client Source Code",
-            "description": "Client Source Code"
-        },
-        "serverbase64": {
-            "title": "Server Source Code",
-            "description": "Server Source Code"
-        }
-    },
-    "flower": {
-        "sourceCode": {
-            "title": "Flower App Source Code",
-            "description": ""
-        },
-        "image": {
-            "title": "Container image to use",
-            "description": ""
-        },
-        "baseImage": {
-            "title": "Base container image to use for build task",
-            "description": ""
-        },
-        "requirements": {
-            "title": "Python dependencies",
-            "description": ""
-        },
-        "federation": {
-            "title": "Name of the federation",
-            "description": ""
-        },
-        "superlink": {
-            "title": "Superlink endpoint",
-            "description": ""
-        },
-        "root_certificates": {
-            "title": "Root TLS certificate",
-            "description": ""
-        },
-        "nodeconfig": {
-            "title": "Client node configuration parameters",
-            "description": ""
-        },
-        "private_key_secret": {
-            "title": "Private key for client node authentication",
-            "description": ""
-        },
-        "public_key_secret": {
-            "title": "Public key for client node authentication",
-            "description": ""
-        },
-        "isolation": {
-            "title": "Client node isolation mode",
-            "description": ""
-        },
-        "auth_public_keys": {
-            "title": "List of public keys for client node authentication",
-            "description": ""
-        }
-    },
-    "duration": {
-        "title": "Duration",
-        "description": "Duration (in hours)"
     }
 }

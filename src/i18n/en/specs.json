@@ -11,7 +11,15 @@
         "description": "Container build task definition",
         "title": "Container build task"
     },
+    "container+build:run": {
+        "description": "Container build task definition",
+        "title": "Container build task"
+    },
     "container+deploy": {
+        "description": "Container deploy task definition",
+        "title": "Container deploy task"
+    },
+    "container+deploy:run": {
         "description": "Container deploy task definition",
         "title": "Container deploy task"
     },
@@ -19,11 +27,23 @@
         "description": "Container job definition",
         "title": "Container job"
     },
+    "container+job:run": {
+        "description": "Container job definition",
+        "title": "Container job"
+    },
     "container+run": {
         "description": "Container run definition",
         "title": "Container run"
     },
+    "container+run:run": {
+        "description": "Container run definition",
+        "title": "Container run"
+    },
     "container+serve": {
+        "description": "Container serve definition",
+        "title": "Container serve"
+    },
+    "container+serve:run": {
         "description": "Container serve definition",
         "title": "Container serve"
     },
@@ -36,12 +56,96 @@
         "title": "DBT"
     },
     "dbt+run": {
-        "description": " DBT run definition",
+        "description": "DBT run definition",
+        "title": "DBT run"
+    },
+    "dbt+run:run": {
+        "description": "DBT run definition",
         "title": "DBT run"
     },
     "dbt+transform": {
-        "description": " DBT transform task definition",
+        "description": "DBT transform task definition",
         "title": "DBT transform task"
+    },
+    "dbt+transform:run": {
+        "description": "DBT transform task definition",
+        "title": "DBT transform task"
+    },
+    "flower-app": {
+        "description": "",
+        "title": "Flower Federated Learning App"
+    },
+    "flower-app+train": {
+        "description": "",
+        "title": "Flower app train"
+    },
+    "flower-app+train:run": {
+        "description": "",
+        "title": "Flower app train"
+    },
+    "flower-app+run": {
+        "description": "",
+        "title": "Flower app run"
+    },
+    "flower-app+run:run": {
+        "description": "",
+        "title": "Flower app run"
+    },
+    "flower-client": {
+        "description": "",
+        "title": "Flower Federated Learning Client Node"
+    },
+    "flower-client+build": {
+        "description": "",
+        "title": "Flower client build task"
+    },
+    "flower-client+build:run": {
+        "description": "",
+        "title": "Flower client build task"
+    },
+    "flower-client+deploy": {
+        "description": "",
+        "title": "Flower client deploy task"
+    },
+    "flower-client+deploy:run": {
+        "description": "",
+        "title": "Flower client deploy task"
+    },
+    "flower-client+run": {
+        "description": "",
+        "title": "Flower client run"
+    },
+    "flower-client+run:run": {
+        "description": "",
+        "title": "Flower client run"
+    },
+    "flower-server": {
+        "description": "",
+        "title": "Flower Federated Learning Server Node"
+    },
+    "flower-server+build": {
+        "description": "",
+        "title": "Flower server build task"
+    },
+    "flower-server+build:run": {
+        "description": "",
+        "title": "Flower server build task"
+    },
+    "flower-server+deploy": {
+        "description": "",
+        "title": "Flower server deploy task"
+    },
+    "flower-server+deploy:run": {
+        "description": "",
+        "title": "Flower server deploy task"
+    },
+    "flower-server+run": {
+        "description": "",
+        "title": "Flower server run"
+    },
+    "flower-server+run:run": {
+        "description": "",
+        "title": "Flower server run"
     },
     "huggingface": {
         "description": "Huggingface model definition",
@@ -59,11 +163,23 @@
         "description": "Kubeflow Pipeline task definition",
         "title": "Kubeflow Pipeline task"
     },
+    "kfp+pipeline:run": {
+        "description": "Kubeflow Pipeline task definition",
+        "title": "Kubeflow Pipeline task"
+    },
     "kfp+build": {
         "description": "Kubeflow Pipeline build task definition",
         "title": "Kubeflow Pipeline build task"
     },
+    "kfp+build:run": {
+        "description": "Kubeflow Pipeline build task definition",
+        "title": "Kubeflow Pipeline build task"
+    },
     "kfp+run": {
+        "description": "Kubeflow Pipeline run definition",
+        "title": "Kubeflow Pipeline run"
+    },
+    "kfp+run:run": {
         "description": "Kubeflow Pipeline run definition",
         "title": "Kubeflow Pipeline run"
     },
@@ -78,7 +194,15 @@
         "description": "KubeAI serve task definition",
         "title": "KubeAI serve task"
     },
+    "kubeai+serve:run": {
+        "description": "KubeAI serve task definition",
+        "title": "KubeAI serve task"
+    },
     "kubeai+run": {
+        "description": "KubeAI serve run definition",
+        "title": "KubeAI Run"
+    },
+    "kubeai+run:run": {
         "description": "KubeAI serve run definition",
         "title": "KubeAI Run"
     },
@@ -124,11 +248,23 @@
         "description": "MLRun build task definition",
         "title": "MLRun build task"
     },
+    "mlrun+build:run": {
+        "description": "MLRun build task definition",
+        "title": "MLRun build task"
+    },
     "mlrun+job": {
         "description": "MLRun job definition",
         "title": "MLRun job"
     },
+    "mlrun+job:run": {
+        "description": "MLRun job definition",
+        "title": "MLRun job"
+    },
     "mlrun+run": {
+        "description": "MLRun run definition",
+        "title": "MLRun run"
+    },
+    "mlrun+run:run": {
         "description": "MLRun run definition",
         "title": "MLRun run"
     },
@@ -144,7 +280,15 @@
         "description": "Nefertem infer task definition",
         "title": "Nefertem infer task"
     },
+    "nefertem+infer:run": {
+        "description": "Nefertem infer task definition",
+        "title": "Nefertem infer task"
+    },
     "nefertem+metric": {
+        "description": "Nefertem metric task definition",
+        "title": "Nefertem metric task"
+    },
+    "nefertem+metric:run": {
         "description": "Nefertem metric task definition",
         "title": "Nefertem metric task"
     },
@@ -152,11 +296,23 @@
         "description": "Nefertem profile task definition",
         "title": "Nefertem profile task"
     },
+    "nefertem+profile:run": {
+        "description": "Nefertem profile task definition",
+        "title": "Nefertem profile task"
+    },
     "nefertem+run": {
         "description": "Nefertem run definition",
         "title": "Nefertem run"
     },
+    "nefertem+run:run": {
+        "description": "Nefertem run definition",
+        "title": "Nefertem run"
+    },
     "nefertem+validate": {
+        "description": "Nefertem validate task definition",
+        "title": "Nefertem validate task"
+    },
+    "nefertem+validate:run": {
         "description": "Nefertem validate task definition",
         "title": "Nefertem validate task"
     },
@@ -171,7 +327,15 @@
         "description": "Python run definition",
         "title": "Python run"
     },
+    "python+run:run": {
+        "description": "Python run definition",
+        "title": "Python run"
+    },
     "python+build": {
+        "description": "Python build definition",
+        "title": "Python build"
+    },
+    "python+build:run": {
         "description": "Python build definition",
         "title": "Python build"
     },
@@ -179,7 +343,15 @@
         "description": "Python job definition",
         "title": "Python job"
     },
+    "python+job:run": {
+        "description": "Python job definition",
+        "title": "Python job"
+    },
     "python+serve": {
+        "description": "Python serve definition",
+        "title": "Python serve"
+    },
+    "python+serve:run": {
         "description": "Python serve definition",
         "title": "Python serve"
     },
@@ -201,17 +373,5 @@
     "table": {
         "description": "",
         "title": "Table"
-    },
-    "flower-app": {
-        "description": "",
-        "title": "Flower Federated Learning App"
-    },
-    "flower-client": {
-        "description": "",
-        "title": "Flower Federated Learning Client Node"
-    },
-    "flower-server": {
-        "description": "",
-        "title": "Flower Federated Learning Server Node"
     }
 }

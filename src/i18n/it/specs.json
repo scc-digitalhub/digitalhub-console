@@ -1,217 +1,377 @@
 {
-  "artifact": {
-    "description": "",
-    "title": "Metadata Artifact"
-  },
-  "container": {
-    "description": "",
-    "title": "Container"
-  },
-  "container+build": {
-    "description": "Definizione dell'operazione di build del container",
-    "title": "Operazione di build del container"
-  },
-  "container+deploy": {
-    "description": "Definizione dell'operazione di deploy del container",
-    "title": "Operazione di deploy del container"
-  },
-  "container+job": {
-    "description": "Definizione del container job",
-    "title": "Container job"
-  },
-  "container+run": {
-    "description": "Definizione dell'esecuzione dell'operazione su container",
-    "title": "Esecuzione dell'operazione su container"
-  },
-  "container+serve": {
-    "description": "Definizione del container serve",
-    "title": "Container serve"
-  },
-  "dataitem": {
-    "description": "",
-    "title": "Metadata Dataitem"
-  },
-  "dbt": {
-    "description": "",
-    "title": "DBT"
-  },
-  "dbt+run": {
-    "description": "Definizione dell'esecuzione DBT",
-    "title": "Esecuzione DBT"
-  },
-  "dbt+transform": {
-    "description": "Definizione dell'operazione di transformazione DBT",
-    "title": "Operazione di transformazione DBT"
-  },
-  "huggingface": {
-    "description": "Definizione del modello Huggingface",
-    "title": "Huggingface"
-  },
-  "huggingfaceserve": {
-    "description": "Esecuzione modello Huggingface",
-    "title": "Huggingface"
-  },
-  "kfp": {
-    "description": "",
-    "title": "Pipeline di Kubeflow"
-  },
-  "kfp+pipeline": {
-    "description": "Definizione dell'operazione di Kubeflow Pipeline",
-    "title": "Operazione di Kubeflow Pipeline"
-  },
-  "kfp+build": {
-    "description": "Definizione di operazione di build di Kubeflow Pipeline",
-    "title": "Operazione di build di Kubeflow Pipeline"
-  },
-  "kfp+run": {
-    "description": "Definizione dell'esecuzione di Kubeflow Pipeline",
-    "title": "Esecuzione di Kubeflow Pipeline"
-  },
-  "kubeai": {
-      "description": ""
-  },
-  "kubeaiserve": {
-    "description": "Esecuzione modello LLM con KubeAI",
-    "title": "KubeAI"
-  },
-  "kubeai+serve": {
-    "description": "Definizione di KubeAI serve task",
-    "title": "KubeAI serve task"
-  },
-  "kubeai+run": {
-    "description": "Definizione dell'esecuzione di KubeAI serve",
-    "title": "Esecuzione di KubeAI serve"
-  },
-  "metadata": {
-    "audit": {
-      "description": "",
-      "title": "Audit"
-    },
-    "base": {
-      "description": "",
-      "title": "Metadata"
-    },
-    "embedded": {
-      "description": "",
-      "title": "Embedded"
-    },
-    "openmetadata": {
-      "description": "",
-      "title": "Openmetadata"
-    },
-    "relationships": {
+    "artifact": {
         "description": "",
-        "title": "Relazioni"
+        "title": "Metadata Artifact"
     },
-    "versioning": {
-      "description": "",
-      "title": "Versionamento"
+    "container": {
+        "description": "",
+        "title": "Container"
+    },
+    "container+build": {
+        "description": "Definizione dell'operazione di build del container",
+        "title": "Operazione di build del container"
+    },
+    "container+build:run": {
+        "description": "Definizione dell'operazione di build del container",
+        "title": "Operazione di build del container"
+    },
+    "container+deploy": {
+        "description": "Definizione dell'operazione di deploy del container",
+        "title": "Operazione di deploy del container"
+    },
+    "container+deploy:run": {
+        "description": "Definizione dell'operazione di deploy del container",
+        "title": "Operazione di deploy del container"
+    },
+    "container+job": {
+        "description": "Definizione del container job",
+        "title": "Container job"
+    },
+    "container+job:run": {
+        "description": "Definizione del container job",
+        "title": "Container job"
+    },
+    "container+run": {
+        "description": "Definizione dell'esecuzione dell'operazione su container",
+        "title": "Esecuzione dell'operazione su container"
+    },
+    "container+run:run": {
+        "description": "Definizione dell'esecuzione dell'operazione su container",
+        "title": "Esecuzione dell'operazione su container"
+    },
+    "container+serve": {
+        "description": "Definizione del container serve",
+        "title": "Container serve"
+    },
+    "container+serve:run": {
+        "description": "Definizione del container serve",
+        "title": "Container serve"
+    },
+    "dataitem": {
+        "description": "",
+        "title": "Metadata Dataitem"
+    },
+    "dbt": {
+        "description": "",
+        "title": "DBT"
+    },
+    "dbt+run": {
+        "description": "Definizione dell'esecuzione DBT",
+        "title": "Esecuzione DBT"
+    },
+    "dbt+run:run": {
+        "description": "Definizione dell'esecuzione DBT",
+        "title": "Esecuzione DBT"
+    },
+    "dbt+transform": {
+        "description": "Definizione dell'operazione di transformazione DBT",
+        "title": "Operazione di transformazione DBT"
+    },
+    "dbt+transform:run": {
+        "description": "Definizione dell'operazione di transformazione DBT",
+        "title": "Operazione di transformazione DBT"
+    },
+    "flower-app": {
+        "description": "",
+        "title": "Applicazione di Flower Federated Learning"
+    },
+    "flower-app+train": {
+        "description": "",
+        "title": "Addestramento applicazione Flower"
+    },
+    "flower-app+train:run": {
+        "description": "",
+        "title": "Addestramento applicazione Flower"
+    },
+    "flower-app+run": {
+        "description": "",
+        "title": "Esecuzione applicazione Flower"
+    },
+    "flower-app+run:run": {
+        "description": "",
+        "title": "Esecuzione applicazione Flower"
+    },
+    "flower-client": {
+        "description": "",
+        "title": "Nodo client di Flower Federated Learning"
+    },
+    "flower-client+build": {
+        "description": "",
+        "title": "Operazione di build del client Flower"
+    },
+    "flower-client+build:run": {
+        "description": "",
+        "title": "Operazione di build del client Flower"
+    },
+    "flower-client+deploy": {
+        "description": "",
+        "title": "Operazione di deploy del client Flower"
+    },
+    "flower-client+deploy:run": {
+        "description": "",
+        "title": "Operazione di deploy del client Flower"
+    },
+    "flower-client+run": {
+        "description": "",
+        "title": "Esecuzione del client Flower"
+    },
+    "flower-client+run:run": {
+        "description": "",
+        "title": "Esecuzione del client Flower"
+    },
+    "flower-server": {
+        "description": "",
+        "title": "Nodo server di Flower Federated Learning"
+    },
+    "flower-server+build": {
+        "description": "",
+        "title": "Operazione di build del server Flower"
+    },
+    "flower-server+build:run": {
+        "description": "",
+        "title": "Operazione di build del server Flower"
+    },
+    "flower-server+deploy": {
+        "description": "",
+        "title": "Operazione di deploy del server Flower"
+    },
+    "flower-server+deploy:run": {
+        "description": "",
+        "title": "Operazione di deploy del server Flower"
+    },
+    "flower-server+run": {
+        "description": "",
+        "title": "Esecuzione del server Flower"
+    },
+    "flower-server+run:run": {
+        "description": "",
+        "title": "Esecuzione del server Flower"
+    },
+    "huggingface": {
+        "description": "Definizione del modello Huggingface",
+        "title": "Huggingface"
+    },
+    "huggingfaceserve": {
+        "description": "Esecuzione modello Huggingface",
+        "title": "Huggingface"
+    },
+    "kfp": {
+        "description": "",
+        "title": "Pipeline di Kubeflow"
+    },
+    "kfp+pipeline": {
+        "description": "Definizione dell'operazione di Kubeflow Pipeline",
+        "title": "Operazione di Kubeflow Pipeline"
+    },
+    "kfp+pipeline:run": {
+        "description": "Definizione dell'operazione di Kubeflow Pipeline",
+        "title": "Operazione di Kubeflow Pipeline"
+    },
+    "kfp+build": {
+        "description": "Definizione di operazione di build di Kubeflow Pipeline",
+        "title": "Operazione di build di Kubeflow Pipeline"
+    },
+    "kfp+build:run": {
+        "description": "Definizione di operazione di build di Kubeflow Pipeline",
+        "title": "Operazione di build di Kubeflow Pipeline"
+    },
+    "kfp+run": {
+        "description": "Definizione dell'esecuzione di Kubeflow Pipeline",
+        "title": "Esecuzione di Kubeflow Pipeline"
+    },
+    "kfp+run:run": {
+        "description": "Definizione dell'esecuzione di Kubeflow Pipeline",
+        "title": "Esecuzione di Kubeflow Pipeline"
+    },
+    "kubeai": {
+        "description": ""
+    },
+    "kubeaiserve": {
+        "description": "Esecuzione modello LLM con KubeAI",
+        "title": "KubeAI"
+    },
+    "kubeai+serve": {
+        "description": "Definizione di KubeAI serve task",
+        "title": "KubeAI serve task"
+    },
+    "kubeai+serve:run": {
+        "description": "Definizione di KubeAI serve task",
+        "title": "KubeAI serve task"
+    },
+    "kubeai+run": {
+        "description": "Definizione dell'esecuzione di KubeAI serve",
+        "title": "Esecuzione di KubeAI serve"
+    },
+    "kubeai+run:run": {
+        "description": "Definizione dell'esecuzione di KubeAI serve",
+        "title": "Esecuzione di KubeAI serve"
+    },
+    "metadata": {
+        "audit": {
+            "description": "",
+            "title": "Audit"
+        },
+        "base": {
+            "description": "",
+            "title": "Metadata"
+        },
+        "embedded": {
+            "description": "",
+            "title": "Embedded"
+        },
+        "openmetadata": {
+            "description": "",
+            "title": "Openmetadata"
+        },
+        "relationships": {
+            "description": "",
+            "title": "Relazioni"
+        },
+        "versioning": {
+            "description": "",
+            "title": "Versionamento"
+        }
+    },
+    "mlflow": {
+        "description": "Definizione modello MLFlow",
+        "title": "MLflow"
+    },
+    "mlflowserve": {
+        "description": "Esecuzione modello MLFlow",
+        "title": "MLFlow"
+    },
+    "mlrun": {
+        "description": "",
+        "title": "MLRun"
+    },
+    "mlrun+build": {
+        "description": "Definizione dell'operazione di build dell'immagine MLRun",
+        "title": "Operazione di build dell'immagine MLRun"
+    },
+    "mlrun+build:run": {
+        "description": "Definizione dell'operazione di build dell'immagine MLRun",
+        "title": "Operazione di build dell'immagine MLRun"
+    },
+    "mlrun+job": {
+        "description": "Definizione del job di MLRun",
+        "title": "Job di MLRun"
+    },
+    "mlrun+job:run": {
+        "description": "Definizione del job di MLRun",
+        "title": "Job di MLRun"
+    },
+    "mlrun+run": {
+        "description": "Definizione dell'esecuzione MLRun",
+        "title": "Esecuzione MLRun"
+    },
+    "mlrun+run:run": {
+        "description": "Definizione dell'esecuzione MLRun",
+        "title": "Esecuzione MLRun"
+    },
+    "model": {
+        "description": "",
+        "title": "Metadata Model"
+    },
+    "nefertem": {
+        "description": "",
+        "title": "Nefertem"
+    },
+    "nefertem+infer": {
+        "description": "Definizione dell'operazione di infer Nefertem",
+        "title": "Operazione di infer Nefertem"
+    },
+    "nefertem+infer:run": {
+        "description": "Definizione dell'operazione di infer Nefertem",
+        "title": "Operazione di infer Nefertem"
+    },
+    "nefertem+metric": {
+        "description": "Definizione dell'operazione di metriche Nefertem",
+        "title": "Operazione di metriche Nefertem"
+    },
+    "nefertem+metric:run": {
+        "description": "Definizione dell'operazione di metriche Nefertem",
+        "title": "Operazione di metriche Nefertem"
+    },
+    "nefertem+profile": {
+        "description": "Definizione dell'operazione di profilazione Nefertem",
+        "title": "Operazione di profilazione Nefertem"
+    },
+    "nefertem+profile:run": {
+        "description": "Definizione dell'operazione di profilazione Nefertem",
+        "title": "Operazione di profilazione Nefertem"
+    },
+    "nefertem+run": {
+        "description": "Definizione dell'esecuzione di operazione Nefertem",
+        "title": "Esecuzione di operazione Nefertem"
+    },
+    "nefertem+run:run": {
+        "description": "Definizione dell'esecuzione di operazione Nefertem",
+        "title": "Esecuzione di operazione Nefertem"
+    },
+    "nefertem+validate": {
+        "description": "Definizione dell'operazione di validazione Nefertem",
+        "title": "Operazione di validazione Nefertem"
+    },
+    "nefertem+validate:run": {
+        "description": "Definizione dell'operazione di validazione Nefertem",
+        "title": "Operazione di validazione Nefertem"
+    },
+    "project": {
+        "description": ""
+    },
+    "python": {
+        "description": "",
+        "title": "Python"
+    },
+    "python+run": {
+        "description": "Definizione dell'operazione di run del codice Python",
+        "title": "Run di codice Python"
+    },
+    "python+run:run": {
+        "description": "Definizione dell'operazione di run del codice Python",
+        "title": "Run di codice Python"
+    },
+    "python+build": {
+        "description": "Definizione dell'operazione di build del codice Python",
+        "title": "Build di codice Python"
+    },
+    "python+build:run": {
+        "description": "Definizione dell'operazione di build del codice Python",
+        "title": "Build di codice Python"
+    },
+    "python+job": {
+        "description": "Definizione di un job Python",
+        "title": "Job Python"
+    },
+    "python+job:run": {
+        "description": "Definizione di un job Python",
+        "title": "Job Python"
+    },
+    "python+serve": {
+        "description": "Definizione dell'operazione di serve del codice Python",
+        "title": "Serve di codice Python"
+    },
+    "python+serve:run": {
+        "description": "Definizione dell'operazione di serve del codice Python",
+        "title": "Serve di codice Python"
+    },
+    "scheduler": {
+        "description": "",
+        "title": "Scheduler"
+    },
+    "sklearn": {
+        "description": "Definizione modello SKLearn",
+        "title": "SKLearn"
+    },
+    "sklearnserve": {
+        "description": "Esecuzione modello SKLearn",
+        "title": "SKLearn"
+    },
+    "secret": {
+        "description": ""
+    },
+    "table": {
+        "description": "",
+        "title": "Tabella"
     }
-  },
-  "mlflow": {
-    "description": "Definizione modello MLFlow",
-    "title": "MLflow"
-  },
-  "mlflowserve": {
-    "description": "Esecuzione modello MLFlow",
-    "title": "MLFlow"
-  },
-  "mlrun": {
-    "description": "",
-    "title": "MLRun"
-  },
-  "mlrun+build": {
-    "description": "Definizione dell'operazione di build dell'immagine MLRun",
-    "title": "Operazione di build dell'immagine MLRun"
-  },
-  "mlrun+job": {
-    "description": "Definizione del job di MLRun",
-    "title": "Job di MLRun"
-  },
-  "mlrun+run": {
-    "description": "Definizione dell'esecuzione MLRun",
-    "title": "Esecuzione MLRun"
-  },
-  "model": {
-    "description": "",
-    "title": "Metadata Model"
-  },
-  "nefertem": {
-    "description": "",
-    "title": "Nefertem"
-  },
-  "nefertem+infer": {
-    "description": "Definizione dell'operazione di infer Nefertem",
-    "title": "Operazione di infer Nefertem"
-  },
-  "nefertem+metric": {
-    "description": "Definizione dell'operazione di metriche Nefertem",
-    "title": "Operazione di metriche Nefertem"
-  },
-  "nefertem+profile": {
-    "description": "Definizione dell'operazione di profilazione Nefertem",
-    "title": "Operazione di profilazione Nefertem"
-  },
-  "nefertem+run": {
-    "description": "Definizione dell'esecuzione di operazione Nefertem",
-    "title": "Esecuzione di operazione Nefertem"
-  },
-  "nefertem+validate": {
-    "description": "Definizione dell'operazione di validazione Nefertem",
-    "title": "Operazione di validazione Nefertem"
-  },
-  "project": {
-      "description": ""
-  },
-  "python": {
-    "description": "",
-    "title": "Python"
-  },
-  "python+run": {
-    "description": "Definizione dell'operazione di run del codice Python",
-    "title": "Run di codice Python"
-},
-  "python+build": {
-    "description": "Definizione dell'operazione di build del codice Python",
-    "title": "Build di codice Python"
-  },
-  "python+job": {
-    "description": "Definizione di un job Python",
-    "title": "Job Python"
-  },
-  "python+serve": {
-    "description": "Definizione dell'operazione di serve del codice Python",
-    "title": "Serve di codice Python"
-  },
-  "scheduler": {
-      "description": "",
-      "title": "Scheduler"
-  },
-  "sklearn": {
-    "description": "Definizione modello SKLearn",
-    "title": "SKLearn"
-  },
-  "sklearnserve": {
-    "description": "Esecuzione modello SKLearn",
-    "title": "SKLearn"
-  },
-  "secret": {
-    "description": ""
-  },
-  "table": {
-    "description": "",
-    "title": "Tabella"
-  },
-  "flower-app": {
-      "description": "",
-      "title": "Applicazione di Flower Federated Learning"
-  },
-  "flower-client": {
-      "description": "",
-      "title": "Nodo client di Flower Federated Learning"
-  },
-  "flower-server": {
-      "description": "",
-      "title": "Nodo server di Flower Federated Learning"
-  }
 }
