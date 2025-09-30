@@ -4,8 +4,6 @@
 
 import {
     Datagrid,
-    DateField,
-    DeleteWithConfirmButton,
     FunctionField,
     ListView,
     ResourceContextProvider,
@@ -13,19 +11,17 @@ import {
     TextField,
     TopToolbar,
     useGetList,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Container, Typography } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { useCallback } from 'react';
 import { FlatCard } from '../../components/FlatCard';
-import { ListPageTitle, PageTitle } from '../../components/PageTitle';
+import { PageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
-import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, taskParser } from '../../common/helper';
+import { functionParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 import { Stack } from '@mui/system';
