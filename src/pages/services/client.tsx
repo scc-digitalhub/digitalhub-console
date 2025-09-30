@@ -16,6 +16,7 @@ import {
     ListItemText,
     Divider,
     Box,
+    ListItemButton,
 } from '@mui/material';
 import { Add, Delete, ExpandMore } from '@mui/icons-material';
 import {
@@ -167,12 +168,15 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                     <React.Fragment key={idx}>
                                         <ListItem
                                             onClick={() => loadHistory(entry)}
-                                            sx={{ py: 1 }}
+                                            disablePadding
+                                            disableGutters
                                         >
-                                            <ListItemText
-                                                primary={`${entry.method} ${entry.url}`}
-                                                secondary={`${entry.timestamp}`}
-                                            />
+                                            <ListItemButton>
+                                                <ListItemText
+                                                    primary={`${entry.method} ${entry.url}`}
+                                                    secondary={`${entry.timestamp}`}
+                                                />
+                                            </ListItemButton>
                                         </ListItem>
                                         <Divider />
                                     </React.Fragment>
