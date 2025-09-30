@@ -28,7 +28,7 @@ import { RunIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { StateChips, StateColors } from '../../components/StateChips';
-import { LogsView } from '../../components/buttons/LogsButton';
+import { LogsView } from '../../components/LogsView';
 import { StopButton } from './StopButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
