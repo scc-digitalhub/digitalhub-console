@@ -298,10 +298,10 @@ export const RunShowComponent = () => {
             )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
-             </TabbedShowLayout.Tab>
+            </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label={'fields.pods.title'}>
-                    <PodsTab record={record} />
-                </TabbedShowLayout.Tab>
+                <PodsTab record={record} />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };
@@ -335,6 +335,7 @@ export const RunShow = () => {
                         actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
+                            minWidth: '1000px',
                         }}
                         component={FlatCard}
                     >

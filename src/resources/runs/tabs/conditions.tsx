@@ -12,36 +12,27 @@ import {
 } from 'react-admin';
 import { TypeChips } from '../../../components/TypeChips';
 
-export const ConditionsList = (props: { record: any }) => {
-    const { record } = props;
+export const ConditionsList = ({ record }: { record: any }) => {
     const raw = record?.status?.pods?.[0]?.conditions ?? [];
 
-    const toMs = (item: any) => {
-        if (!item) return 0;
-        const v = item.lastTransitionTime;
-        if (v == null) return 0;
+    const listContext = useList({
+        data: raw,
+        sort: { field: 'lastTransitionTime', order: 'DESC' },
+    });
 
-        if (typeof v === 'number') {
-            return v < 1e12 ? v * 1000 : v;
-        }
-
-        const parsed = Date.parse(String(v));
-        return Number.isNaN(parsed) ? 0 : parsed;
-    };
-
-    const sortedConditions = [...raw].sort((a, b) => toMs(b) - toMs(a));
-
-    const listContext = useList({ data: sortedConditions });
-    
     return (
-        <Labeled label="fields.conditions.title"  width={"50%"}>
+        <Labeled label="fields.conditions.title" width="60%">
             <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}   >
+                <Datagrid bulkActionButtons={false} rowClick={false}>
                     <DateField
                         showTime
-                        source={"lastTransitionTime"}
+                        source="lastTransitionTime"
                         label="fields.conditions.lastTransitionTime.title"
-
+                    />
+                    <TypeChips
+                        source="type"
+                        sortable={false}
+                        label="fields.conditions.type.title"
                     />
                     <TextField
                         source="reason"
@@ -52,11 +43,6 @@ export const ConditionsList = (props: { record: any }) => {
                         source="status"
                         sortable={false}
                         label="fields.conditions.status.title"
-                    />
-                    <TypeChips 
-                        source="type"
-                        sortable={false}
-                        label="fields.conditions.type.title"
                     />
                     <></>
                 </Datagrid>

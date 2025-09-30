@@ -34,6 +34,21 @@
         "description": "",
         "title": "Commands"
     },
+    "conditions": {
+        "title": "Conditions",
+        "type": {
+            "title": "Type"
+        },
+        "lastTransitionTime": {
+            "title": "Last Transition Time"
+        },
+        "status": {
+            "title": "Status"
+        },
+        "reason": {
+            "title": "Reason"
+        }
+    },
     "config": {
         "title": "Configuration",
         "description": "",
@@ -62,6 +77,22 @@
         "command": {
             "description": "Override command executed in image",
             "title": "Command"
+        },
+        "name": {
+            "description": "Container name",
+            "title": "Name"
+        },
+        "ready": {
+            "description": "Container readiness status",
+            "title": "Ready"
+        },
+        "restartCount": {
+            "description": "Number of container restarts",
+            "title": "Restart Count"
+        },
+        "state": {
+            "description": "Container state",
+            "title": "State"
         },
         "image": {
             "description": "Container image used for tasks",
@@ -147,21 +178,6 @@
         },
         "details": {
             "title": "Details"
-        }
-    },
-    "conditions": {
-        "title": "Conditions",
-        "type": {
-            "title": "Type"
-        },
-        "lastTransitionTime": {
-            "title": "Last Transition Time"
-        },
-        "status": {
-            "title": "Status"
-        },
-        "reason": {
-            "title": "Reason"
         }
     },
     "example": {
@@ -476,6 +492,10 @@
             "title": "Item"
         },
         "title": "Metrics"
+    },
+    "pods": {
+        "description": "",
+        "title": "Pods"
     },
     "mlflow": {
         "digest": {
