@@ -6,6 +6,7 @@ import React, {
     Fragment,
     ReactElement,
     useCallback,
+    useEffect,
     useMemo,
     useState,
 } from 'react';
@@ -18,7 +19,6 @@ import {
     RaRecord,
     Identifier,
     RecordContextProvider,
-    RefreshButton,
     TextField,
     useGetResourceLabel,
     useListController,
@@ -43,6 +43,7 @@ import {
     styled,
 } from '@mui/material';
 import SegmentIcon from '@mui/icons-material/Segment';
+import NavigationRefresh from '@mui/icons-material/Refresh';
 import { LazyLog } from '@melloware/react-logviewer';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
@@ -189,7 +190,8 @@ export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
 export const LogsView = (props: LogsButtonProps) => {
     const { id, resource } = props;
     const getResourceLabel = useGetResourceLabel();
-    const [cur, setCur] = useState<any>(undefined);
+    const [selectedId, setSelectedId] = useState<string>('');
+    const [currentLog, setCurrentLog] = useState<any>(undefined);
 
     const label = getResourceLabel('logs', 1).toLowerCase();
 
@@ -202,7 +204,7 @@ export const LogsView = (props: LogsButtonProps) => {
     }, [resource, id]);
 
     //TODO handle pagination?
-    const { data } = useListController({
+    const { data, refetch } = useListController({
         resource: 'logs',
         sort: { field: 'created', order: 'DESC' },
         filter,
@@ -210,15 +212,20 @@ export const LogsView = (props: LogsButtonProps) => {
         disableSyncWithLocation: true,
     });
 
+    useEffect(() => {
+        if (data && selectedId != '') {
+            const r = data.find(r => r.id === selectedId);
+            setCurrentLog(r);
+        }
+    }, [data, selectedId]);
+
     if (!data) {
         return <LoadingIndicator />;
     }
 
-    const selected = cur ? cur.id : '';
     const onSelected = e => {
-        if (e.target?.value && data) {
-            const r = data.find(r => r.id === e.target.value);
-            setCur(r);
+        if (e.target?.value) {
+            setSelectedId(e.target.value);
         }
     };
 
@@ -228,7 +235,7 @@ export const LogsView = (props: LogsButtonProps) => {
                 <FormControl fullWidth>
                     <InputLabel>{label}</InputLabel>
                     <Select
-                        value={selected}
+                        value={selectedId}
                         label={label}
                         onChange={onSelected}
                     >
@@ -246,18 +253,26 @@ export const LogsView = (props: LogsButtonProps) => {
                 </FormControl>
             </Box>
             <Box sx={{ pt: 2 }}>
-                <RecordContextProvider value={cur}>
-                    <LogsDetail />
+                <RecordContextProvider value={currentLog}>
+                    <LogsDetail refresh={refetch} />
                 </RecordContextProvider>
             </Box>
         </Stack>
     );
 };
 
-const LogsDetail = (props: { record?: any }) => {
-    const { record: recordFromProps } = props;
+const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
+    const { record: recordFromProps, refresh } = props;
     const recordContext = useRecordContext();
     const ref = React.createRef<LazyLog>();
+
+    const handleRefresh = useCallback(
+        event => {
+            event.preventDefault();
+            if (refresh) refresh();
+        },
+        [refresh]
+    );
 
     const record = recordFromProps || recordContext;
     if (!record) {
@@ -299,7 +314,9 @@ const LogsDetail = (props: { record?: any }) => {
                 className={ToolbarClasses.mobileToolbar}
                 sx={{ mb: 0, pb: 0 }}
             >
-                <RefreshButton label="" />
+                <Button label="" onClick={handleRefresh}>
+                    <NavigationRefresh />
+                </Button>
                 <DownloadButton label="" record={record} />
             </TopToolbar>
             <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
