@@ -10,6 +10,7 @@ import { round } from 'lodash';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
+export const FUNCTION_OR_WORKFLOW = 'functionOrWorkflow';
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);

@@ -11,6 +11,7 @@ import {
 import { StateChips, StateColors } from '../components/StateChips';
 import { ReactElement, useEffect, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
+import { FUNCTION_OR_WORKFLOW } from '../common/helper';
 
 const fileRelatedStates = ['CREATED', 'UPLOADING', 'ERROR', 'READY'];
 
@@ -36,8 +37,7 @@ const getChoices = (resource: string) => {
 };
 
 export type GetFiltersFunction = (
-    functions?: any[],
-    workflows?: any[]
+    functions?: any[]
 ) => ReactElement[] | undefined;
 
 export const useGetFilters = (): GetFiltersFunction => {
@@ -66,7 +66,7 @@ export const useGetFilters = (): GetFiltersFunction => {
         sx: { '& .RaSelectInput-input': { margin: '0px' } },
     };
 
-    const getFilters: GetFiltersFunction = (functions, workflows) => {
+    const getFilters: GetFiltersFunction = functions => {
         if (!kinds || !resource) {
             return undefined;
         }
@@ -113,25 +113,13 @@ export const useGetFilters = (): GetFiltersFunction => {
             filters.push(
                 <SelectInput
                     key={4}
-                    label={translate('resources.functions.name', {
+                    label={`${translate('resources.functions.name', {
                         smart_count: 1,
-                    })}
-                    source="function"
+                    })}/${translate('resources.workflows.name', {
+                        smart_count: 1,
+                    })}`}
+                    source={FUNCTION_OR_WORKFLOW}
                     choices={functions}
-                    {...selectProps}
-                />
-            );
-        }
-
-        if (workflows) {
-            filters.push(
-                <SelectInput
-                    key={5}
-                    label={translate('resources.workflows.name', {
-                        smart_count: 1,
-                    })}
-                    source="workflow"
-                    choices={workflows}
                     {...selectProps}
                 />
             );

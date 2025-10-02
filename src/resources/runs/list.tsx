@@ -14,7 +14,7 @@ import {
     useGetList,
     useResourceContext,
 } from 'react-admin';
-import { Box, Container } from '@mui/material';
+import { Box, Container, Stack, Typography } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { useCallback } from 'react';
 import { FlatCard } from '../../components/FlatCard';
@@ -24,7 +24,7 @@ import { StateChips } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { taskParser } from '../../common/helper';
+import { functionParser, taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 
@@ -42,12 +42,23 @@ export const RunList = () => {
     const { root } = useRootSelector();
     const getFilters = useGetFilters();
 
-    const selectOption = useCallback(
+    const functionSelectOption = useCallback(
         d => ({
             ...d,
             data: d.data?.map(record => ({
                 name: record.name,
-                id: `${record.kind}://${record.project}/${record.name}`,
+                id: `function_${record.kind}://${record.project}/${record.name}`,
+            })),
+        }),
+        []
+    );
+
+    const workflowSelectOption = useCallback(
+        d => ({
+            ...d,
+            data: d.data?.map(record => ({
+                name: record.name,
+                id: `workflow_${record.kind}://${record.project}/${record.name}`,
             })),
         }),
         []
@@ -56,19 +67,19 @@ export const RunList = () => {
     const { data: functions } = useGetList(
         'functions',
         { pagination: { page: 1, perPage: 100 } },
-        { select: selectOption }
+        { select: functionSelectOption }
     );
     const { data: workflows } = useGetList(
         'workflows',
         { pagination: { page: 1, perPage: 100 } },
-        { select: selectOption }
+        { select: workflowSelectOption }
     );
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ListBaseLive
                 exporter={yamlExporter}
-                sort={{ field: 'metadata.updated', order: 'DESC' }}
+                sort={{ field: 'metadata.created', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
             >
                 <>
@@ -80,7 +91,7 @@ export const RunList = () => {
                         <ListView
                             filters={
                                 functions && workflows
-                                    ? getFilters(functions, workflows)
+                                    ? getFilters([...functions, ...workflows])
                                     : undefined
                             }
                             actions={false}
@@ -93,9 +104,37 @@ export const RunList = () => {
                                     <BulkDeleteAllVersionsButton />
                                 }
                             >
-                                <TextField
-                                    source="name"
+                                <FunctionField
+                                    source="spec.function"
                                     label="fields.name.title"
+                                    sortable={false}
+                                    render={record => (
+                                        <Stack direction={'column'} gap={1}>
+                                            {record?.spec?.function && (
+                                                <Typography variant="h6">
+                                                    {
+                                                        functionParser(
+                                                            record.spec.function
+                                                        ).name
+                                                    }
+                                                </Typography>
+                                            )}
+                                            {record?.spec?.workflow && (
+                                                <Typography variant="h6">
+                                                    {
+                                                        functionParser(
+                                                            record.spec.workflow
+                                                        ).name
+                                                    }
+                                                </Typography>
+                                            )}
+                                            <TextField
+                                                source="name"
+                                                label="fields.name"
+                                                color="info"
+                                            />
+                                        </Stack>
+                                    )}
                                 />
                                 <DateField
                                     source="metadata.created"

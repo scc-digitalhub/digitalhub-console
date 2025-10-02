@@ -11,6 +11,7 @@ import {
     SearchProvider,
     SearchResults,
 } from '../search/searchbar/SearchProvider';
+import { FUNCTION_OR_WORKFLOW } from '../common/helper';
 
 /**
  * Data Provider for Spring REST with Pageable support.
@@ -91,6 +92,13 @@ const springDataProvider = (
 
             const record = params.meta?.record;
             const allVersion = params.meta?.allVersion;
+
+            if (params.filter?.[FUNCTION_OR_WORKFLOW]) {
+                //either use function or workflow filter based on the prefix
+                const f = params.filter[FUNCTION_OR_WORKFLOW].split('_');
+                params.filter[f[0]] = f[1];
+                delete params.filter[FUNCTION_OR_WORKFLOW];
+            }
 
             const query = {
                 ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is

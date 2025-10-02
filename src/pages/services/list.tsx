@@ -10,12 +10,10 @@ import {
     ShowButton,
     TextField,
     TopToolbar,
-    useGetList,
     useTranslate,
 } from 'react-admin';
 import { Box, Container, Typography } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { useCallback } from 'react';
 import { FlatCard } from '../../components/FlatCard';
 import { PageTitle } from '../../components/PageTitle';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
@@ -23,7 +21,6 @@ import { StateChips } from '../../components/StateChips';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
-import { useGetFilters } from '../../controllers/filtersController';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { LogsButton } from '../../components/buttons/LogsButton';
@@ -43,29 +40,6 @@ const RowActions = () => {
 export const ServiceList = () => {
     const { root } = useRootSelector();
     const translate = useTranslate();
-    const getFilters = useGetFilters();
-
-    const selectOption = useCallback(
-        d => ({
-            ...d,
-            data: d.data?.map(record => ({
-                name: record.name,
-                id: `${record.kind}://${record.project}/${record.name}`,
-            })),
-        }),
-        []
-    );
-
-    const { data: functions } = useGetList(
-        'functions',
-        { pagination: { page: 1, perPage: 100 } },
-        { select: selectOption }
-    );
-    const { data: workflows } = useGetList(
-        'workflows',
-        { pagination: { page: 1, perPage: 100 } },
-        { select: selectOption }
-    );
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -87,13 +61,8 @@ export const ServiceList = () => {
 
                         <TopToolbar />
 
-                        <FlatCard>
+                        <FlatCard sx={{ pt: '9px' }}>
                             <ListView
-                                filters={
-                                    functions && workflows
-                                        ? getFilters(functions, workflows)
-                                        : undefined
-                                }
                                 actions={false}
                                 component={Box}
                                 sx={{ pb: 2 }}
