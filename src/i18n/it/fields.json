@@ -34,6 +34,21 @@
         "description": "",
         "title": "Comandi"
     },
+    "conditions": {
+        "title": "Condizioni",
+        "type": {
+            "title": "Tipo"
+        },
+        "lastTransitionTime": {
+            "title": "Ultimo Tempo di Transizione"
+        },
+        "status": {
+            "title": "Stato"
+        },
+        "reason": {
+            "title": "Motivo"
+        }
+    },
     "config": {
         "title": "Configurazione",
         "description": "",
@@ -62,6 +77,22 @@
         "command": {
             "description": "Sovrascrive il comando eseguito nell'immagine",
             "title": "Comando di Esecuzione del Container"
+        },
+        "name": {
+            "description": "Nome del container",
+            "title": "Nome"
+        },
+        "ready": {
+            "description": "Stato di prontezza del container",
+            "title": "Pronto"
+        },
+        "restartCount": {
+            "description": "Numero di riavvii del container",
+            "title": "Conteggio Riavvii"
+        },
+        "state": {
+            "description": "Stato del container",
+            "title": "Stato"
         },
         "image": {
             "description": "Immagine usata per i container dei task",
@@ -424,6 +455,18 @@
         "title": "Chiave"
     },
     "kind": "Tipologia",
+    "startTime": {
+        "description": "",
+        "title": "Ora di Inizio"
+    },
+    "phase": {
+        "description": "",
+        "title": "Fase"
+    },
+    "namespace": {
+        "description": "",
+        "title": "Spazio dei Nomice"
+    },
     "labels": {
         "description": "",
         "title": "Etichette"
@@ -449,6 +492,10 @@
             "title": "Elemento"
         },
         "title": "Metriche"
+    },
+    "pods": {
+        "description": "",
+        "title": "Pods"
     },
     "mlflow": {
         "digest": {

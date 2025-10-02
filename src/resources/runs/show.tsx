@@ -51,6 +51,7 @@ import { K8sDetails } from './tabs/k8s';
 import { OpenAIDetails } from './tabs/openai';
 import { CloneButton } from './CloneButton';
 import { ClientTab } from './tabs/client';
+import PodsTab from './tabs/pods';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -298,6 +299,9 @@ export const RunShowComponent = () => {
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label={'fields.pods.title'}>
+                <PodsTab record={record} />
+            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };
@@ -331,6 +335,7 @@ export const RunShow = () => {
                         actions={<ShowToolbar />}
                         sx={{
                             width: '100%',
+                            minWidth: '1000px',
                         }}
                         component={FlatCard}
                     >
