@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import {
-    Card,
-    CardContent,
-    CardHeader,
     Typography,
     Button,
     TextField,
@@ -19,6 +16,7 @@ import {
     ListItemText,
     Divider,
     Box,
+    ListItemButton,
 } from '@mui/material';
 import { Add, Delete, ExpandMore } from '@mui/icons-material';
 import {
@@ -130,7 +128,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                 timestamp: new Date().toLocaleTimeString(),
             };
             setHistory([newEntry, ...history.slice(0, 9)]); // keep max 10
-        } catch (err) {
+        } catch (err: any) {
             setResponse({ error: err.message });
         } finally {
             setLoading(false);
@@ -149,13 +147,15 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
         <>
             <Box mb={1}>
                 <Typography variant="h6" mb={1}>
-                    {translate("pages.http-client.request")}
+                    {translate('pages.http-client.request')}
                 </Typography>
 
                 {/* History */}
                 <Accordion sx={{ mb: 2 }}>
                     <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>{translate("pages.http-client.history")}</Typography>
+                        <Typography>
+                            {translate('pages.http-client.history')}
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         {history.length === 0 ? (
@@ -167,14 +167,16 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                 {history.map((entry, idx) => (
                                     <React.Fragment key={idx}>
                                         <ListItem
-                                            button
                                             onClick={() => loadHistory(entry)}
-                                            sx={{ py: 1 }}
+                                            disablePadding
+                                            disableGutters
                                         >
-                                            <ListItemText
-                                                primary={`${entry.method} ${entry.url}`}
-                                                secondary={`${entry.timestamp}`}
-                                            />
+                                            <ListItemButton>
+                                                <ListItemText
+                                                    primary={`${entry.method} ${entry.url}`}
+                                                    secondary={`${entry.timestamp}`}
+                                                />
+                                            </ListItemButton>
                                         </ListItem>
                                         <Divider />
                                     </React.Fragment>
@@ -235,7 +237,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                 key={index}
                                 sx={{ mb: 1 }}
                             >
-                                <Grid item xs={5}>
+                                <Grid size={5}>
                                     <TextField
                                         label="Key"
                                         value={h.key}
@@ -250,7 +252,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                         size="small"
                                     />
                                 </Grid>
-                                <Grid item xs={5}>
+                                <Grid size={5}>
                                     <TextField
                                         label="Value"
                                         value={h.value}
@@ -266,8 +268,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                     />
                                 </Grid>
                                 <Grid
-                                    item
-                                    xs={2}
+                                    size={2}
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -327,7 +328,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
             <Collapse in={!!response}>
                 <RecordContextProvider value={response}>
                     <Typography variant="h6" mt={2}>
-                        {translate("pages.http-client.response")}
+                        {translate('pages.http-client.response')}
                     </Typography>
 
                     <TabbedShowLayout syncWithLocation={false}>

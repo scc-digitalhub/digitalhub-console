@@ -880,6 +880,7 @@
         "description": "Username dell'autore dell'ultima modifica",
         "title": "Aggiornato da"
     },
+    "url": "URL",
     "user": {
         "description": "Username",
         "title": "Utente"

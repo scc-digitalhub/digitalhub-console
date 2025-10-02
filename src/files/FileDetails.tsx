@@ -1,6 +1,6 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 import {
     DateField,
     FunctionField,
@@ -9,13 +9,7 @@ import {
     TextField,
     useDataProvider,
 } from 'react-admin';
-import {
-    CardContent,
-    Divider,
-    Popover,
-    Stack,
-    Typography,
-} from '@mui/material';
+import { CardContent, Divider, Stack, Typography } from '@mui/material';
 
 import { PreviewButton } from './PreviewButton';
 import { FlatCard } from '../components/FlatCard';
@@ -41,15 +35,6 @@ export const FileDetails = (props: {
 
     const dataProvider = useDataProvider();
     const [info, setInfo] = useState<any | null>(null);
-
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const handlePopoverOpen = (event: MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
-    const open = Boolean(anchorEl);
 
     useEffect(() => {
         if (dataProvider && file) {
@@ -130,40 +115,10 @@ export const FileDetails = (props: {
                                 <IdField
                                     source="path"
                                     noWrap
-                                    aria-owns={
-                                        open ? 'mouse-over-popover' : undefined
-                                    }
-                                    aria-haspopup="true"
-                                    onMouseEnter={handlePopoverOpen}
-                                    onMouseLeave={handlePopoverClose}
+                                    truncate={30}
+                                    label="fields.path.title"
                                 />
                             </Labeled>
-                            <Popover
-                                id="mouse-over-popover"
-                                sx={{ pointerEvents: 'none' }}
-                                open={open}
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                onClose={handlePopoverClose}
-                                disableRestoreFocus
-                                slotProps={{
-                                    paper: {
-                                        variant: 'outlined',
-                                        square: true,
-                                    },
-                                }}
-                            >
-                                <Typography variant="body2" sx={{ p: 1 }}>
-                                    {info.path}
-                                </Typography>
-                            </Popover>
                             <Labeled>
                                 <TextField source="content_type" />
                             </Labeled>

@@ -5,11 +5,8 @@
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
-    useNotify,
     Button,
     FieldProps,
-    useResourceContext,
     ButtonProps,
     RaRecord,
     LoadingIndicator,
@@ -17,30 +14,16 @@ import {
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
-import React, {
-    Fragment,
-    ReactElement,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
-import AceEditor from 'react-ace';
+import { Fragment, ReactElement, useCallback, useState } from 'react';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
-import { LazyLog } from '@melloware/react-logviewer';
-import { usePapaParse } from 'react-papaparse';
-import { DataGrid } from '@mui/x-data-grid';
 import {
-    Box,
     Breakpoint,
     Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    ImageList,
-    ImageListItem,
-    Stack,
     styled,
     Typography,
 } from '@mui/material';
@@ -61,7 +44,6 @@ export const ClientButton = (props: ClientButtonProps) => {
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
 
-    const resource = useResourceContext(props);
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
     const url = record?.status?.service?.url;
