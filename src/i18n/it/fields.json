@@ -599,6 +599,22 @@
             "description": "",
             "title": "LoRA Adapter"
         },
+        "apiVersion": {
+            "description": "",
+            "title": "Versione API"
+        },
+        "generation": {
+            "description": "",
+            "title": "Generazione del modello"
+        },
+        "creationTimestamp": {
+            "description": "",
+            "title": "Timestamp di creazione"
+        },
+        "resourceProfile": {
+            "description": "",
+            "title": "Profilo della risorsa"
+        },
         "features": {
             "description": "",
             "title": "Features supportate"
@@ -625,7 +641,15 @@
         },
         "replicas": {
             "description": "Numero di repliche dei Pod che devono essere srvite",
-            "title": "Numero di Repliche"
+            "title": "Numero di Repliche",
+            "all": {
+                "description": "numero totale di repliche",
+                "title": "Totale"
+            },
+            "ready": {
+                "description": "numero di repliche pronte",
+                "title": "Pronte"
+            }
         },
         "minreplicas": {
             "description": "numero minimo di repliche di Pod a cui il modello può essere adattato.",
@@ -959,5 +983,158 @@
     "workflow": {
         "description": "Riferimento statico al workflow",
         "title": "Workflow"
+    },
+    "runAsUser": {
+        "description": "ID utente per l'esecuzione del container",
+        "title": "Esegui come utente"
+    },
+    "runAsGroup": {
+        "description": "ID gruppo per l'esecuzione del container",
+        "title": "Esegui come gruppo"
+    },
+    "runAsNonRoot": {
+        "description": "Eseguire come utente non-root",
+        "title": "Eseguire come non root"
+    },
+    "initParameters": {
+        "description": "",
+        "item": {
+            "description": "",
+            "title": "Parametro"
+        },
+        "title": "Parametri di Inizializzazione"
+    },
+    "adapters": {
+        "item": {
+            "description": "",
+            "title": "Adapter"
+        }
+    },
+    "features": {
+        "item": {
+            "description": "",
+            "title": "Feature"
+        }
+    },
+    "env": {
+        "item": {
+            "description": "",
+            "title": "Variabile di Ambiente"
+        }
+    },
+    "issuedAt": {
+        "title": "Emesso il"
+    },
+    "expiresAt": {
+        "title": "Scade il"
+    },
+    "expiresIn": {
+        "title": "Scade entro",
+        "value": "%{d} giorni, %{h} ore, %{m} minuti e %{s} secondi"
+    },
+    "scopes": {
+        "title": "Scope",
+        "description": "Scope di access (permessi)"
+    },
+    "validity": {
+        "title": "Validità",
+        "description": "Periodo di validità del token"
+    },
+    "ipAddress": {
+        "title": "Indirizzo IP"
+    },
+    "token": {
+        "title": "Token"
+    },
+    "openai": {
+        "title": "OpenAI",
+        "baseUrl": {
+            "title": "URL di base",
+            "description": "URL di base per il servizio OpenAI"
+        },
+        "model": {
+            "title": "Modello",
+            "description": "Modello utilizzato per le richieste"
+        },
+        "urls": {
+            "title": "URL",
+            "description": "Elenco degli URL"
+        },
+        "features": {
+            "description": "",
+            "title": "Funzionalità"
+        }
+    },
+    "flowerSourceCode": {
+        "source": {
+            "title": "Riferimento al codice sorgente di Flower App",
+            "description": ""
+        },
+        "clientapp": {
+            "title": "Riferimento all'istanza di Client App",
+            "description": ""
+        },
+        "serverapp": {
+            "title": "Riferimento all'istanza di Server App ",
+            "description": ""
+        },
+        "clientbase64": {
+            "title": "Codice sorgente di client",
+            "description": "Codice sorgente di client"
+        },
+        "serverbase64": {
+            "title": "Codice sorgente del server",
+            "description": "Codice sorgente del server"
+        }
+    },
+    "flower": {
+        "sourceCode": {
+            "title": "CodiceFlower App Source Code",
+            "description": ""
+        },
+        "image": {
+            "title": "Container image to use",
+            "description": ""
+        },
+        "baseImage": {
+            "title": "Base container image to use for build task",
+            "description": ""
+        },
+        "requirements": {
+            "title": "Python dependencies",
+            "description": ""
+        },
+        "federation": {
+            "title": "Name of the federation",
+            "description": ""
+        },
+        "superlink": {
+            "title": "Superlink endpoint",
+            "description": ""
+        },
+        "root_certificates": {
+            "title": "Root TLS certificate",
+            "description": ""
+        },
+        "nodeconfig": {
+            "title": "Client node configuration parameters",
+            "description": ""
+        },
+        "private_key_secret": {
+            "title": "Private key for client node authentication",
+            "description": ""
+        },
+        "public_key_secret": {
+            "title": "Public key for client node authentication",
+            "description": ""
+        },
+        "isolation": {
+            "title": "Client node isolation mode",
+            "description": ""
+        },
+        "auth_public_keys": {
+            "title": "List of public keys for client node authentication",
+            "description": ""
+        }
     }
 }
