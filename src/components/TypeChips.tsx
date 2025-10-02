@@ -41,7 +41,22 @@ export const TypeChips = (props: {
         PodScheduled: 'default',
     };
 
-    const colorKey = TypeColors[value] || 'grey';
+    const fallbackColors = [
+        'primary',
+        'secondary',
+        'info',
+        'success',
+        'warning',
+        'error',
+    ];
+
+    const colorKey =
+        TypeColors[value] ||
+        fallbackColors[
+            Math.abs(
+                value.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+            ) % fallbackColors.length
+        ];
 
     const paletteEntry =
         (theme.palette as any)[colorKey] ||
