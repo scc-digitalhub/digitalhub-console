@@ -267,6 +267,10 @@
         "auth_public_keys": {
             "title": "List of public keys for client node authentication",
             "description": ""
+        },
+        "insecure": {
+            "title": "Disable TLS verification",
+            "description": ""
         }
     },
     "flowerSourceCode": {
