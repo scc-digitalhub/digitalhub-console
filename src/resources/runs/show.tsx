@@ -299,9 +299,11 @@ export const RunShowComponent = () => {
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.pods.title'}>
-                <PodsTab record={record} />
-            </TabbedShowLayout.Tab>
+            {record?.status?.pods?.length > 0 && (
+                <TabbedShowLayout.Tab label={'fields.pods.title'}>
+                    <PodsTab record={record} />
+                </TabbedShowLayout.Tab>
+            )}
         </TabbedShowLayout>
     );
 };
