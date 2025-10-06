@@ -133,11 +133,11 @@ export const ImportButton = (props: ImportButtonProps) => {
                     }}
                     mutationOptions={{
                         ...mutationOptions,
-                        onSuccess: (data, variables, context) => {
+                        onSuccess: (data, variables, onMutateResult, context) => {
                             closeDialog();
 
                             if (onSuccess) {
-                                return onSuccess(data, variables, context);
+                                return onSuccess(data, variables, onMutateResult, context);
                             }
 
                             notify('ra.notification.created', {

@@ -30,7 +30,6 @@ import {
     useList,
     useTranslate,
 } from 'react-admin';
-import { useProjectPermissions } from '../provider/authProvider';
 import {
     Alert,
     Box,
@@ -44,15 +43,8 @@ import { PageTitle } from '../components/PageTitle';
 import BrowserIcon from '@mui/icons-material/Inventory2';
 import ReloadIcon from '@mui/icons-material/Replay';
 
-import FolderRounded from '@mui/icons-material/FolderRounded';
-import GenericFileIcon from '@mui/icons-material/InsertDriveFile';
-
 import { FlatCard } from '../components/FlatCard';
-import {
-    getMimeTypeFromExtension,
-    getTypeFromMimeType,
-    prettyBytes,
-} from './utils';
+import { prettyBytes } from './utils';
 import { FileDetails } from './FileDetails';
 import { FileIcon } from './FileIcon';
 import { UploadButton } from './UploadButton';
@@ -62,7 +54,6 @@ export const Browser = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
-    const { isAdmin } = useProjectPermissions();
 
     const [stores, setStores] = useState<string[] | null>(null);
     const [store, setStore] = useState<string | null>(null);
@@ -121,9 +112,9 @@ export const Browser = () => {
         }
     }, [dataProvider, projectId, store]);
 
-    const selectStore = key => {
-        setStore(key);
-    };
+    // const selectStore = key => {
+    //     setStore(key);
+    // };
 
     const reload = () => {
         if (dataProvider && projectId && store != null && path != null) {
@@ -148,16 +139,16 @@ export const Browser = () => {
         }
     };
 
-    const parent = () => {
-        if (path && path != store) {
-            const cur = path.substring(0, path.length - 1);
-            const parent = cur.substring(0, cur.lastIndexOf('/') + 1);
+    // const parent = () => {
+    //     if (path && path != store) {
+    //         const cur = path.substring(0, path.length - 1);
+    //         const parent = cur.substring(0, cur.lastIndexOf('/') + 1);
 
-            if (parent != path) {
-                setPath(parent);
-            }
-        }
-    };
+    //         if (parent != path) {
+    //             setPath(parent);
+    //         }
+    //     }
+    // };
 
     const breadcrumbs: any[] = [];
 
@@ -216,6 +207,9 @@ export const Browser = () => {
                                 {breadcrumbs &&
                                     breadcrumbs.map((p, idx) => (
                                         <a
+                                            key={
+                                                'file-browser-breadcrumb-' + idx
+                                            }
                                             style={{
                                                 // textDecoration: 'underline',
                                                 cursor: 'pointer',

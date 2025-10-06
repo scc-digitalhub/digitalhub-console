@@ -19,7 +19,6 @@ import {
     TextField,
     useGetIdentity,
     useTranslate,
-    Button,
     DeleteWithConfirmButton,
     useGetResourceLabel,
     ResourceContextProvider,
@@ -32,7 +31,6 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { MyProjects } from './MyProjects';
 import { MyPersonalTokens } from './MyPersonalTokens';
 import { MyRefreshTokens } from './MyRefreshTokens';
-import { DeleteWithConfirmDialog } from '@dslab/ra-delete-dialog-button';
 
 export const MyAccount = () => {
     const translate = useTranslate();

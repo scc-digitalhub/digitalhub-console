@@ -20,8 +20,8 @@ export const JsonParamsWidget = function <
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->(props: WidgetProps) {
-    const { idSchema, required, title, registry, options, formData } = props;
+>(props: WidgetProps<T, S, F>) {
+    const { schema, idSchema, required, title, registry, options, formData } = props;
     const translate = useTranslate();
     const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
         'TitleFieldTemplate',
@@ -38,6 +38,7 @@ export const JsonParamsWidget = function <
                 title={translate(title)}
                 required={required}
                 registry={registry}
+                schema={schema}
             />
         }
             <Box

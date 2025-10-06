@@ -4,7 +4,6 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    useRecordContext,
     useDataProvider,
     useNotify,
     Button,
@@ -16,7 +15,7 @@ import {
     useListContext,
 } from 'react-admin';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Fragment, ReactElement, useCallback, useState } from 'react';
+import { Fragment, ReactElement, useState } from 'react';
 
 const defaultIcon = <DeleteIcon />;
 
@@ -90,10 +89,6 @@ export const BulkDeleteButton = (props: BulkDeleteButtonProps) => {
         e.stopPropagation();
         setOpen(false);
     };
-
-    const handleClick = useCallback(e => {
-        e.stopPropagation();
-    }, []);
 
     return (
         <Fragment>

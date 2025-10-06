@@ -101,7 +101,7 @@ export const ShareButton = (props: ShareButtonProps) => {
                         id="share-dialog-title"
                         className={ShareDialogButtonClasses.title}
                     >
-                        {translate(label)}
+                        {typeof label === 'string' ? translate(label) : label}
                     </DialogTitle>
                     <IconButton
                         className={ShareDialogButtonClasses.closeButton}
