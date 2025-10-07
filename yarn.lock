@@ -249,75 +249,99 @@
     "@types/semver" "^7.5.5"
     semver "^7.5.2"
 
-"@dslab/ra-ace-editor@file:../react-admin-packages/packages/ra-ace-editor":
-  version "3.0.0"
+"@dslab/ra-ace-editor@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-ace-editor/-/ra-ace-editor-2.0.1.tgz#b1e75e72b3e58e75ec9a96bce684f71a45194c25"
+  integrity sha512-dyt/j71WTtGkHCkoiz2JqWcfrSorBt3bPbuaXphDdnef+Bc/TgZWcKhXA/0NDILMY/BzT3S41dxPVOMtiYFOSg==
   dependencies:
     ace-builds "^1.14.0"
     react-ace "^10.1.0"
 
-"@dslab/ra-auth-oidc@file:../react-admin-packages/packages/ra-auth-oidc":
-  version "3.0.0"
+"@dslab/ra-auth-oidc@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-auth-oidc/-/ra-auth-oidc-2.0.0.tgz#549006f961c37aee4d0d3d8ef247d303c48cb753"
+  integrity sha512-X49DvTto7+xsX+CVGGm36RwX6E7i9QQ8dBEqNqCFq/tXqKWiBHtfnSE2tHKn7rdsUH4chB8h+alAbIPIVewIQw==
   dependencies:
     oidc-client-ts "^2.2.3"
 
-"@dslab/ra-back-button@file:../react-admin-packages/packages/ra-back-button":
-  version "3.0.0"
+"@dslab/ra-back-button@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-back-button/-/ra-back-button-2.0.0.tgz#4ee2dd20126a1bdc89a19be1923df47e5e17c6af"
+  integrity sha512-wOEZbo5sQUGpCGW8XUuiawqKg5xtPDK659WmWKtCmSw+WOTBMFbGSquq9GF1IfHQx9aBQHWClsZgrN//vVPkdw==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
-"@dslab/ra-delete-dialog-button@file:../react-admin-packages/packages/ra-delete-dialog-button":
-  version "3.0.0"
+"@dslab/ra-delete-dialog-button@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-delete-dialog-button/-/ra-delete-dialog-button-2.0.0.tgz#3a0588246167b97913e7b040b531f56667933c5b"
+  integrity sha512-vMjTRqqbnSg5DizfmqBZa6K87ruY8+nW4Dw0LSUxWOTjg+FFreLWQ/nx0Ypy5oQrX+c5qxrcjleJKOeltyCt4g==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
-"@dslab/ra-dialog-crud@file:../react-admin-packages/packages/ra-dialog-crud":
-  version "3.0.0"
+"@dslab/ra-dialog-crud@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-dialog-crud/-/ra-dialog-crud-2.0.0.tgz#1ba57e832138886776d2a44d2440a19edcd07616"
+  integrity sha512-Bc1GRuJDmPZHiLJd578B2DzZJTJFViXNbQ7qwmIEC+lsmhNMwVSKkWYbNxhm6Bu7Milv6WTLJRV00Oif7/OB0Q==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
-"@dslab/ra-export-record-button@file:../react-admin-packages/packages/ra-export-record-button":
-  version "3.0.0"
+"@dslab/ra-export-record-button@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-export-record-button/-/ra-export-record-button-2.0.0.tgz#1e7346da4ea0c1216e0649558658019592d1f424"
+  integrity sha512-nCWEEdxoly/90gpEPcgikZ2+YHgEq1qsYJlP4ebsDVS9qbN5AkwjbZEyGxd+Gg/HTlRAounhvp8YcS94IKo3+w==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
     yaml "^2.3.4"
 
-"@dslab/ra-export-yaml@file:../react-admin-packages/packages/ra-export-yaml":
-  version "3.0.0"
+"@dslab/ra-export-yaml@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-export-yaml/-/ra-export-yaml-2.0.0.tgz#83888dcf08701ae1417667157a0e72b160fda05f"
+  integrity sha512-KUij+m/+8N1T0RUH6RMSnRUYW/AIA+nbtXE2pt/zeuc69ukDSZC39C82ybYkSLTptAsLRTbPqn3j8QIc6wNiCA==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
     yaml "^2.3.4"
 
-"@dslab/ra-inspect-button@file:../react-admin-packages/packages/ra-inspect-button":
-  version "3.0.0"
+"@dslab/ra-inspect-button@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-inspect-button/-/ra-inspect-button-2.0.0.tgz#651d4983c0d94b4f80bc0c7e6128ca552825d324"
+  integrity sha512-caNsbLLz3lfgNZ9w4MK/VgFBKLKl5QDomvV2YSWFiU6gO7dQDfC/lja7tmQVMJobmGerhvkRg/IwAWtw12u9MQ==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@file:../react-admin-packages/packages/ra-jsonschema-input":
-  version "4.0.0"
+"@dslab/ra-jsonschema-input@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.0.tgz#29cec9135120824c0a2a6172ced33c160ed42c8d"
+  integrity sha512-NK03Xq31+ds+2xb7JmUYbB0M65/7OldZpmUD4bY/KfSujoGzhTEm67CTHvkHjg5bxgM6sb4K/4Nm+DAf4OfGeQ==
   dependencies:
-    "@rjsf/core" "6.0.0-beta.11"
-    "@rjsf/mui" "6.0.0-beta.11"
-    "@rjsf/utils" "6.0.0-beta.11"
-    "@rjsf/validator-ajv8" "6.0.0-beta.11"
+    "@rjsf/core" "^6.0.0-beta.11"
+    "@rjsf/mui" "^6.0.0-beta.11"
+    "@rjsf/utils" "^6.0.0-beta.11"
+    "@rjsf/validator-ajv8" "^6.0.0-beta.11"
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
 
-"@dslab/ra-language-italian@file:../react-admin-packages/packages/ra-italian-language":
-  version "3.0.0"
+"@dslab/ra-language-italian@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-language-italian/-/ra-language-italian-2.0.0.tgz#b41f31f8d04b5ebb97c5a3caa2148de105fd7a84"
+  integrity sha512-i/9b3FD9xmHxU/tZzYS5LxCc7ai/dxffKGThOoPC1N24qskeaYa5PDHp4CYe0C+rDwo/Md9pU6q1t0UpzuyoRg==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
-"@dslab/ra-root-selector@file:../react-admin-packages/packages/ra-root-selector":
-  version "3.0.0"
+"@dslab/ra-root-selector@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-root-selector/-/ra-root-selector-2.0.0.tgz#82c25897948e3f1e2d35dd71a368b853b3563523"
+  integrity sha512-uhZ7QYGoBM5Rr8oVBYkx4pNTiccxGiO9HdeRBsPTnLx19njZEzqP9c0RPBYt0/LxK6ZwNl4pYCdt7SDQZeVT4w==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
-"@dslab/ra-stepper@file:../react-admin-packages/packages/ra-stepper":
-  version "3.0.0"
+"@dslab/ra-stepper@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-stepper/-/ra-stepper-2.0.0.tgz#1059ebdb84b4dc186ce3cac5c424d5d5ea5b03fc"
+  integrity sha512-oNmb2DQZcPem0mEWHsHeJzjxPMmEV2kEiA6K4gFJWbwctmj7WB3QgWQgFnFu00BebICadZNFZ31SbX0UETtBPw==
   dependencies:
-    ra-core "^5.11.4"
+    ra-core "^5.8.3"
 
 "@emotion/babel-plugin@^11.13.5":
   version "11.13.5"
@@ -874,7 +898,7 @@
     "@react-spring/shared" "~10.0.1"
     "@react-spring/types" "~10.0.1"
 
-"@rjsf/core@6.0.0-beta.11":
+"@rjsf/core@6.0.0-beta.11", "@rjsf/core@^6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-6.0.0-beta.11.tgz#9501d564866931f6aaa3f07e2d48cca9d3a6051e"
   integrity sha512-tadVN0B7CjAzl2p3HDsZKR3V8iCIiQMncblfCYSK0PAh9RqIjigFp8ovrZ3UqkVIRRcD+tQ6Y+psY5yEB4GWqA==
@@ -885,12 +909,12 @@
     nanoid "^5.1.5"
     prop-types "^15.8.1"
 
-"@rjsf/mui@6.0.0-beta.11":
+"@rjsf/mui@6.0.0-beta.11", "@rjsf/mui@^6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/mui/-/mui-6.0.0-beta.11.tgz#12f3cc2fc389b8bde40af2b74d93d85e19b43e65"
   integrity sha512-lgSFI01V6GrWAiMs6z2fnt8mb5JpuVwCwLUnc9qm6WaZB/noR9Q2iQ/ga6POLykU2VYhFUAfv8f/Br0DPJ301A==
 
-"@rjsf/utils@6.0.0-beta.11":
+"@rjsf/utils@6.0.0-beta.11", "@rjsf/utils@^6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-6.0.0-beta.11.tgz#6ba19808fce7c5a85c21ddf635b421bbb82a7612"
   integrity sha512-tQeyacweXmquRjPcXCVS1pMFfhamFSoqpczNi0zEvMbx+mfu2b6CgoRKi2Hm8KgFEafdVBF+6HLqs+0FnYhRlQ==
@@ -903,7 +927,7 @@
     nanoid "^5.1.5"
     react-is "^18.2.0"
 
-"@rjsf/validator-ajv8@6.0.0-beta.11":
+"@rjsf/validator-ajv8@6.0.0-beta.11", "@rjsf/validator-ajv8@^6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-6.0.0-beta.11.tgz#70b83286c5eab43dff8e010762469610d072f0b8"
   integrity sha512-gR8pbCsR91LiayDKdIz7d7m7A2ozUv9J+7Tpl5/qUQ69Q/NmnHo+cAiVW04/yvqzf1cbRwMgkc5pZyu01Uu1/w==
@@ -3885,9 +3909,9 @@ lru-cache@^6.0.0:
     yallist "^4.0.0"
 
 markdown-to-jsx@^7.7.6:
-  version "7.7.14"
-  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.7.14.tgz#cc68f1aec783afe6f9b708eadce62d17afb50380"
-  integrity sha512-OBq0NiByoHZTQk+CO0b4A6OJktyChs/L4E9SsrJ7z2FX3r4qQFcxOyytzW6GGVIL9wvjoxMdPySDxXyFIB64Qw==
+  version "7.7.15"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.7.15.tgz#7dad08e2b2cf35460a1c157f5d3e7bc875bcb511"
+  integrity sha512-U5dw5oRajrPTE2oJQWAbLK8RgbCDJ264AjW3fGABq+/rZjQ0E/WGVCLKAHvpKHQFUwoWoK8ZZWVPNLR/biYMhg==
 
 math-intrinsics@^1.1.0:
   version "1.1.0"
@@ -4338,7 +4362,7 @@ queue-microtask@^1.2.2:
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-ra-core@^5.11.4:
+ra-core@5.11.4, ra-core@^5.11.4, ra-core@^5.8.3:
   version "5.11.4"
   resolved "https://registry.yarnpkg.com/ra-core/-/ra-core-5.11.4.tgz#f5da6591081394a153c308f260cf93da420c8ffe"
   integrity sha512-rLkh/jWtmsaDWv+oL4Qh7Mzfmt2gttVqi6mGfYCL2/vrk4SGc6t/cXV3fVisEuhxITWfGruUrocC3qvmBlbErw==
@@ -4353,7 +4377,7 @@ ra-core@^5.11.4:
     react-error-boundary "^4.0.13"
     react-is "^18.2.0 || ^19.0.0"
 
-ra-i18n-polyglot@^5.11.4:
+ra-i18n-polyglot@5.11.4, ra-i18n-polyglot@^5.11.4:
   version "5.11.4"
   resolved "https://registry.yarnpkg.com/ra-i18n-polyglot/-/ra-i18n-polyglot-5.11.4.tgz#c018a37c805bb55370c793baa23fc8f68acf8d24"
   integrity sha512-6Qugftf+rsdXOTdmfXvJnmBcGMcgrF8UB79i/t5ddrRj1PtBqsvdkLzODbd+SMuq2URXWY7b970zhlAVr7pTPw==
@@ -4361,14 +4385,14 @@ ra-i18n-polyglot@^5.11.4:
     node-polyglot "^2.2.2"
     ra-core "^5.11.4"
 
-ra-language-english@^5.11.4:
+ra-language-english@5.11.4, ra-language-english@^5.11.4:
   version "5.11.4"
   resolved "https://registry.yarnpkg.com/ra-language-english/-/ra-language-english-5.11.4.tgz#567dd02c4df726b32d92811d439adc27d3878230"
   integrity sha512-I/EvdQjsNBkswb8H7c0ViwCRnBxL2sX+Li6I16QLJ93/fFz9+EDxM2P1hhWdtdSTAEfCZxkTxnJRQWuLEecv+Q==
   dependencies:
     ra-core "^5.11.4"
 
-ra-ui-materialui@^5.11.4:
+ra-ui-materialui@5.11.4, ra-ui-materialui@^5.11.4:
   version "5.11.4"
   resolved "https://registry.yarnpkg.com/ra-ui-materialui/-/ra-ui-materialui-5.11.4.tgz#e75aa528c936f7829bd6962dacf29d8f8930c626"
   integrity sha512-fCJdJK3shr32xYCBhgJ2Z7mx0nDuBktdyEL9E34rJxe82kNHYnM3u5//OoWtsYiVaV5puqe6Nxma9aakEvCKOg==
@@ -4492,7 +4516,7 @@ react-is@^16.13.1, react-is@^16.7.0:
 
 react-is@^18.2.0:
   version "18.3.1"
-  resolved "https://registry.npmjs.org/react-is/-/react-is-18.3.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
 "react-is@^18.2.0 || ^19.0.0", react-is@^19.1.1:
