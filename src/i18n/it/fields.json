@@ -224,7 +224,7 @@
             "title": "CodiceFlower App Source Code",
             "description": ""
         },
-        "image" : {
+        "image": {
             "title": "Container image to use",
             "description": ""
         },
@@ -726,7 +726,7 @@
         "description": "",
         "title": "Numero di Worker"
     },
-    "openai":{
+    "openai": {
         "title": "OpenAI"
     },
     "openMetadata": {
@@ -861,7 +861,9 @@
         "title": "Segreti"
     },
     "service": {
-        "title": "Servizio"
+        "title": "Servizio",
+        "url": { "description": "", "title": "URL" },
+        "urls": { "description": "", "title": "URLs" }
     },
     "serviceName": {
         "description": "Nome del servizio da esporre",

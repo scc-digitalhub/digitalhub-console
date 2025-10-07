@@ -2,27 +2,42 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Labeled } from 'react-admin';
+import {
+    ArrayField,
+    Labeled,
+    RecordContextProvider,
+} from 'react-admin';
 import { Box } from '@mui/material';
-import { JSONTree } from 'react-json-tree';
+import { Stack } from '@mui/system';
+import { IdField } from '../../../components/IdField';
 
 export const ServiceDetails = (props: { record: any }) => {
     const { record } = props;
 
-    const json = record?.status?.service || {};
+    const service = record?.status?.service || {};
+    const urls = record?.status?.service?.urls || [];
 
     return (
-        <Labeled label="fields.service.title" fullWidth>
-            <Box
-                sx={{
-                    backgroundColor: '#002b36',
-                    px: 2,
-                    py: 0,
-                    minHeight: '20vw',
-                }}
-            >
-                <JSONTree data={json} hideRoot />
-            </Box>
-        </Labeled>
+        <Stack spacing={2}>
+            <RecordContextProvider value={service}>
+                <Labeled label="fields.service.url.title">
+                    <IdField source="url" />
+                </Labeled>
+                {urls.length > 0 && (
+                    <Labeled label="fields.service.urls.title">
+                        <ArrayField source="urls">
+                            <Stack spacing={1}>
+                                {urls.map((url, index) => (
+                                    <Box key={index} sx={{ ml: 2 }}>
+                                        <IdField source="url" record={{ url }} />
+                                    </Box>
+                                ))}
+                            </Stack>
+                        </ArrayField>
+                    </Labeled>
+                )}
+               
+            </RecordContextProvider>
+        </Stack>
     );
 };

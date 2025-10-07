@@ -862,7 +862,9 @@
         "title": "Secrets"
     },
     "service": {
-        "title": "Service"
+        "title": "Service",
+        "url": { "description": "", "title": "URL" },
+        "urls": { "description": "", "title": "URLs" }
     },
     "serviceName": {
         "description": "Name of the service exposed",

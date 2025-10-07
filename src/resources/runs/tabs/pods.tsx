@@ -26,8 +26,34 @@ export default function PodsTab(props: { record: any }) {
     const pods = record?.status?.pods || [];
 
     const pod = pods[0] || null;
-
     const containers = pod?.containers || [];
+
+    function formatDuration(ms) {
+        if (!Number.isFinite(ms) || ms <= 0) return '0s';
+        let s = Math.floor(ms / 1000);
+
+        const days = Math.floor(s / 86400);
+        s = s % 86400;
+
+        const hours = Math.floor(s / 3600);
+        s = s % 3600;
+
+        const minutes = Math.floor(s / 60);
+        const seconds = s % 60;
+
+        if (days > 0) return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
+        if (minutes > 0) return `${minutes}m ${seconds}s`;
+        return `${seconds}s`;
+    }
+
+    const rawDuration = Date.now() - new Date(pod?.startTime).getTime();
+    const durationFormatted = formatDuration(rawDuration);
+
+    if (pod?.phase === 'Running') {
+        pod.duration = durationFormatted;
+    }
+
 
     const [selectedContainerName, setSelectedContainerName] = useState<string>(
         containers[0]?.name ?? ''
@@ -58,8 +84,64 @@ export default function PodsTab(props: { record: any }) {
 
     const label = 'Container';
 
+    const leftColumnWidth = '600px';
+
     return (
         <Stack spacing={1}>
+            <RecordContextProvider value={pod ?? {}}>
+                <Box
+                    sx={{
+                        display: { xs: 'block', sm: 'grid' },
+                        gridTemplateColumns: { sm: `${leftColumnWidth} 1fr` },
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="name"
+                                label="fields.name.title"
+                            />
+                        </Labeled>
+                    </Box>
+
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="namespace"
+                                label="fields.namespace.title"
+                            />
+                        </Labeled>
+                    </Box>
+
+                    <Box>
+                        <Labeled>
+                            <DateField
+                                source="startTime"
+                                showTime
+                                label="fields.startTime.title"
+                            />
+                        </Labeled>
+                    </Box>
+
+                    <Box>
+                        {pod?.phase === 'Running' ? (
+                            <Labeled>
+                                <TextField
+                                    source="duration"
+                                    label="fields.duration.title"
+                                />
+                            </Labeled>
+                        ) : (
+                            <Box sx={{ minHeight: '1.6rem' }} />
+                        )}
+                    </Box>
+                </Box>
+            </RecordContextProvider>
+
+            <Divider />
+
             <Box>
                 <FormControl fullWidth>
                     <InputLabel>{label}</InputLabel>
@@ -84,70 +166,69 @@ export default function PodsTab(props: { record: any }) {
             </Box>
 
             <RecordContextProvider value={selectedContainer ?? {}}>
-                <Labeled>
-                    <TextField
-                        source="name"
-                        label="fields.container.name.title"
-                    />
-                </Labeled>
+                <Box
+                    sx={{
+                        display: { xs: 'block', sm: 'grid' },
+                        gridTemplateColumns: { sm: `${leftColumnWidth} 1fr` },
+                        gap: 1,
+                        alignItems: 'center',
+                    }}
+                >
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="name"
+                                label="fields.container.name.title"
+                            />
+                        </Labeled>
+                    </Box>
 
-                <Labeled>
-                    <TextField
-                        source="image"
-                        label="fields.container.image.title"
-                    />
-                </Labeled>
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="image"
+                                label="fields.container.image.title"
+                            />
+                        </Labeled>
+                    </Box>
 
-                <Labeled>
-                    <TextField
-                        source="ready"
-                        label="fields.container.ready.title"
-                    />
-                </Labeled>
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="ready"
+                                label="fields.container.ready.title"
+                            />
+                        </Labeled>
+                    </Box>
 
-                <Labeled>
-                    <TextField
-                        source="restartCount"
-                        label="fields.container.restartCount.title"
-                    />
-                </Labeled>
+                    <Box>
+                        <Labeled>
+                            <TextField
+                                source="restartCount"
+                                label="fields.container.restartCount.title"
+                            />
+                        </Labeled>
+                    </Box>
 
-                <Labeled>
-                    <TextField
-                        source="state"
-                        label="fields.container.state.title"
-                    />
-                </Labeled>
+                    <Box sx={{ gridColumn: { sm: '1 / -1' } }}>
+                        <Labeled>
+                            <TextField
+                                source="state"
+                                label="fields.container.state.title"
+                            />
+                        </Labeled>
+                    </Box>
+                </Box>
             </RecordContextProvider>
-
-            <Divider />
 
             <RecordContextProvider value={pod ?? {}}>
-                <Labeled>
-                    <TextField source="name" label="fields.name.title" />
-                </Labeled>
-                <Labeled>
-                    <DateField
-                        source="startTime"
-                        showTime
-                        label="fields.startTime.title"
-                    />
-                </Labeled>
-
-                <Labeled>
-                    <TextField source="phase" label="fields.phase.title" />
-                </Labeled>
-
-                <Labeled>
-                    <TextField
-                        source="namespace"
-                        label="fields.namespace.title"
-                    />
+                <Labeled sx={{ pt: 1, pb: 1 }} label="fields.phase.title">
+                    <Box sx={{ display: 'inline-flex' }}>
+                        <StateChips source="phase" />
+                    </Box>
                 </Labeled>
             </RecordContextProvider>
-            <Labeled width={100}>
-                <StateChips source="status.state" label="fields.status.state" />
-            </Labeled>
+
             {pod?.conditions && <ConditionsList record={record} />}
         </Stack>
     );
