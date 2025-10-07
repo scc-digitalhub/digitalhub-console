@@ -5,11 +5,15 @@
     "deleted": "Cancellato",
     "deleting": "In cancellazione",
     "error": "Errore",
+    "failed": "Fallito",
+    "pending": "In attesa",
     "ready": "Pronto",
     "running": "In esecuzione",
     "resume": "Ripreso",
     "stopped": "Interrotto",
     "stopping": "Interruzione in corso",
+    "succeeded": "Riuscito",
     "stop": "Stop",
-    "uploading": "Caricamento in corso"
+    "uploading": "Caricamento in corso",
+    "unknown": "Sconosciuto"
 }

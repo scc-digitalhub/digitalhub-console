@@ -7,7 +7,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Chip, Divider, Stack } from '@mui/material';
-import { TypeChips } from '../../../components/TypeChips';
+import { IdField } from '../../../components/IdField';
+import { ChipsField } from '../../../components/ChipsField';
 
 type OpenAIDetailsProps = {
     record?: RaRecord<Identifier>;
@@ -19,10 +20,10 @@ export const OpenAIDetails = ({ record }: OpenAIDetailsProps) => {
     const translate = useTranslate(); // <--- hook for translations
 
     return (
-        <Stack spacing={1}>
+        <Stack spacing={2}>
             <RecordContextProvider value={openAIDetails?.openai || {}}>
                 <Labeled>
-                    <TextField
+                    <IdField
                         source="baseUrl"
                         label="fields.openai.baseUrl.title"
                     />
@@ -36,40 +37,24 @@ export const OpenAIDetails = ({ record }: OpenAIDetailsProps) => {
                 </Labeled>
 
                 <Labeled label="fields.openai.features.title">
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        sx={{ flexWrap: 'wrap', alignItems: 'center' }}
-                    >
-                        {openAIDetails.openai.features.map((f, i) => (
-                            <TypeChips
-                                key={i}
-                                record={{ id: `feature-${i}`, feature: f }}
-                                source="feature"
-                            />
-                        ))}
-                    </Stack>
-                </Labeled>
-            </RecordContextProvider>
-
-            <RecordContextProvider value={openAIDetails?.service || {}}>
-                <Labeled>
-                    <TextField source="urls" label="fields.openai.urls.title" />
+                    <ChipsField source="features" />
                 </Labeled>
             </RecordContextProvider>
 
             <Divider />
 
             <RecordContextProvider value={modelDetails?.spec || {}}>
-                <Labeled>
-                    <TextField
-                        source="engine"
-                        label="fields.kubeai.engine.title"
-                    />
-                </Labeled>
-                <Labeled>
-                    <TextField source="url" label="fields.kubeai.url.title" />
-                </Labeled>
+                <Stack direction={'row'} spacing={10} alignItems="center">
+                    <Labeled>
+                        <TextField
+                            source="engine"
+                            label="fields.kubeai.engine.title"
+                        />
+                    </Labeled>
+                    <Labeled>
+                        <IdField source="url" label="fields.kubeai.url.title" />
+                    </Labeled>
+                </Stack>
                 <Labeled>
                     <TextField
                         source="resourceProfile"
@@ -81,13 +66,6 @@ export const OpenAIDetails = ({ record }: OpenAIDetailsProps) => {
             <RecordContextProvider value={modelDetails?.status?.replicas || {}}>
                 <Labeled label="fields.kubeai.replicas.title">
                     <Stack direction="row" spacing={2}>
-                        <Chip
-                            label={`${translate(
-                                'fields.kubeai.replicas.all.title'
-                            )}: ${modelDetails?.status?.replicas?.all ?? 0}`}
-                            color="primary"
-                            size="small"
-                        />
                         <Chip
                             label={`${translate(
                                 'fields.kubeai.replicas.ready.title'

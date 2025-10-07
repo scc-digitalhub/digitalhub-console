@@ -21,7 +21,7 @@ export const StateChips = (props: {
     const { source, ...rest } = props;
     const translate = useTranslate();
     const record = useRecordContext(rest);
-    const value = get(record, source)?.toString();
+    const value = get(record, source)?.toString().toUpperCase();
     if (!record || !value) {
         return <></>;
     }
@@ -45,4 +45,8 @@ export enum StateColors {
     STOPPED = 'warning',
     UPLOADING = 'info',
     CREATED = 'default',
+    SUCCEEDED = 'success',
+    FAILED = 'error',
+    PENDING = 'warning',
+    UNKNOWN = 'default',
 }

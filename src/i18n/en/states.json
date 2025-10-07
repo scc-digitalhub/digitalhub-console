@@ -5,11 +5,15 @@
     "deleted": "Deleted",
     "deleting": "Deleting",
     "error": "Error",
+    "failed": "Failed",
+    "pending": "Pending",
     "ready": "Ready",
     "running": "Running",
     "resume": "Resume",
     "stopped": "Stopped",
     "stopping": "Stopping",
+    "succeeded": "Succeeded",
     "stop": "Stop",
-    "uploading": "Uploading"
+    "uploading": "Uploading",
+    "unknown": "Unknown"
 }
