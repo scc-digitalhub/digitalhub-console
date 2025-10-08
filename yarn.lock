@@ -15,15 +15,7 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.23.5":
-  version "7.23.5"
-  resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.23.5.tgz"
-  integrity sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA==
-  dependencies:
-    "@babel/highlight" "^7.23.4"
-    chalk "^2.4.2"
-
-"@babel/code-frame@^7.22.13":
+"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.22.13", "@babel/code-frame@^7.23.5":
   version "7.24.7"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.24.7.tgz"
   integrity sha512-BcYH1CVJBO9tvyIZ2jVeXgSIMvGZ2FDRvDdOIVQyuklNKSsx+eppDEBq/g47Ayw+RqNFE+URvOShmf+f/qwAlA==
@@ -140,12 +132,7 @@
   resolved "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.23.4.tgz"
   integrity sha512-803gmbQdqwdf4olxrX4AJyFBV/RTr3rSmOj0rKwesmzlfhYNDEs+/iOcznzpNWlJlIlTJC2QfPFcHB6DlzdVLQ==
 
-"@babel/helper-validator-identifier@^7.22.20":
-  version "7.22.20"
-  resolved "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.22.20.tgz"
-  integrity sha512-Y4OZ+ytlatR8AI+8KZfKuL5urKp7qey08ha31L8b3BwewJAoJamTzyvxPR/5D+KkdJCGPq/+8TukHBlY10FX9A==
-
-"@babel/helper-validator-identifier@^7.24.7":
+"@babel/helper-validator-identifier@^7.22.20", "@babel/helper-validator-identifier@^7.24.7":
   version "7.24.7"
   resolved "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.24.7.tgz"
   integrity sha512-rR+PBcQ1SMQDDyF6X0wxtG8QyLCgUB0eRAGguqRLfkCA87l7yAP7ehq8SNj96OOGTO8OBV70KhuFYcIkHXOg0w==
@@ -163,15 +150,6 @@
     "@babel/template" "^7.24.0"
     "@babel/traverse" "^7.24.0"
     "@babel/types" "^7.24.0"
-
-"@babel/highlight@^7.23.4":
-  version "7.23.4"
-  resolved "https://registry.npmjs.org/@babel/highlight/-/highlight-7.23.4.tgz"
-  integrity sha512-acGdbYSfp2WheJoJm/EBBBLh/ID8KDc64ISZ9DYtBmC8/Q204PZJLHyzeB5qMzJ5trcOkybd78M4x2KWsUq++A==
-  dependencies:
-    "@babel/helper-validator-identifier" "^7.22.20"
-    chalk "^2.4.2"
-    js-tokens "^4.0.0"
 
 "@babel/highlight@^7.24.7":
   version "7.24.7"
@@ -310,15 +288,15 @@
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.0.tgz#29cec9135120824c0a2a6172ced33c160ed42c8d"
-  integrity sha512-NK03Xq31+ds+2xb7JmUYbB0M65/7OldZpmUD4bY/KfSujoGzhTEm67CTHvkHjg5bxgM6sb4K/4Nm+DAf4OfGeQ==
+"@dslab/ra-jsonschema-input@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.1.tgz#3f4be6a0e999f522763a5f419a9a3b81baa3e997"
+  integrity sha512-w2Mh2akQJFQbjdyKnzpmi6+P7RdV1AS5iEW2//MVT8o1c/NON6KnVhMOBfQbvkhW3zZqCbLrJrouNPb3iAtJCg==
   dependencies:
-    "@rjsf/core" "^6.0.0-beta.11"
-    "@rjsf/mui" "^6.0.0-beta.11"
-    "@rjsf/utils" "^6.0.0-beta.11"
-    "@rjsf/validator-ajv8" "^6.0.0-beta.11"
+    "@rjsf/core" "6.0.0-beta.11"
+    "@rjsf/mui" "6.0.0-beta.11"
+    "@rjsf/utils" "6.0.0-beta.11"
+    "@rjsf/validator-ajv8" "6.0.0-beta.11"
     ajv "^8.12.0"
     ajv-formats "^2.1.1"
 
@@ -898,7 +876,7 @@
     "@react-spring/shared" "~10.0.1"
     "@react-spring/types" "~10.0.1"
 
-"@rjsf/core@6.0.0-beta.11", "@rjsf/core@^6.0.0-beta.11":
+"@rjsf/core@6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/core/-/core-6.0.0-beta.11.tgz#9501d564866931f6aaa3f07e2d48cca9d3a6051e"
   integrity sha512-tadVN0B7CjAzl2p3HDsZKR3V8iCIiQMncblfCYSK0PAh9RqIjigFp8ovrZ3UqkVIRRcD+tQ6Y+psY5yEB4GWqA==
@@ -909,12 +887,12 @@
     nanoid "^5.1.5"
     prop-types "^15.8.1"
 
-"@rjsf/mui@6.0.0-beta.11", "@rjsf/mui@^6.0.0-beta.11":
+"@rjsf/mui@6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/mui/-/mui-6.0.0-beta.11.tgz#12f3cc2fc389b8bde40af2b74d93d85e19b43e65"
   integrity sha512-lgSFI01V6GrWAiMs6z2fnt8mb5JpuVwCwLUnc9qm6WaZB/noR9Q2iQ/ga6POLykU2VYhFUAfv8f/Br0DPJ301A==
 
-"@rjsf/utils@6.0.0-beta.11", "@rjsf/utils@^6.0.0-beta.11":
+"@rjsf/utils@6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/utils/-/utils-6.0.0-beta.11.tgz#6ba19808fce7c5a85c21ddf635b421bbb82a7612"
   integrity sha512-tQeyacweXmquRjPcXCVS1pMFfhamFSoqpczNi0zEvMbx+mfu2b6CgoRKi2Hm8KgFEafdVBF+6HLqs+0FnYhRlQ==
@@ -927,7 +905,7 @@
     nanoid "^5.1.5"
     react-is "^18.2.0"
 
-"@rjsf/validator-ajv8@6.0.0-beta.11", "@rjsf/validator-ajv8@^6.0.0-beta.11":
+"@rjsf/validator-ajv8@6.0.0-beta.11":
   version "6.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/@rjsf/validator-ajv8/-/validator-ajv8-6.0.0-beta.11.tgz#70b83286c5eab43dff8e010762469610d072f0b8"
   integrity sha512-gR8pbCsR91LiayDKdIz7d7m7A2ozUv9J+7Tpl5/qUQ69Q/NmnHo+cAiVW04/yvqzf1cbRwMgkc5pZyu01Uu1/w==
@@ -1093,12 +1071,7 @@
   dependencies:
     "@types/d3-time" "*"
 
-"@types/d3-selection@*":
-  version "3.0.10"
-  resolved "https://registry.npmjs.org/@types/d3-selection/-/d3-selection-3.0.10.tgz"
-  integrity sha512-cuHoUgS/V3hLdjJOLTT691+G2QoqAjCVLmr4kJXR4ha56w1Zdu8UUQ5TxLRqudgNjwXeQxKMq4j+lyf9sWuslg==
-
-"@types/d3-selection@^3.0.10":
+"@types/d3-selection@*", "@types/d3-selection@^3.0.10":
   version "3.0.11"
   resolved "https://registry.npmjs.org/@types/d3-selection/-/d3-selection-3.0.11.tgz"
   integrity sha512-bhAXu23DJWsrI45xafYpkQ4NtcKMwWnAC/vKrd2l+nxMFuvOT3XMYTIj2opv8vq8AO5Yh7Qac/nSeP/3zjTK0w==
@@ -1188,12 +1161,7 @@
   resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.2.tgz"
   integrity sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==
 
-"@types/prop-types@*":
-  version "15.7.11"
-  resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.11.tgz"
-  integrity sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==
-
-"@types/prop-types@^15.7.15":
+"@types/prop-types@*", "@types/prop-types@^15.7.15":
   version "15.7.15"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.15.tgz#e6e5a86d602beaca71ce5163fadf5f95d70931c7"
   integrity sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==
