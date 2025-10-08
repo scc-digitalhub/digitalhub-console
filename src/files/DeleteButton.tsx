@@ -15,7 +15,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Fragment, ReactElement, useCallback, useState } from 'react';
+import { Fragment, ReactElement, useState } from 'react';
 
 const defaultIcon = <DeleteIcon />;
 
@@ -41,7 +41,6 @@ export const DeleteButton = (props: DeleteButtonProps) => {
     }
 
     const path = pathProp || record?.path;
-    const fileName = fileNameProp || record?.name;
 
     const handleDelete = () => {
         dataProvider
@@ -85,10 +84,6 @@ export const DeleteButton = (props: DeleteButtonProps) => {
         e.stopPropagation();
         setOpen(false);
     };
-
-    const handleClick = useCallback(e => {
-        e.stopPropagation();
-    }, []);
 
     return (
         <Fragment>

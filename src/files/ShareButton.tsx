@@ -2,13 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    Fragment,
-    ReactElement,
-    useCallback,
-    useEffect,
-    useState,
-} from 'react';
+import { Fragment, ReactElement, useCallback, useState } from 'react';
 import {
     Button,
     ButtonProps,
@@ -18,17 +12,10 @@ import {
     useRecordContext,
     useTranslate,
     useDataProvider,
-    useList,
-    Datagrid,
-    ListContextProvider,
-    TextField,
-    TextInput,
     Toolbar,
     Create,
     SaveButton,
     Form,
-    FunctionField,
-    TimeInput,
     Labeled,
     RecordContextProvider,
     SimpleShowLayout,
@@ -44,12 +31,9 @@ import {
     styled,
     Grid,
     Typography,
-    Stack,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
-import CancelIcon from '@mui/icons-material/Cancel';
-import AddIcon from '@mui/icons-material/Add';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { IdField } from '../components/IdField';
 
@@ -110,7 +94,11 @@ export const ShareButton = (props: ShareButtonProps) => {
                         id="share-dialog-title"
                         className={ShareDialogButtonClasses.title}
                     >
-                        {translate(label || 'actions.share')}{' '}
+                        {translate(
+                            label && typeof label === 'string'
+                                ? label
+                                : 'actions.share'
+                        )}{' '}
                         {record && record.name}
                     </DialogTitle>
                     <IconButton
@@ -143,7 +131,6 @@ const ShareCreateForm = (props: { path?: string; record?: any }) => {
     const { path: pathProp, record: recordFromProps } = props;
     const { root: projectId } = useRootSelector();
     const dataProvider = useDataProvider();
-    const translate = useTranslate();
     const recordContext = useRecordContext();
     const record = recordFromProps || recordContext;
     const path = pathProp || record?.path;

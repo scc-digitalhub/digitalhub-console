@@ -166,7 +166,7 @@ const Lineage = () => {
                 width: '100%',
             }}
         >
-            {relationships.length !== 0 ? (
+            {project && relationships.length !== 0 ? (
                 <RecordLineage
                     relationships={relationships}
                     record={project}

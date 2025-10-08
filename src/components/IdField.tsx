@@ -67,7 +67,7 @@ export const IdField = <
         }
     };
 
-    const handlePopoverOpen = (event: MouseEvent<HTMLDivElement>) => {
+    const handlePopoverOpen = () => {
         if (!open) {
             setOpen(true);
         }

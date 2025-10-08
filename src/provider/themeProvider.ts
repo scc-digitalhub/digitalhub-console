@@ -3,55 +3,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createTheme, PaletteOptions, Theme } from '@mui/material';
-import {
-    defaultTheme,
-    houseLightTheme,
-    houseDarkTheme,
-    RaThemeOptions,
-} from 'react-admin';
+import { houseLightTheme, houseDarkTheme, RaThemeOptions } from 'react-admin';
 import { alpha } from '@mui/material';
 
 const componentsOverrides = (theme: Theme) => ({
     ...theme.components,
     MuiTextField: {
         defaultProps: {
-            size: 'small',
+            size: 'small' as const,
         },
     },
     MuiSelect: {
         defaultProps: {
-            size: 'small',
+            size: 'small' as const,
         },
     },
-    // MuiCssBaseline: {
-    //     styleOverrides: {
-    //         '*': {
-    //             boxSizing: 'border-box',
-    //         },
-    //         html: {
-    //             MozOsxFontSmoothing: 'grayscale',
-    //             WebkitFontSmoothing: 'antialiased',
-    //             display: 'flex',
-    //             flexDirection: 'column',
-    //             minHeight: '100%',
-    //             width: '100%',
-    //         },
-    //         body: {
-    //             display: 'flex',
-    //             flex: '1 1 auto',
-    //             flexDirection: 'column',
-    //             minHeight: '100%',
-    //             width: '100%',
-    //         },
-    //         '#root': {
-    //             display: 'flex',
-    //             flex: '1 1 auto',
-    //             flexDirection: 'column',
-    //             height: '100%',
-    //             width: '100%',
-    //         },
-    //     },
-    // },
     RaAppBar: {
         styleOverrides: {
             root: {
@@ -67,27 +33,6 @@ const componentsOverrides = (theme: Theme) => ({
             },
         },
     },
-    // RaMenu: {
-    //     styleOverrides: {
-    //         root: {
-    //             backgroundColor: theme.palette['paper'],
-    //             // borderRight: '1px solid ' + theme.palette.divider,
-    //             '& .MuiButtonBase-root': {
-    //                 marginTop: 3,
-    //                 marginBottom: 3,
-    //             },
-    //         },
-    //     },
-    // },
-    // RaLayout: {
-    //     styleOverrides: {
-    //         root: {
-    //             '& .RaLayout-content': {
-    //                 backgroundColor: theme.palette?.background?.default,
-    //             },
-    //         },
-    //     },
-    // },
     RaMenuItemLink: {
         styleOverrides: {
             root: {
@@ -178,18 +123,6 @@ const componentsOverrides = (theme: Theme) => ({
     },
 });
 
-// const palette: PaletteOptions & { paper: string } = {
-//     mode: 'light' as 'light',
-//     primary: {
-//         main: '#E0701B',
-//         dark: '#9c3b15',
-//         light: '#ec934f',
-//     },
-//     secondary: { main: '#062D4B' },
-//     paper: '#F8F7F2',
-//     background: { default: '#f5f5f6', paper: '#FFF' },
-// };
-
 const palette: {
     light: PaletteOptions & { paper: string };
     dark: PaletteOptions & { paper: string };
@@ -231,13 +164,6 @@ const createApplicationTheme = (
     theme.components = componentsOverrides(theme);
     return theme;
 };
-
-export const BASE_THEME = defaultTheme;
-
-// export const themeProvider = (): RaThemeOptions => {
-//     // return createApplicationTheme(BASE_THEME);
-//     return createApplicationTheme(houseLightTheme);
-// };
 
 export const themeProvider = (): {
     light: RaThemeOptions;

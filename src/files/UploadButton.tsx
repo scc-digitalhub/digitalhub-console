@@ -2,13 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    useDataProvider,
     Button,
     ButtonProps,
     useTranslate,
-    SimpleForm,
     LoadingIndicator,
     Labeled,
     useTheme,
@@ -29,7 +26,7 @@ import {
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import UploadIcon from '@mui/icons-material/Upload';
 import { useUploadController } from './uploadController';
-import { FileInput, Uploader } from '../components/FileInput';
+import { Uploader } from '../components/FileInput';
 import { Dashboard } from '@uppy/react';
 
 const defaultIcon = <UploadIcon />;
@@ -45,8 +42,6 @@ export const UploadButton = (props: UploadButtonProps) => {
         onUpload,
         ...rest
     } = props;
-    const { root: projectId } = useRootSelector();
-    const dataProvider = useDataProvider();
     const translate = useTranslate();
     const [theme] = useTheme();
 

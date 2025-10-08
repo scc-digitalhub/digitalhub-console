@@ -9,7 +9,6 @@ import {
     useNotify,
     Button,
     FieldProps,
-    useResourceContext,
     ButtonProps,
     RaRecord,
     LoadingIndicator,
@@ -71,9 +70,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         contentType: contentTypeProps,
         ...rest
     } = props;
-    const { root: projectId } = useRootSelector();
     const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
 
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
@@ -158,7 +155,12 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         id="logs-dialog-title"
                         className={CreateInDialogButtonClasses.title}
                     >
-                        {translate(label || 'fields.preview')} {fileName}
+                        {translate(
+                            label && typeof label === 'string'
+                                ? label
+                                : 'fields.preview'
+                        )}{' '}
+                        {fileName}
                     </DialogTitle>
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}

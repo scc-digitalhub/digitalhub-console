@@ -87,7 +87,10 @@ export const ClientButton = (props: ClientButtonProps) => {
                         id="client-dialog-title"
                         className={CreateInDialogButtonClasses.title}
                     >
-                        {translate(label)} #{record?.name}
+                        {label && typeof label === 'string'
+                            ? translate(label)
+                            : ''}{' '}
+                        #{record?.name}
                     </DialogTitle>
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}
