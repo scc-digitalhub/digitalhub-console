@@ -259,15 +259,25 @@ const ShowComponent = () => {
     );
 };
 
-export const SourceCodeTab = (props: { sourceCode?: any; fabSourceCode?: any; spec: any }) => {
+export const SourceCodeTab = (props: {
+    sourceCode?: any;
+    fabSourceCode?: any;
+    spec: any;
+}) => {
     const { sourceCode, fabSourceCode, spec } = props;
     const record = useRecordContext();
     const uiSchema = getFunctionUiSpec(record?.kind) || {};
     const values = { spec: { source: sourceCode, fab_source: fabSourceCode } };
     const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
     if ('properties' in schema) {
-        schema.properties = { source: spec?.schema.properties.source };
-        schema.properties = { fab_source: spec?.schema.properties.fab_source };
+        if (sourceCode) {
+            schema.properties = { source: spec?.schema.properties.source };
+        }
+        if (fabSourceCode) {
+            schema.properties = {
+                fab_source: spec?.schema.properties.fab_source,
+            };
+        }
     }
 
     return (
