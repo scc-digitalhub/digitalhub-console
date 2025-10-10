@@ -378,6 +378,10 @@
         "trustremotecode": {
             "description": "",
             "title": "Allow Custom Code for Models and Tokenizers"
+        },
+        "args": {
+            "description": "",
+            "title": "Backend server arguments"
         }
     },
     "id": "Id",
