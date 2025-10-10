@@ -38,7 +38,7 @@ import { IdField } from '../../components/IdField';
 import { ChipsField } from '../../components/ChipsField';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { isAlphaNumeric } from '../../common/helper';
+import { formatDuration, isAlphaNumeric } from '../../common/helper';
 import CloseIcon from '@mui/icons-material/Close';
 
 export const MyPersonalTokens = () => {
@@ -117,25 +117,6 @@ export const MyPersonalTokens = () => {
 
 const scopes = ['profile', 'openid', 'credentials'];
 
-const formatSeconds = (
-    totalSeconds: number
-): { d: number; h: number; m: number; s: number } => {
-    const secInDay = 60 * 60 * 24;
-    const secInHour = 60 * 60;
-    const secInMin = 60;
-
-    const d = Math.floor(totalSeconds / secInDay);
-    let s = totalSeconds % secInDay;
-
-    const h = Math.floor(s / secInHour);
-    s = s % secInHour;
-
-    const m = Math.floor(s / secInMin);
-    s = s % secInMin;
-
-    return { d, h, m, s };
-};
-
 const PersonalTokensToolbar = () => {
     const translate = useTranslate();
     const [result, setResult] = useState<any | null>(null);
@@ -210,7 +191,7 @@ const PersonalTokensToolbar = () => {
                                     render={r =>
                                         translate(
                                             'fields.expiresIn.value',
-                                            formatSeconds(r.expires_in)
+                                            formatDuration(r.expires_in * 1000)
                                         )
                                     }
                                     label="fields.expiresIn.title"

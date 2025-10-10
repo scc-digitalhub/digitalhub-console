@@ -26,6 +26,7 @@ import { ServiceIcon } from './icon';
 import { LogsButton } from '../../components/buttons/LogsButton';
 import { ClientButton } from './ClientButton';
 import { IdField } from '../../components/IdField';
+import { FunctionIcon } from '../../resources/functions/icon';
 
 const RowActions = () => {
     return (
@@ -76,22 +77,34 @@ export const ServiceList = () => {
                                         label="fields.function.title"
                                         sortable={false}
                                         render={record => (
-                                            <Stack direction={'column'} gap={1}>
-                                                {record?.spec?.function && (
-                                                    <Typography variant="h6">
-                                                        {
-                                                            functionParser(
-                                                                record.spec
-                                                                    .function
-                                                            ).name
-                                                        }
-                                                    </Typography>
-                                                )}
+                                            <Stack gap={1}>
                                                 <TextField
                                                     source="name"
                                                     label="fields.name"
-                                                    color="info"
+                                                    variant="body1"
                                                 />
+                                                {record?.spec?.function && (
+                                                    <Stack
+                                                        direction="row"
+                                                        gap={1}
+                                                    >
+                                                        <FunctionIcon
+                                                            fontSize="small"
+                                                            color="info"
+                                                        />
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="info"
+                                                        >
+                                                            {
+                                                                functionParser(
+                                                                    record.spec
+                                                                        .function
+                                                                ).name
+                                                            }
+                                                        </Typography>
+                                                    </Stack>
+                                                )}
                                             </Stack>
                                         )}
                                     />
@@ -100,20 +113,23 @@ export const ServiceList = () => {
                                         label="fields.status.state"
                                         sortable={false}
                                         render={record => (
-                                            <>
+                                            <Stack
+                                                gap={1}
+                                                sx={{
+                                                    alignItems: 'flex-start',
+                                                }}
+                                            >
                                                 <StateChips
                                                     source="status.state"
                                                     label="fields.status.state"
                                                 />
                                                 {record?.status?.message && (
-                                                    <Stack mt={1}>
-                                                        <TextField
-                                                            source="status.message"
-                                                            label="fields.message"
-                                                        />
-                                                    </Stack>
+                                                    <TextField
+                                                        source="status.message"
+                                                        label="fields.message"
+                                                    />
                                                 )}
-                                            </>
+                                            </Stack>
                                         )}
                                     />
 

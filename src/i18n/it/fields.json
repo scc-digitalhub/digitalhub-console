@@ -193,7 +193,7 @@
     },
     "expiresIn": {
         "title": "Scade entro",
-        "value": "%{d} giorni, %{h} ore, %{m} minuti e %{s} secondi"
+        "value": "%{days} giorni, %{hours} ore, %{minutes} minuti e %{seconds} secondi"
     },
     "features": {
         "item": {
