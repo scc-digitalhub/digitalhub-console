@@ -73,7 +73,7 @@ export const useGetFilters = (): GetFiltersFunction => {
 
         let filters = [
             <TextInput
-                label="fields.name.title"
+                label={functions ? 'ra.action.search' : 'fields.name.title'}
                 source="q"
                 alwaysOn
                 resettable

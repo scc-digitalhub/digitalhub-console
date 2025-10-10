@@ -164,3 +164,38 @@ export const scaleBytes = (bytes: number, precision: number = 1) => {
     const unit = B.value(bytes).autoScale({ type: 'decimal' });
     return `${round(unit.value, precision)} ${unit.unit.unit}`;
 };
+
+//TODO replaces same function in pods tab
+export const formatDuration = (
+    ms: number
+): {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    asString: string;
+} => {
+    if (!Number.isFinite(ms) || ms <= 0)
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, asString: '0s' };
+    let s = Math.floor(ms / 1000);
+
+    const days = Math.floor(s / 86400);
+    s = s % 86400;
+
+    const hours = Math.floor(s / 3600);
+    s = s % 3600;
+
+    const minutes = Math.floor(s / 60);
+    const seconds = s % 60;
+
+    const asString =
+        days > 0
+            ? `${days}d ${hours}h ${minutes}m ${seconds}s`
+            : hours > 0
+            ? `${hours}h ${minutes}m ${seconds}s`
+            : minutes > 0
+            ? `${minutes}m ${seconds}s`
+            : `${seconds}s`;
+
+    return { days, hours, minutes, seconds, asString };
+};

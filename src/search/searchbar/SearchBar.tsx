@@ -25,7 +25,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
-import { InputProps } from 'ra-core';
+import { InputProps, useTranslate } from 'ra-core';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>
@@ -68,7 +68,7 @@ export type SearchBarProps = BoxProps & {
 
 export const SearchBar = (props: SearchBarProps) => {
     const {
-        hintText = 'Search',
+        hintText = 'ra.action.search',
         to,
         filters,
         filterSeparator = ':',
@@ -194,6 +194,7 @@ const ActualSearchBar = (props: any) => {
     const { field } = useController({ name: 'q', defaultValue: '' });
 
     const formContext = useFormContext();
+    const translate = useTranslate();
 
     const handleClickClear = () => {
         formContext.reset();
@@ -207,7 +208,7 @@ const ActualSearchBar = (props: any) => {
             variant="outlined"
             id="search-input"
             type="text"
-            placeholder={hintText}
+            placeholder={translate(hintText)}
             onKeyDown={e => {
                 if (e.key === 'Enter' && field.value)
                     handleEnter(formContext.getValues());

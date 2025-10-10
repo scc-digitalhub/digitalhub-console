@@ -197,7 +197,6 @@ export const MyAppBar = () => {
             </Typography>
             {enableSearch && (
                 <SearchBar
-                    hintText="Search"
                     to="../searchresults"
                     filters={filters}
                     filterSeparator=":"

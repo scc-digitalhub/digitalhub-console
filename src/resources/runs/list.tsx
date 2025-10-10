@@ -24,9 +24,11 @@ import { StateChips } from '../../components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, taskParser } from '../../common/helper';
+import { formatDuration, functionParser } from '../../common/helper';
 import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
+import { FunctionIcon } from '../functions/icon';
+import { WorkflowIcon } from '../workflows/icon';
 
 const RowActions = () => {
     return (
@@ -109,30 +111,50 @@ export const RunList = () => {
                                     label="fields.name.title"
                                     sortable={false}
                                     render={record => (
-                                        <Stack direction={'column'} gap={1}>
-                                            {record?.spec?.function && (
-                                                <Typography variant="h6">
-                                                    {
-                                                        functionParser(
-                                                            record.spec.function
-                                                        ).name
-                                                    }
-                                                </Typography>
-                                            )}
-                                            {record?.spec?.workflow && (
-                                                <Typography variant="h6">
-                                                    {
-                                                        functionParser(
-                                                            record.spec.workflow
-                                                        ).name
-                                                    }
-                                                </Typography>
-                                            )}
+                                        <Stack gap={1}>
                                             <TextField
                                                 source="name"
                                                 label="fields.name"
-                                                color="info"
+                                                variant="body1"
                                             />
+                                            {record?.spec?.function && (
+                                                <Stack direction="row" gap={1}>
+                                                    <FunctionIcon
+                                                        fontSize="small"
+                                                        color="info"
+                                                    />
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="info"
+                                                    >
+                                                        {
+                                                            functionParser(
+                                                                record.spec
+                                                                    .function
+                                                            ).name
+                                                        }
+                                                    </Typography>
+                                                </Stack>
+                                            )}
+                                            {record?.spec?.workflow && (
+                                                <Stack direction="row" gap={1}>
+                                                    <WorkflowIcon
+                                                        fontSize="small"
+                                                        color="info"
+                                                    />
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="info"
+                                                    >
+                                                        {
+                                                            functionParser(
+                                                                record.spec
+                                                                    .workflow
+                                                            ).name
+                                                        }
+                                                    </Typography>
+                                                </Stack>
+                                            )}
                                         </Stack>
                                     )}
                                 />
@@ -142,32 +164,21 @@ export const RunList = () => {
                                     showDate
                                     showTime
                                 />
-                                <DateField
-                                    source="metadata.updated"
-                                    label="fields.updated.title"
-                                    showDate
-                                    showTime
-                                />
-                                <TextField source="kind" label="fields.kind" />
-
                                 <FunctionField
-                                    source="spec.task"
-                                    label="fields.task.title"
+                                    label="fields.duration.title"
                                     sortable={false}
                                     render={record =>
-                                        record?.spec?.task ? (
-                                            <>
-                                                {
-                                                    taskParser(record.spec.task)
-                                                        .kind
-                                                }
-                                            </>
-                                        ) : (
-                                            <></>
-                                        )
+                                        formatDuration(
+                                            new Date(
+                                                record.metadata.updated
+                                            ).getTime() -
+                                                new Date(
+                                                    record.metadata.created
+                                                ).getTime()
+                                        ).asString
                                     }
                                 />
-
+                                <TextField source="kind" label="fields.kind" />
                                 <StateChips
                                     source="status.state"
                                     label="fields.status.state"
