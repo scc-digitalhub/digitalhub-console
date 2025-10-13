@@ -13,6 +13,7 @@ import {
 } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { keyParser } from '../../../common/helper';
+import { Stack } from '@mui/system';
 
 export const ResultsList = (props: { record: any }) => {
     const { record } = props;
@@ -50,10 +51,22 @@ export const InputsList = (props: { record: any }) => {
           }))
         : [];
 
+    const parameters = record?.spec?.parameters
+        ? Object.keys(record.spec.parameters).map(k => ({
+              name: k,
+              value: record.spec.parameters[k],
+          }))
+        : [];
+
     return (
-        <Labeled label={'fields.inputs.title'}>
-            <InputOutputsList data={data} />
-        </Labeled>
+        <Stack>
+            <Labeled label={'fields.inputs.title'}>
+                <InputOutputsList data={data} />
+            </Labeled>
+            <Labeled label={'fields.parameters.title'}>
+                <ParametersList data={parameters} />
+            </Labeled>
+        </Stack>
     );
 };
 
@@ -70,6 +83,22 @@ export const OutputsList = (props: { record: any }) => {
     return (
         <Labeled label={'fields.outputs.title'}>
             <InputOutputsList data={data} />
+        </Labeled>
+    );
+};
+
+export const ParametersList = (props: { data: any }) => {
+    const { data } = props;
+    const listContext = useList({ data: data || [] });
+    return (
+        <Labeled width={'60%'}>
+            <ListContextProvider value={listContext}>
+                <Datagrid bulkActionButtons={false} rowClick={false}>
+                    <TextField source="name" label="fields.name.title" />
+                    <TextField source="value" label="fields.value.title" />
+                    <></>
+                </Datagrid>
+            </ListContextProvider>
         </Labeled>
     );
 };

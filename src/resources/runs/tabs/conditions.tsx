@@ -21,7 +21,7 @@ export const ConditionsList = ({ record }: { record: any }) => {
     });
 
     return (
-        <Labeled label="fields.conditions.title" width="60%">
+        <Labeled width="60%">
             <ListContextProvider value={listContext}>
                 <Datagrid bulkActionButtons={false} rowClick={false}>
                     <DateField

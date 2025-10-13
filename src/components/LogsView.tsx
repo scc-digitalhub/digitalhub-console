@@ -134,7 +134,7 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
     let text = '\n';
     try {
         text = atob(record.content || '');
-    } catch (e: any) {}
+    } catch (e: any) { /* empty */ }
 
     return (
         <Stack spacing={2}>
@@ -196,7 +196,7 @@ const DownloadButton = (props: { record: any; label?: string }) => {
     let text = '\n';
     try {
         text = atob(record.content || '');
-    } catch (e: any) {}
+    } catch (e: any) { /* empty */ }
 
     const handleDownload = e => {
         e.stopPropagation();
@@ -233,7 +233,7 @@ const LogViewer = styled(Box, {
     },
 }));
 
-const LogMetrics = (props: { metrics: any[] }) => {
+export const LogMetrics = (props: { metrics: any[] }) => {
     const { metrics } = props;
     const keyToLabel: { [key: string]: string } = {
         cpu: 'Cpu (n)',
