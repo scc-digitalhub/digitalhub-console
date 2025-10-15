@@ -2,114 +2,54 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, Typography, MenuItem, Select, TextField } from '@mui/material';
+import { Grid, Typography, TextField } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { useState } from 'react';
+import { useTranslate } from 'react-admin';
 
 export const CoreResourceCpuWidget = function (props: WidgetProps) {
     const { id, value, readonly, options, onChange } = props;
-    const [stringValue, setStringValue] = useState<string>(value ? value : '');
+    const translate = useTranslate();
     const [inputValue, setInputValue] = useState<number>(
         value ? parseInt(value) : 0
     );
-    const [inputUnit, setInputUnit] = useState<string>(RequestTypes[0].value);
 
     const handleInputChange = event => {
         setInputValue(event.target.value);
-        setStringValue(event.target.value + inputUnit);
-        onChange(event.target.value + inputUnit);
-    };
-    const handleUnitChange = event => {
-        setInputUnit(event.target.value);
-        setStringValue(inputValue + event.target.value);
-        onChange(inputValue + event.target.value);
+        onChange('' + event.target.value);
     };
 
     return (
-        <div>
-            <Grid size={{ xs: 12, sm: 6, md: 12 }}>
-                <Grid container spacing={2}>
-                    <Grid
-                        size={{ xs: 4, sm: 4, md: 4 }}
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            paddingTop: readonly ? '10px' : '0px',
-                            paddingBottom: readonly ? '10px' : '0px',
-                        }}
-                    >
-                        <Typography
-                            sx={{
-                                fontSize: '12px',
-                                fontWeight: 'bold',
-                                color: 'grey',
-                                paddingTop: readonly ? '18px' : '0px',
-                                paddingBottom: readonly ? '16px' : '0px',
-                            }}
-                            color={'secondary.main'}
-                        >
-                            {options['ui:title'] as string}
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid
-                        size={{ xs: 12, sm: 4, md: 4 }}
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            type="number"
-                            disabled={readonly}
-                            slotProps={{ htmlInput: { min: 0, step: 1 } }}
-                            id={id}
-                            name={id}
-                            value={inputValue}
-                            onChange={handleInputChange}
-                        />
-                    </Grid>
-                    <Grid
-                        size={{ xs: 12, sm: 4, md: 4 }}
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                        <Select
-                            labelId="type-select-label"
-                            id="type-select"
-                            value={inputUnit}
-                            disabled={readonly}
-                            type="outlined"
-                            onChange={handleUnitChange}
-                            defaultValue={RequestTypes[0].value}
-                        >
-                            {RequestTypes.map(option => {
-                                return (
-                                    <MenuItem
-                                        key={option.value}
-                                        value={option.value}
-                                    >
-                                        {option.label}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                    </Grid>
-                </Grid>
+        <Grid container>
+            <Grid size={12}>
+                <Typography
+                    sx={{
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        color: 'grey',
+                        marginBottom: '10px',
+                    }}
+                    color={'secondary.main'}
+                >
+                    {translate(options['ui:title'])}
+                </Typography>
             </Grid>
-        </div>
+            <Grid size={10}>
+                <TextField
+                    variant="outlined"
+                    margin="none"
+                    type="number"
+                    disabled={readonly}
+                    slotProps={{ htmlInput: { min: 0, step: 1 } }}
+                    id={id}
+                    name={id}
+                    value={inputValue}
+                    onChange={handleInputChange}
+                />
+            </Grid>
+        </Grid>
     );
 };
-
-const RequestTypes = [
-    {
-        value: 'm',
-        label: 'millicpu',
-    },
-    {
-        value: '',
-        label: 'cpu',
-    },
-];
 
 function getValueCpu(value: string) {
     if (!value) return 0;
