@@ -45,7 +45,7 @@ export default function ComputeResources(props: { record: any }) {
     const pod = pods[0] || null;
     const containers = pod?.containers || [];
     const rawDuration = Date.now() - new Date(pod?.startTime).getTime();
-    const durationFormatted = formatDuration(rawDuration);
+    const durationFormatted = formatDuration(rawDuration).asString;
 
     if (pod?.phase === 'Running') {
         pod.duration = durationFormatted;

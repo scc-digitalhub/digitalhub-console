@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import{ useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     LoadingIndicator,
     RecordContextProvider,
@@ -11,12 +11,20 @@ import {
     useListController,
     useRecordContext,
     Labeled,
-    DateField,
     TextField,
     Identifier,
 } from 'react-admin';
-import { Box, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
-import { LogMetrics } from './LogsView';
+import {
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+} from '@mui/material';
+import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
+import Parser from 'k8s-resource-parser';
+import { axisClasses, LineChart } from '@mui/x-charts';
 
 type ChartViewProps = {
     id?: Identifier;
@@ -30,7 +38,7 @@ export const ChartView = (props: ChartViewProps) => {
     const [selectedId, setSelectedId] = useState<string>('');
     const [currentLog, setCurrentLog] = useState<any>(undefined);
 
-    const label = getResourceLabel('logs', 1).toLowerCase();
+    const label = getResourceLabel('container', 1).toLowerCase();
 
     const filter = useMemo(() => {
         const f: any = {};
@@ -49,7 +57,11 @@ export const ChartView = (props: ChartViewProps) => {
     });
 
     const recordContext = useRecordContext();
-    const podName = recordContext?.status?.pod || recordContext?.metadata?.name || recordContext?.name || '';
+    const podName =
+        recordContext?.status?.pod ||
+        recordContext?.metadata?.name ||
+        recordContext?.name ||
+        '';
 
     const filteredData = useMemo(() => {
         if (!data) return [];
@@ -59,6 +71,13 @@ export const ChartView = (props: ChartViewProps) => {
             return !!podField && podField === podName;
         });
     }, [data, podName]);
+
+    useEffect(() => {
+        if (filteredData.length > 0 && selectedId === '') {
+            const firstItemId = filteredData[0].id;
+            setSelectedId(firstItemId);
+        }
+    }, [filteredData, selectedId]);
 
     useEffect(() => {
         if (data && selectedId !== '') {
@@ -88,30 +107,83 @@ export const ChartView = (props: ChartViewProps) => {
         }
     };
 
+    const LogMetrics = (props: { metrics: any[] }) => {
+        const { metrics } = props;
+        const keyToLabel: { [key: string]: string } = {
+            cpu: 'Cpu (n)',
+            memory: 'Memory (MB)',
+        };
+
+        const data = metrics.map((m: { timestamp: any; usage: any }) => {
+            let val = { timestamp: new Date(m.timestamp) };
+            if (m.usage.memory) {
+                const bytes = Parser.memoryParser(m.usage.memory);
+                val['memory'] = ByteConverter.convert(
+                    Byte.value(bytes),
+                    'MB'
+                ).value;
+            }
+            if (m.usage.cpu) {
+                const cpu = m.usage.cpu.endsWith('n')
+                    ? parseInt(m.usage.cpu.slice(0, -1)) / 1000000
+                    : parseInt(m.usage.cpu);
+                val['cpu'] = cpu;
+            }
+            return val;
+        });
+
+        return (
+            <LineChart
+                xAxis={[
+                    {
+                        dataKey: 'timestamp',
+                        scaleType: 'time',
+                        tickNumber: 4,
+                        valueFormatter: (value: Date, context) =>
+                            context.location === 'tick'
+                                ? `${value.toLocaleDateString()}\n${value.toLocaleTimeString()}`
+                                : value.toLocaleString(),
+                    },
+                ]}
+                yAxis={Object.keys(keyToLabel).map(key => ({
+                    id: key,
+                    scaleType: 'linear',
+                    label: keyToLabel[key],
+                    min: 0,
+                    position: key == 'cpu' ? 'left' : 'right',
+                }))}
+                series={Object.keys(keyToLabel).map(key => ({
+                    dataKey: key,
+                    label: keyToLabel[key],
+                    yAxisId: key,
+                    showMark: false,
+                }))}
+                margin={{ top: 50, right: 50, bottom: 50, left: 65 }}
+                sx={{
+                    [`.${axisClasses.left} .${axisClasses.label}`]: {
+                        transform: 'translateX(-15px)',
+                    },
+                }}
+                dataset={data}
+                height={300}
+            />
+        );
+    };
+
     const LogsPreview = () => {
         const record = useRecordContext();
         if (!record) return <></>;
 
         return (
-            <Stack spacing={2}>
-                <Stack direction={'row'} spacing={8}>
-                    <Labeled>
-                        <DateField source="metadata.created" showTime />
-                    </Labeled>
-                    <Labeled>
-                        <DateField source="metadata.updated" showTime />
-                    </Labeled>
-                </Stack>
-
-                {record.status?.pod && (
-                    <Labeled>
-                        <TextField source="status.pod" />
-                    </Labeled>
-                )}
-
+            <Stack direction={'row'} spacing={6} sx={{ mb: 2 }}>
                 {record.status?.container && (
                     <Labeled>
                         <TextField source="status.container" />
+                    </Labeled>
+                )}
+                {record.status?.pod && (
+                    <Labeled>
+                        <TextField source="status.pod" />
                     </Labeled>
                 )}
             </Stack>
@@ -123,11 +195,19 @@ export const ChartView = (props: ChartViewProps) => {
             <Box>
                 <FormControl fullWidth>
                     <InputLabel>{label}</InputLabel>
-                    <Select value={selectedId} label={label} onChange={onSelected}>
-                        
+                    <Select
+                        value={selectedId}
+                        label={label}
+                        onChange={onSelected}
+                    >
                         {filteredData.map((r: any) => (
-                            <MenuItem key={'chart-logs-select-' + r.id} value={r.id}>
-                                {r.status?.container || r.metadata?.updated || r.id}
+                            <MenuItem
+                                key={'chart-logs-select-' + r.id}
+                                value={r.id}
+                            >
+                                {r.status?.container ||
+                                    r.metadata?.updated ||
+                                    r.id}
                             </MenuItem>
                         ))}
                     </Select>
@@ -141,7 +221,9 @@ export const ChartView = (props: ChartViewProps) => {
                             <LogsPreview />
                             {currentLog?.status?.metrics && (
                                 <Box sx={{ pt: 1 }}>
-                                    <LogMetrics metrics={currentLog.status.metrics} />
+                                    <LogMetrics
+                                        metrics={currentLog.status.metrics}
+                                    />
                                 </Box>
                             )}
                         </>

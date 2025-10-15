@@ -9,7 +9,6 @@ import {
     Labeled,
     LoadingIndicator,
     RecordContextProvider,
-    TextField,
     useGetResourceLabel,
     useListController,
     useRecordContext,
@@ -28,10 +27,6 @@ import {
 } from '@mui/material';
 import NavigationRefresh from '@mui/icons-material/Refresh';
 import { LazyLog } from '@melloware/react-logviewer';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import Parser from 'k8s-resource-parser';
-import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 import DownloadIcon from '@mui/icons-material/GetApp';
 
 type LogsViewProps = {
@@ -134,7 +129,9 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
     let text = '\n';
     try {
         text = atob(record.content || '');
-    } catch (e: any) { /* empty */ }
+    } catch (e: any) {
+        /* empty */
+    }
 
     return (
         <Stack spacing={2}>
@@ -146,22 +143,6 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
                     <DateField source="metadata.updated" showTime />
                 </Labeled>
             </Stack>
-            {record.status?.pod && (
-                <Labeled>
-                    <TextField source="status.pod" />
-                </Labeled>
-            )}
-
-            {record.status?.container && (
-                <Labeled>
-                    <TextField source="status.container" />
-                </Labeled>
-            )}
-
-            {record.status?.metrics && (
-                <LogMetrics metrics={record.status.metrics} />
-            )}
-
             <TopToolbar
                 className={ToolbarClasses.mobileToolbar}
                 sx={{ mb: 0, pb: 0 }}
@@ -196,7 +177,9 @@ const DownloadButton = (props: { record: any; label?: string }) => {
     let text = '\n';
     try {
         text = atob(record.content || '');
-    } catch (e: any) { /* empty */ }
+    } catch (e: any) {
+        /* empty */
+    }
 
     const handleDownload = e => {
         e.stopPropagation();
@@ -232,68 +215,3 @@ const LogViewer = styled(Box, {
         marginRight: 0,
     },
 }));
-
-export const LogMetrics = (props: { metrics: any[] }) => {
-    const { metrics } = props;
-    const keyToLabel: { [key: string]: string } = {
-        cpu: 'Cpu (n)',
-        memory: 'Memory (MB)',
-    };
-
-    const data = metrics.map((m: { timestamp: any; usage: any }) => {
-        let val = { timestamp: new Date(m.timestamp) };
-        if (m.usage.memory) {
-            //parse kubernetes resource and convert to Megabytes
-            const bytes = Parser.memoryParser(m.usage.memory);
-            val['memory'] = ByteConverter.convert(
-                Byte.value(bytes),
-                'MB'
-            ).value;
-        }
-        if (m.usage.cpu) {
-            //convert nanocores to millicores
-            const cpu = m.usage.cpu.endsWith('n')
-                ? parseInt(m.usage.cpu.slice(0, -1)) / 1000000
-                : parseInt(m.usage.cpu);
-            val['cpu'] = cpu;
-        }
-        return val;
-    });
-
-    return (
-        <LineChart
-            xAxis={[
-                {
-                    dataKey: 'timestamp',
-                    scaleType: 'time',
-                    tickNumber: 4,
-                    valueFormatter: (value: Date, context) =>
-                        context.location === 'tick'
-                            ? `${value.toLocaleDateString()}\n${value.toLocaleTimeString()}`
-                            : value.toLocaleString(),
-                },
-            ]}
-            yAxis={Object.keys(keyToLabel).map(key => ({
-                id: key,
-                scaleType: 'linear',
-                label: keyToLabel[key],
-                min: 0,
-                position: key == 'cpu' ? 'left' : 'right',
-            }))}
-            series={Object.keys(keyToLabel).map(key => ({
-                dataKey: key,
-                label: keyToLabel[key],
-                yAxisId: key,
-                showMark: false,
-            }))}
-            margin={{ top: 50, right: 50, bottom: 50, left: 65 }}
-            sx={{
-                [`.${axisClasses.left} .${axisClasses.label}`]: {
-                    transform: 'translateX(-15px)',
-                },
-            }}
-            dataset={data}
-            height={300}
-        />
-    );
-};

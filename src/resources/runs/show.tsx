@@ -245,6 +245,9 @@ export const RunShowComponent = () => {
                     <LogsView id={record.id as string} resource={resource} />
                 )}
             </TabbedShowLayout.Tab>
+            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
+                <ComputeResources record={record} />
+            </TabbedShowLayout.Tab>
             {record?.status?.service && (
                 <TabbedShowLayout.Tab label={'fields.service.title'}>
                     <ServiceDetails record={record} />
@@ -282,9 +285,6 @@ export const RunShowComponent = () => {
             )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
-                <ComputeResources record={record} />
             </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
