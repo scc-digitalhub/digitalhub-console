@@ -84,6 +84,19 @@ export const OidcAuthProvider = (
                 });
         },
         refreshUser: () => refreshUser(provider, loginUrl),
+        checkError: error => {
+            const status = error.status;
+            if (status === 401) {
+                return Promise.reject();
+            }
+            if (status === 403) {
+                return Promise.reject({
+                    logoutUser: false,
+                    message: 'ra.notification.not_authorized',
+                });
+            }
+            return Promise.resolve();
+        },
         logout: (params: any) => {
             return provider.logout(params).then(() => {
                 return logoutTo;
@@ -186,9 +199,14 @@ export const BasicAuthProvider = (props: {
         },
 
         checkError: error => {
-            if (error.status === 401 || error.status === 403) {
+            if (error.status === 401) {
                 sessionStorage.removeItem('user');
                 return Promise.reject();
+            } else if (error.status === 403) {
+                return Promise.reject({
+                    logoutUser: false,
+                    message: 'ra.notification.not_authorized',
+                });
             } else {
                 return Promise.resolve();
             }

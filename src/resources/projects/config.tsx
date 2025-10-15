@@ -39,14 +39,18 @@ const ShowToolbar = () => {
 
     return (
         <TopToolbar>
-            <EditButton style={{ marginLeft: 'auto' }} />
+            {isAdmin(record.id) && (
+                <EditButton style={{ marginLeft: 'auto' }} />
+            )}
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
             {isAdmin(record.id) && <ShareButton />}
-            <DeleteWithDialogButton
-                redirect="/projects"
-                mutationOptions={{ meta: { cascade: true } }}
-            />
+            {isAdmin(record.id) && (
+                <DeleteWithDialogButton
+                    redirect="/projects"
+                    mutationOptions={{ meta: { cascade: true } }}
+                />
+            )}
         </TopToolbar>
     );
 };
