@@ -437,14 +437,32 @@
         },
         "resources": {
             "cpu": {
-                "title": "Cpu"
+                "title": "Cpu",
+                "limits": {
+                    "title": "Limits (cpu units)"
+                },
+                "requests": {
+                    "title": "Requests (cpu units)"
+                }
             },
             "description": "K8s resources",
             "gpu": {
-                "title": "Gpu"
+                "title": "Gpu",
+                "limits": {
+                    "title": "Limits"
+                },
+                "requests": {
+                    "title": "Requests"
+                }
             },
             "memory": {
-                "title": "Memory"
+                "title": "Memory",
+                "limits": {
+                    "title": "Limits"
+                },
+                "requests": {
+                    "title": "Requests"
+                }
             },
             "title": "Resources"
         },
