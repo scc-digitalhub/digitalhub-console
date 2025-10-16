@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { Container, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
     Labeled,
@@ -25,6 +25,8 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { getFunctionUiSpec } from './types';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
@@ -163,24 +165,6 @@ const ShowComponent = () => {
         return <LoadingIndicator />;
     }
 
-    const getUiSpec = (kind: string) => {
-        const uiSpec = getFunctionUiSpec(kind) || {};
-        if (sourceCode) {
-            //hide source field
-            uiSpec['source'] = {
-                'ui:widget': 'hidden',
-            };
-        }
-        if (fabSourceCode) {
-            //hide source field
-            uiSpec['fab_source'] = {
-                'ui:widget': 'hidden',
-            };
-        }
-
-        return uiSpec;
-    };
-
     const getKind = (kind: string) => {
         if (kind.indexOf('+') > 0) {
             return kind.split('+')[1];
@@ -208,16 +192,20 @@ const ShowComponent = () => {
                 <IdField source="key" />
 
                 <MetadataField />
-
-                {spec && (
-                    <JsonSchemaField
-                        source="spec"
-                        schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
-                        label={false}
-                    />
-                )}
             </TabbedShowLayout.Tab>
+            {spec && (
+                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                    <Box sx={{ width: '100%' }}>
+                        <AceEditorField
+                            width="100%"
+                            source="spec"
+                            parse={toYaml}
+                            mode="yaml"
+                            minLines={60}
+                        />
+                    </Box>
+                </TabbedShowLayout.Tab>
+            )}
 
             {sourceCode && (
                 <TabbedShowLayout.Tab
