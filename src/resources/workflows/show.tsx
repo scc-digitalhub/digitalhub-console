@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { JsonSchemaField } from '../../components/JsonSchema';
 import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -22,8 +21,8 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { getWorkflowUiSpec } from './types';
 import { InspectButton } from '@dslab/ra-inspect-button';
+import { toYaml } from '@dslab/ra-export-record-button';
 import { WorkflowIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 
@@ -42,8 +41,6 @@ const ShowComponent = () => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
-
-    const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
@@ -167,19 +164,6 @@ const ShowComponent = () => {
         return <LoadingIndicator />;
     }
 
-    //TODO refactor!
-    const getUiSpec = (kind: string) => {
-        const uiSpec = getWorkflowUiSpec(kind) || {};
-        if (sourceCode) {
-            //hide source field
-            uiSpec['source'] = {
-                'ui:widget': 'hidden',
-            };
-        }
-
-        return uiSpec;
-    };
-
     const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
             return kind.split('+')[1];
@@ -203,16 +187,20 @@ const ShowComponent = () => {
                 <IdField source="key" />
 
                 <MetadataField />
-
-                {spec && (
-                    <JsonSchemaField
-                        source="spec"
-                        schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
-                        label={false}
-                    />
-                )}
             </TabbedShowLayout.Tab>
+            {spec && (
+                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                    <Box sx={{ width: '100%' }}>
+                        <AceEditorField
+                            width="100%"
+                            source="spec"
+                            parse={toYaml}
+                            mode="yaml"
+                            minLines={60}
+                        />
+                    </Box>
+                </TabbedShowLayout.Tab>
+            )}
 
             {sourceCode && (
                 <TabbedShowLayout.Tab
