@@ -39,6 +39,7 @@ export const ClientButton = (props: ClientButtonProps) => {
         icon = defaultIcon,
         fullWidth = true,
         maxWidth = 'lg',
+        ...rest
     } = props;
 
     const translate = useTranslate();
@@ -49,8 +50,12 @@ export const ClientButton = (props: ClientButtonProps) => {
     const url = record?.status?.service?.url;
 
     const isLoading = !record;
+    const isDisabled =
+        rest.disabled || record?.status?.state !== 'RUNNING' || !url;
 
     const handleDialogOpen = e => {
+        if (isDisabled) return;
+
         setOpen(true);
         e.stopPropagation();
     };
@@ -70,7 +75,12 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     return (
         <Fragment>
-            <Button label={label} color={color} onClick={handleDialogOpen}>
+            <Button
+                label={label}
+                color={color}
+                onClick={handleDialogOpen}
+                disabled={isDisabled}
+            >
                 {icon}
             </Button>
             <ClientDialog

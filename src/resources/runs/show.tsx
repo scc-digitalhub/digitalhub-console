@@ -47,11 +47,10 @@ import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
 import { EventsList } from './tabs/events';
 import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
-import { K8sDetails } from './tabs/k8s';
-import { OpenAIDetails } from './tabs/openai';
+
 import { CloneButton } from './CloneButton';
-import { ClientTab } from './tabs/client';
-import PodsTab from './tabs/pods';
+import ComputeResources from './tabs/computeResources';
+import { ClientButton } from '../../pages/services/ClientButton';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -236,7 +235,7 @@ export const RunShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
             {(record?.status?.outputs || record?.status?.results) && (
-                <TabbedShowLayout.Tab label={'fields.results'}>
+                <TabbedShowLayout.Tab label={'fields.outputs.title'}>
                     {record?.status?.outputs && <OutputsList record={record} />}
                     {record?.status?.results && <ResultsList record={record} />}
                 </TabbedShowLayout.Tab>
@@ -246,24 +245,12 @@ export const RunShowComponent = () => {
                     <LogsView id={record.id as string} resource={resource} />
                 )}
             </TabbedShowLayout.Tab>
-            {record?.status?.k8s && (
-                <TabbedShowLayout.Tab label={'fields.k8s.title'}>
-                    <K8sDetails record={record} />
-                </TabbedShowLayout.Tab>
-            )}
+            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
+                <ComputeResources record={record} />
+            </TabbedShowLayout.Tab>
             {record?.status?.service && (
                 <TabbedShowLayout.Tab label={'fields.service.title'}>
                     <ServiceDetails record={record} />
-                </TabbedShowLayout.Tab>
-            )}
-            {record?.status?.service?.url && (
-                <TabbedShowLayout.Tab label={'client'}>
-                    <ClientTab record={record} />
-                </TabbedShowLayout.Tab>
-            )}
-            {record?.status?.openai && (
-                <TabbedShowLayout.Tab label={'fields.openai.title'}>
-                    <OpenAIDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
             {record?.spec?.function && (
@@ -299,11 +286,6 @@ export const RunShowComponent = () => {
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
-            {record?.status?.pods?.length > 0 && (
-                <TabbedShowLayout.Tab label={'fields.pods.title'}>
-                    <PodsTab record={record} />
-                </TabbedShowLayout.Tab>
-            )}
         </TabbedShowLayout>
     );
 };
@@ -312,6 +294,7 @@ const ShowToolbar = () => (
     <TopToolbar>
         <BackButton />
         <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
+        <ClientButton />
         <FunctionField
             render={record =>
                 record.status?.state == 'RUNNING' ? (

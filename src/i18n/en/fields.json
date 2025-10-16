@@ -617,6 +617,22 @@
             "description": "",
             "title": "LoRA Adapters"
         },
+        "apiVersion": {
+            "description": "",
+            "title": "API Version"
+        },
+        "generation": {
+            "description": "",
+            "title": "Model Generation"
+        },
+        "creationTimestamp": {
+            "description": "",
+            "title": "Creation Timestamp"
+        },
+        "resourceProfile": {
+            "description": "",
+            "title": "Resource Profile"
+        },
         "features": {
             "description": "",
             "title": "Supported Model Features"
@@ -643,7 +659,15 @@
         },
         "replicas": {
             "description": "number of Pod replicas that should be actively serving the model",
-            "title": "Number of Replicas"
+            "title": "Number of Replicas",
+            "all": {
+                "description": "total number of replicas",
+                "title": "All "
+            },
+            "ready": {
+                "description": "number of ready replicas",
+                "title": "Ready "
+            }
         },
         "minreplicas": {
             "description": "minimum number of Pod replicas that the model can scale down to.",
@@ -721,7 +745,23 @@
         "title": "Number of Workers"
     },
     "openai": {
-        "title": "OpenAI"
+        "title": "OpenAI",
+        "baseUrl": {
+            "title": "Base URL",
+            "description": "Base URL for the OpenAI service"
+        },
+        "model": {
+            "title": "Model",
+            "description": "Model used for the requests"
+        },
+        "urls": {
+            "title": "URLs",
+            "description": "List of URLs"
+        },
+        "features": {
+            "description": "",
+            "title": "Features"
+        }
     },
     "openMetadata": {
         "description": "",
@@ -855,7 +895,9 @@
         "title": "Secrets"
     },
     "service": {
-        "title": "Service"
+        "title": "Service",
+        "url": { "description": "", "title": "URL" },
+        "urls": { "description": "", "title": "URLs" }
     },
     "serviceName": {
         "description": "Name of the service exposed",

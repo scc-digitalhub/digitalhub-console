@@ -224,7 +224,7 @@
             "title": "CodiceFlower App Source Code",
             "description": ""
         },
-        "image" : {
+        "image": {
             "title": "Container image to use",
             "description": ""
         },
@@ -385,6 +385,10 @@
         }
     },
     "id": "Id",
+    "info": {
+        "empty": "Nessuna informazione disponibile",
+        "tab": "Info"
+    },
     "initParameters": {
         "description": "",
         "item": {
@@ -392,10 +396,6 @@
             "title": "Parametro"
         },
         "title": "Parametri di Inizializzazione"
-    },
-    "info": {
-        "empty": "Nessuna informazione disponibile",
-        "tab": "Info"
     },
     "inputDatasets": {
         "item": {
@@ -617,6 +617,22 @@
             "description": "",
             "title": "LoRA Adapter"
         },
+        "apiVersion": {
+            "description": "",
+            "title": "Versione API"
+        },
+        "generation": {
+            "description": "",
+            "title": "Generazione del modello"
+        },
+        "creationTimestamp": {
+            "description": "",
+            "title": "Timestamp di creazione"
+        },
+        "resourceProfile": {
+            "description": "",
+            "title": "Profilo della risorsa"
+        },
         "features": {
             "description": "",
             "title": "Features supportate"
@@ -643,7 +659,15 @@
         },
         "replicas": {
             "description": "Numero di repliche dei Pod che devono essere srvite",
-            "title": "Numero di Repliche"
+            "title": "Numero di Repliche",
+            "all": {
+                "description": "numero totale di repliche",
+                "title": "Totale"
+            },
+            "ready": {
+                "description": "numero di repliche pronte",
+                "title": "Pronte"
+            }
         },
         "minreplicas": {
             "description": "numero minimo di repliche di Pod a cui il modello può essere adattato.",
@@ -720,8 +744,24 @@
         "description": "",
         "title": "Numero di Worker"
     },
-    "openai":{
-        "title": "OpenAI"
+    "openai": {
+        "title": "OpenAI",
+        "baseUrl": {
+            "title": "URL di base",
+            "description": "URL di base per il servizio OpenAI"
+        },
+        "model": {
+            "title": "Modello",
+            "description": "Modello utilizzato per le richieste"
+        },
+        "urls": {
+            "title": "URL",
+            "description": "Elenco degli URL"
+        },
+        "features": {
+            "description": "",
+            "title": "Funzionalità"
+        }
     },
     "openMetadata": {
         "description": "",
@@ -855,7 +895,9 @@
         "title": "Segreti"
     },
     "service": {
-        "title": "Servizio"
+        "title": "Servizio",
+        "url": { "description": "", "title": "URL" },
+        "urls": { "description": "", "title": "URLs" }
     },
     "serviceName": {
         "description": "Nome del servizio da esporre",
