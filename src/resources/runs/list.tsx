@@ -89,17 +89,6 @@ export const RunList = () => {
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
 
-                    <TopToolbar>
-                        <CreateInDialogButton
-                            resource={resource}
-                            fullWidth
-                            maxWidth={'lg'}
-                            closeOnClickOutside={false}
-                        >
-                            <RunCreate />
-                        </CreateInDialogButton>
-                    </TopToolbar>
-
                     <FlatCard>
                         <ListView
                             filters={
