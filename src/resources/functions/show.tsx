@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { JsonSchemaField } from '../../components/JsonSchema';
-import { Container, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
     Labeled,
@@ -13,7 +13,6 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
-    TopToolbar,
     useDataProvider,
     useRecordContext,
     useResourceContext,
@@ -23,7 +22,8 @@ import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { getFunctionUiSpec } from './types';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { AceEditorField } from '@dslab/ra-ace-editor';
 import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
@@ -31,6 +31,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
+import { countLines } from '../../common/helper';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -39,7 +40,6 @@ const ShowComponent = () => {
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
 
-    const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
@@ -166,25 +166,8 @@ const ShowComponent = () => {
     if (!record) {
         return <LoadingIndicator />;
     }
-
-    //TODO refactor!
-    const getUiSpec = (kind: string) => {
-        const uiSpec = getFunctionUiSpec(kind) || {};
-        if (sourceCode) {
-            //hide source field
-            uiSpec['source'] = {
-                'ui:widget': 'hidden',
-            };
-        }
-        if (fabSourceCode) {
-            //hide source field
-            uiSpec['fab_source'] = {
-                'ui:widget': 'hidden',
-            };
-        }
-
-        return uiSpec;
-    };
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
@@ -209,16 +192,21 @@ const ShowComponent = () => {
                 <IdField source="key" />
 
                 <MetadataField />
-
-                {spec && (
-                    <JsonSchemaField
-                        source="spec"
-                        schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getUiSpec(kind)}
-                        label={false}
-                    />
-                )}
             </TabbedShowLayout.Tab>
+            {spec && (
+                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                    <Box sx={{ width: '100%' }}>
+                        <AceEditorField
+                            width="100%"
+                            source="spec"
+                            parse={toYaml}
+                            mode="yaml"
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
+                        />
+                    </Box>
+                </TabbedShowLayout.Tab>
+            )}
 
             {sourceCode && (
                 <TabbedShowLayout.Tab
@@ -275,9 +263,6 @@ export const SourceCodeTab = (props: {
 
     return (
         <RecordContextProvider value={values}>
-            <TopToolbar>
-                <InspectButton showCopyButton={false} />
-            </TopToolbar>
             {spec && (
                 <JsonSchemaField
                     source="spec"

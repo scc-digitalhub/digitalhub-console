@@ -63,6 +63,8 @@ export const LogsView = (props: LogsViewProps) => {
         if (data && selectedId != '') {
             const r = data.find(r => r.id === selectedId);
             setCurrentLog(r);
+        } else {
+            setCurrentLog(undefined);
         }
     }, [data, selectedId]);
 
@@ -73,6 +75,8 @@ export const LogsView = (props: LogsViewProps) => {
     const onSelected = e => {
         if (e.target?.value) {
             setSelectedId(e.target.value);
+        } else {
+            setSelectedId('');
         }
     };
 
@@ -122,15 +126,18 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
     );
 
     const record = recordFromProps || recordContext;
-    if (!record) {
-        return <></>;
-    }
 
     let text = '\n';
-    try {
-        text = atob(record.content || '');
-    } catch (e: any) {
-        /* empty */
+    if (record) {
+        try {
+            text = atob(record.content || '');
+        } catch (e: any) {
+            /* empty */
+        }
+    }
+
+    if (!record) {
+        return <></>;
     }
 
     return (
@@ -154,6 +161,7 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
             </TopToolbar>
             <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
                 <LazyLog
+                    key={record.id}
                     ref={ref}
                     text={text}
                     caseInsensitive={true}

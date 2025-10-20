@@ -38,7 +38,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { ResumeButton } from './ResumeButton';
-import { functionParser } from '../../common/helper';
+import { countLines, functionParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
@@ -96,6 +96,8 @@ export const RunShowComponent = () => {
     for (const c in StateColors) {
         states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
     }
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     const metricsComparisonFilters = [
         <TextInput
@@ -218,7 +220,8 @@ export const RunShowComponent = () => {
                     source="spec"
                     parse={toYaml}
                     mode="yaml"
-                    minLines={20}
+                    minLines={lineCount[0]}
+                    maxLines={lineCount[1]}
                 />
             </TabbedShowLayout.Tab>
             {record?.spec?.source && schema && (

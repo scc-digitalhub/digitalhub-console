@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Container, Stack } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import {
     DateField,
@@ -13,14 +13,13 @@ import {
     TextInput,
     useRecordContext,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
-import { arePropsEqual } from '../../common/helper';
-import { JsonSchemaField } from '../../components/JsonSchema';
+import { arePropsEqual, countLines } from '../../common/helper';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
-import { getModelSpecUiSchema } from './types';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { FileInfo } from '../../components/FileInfo';
@@ -31,6 +30,8 @@ import { ChipsField } from '../../components/ChipsField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
+import { AceEditorField } from '@dslab/ra-ace-editor';
+import { toYaml } from '@dslab/ra-export-record-button';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -41,9 +42,12 @@ const ShowComponent = () => {
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
     const schemaProvider = useSchemaProvider();
+    const translate = useTranslate();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     useEffect(() => {
         if (!schemaProvider) {
@@ -114,15 +118,21 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-                {spec && (
-                    <JsonSchemaField
-                        source="spec"
-                        schema={{ ...spec.schema, title: 'Spec' }}
-                        uiSchema={getModelSpecUiSchema(kind, true)}
-                        label={false}
-                    />
-                )}
             </TabbedShowLayout.Tab>
+            {spec && (
+                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                    <Box sx={{ width: '100%' }}>
+                        <AceEditorField
+                            width="100%"
+                            source="spec"
+                            parse={toYaml}
+                            mode="yaml"
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
+                        />
+                    </Box>
+                </TabbedShowLayout.Tab>
+            )}
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
