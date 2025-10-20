@@ -4,8 +4,11 @@
 
 import { StepperForm } from '@dslab/ra-stepper';
 import {
+    AutocompleteInput,
     FormDataConsumer,
+    ReferenceInput,
     required,
+    useGetList,
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
@@ -20,22 +23,95 @@ import { isValidAgainstSchema } from '../../common/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useCallback, useRef } from 'react';
+import { filterProps } from '../../common/schemas';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
-export const RunCreateForm = (props: {
-    runtime: string;
-    runSchema: any;
-    taskSchema: any;
-}) => {
-    const { runtime, runSchema, taskSchema } = props;
+export const RunCreate = () => {
+    const { root } = useRootSelector();
+    const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
+    const fn = useRef<string | null>(null);
 
-    const { data: schemas } = useGetManySchemas([
-        { resource: 'runs', runtime },
-    ]);
-    const schema = schemas ? schemas.find(s => s.entity === 'RUN') : null;
+    const functionSelectOption = useCallback(
+        d => ({
+            ...d,
+            data: d.data?.map(record => ({
+                name: record.name,
+                id: `function_${record.kind}://${record.project}/${record.name}`,
+            })),
+        }),
+        []
+    );
+
+    const workflowSelectOption = useCallback(
+        d => ({
+            ...d,
+            data: d.data?.map(record => ({
+                name: record.name,
+                id: `workflow_${record.kind}://${record.project}/${record.name}`,
+            })),
+        }),
+        []
+    );
+    const { data: functions } = useGetList(
+        'functions',
+        { pagination: { page: 1, perPage: 100 } },
+        { select: functionSelectOption }
+    );
+    const { data: workflows } = useGetList(
+        'workflows',
+        { pagination: { page: 1, perPage: 100 } },
+        { select: workflowSelectOption }
+    );
+
+    const onChange = e => {
+        if (e && typeof e == 'string') {
+            fn.current = e;
+        }
+    };
+
+    return (
+        <StepperForm
+            toolbar={<StepperToolbar saveProps={{ alwaysEnable: true }} />}
+        >
+            <StepperForm.Step label={getResourceLabel('functions', 1)}>
+                <ReferenceInput source="_function" reference="functions">
+                    <AutocompleteInput onChange={e => onChange(e)} />
+                </ReferenceInput>
+            </StepperForm.Step>
+            <StepperForm.Step label={getResourceLabel('runs', 1)}>
+                <FormDataConsumer>
+                    {({ formData }) => {
+                        //read-only view
+                        const r = { spec: btoa(toYaml(formData)) };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                                parse={atob}
+                            />
+                        );
+                    }}
+                </FormDataConsumer>
+            </StepperForm.Step>
+        </StepperForm>
+    );
+};
+
+export const RunCreateTaskStep = () => {};
+
+export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
+    const { runSchema: runSchemaProps, taskSchema } = props;
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+    //filter task properties from run schema
+    const runSchema = filterProps(runSchemaProps, taskSchema);
 
     return (
         <StepperForm
@@ -58,7 +134,7 @@ export const RunCreateForm = (props: {
             <StepperForm.Step label={translate('fields.summary')} optional>
                 <FormDataConsumer>
                     {({ formData }) => {
-                        if (schema) {
+                        if (runSchemaProps) {
                             //let users edit and then validate against schema
                             return (
                                 <AceEditorInput
@@ -71,7 +147,7 @@ export const RunCreateForm = (props: {
                                         required(),
                                         isValidAgainstSchema(
                                             ajv,
-                                            schema?.schema
+                                            runSchemaProps?.schema
                                         ),
                                     ]}
                                 />

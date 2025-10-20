@@ -29,6 +29,8 @@ import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
+import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
+import { RunCreate } from './create';
 
 const RowActions = () => {
     return (
@@ -87,7 +89,16 @@ export const RunList = () => {
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
 
-                    <TopToolbar />
+                    <TopToolbar>
+                        <CreateInDialogButton
+                            resource={resource}
+                            fullWidth
+                            maxWidth={'lg'}
+                            closeOnClickOutside={false}
+                        >
+                            <RunCreate />
+                        </CreateInDialogButton>
+                    </TopToolbar>
 
                     <FlatCard>
                         <ListView

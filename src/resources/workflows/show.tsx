@@ -9,7 +9,6 @@ import {
     Labeled,
     LoadingIndicator,
     RecordContextProvider,
-    ResourceContextProvider,
     ShowBase,
     ShowView,
     TabbedShowLayout,
@@ -33,10 +32,9 @@ import deepEqual from 'deep-is';
 import { MetadataField } from '../../components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
-import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
-import { TaskAndRuns } from '../../components/TaskAndRuns';
 import { RunStateBadge } from '../../components/RunStateBadge';
+import { WorkflowTaskShow } from './tasks';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -47,7 +45,7 @@ const ShowComponent = () => {
 
     const kind = record?.kind || undefined;
     const [spec, setSpec] = useState<any>();
-    const [tasks, setTasks] = useState<any>([]);
+    const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
@@ -96,7 +94,16 @@ const ShowComponent = () => {
 
             Promise.all([
                 schemaProvider.list('tasks', record.kind).then(schemas => {
-                    return schemas?.map(s => s.kind);
+                    const v = schemas?.map(s => s.kind);
+                    if (!v) {
+                        return null;
+                    }
+
+                    v.sort((a, b) => {
+                        return a.localeCompare(b);
+                    });
+
+                    return v;
                 }),
 
                 dataProvider.getList('tasks', {
@@ -118,11 +125,7 @@ const ShowComponent = () => {
                     );
                     if (missing.length == 0) {
                         //all tasks defined
-                        list.data.sort((a, b) => {
-                            return a.kind.localeCompare(b.kind);
-                        });
-
-                        setTasks(list.data);
+                        setTasks(kinds);
                         return;
                     }
 
@@ -148,7 +151,7 @@ const ShowComponent = () => {
                             res.sort((a, b) => {
                                 return a.kind.localeCompare(b.kind);
                             });
-                            setTasks(res);
+                            setTasks(res.map(r => r.kind));
                         })
                         .catch(e => {
                             throw e;
@@ -164,6 +167,7 @@ const ShowComponent = () => {
         return <LoadingIndicator />;
     }
 
+    //TODO refactor!
     const getUiSpec = (kind: string) => {
         const uiSpec = getWorkflowUiSpec(kind) || {};
         if (sourceCode) {
@@ -176,17 +180,13 @@ const ShowComponent = () => {
         return uiSpec;
     };
 
-    const getKind = (kind: string) => {
+    const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
             return kind.split('+')[1];
         }
         return kind;
     };
-    const editTask = (id: string, taskUpdated: any) => {
-        setTasks(tasks => {
-            return tasks.map(task => (task.id === id ? taskUpdated : task));
-        });
-    };
+
     return (
         <TabbedShowLayout record={record} syncWithLocation={false}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
@@ -228,34 +228,23 @@ const ShowComponent = () => {
                 <TabbedShowLayout.Tab
                     label={
                         <Stack direction="row" sx={{ alignItems: 'center' }}>
-                            <RunStateBadge
+                            {/* <RunStateBadge
                                 sx={{ marginRight: '9px' }}
                                 getListFilters={{
                                     task: `${task.kind}://${task.project}/${task.id}`,
                                 }}
-                            />
+                            /> */}
                             {translate(
-                                'resources.tasks.kinds.' + getKind(task.kind)
+                                'resources.tasks.kinds.' + getAction(task)
                             )}
                         </Stack>
                     }
-                    key={task.kind}
-                    path={task.kind}
+                    key={task}
+                    path={task}
                 >
-                    <ResourceContextProvider value="tasks">
-                        <RecordContextProvider value={task}>
-                            <TaskAndRuns
-                                task={task.id}
-                                onEdit={editTask}
-                                runOf="workflow"
-                            />
-                        </RecordContextProvider>
-                    </ResourceContextProvider>
+                    <WorkflowTaskShow kind={task} />
                 </TabbedShowLayout.Tab>
             ))}
-            <TabbedShowLayout.Tab label="pages.lineage.title">
-                <LineageTabComponent />
-            </TabbedShowLayout.Tab>
         </TabbedShowLayout>
     );
 };
