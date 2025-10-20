@@ -19,6 +19,9 @@ export const getTaskUiSpec = (schema: any | undefined) => {
         function: {
             'ui:readonly': true,
         },
+        workflow: {
+            'ui:readonly': true,
+        },
     };
 
     return mergeUiTemplate(schema, base, k8sSpec);

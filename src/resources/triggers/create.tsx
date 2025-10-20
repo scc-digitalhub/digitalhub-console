@@ -60,7 +60,7 @@ export const TriggerCreateForm = (props: {
             return undefined;
         }
 
-        return getTriggerUiSpec(schema);
+        return getTriggerUiSpec(schema, taskSchema);
     };
 
     return (
