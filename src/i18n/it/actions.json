@@ -11,11 +11,12 @@
     "delete_all_versions": "Rimuovi tutte le versioni",
     "download": "Scarica",
     "import_one": "Importa",
+    "load_more": "Carica altro",
     "share": "Condividi",
     "stop": "Interrompi",
     "resume": "Riprendi",
     "retry": "Riprova",
     "revoke": "Revoca",
     "toggle_x": "Mostra/Nascondi %{el}",
-    "upload": "Carica"    
+    "upload": "Carica"
 }

@@ -24,6 +24,7 @@ import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { getRunUiSpec } from '../runs/types';
 import { KindSelector } from '../../components/KindSelector';
 import { Stack } from '@mui/material';
+import { filterProps } from '../../common/schemas';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -31,10 +32,11 @@ export const TriggerCreateForm = (props: {
     runSchema: any;
     taskSchema: any;
 }) => {
-    const { runSchema, taskSchema } = props;
+    const { runSchema: runSchemaProps, taskSchema } = props;
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
-
+    //filter task properties from run schema
+    const runSchema = filterProps(runSchemaProps, taskSchema);
     const { data: schemas } = useGetSchemas('triggers');
     const kinds = schemas
         ? schemas.map(s => ({

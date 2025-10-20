@@ -6,50 +6,82 @@ import {
     Labeled,
     SimpleShowLayout,
     TextField,
+    TopToolbar,
     useRecordContext,
-    useResourceContext,
 } from 'react-admin';
-import { Stack } from '@mui/material';
-import { useSchemaProvider } from '../../provider/schemaProvider';
-import { useEffect, useState } from 'react';
-import { JsonSchemaField } from '../../components/JsonSchema';
-import { getTaskUiSpec } from './types';
+import { Box, Stack } from '@mui/material';
+import { TaskTriggerList } from './triggers';
+import { TaskRunList } from './runs';
+import { ShowInDialogButton, EditInDialogButton } from '@dslab/ra-dialog-crud';
+import { InspectButton } from '@dslab/ra-inspect-button';
+import { TaskEditComponent } from './edit';
+import { AceEditorField } from '@dslab/ra-ace-editor';
+import { toYaml } from '@dslab/ra-export-record-button';
 
 export const TaskShowComponent = () => {
-    const resource = useResourceContext();
-    const record = useRecordContext();
-    const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || null;
+    return (
+        <Stack direction={'column'} gap={1}>
+            <>
+                <TaskToolbar />
+                <SimpleShowLayout>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="kind" label="fields.kind" />
+                        </Labeled>
+                        <Labeled>
+                            <TextField source="id" />
+                        </Labeled>
+                    </Stack>
+                    <Labeled>
+                        <TextField source="key" />
+                    </Labeled>
+                </SimpleShowLayout>
+            </>
+            <TaskTriggerList />
+            <TaskRunList />
+        </Stack>
+    );
+};
 
-    useEffect(() => {
-        if (schemaProvider && record && resource) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
-        }
-    }, [record, schemaProvider, resource]);
+const TaskToolbar = () => {
+    return (
+        <TopToolbar>
+            <ShowInDialogButton
+                label="fields.spec.title"
+                fullWidth
+                maxWidth={'lg'}
+            >
+                <TaskSpecShow />
+            </ShowInDialogButton>
+            <EditInDialogButton
+                fullWidth
+                closeOnClickOutside={false}
+                maxWidth={'lg'}
+                // transform={prepareTask}
+                mutationMode="pessimistic"
+            >
+                <TaskEditComponent />
+            </EditInDialogButton>
+            <InspectButton fullWidth />
+        </TopToolbar>
+    );
+};
+
+export const TaskSpecShow = () => {
+    const record = useRecordContext();
+
+    if (!record) {
+        return <></>;
+    }
 
     return (
-        <SimpleShowLayout>
-            <Stack direction={'row'} spacing={3}>
-                <Labeled>
-                    <TextField source="name" />
-                </Labeled>
-
-                <Labeled>
-                    <TextField source="kind" label="fields.kind" />
-                </Labeled>
-            </Stack>
-            <Labeled>
-                <TextField source="key" />
-            </Labeled>
-            {spec && (
-                <JsonSchemaField
-                    source="spec"
-                    schema={{ ...spec.schema, title: 'Spec' }}
-                    uiSchema={getTaskUiSpec(spec.schema)}
-                    label={false}
-                />
-            )}
-        </SimpleShowLayout>
+        <Box p={1}>
+            <AceEditorField
+                source="spec"
+                parse={toYaml}
+                mode="yaml"
+                minLines={20}
+            />
+        </Box>
     );
 };
