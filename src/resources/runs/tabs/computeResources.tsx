@@ -27,6 +27,7 @@ import { styled } from '@mui/material/styles';
 import { JSONTree } from 'react-json-tree';
 import { ChartView } from '../../../components/ChartView';
 import { formatDuration } from '../../../common/helper';
+import { EventsList } from './events';
 
 const AccordionStyle = styled((props: AccordionProps) => (
     <Accordion disableGutters elevation={0} square {...props} />
@@ -157,7 +158,7 @@ export default function ComputeResources(props: { record: any }) {
         <Stack spacing={1}>
             <RecordContextProvider value={pod ?? {}}>
                 {record?.id && (
-                    <ChartView id={record.id as string} resource="runs"  />
+                    <ChartView id={record.id as string} resource="runs" />
                 )}
 
                 {pod && (
@@ -255,6 +256,8 @@ export default function ComputeResources(props: { record: any }) {
                     </Labeled>
                 )}
             </RecordContextProvider>
+
+            <EventsList record={record} />
 
             <ConditionsBlock />
 

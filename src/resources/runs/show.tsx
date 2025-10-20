@@ -45,7 +45,7 @@ import { LineageTabComponent } from '../../components/lineage/LineageTabComponen
 import { MetricsGrid } from '../../components/metrics/MetricsGrid';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
-import { EventsList } from './tabs/events';
+import { TransitionsList } from './tabs/transitions';
 import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
 
 import { CloneButton } from './CloneButton';
@@ -208,7 +208,7 @@ export const RunShowComponent = () => {
                         label="fields.status.state"
                     />
                 </Labeled>
-                {record?.status?.transitions && <EventsList record={record} />}
+                {record?.status?.transitions && <TransitionsList record={record} />}
             </TabbedShowLayout.Tab>
             {record?.spec?.workflow && schema && (
                 <TabbedShowLayout.Tab label={'fields.workflow.title'}>
