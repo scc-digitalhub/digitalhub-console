@@ -3,7 +3,6 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { RunCreateForm } from './create';
 import { useRecordContext } from 'react-admin';
 import { useGetManySchemas } from '../../controllers/schemaController';
-import { filterProps } from '../../common/schemas';
 import { taskParser } from '../../common/helper';
 
 export const CloneButton = () => {
