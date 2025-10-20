@@ -213,7 +213,7 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
                 .invoke({
                     path: url,
                     options: { method: 'POST' },
-                    params: { user: data.user },
+                    params: { user: data.user.trim() },
                 })
                 .then(() => {
                     reload();

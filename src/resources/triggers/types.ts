@@ -4,20 +4,23 @@
 
 import { mergeUiTemplate } from '../../common/schemas';
 
-export const getTriggerUiSpec = (schema: any | undefined) => {
+export const getTriggerUiSpec = (schema: any | undefined, taskSchema: any) => {
     //filter and merge with template
     if (!schema || !('properties' in schema)) {
         return {};
     }
 
     const base = {
-        'ui:order': ['task', 'function', 'template'],
+        'ui:order': ['task', 'function', 'workflow', 'template'],
         task: {
             'ui:readonly': true,
         },
-        function: {
-            'ui:readonly': true,
-        },
+        function: taskSchema.properties.function
+            ? { 'ui:readonly': true }
+            : { 'ui:widget': 'hidden' },
+        workflow: taskSchema.properties.workflow
+            ? { 'ui:readonly': true }
+            : { 'ui:widget': 'hidden' },
         template: {
             'ui:widget': 'hidden',
         },

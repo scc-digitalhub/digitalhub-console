@@ -578,9 +578,13 @@ const FileInfoTable = (props: any) => {
                         <PreviewButton
                             sub={info.data.path}
                             fileType={info.fileType}
+                            fileName={info.label || undefined}
                         />
                     ) : (
-                        <PreviewButton fileType={info.fileType} />
+                        <PreviewButton
+                            fileType={info.fileType}
+                            fileName={info.label || undefined}
+                        />
                     )}
                     {info.data.path ? (
                         <DownloadButton sub={info.data.path} />

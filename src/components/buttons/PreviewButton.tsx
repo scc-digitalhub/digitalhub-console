@@ -57,6 +57,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         maxWidth = 'md',
         sub,
         fileType,
+        fileName,
     } = props;
 
     const translate = useTranslate();
@@ -104,7 +105,11 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         id="logs-dialog-title"
                         className={CreateInDialogButtonClasses.title}
                     >
-                        {typeof label === 'string' ? translate(label) : label}
+                        {fileName
+                            ? fileName
+                            : typeof label === 'string'
+                            ? translate(label)
+                            : label}
                     </DialogTitle>
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}
@@ -349,4 +354,5 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
         fullWidth?: boolean;
         maxWidth?: Breakpoint;
         fileType: string;
+        fileName?: string;
     };

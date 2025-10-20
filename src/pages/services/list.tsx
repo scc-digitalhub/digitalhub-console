@@ -74,7 +74,7 @@ export const ServiceList = () => {
                                 >
                                     <FunctionField
                                         source="spec.function"
-                                        label="fields.function.title"
+                                        label="fields.name.title"
                                         sortable={false}
                                         render={record => (
                                             <Stack gap={1}>

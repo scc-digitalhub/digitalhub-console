@@ -179,14 +179,21 @@ export const RunList = () => {
                                     label="fields.duration.title"
                                     sortable={false}
                                     render={record =>
-                                        formatDuration(
-                                            new Date(
-                                                record.metadata.updated
-                                            ).getTime() -
-                                                new Date(
-                                                    record.metadata.created
-                                                ).getTime()
-                                        ).asString
+                                        record.status?.state === 'RUNNING'
+                                            ? formatDuration(
+                                                  Date.now() -
+                                                      new Date(
+                                                          record.metadata.created
+                                                      ).getTime()
+                                              ).asString
+                                            : formatDuration(
+                                                  new Date(
+                                                      record.metadata.updated
+                                                  ).getTime() -
+                                                      new Date(
+                                                          record.metadata.created
+                                                      ).getTime()
+                                              ).asString
                                     }
                                 />
                                 <TextField source="kind" label="fields.kind" />
