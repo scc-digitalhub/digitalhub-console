@@ -32,10 +32,14 @@ export const ShowBaseLive = <RecordType extends RaRecord = any>({
             console.log('subscribing to', topic);
             const callback = message => {
                 let notification = JSON.parse(message.body);
-                console.log('notification to', topic, notification);
-                queryClient.invalidateQueries({
-                    queryKey: [resource, 'getOne', { id: String(id) }],
-                });
+                //console.log('notification to', topic, notification);
+                const state = notification.record?.status?.state;
+                //check deletion state to avoid refetching a non-existent resource
+                if (state !== 'DELETING' && state !== 'DELETED') {
+                    queryClient.invalidateQueries({
+                        queryKey: [resource, 'getOne', { id: String(id) }],
+                    });
+                }
             };
             subscription.current = client.subscribe(topic, callback);
         }
