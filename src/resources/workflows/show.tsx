@@ -12,7 +12,6 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
-    TopToolbar,
     useDataProvider,
     useRecordContext,
     useResourceContext,
@@ -21,7 +20,6 @@ import {
 import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { WorkflowIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -34,6 +32,7 @@ import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { RunStateBadge } from '../../components/RunStateBadge';
 import { WorkflowTaskShow } from './tasks';
+import { countLines } from '../../common/helper';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -171,6 +170,9 @@ const ShowComponent = () => {
         return kind;
     };
 
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
+
     return (
         <TabbedShowLayout record={record} syncWithLocation={false}>
             <TabbedShowLayout.Tab label={translate('fields.summary')}>
@@ -196,7 +198,8 @@ const ShowComponent = () => {
                             source="spec"
                             parse={toYaml}
                             mode="yaml"
-                            minLines={60}
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
                         />
                     </Box>
                 </TabbedShowLayout.Tab>
@@ -245,12 +248,10 @@ const SourceCodeView = (props: { sourceCode: any }) => {
         source: sourceCode.source || '-',
         lang: sourceCode.lang || 'unknown',
     };
+    const lineCount = atob(sourceCode.base64).split('\n').length;
 
     return (
         <RecordContextProvider value={values}>
-            <TopToolbar>
-                <InspectButton showCopyButton={false} />
-            </TopToolbar>
             <Stack direction={'row'} spacing={3} color={'gray'}>
                 <Labeled>
                     <TextField source="lang" record={values} />
@@ -268,6 +269,8 @@ const SourceCodeView = (props: { sourceCode: any }) => {
                             source="sourceCode.base64"
                             theme="monokai"
                             parse={atob}
+                            minLines={lineCount}
+                            maxLines={Math.max(25, lineCount)}
                         />
                     </Labeled>
                 </Box>

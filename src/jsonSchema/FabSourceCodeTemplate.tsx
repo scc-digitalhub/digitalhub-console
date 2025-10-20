@@ -6,7 +6,6 @@ import {
     ObjectFieldTemplateProps,
     ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
-import { FormLabel } from '../components/FormLabel';
 import { Box, Grid, Stack } from '@mui/material';
 
 import 'ace-builds/src-noconflict/mode-java';
@@ -79,7 +78,6 @@ export const FabSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
 
     return (
         <>
-            <FormLabel label={props.title} />
             <div style={{ display: 'flex', width: '100%' }}>
                 <Grid container spacing={2}>
                     <Grid size={12} key={'sctw-0'}>

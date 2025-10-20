@@ -7,7 +7,6 @@ import {
     ObjectFieldTemplatePropertyType,
     WidgetProps,
 } from '@rjsf/utils';
-import { FormLabel } from '../components/FormLabel';
 import { Box, Grid, Stack } from '@mui/material';
 import AceEditor from 'react-ace';
 
@@ -76,7 +75,6 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
 
     return (
         <>
-            <FormLabel label={props.title} />
             <div style={{ display: 'flex', width: '100%' }}>
                 <Grid container spacing={2}>
                     <Grid size={12} key={'sctw-0'}>
@@ -124,8 +122,10 @@ export const SourceCodeEditorWidget = function (props: WidgetProps) {
     };
 
     let code = '';
+    let lineCount = 0;
     try {
         code = atob(value);
+        lineCount = code.split('\n').length;
     } catch (e: any) {
         code = '';
     }
@@ -138,7 +138,11 @@ export const SourceCodeEditorWidget = function (props: WidgetProps) {
                 theme={'monokai'}
                 wrapEnabled
                 width={'50vw'}
-                setOptions={{ showPrintMargin: false }}
+                setOptions={{
+                    showPrintMargin: false,
+                    minLines: lineCount,
+                    maxLines: Math.max(lineCount, 25),
+                }}
                 value={code}
                 onChange={handleChange}
             />

@@ -15,7 +15,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual } from '../../common/helper';
+import { arePropsEqual, countLines } from '../../common/helper';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
@@ -46,6 +46,8 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     useEffect(() => {
         if (!schemaProvider) {
@@ -125,7 +127,8 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                             source="spec"
                             parse={toYaml}
                             mode="yaml"
-                            minLines={60}
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
                         />
                     </Box>
                 </TabbedShowLayout.Tab>

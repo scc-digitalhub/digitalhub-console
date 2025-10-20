@@ -13,7 +13,6 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
-    TopToolbar,
     useDataProvider,
     useRecordContext,
     useResourceContext,
@@ -23,7 +22,6 @@ import { FlatCard } from '../../components/FlatCard';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { getFunctionUiSpec } from './types';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { FunctionIcon } from './icon';
@@ -33,6 +31,7 @@ import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
+import { countLines } from '../../common/helper';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -167,6 +166,8 @@ const ShowComponent = () => {
     if (!record) {
         return <LoadingIndicator />;
     }
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
@@ -200,7 +201,8 @@ const ShowComponent = () => {
                             source="spec"
                             parse={toYaml}
                             mode="yaml"
-                            minLines={60}
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
                         />
                     </Box>
                 </TabbedShowLayout.Tab>
@@ -261,9 +263,6 @@ export const SourceCodeTab = (props: {
 
     return (
         <RecordContextProvider value={values}>
-            <TopToolbar>
-                <InspectButton showCopyButton={false} />
-            </TopToolbar>
             {spec && (
                 <JsonSchemaField
                     source="spec"

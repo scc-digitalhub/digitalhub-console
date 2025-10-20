@@ -7,6 +7,7 @@ import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 import memoize from 'lodash/memoize';
 import { B } from '@wtfcode/byte-converter';
 import { round } from 'lodash';
+import { toYaml } from '@dslab/ra-export-record-button';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
@@ -198,4 +199,19 @@ export const formatDuration = (
             : `${seconds}s`;
 
     return { days, hours, minutes, seconds, asString };
+};
+
+export const countLines = recordSpec => {
+    const specString =
+        recordSpec == null
+            ? ''
+            : typeof recordSpec === 'string'
+            ? recordSpec
+            : toYaml(recordSpec) ?? '';
+
+    const rawLines = specString.split(/\r\n|\r|\n/);
+    const lineCount = specString.length === 0 ? 0 : rawLines.length;
+    const maxLines = Math.max(lineCount, 25);
+
+    return [lineCount, maxLines];
 };

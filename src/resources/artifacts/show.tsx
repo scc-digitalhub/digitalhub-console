@@ -13,7 +13,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual } from '../../common/helper';
+import { arePropsEqual, countLines } from '../../common/helper';
 import { FlatCard } from '../../components/FlatCard';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
@@ -44,6 +44,8 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || undefined;
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     useEffect(() => {
         if (!schemaProvider) {
@@ -84,7 +86,8 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                             source="spec"
                             parse={toYaml}
                             mode="yaml"
-                            minLines={60}
+                            minLines={lineCount[0]}
+                            maxLines={lineCount[1]}
                         />
                     </Box>
                 </TabbedShowLayout.Tab>
