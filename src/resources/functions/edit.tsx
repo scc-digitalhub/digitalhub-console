@@ -87,6 +87,8 @@ export const FunctionEdit = () => {
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
+        useState<boolean>(false);
 
     useEffect(() => {
         if (schemaProvider) {
@@ -106,8 +108,8 @@ export const FunctionEdit = () => {
         return <LoadingIndicator />;
     }
 
-    const onSuccess = (data, variables, context) => {};
-    const onSettled = (data, variables, context) => {
+    const onSuccess = () => {};
+    const onSettled = data => {
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
@@ -115,11 +117,23 @@ export const FunctionEdit = () => {
         redirect('show', resource, data.id, data);
     };
 
+    const transform = data => {
+        const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
+
+        //reset metadata version if new version, unless manually filled
+        return {
+            ...data,
+            metadata: resetMetadataVersion
+                ? { ...data.metadata, version: undefined }
+                : data.metadata,
+        };
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
-                redirect={'show'}
                 mutationMode="optimistic"
+                transform={transform}
                 mutationOptions={{
                     meta: { update: !isSpecDirty },
                     onSuccess: onSuccess,
@@ -144,7 +158,9 @@ export const FunctionEdit = () => {
                                     />
                                 </Stack>
 
-                                <MetadataInput />
+                                <MetadataInput
+                                    onVersionDirty={setIsMetadataVersionDirty}
+                                />
 
                                 <SpecInput
                                     source="spec"

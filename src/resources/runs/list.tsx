@@ -10,7 +10,6 @@ import {
     ListView,
     ShowButton,
     TextField,
-    TopToolbar,
     useGetList,
     useResourceContext,
 } from 'react-admin';
@@ -29,8 +28,6 @@ import { ListBaseLive } from '../../components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
-import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { RunCreate } from './create';
 
 const RowActions = () => {
     return (
