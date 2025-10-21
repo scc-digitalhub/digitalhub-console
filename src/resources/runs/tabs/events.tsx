@@ -5,6 +5,7 @@
 import {
     Datagrid,
     DateField,
+    FunctionField,
     Labeled,
     ListContextProvider,
     TextField,
@@ -13,7 +14,12 @@ import {
 
 export const EventsList = (props: { record: any }) => {
     const { record } = props;
-    const data = record?.status?.events ? record.status.events : [];
+    const data = record?.status?.events ? [...record.status.events] : [];
+    //sort by timestamp
+    data.sort((a, b) => {
+        return a.timestamp - b.timestamp;
+    });
+
     const listContext = useList({ data });
 
     if (!data || data.length == 0) {
@@ -21,7 +27,7 @@ export const EventsList = (props: { record: any }) => {
     }
 
     return (
-        <Labeled label="fields.events.title">
+        <Labeled>
             <ListContextProvider value={listContext}>
                 <Datagrid bulkActionButtons={false} rowClick={false}>
                     <DateField
@@ -31,9 +37,19 @@ export const EventsList = (props: { record: any }) => {
                         label="fields.events.time.title"
                     />
                     <TextField
+                        source="kind"
+                        sortable={false}
+                        label="fields.kind"
+                    />
+                    <FunctionField
                         source="reason"
                         sortable={false}
                         label="fields.events.details.title"
+                        render={r => (
+                            <>
+                                <strong>{r.type}:</strong> {r.reason}
+                            </>
+                        )}
                     />
                     <TextField
                         source="note"

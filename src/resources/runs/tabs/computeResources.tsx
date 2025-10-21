@@ -115,6 +115,22 @@ export default function ComputeResources(props: { record: any }) {
         );
     }, [pod, selectedContainerName]);
 
+    function EventsBlock() {
+        if (!record.status?.events) return null;
+        return (
+            <AccordionStyle>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="h5">
+                        {translate('fields.events.title')}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <EventsList record={record} />
+                </AccordionDetails>
+            </AccordionStyle>
+        );
+    }
+
     function ConditionsBlock() {
         if (!pod?.conditions) return null;
         return (
@@ -257,7 +273,7 @@ export default function ComputeResources(props: { record: any }) {
                 )}
             </RecordContextProvider>
 
-            <EventsList record={record} />
+            <EventsBlock />
 
             <ConditionsBlock />
 
