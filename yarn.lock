@@ -227,10 +227,10 @@
     "@types/semver" "^7.5.5"
     semver "^7.5.2"
 
-"@dslab/ra-ace-editor@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-ace-editor/-/ra-ace-editor-2.0.1.tgz#b1e75e72b3e58e75ec9a96bce684f71a45194c25"
-  integrity sha512-dyt/j71WTtGkHCkoiz2JqWcfrSorBt3bPbuaXphDdnef+Bc/TgZWcKhXA/0NDILMY/BzT3S41dxPVOMtiYFOSg==
+"@dslab/ra-ace-editor@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-ace-editor/-/ra-ace-editor-2.0.2.tgz#b2259993683b12af2fd64dbb51df5da1bcb521da"
+  integrity sha512-kcVVC9aXRCEwI6Y+44g1Z3xWcptCcLt3x6ibuzKHeXK9WE8PN7pXIriKjWoiNI8bSJqoZPY+xoqfNj1EwBPAGw==
   dependencies:
     ace-builds "^1.14.0"
     react-ace "^10.1.0"
