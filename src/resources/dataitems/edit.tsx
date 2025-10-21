@@ -30,6 +30,8 @@ export const DataItemEdit = () => {
         id: id.current,
     });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
+        useState<boolean>(false);
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -54,11 +56,16 @@ export const DataItemEdit = () => {
     const transform = data => {
         //strip path tl which is a transient field
         const { path, ...rest } = data;
+        const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
 
         //reset status if new version
+        //reset metadata version if new version, unless manually filled
         return {
             ...rest,
             status: isSpecDirty ? {} : rest.status,
+            metadata: resetMetadataVersion
+                ? { ...rest.metadata, version: undefined }
+                : rest.metadata,
         };
     };
 
@@ -81,6 +88,9 @@ export const DataItemEdit = () => {
                             <SimpleForm toolbar={<EditToolbar />}>
                                 <EditFormContentWithUpload
                                     onSpecDirty={setIsSpecDirty}
+                                    onMetadataVersionDirty={
+                                        setIsMetadataVersionDirty
+                                    }
                                     uploader={uploader}
                                     getSpecUiSchema={getDataItemSpecUiSchema}
                                 />

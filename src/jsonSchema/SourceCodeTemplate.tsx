@@ -27,8 +27,6 @@ import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import { Fragment } from 'react';
-import { RecordContextProvider } from 'react-admin';
-import { spacing } from '@mui/system';
 
 export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     const { formData, properties, formContext } = props;

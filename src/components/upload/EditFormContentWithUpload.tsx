@@ -13,6 +13,7 @@ import { SpecInput } from '../../components/SpecInput';
 
 export type EditFormContentWithUploadProps = {
     onSpecDirty?: (state: boolean) => void;
+    onMetadataVersionDirty?: (state: boolean) => void;
     uploader?: UploadController;
     getSpecUiSchema: (kind: string | undefined) => any;
 };
@@ -20,7 +21,8 @@ export type EditFormContentWithUploadProps = {
 export const EditFormContentWithUpload = (
     props: EditFormContentWithUploadProps
 ) => {
-    const { onSpecDirty, uploader, getSpecUiSchema } = props;
+    const { onSpecDirty, onMetadataVersionDirty, uploader, getSpecUiSchema } =
+        props;
     const resource = useResourceContext();
 
     //update path in spec depending on upload
@@ -53,7 +55,7 @@ export const EditFormContentWithUpload = (
                 <TextInput source="name" readOnly />
                 <TextInput source="kind" readOnly />
             </Stack>
-            <MetadataInput />
+            <MetadataInput onVersionDirty={onMetadataVersionDirty} />
             <SpecInput
                 source="spec"
                 onDirty={onSpecDirty}

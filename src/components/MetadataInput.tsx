@@ -12,9 +12,13 @@ import { MetadataCreateUiSchema } from '../common/schemas';
 import { useGetSchemas } from '../controllers/schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useTranslate } from 'react-admin';
+import { useRecordContext, useTranslate } from 'react-admin';
 import { styled } from '@mui/material/styles';
 import { JsonSchemaInput } from './JsonSchema';
+import { useEffect } from 'react';
+import deepEqual from 'deep-is';
+import { get } from 'lodash';
+import { useWatch } from 'react-hook-form';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -32,8 +36,13 @@ const Accordion = styled((props: AccordionProps) => (
     },
 }));
 
-export const MetadataInput = () => {
+export const MetadataInput = (props: {
+    onVersionDirty?: (state: boolean) => void;
+}) => {
+    const { onVersionDirty } = props;
     const translate = useTranslate();
+    const record = useRecordContext();
+    const value = useWatch({ name: 'metadata' });
     const { data: schemas } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
@@ -50,6 +59,14 @@ export const MetadataInput = () => {
                       : a.id.localeCompare(b.id)
               )
         : [];
+
+    useEffect(() => {
+        if (onVersionDirty && record) {
+            onVersionDirty(
+                !deepEqual(get(record, 'metadata.version', {}), value.version)
+            );
+        }
+    }, [onVersionDirty, record, value]);
 
     return (
         <Grid container={true} alignItems="top">
