@@ -40,7 +40,7 @@
         "i18n-missing-keys-specs-en": "cat ./src/i18n/en/specs.json | jq -r '. as $root | path(..) | . as $path | $root | getpath($path) as $value | select($value | scalars) | ([$path[]] | join(\".\"))' | sort -u | sed 's/^/specs./'"
     },
     "dependencies": {
-        "@dslab/ra-ace-editor": "^2.0.1",
+        "@dslab/ra-ace-editor": "^2.0.2",
         "@dslab/ra-auth-oidc": "^2.0.0",
         "@dslab/ra-back-button": "^2.0.0",
         "@dslab/ra-delete-dialog-button": "^2.0.0",
