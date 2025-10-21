@@ -27,6 +27,8 @@ import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 import { Fragment } from 'react';
+import { RecordContextProvider } from 'react-admin';
+import { spacing } from '@mui/system';
 
 export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     const { formData, properties, formContext } = props;
@@ -74,39 +76,32 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     );
 
     return (
-        <>
-            <div style={{ display: 'flex', width: '100%' }}>
-                <Grid container spacing={2}>
-                    <Grid size={12} key={'sctw-0'}>
-                        <Stack spacing={2}>
-                            <Box>
-                                <div style={{ width: '100%' }} key={'lang'}>
-                                    {source.prop.content}
-                                </div>
-                            </Box>
-                        </Stack>
-                    </Grid>
-                    <Grid size={12} key={'sctw-1'}>
-                        <Stack spacing={2} direction={'row'}>
-                            <Box>{language.prop.content}</Box>
-                            <Box>{handler.prop.content}</Box>
-                        </Stack>
-                    </Grid>
-
-                    <Grid size={12} key={'sctw-2'}>
-                        {base64.prop.content}
-                    </Grid>
-
-                    {rest.map((element, index) => (
-                        <Grid size={12} key={'sctw-r-' + index}>
-                            <div style={{ width: '100%' }} key={index}>
-                                {element.content}
+        <div style={{ display: 'flex', width: '100%' }}>
+            <Grid container spacing={2}>
+                <Stack spacing={2}>
+                    <Stack direction={'row'} spacing={6}>
+                        <Box>
+                            <div style={{ width: '100%' }} key={'lang'}>
+                                {source.prop.content}
                             </div>
-                        </Grid>
-                    ))}
+                        </Box>
+                        {handler.prop.content}
+                    </Stack>
+                    <Stack width={'200px'}>{language.prop.content}</Stack>
+                </Stack>
+                <Grid size={12} key={'sctw-2'}>
+                    {base64.prop.content}
                 </Grid>
-            </div>
-        </>
+
+                {rest.map((element, index) => (
+                    <Grid size={12} key={'sctw-r-' + index}>
+                        <div style={{ width: '100%' }} key={index}>
+                            {element.content}
+                        </div>
+                    </Grid>
+                ))}
+            </Grid>
+        </div>
     );
 };
 
