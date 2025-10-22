@@ -125,7 +125,18 @@
         "title": "Client",
         "helperText": "Http/https basic client for testing and debugging. Only service urls bound to runs can be used as destination.",
         "request": "Request",
+        "requestUrl": "Request URL",
         "response": "Response",
-        "history": "History"
+        "headers": "Headers",
+        "history": "History",
+        "noRequests": "No requests yet",
+        "contentType": {
+            "appjson": "application/json",
+            "textplain": "text/plain"
+        },
+        "send": "Send",
+        "addHeader": "Add Header",
+        "requestBody": "Request Body",
+        "jsonOrRaw": "JSON or raw text"
     }
 }

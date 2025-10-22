@@ -88,7 +88,7 @@ export const FileDetails = (props: {
 
                 {info && (
                     <RecordContextProvider value={info}>
-                        <Stack direction={'row'} gap={1} pb={2}>
+                        <Stack direction={'row'} pb={2}>
                             <DownloadButton
                                 size="small"
                                 label=""

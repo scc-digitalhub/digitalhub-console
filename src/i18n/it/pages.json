@@ -125,7 +125,18 @@
         "title": "Client",
         "helperText": "Client http/https basico per testing e debugging. Solo i servizi esposti dalle run possono essere usati come indirizzo di destinazione.",
         "request": "Richiesta",
+        "requestUrl": "URL della richiesta",
         "response": "Risposta",
-        "history": "Storico"
+        "headers": "Intestazioni",
+        "history": "Storico",
+        "noRequests": "Ancora nessuna richiesta",
+        "contentType": {
+            "appjson": "application/json",
+            "textplain": "text/plain"
+        },
+        "send": "Invia",
+        "addHeader": "Aggiungi Intestazione",
+        "requestBody": "Body della richiesta",
+        "jsonOrRaw": "JSON o testo"
     }
 }
