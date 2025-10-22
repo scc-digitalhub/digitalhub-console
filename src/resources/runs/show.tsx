@@ -46,7 +46,7 @@ import { MetricsGrid } from '../../components/metrics/MetricsGrid';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
 import { TransitionsList } from './tabs/transitions';
-import { InputsList, OutputsList, ResultsList } from './tabs/inputOutputs';
+import { Inputs, Outputs } from './tabs/inputOutputs';
 
 import { CloneButton } from './CloneButton';
 import ComputeResources from './tabs/computeResources';
@@ -208,7 +208,9 @@ export const RunShowComponent = () => {
                         label="fields.status.state"
                     />
                 </Labeled>
-                {record?.status?.transitions && <TransitionsList record={record} />}
+                {record?.status?.transitions && (
+                    <TransitionsList record={record} />
+                )}
             </TabbedShowLayout.Tab>
             {record?.spec?.workflow && schema && (
                 <TabbedShowLayout.Tab label={'fields.workflow.title'}>
@@ -232,15 +234,14 @@ export const RunShowComponent = () => {
                     />
                 </TabbedShowLayout.Tab>
             )}
-            {record?.spec?.inputs && (
+            {(record?.spec?.inputs || record?.spec?.parameters) && (
                 <TabbedShowLayout.Tab label={'fields.inputs.title'}>
-                    <InputsList record={record} />
+                    <Inputs record={record} />
                 </TabbedShowLayout.Tab>
             )}
             {(record?.status?.outputs || record?.status?.results) && (
                 <TabbedShowLayout.Tab label={'fields.outputs.title'}>
-                    {record?.status?.outputs && <OutputsList record={record} />}
-                    {record?.status?.results && <ResultsList record={record} />}
+                    <Outputs record={record} />
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label={translate('fields.logs')}>

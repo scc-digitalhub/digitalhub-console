@@ -5,12 +5,13 @@
 import {
     Datagrid,
     DateField,
-    Labeled,
     ListContextProvider,
+    ResourceContextProvider,
     TextField,
     useList,
 } from 'react-admin';
 import { TypeChips } from '../../../components/TypeChips';
+import { Box } from '@mui/material';
 
 export const ConditionsList = ({ record }: { record: any }) => {
     const raw = record?.status?.pods?.[0]?.conditions ?? [];
@@ -21,32 +22,34 @@ export const ConditionsList = ({ record }: { record: any }) => {
     });
 
     return (
-        <Labeled width="60%">
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField
-                        showTime
-                        source="lastTransitionTime"
-                        label="fields.conditions.lastTransitionTime.title"
-                    />
-                    <TypeChips
-                        source="type"
-                        sortable={false}
-                        label="fields.conditions.type.title"
-                    />
-                    <TextField
-                        source="reason"
-                        sortable={false}
-                        label="fields.conditions.reason.title"
-                    />
-                    <TextField
-                        source="status"
-                        sortable={false}
-                        label="fields.conditions.status.title"
-                    />
-                    <></>
-                </Datagrid>
-            </ListContextProvider>
-        </Labeled>
+        <Box width="60%">
+            <ResourceContextProvider value="conditions">
+                <ListContextProvider value={listContext}>
+                    <Datagrid bulkActionButtons={false} rowClick={false}>
+                        <DateField
+                            showTime
+                            source="lastTransitionTime"
+                            label="fields.conditions.lastTransitionTime.title"
+                        />
+                        <TypeChips
+                            source="type"
+                            sortable={false}
+                            label="fields.conditions.type.title"
+                        />
+                        <TextField
+                            source="reason"
+                            sortable={false}
+                            label="fields.conditions.reason.title"
+                        />
+                        <TextField
+                            source="status"
+                            sortable={false}
+                            label="fields.conditions.status.title"
+                        />
+                        <></>
+                    </Datagrid>
+                </ListContextProvider>
+            </ResourceContextProvider>
+        </Box>
     );
 };
