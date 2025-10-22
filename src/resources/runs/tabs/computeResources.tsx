@@ -115,69 +115,14 @@ export default function ComputeResources(props: { record: any }) {
         );
     }, [pod, selectedContainerName]);
 
-    function EventsBlock() {
-        if (!record.status?.events) return null;
-        return (
-            <AccordionStyle>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h5">
-                        {translate('fields.events.title')}
-                    </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <EventsList record={record} />
-                </AccordionDetails>
-            </AccordionStyle>
-        );
-    }
-
-    function ConditionsBlock() {
-        if (!pod?.conditions) return null;
-        return (
-            <AccordionStyle>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h5">
-                        {translate('fields.conditions.title')}
-                    </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <ConditionsList record={record} />
-                </AccordionDetails>
-            </AccordionStyle>
-        );
-    }
-
-    function DetailsBlock() {
-        if (!record?.status?.k8s) return null;
-        return (
-            <AccordionStyle>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h5">{'Details'}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Box
-                        sx={{
-                            backgroundColor: '#002b36',
-                            px: 2,
-                            py: 0,
-                            minHeight: '20vw',
-                        }}
-                    >
-                        <JSONTree data={record?.status?.k8s} hideRoot />
-                    </Box>
-                </AccordionDetails>
-            </AccordionStyle>
-        );
-    }
-
     return (
         <Stack spacing={1}>
-            <RecordContextProvider value={pod ?? {}}>
-                {record?.id && (
-                    <ChartView id={record.id as string} resource="runs" />
-                )}
+            {pod && (
+                <RecordContextProvider value={pod}>
+                    {record?.id && pod.containers && (
+                        <ChartView id={record.id as string} resource="runs" />
+                    )}
 
-                {pod && (
                     <Box
                         sx={{
                             display: { xs: 'block', sm: 'grid' },
@@ -210,11 +155,11 @@ export default function ComputeResources(props: { record: any }) {
                             )}
                         </Box>
                     </Box>
-                )}
-            </RecordContextProvider>
+                </RecordContextProvider>
+            )}
 
-            <RecordContextProvider value={selectedContainer ?? {}}>
-                {pod && (
+            {selectedContainer && (
+                <RecordContextProvider value={selectedContainer}>
                     <Box
                         sx={{
                             display: { xs: 'block', sm: 'grid' },
@@ -260,24 +205,69 @@ export default function ComputeResources(props: { record: any }) {
                             </Labeled>
                         </Box>
                     </Box>
-                )}
-            </RecordContextProvider>
+                </RecordContextProvider>
+            )}
 
-            <RecordContextProvider value={pod ?? {}}>
-                {pod && (
-                    <Labeled sx={{ pt: 1, pb: 1 }} label="fields.phase.title">
-                        <Box sx={{ display: 'inline-flex' }}>
-                            <StateChips source="phase" />
+            {pod && (
+                <RecordContextProvider value={pod}>
+                    {pod && (
+                        <Labeled
+                            sx={{ pt: 1, pb: 1 }}
+                            label="fields.phase.title"
+                        >
+                            <Box sx={{ display: 'inline-flex' }}>
+                                <StateChips source="phase" />
+                            </Box>
+                        </Labeled>
+                    )}
+                </RecordContextProvider>
+            )}
+
+            {record?.status?.events && (
+                <AccordionStyle>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h5">
+                            {translate('fields.events.title')}
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <EventsList record={record} />
+                    </AccordionDetails>
+                </AccordionStyle>
+            )}
+
+            {pod?.conditions && (
+                <AccordionStyle>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h5">
+                            {translate('fields.conditions.title')}
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ConditionsList record={record} />
+                    </AccordionDetails>
+                </AccordionStyle>
+            )}
+
+            {record?.status?.k8s && (
+                <AccordionStyle>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h5">{'Details'}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Box
+                            sx={{
+                                backgroundColor: '#002b36',
+                                px: 2,
+                                py: 0,
+                                minHeight: '20vw',
+                            }}
+                        >
+                            <JSONTree data={record?.status?.k8s} hideRoot />
                         </Box>
-                    </Labeled>
-                )}
-            </RecordContextProvider>
-
-            <EventsBlock />
-
-            <ConditionsBlock />
-
-            <DetailsBlock />
+                    </AccordionDetails>
+                </AccordionStyle>
+            )}
         </Stack>
     );
 }
