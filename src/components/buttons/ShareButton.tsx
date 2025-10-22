@@ -28,6 +28,7 @@ import {
     SaveButton,
     Form,
     FunctionField,
+    ResourceContextProvider,
 } from 'react-admin';
 import {
     Breakpoint,
@@ -180,21 +181,23 @@ const ShareList = (props: { record?: any }) => {
                 {translate('pages.share.description')}
             </Typography>
             <ShareCreateForm record={record} reload={reload} />
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <TextField source="user" sortable={false} />
-                    <FunctionField
-                        render={r => (
-                            <Button
-                                label="actions.revoke"
-                                onClick={handleRevoke(r)}
-                                startIcon={<CancelIcon />}
-                                color="error"
-                            />
-                        )}
-                    />
-                </Datagrid>
-            </ListContextProvider>
+            <ResourceContextProvider value="users">
+                <ListContextProvider value={listContext}>
+                    <Datagrid bulkActionButtons={false} rowClick={false}>
+                        <TextField source="user" sortable={false} />
+                        <FunctionField
+                            render={r => (
+                                <Button
+                                    label="actions.revoke"
+                                    onClick={handleRevoke(r)}
+                                    startIcon={<CancelIcon />}
+                                    color="error"
+                                />
+                            )}
+                        />
+                    </Datagrid>
+                </ListContextProvider>
+            </ResourceContextProvider>
         </>
     );
 };

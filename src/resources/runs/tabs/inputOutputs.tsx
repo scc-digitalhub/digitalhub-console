@@ -7,6 +7,7 @@ import {
     FunctionField,
     Labeled,
     ListContextProvider,
+    ResourceContextProvider,
     ShowButton,
     TextField,
     useList,
@@ -14,36 +15,11 @@ import {
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { keyParser } from '../../../common/helper';
 import { Stack } from '@mui/system';
+import { Box } from '@mui/material';
 
-export const ResultsList = (props: { record: any }) => {
+export const Inputs = (props: { record: any }) => {
     const { record } = props;
-    const data = record?.status?.results
-        ? Object.keys(record.status.results).map(k => ({
-              id: k,
-              key: k,
-              value: JSON.stringify(record.status.results[k] || null),
-          }))
-        : [];
-    const listContext = useList({ data });
-    return (
-        <Labeled label="fields.results">
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <TextField source="key" label="fields.key.title" />
-                    <TextField
-                        source="value"
-                        label="fields.value.title"
-                        sortable={false}
-                    />
-                </Datagrid>
-            </ListContextProvider>
-        </Labeled>
-    );
-};
-
-export const InputsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.spec?.inputs
+    const inputs = record?.spec?.inputs
         ? Object.keys(record.spec.inputs).map(k => ({
               key: record.spec.inputs[k],
               name: k,
@@ -61,18 +37,22 @@ export const InputsList = (props: { record: any }) => {
     return (
         <Stack>
             <Labeled label={'fields.inputs.title'}>
-                <InputOutputsList data={data} />
+                <ResourceContextProvider value="inputs">
+                    <InputOutputsList data={inputs} />
+                </ResourceContextProvider>
             </Labeled>
             <Labeled label={'fields.parameters.title'}>
-                <ParametersList data={parameters} />
+                <ResourceContextProvider value="parameters">
+                    <ParametersList data={parameters} />
+                </ResourceContextProvider>
             </Labeled>
         </Stack>
     );
 };
 
-export const OutputsList = (props: { record: any }) => {
+export const Outputs = (props: { record: any }) => {
     const { record } = props;
-    const data = record?.status?.outputs
+    const outputs = record?.status?.outputs
         ? Object.keys(record.status.outputs).map(k => ({
               key: record.status.outputs[k],
               name: k,
@@ -80,18 +60,36 @@ export const OutputsList = (props: { record: any }) => {
           }))
         : [];
 
+    const results = record?.status?.results
+        ? Object.keys(record.status.results).map(k => ({
+              id: k,
+              key: k,
+              value: JSON.stringify(record.status.results[k] || null),
+          }))
+        : [];
+
     return (
-        <Labeled label={'fields.outputs.title'}>
-            <InputOutputsList data={data} />
-        </Labeled>
+        <Stack>
+            <Labeled label={'fields.outputs.title'}>
+                <ResourceContextProvider value="outputs">
+                    <InputOutputsList data={outputs} />
+                </ResourceContextProvider>
+            </Labeled>
+            <Labeled label={'fields.results'}>
+                <ResourceContextProvider value="results">
+                    <ResultsList data={results} />
+                </ResourceContextProvider>
+            </Labeled>
+        </Stack>
     );
 };
 
 export const ParametersList = (props: { data: any }) => {
     const { data } = props;
     const listContext = useList({ data: data || [] });
+
     return (
-        <Labeled width={'60%'}>
+        <Box width="60%">
             <ListContextProvider value={listContext}>
                 <Datagrid bulkActionButtons={false} rowClick={false}>
                     <TextField source="name" label="fields.name.title" />
@@ -99,15 +97,33 @@ export const ParametersList = (props: { data: any }) => {
                     <></>
                 </Datagrid>
             </ListContextProvider>
-        </Labeled>
+        </Box>
+    );
+};
+
+export const ResultsList = (props: { data: any }) => {
+    const { data } = props;
+    const listContext = useList({ data: data || [] });
+
+    return (
+        <ListContextProvider value={listContext}>
+            <Datagrid bulkActionButtons={false} rowClick={false}>
+                <TextField source="key" label="fields.key.title" />
+                <TextField
+                    source="value"
+                    label="fields.value.title"
+                    sortable={false}
+                />
+            </Datagrid>
+        </ListContextProvider>
     );
 };
 
 export const InputOutputsList = (props: { data: any[] }) => {
     const { data } = props;
     const { root: projectId } = useRootSelector();
-
     const listContext = useList({ data: data || [] });
+
     return (
         <ListContextProvider value={listContext}>
             <Datagrid bulkActionButtons={false} rowClick={false}>
