@@ -15,6 +15,7 @@ import {
     TopToolbar,
     ToolbarClasses,
     Identifier,
+    useTranslate,
 } from 'react-admin';
 import {
     Box,
@@ -37,6 +38,7 @@ type LogsViewProps = {
 export const LogsView = (props: LogsViewProps) => {
     const { id, resource } = props;
     const getResourceLabel = useGetResourceLabel();
+    const translate = useTranslate();
     const [selectedId, setSelectedId] = useState<string>('');
     const [currentLog, setCurrentLog] = useState<any>(undefined);
 
@@ -60,6 +62,17 @@ export const LogsView = (props: LogsViewProps) => {
     });
 
     useEffect(() => {
+        if (data && data.length > 0) {
+            const currentSelectionValid = data.some(r => r.id === selectedId);
+            if (!currentSelectionValid) {
+                setSelectedId(data[0].id);
+            }
+        } else if (data) {
+            setSelectedId('');
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (data && selectedId != '') {
             const r = data.find(r => r.id === selectedId);
             setCurrentLog(r);
@@ -79,27 +92,37 @@ export const LogsView = (props: LogsViewProps) => {
             setSelectedId('');
         }
     };
+    const noLogsLabel = translate('messages.logs.no_logs_to_show');
+    const displayLabel = data.length === 0 ? noLogsLabel : label;
 
     return (
         <Stack>
             <Box>
                 <FormControl fullWidth>
-                    <InputLabel>{label}</InputLabel>
+                    <InputLabel>{displayLabel}</InputLabel>
                     <Select
                         value={selectedId}
-                        label={label}
+                        label={displayLabel}
                         onChange={onSelected}
+                        disabled={data.length === 0}
                     >
-                        {data.map(r => {
-                            return (
-                                <MenuItem
-                                    key={'logs-list-select-' + r.id}
-                                    value={r.id}
-                                >
-                                    {r.status?.container || r.metadata?.updated}
-                                </MenuItem>
-                            );
-                        })}
+                        {data.length === 0 ? (
+                            <MenuItem value="" disabled>
+                                {noLogsLabel}
+                            </MenuItem>
+                        ) : (
+                            data.map(r => {
+                                return (
+                                    <MenuItem
+                                        key={'logs-list-select-' + r.id}
+                                        value={r.id}
+                                    >
+                                        {r.status?.container ||
+                                            r.metadata?.updated}
+                                    </MenuItem>
+                                );
+                            })
+                        )}
                     </Select>
                 </FormControl>
             </Box>

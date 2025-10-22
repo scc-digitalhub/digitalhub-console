@@ -911,6 +911,10 @@
         },
         "title": "Service Ports"
     },
+    "clusterIP": {
+        "description": "",
+        "title": "Cluster IP"
+    },
     "serviceType": {
         "description": "Select the type used for service definition",
         "title": "Service Type"

@@ -9,6 +9,9 @@
         "noLineage": "No lineage information available",
         "noExpansion": "There are no further relationships to display"
     },
+    "logs": {
+        "no_logs_to_show": "No logs to show"
+    },
     "metrics": {
         "comparison_title": "Compare with #%{id}"
     },

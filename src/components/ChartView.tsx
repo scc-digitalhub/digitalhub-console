@@ -1,4 +1,3 @@
-// ChartView.tsx
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,6 +24,7 @@ import {
 import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 import Parser from 'k8s-resource-parser';
 import { axisClasses, LineChart } from '@mui/x-charts';
+import { formatTimeTick } from '../common/helper';
 
 type ChartViewProps = {
     id?: Identifier;
@@ -114,35 +114,55 @@ export const ChartView = (props: ChartViewProps) => {
             memory: 'Memory (MB)',
         };
 
-        const data = metrics.map((m: { timestamp: any; usage: any }) => {
-            let val = { timestamp: new Date(m.timestamp) };
-            if (m.usage.memory) {
-                const bytes = Parser.memoryParser(m.usage.memory);
-                val['memory'] = ByteConverter.convert(
-                    Byte.value(bytes),
-                    'MB'
-                ).value;
-            }
-            if (m.usage.cpu) {
-                const cpu = m.usage.cpu.endsWith('n')
-                    ? parseInt(m.usage.cpu.slice(0, -1)) / 1000000
-                    : parseInt(m.usage.cpu);
-                val['cpu'] = cpu;
-            }
-            return val;
-        });
+        const data = useMemo(() => {
+            if (!metrics || metrics.length === 0) return [];
+
+            const sortedMetrics = [...metrics].sort(
+                (a, b) =>
+                    new Date(a.timestamp).getTime() -
+                    new Date(b.timestamp).getTime()
+            );
+
+            const startTime = new Date(sortedMetrics[0].timestamp).getTime();
+
+            return sortedMetrics.map(
+                (m: { timestamp: any; usage: any }, index: number) => {
+                    const currentTime = new Date(m.timestamp).getTime();
+                    const relativeTime = (currentTime - startTime) / 1000;
+
+                    let val = {
+                        time: relativeTime,
+                        index: index,
+                    };
+
+                    if (m.usage.memory) {
+                        const bytes = Parser.memoryParser(m.usage.memory);
+                        val['memory'] = ByteConverter.convert(
+                            Byte.value(bytes),
+                            'MB'
+                        ).value;
+                    }
+                    if (m.usage.cpu) {
+                        const cpu = m.usage.cpu.endsWith('n')
+                            ? parseInt(m.usage.cpu.slice(0, -1)) / 1000000
+                            : parseInt(m.usage.cpu);
+                        val['cpu'] = cpu;
+                    }
+                    return val;
+                }
+            );
+        }, [metrics]);
 
         return (
             <LineChart
                 xAxis={[
                     {
-                        dataKey: 'timestamp',
-                        scaleType: 'time',
-                        tickNumber: 4,
-                        valueFormatter: (value: Date, context) =>
-                            context.location === 'tick'
-                                ? `${value.toLocaleDateString()}\n${value.toLocaleTimeString()}`
-                                : value.toLocaleString(),
+                        dataKey: 'time',
+                        scaleType: 'linear',
+                        tickNumber: 6,
+                        valueFormatter: (value: number) =>
+                            formatTimeTick(value),
+                        label: 'Time',
                     },
                 ]}
                 yAxis={Object.keys(keyToLabel).map(key => ({

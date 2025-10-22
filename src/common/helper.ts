@@ -215,3 +215,17 @@ export const countLines = recordSpec => {
 
     return [lineCount, maxLines];
 };
+
+export const formatTimeTick = (value: number) => {
+    if (value < 60) {
+        return `${value}s`;
+    } else if (value < 3600) {
+        const minutes = Math.floor(value / 60);
+        const seconds = Math.floor(value % 60);
+        return `${minutes}m${seconds > 0 ? `${seconds}s` : ''}`;
+    } else {
+        const hours = Math.floor(value / 3600);
+        const minutes = Math.floor((value % 3600) / 60);
+        return `${hours}h${minutes > 0 ? `${minutes}m` : ''}`;
+    }
+};
