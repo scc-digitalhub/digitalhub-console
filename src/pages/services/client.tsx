@@ -17,6 +17,7 @@ import {
     Divider,
     Box,
     ListItemButton,
+    styled,
 } from '@mui/material';
 import { Add, Delete, ExpandMore } from '@mui/icons-material';
 import {
@@ -160,7 +161,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                     <AccordionDetails>
                         {history.length === 0 ? (
                             <Typography color="text.secondary">
-                                No requests yet.
+                                {translate('pages.http-client.noRequests')}
                             </Typography>
                         ) : (
                             <List dense>
@@ -208,7 +209,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                         ))}
                     </TextField>
                     <TextField
-                        label="Request URL"
+                        label={translate('pages.http-client.requestUrl')}
                         value={url}
                         onChange={e => setUrl(e.target.value)}
                         fullWidth
@@ -220,14 +221,20 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                         disabled={loading}
                         sx={{ minWidth: 100 }}
                     >
-                        {loading ? <CircularProgress size={20} /> : 'Send'}
+                        {loading ? (
+                            <CircularProgress size={20} />
+                        ) : (
+                            translate('pages.http-client.send')
+                        )}
                     </Button>
                 </div>
 
                 {/* Headers (Collapsible) */}
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>Headers</Typography>
+                        <Typography>
+                            {translate('pages.http-client.headers')}
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         {headers.map((h, index) => (
@@ -239,7 +246,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                             >
                                 <Grid size={5}>
                                     <TextField
-                                        label="Key"
+                                        label={translate('fields.key.title')}
                                         value={h.key}
                                         onChange={e =>
                                             handleHeaderChange(
@@ -254,7 +261,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                 </Grid>
                                 <Grid size={5}>
                                     <TextField
-                                        label="Value"
+                                        label={translate('fields.value.title')}
                                         value={h.value}
                                         onChange={e =>
                                             handleHeaderChange(
@@ -290,7 +297,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                             size="small"
                             variant="outlined"
                         >
-                            Add Header
+                            {translate('pages.http-client.addHeader')}
                         </Button>
                     </AccordionDetails>
                 </Accordion>
@@ -307,18 +314,26 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                             size="small"
                         >
                             <MenuItem value="application/json">
-                                application/json
+                                {translate(
+                                    'pages.http-client.contentType.appjson'
+                                )}
                             </MenuItem>
-                            <MenuItem value="text/plain">text/plain</MenuItem>
+                            <MenuItem value="text/plain">
+                                {translate(
+                                    'pages.http-client.contentType.textplain'
+                                )}
+                            </MenuItem>
                         </TextField>
                         <TextField
-                            label="Request Body"
+                            label={translate('pages.http-client.requestBody')}
                             multiline
                             minRows={6}
                             value={body}
                             onChange={e => setBody(e.target.value)}
                             fullWidth
-                            placeholder="JSON or raw text"
+                            placeholder={translate(
+                                'pages.http-client.jsonOrRaw'
+                            )}
                         />
                     </>
                 )}
@@ -350,36 +365,20 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                         >
                                             Headers
                                         </Typography>
-                                        <pre
-                                            style={{
-                                                background: '#f5f5f5',
-                                                padding: '8px',
-                                                borderRadius: '4px',
-                                                maxHeight: '200px',
-                                                overflow: 'auto',
-                                            }}
-                                        >
+                                        <Pre>
                                             {JSON.stringify(
                                                 response?.headers,
                                                 null,
                                                 2
                                             )}
-                                        </pre>
+                                        </Pre>
                                         <Typography
                                             variant="subtitle1"
                                             sx={{ mt: 2 }}
                                         >
                                             Body
                                         </Typography>
-                                        <pre
-                                            style={{
-                                                background: '#f5f5f5',
-                                                padding: '8px',
-                                                borderRadius: '4px',
-                                                maxHeight: '400px',
-                                                overflow: 'auto',
-                                            }}
-                                        >
+                                        <Pre>
                                             {typeof response?.body === 'object'
                                                 ? JSON.stringify(
                                                       response.body,
@@ -387,7 +386,7 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                                       2
                                                   )
                                                 : response?.body}
-                                        </pre>
+                                        </Pre>
                                     </>
                                 )}
                             </div>
@@ -396,7 +395,12 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                             <TabbedShowLayout.Tab
                                 label={translate('fields.preview')}
                             >
-                                <Labeled label="headers" fullWidth>
+                                <Labeled
+                                    label={translate(
+                                        'pages.http-client.headers'
+                                    )}
+                                    fullWidth
+                                >
                                     <Box
                                         sx={{
                                             backgroundColor: '#002b36',
@@ -411,7 +415,12 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                                         />
                                     </Box>
                                 </Labeled>
-                                <Labeled label="response" fullWidth>
+                                <Labeled
+                                    label={translate(
+                                        'pages.http-client.response'
+                                    )}
+                                    fullWidth
+                                >
                                     <Box
                                         sx={{
                                             backgroundColor: '#002b36',
@@ -431,3 +440,13 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
         </>
     );
 };
+
+const Pre = styled('pre', {
+    name: 'StyledPre',
+})(({ theme }) => ({
+    background: theme.palette['paper'],
+    padding: '8px',
+    borderRadius: '4px',
+    maxHeight: '200px',
+    overflow: 'auto',
+}));
