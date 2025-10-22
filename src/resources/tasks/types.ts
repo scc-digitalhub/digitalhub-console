@@ -59,56 +59,24 @@ export const k8sSpec = {
         'ui:order': ['cpu', 'mem', 'gpu'],
         'ui:layout': [4, 6, 2],
         cpu: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
+            'ui:widget': CoreResourceCpuWidget,
             'ui:title': 'fields.k8s.resources.cpu.title',
-            'ui:order': ['requests', 'limits'],
-
-            limits: {
-                'ui:widget': CoreResourceCpuWidget,
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.cpu.limits.title',
-                },
-            },
-            requests: {
-                'ui:widget': CoreResourceCpuWidget,
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.cpu.requests.title',
-                },
+            'ui:options': {
+                'ui:title': 'fields.k8s.resources.cpu.title',
             },
         },
         mem: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
+            'ui:widget': CoreResourceMemWidget,
             'ui:title': 'fields.k8s.resources.memory.title',
-            'ui:order': ['requests', 'limits'],
-            limits: {
-                'ui:widget': CoreResourceMemWidget,
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.memory.limits.title',
-                },
-            },
-            requests: {
-                'ui:widget': CoreResourceMemWidget,
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.memory.requests.title',
-                },
+            'ui:options': {
+                'ui:title': 'fields.k8s.resources.memory.title',
             },
         },
         gpu: {
-            'ui:ObjectFieldTemplate': CoreResourceFieldTemplate,
             'ui:title': 'fields.k8s.resources.gpu.title',
-            'ui:order': ['requests', 'limits'],
-
-            requests: {
-                'ui:widget': 'hidden',
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.gpu.requests.title',
-                },
-            },
-            limits: {
-                'ui:widget': CoreResourceGpuWidget,
-                'ui:options': {
-                    'ui:title': 'fields.k8s.resources.gpu.limits.title',
-                },
+            'ui:widget': CoreResourceGpuWidget,
+            'ui:options': {
+                'ui:title': 'fields.k8s.resources.gpu.title',
             },
         },
     },
