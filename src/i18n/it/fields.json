@@ -911,6 +911,10 @@
         },
         "title": "Porte del Servizio"
     },
+    "clusterIP": {
+        "description": "",
+        "title": "IP del Cluster"
+    },
     "serviceType": {
         "description": "Seleziona il tipo da usare nella definizione del servizio",
         "title": "Tipo di Servizio"
