@@ -46,6 +46,7 @@ export const TriggerList = () => {
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
+                queryOptions={{ meta: { root }}}
             >
                 <>
                     <ListPageTitle icon={<TriggerIcon fontSize={'large'} />} />

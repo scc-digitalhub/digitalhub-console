@@ -28,9 +28,19 @@ export const ListBaseLive = <RecordType extends RaRecord = any>({
             console.log('subscribing to', topic);
             const callback = message => {
                 let notification = JSON.parse(message.body);
-                // console.log('notification to', topic, notification);
                 queryClient.invalidateQueries({
-                    queryKey: [resource, 'getList'],
+                    predicate: query => {
+                        if (
+                            query.queryKey[0] === resource &&
+                            query.queryKey[1] === 'getList' &&
+                            query.queryKey[2]?.['meta']?.root ===
+                                notification.record?.project
+                        ) {
+                            // console.log('notification to', topic, notification);
+                            return true;
+                        }
+                        return false;
+                    },
                 });
             };
             subscription.current = client.subscribe(topic, callback);

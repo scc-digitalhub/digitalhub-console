@@ -27,10 +27,12 @@ import { RunCreateForm } from '../runs/create';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from '../../components/ListBaseLive';
 import { CloneButton } from '../runs/CloneButton';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 export const TaskRunList = () => {
     //task is the current record
     const record = useRecordContext();
+    const { root } = useRootSelector();
     const getResourceLabel = useGetResourceLabel();
     const label = getResourceLabel('runs', 2);
 
@@ -92,6 +94,7 @@ export const TaskRunList = () => {
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: taskKey }}
                 disableSyncWithLocation
+                queryOptions={{ meta: { root }}}
             >
                 <ListView
                     component={Box}

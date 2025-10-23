@@ -82,6 +82,7 @@ export const RunList = () => {
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.created', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
+                queryOptions={{ meta: { root }}}
             >
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
