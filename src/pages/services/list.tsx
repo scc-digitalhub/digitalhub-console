@@ -50,6 +50,7 @@ export const ServiceList = () => {
                     sort={{ field: 'metadata.created', order: 'DESC' }}
                     storeKey={`${root}.services.listParams`}
                     filter={{ action: 'serve' }}
+                    queryOptions={{ meta: { root }}}
                 >
                     <>
                         <PageTitle
