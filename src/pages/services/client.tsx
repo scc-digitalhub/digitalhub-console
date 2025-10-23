@@ -18,6 +18,7 @@ import {
     Box,
     ListItemButton,
     styled,
+    Autocomplete,
 } from '@mui/material';
 import { Add, Delete, ExpandMore } from '@mui/icons-material';
 import {
@@ -29,12 +30,12 @@ import {
 } from 'react-admin';
 import { JSONTree } from 'react-json-tree';
 
-export const HttpClient = (props: { url?: string; proxy?: string }) => {
-    const { url: urlProps = '', proxy: proxyUrl = '/proxy' } = props;
+export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
+    const { proxy: proxyUrl = '/proxy', urls: availableUrls } = props;
     const dataProvider = useDataProvider();
     const translate = useTranslate();
     const [method, setMethod] = useState('GET');
-    const [url, setUrl] = useState(urlProps);
+    const [url, setUrl] = useState(availableUrls[0] || '');
     const [body, setBody] = useState('');
     const [headers, setHeaders] = useState([{ key: '', value: '' }]);
     const [contentType, setContentType] = useState('application/json');
@@ -208,12 +209,26 @@ export const HttpClient = (props: { url?: string; proxy?: string }) => {
                             </MenuItem>
                         ))}
                     </TextField>
-                    <TextField
-                        label={translate('pages.http-client.requestUrl')}
+                    <Autocomplete
+                        freeSolo
+                        options={availableUrls}
                         value={url}
-                        onChange={e => setUrl(e.target.value)}
-                        fullWidth
-                        size="small"
+                        onChange={(event, newValue) => {
+                            setUrl(newValue || '');
+                        }}
+                        onInputChange={(event, newInputValue) => {
+                            setUrl(newInputValue);
+                        }}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={translate(
+                                    'pages.http-client.requestUrl'
+                                )}
+                                size="small"
+                                fullWidth
+                            />
+                        )}
                     />
                     <Button
                         variant="contained"
