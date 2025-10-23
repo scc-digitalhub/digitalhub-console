@@ -47,11 +47,14 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
-    const url = record?.status?.service?.url;
+    const urls = record?.status?.service?.urls;
 
     const isLoading = !record;
     const isDisabled =
-        rest.disabled || record?.status?.state !== 'RUNNING' || !url;
+        rest.disabled ||
+        record?.status?.state !== 'RUNNING' ||
+        !urls ||
+        urls.length === 0;
 
     const handleDialogOpen = e => {
         if (isDisabled) return;
@@ -69,7 +72,7 @@ export const ClientButton = (props: ClientButtonProps) => {
         e.stopPropagation();
     }, []);
 
-    if (!record || !url) {
+    if (!record || !urls || urls.length === 0) {
         return <></>;
     }
 
@@ -122,7 +125,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                         <LoadingIndicator />
                     ) : (
                         <HttpClient
-                            url={url}
+                            urls={urls}
                             proxy={
                                 '/-/' +
                                 projectId +
