@@ -1,12 +1,15 @@
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { RunCreateForm } from './create';
-import { useRecordContext } from 'react-admin';
+import { useRecordContext, useTranslate } from 'react-admin';
 import { useGetManySchemas } from '../../controllers/schemaController';
 import { taskParser } from '../../common/helper';
+import { Alert } from '@mui/material';
 
-export const CloneButton = () => {
-    const record = useRecordContext();
+export const CloneButton = props => {
+    const translate = useTranslate();
+
+    const record = useRecordContext(props);
     const task = taskParser(record?.spec?.task);
 
     //TODO remove hardcoded dereference of task/runtime
@@ -56,11 +59,15 @@ export const CloneButton = () => {
             transform={prepare}
             closeOnClickOutside={false}
         >
-            {runSchema?.schema && taskSchema?.schema && (
+            {runSchema?.schema && taskSchema?.schema ? (
                 <RunCreateForm
                     runSchema={runSchema.schema}
                     taskSchema={taskSchema.schema}
                 />
+            ) : (
+                <Alert severity="error">
+                    {translate('messages.invalidKind')}
+                </Alert>
             )}
         </CreateInDialogButton>
     );
