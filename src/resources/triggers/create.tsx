@@ -119,7 +119,23 @@ export const TriggerCreateForm = (props: {
                                     mode="yaml"
                                     theme="github"
                                     source="spec"
-                                    parse={toYaml}
+                                    parse={value => {
+                                        if (value.function === undefined)
+                                            delete value.function;
+                                        if (value.workflow === undefined)
+                                            delete value.workflow;
+                                        if (
+                                            value.template.function ===
+                                            undefined
+                                        )
+                                            delete value.template.function;
+                                        if (
+                                            value.template.workflow ===
+                                            undefined
+                                        )
+                                            delete value.template.workflow;
+                                        return toYaml(value);
+                                    }}
                                     format={yaml.parse}
                                     validate={[
                                         required(),
