@@ -16,6 +16,6 @@ export default {
     create: WorkflowCreate,
     edit: WorkflowEdit,
     options: {
-        type: 'WORKFLOW',
+        type: 'workflow',
     },
 };

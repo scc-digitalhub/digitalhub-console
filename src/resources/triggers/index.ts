@@ -13,6 +13,6 @@ export default {
     show: TriggerShow,
     recordRepresentation: record => record?.kind || record.id,
     options: {
-        type: 'TRIGGER',
+        type: 'trigger',
     },
 };

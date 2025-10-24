@@ -16,6 +16,6 @@ export default {
     create: ModelCreate,
     edit: ModelEdit,
     options: {
-        type: 'MODEL',
+        type: 'model',
     },
 };

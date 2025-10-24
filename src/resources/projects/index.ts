@@ -12,6 +12,6 @@ export default {
     create: ProjectCreate,
     edit: ProjectEdit,
     options: {
-        type: 'PROJECT',
+        type: 'project',
     },
 };

@@ -16,6 +16,6 @@ export default {
     create: SecretCreate,
     edit: SecretEdit,
     options: {
-        type: 'SECRET',
+        type: 'secret',
     },
 };

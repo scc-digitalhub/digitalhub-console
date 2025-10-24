@@ -16,6 +16,6 @@ export default {
     create: FunctionCreate,
     edit: FunctionEdit,
     options: {
-        type: 'FUNCTION',
+        type: 'function',
     },
 };

@@ -16,6 +16,6 @@ export default {
     create: ArtifactCreate,
     edit: ArtifactEdit,
     options: {
-        type: 'ARTIFACT',
+        type: 'artifact',
     },
 };

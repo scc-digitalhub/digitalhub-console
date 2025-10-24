@@ -16,6 +16,6 @@ export default {
     create: DataItemCreate,
     edit: DataItemEdit,
     options: {
-        type: 'DATAITEM',
+        type: 'dataitem',
     },
 };
