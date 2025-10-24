@@ -23,7 +23,8 @@
     },
     "search": {
         "no_results": "La tua ricerca non ha prodotto risultati",
-        "current_filters": "Filtri di ricerca attuali:"
+        "current_filters": "Filtri di ricerca attuali:",
+        "enter_filters" : "Inserisci dei filtri per cominciare la ricerca"
     },
     "templates": {
         "noTemplates": "Nessun template disponibile",

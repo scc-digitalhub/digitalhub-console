@@ -100,6 +100,7 @@ export const SearchBar = (props: SearchBarProps) => {
                 conversionMap[element.props.source] = {
                     parse: element.props.parse,
                     format: element.props.format,
+                    defaultValue: element.props.defaultValue,
                 };
                 unflatten(
                     defaultValues,
@@ -127,8 +128,7 @@ export const SearchBar = (props: SearchBarProps) => {
     }
 
     const handleClickSearch = (filterInputs: any) => {
-        console.log('searchbar filterInputs ', filterInputs);
-        let q = filterInputs.q;
+        let q = filterInputs.q.trim();
         let fq: SearchFilter[] = [];
 
         //build fq using parse functions defined on filters
@@ -141,20 +141,27 @@ export const SearchBar = (props: SearchBarProps) => {
                 .map(source => {
                     const value = flattenedInputs[source];
                     const parse = conversionMap[source].parse;
-                    if (!isEmpty(value)) {
-                        return {
-                            field: source,
-                            value: value,
-                            filter: parse(value),
-                        };
+                    if (
+                        isEmpty(value) ||
+                        value === conversionMap[source].defaultValue
+                    ) {
+                        return null;
                     }
-                    return null;
+                    return {
+                        field: source,
+                        value: value,
+                        filter: parse(value),
+                    };
                 })
                 .filter(value => value !== null);
         }
 
         //write input values into context
-        setParams({ q: extractQ(q, filterSeparator), fq: fq });
+        if (isEmpty(q) && isEmpty(fq)) {
+            setParams({});
+        } else {
+            setParams({ q: extractQ(q, filterSeparator), fq: fq });
+        }
         //close filter box
         handleCloseFilters();
         if (to) {
@@ -173,6 +180,7 @@ export const SearchBar = (props: SearchBarProps) => {
                                 handleEnter={handleClickSearch}
                                 handleClickShowFilters={handleClickShowFilters}
                                 showFiltersIcon={!!filters}
+                                resetSearch={() => setParams({})}
                             />
                             <FilterBox
                                 filters={newFilters}
@@ -189,8 +197,13 @@ export const SearchBar = (props: SearchBarProps) => {
 };
 
 const ActualSearchBar = (props: any) => {
-    const { hintText, handleEnter, handleClickShowFilters, showFiltersIcon } =
-        props;
+    const {
+        hintText,
+        handleEnter,
+        handleClickShowFilters,
+        showFiltersIcon,
+        resetSearch,
+    } = props;
     const { field } = useController({ name: 'q', defaultValue: '' });
 
     const formContext = useFormContext();
@@ -198,6 +211,7 @@ const ActualSearchBar = (props: any) => {
 
     const handleClickClear = () => {
         formContext.reset();
+        resetSearch();
     };
 
     const theme = useTheme();

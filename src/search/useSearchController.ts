@@ -48,6 +48,13 @@ export const useSearchController = ({
             return;
         }
 
+        if (Object.keys(searchParams).length === 0) {
+            //set empty response
+            setResponse({ total: 0, results: [] });
+            isLoading.current = false;
+            return;
+        }
+
         let copyOfSearchParams = JSON.parse(
             JSON.stringify(searchParams)
         ) as typeof searchParams;
@@ -68,7 +75,7 @@ export const useSearchController = ({
                 setResponse({ total: 0, results: [], error });
                 isLoading.current = false;
             });
-    }, [searchParams, page, perPage, sort, order]);
+    }, [searchParams, page, perPage, sort, order, provider]);
 
     //create Listcontext for pagination handling
     const listContext: ListControllerResult = {
