@@ -56,6 +56,21 @@ export const isValidAgainstSchema =
         }
     };
 
+export const sanitizeObj = value => {
+    //remove undefined values
+    return Object.keys(value)
+        .filter(key => value[key] !== undefined)
+        .reduce((obj, key) => {
+            const v = value[key];
+            if (typeof v === 'object' && !Array.isArray(v) && v !== null) {
+                obj[key] = sanitizeObj(v);
+            } else {
+                obj[key] = v;
+            }
+            return obj;
+        }, {});
+};
+
 export const randomId = () => {
     //generate a ~random id from (time + rand)
     let p3 = Date.now().toString(36);

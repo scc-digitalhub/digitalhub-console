@@ -269,6 +269,23 @@ export const filterProps = (first: any, second: any) => {
     };
 };
 
+export const filterProperties = (schema, keys) => {
+    if (!schema) return null;
+
+    //remove properties definition
+    //TODO handle nested in allOf/anyOf
+    return {
+        ...JSON.parse(JSON.stringify(schema)),
+        properties: Object.keys(schema.properties)
+            .filter(key => !keys.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = schema.properties[key];
+                return obj;
+            }, {}),
+        required: schema.required.filter(key => !keys.includes(key)),
+    };
+};
+
 export const SchemaIdPrefixes = {
     artifacts: 'ARTIFACT:',
     dataitems: 'DATAITEM:',

@@ -24,7 +24,7 @@ import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { getRunUiSpec } from '../runs/types';
 import { KindSelector } from '../../components/KindSelector';
 import { Stack } from '@mui/material';
-import { filterProps } from '../../common/schemas';
+import { filterProperties, filterProps } from '../../common/schemas';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -81,17 +81,14 @@ export const TriggerCreateForm = (props: {
                             return (
                                 <JsonSchemaInput
                                     source="spec"
-                                    schema={getSpecSchema(formData.kind)}
+                                    schema={filterProperties(
+                                        getSpecSchema(formData.kind),
+                                        ['template'] //we filter template to avoid collision with spec.template below
+                                    )}
                                     uiSchema={getUiSchema(formData.kind)}
                                 />
                             );
                         }
-                        // <SpecInput
-                        //     source="spec"
-                        //     kind={formData.kind}
-                        //     schema={getSpecSchema(formData.kind)}
-                        //     getUiSchema={getUiSchema}
-                        // />
                     }}
                 </FormDataConsumer>
             </StepperForm.Step>

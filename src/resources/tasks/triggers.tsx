@@ -25,6 +25,7 @@ import { DropDownButton } from '../../components/buttons/DropdownButton';
 import { TriggerCreateForm } from '../triggers/create';
 import { DeactivateButton } from '../triggers/DeactivateButton';
 import { LoadMore } from '../../components/LoadMore';
+import { sanitizeObj } from '../../common/helper';
 
 export const TaskTriggerList = () => {
     //task is the current record
@@ -48,7 +49,7 @@ export const TaskTriggerList = () => {
     const taskFunction = record?.spec?.function;
     const taskWorkflow = record?.spec?.workflow;
 
-    const partial = {
+    const partial = sanitizeObj({
         project: record?.project,
         spec: {
             task: taskKey,
@@ -61,7 +62,7 @@ export const TaskTriggerList = () => {
                 local_execution: false,
             },
         },
-    };
+    });
 
     const prepare = (r: any) => {
         const v = {
