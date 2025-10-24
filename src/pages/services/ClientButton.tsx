@@ -47,13 +47,15 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
-    const urls = record?.status?.service?.urls;
+    const urls = [record?.status?.service?.url];
+    if (record?.status?.service?.urls) {
+        urls.push(...record.status.service.urls);
+    }
 
     const isLoading = !record;
     const isDisabled =
         rest.disabled ||
         record?.status?.state !== 'RUNNING' ||
-        !urls ||
         urls.length === 0;
 
     const handleDialogOpen = e => {

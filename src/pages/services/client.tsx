@@ -111,10 +111,21 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                 parsedBody = res.body;
             }
 
+            //extract proxied headers
+            let responseHeaders = {};
+            if (res.headers) {
+                const rh = Object.fromEntries(res.headers.entries());
+                Object.keys(rh)
+                    .filter(k => k.toLowerCase().startsWith('x-proxy-'))
+                    .forEach(k => {
+                        responseHeaders[k.substring(8)] = rh[k];
+                    });
+            }
+
             const responseObj = {
                 status: res.status,
                 statusText: res.statusText,
-                headers: Object.fromEntries(res.headers.entries()),
+                headers: responseHeaders,
                 body: parsedBody,
             };
 
@@ -371,8 +382,11 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                                 ) : (
                                     <>
                                         <Typography>
-                                            Status: {response?.status}{' '}
-                                            {response?.statusText}
+                                            Status:{' '}
+                                            {response?.headers?.status ||
+                                                response?.status +
+                                                    '' +
+                                                    response?.statusText}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
