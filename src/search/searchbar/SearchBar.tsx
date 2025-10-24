@@ -26,6 +26,7 @@ import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from './SearchProvider';
 import { InputProps, useTranslate } from 'ra-core';
+import { alphaNumericName } from '../../common/helper';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>
@@ -44,7 +45,14 @@ const extractQ = (input: string, filterSeparator: string) => {
         `[^\\s${filterSeparator}"]+(${filterSeparator}"){1}[^${filterSeparator}]+"\\s?`,
         'g'
     );
-    return input.replace(reg, '');
+
+    let q = input.replace(reg, '');
+
+    //if single string, add wildcard by default
+    if (q && alphaNumericName(q)) {
+        q = q + '*';
+    }
+    return q;
 };
 
 const isEmpty = value => {
