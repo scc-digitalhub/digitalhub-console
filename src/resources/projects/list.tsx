@@ -88,6 +88,7 @@ export const ProjectSelectorList = props => {
             storeKey={false}
             pagination={<Pagination rowsPerPageOptions={[perPage]} />}
             filters={filters}
+            filterDefaultValues={{ user: username }}
             empty={
                 <Empty>
                     <CreateProjectButton />
