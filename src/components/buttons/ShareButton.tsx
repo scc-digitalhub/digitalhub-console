@@ -29,6 +29,7 @@ import {
     Form,
     FunctionField,
     ResourceContextProvider,
+    regex,
 } from 'react-admin';
 import {
     Breakpoint,
@@ -44,6 +45,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
+import { memoize } from 'lodash';
 
 const defaultIcon = <ShareIcon />;
 
@@ -223,6 +225,8 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
                 });
         }
     };
+    const userPattern = /^[a-zA-Z0-9!#$%&@'*+/=?^_`{|}~.-]+$/;
+    const validateUser = regex(userPattern, 'messages.validation.wrongChar');
 
     return (
         <Create record={{}} component={Toolbar}>
@@ -234,6 +238,7 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
                             label="fields.user.title"
                             helperText="fields.user.description"
                             fullWidth
+                            validate={validateUser}
                         />
                     </Grid>
                     <Grid size={2} pt={1}>
