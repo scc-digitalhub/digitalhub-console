@@ -116,6 +116,8 @@ const IconResource = () => {
 
 const NoResults = () => {
     const translate = useTranslate();
+    const { params: searchParams } = useSearch();
+    const noSearchFilters = Object.keys(searchParams).length === 0;
 
     return (
         <Root className="RaList-noResults">
@@ -126,7 +128,9 @@ const NoResults = () => {
                     component="p"
                     sx={{ marginBottom: '16px' }}
                 >
-                    {translate('messages.search.no_results')}
+                    {noSearchFilters
+                        ? translate('messages.search.enter_filters')
+                        : translate('messages.search.no_results')}
                 </Typography>
             </div>
         </Root>

@@ -23,7 +23,8 @@
     },
     "search": {
         "no_results": "Your search gave no results",
-        "current_filters": "Current search filters:"
+        "current_filters": "Current search filters:",
+        "enter_filters" : "Enter some filters to start searching"
     },
     "templates": {
         "noTemplates": "No templates available",

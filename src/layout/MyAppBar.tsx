@@ -57,15 +57,14 @@ const filters = [
         defaultValue={[]}
         parse={v => {
             //v=['function', 'dataitem']
-            //return type:(function OR dataitem)
-            return `type:(${v.join(' OR ')})`;
+            //return type:function OR dataitem
+            return `type:${v.join(' OR ')}`;
         }}
         format={v => {
-            //v=type:(function OR dataitem)
+            //v=type:function OR dataitem
             //return ['function', 'dataitem']
-            const startIndex = v.indexOf('(');
-            const endIndex = v.indexOf(')');
-            return v.substring(startIndex + 1, endIndex).split(' OR ');
+            const startIndex = v.indexOf(':');
+            return v.substring(startIndex + 1).split(' OR ');
         }}
     />,
     <TextInput
