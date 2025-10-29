@@ -47,7 +47,10 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
-    const urls = [record?.status?.service?.url];
+    const urls: string[] = [];
+    if (record?.status?.service?.url) {
+        urls.push(record.status.service.url);
+    }
     if (record?.status?.service?.urls) {
         urls.push(...record.status.service.urls);
     }
@@ -74,7 +77,7 @@ export const ClientButton = (props: ClientButtonProps) => {
         e.stopPropagation();
     }, []);
 
-    if (!record || !urls || urls.length === 0) {
+    if (!record || !urls) {
         return <></>;
     }
 
