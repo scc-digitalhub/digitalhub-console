@@ -216,10 +216,6 @@ const CoreApp = () => {
                                                 path="/services"
                                                 element={<ServiceList />}
                                             />
-                                            <Route
-                                                path="/client"
-                                                element={<HttpClient />}
-                                            />
                                             {enableSearch && (
                                                 <Route
                                                     path="/searchresults"
