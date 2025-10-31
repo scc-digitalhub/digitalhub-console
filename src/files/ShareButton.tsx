@@ -21,6 +21,7 @@ import {
     SimpleShowLayout,
     NumberInput,
     DateField,
+    IconButtonWithTooltip,
 } from 'react-admin';
 import {
     Breakpoint,
@@ -37,7 +38,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { IdField } from '../components/IdField';
 
-const defaultIcon = <ShareIcon />;
+const defaultIcon = <ShareIcon fontSize="small" />;
 
 export const ShareButton = (props: ShareButtonProps) => {
     const {
@@ -46,6 +47,8 @@ export const ShareButton = (props: ShareButtonProps) => {
         fullWidth = true,
         maxWidth = 'md',
         color = 'info',
+        size = 'medium',
+        iconButton = false,
         record: recordFromProps,
         path: pathProp,
         ...rest
@@ -72,14 +75,26 @@ export const ShareButton = (props: ShareButtonProps) => {
 
     return (
         <Fragment>
-            <Button
-                label={label}
-                onClick={handleDialogOpen}
-                color={color}
-                {...rest}
-            >
-                {icon}
-            </Button>
+            {iconButton ? (
+                <IconButtonWithTooltip
+                    label={label}
+                    color={color}
+                    size={size}
+                    onClick={handleDialogOpen}
+                    {...rest}
+                >
+                    {icon}
+                </IconButtonWithTooltip>
+            ) : (
+                <Button
+                    label={label}
+                    onClick={handleDialogOpen}
+                    color={color}
+                    {...rest}
+                >
+                    {icon}
+                </Button>
+            )}
             <ShareDialog
                 open={open}
                 onClose={handleDialogClose}
@@ -263,4 +278,8 @@ export type ShareButtonProps<RecordType extends RaRecord = any> =
          * Max width for the modal window (breakpoint). Defaults to `md`
          */
         maxWidth?: Breakpoint;
+        /**
+         * Display the button as an icon button
+         */
+        iconButton?: boolean;
     };
