@@ -88,21 +88,25 @@ export const FileDetails = (props: {
 
                 {info && (
                     <RecordContextProvider value={info}>
-                        <Stack direction={'row'} pb={2}>
+                        <Stack
+                            direction={'row'}
+                            pb={2}
+                            justifyContent="space-around"
+                        >
                             <DownloadButton
                                 size="small"
-                                label=""
+                                iconButton
                                 color="success"
                             />
                             <PreviewButton
                                 size="small"
-                                label=""
+                                iconButton
                                 disabled={!isPreviewable}
                             />
-                            <ShareButton size="small" label="" />
+                            <ShareButton size="small" iconButton />
                             <DeleteButton
                                 size="small"
-                                label=""
+                                iconButton
                                 onDelete={() => onDelete && onDelete(file)}
                             />
                         </Stack>
@@ -136,7 +140,12 @@ export const FileDetails = (props: {
                             </Labeled>
                             {info.hash && (
                                 <Labeled>
-                                    <TextField source="hash" />
+                                    <IdField
+                                        source="hash"
+                                        noWrap
+                                        truncate={30}
+                                        copy={false}
+                                    />
                                 </Labeled>
                             )}
                             {/* <Labeled label="size">

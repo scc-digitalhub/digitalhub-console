@@ -102,7 +102,7 @@ export const UploadArea = () => {
         <Box className="DropDownMenu" component="span">
             <Box>
                 <IconButtonWithTooltip
-                    label={'ra.action.open'}
+                    label={'messages.upload.header'}
                     onClick={handleOpen}
                     color="inherit"
                 >

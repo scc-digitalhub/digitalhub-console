@@ -50,7 +50,7 @@ export const ServiceList = () => {
                     sort={{ field: 'metadata.created', order: 'DESC' }}
                     storeKey={`${root}.services.listParams`}
                     filter={{ action: 'serve' }}
-                    queryOptions={{ meta: { root }}}
+                    queryOptions={{ meta: { root } }}
                 >
                     <>
                         <PageTitle
@@ -125,9 +125,12 @@ export const ServiceList = () => {
                                                     label="fields.status.state"
                                                 />
                                                 {record?.status?.message && (
-                                                    <TextField
+                                                    <IdField
+                                                        noWrap
+                                                        truncate={40}
                                                         source="status.message"
-                                                        label="fields.message"
+                                                        label="fields.events.message.title"
+                                                        copy={false}
                                                     />
                                                 )}
                                             </Stack>

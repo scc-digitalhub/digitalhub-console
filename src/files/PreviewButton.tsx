@@ -13,6 +13,7 @@ import {
     RaRecord,
     LoadingIndicator,
     useTranslate,
+    IconButtonWithTooltip,
 } from 'react-admin';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
@@ -55,7 +56,7 @@ import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { NoContent } from '../components/NoContent';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from './utils';
 
-const defaultIcon = <PreviewIcon />;
+const defaultIcon = <PreviewIcon fontSize="small" />;
 
 export const PreviewButton = (props: PreviewButtonProps) => {
     const {
@@ -64,6 +65,8 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         icon = defaultIcon,
         fullWidth = true,
         maxWidth = 'md',
+        size = 'medium',
+        iconButton = false,
         fileName: fileNameProp,
         path: pathProp,
         fileType: fileTypeProp,
@@ -133,14 +136,26 @@ export const PreviewButton = (props: PreviewButtonProps) => {
 
     return (
         <Fragment>
-            <Button
-                label={label}
-                color={color}
-                onClick={handleDialogOpen}
-                {...rest}
-            >
-                {icon}
-            </Button>
+            {iconButton ? (
+                <IconButtonWithTooltip
+                    label={label}
+                    color={color}
+                    size={size}
+                    onClick={handleDialogOpen}
+                    {...rest}
+                >
+                    {icon}
+                </IconButtonWithTooltip>
+            ) : (
+                <Button
+                    label={label}
+                    color={color}
+                    onClick={handleDialogOpen}
+                    {...rest}
+                >
+                    {icon}
+                </Button>
+            )}
             <PreviewDialog
                 open={open}
                 onClose={handleDialogClose}
@@ -407,6 +422,7 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
 > &
     ButtonProps & {
         icon?: ReactElement;
+        iconButton?: boolean;
         fileName?: string;
         path?: string;
         fullWidth?: boolean;

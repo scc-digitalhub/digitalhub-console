@@ -94,7 +94,7 @@ export const NotificationArea = () => {
         <Box className="DropDownMenu" component="span">
             <Box>
                 <IconButtonWithTooltip
-                    label={'ra.action.open'}
+                    label={'messages.notifications.header'}
                     onClick={handleOpen}
                     color="inherit"
                 >

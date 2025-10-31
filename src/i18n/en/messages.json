@@ -4,6 +4,7 @@
         "no_undone_files": "This action will delete files from the store and cannot be undone"
     },
     "content_copied_x": "%{x} copied",
+    "documentation": "Documentation",
     "double_click_to_edit": "Double click to edit",
     "lineage": {
         "noLineage": "No lineage information available",

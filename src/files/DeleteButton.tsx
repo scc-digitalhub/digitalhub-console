@@ -13,17 +13,20 @@ import {
     RaRecord,
     Confirm,
     useTranslate,
+    IconButtonWithTooltip,
 } from 'react-admin';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Fragment, ReactElement, useState } from 'react';
 
-const defaultIcon = <DeleteIcon />;
+const defaultIcon = <DeleteIcon fontSize="small" />;
 
 export const DeleteButton = (props: DeleteButtonProps) => {
     const {
         color = 'error',
         label = 'ra.action.delete',
         icon = defaultIcon,
+        size = 'medium',
+        iconButton = false,
         fileName: fileNameProp,
         path: pathProp,
         onDelete,
@@ -87,14 +90,25 @@ export const DeleteButton = (props: DeleteButtonProps) => {
 
     return (
         <Fragment>
-            <Button
-                label={label}
-                color={color}
-                onClick={handleDialogOpen}
-                key="button"
-            >
-                {icon}
-            </Button>
+            {iconButton ? (
+                <IconButtonWithTooltip
+                    label={label}
+                    color={color}
+                    size={size}
+                    onClick={handleDialogOpen}
+                >
+                    {icon}
+                </IconButtonWithTooltip>
+            ) : (
+                <Button
+                    label={label}
+                    color={color}
+                    onClick={handleDialogOpen}
+                    key="button"
+                >
+                    {icon}
+                </Button>
+            )}
             <Confirm
                 isOpen={open}
                 loading={false}
@@ -121,6 +135,7 @@ export type DeleteButtonProps<RecordType extends RaRecord = any> = Omit<
 > &
     ButtonProps & {
         icon?: ReactElement;
+        iconButton?: boolean;
         fileName?: string;
         path?: string;
         onDelete?: () => void;

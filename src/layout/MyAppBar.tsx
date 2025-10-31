@@ -6,10 +6,11 @@ import {
     AppBar,
     AutocompleteArrayInput,
     CheckboxGroupInput,
+    IconButtonWithTooltip,
     ReferenceArrayInput,
     TextInput,
 } from 'react-admin';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
@@ -209,15 +210,16 @@ export const MyAppBar = () => {
             {client && <NotificationArea />}
 
             {docsVersion && (
-                <Button
+                <IconButtonWithTooltip
                     color="inherit"
                     href={
                         'https://scc-digitalhub.github.io/docs/' + docsVersion
                     }
                     target="_blank"
+                    label="messages.documentation"
                 >
                     <HelpCenterIcon />
-                </Button>
+                </IconButtonWithTooltip>
             )}
         </AppBar>
     );

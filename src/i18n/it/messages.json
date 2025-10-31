@@ -4,6 +4,7 @@
         "no_undone_files": "Questa azione eliminerà i file dallo store e non può essere annullata"
     },
     "content_copied_x": "%{x} copiato",
+    "documentation": "Documentazione",
     "double_click_to_edit": "Doppio click per modificare",
     "lineage": {
         "noLineage": "Nessuna informazione disponibile sulla genealogia",
