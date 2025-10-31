@@ -147,6 +147,26 @@
         "description": "",
         "title": "Esecuzione del server Flower"
     },
+    "hera": {
+        "description": "",
+        "title": "Hera"
+    },
+    "hera+build": {
+        "description": "",
+        "title": "Operazione di build di Hera"
+    },
+    "hera+build:run": {
+        "description": "",
+        "title": "Operazione di build di Hera"
+    },
+    "hera+pipeline": {
+        "description": "",
+        "title": "Operazione di pipeline Hera"
+    },
+    "hera+pipeline:run": {
+        "description": "",
+        "title": "Operazione di pipeline Hera"
+    },
     "huggingface": {
         "description": "Definizione del modello Huggingface",
         "title": "Huggingface"
