@@ -147,6 +147,26 @@
         "description": "",
         "title": "Flower server run"
     },
+    "hera": {
+        "description": "",
+        "title": "Hera"
+    },
+    "hera+build": {
+        "description": "",
+        "title": "Hera build task"
+    },
+    "hera+build:run": {
+        "description": "",
+        "title": "Hera build task"
+    },
+    "hera+pipeline": {
+        "description": "",
+        "title": "Hera pipeline task"
+    },
+    "hera+pipeline:run": {
+        "description": "",
+        "title": "Hera pipeline task"
+    },
     "huggingface": {
         "description": "Huggingface model definition",
         "title": "Huggingface"
