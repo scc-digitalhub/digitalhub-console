@@ -62,6 +62,7 @@ export const ChartView = (props: ChartViewProps) => {
         recordContext?.metadata?.name ||
         recordContext?.name ||
         '';
+    const startTime = recordContext?.startTime;
 
     const filteredData = useMemo(() => {
         if (!data) return [];
@@ -122,13 +123,12 @@ export const ChartView = (props: ChartViewProps) => {
                     new Date(a.timestamp).getTime() -
                     new Date(b.timestamp).getTime()
             );
-
-            const startTime = new Date(sortedMetrics[0].timestamp).getTime();
+            const start = new Date(startTime).getTime();
 
             return sortedMetrics.map(
                 (m: { timestamp: any; usage: any }, index: number) => {
                     const currentTime = new Date(m.timestamp).getTime();
-                    const relativeTime = (currentTime - startTime) / 1000;
+                    const relativeTime = (currentTime - start) / 1000;
 
                     let val = {
                         time: relativeTime,
@@ -152,6 +152,8 @@ export const ChartView = (props: ChartViewProps) => {
                 }
             );
         }, [metrics]);
+        const minTime = data.length > 0 ? data[0].time : 0;
+        const maxTime = data.length > 0 ? data[data.length - 1].time : 0;
 
         return (
             <LineChart
@@ -163,6 +165,8 @@ export const ChartView = (props: ChartViewProps) => {
                         valueFormatter: (value: number) =>
                             formatTimeTick(value),
                         label: 'Time',
+                        min: minTime,
+                        max: maxTime,
                     },
                 ]}
                 yAxis={Object.keys(keyToLabel).map(key => ({
