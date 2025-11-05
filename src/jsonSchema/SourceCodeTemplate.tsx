@@ -7,7 +7,7 @@ import {
     ObjectFieldTemplatePropertyType,
     WidgetProps,
 } from '@rjsf/utils';
-import { Box, Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';

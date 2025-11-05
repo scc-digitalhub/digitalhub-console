@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Chip, SxProps, Theme } from '@mui/material';
 import { useMemo } from 'react';
 import {
@@ -8,6 +12,7 @@ import {
 } from 'react-admin';
 import { StateColors } from './StateChips';
 import { useNavigate } from 'react-router-dom';
+import { FUNCTION_OR_WORKFLOW } from '../common/helper';
 
 export type RunStateBadgeProps = {
     state?: string;
@@ -56,7 +61,12 @@ export const RunStateBadge = (props: RunStateBadgeProps) => {
         event.preventDefault();
 
         let filter = { state };
-        if (singularResource) filter[singularResource] = resourceKey;
+        if (singularResource && resourceKey)
+            filter[FUNCTION_OR_WORKFLOW] = `${singularResource}_${
+                filterById
+                    ? resourceKey.replace(`:${record?.id}`, '')
+                    : resourceKey
+            }`;
         const link =
             createPath({ type: 'list', resource: 'runs' }) +
             '?filter=' +
