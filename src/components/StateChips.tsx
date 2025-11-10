@@ -34,19 +34,17 @@ export const StateChips = (props: {
 };
 
 export enum StateColors {
-    COMPLETED = 'success',
-    ERROR = 'error',
-    RUNNING = 'info',
     BUILT = 'warning',
-    READY = 'success',
+    COMPLETED = 'success',
+    CREATED = 'default',
     DELETED = 'secondary',
     DELETING = 'warning',
+    ERROR = 'error',
+    PENDING = 'warning',
+    READY = 'success',
+    RUNNING = 'info',
     STOP = 'warning',
     STOPPED = 'warning',
-    UPLOADING = 'info',
-    CREATED = 'default',
     SUCCEEDED = 'success',
-    FAILED = 'error',
-    PENDING = 'warning',
-    UNKNOWN = 'default',
+    UPLOADING = 'info',
 }

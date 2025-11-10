@@ -5,6 +5,7 @@
 import {
     SelectInput,
     TextInput,
+    useLocaleState,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -13,7 +14,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
 import { FUNCTION_OR_WORKFLOW } from '../common/helper';
 
-const fileRelatedStates = ['CREATED', 'UPLOADING', 'ERROR', 'READY'];
+const fileRelatedStates = ['CREATED', 'ERROR', 'READY', 'UPLOADING'];
 
 const stateFilterValues = {
     artifacts: fileRelatedStates,
@@ -22,7 +23,6 @@ const stateFilterValues = {
     runs: Object.keys(StateColors),
     triggers: Object.keys(StateColors),
 };
-
 const getChoices = (resource: string) => {
     const states: any[] = [];
 
@@ -45,6 +45,7 @@ export const useGetFilters = (): GetFiltersFunction => {
     const resource = useResourceContext();
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<any[]>();
+    const [localeState] = useLocaleState();
 
     useEffect(() => {
         if (schemaProvider && resource) {
@@ -66,6 +67,11 @@ export const useGetFilters = (): GetFiltersFunction => {
         sx: { '& .RaSelectInput-input': { margin: '0px' } },
     };
 
+    const sortByTranslation = (a: any, b: any, field = 'name') => {
+        const locale = localeState?.startsWith('it') ? 'it' : 'en';
+        return translate(a[field]).localeCompare(translate(b[field]), locale);
+    };
+
     const getFilters: GetFiltersFunction = functions => {
         if (!kinds || !resource) {
             return undefined;
@@ -83,7 +89,7 @@ export const useGetFilters = (): GetFiltersFunction => {
                 key={2}
                 label="fields.kind"
                 source="kind"
-                choices={kinds}
+                choices={kinds.sort((a, b) => sortByTranslation(a, b))}
                 {...selectProps}
             />,
         ];
@@ -94,7 +100,9 @@ export const useGetFilters = (): GetFiltersFunction => {
                     key={3}
                     label="fields.status.state"
                     source="state"
-                    choices={getChoices(resource)}
+                    choices={getChoices(resource).sort((a, b) =>
+                        sortByTranslation(a, b)
+                    )}
                     optionText={(choice: any) => {
                         return (
                             <StateChips
@@ -119,7 +127,7 @@ export const useGetFilters = (): GetFiltersFunction => {
                         smart_count: 1,
                     })}`}
                     source={FUNCTION_OR_WORKFLOW}
-                    choices={functions}
+                    choices={functions.sort((a, b) => sortByTranslation(a, b))}
                     {...selectProps}
                 />
             );
@@ -127,6 +135,5 @@ export const useGetFilters = (): GetFiltersFunction => {
 
         return filters;
     };
-
     return getFilters;
 };
