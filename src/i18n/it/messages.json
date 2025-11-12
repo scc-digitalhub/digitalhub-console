@@ -25,7 +25,8 @@
     "search": {
         "no_results": "La tua ricerca non ha prodotto risultati",
         "current_filters": "Filtri di ricerca attuali:",
-        "enter_filters" : "Inserisci dei filtri per cominciare la ricerca"
+        "enter_filters" : "Inserisci dei filtri per cominciare la ricerca",
+        "group_results": "Raggruppa le versioni della stessa risorsa"
     },
     "templates": {
         "noTemplates": "Nessun template disponibile",

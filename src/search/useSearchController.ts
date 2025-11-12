@@ -15,6 +15,7 @@ export const useSearchController = ({
     resultsPerPage = 5,
     sortField = 'id',
     sortOrder = 'ASC',
+    groupedSearch = false,
 }: SearchControllerProps = {}): SearchControllerResult => {
     const { params: searchParams, provider } = useSearch();
     const isLoading = useRef(true);
@@ -63,19 +64,35 @@ export const useSearchController = ({
             pagination: { page, perPage },
             sort: { field: sort, order: order } as SortPayload,
             filter: {},
+            meta: groupedSearch ? { group: true } : {},
         };
 
         provider
             .search(copyOfSearchParams, params)
             .then(({ data, total }) => {
-                setResponse({ total: total || 0, results: data });
+                if (groupedSearch) {
+                    setResponse({
+                        total: total || 0,
+                        results: data.map(v => {
+                            const groupInfo = v.keyGroup.split('_');
+                            return {
+                                ...v,
+                                kind: groupInfo[0],
+                                name: groupInfo[2],
+                                type: v.docs[0].type,
+                            };
+                        }),
+                    });
+                } else {
+                    setResponse({ total: total || 0, results: data });
+                }
                 isLoading.current = false;
             })
             .catch(error => {
                 setResponse({ total: 0, results: [], error });
                 isLoading.current = false;
             });
-    }, [searchParams, page, perPage, sort, order, provider]);
+    }, [searchParams, page, perPage, sort, order, provider, groupedSearch]);
 
     //create Listcontext for pagination handling
     const listContext: ListControllerResult = {
@@ -123,6 +140,7 @@ export type SearchControllerProps = {
     resultsPerPage?: number;
     sortField?: string;
     sortOrder?: string;
+    groupedSearch?: boolean;
 };
 
 export type SearchControllerResult = {
