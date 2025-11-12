@@ -11,25 +11,47 @@ import {
     Pagination,
     ShowButton,
     useRecordContext,
-    DateField,
     RichTextField,
     useTranslate,
     useResourceDefinitions,
+    DateField,
 } from 'react-admin';
-import Inbox from '@mui/icons-material/Inbox';
-import { RowButtonGroup } from '../components/buttons/RowButtonGroup';
-import { Box, Chip, Container, Tooltip, Typography } from '@mui/material';
-import { alpha, styled, useTheme } from '@mui/material/styles';
+import {
+    Box,
+    Chip,
+    Container,
+    FormControlLabel,
+    Switch,
+    Tooltip,
+    Typography,
+} from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
 import { useSearchController } from './useSearchController';
 import { useSearch } from './searchbar/SearchContext';
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
+import { NoResults } from './NoResults';
+import { RowButtonGroup } from '../components/buttons/RowButtonGroup';
+import { ChipsField } from '../components/ChipsField';
+import { MultiField } from './MultiField';
+
+const replaceWithHighlights = res => {
+    //replace metadata fields with highlights
+    if (res.highlights && Object.keys(res.highlights).length !== 0) {
+        for (const [key, value] of Object.entries(res.highlights)) {
+            res.metadata[key.split('.')[1]] = value;
+        }
+    }
+};
 
 export const SearchList = () => {
     const theme = useTheme();
+    const translate = useTranslate();
+    const [groupedSearch, setGroupedSearch] = useState<boolean>(false);
     const { listContext } = useSearchController({
         sortField: 'metadata.updated',
         sortOrder: 'DESC',
+        groupedSearch,
     });
 
     if (listContext.isLoading) return <Loading />;
@@ -39,19 +61,33 @@ export const SearchList = () => {
         );
     if (!listContext.data) return null;
 
-    listContext.data.forEach(res => {
-        //replace metadata fields with highlights
-        if (res.highlights && Object.keys(res.highlights).length !== 0) {
-            for (const [key, value] of Object.entries(res.highlights)) {
-                res.metadata[key.split('.')[1]] = value;
-            }
-        }
-    });
+    if (groupedSearch) {
+        listContext.data.forEach(res => {
+            res.docs?.forEach(replaceWithHighlights);
+        });
+    } else {
+        listContext.data.forEach(replaceWithHighlights);
+    }
+
+    const handleSwitch = (e: any) => {
+        setGroupedSearch(e.target.checked);
+    };
 
     return (
         <ListContextProvider value={listContext}>
             <Container maxWidth={false} sx={{ paddingTop: '18px', marginX: 0 }}>
                 <ResultsHeader />
+                <Box sx={{ textAlign: 'right' }}>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={groupedSearch}
+                                onChange={handleSwitch}
+                            />
+                        }
+                        label={translate('messages.search.group_results')}
+                    />
+                </Box>
                 <FlatCard sx={{ paddingY: '18px' }}>
                     <Datagrid
                         bulkActionButtons={false}
@@ -64,26 +100,83 @@ export const SearchList = () => {
                                     0.3
                                 ),
                             },
+                            '& .MultiField': {
+                                padding: '0 !important',
+                                height: 0,
+                            },
+                            '& .MultiFieldCell': {
+                                border: 0,
+                            },
                         }}
                     >
                         <IconResource />
                         <RichTextField
-                            source="metadata.name"
+                            source="name"
                             label="fields.name.title"
+                            sortable={false}
                         />
-                        <TextField source="kind" label="fields.kind" />
-                        <RichTextField
-                            source="metadata.description"
-                            label="fields.description.title"
+                        <TextField
+                            source="kind"
+                            label="fields.kind"
+                            sortable={false}
                         />
-                        <DateField
-                            source="metadata.updated"
-                            label="fields.updated.title"
-                            showTime
-                        />
-                        <RowButtonGroup>
-                            <ShowResourceButton />
-                        </RowButtonGroup>
+                        {groupedSearch ? (
+                            <MultiField
+                                source="metadata.version"
+                                label="fields.version.title"
+                                component={RichTextField}
+                                sortable={false}
+                                noWrap
+                                cellClassName="MultiField"
+                            />
+                        ) : (
+                            <RichTextField
+                                source="metadata.version"
+                                label="fields.version.title"
+                                sortable={false}
+                            />
+                        )}
+                        {groupedSearch ? (
+                            <MultiField
+                                source="metadata.labels"
+                                label="fields.labels.title"
+                                component={ChipsField}
+                                sortable={false}
+                                cellClassName="MultiField"
+                            />
+                        ) : (
+                            <ChipsField
+                                source="metadata.labels"
+                                label="fields.labels.title"
+                                sortable={false}
+                            />
+                        )}
+                        {groupedSearch ? (
+                            <MultiField
+                                source="metadata.updated"
+                                label="fields.updated.title"
+                                component={DateField}
+                                showTime
+                                cellClassName="MultiField"
+                            />
+                        ) : (
+                            <DateField
+                                source="metadata.updated"
+                                label="fields.updated.title"
+                                showTime
+                            />
+                        )}
+                        {groupedSearch ? (
+                            <MultiField
+                                source=""
+                                component={ShowResourceButton}
+                                cellClassName="MultiField"
+                            />
+                        ) : (
+                            <RowButtonGroup>
+                                <ShowResourceButton />
+                            </RowButtonGroup>
+                        )}
                     </Datagrid>
                     <Pagination />
                 </FlatCard>
@@ -114,29 +207,6 @@ const IconResource = () => {
     );
 };
 
-const NoResults = () => {
-    const translate = useTranslate();
-    const { params: searchParams } = useSearch();
-    const noSearchFilters = Object.keys(searchParams).length === 0;
-
-    return (
-        <Root className="RaList-noResults">
-            <div className={EmptyClasses.message}>
-                <Inbox className={EmptyClasses.icon} />
-                <Typography
-                    variant="h4"
-                    component="p"
-                    sx={{ marginBottom: '16px' }}
-                >
-                    {noSearchFilters
-                        ? translate('messages.search.enter_filters')
-                        : translate('messages.search.no_results')}
-                </Typography>
-            </div>
-        </Root>
-    );
-};
-
 const ResultsHeader = () => {
     const { params: searchParams } = useSearch();
     const translate = useTranslate();
@@ -161,31 +231,3 @@ const ResultsHeader = () => {
         </Box>
     );
 };
-
-const PREFIX = 'RaEmpty';
-
-export const EmptyClasses = {
-    message: `${PREFIX}-message`,
-    icon: `${PREFIX}-icon`,
-};
-
-const Root = styled('span', {
-    name: PREFIX,
-    overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-    flex: 1,
-    [`& .${EmptyClasses.message}`]: {
-        textAlign: 'center',
-        opacity: theme.palette.mode === 'light' ? 0.5 : 0.8,
-        margin: '0 1em',
-        color:
-            theme.palette.mode === 'light'
-                ? 'inherit'
-                : theme.palette.text.primary,
-    },
-
-    [`& .${EmptyClasses.icon}`]: {
-        width: '9em',
-        height: '9em',
-    },
-}));

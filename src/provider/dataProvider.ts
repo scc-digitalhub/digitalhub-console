@@ -412,7 +412,9 @@ const springDataProvider = (
             if (params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
-            const url = `${apiUrl}${prefix}/solr/search/item?`;
+            const url = `${apiUrl}${prefix}/solr/search/${
+                params.meta?.group ? 'group' : 'item'
+            }?`;
 
             return httpClient(
                 `${url}${[q, fq, pageQuery].filter(Boolean).join('&')}`,
