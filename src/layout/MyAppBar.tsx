@@ -10,7 +10,7 @@ import {
     ReferenceArrayInput,
     TextInput,
 } from 'react-admin';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { DateIntervalInput } from '../search/DateIntervalInput';
 import SearchBar from '../search/searchbar/SearchBar';
@@ -181,46 +181,58 @@ export const MyAppBar = () => {
 
     return (
         <AppBar color="primary" elevation={0} userMenu={<MyUserMenu />}>
-            <Typography
-                textOverflow="ellipsis"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                variant="h6"
-                color="inherit"
-                flex={enableSearch ? undefined : '1'}
-            >
-                <RootResourceSelectorMenu
-                    source="name"
-                    showSelected={true}
-                    icon={false}
-                />
-            </Typography>
-            {enableSearch && (
-                <SearchBar
-                    to="../searchresults"
-                    filters={filters}
-                    filterSeparator=":"
-                    flex="1"
-                    sx={{ marginLeft: '50px' }}
-                />
-            )}
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Box sx={{ width: '210px' }}>
+                    <Typography
+                        textOverflow="ellipsis"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        variant="h6"
+                        color="inherit"
+                    >
+                        <RootResourceSelectorMenu
+                            source="name"
+                            showSelected={true}
+                            icon={false}
+                        />
+                    </Typography>
+                </Box>
 
-            <UploadArea />
+                {enableSearch && (
+                    <Box sx={{ flex: 1, mx: 2 }}>
+                        <SearchBar
+                            to="../searchresults"
+                            filters={filters}
+                            filterSeparator=":"
+                            sx={{ width: '100%' }}
+                        />
+                    </Box>
+                )}
 
-            {client && <NotificationArea />}
-
-            {docsVersion && (
-                <IconButtonWithTooltip
-                    color="inherit"
-                    href={
-                        'https://scc-digitalhub.github.io/docs/' + docsVersion
-                    }
-                    target="_blank"
-                    label="messages.documentation"
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                    }}
                 >
-                    <HelpCenterIcon />
-                </IconButtonWithTooltip>
-            )}
+                    <UploadArea />
+                    {client && <NotificationArea />}
+                    {docsVersion && (
+                        <IconButtonWithTooltip
+                            color="inherit"
+                            href={
+                                'https://scc-digitalhub.github.io/docs/' +
+                                docsVersion
+                            }
+                            target="_blank"
+                            label="messages.documentation"
+                        >
+                            <HelpCenterIcon />
+                        </IconButtonWithTooltip>
+                    )}
+                </Box>
+            </Box>
         </AppBar>
     );
 };
