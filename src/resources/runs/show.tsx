@@ -257,36 +257,38 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
-            {record?.spec?.function && (
-                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                    <MetricsGrid
-                        record={record}
-                        filters={metricsComparisonFilters}
-                        datagridFields={metricsDatagridFields}
-                        postFetchFilter={v =>
-                            //TODO refactor properly
-                            {
-                                if (!v.spec?.function) {
-                                    return false;
-                                }
+            {record?.status?.metrics &&
+                Object.keys(record.status.metrics).length > 0 && (
+                    <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                        <MetricsGrid
+                            record={record}
+                            filters={metricsComparisonFilters}
+                            datagridFields={metricsDatagridFields}
+                            postFetchFilter={v =>
+                                //TODO refactor properly
+                                {
+                                    if (!v.spec?.function) {
+                                        return false;
+                                    }
 
-                                if (!v.kind || v.kind != record.kind) {
-                                    return false;
-                                }
+                                    if (!v.kind || v.kind != record.kind) {
+                                        return false;
+                                    }
 
-                                if (
-                                    functionParser(v.spec.function).name !=
-                                    functionParser(record.spec.function).name
-                                ) {
-                                    return false;
-                                }
+                                    if (
+                                        functionParser(v.spec.function).name !=
+                                        functionParser(record.spec.function)
+                                            .name
+                                    ) {
+                                        return false;
+                                    }
 
-                                return true;
+                                    return true;
+                                }
                             }
-                        }
-                    />
-                </TabbedShowLayout.Tab>
-            )}
+                        />
+                    </TabbedShowLayout.Tab>
+                )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
@@ -294,25 +296,29 @@ export const RunShowComponent = () => {
     );
 };
 
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
-        <ClientButton />
-        <FunctionField
-            render={record =>
-                record.status?.state == 'RUNNING' ? (
-                    <StopButton record={record} />
-                ) : record.status?.state == 'STOPPED' ? (
-                    <ResumeButton record={record} />
-                ) : null
-            }
-        />
-        <CloneButton />
-        <ExportRecordButton language="yaml" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
+const ShowToolbar = () => {
+    const record = useRecordContext();
+
+    return (
+        <TopToolbar>
+            <BackButton />
+            <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
+            {record?.status?.service && <ClientButton />}
+            <FunctionField
+                render={record =>
+                    record.status?.state == 'RUNNING' ? (
+                        <StopButton record={record} />
+                    ) : record.status?.state == 'STOPPED' ? (
+                        <ResumeButton record={record} />
+                    ) : null
+                }
+            />
+            <CloneButton />
+            <ExportRecordButton language="yaml" />
+            <DeleteWithConfirmButton />
+        </TopToolbar>
+    );
+};
 
 export const RunShow = () => {
     return (

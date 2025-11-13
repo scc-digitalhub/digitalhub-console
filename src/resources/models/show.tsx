@@ -136,14 +136,17 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
             <TabbedShowLayout.Tab label="fields.files.tab">
                 <FileInfo />
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                <MetricsGrid
-                    record={record}
-                    filter={{ name: record?.name, versions: 'all' }}
-                    filters={metricsComparisonFilters}
-                    datagridFields={metricsDatagridFields}
-                />
-            </TabbedShowLayout.Tab>
+            {record?.status?.metrics &&
+                Object.keys(record.status.metrics).length > 0 && (
+                    <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                        <MetricsGrid
+                            record={record}
+                            filter={{ name: record?.name, versions: 'all' }}
+                            filters={metricsComparisonFilters}
+                            datagridFields={metricsDatagridFields}
+                        />
+                    </TabbedShowLayout.Tab>
+                )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
