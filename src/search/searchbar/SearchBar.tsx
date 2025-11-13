@@ -238,7 +238,7 @@ const ActualSearchBar = (props: any) => {
             slotProps={{
                 input: {
                     sx: {
-                        width: '50ch',
+                        minWidth: '40ch',
                         backgroundColor: theme.palette.background.paper,
                         '& .MuiInputBase-input': {
                             padding: '8px 0',
