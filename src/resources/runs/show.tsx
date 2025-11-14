@@ -32,7 +32,6 @@ import { LogsView } from '../../components/LogsView';
 import { StopButton } from './StopButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../components/MetadataField';
-import { SourceCodeTab } from '../functions/show';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -51,6 +50,8 @@ import { Inputs, Outputs } from './tabs/inputOutputs';
 import { CloneButton } from './CloneButton';
 import ComputeResources from './tabs/computeResources';
 import { ClientButton } from '../../pages/services/ClientButton';
+import { SourceCodeView } from '../../components/SourceCodeView';
+import { getFunctionUiSpec } from '../functions/types';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -226,11 +227,12 @@ export const RunShowComponent = () => {
                     maxLines={lineCount[1]}
                 />
             </TabbedShowLayout.Tab>
-            {record?.spec?.source && schema && (
+            {record?.spec?.source && schema?.schema && (
                 <TabbedShowLayout.Tab label={'fields.code'}>
-                    <SourceCodeTab
+                    <SourceCodeView
                         sourceCode={record.spec.source}
-                        spec={schema}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec()}
                     />
                 </TabbedShowLayout.Tab>
             )}

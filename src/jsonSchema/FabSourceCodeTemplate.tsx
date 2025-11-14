@@ -6,7 +6,7 @@ import {
     ObjectFieldTemplateProps,
     ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
-import { Box, Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -77,41 +77,33 @@ export const FabSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     );
 
     return (
-        <>
-            <div style={{ display: 'flex', width: '100%' }}>
-                <Grid container spacing={2}>
-                    <Grid size={12} key={'sctw-0'}>
-                        <Stack spacing={2}>
-                            <Box>
-                                <div style={{ width: '100%' }} key={'lang'}>
-                                    {source.prop.content}
-                                </div>
-                            </Box>
-                        </Stack>
-                    </Grid>
-                    <Grid size={12} key={'sctw-1'}>
-                        <Stack spacing={2} direction={'row'}>
-                            <Box>{clientapp.prop.content}</Box>
-                            <Box>{serverapp.prop.content}</Box>
-                        </Stack>
-                    </Grid>
-
-                    <Grid size={12} key={'sctw-2-c'}>
-                        {clientbase64.prop.content}
-                    </Grid>
-                    <Grid size={12} key={'sctw-2-s'}>
-                        {serverbase64.prop.content}
-                    </Grid>
-
-                    {rest.map((element, index) => (
-                        <Grid size={12} key={'sctw-r-' + index}>
-                            <div style={{ width: '100%' }} key={index}>
-                                {element.content}
-                            </div>
-                        </Grid>
-                    ))}
+        <div style={{ display: 'flex', width: '100%' }}>
+            <Grid container spacing={2}>
+                <Grid size={12} key={'sctw-0'}>
+                    {source.prop.content}
                 </Grid>
-            </div>
-        </>
+                <Grid size={6} key={'sctw-1-client'}>
+                    {clientapp.prop.content}
+                </Grid>
+                <Grid size={6} key={'sctw-1-server'}>
+                    {serverapp.prop.content}
+                </Grid>
+
+                <Grid size={12} key={'sctw-2-c'}>
+                    {clientbase64.prop.content}
+                </Grid>
+                <Grid size={12} key={'sctw-2-s'}>
+                    {serverbase64.prop.content}
+                </Grid>
+
+                {rest.map((element, index) => (
+                    <Grid size={12} key={'sctw-r-' + index}>
+                        <div style={{ width: '100%' }} key={index}>
+                            {element.content}
+                        </div>
+                    </Grid>
+                ))}
+            </Grid>
+        </div>
     );
 };

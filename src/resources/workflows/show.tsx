@@ -33,6 +33,7 @@ import { RunStateBadge } from '../../components/RunStateBadge';
 import { WorkflowTaskShow } from './tasks';
 import { countLines } from '../../common/helper';
 import { SourceCodeView } from '../../components/SourceCodeView';
+import { getWorkflowUiSpec } from './types';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -40,7 +41,7 @@ const ShowComponent = () => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
+    const [schema, setSchema] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const initializing = useRef<boolean>(false);
@@ -85,7 +86,7 @@ const ShowComponent = () => {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
-                setSpec(s);
+                setSchema(s);
             });
 
             Promise.all([
@@ -190,7 +191,7 @@ const ShowComponent = () => {
 
                 <MetadataField />
             </TabbedShowLayout.Tab>
-            {spec && (
+            {schema && (
                 <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
@@ -205,13 +206,17 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
 
-            {sourceCode && (
+            {sourceCode && schema?.schema && (
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeView sourceCode={sourceCode} />
+                    <SourceCodeView
+                        sourceCode={sourceCode}
+                        schema={schema.schema}
+                        uiSchema={getWorkflowUiSpec(record.kind)}
+                    />
                 </TabbedShowLayout.Tab>
             )}
 
@@ -219,12 +224,6 @@ const ShowComponent = () => {
                 <TabbedShowLayout.Tab
                     label={
                         <Stack direction="row" sx={{ alignItems: 'center' }}>
-                            {/* <RunStateBadge
-                                sx={{ marginRight: '9px' }}
-                                getListFilters={{
-                                    task: `${task.kind}://${task.project}/${task.id}`,
-                                }}
-                            /> */}
                             {translate(
                                 'resources.tasks.kinds.' + getAction(task)
                             )}

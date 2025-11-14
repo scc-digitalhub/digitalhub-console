@@ -2,13 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { JsonSchemaField } from '../../components/JsonSchema';
 import { Box, Container, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
     Labeled,
     LoadingIndicator,
-    RecordContextProvider,
     ShowBase,
     ShowView,
     TabbedShowLayout,
@@ -32,6 +30,7 @@ import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
 import { countLines } from '../../common/helper';
+import { SourceCodeView } from '../../components/SourceCodeView';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -40,7 +39,7 @@ const ShowComponent = () => {
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
 
-    const [spec, setSpec] = useState<any>();
+    const [schema, setSchema] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const [fabSourceCode, setFabSourceCode] = useState<any>();
@@ -89,7 +88,7 @@ const ShowComponent = () => {
             cur.current = record;
 
             schemaProvider.get(resource, record.kind).then(s => {
-                setSpec(s);
+                setSchema(s);
             });
 
             Promise.all([
@@ -193,7 +192,7 @@ const ShowComponent = () => {
 
                 <MetadataField />
             </TabbedShowLayout.Tab>
-            {spec && (
+            {schema && (
                 <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
@@ -208,22 +207,30 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
 
-            {sourceCode && (
+            {sourceCode && schema?.schema && (
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeTab sourceCode={sourceCode} spec={spec} />
+                    <SourceCodeView
+                        sourceCode={sourceCode}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
                 </TabbedShowLayout.Tab>
             )}
-            {fabSourceCode && (
+            {fabSourceCode && schema?.schema && (
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeTab fabSourceCode={fabSourceCode} spec={spec} />
+                    <SourceCodeView
+                        fabSourceCode={fabSourceCode}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
                 </TabbedShowLayout.Tab>
             )}
 
@@ -237,41 +244,6 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             ))}
         </TabbedShowLayout>
-    );
-};
-
-export const SourceCodeTab = (props: {
-    sourceCode?: any;
-    fabSourceCode?: any;
-    spec: any;
-}) => {
-    const { sourceCode, fabSourceCode, spec } = props;
-    const record = useRecordContext();
-    const uiSchema = getFunctionUiSpec(record?.kind) || {};
-    const values = { spec: { source: sourceCode, fab_source: fabSourceCode } };
-    const schema = spec ? JSON.parse(JSON.stringify(spec.schema)) : {};
-    if ('properties' in schema) {
-        if (sourceCode) {
-            schema.properties = { source: spec?.schema.properties.source };
-        }
-        if (fabSourceCode) {
-            schema.properties = {
-                fab_source: spec?.schema.properties.fab_source,
-            };
-        }
-    }
-
-    return (
-        <RecordContextProvider value={values}>
-            {spec && (
-                <JsonSchemaField
-                    source="spec"
-                    schema={{ ...schema, title: '' }}
-                    uiSchema={uiSchema}
-                    label={false}
-                />
-            )}
-        </RecordContextProvider>
     );
 };
 

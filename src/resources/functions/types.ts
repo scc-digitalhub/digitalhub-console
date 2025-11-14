@@ -9,7 +9,7 @@ import {
 } from '../../jsonSchema/SourceCodeTemplate';
 
 //TODO cleanup implementation and properly check for source definition in schema!
-export const getFunctionUiSpec = (kind: string | undefined) => {
+export const getFunctionUiSpec = (kind?: string) => {
     return {
         source: {
             'ui:ObjectFieldTemplate': SourceCodeTemplate,

@@ -1,45 +1,50 @@
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { Box, Stack } from '@mui/system';
-import { Labeled, RecordContextProvider, TextField } from 'react-admin';
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
 
-export const SourceCodeView = (props: { sourceCode: any }) => {
-    const { sourceCode } = props;
+import { RecordContextProvider } from 'react-admin';
+import { JsonSchemaField } from './JsonSchema';
 
-    const values = {
-        ...{ sourceCode },
-        source: sourceCode.source || '-',
-        lang: sourceCode.lang || 'unknown',
-    };
-    let lineCount = 1;
-    if (sourceCode?.base64) {
-        lineCount = atob(sourceCode.base64).split('\n').length;
+export const SourceCodeView = (props: {
+    sourceCode?: any;
+    fabSourceCode?: any;
+    schema: any;
+    uiSchema: any;
+}) => {
+    const {
+        sourceCode,
+        fabSourceCode,
+        schema: schemaFromProps,
+        uiSchema,
+    } = props;
+    const values = { spec: { source: sourceCode, fab_source: fabSourceCode } };
+    const schema = schemaFromProps
+        ? JSON.parse(JSON.stringify(schemaFromProps))
+        : {};
+
+    if ('properties' in schema) {
+        if (sourceCode) {
+            schema.properties = {
+                source: schemaFromProps?.properties.source,
+            };
+        }
+        if (fabSourceCode) {
+            schema.properties = {
+                fab_source: schemaFromProps?.properties.fab_source,
+            };
+        }
     }
 
     return (
         <RecordContextProvider value={values}>
-            <Stack direction={'row'} spacing={3} color={'gray'}>
-                <Labeled>
-                    <TextField source="lang" record={values} />
-                </Labeled>
-
-                <Labeled>
-                    <TextField source="source" record={values} />
-                </Labeled>
-            </Stack>
-            <Box sx={{ pt: 2 }}>
-                <Box sx={{ pt: 2 }}>
-                    <Labeled label="fields.code">
-                        <AceEditorField
-                            mode={sourceCode.lang}
-                            source="sourceCode.base64"
-                            theme="monokai"
-                            parse={atob}
-                            minLines={lineCount}
-                            maxLines={Math.max(25, lineCount)}
-                        />
-                    </Labeled>
-                </Box>
-            </Box>
+            {schemaFromProps && (
+                <JsonSchemaField
+                    source="spec"
+                    schema={{ ...schema, title: '' }}
+                    uiSchema={uiSchema}
+                    label={false}
+                />
+            )}
         </RecordContextProvider>
     );
 };
