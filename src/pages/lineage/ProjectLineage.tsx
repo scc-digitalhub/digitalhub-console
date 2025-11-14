@@ -173,6 +173,7 @@ const Lineage = () => {
                     expandable={false}
                     addRecordNode={false}
                     viewportHeight="500px"
+                    filterRelationships={r => r.type !== 'run_of'}
                 />
             ) : (
                 <NoContent message={'messages.lineage.noLineage'} />

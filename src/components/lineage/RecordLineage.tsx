@@ -24,6 +24,7 @@ export const RecordLineage = (props: {
     addRecordNode?: boolean;
     viewportHeight?: string;
     viewportWidth?: string;
+    filterRelationships?: (rel: any) => boolean;
 }) => {
     const {
         relationships: relFromProps = [],
@@ -32,15 +33,23 @@ export const RecordLineage = (props: {
         addRecordNode = true,
         viewportHeight,
         viewportWidth,
+        filterRelationships: filterFromProps,
     } = props;
+    const filterRelationships = useCallback(
+        r => {
+            if (filterFromProps) return filterFromProps(r);
+            else return true;
+        },
+        [filterFromProps]
+    );
     const [relationships, setRelationships] = useState<Relationship[]>(
-        relFromProps || []
+        relFromProps.filter(filterRelationships) || []
     );
 
     useEffect(() => {
         //update relationships if new ones are passed from parent
-        setRelationships(relFromProps);
-    }, [relFromProps]);
+        setRelationships(relFromProps.filter(filterRelationships));
+    }, [filterRelationships, relFromProps]);
 
     const translate = useTranslate();
     const dataProvider = useDataProvider();
@@ -79,6 +88,7 @@ export const RecordLineage = (props: {
                         if (data?.lineage) {
                             //extract requested side from list of rels
                             const rels = data.lineage
+                                .filter(filterRelationships)
                                 .filter(r => r[as] == key)
                                 .map(exp => ({ ...exp, expands: nodeId }));
                             if (rels.length == 0) {
@@ -128,7 +138,7 @@ export const RecordLineage = (props: {
                     });
             }
         },
-        [dataProvider, notify, root, setRelationships]
+        [dataProvider, filterRelationships, notify, root]
     );
 
     const { nodes, edges } = getNodesAndEdges(

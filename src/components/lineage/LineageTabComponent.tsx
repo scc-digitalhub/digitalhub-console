@@ -71,7 +71,11 @@ export const LineageTabComponent = () => {
                 {translate('pages.lineage.description')}
             </Typography>
             {record && relationships.length !== 0 ? (
-                <RecordLineage relationships={relationships} record={record} />
+                <RecordLineage
+                    relationships={relationships}
+                    record={record}
+                    filterRelationships={r => r.type !== 'run_of'}
+                />
             ) : (
                 <NoContent message={'messages.lineage.noLineage'} />
             )}
