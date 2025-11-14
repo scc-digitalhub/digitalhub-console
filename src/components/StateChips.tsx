@@ -17,8 +17,9 @@ export const StateChips = (props: {
     source: string;
     label?: string;
     sortable?: boolean;
+    size?: 'medium' | 'small';
 }) => {
-    const { source, ...rest } = props;
+    const { source, size = 'medium', ...rest } = props;
     const translate = useTranslate();
     const record = useRecordContext(rest);
     const value = get(record, source)?.toString().toUpperCase();
@@ -30,7 +31,14 @@ export const StateChips = (props: {
         value: translate('states.' + value.toLowerCase()).toUpperCase(),
     };
 
-    return <ChipField record={r} source={'value'} color={StateColors[value]} />;
+    return (
+        <ChipField
+            record={r}
+            source="value"
+            color={StateColors[value]}
+            size={size}
+        />
+    );
 };
 
 export enum StateColors {

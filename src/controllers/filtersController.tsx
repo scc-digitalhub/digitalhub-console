@@ -64,7 +64,10 @@ export const useGetFilters = (): GetFiltersFunction => {
 
     const selectProps = {
         alwaysOn: true,
-        sx: { '& .RaSelectInput-input': { margin: '0px' } },
+        sx: {
+            '& .RaSelectInput-input': { margin: '0px' },
+            '& .MuiChip-root': { height: '20px' },
+        },
     };
 
     const sortByTranslation = (a: any, b: any, field = 'name') => {
@@ -109,6 +112,7 @@ export const useGetFilters = (): GetFiltersFunction => {
                                 record={choice}
                                 source="id"
                                 label="name"
+                                size="small"
                             />
                         );
                     }}
