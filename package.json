@@ -65,6 +65,7 @@
         "@mui/x-tree-view": "^8.0.0",
         "@react-spring/web": "^10.0.1",
         "@stomp/stompjs": "^7.0.0",
+        "@tailwindcss/cli": "^4.1.17",
         "@uppy/react": "^4.2.3",
         "@wtfcode/byte-converter": "^2.0.8",
         "@xyflow/react": "^12.3.1",
@@ -73,6 +74,8 @@
         "html-to-image": "1.11.11",
         "k8s-resource-parser": "^0.2.2",
         "mui-chips-input": "^7.0.0",
+        "reablocks": "^10.0.0-alpha.10",
+        "reachat": "^2.1.0-alpha.5",
         "react": "^18.2.0",
         "react-ace": "^11.0.1",
         "react-admin": "5.11.4",
@@ -83,6 +86,7 @@
         "react-router": "^7.1.1",
         "react-router-dom": "^7.1.1",
         "react-syntax-highlighter": "^15.5.0",
+        "tailwindcss": "^4.1.17",
         "uppy": "^4.15.0"
     },
     "devDependencies": {
