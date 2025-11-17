@@ -130,7 +130,8 @@ import { StoreResetter } from './components/StoreResetter';
 import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { HttpClient } from './pages/services/client';
+import { ThemeProvider, theme as reatheme } from 'reablocks';
+import { ReaChat } from './components/Chat';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -222,6 +223,16 @@ const CoreApp = () => {
                                                     element={<SearchList />}
                                                 />
                                             )}
+                                            <Route
+                                                path="/reachat"
+                                                element={
+                                                    <ThemeProvider
+                                                        theme={reatheme}
+                                                    >
+                                                        <ReaChat />
+                                                    </ThemeProvider>
+                                                }
+                                            />
                                         </CustomRoutes>
                                     </AdminUI>
                                 </UploadStatusContextProvider>
