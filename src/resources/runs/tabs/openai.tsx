@@ -76,7 +76,11 @@ export const OpenAIDetails = ({ record }: OpenAIDetailsProps) => {
                             label={`${translate(
                                 'fields.kubeai.replicas.ready.title'
                             )}: ${modelDetails?.status?.replicas?.ready ?? 0}`}
-                            color="success"
+                            color={
+                                modelDetails?.status?.replicas?.ready > 0
+                                    ? 'success'
+                                    : 'default'
+                            }
                             size="small"
                         />
                     </Stack>
