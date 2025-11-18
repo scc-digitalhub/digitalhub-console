@@ -130,8 +130,7 @@ import { StoreResetter } from './components/StoreResetter';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
 import { FileContextProvider } from './files/FileContextProvider';
-import { ThemeProvider, theme as reatheme } from 'reablocks';
-import { ReaChat } from './components/Chat';
+import { ReaChat } from './components/chat/Chat';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -227,13 +226,7 @@ const CoreApp = () => {
                                             )}
                                             <Route
                                                 path="/reachat"
-                                                element={
-                                                    <ThemeProvider
-                                                        theme={reatheme}
-                                                    >
-                                                        <ReaChat />
-                                                    </ThemeProvider>
-                                                }
+                                                element={<ReaChat />}
                                             />
                                         </CustomRoutes>
                                     </AdminUI>
