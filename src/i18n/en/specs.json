@@ -210,13 +210,21 @@
         "description": "KubeAI model serving",
         "title": "KubeAI"
     },
-    "kubeai+serve": {
-        "description": "KubeAI serve task definition",
-        "title": "KubeAI serve task"
+    "kubeai-text+serve": {
+        "description": "KubeAI text model serve task definition",
+        "title": "KubeAI text model serve task"
     },
-    "kubeai+serve:run": {
-        "description": "KubeAI serve task definition",
-        "title": "KubeAI serve task"
+    "kubeai-text+serve:run": {
+        "description": "KubeAI text model serve task definition",
+        "title": "KubeAI text model serve task"
+    },
+    "kubeai-stt+serve": {
+        "description": "KubeAI speech-to-text model serve task definition",
+        "title": "KubeAI speech-to-text model serve task"
+    },
+    "kubeai-stt+serve:run": {
+        "description": "KubeAI speech-to-text model serve task definition",
+        "title": "KubeAI speech-to-text model serve task"
     },
     "kubeai+run": {
         "description": "KubeAI serve run definition",
@@ -225,6 +233,30 @@
     "kubeai+run:run": {
         "description": "KubeAI serve run definition",
         "title": "KubeAI Run"
+    },
+    "vllmserve-text+serve": {
+        "description": "vLLM Text model serving task definition",
+        "title": "vLLM Text"
+    },
+    "vllmserve-speech+serve": {
+        "description": "vLLM Speech model serving task definition",
+        "title": "vLLM Speech"
+    },
+    "vllmserve-pooling+serve": {
+        "description": "vLLM Pooling model serving task definition",
+        "title": "vLLM Pooling"
+    },
+    "vllmserve-text+serve:run": {
+        "description": "vLLM Text model serving run definition",
+        "title": "vLLM Text"
+    },
+    "vllmserve-speech+serve:run": {
+        "description": "vLLM Speech model serving run definition",
+        "title": "vLLM Speech"
+    },
+    "vllmserve-pooling+serve:run": {
+        "description": "vLLM Pooling model serving run definition",
+        "title": "vLLM Pooling"
     },
     "metadata": {
         "audit": {

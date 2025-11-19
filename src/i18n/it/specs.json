@@ -210,21 +210,53 @@
         "description": "Esecuzione modello LLM con KubeAI",
         "title": "KubeAI"
     },
-    "kubeai+serve": {
-        "description": "Definizione di KubeAI serve task",
-        "title": "KubeAI serve task"
+    "kubeai-text+serve": { 
+        "description": "",
+        "title": "Definizione di operazione del serving del modello LLM con KubeAI"
     },
-    "kubeai+serve:run": {
-        "description": "Definizione di KubeAI serve task",
-        "title": "KubeAI serve task"
+    "kubeai-text+serve:run": {
+        "description": "",
+        "title": "Definizione di esecuzione modello LLM con KubeAI"
+    },
+    "kubeai-stt+serve": {
+        "description": "",
+        "title": "Definizione di operazione del serving del modello speech-to-text con KubeAI"
+    },
+    "kubeai-stt+serve:run": {
+        "description": "",
+        "title": "Definizione di esecuzione modello speech-to-text con KubeAI"
     },
     "kubeai+run": {
         "description": "Definizione dell'esecuzione di KubeAI serve",
         "title": "Esecuzione di KubeAI serve"
     },
     "kubeai+run:run": {
-        "description": "Definizione dell'esecuzione di KubeAI serve",
-        "title": "Esecuzione di KubeAI serve"
+        "description": "KubeAI serve run definition",
+        "title": "KubeAI Run"
+    },
+    "vllmserve-text+serve": {
+        "description": "Definizione di operazione del serving del modello LLM con vLLM",
+        "title": "Modello LLM con vLLM"
+    },
+    "vllmserve-speech+serve": {
+        "description": "Definizione di operazione del serving del modello speech con vLLM",
+        "title": "Modello speech con vLLM"
+    },
+    "vllmserve-pooling+serve": {
+        "description": "Definizione di operazione del serving del modello pooling con vLLM",
+        "title": "Modello pooling con vLLM"
+    },
+    "vllmserve-text+serve:run": {
+        "description": "Definizione di esecuzione del modello LLM con vLLM",
+        "title": "Modello LLM con vLLM"
+    },
+    "vllmserve-speech+serve:run": {
+        "description": "Definizione di esecuzione del modello speech con vLLM",
+        "title": "Modello speech con vLLM"
+    },
+    "vllmserve-pooling+serve:run": {
+        "description": "Definizione di esecuzione del modello pooling con vLLM",
+        "title": "Modello pooling con vLLM"
     },
     "metadata": {
         "audit": {

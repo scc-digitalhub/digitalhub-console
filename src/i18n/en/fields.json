@@ -384,6 +384,32 @@
             "title": "Backend server arguments"
         }
     },
+    "vllm" : {
+        "args": {
+            "description": "",
+            "title": "VLLM server arguments"
+        },
+        "adapters": {
+            "description": "",
+            "title": "LoRA Adapters"
+        },
+        "url": {
+            "description": "URL to the model (s3://, hf://, store://)",
+            "title": "Model URL"
+        },
+        "enableTelemetry": {
+            "description": "",
+            "title": "Enable Telemetry"
+        },
+        "useCpuImage": {
+            "description": "",
+            "title": "Use CPU-only Image"
+        },
+        "storageSpace": {
+            "description": "(e.g., 10Gi)",
+            "title": "Storage Space for Model Caching"
+        }
+    },
     "id": "Id",
     "info": {
         "empty": "No info available",
