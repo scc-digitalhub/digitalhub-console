@@ -208,13 +208,22 @@ const IconResource = () => {
 };
 
 const ResultsHeader = () => {
-    const { params: searchParams } = useSearch();
+    const { params: searchParams, setParams } = useSearch();
     const translate = useTranslate();
     let current: string[] = [];
 
     searchParams.fq?.forEach(sf => {
         current.push(sf.filter);
     });
+
+    const handleDelete = deletedFilter => {
+        setParams({
+            ...searchParams,
+            fq: searchParams.fq
+                ? searchParams.fq.filter(f => f.filter !== deletedFilter)
+                : [],
+        });
+    };
 
     return (
         <Box sx={{ pb: 2, display: 'flex', alignItems: 'center' }}>
@@ -225,7 +234,12 @@ const ResultsHeader = () => {
             </Box>
             <Box>
                 {current.map((s, i) => (
-                    <Chip label={s} key={i} sx={{ marginLeft: 1 }} />
+                    <Chip
+                        label={s}
+                        key={i}
+                        sx={{ marginLeft: 1 }}
+                        onDelete={() => handleDelete(s)}
+                    />
                 ))}
             </Box>
         </Box>

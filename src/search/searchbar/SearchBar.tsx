@@ -278,10 +278,45 @@ const ActualSearchBar = (props: any) => {
 const FilterBox = (props: any) => {
     const { filters, handleClickSearch, anchorElement, handleCloseFilters } =
         props;
+    const { params: searchParams } = useSearch();
     const [disabled, setDisabled] = useState(true);
-    const formContext = useFormContext();
+    const { getValues, setValue, reset, resetField } = useFormContext();
     const { isDirty } = useFormState();
     const open = Boolean(anchorElement);
+
+    useEffect(() => {
+        //keep form in sync with search params, in case they are cleared programmatically
+        if (Object.keys(searchParams).length === 0) {
+            //either search has been reset or not started
+            return;
+        }
+
+        if (Object.values(searchParams).every(s => isEmpty(s))) {
+            //some values have been set and then cleared
+            reset();
+            return;
+        }
+
+        //only handle fq
+        if (searchParams.fq !== undefined) {
+            const sources: string[] = [];
+            if (Array.isArray(filters)) {
+                filters.forEach(f => {
+                    if (f.props.source) sources.push(f.props.source);
+                });
+            } else {
+                if (filters.props.source) sources.push(filters.props.source);
+            }
+            sources.forEach(s => {
+                const param = searchParams.fq?.find(f => f.field == s);
+                if (param) {
+                    setValue(s, param.value);
+                } else {
+                    resetField(s);
+                }
+            });
+        }
+    }, [JSON.stringify(filters), reset, resetField, searchParams, setValue]);
 
     useEffect(() => {
         if (isDirty) {
@@ -331,7 +366,7 @@ const FilterBox = (props: any) => {
                     aria-controls="search-button"
                     aria-label="search"
                     disabled={disabled}
-                    onClick={() => handleClickSearch(formContext.getValues())}
+                    onClick={() => handleClickSearch(getValues())}
                 >
                     Search
                 </Button>

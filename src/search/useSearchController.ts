@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
     GetListParams,
+    isEmpty,
     ListControllerResult,
     SortPayload,
     useListParams,
@@ -49,7 +50,10 @@ export const useSearchController = ({
             return;
         }
 
-        if (Object.keys(searchParams).length === 0) {
+        if (
+            Object.keys(searchParams).length === 0 ||
+            Object.values(searchParams).every(s => isEmpty(s))
+        ) {
             //set empty response
             setResponse({ total: 0, results: [] });
             isLoading.current = false;
