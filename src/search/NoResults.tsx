@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useTranslate } from 'react-admin';
+import { isEmpty, useTranslate } from 'react-admin';
 import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FlatCard } from '../components/FlatCard';
@@ -12,7 +12,9 @@ import Inbox from '@mui/icons-material/Inbox';
 export const NoResults = () => {
     const translate = useTranslate();
     const { params: searchParams } = useSearch();
-    const noSearchFilters = Object.keys(searchParams).length === 0;
+    const noSearchFilters =
+        Object.keys(searchParams).length === 0 ||
+        Object.values(searchParams).every(s => isEmpty(s));
 
     return (
         <Container maxWidth={false} sx={{ paddingTop: '18px', marginX: 0 }}>

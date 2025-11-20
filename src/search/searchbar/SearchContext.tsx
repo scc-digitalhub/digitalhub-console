@@ -22,7 +22,7 @@ export const useSearch = () => {
     const search = useContext(SearchContext);
     if (search === undefined) {
         throw new Error(
-            'useSearchProvider must be used inside a SearchContext'
+            'useSearch must be used inside a SearchContext'
         );
     }
     return search;
