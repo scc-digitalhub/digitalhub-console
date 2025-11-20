@@ -130,7 +130,7 @@ import { StoreResetter } from './components/StoreResetter';
 import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { ReaChat } from './components/chat/Chat';
+import { ReaChat } from './components/chat/ReaChat';
 
 export const SearchEnabledContext = createContext(false);
 
