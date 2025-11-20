@@ -129,8 +129,8 @@ import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
+import { ReaChat } from './components/chat/ReaChat';
 import { FileContextProvider } from './files/FileContextProvider';
-import { ReaChat } from './components/chat/Chat';
 
 export const SearchEnabledContext = createContext(false);
 
