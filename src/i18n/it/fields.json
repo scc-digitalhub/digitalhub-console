@@ -384,6 +384,32 @@
             "title": "Parametri di Backend server"
         }
     },
+    "vllm" : {
+        "args": {
+            "description": "",
+            "title": "Argomenti del server VLLM"
+        },
+        "adapters": {
+            "description": "",
+            "title": "Adattatori LoRA"
+        },
+        "url": {
+            "description": "URL del modello (s3://, hf://, store://)",
+            "title": "URL del modello"
+        },
+        "enableTelemetry": {
+            "description": "",
+            "title": "Abilita Telemetria"
+        },
+        "useCpuImage": {
+            "description": "",
+            "title": "Usa immagine solo CPU"
+        },
+        "storageSpace": {
+            "description": "(e.g., 10Gi)",
+            "title": "Spazio di archiviazione per il cache del modello"
+        }
+    },
     "id": "Id",
     "info": {
         "empty": "Nessuna informazione disponibile",
