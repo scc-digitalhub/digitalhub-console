@@ -8,18 +8,33 @@ import {
     SessionMessages,
     SessionMessagePanel,
     SessionMessagesHeader,
-    chatTheme as defaultTheme,
-    ChatTheme,
     Session,
     SessionGroups,
     SessionsList,
     NewSessionButton,
 } from 'reachat';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { twMerge } from 'tailwind-merge';
 import './chatTheme.css';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
+import { chatTheme } from './chatTheme';
+import { FilePreviewBanner, StyledAttachIcon } from './ChatFileComponents';
+
+interface FileData {
+    name: string;
+    size: number;
+    type: string;
+    url: string;
+}
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.txt', '.csv', '.png', '.jpg'];
+const API_KEY: string =
+    (globalThis as any).VITE_OPENAI_API_KEY ||
+    import.meta.env.VITE_OPENAI_API_KEY ||
+    '';
+const API_BASE_URL: string =
+    (globalThis as any).VITE_OPENAI_BASE_URL ||
+    import.meta.env.VITE_OPENAI_BASE_URL ||
+    '';
 
 export const ReaChat = () => {
     return (
@@ -29,154 +44,175 @@ export const ReaChat = () => {
     );
 };
 
-const API_KEY: string =
-    (globalThis as any).VITE_OPENAI_API_KEY ||
-    import.meta.env.VITE_OPENAI_API_KEY ||
-    '';
-
-const API_BASE_URL: string =
-    (globalThis as any).VITE_OPENAI_BASE_URL ||
-    import.meta.env.VITE_OPENAI_BASE_URL ||
-    '';
-
 const OpenAIChat = () => {
     const [sessions, setSessions] = useState<Session[]>([]);
-    const [apiKey, setApiKey] = useState(API_KEY);
     const [loading, setIsLoading] = useState<boolean>(false);
-    const openai = useRef<OpenAI | null>(null);
     const [activeSessionId, setActiveSessionId] = useState<string>(
         Date.now().toString()
     );
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const openai = useRef<OpenAI | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     useEffect(() => {
-        if (apiKey) {
+        if (API_KEY) {
             openai.current = new OpenAI({
-                apiKey: apiKey,
+                apiKey: API_KEY,
                 baseURL: API_BASE_URL,
                 dangerouslyAllowBrowser: true, // For demo purposes only
             });
         }
-    }, [apiKey]);
+    }, []);
 
     const handleNewSession = useCallback(() => {
-        const newId = Date.now().toString();
-        setActiveSessionId(newId);
+        setActiveSessionId(Date.now().toString());
+        setSelectedFile(null);
+    }, []);
+
+    const handleSessionSelect = useCallback(
+        (id: string) => setActiveSessionId(id),
+        []
+    );
+
+    const handleDeleteSession = useCallback(
+        (sessionId: string) => {
+            setSessions(prev => prev.filter(s => s.id !== sessionId));
+            if (sessionId === activeSessionId) handleNewSession();
+        },
+        [activeSessionId, handleNewSession]
+    );
+
+    const handleStop = useCallback(() => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+        setIsLoading(false);
     }, []);
 
     const handleNewMessage = useCallback(
         async (message: string) => {
-            const currentSessionId = activeSessionId;
+            if (!openai.current)
+                return console.error('OpenAI client not initialized');
 
-            if (!openai.current) {
-                console.error('OpenAI client not initialized');
-                return;
+            if (!message) return;
+
+            let fileData: FileData | undefined;
+            if (selectedFile) {
+                fileData = {
+                    name: selectedFile.name,
+                    size: selectedFile.size,
+                    type: selectedFile.type,
+                    url: URL.createObjectURL(selectedFile),
+                };
             }
 
             setIsLoading(true);
+            setSelectedFile(null);
+            abortControllerRef.current = new AbortController();
+
+            const currentSessionId = activeSessionId;
             const conversationId = Date.now().toString();
 
-            setSessions(prevSessions => {
-                const sessionIndex = prevSessions.findIndex(
-                    s => s.id === currentSessionId
-                );
+            const updateSessionState = (currentResponse: string) => {
+                setSessions(prevSessions => {
+                    const newConversation = {
+                        title: message,
+                        id: conversationId,
+                        question: message,
+                        response: currentResponse,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        ...(fileData ? { files: [fileData] } : {}),
+                    };
 
-                const newConversation = {
-                    id: conversationId,
-                    question: message,
-                    response: '',
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                };
+                    const sessionIndex = prevSessions.findIndex(
+                        s => s.id === currentSessionId
+                    );
 
-                if (sessionIndex === -1) {
-                    return [
-                        {
-                            id: currentSessionId,
-                            title: message.slice(0, 30),
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                            conversations: [newConversation],
-                        },
-                        ...prevSessions,
-                    ];
-                } else {
+                    if (sessionIndex === -1) {
+                        return [
+                            {
+                                id: currentSessionId,
+                                title: message,
+                                createdAt: new Date(),
+                                updatedAt: new Date(),
+                                conversations: [newConversation],
+                            },
+                            ...prevSessions,
+                        ];
+                    }
+
                     const updatedSessions = [...prevSessions];
+                    const session = updatedSessions[sessionIndex];
+                    const conversations = [...session.conversations];
+                    const convIndex = conversations.findIndex(
+                        c => c.id === conversationId
+                    );
+
+                    if (convIndex === -1) {
+                        conversations.push(newConversation);
+                    } else {
+                        conversations[convIndex] = {
+                            ...conversations[convIndex],
+                            response: currentResponse,
+                            updatedAt: new Date(),
+                        };
+                    }
+
                     updatedSessions[sessionIndex] = {
-                        ...updatedSessions[sessionIndex],
-                        conversations: [
-                            ...updatedSessions[sessionIndex].conversations,
-                            newConversation,
-                        ],
+                        ...session,
+                        conversations,
                     };
                     return updatedSessions;
-                }
-            });
+                });
+            };
+
+            updateSessionState('');
 
             try {
-                const stream = await openai.current.chat.completions.create({
-                    model: 'qwen-test-cpu',
-                    messages: [{ role: 'user', content: message }],
-                    stream: true,
-                });
+                const stream = await openai.current.chat.completions.create(
+                    {
+                        model: 'qwen-test-cpu',
+                        messages: [{ role: 'user', content: message }],
+                        stream: true,
+                    },
+                    {
+                        signal: abortControllerRef.current.signal,
+                    }
+                );
 
                 let accumulatedResponse = '';
+
+                let lastUpdateTime = 0;
+                const THROTTLE_MS = 100; // We update UI max every 100ms
 
                 for await (const chunk of stream) {
                     const content = chunk.choices[0]?.delta?.content || '';
                     accumulatedResponse += content;
 
-                    setSessions(prevSessions => {
-                        const sessionIndex = prevSessions.findIndex(
-                            s => s.id === currentSessionId
-                        );
-                        if (sessionIndex === -1) return prevSessions;
+                    const now = Date.now();
 
-                        const updatedSessions = [...prevSessions];
-                        const session = updatedSessions[sessionIndex];
-                        const conversationIndex =
-                            session.conversations.findIndex(
-                                c => c.id === conversationId
-                            );
-
-                        if (conversationIndex !== -1) {
-                            const newConversations = [...session.conversations];
-                            newConversations[conversationIndex] = {
-                                ...newConversations[conversationIndex],
-                                response: accumulatedResponse,
-                                updatedAt: new Date(),
-                            };
-
-                            updatedSessions[sessionIndex] = {
-                                ...session,
-                                conversations: newConversations,
-                            };
-                        }
-                        return updatedSessions;
-                    });
+                    if (now - lastUpdateTime > THROTTLE_MS) {
+                        updateSessionState(accumulatedResponse);
+                        lastUpdateTime = now;
+                    }
                 }
-            } catch (error) {
-                console.error('Error calling OpenAI API:', error);
+
+                updateSessionState(accumulatedResponse);
+            } catch (error: any) {
+                if (error.name === 'AbortError') {
+                    console.log('Stream stopped by user.');
+                } else {
+                    console.error('Error calling OpenAI API:', error);
+                }
             } finally {
                 setIsLoading(false);
+                abortControllerRef.current = null;
             }
         },
-        [openai, activeSessionId]
+        [activeSessionId, selectedFile]
     );
-    const handleDeleteSession = useCallback(
-        (sessionId: string) => {
-            setSessions(prevSessions =>
-                prevSessions.filter(s => s.id !== sessionId)
-            );
-            if (sessionId === activeSessionId) {
-                handleNewSession();
-            }
-        },
-        [activeSessionId, handleNewSession]
-    );
-
-    const handleSessionSelect = useCallback((sessionId: string) => {
-        setActiveSessionId(sessionId);
-    }, []);
 
     return (
         <Chat
@@ -189,103 +225,29 @@ const OpenAIChat = () => {
             onDeleteSession={handleDeleteSession}
             onNewSession={handleNewSession}
             viewType="console"
+            onFileUpload={setSelectedFile}
+            onStopMessage={handleStop}
         >
             <SessionsList>
                 <NewSessionButton newSessionText="New Chat" />
                 <SessionGroups />
             </SessionsList>
+
             <SessionMessagePanel>
                 <SessionMessagesHeader />
                 <SessionMessages />
-                <ChatInput />
+                {selectedFile && (
+                    <FilePreviewBanner
+                        file={selectedFile}
+                        onRemove={() => setSelectedFile(null)}
+                    />
+                )}
+                <ChatInput
+                    placeholder="Type your message..."
+                    allowedFiles={ALLOWED_EXTENSIONS}
+                    attachIcon={<StyledAttachIcon hasFile={!!selectedFile} />}
+                />
             </SessionMessagePanel>
         </Chat>
     );
-};
-
-const chatTheme: ChatTheme = {
-    ...defaultTheme,
-
-    base: twMerge(
-        defaultTheme.base,
-        'bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden'
-    ),
-
-    sessions: {
-        ...defaultTheme.sessions,
-        console: twMerge(
-            defaultTheme.sessions.console,
-            'bg-gray-50 dark:bg-gray-900 w-[280px] border-r border-gray-200 dark:border-gray-700'
-        ),
-        create: twMerge(
-            defaultTheme.sessions.create,
-            'flex items-center justify-center w-full gap-2 px-4 py-3 mb-4 font-medium text-white transition-all rounded-lg shadow-md bg-[#E0701B] hover:bg-[#cc5f17] hover:shadow-lg active:scale-95 cursor-pointer mx-auto'
-        ),
-        session: {
-            ...defaultTheme.sessions.session,
-            base: twMerge(
-                defaultTheme.sessions.session.base,
-                'rounded-lg px-3 py-3 text-sm font-medium transition-all text-gray-600 mx-2 cursor-pointer',
-                'hover:bg-[#E0701B]/10 '
-            ),
-            active: twMerge(
-                defaultTheme.sessions.session.active,
-                'bg-[#E0701B]/15 border-l-4 border-[#E0701B] shadow-sm'
-            ),
-            delete: 'text-gray-400 hover:text-red-500 p-1',
-        },
-    },
-
-    messages: {
-        ...defaultTheme.messages,
-        base: twMerge(
-            defaultTheme.messages.base,
-            'bg-white dark:bg-gray-900 p-4'
-        ),
-        message: {
-            ...defaultTheme.messages.message,
-            base: twMerge(
-                defaultTheme.messages.message.base,
-                'mb-6 gap-3 max-w-3xl mx-auto w-full'
-            ),
-
-            question: twMerge(
-                defaultTheme.messages.message.question,
-                'bg-[#E0701B] text-white shadow-md rounded-2xl rounded-tr-sm px-5 py-3 text-base leading-relaxed ml-auto max-w-[80%]'
-            ),
-
-            response: twMerge(
-                defaultTheme.messages.message.response,
-                'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm px-5 py-4 mr-auto max-w-[80%] text-base leading-relaxed'
-            ),
-
-            footer: {
-                ...defaultTheme.messages.message.footer,
-                base: 'flex gap-3 mt-2 px-1 text-gray-400',
-                copy: 'hover:text-[#E0701B] transition-colors cursor-pointer',
-                refresh:
-                    'hover:text-[#E0701B] transition-colors cursor-pointer',
-                upvote: 'hover:text-green-600 transition-colors cursor-pointer',
-                downvote: 'hover:text-red-600 transition-colors cursor-pointer',
-            },
-        },
-    },
-
-    input: {
-        ...defaultTheme.input,
-        base: twMerge(
-            defaultTheme.input.base,
-            'bg-white dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-700'
-        ),
-        input: twMerge(
-            defaultTheme.input.input,
-            'bg-white dark:bg-gray-800 text-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all shadow-inner'
-        ),
-        actions: {
-            ...defaultTheme.input.actions,
-            base: 'flex items-center gap-2 ml-3',
-            send: 'bg-[#E0701B] hover:bg-[#cc5f17] text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
-            stop: 'border border-red-500 text-red-500 w-10 h-10 rounded-lg flex items-center justify-center hover:bg-red-50',
-        },
-    },
 };
