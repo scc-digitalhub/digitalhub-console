@@ -33,7 +33,7 @@ export const chatTheme: ChatTheme = {
             ),
             active: twMerge(
                 defaultTheme.sessions.session.active,
-                'bg-[#E0701B]/15 border-l-4 border-[#E0701B] shadow-sm'
+                'bg-[#E0701B]/15 border-l-4 border-[#E0701B] shadow-xs'
             ),
             delete: 'text-gray-400 hover:text-red-500 p-1',
         },
@@ -82,13 +82,13 @@ export const chatTheme: ChatTheme = {
         ),
         input: twMerge(
             defaultTheme.input.input,
-            'bg-white dark:bg-gray-800 text-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all shadow-inner'
+            'bg-white dark:bg-gray-800 text-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-hidden transition-all shadow-inner'
         ),
         actions: {
             ...defaultTheme.input.actions,
             base: 'flex items-center gap-2 ml-3',
-            send: 'bg-[#E0701B] hover:bg-[#cc5f17] text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
-            stop: 'border border-red-500 text-red-500 w-10 h-10 rounded-lg flex items-center justify-center hover:bg-red-50 cursor-pointer',
+            send: 'bg-[#E0701B] hover:bg-[#cc5f17] text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
+            stop: 'border border-red-500 text-red-500 w-12 h-10 rounded-lg flex items-center justify-center hover:bg-red-50 cursor-pointer',
         },
     },
 };
