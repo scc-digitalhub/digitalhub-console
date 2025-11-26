@@ -90,7 +90,8 @@
         "relationships": {
             "consumes": "consumato da",
             "produced_by": "produce",
-            "run_of": "esecuzione di"
+            "run_of": "esecuzione di",
+            "step_of": "step di"
         },
         "title": "Genealogia"
     },

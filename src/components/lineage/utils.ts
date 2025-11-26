@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import dagre from 'dagre';
+import dagre from '@dagrejs/dagre';
 
 import { RaRecord } from 'react-admin';
 import { Node, Edge, Position } from '@xyflow/react';
@@ -11,8 +11,8 @@ import { keyParser } from '../../common/helper';
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-export const NODE_WIDTH = 172;
-export const NODE_HEIGHT = 90;
+export const NODE_WIDTH = 200;
+export const NODE_HEIGHT = 150;
 
 //lineage rel types
 export type Relationship = {
@@ -107,7 +107,7 @@ export const getLayoutedElements = (
     direction = 'LR'
 ): { nodes: Node[]; edges: Edge[] } => {
     const isHorizontal = direction === 'LR';
-    dagreGraph.setGraph({ rankdir: direction });
+    dagreGraph.setGraph({ rankdir: direction, ranksep: 100 });
 
     nodes.forEach(node => {
         dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });

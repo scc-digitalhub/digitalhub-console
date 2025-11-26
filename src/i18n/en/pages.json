@@ -90,7 +90,8 @@
         "relationships": {
             "consumes": "consumed by",
             "produced_by": "produces",
-            "run_of": "run of"
+            "run_of": "run of",
+            "step_of": "step of"
         },
         "title": "Lineage"
     },
