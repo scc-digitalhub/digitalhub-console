@@ -35,7 +35,7 @@ import {
 } from 'react-admin';
 import { Grid, Divider } from '@mui/material';
 
-import dagre from 'dagre';
+import dagre from '@dagrejs/dagre';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
