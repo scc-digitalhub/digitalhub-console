@@ -48,7 +48,9 @@ const RowActions = () => {
             <DeleteWithConfirmButtonByName
                 deleteAll
                 disabled={expanded}
+                askForDeleteAll
                 askForCascade
+                disableDeleteAll
             />
         </RowButtonGroup>
     );

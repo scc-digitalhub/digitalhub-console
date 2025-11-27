@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { BackButton } from '@dslab/ra-back-button';
-import { Box, FormControlLabel, Switch } from '@mui/material';
 import { useState } from 'react';
 import {
     EditButton,
@@ -11,7 +10,6 @@ import {
     useGetList,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -24,10 +22,13 @@ import { useRootSelector } from '@dslab/ra-root-selector';
  * back, edit, download (if the record has a file), inspect, export, delete (with confirm).
  * @returns
  */
-export const ShowToolbar = () => {
+export const ShowToolbar = (props: {
+    askForDeleteAll?: boolean;
+    askForCascade?: boolean;
+}) => {
+    const { askForDeleteAll = true, askForCascade = true } = props;
     const record = useRecordContext();
     const resource = useResourceContext();
-    const translate = useTranslate();
     const { root } = useRootSelector();
     const [checked, setChecked] = useState(false);
     const { data } = useGetList(resource || '', {
@@ -35,10 +36,6 @@ export const ShowToolbar = () => {
         sort: { field: 'created', order: 'DESC' },
         filter: { name: record?.name, versions: 'all' },
     });
-
-    const handleChange = (e: any) => {
-        setChecked(e.target.checked);
-    };
 
     //redirect to list after delete if all versions have been deleted or there is no other version
     const toListAfterDelete = checked || (data && data.length < 2);
@@ -54,30 +51,19 @@ export const ShowToolbar = () => {
         }
     }
 
-    const additionalConfirmContent = (
-        <Box>
-            <FormControlLabel
-                control={<Switch checked={checked} onChange={handleChange} />}
-                label={translate('actions.delete_all_versions')}
-            />
-        </Box>
-    );
-
     return (
         <TopToolbar>
             <BackButton />
             <EditButton style={{ marginLeft: 'auto' }} />
-            {record?.status?.files?.length === 1 && (
-                <DownloadButton />
-            )}
+            {record?.status?.files?.length === 1 && <DownloadButton />}
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
             <DeleteWithConfirmButtonByName
-                additionalContent={additionalConfirmContent}
-                deleteAll={checked}
                 redirect={redirect}
                 titleTranslateOptions={{ id: record?.id }}
-                askForCascade
+                askForDeleteAll={askForDeleteAll}
+                onDeleteAll={value => setChecked(value)}
+                askForCascade={askForCascade}
             />
         </TopToolbar>
     );
