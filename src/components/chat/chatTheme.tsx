@@ -43,8 +43,9 @@ export const chatTheme: ChatTheme = {
         ...defaultTheme.messages,
         base: twMerge(
             defaultTheme.messages.base,
-            'bg-white dark:bg-gray-900 p-4'
+            'bg-white dark:bg-[#0B0B0C] p-4'
         ),
+
         message: {
             ...defaultTheme.messages.message,
             base: twMerge(
@@ -54,22 +55,23 @@ export const chatTheme: ChatTheme = {
 
             question: twMerge(
                 defaultTheme.messages.message.question,
-                'bg-[#E0701B] text-white shadow-md rounded-2xl rounded-tr-sm px-5 py-3 text-base leading-relaxed ml-auto max-w-[80%]'
+                'bg-[#E9E9E980] dark:bg-[#2A2A2C] text-gray-700 dark:text-[#E5E5E7]',
+                'rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm ml-auto max-w-[80%]'
             ),
 
             response: twMerge(
                 defaultTheme.messages.message.response,
-                'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm px-5 py-4 mr-auto max-w-[80%] text-base leading-relaxed'
+                'bg-white dark:bg-[#1E1E20] text-gray-800 dark:text-[#E5E5E7]',
+                'border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm px-5 py-4 mr-auto max-w-[80%]'
             ),
 
             footer: {
                 ...defaultTheme.messages.message.footer,
                 base: 'flex gap-3 mt-2 px-1 text-gray-400',
-                copy: 'hover:text-[#E0701B] transition-colors cursor-pointer',
-                refresh:
-                    'hover:text-[#E0701B] transition-colors cursor-pointer',
-                upvote: 'hover:text-green-600 transition-colors cursor-pointer',
-                downvote: 'hover:text-red-600 transition-colors cursor-pointer',
+                copy: 'hover:text-gray-950 transition-colors cursor-pointer',
+                refresh: 'hover:text-gray-950 transition-colors cursor-pointer',
+                upvote: 'hidden',
+                downvote: 'hidden',
             },
         },
     },
@@ -87,8 +89,8 @@ export const chatTheme: ChatTheme = {
         actions: {
             ...defaultTheme.input.actions,
             base: 'flex items-center gap-2 ml-3',
-            send: 'bg-[#E0701B] hover:bg-[#cc5f17] text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
-            stop: 'border border-red-500 text-red-500 w-12 h-10 rounded-lg flex items-center justify-center hover:bg-red-50 cursor-pointer',
+            send: 'bg-gray-700 hover:bg-[#cc5f17] text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
+            stop: 'bg-red-500 hover:bg-red-600 text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 cursor-pointer',
         },
     },
 };

@@ -29,8 +29,20 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { HttpClient } from './client';
+import { ReaChat } from '../../components/chat/ReaChat';
 
 const defaultIcon = <SignpostIcon />;
+
+export type ClientButtonMode = 'http' | 'chat';
+
+export interface ClientButtonProps<RecordType extends RaRecord = any>
+    extends Omit<FieldProps<RecordType>, 'source'>,
+        Omit<ButtonProps, 'variant'> {
+    icon?: ReactElement;
+    fullWidth?: boolean;
+    maxWidth?: Breakpoint;
+    mode?: ClientButtonMode;
+}
 
 export const ClientButton = (props: ClientButtonProps) => {
     const {
@@ -39,6 +51,7 @@ export const ClientButton = (props: ClientButtonProps) => {
         icon = defaultIcon,
         fullWidth = true,
         maxWidth = 'lg',
+        mode = 'http',
         ...rest
     } = props;
 
@@ -48,6 +61,7 @@ export const ClientButton = (props: ClientButtonProps) => {
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
     const urls: string[] = [];
+
     if (record?.status?.service?.url) {
         urls.push(record.status.service.url);
     }
@@ -59,11 +73,10 @@ export const ClientButton = (props: ClientButtonProps) => {
     const isDisabled =
         rest.disabled ||
         record?.status?.state !== 'RUNNING' ||
-        urls.length === 0;
+        (mode === 'http' && urls.length === 0);
 
     const handleDialogOpen = e => {
         if (isDisabled) return;
-
         setOpen(true);
         e.stopPropagation();
     };
@@ -77,9 +90,37 @@ export const ClientButton = (props: ClientButtonProps) => {
         e.stopPropagation();
     }, []);
 
-    if (!record || !urls) {
+    if (!record) {
         return <></>;
     }
+
+    const renderContent = () => {
+        if (isLoading) return <LoadingIndicator />;
+
+        switch (mode) {
+            case 'chat':
+                return <ReaChat />;
+            case 'http':
+            default:
+                return (
+                    <>
+                        <Typography variant="body2" mb={1}>
+                            {translate('pages.http-client.helperText')}
+                        </Typography>
+                        <HttpClient
+                            urls={urls}
+                            proxy={
+                                '/-/' +
+                                projectId +
+                                '/runs/' +
+                                record.id +
+                                '/proxy'
+                            }
+                        />
+                    </>
+                );
+        }
+    };
 
     return (
         <Fragment>
@@ -88,6 +129,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                 color={color}
                 onClick={handleDialogOpen}
                 disabled={isDisabled}
+                {...rest}
             >
                 {icon}
             </Button>
@@ -120,33 +162,13 @@ export const ClientButton = (props: ClientButtonProps) => {
                         <CloseIcon fontSize="small" />
                     </IconButton>
                 </div>
-
-                <DialogContent>
-                    <Typography variant="body2" mb={1}>
-                        {translate('pages.http-client.helperText')}
-                    </Typography>
-
-                    {isLoading ? (
-                        <LoadingIndicator />
-                    ) : (
-                        <HttpClient
-                            urls={urls}
-                            proxy={
-                                '/-/' +
-                                projectId +
-                                '/runs/' +
-                                record.id +
-                                '/proxy'
-                            }
-                        />
-                    )}
-                </DialogContent>
+                <DialogContent>{renderContent()}</DialogContent>
             </ClientDialog>
         </Fragment>
     );
 };
 
-const ClientDialog = styled(Dialog, {
+export const ClientDialog = styled(Dialog, {
     name: 'RaCreateInDialogButton',
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({
@@ -163,13 +185,3 @@ const ClientDialog = styled(Dialog, {
         height: 'fit-content',
     },
 }));
-
-export type ClientButtonProps<RecordType extends RaRecord = any> = Omit<
-    FieldProps<RecordType>,
-    'source'
-> &
-    ButtonProps & {
-        icon?: ReactElement;
-        fullWidth?: boolean;
-        maxWidth?: Breakpoint;
-    };
