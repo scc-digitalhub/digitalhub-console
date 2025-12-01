@@ -13,9 +13,6 @@ import {
     useTranslate,
     useDataProvider,
     useNotify,
-    DeleteWithConfirmButton,
-    EditButton,
-    TopToolbar,
 } from 'react-admin';
 import { Container, Stack, Typography } from '@mui/material';
 import { MouseEvent } from 'react';
@@ -24,23 +21,11 @@ import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ShowPageTitle } from '../../components/PageTitle';
 import { FlatCard } from '../../components/FlatCard';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
 import { SecretIcon } from './icon';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
 import { IdField } from '../../components/IdField';
-
-const ShowToolbar = () => (
-    <TopToolbar>
-        <BackButton />
-        <EditButton style={{ marginLeft: 'auto' }} />
-        <InspectButton />
-        <ExportRecordButton language="yaml" color="info" />
-        <DeleteWithConfirmButton />
-    </TopToolbar>
-);
+import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 
 const ShowComponent = () => {
     const translate = useTranslate();
@@ -161,7 +146,12 @@ export const SecretShow = () => {
                 <>
                     <ShowPageTitle icon={<SecretIcon fontSize={'large'} />} />
                     <ShowView
-                        actions={<ShowToolbar />}
+                        actions={
+                            <ShowToolbar
+                                askForDeleteAll={false}
+                                askForCascade={false}
+                            />
+                        }
                         sx={{
                             width: '100%',
                         }}
