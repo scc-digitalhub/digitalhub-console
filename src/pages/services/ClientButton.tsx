@@ -14,7 +14,14 @@ import {
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
-import { Fragment, ReactElement, useCallback, useState } from 'react';
+import {
+    Fragment,
+    ReactElement,
+    useCallback,
+    useState,
+    useEffect,
+    SyntheticEvent,
+} from 'react';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -26,14 +33,22 @@ import {
     IconButton,
     styled,
     Typography,
+    Tab,
+    Tabs,
+    Box,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
+import { HealthChips } from '../../components/HealthChips';
 import { HttpClient } from './client';
 import { ReaChat } from '../../components/chat/ReaChat';
 
 const defaultIcon = <SignpostIcon />;
 
-export type ClientButtonMode = 'http' | 'chat';
+export type ClientButtonMode = 'http' | 'chat' | 'v2';
+interface HealthStatus {
+    ready: boolean;
+    live: boolean;
+}
 
 export interface ClientButtonProps<RecordType extends RaRecord = any>
     extends Omit<FieldProps<RecordType>, 'source'>,
@@ -42,6 +57,8 @@ export interface ClientButtonProps<RecordType extends RaRecord = any>
     fullWidth?: boolean;
     maxWidth?: Breakpoint;
     mode?: ClientButtonMode;
+    showHealthChecks?: boolean;
+    showTabs?: boolean;
 }
 
 export const ClientButton = (props: ClientButtonProps) => {
@@ -52,12 +69,18 @@ export const ClientButton = (props: ClientButtonProps) => {
         fullWidth = true,
         maxWidth = 'lg',
         mode = 'http',
+        showHealthChecks = mode === 'v2',
+        showTabs = mode === 'v2',
         ...rest
     } = props;
 
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
-
+    const [activeTab, setActiveTab] = useState(0);
+    const [healthStatus, setHealthStatus] = useState<HealthStatus>({
+        ready: false,
+        live: false,
+    });
     const record = useRecordContext(props);
     const { root: projectId } = useRootSelector();
     const urls: string[] = [];
@@ -68,27 +91,69 @@ export const ClientButton = (props: ClientButtonProps) => {
     if (record?.status?.service?.urls) {
         urls.push(...record.status.service.urls);
     }
+    const modelName = record?.status?.openai?.model;
+    const proxy = '/-/' + projectId + '/runs/' + record?.id + '/proxy';
 
     const isLoading = !record;
     const isDisabled =
         rest.disabled ||
         record?.status?.state !== 'RUNNING' ||
-        (mode === 'http' && urls.length === 0);
+        (mode !== 'chat' && urls.length === 0);
 
-    const handleDialogOpen = e => {
+    const handleDialogOpen = (e: SyntheticEvent) => {
         if (isDisabled) return;
         setOpen(true);
         e.stopPropagation();
     };
 
-    const handleDialogClose = e => {
+    const handleDialogClose = (e: SyntheticEvent) => {
         e.stopPropagation();
         setOpen(false);
+        setActiveTab(0);
+        setHealthStatus({ ready: false, live: false });
     };
 
-    const handleClick = useCallback(e => {
+    const handleClick = useCallback((e: SyntheticEvent) => {
         e.stopPropagation();
     }, []);
+
+    const handleTabChange = (event: SyntheticEvent, newValue: number) => {
+        setActiveTab(newValue);
+    };
+
+    useEffect(() => {
+        const base = urls[0];
+        if (!open || !base) return;
+        // DEBUG: both health flags true for testing
+        // setHealthStatus({ ready: true, live: true });
+        // return;
+
+        const ctrl = new AbortController();
+
+        const check = (path, key) =>
+            fetch(`${base}${path}`, { signal: ctrl.signal })
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => d?.[key] === true)
+                .catch(() => false);
+
+        (async () => {
+            setHealthStatus({ ready: false, live: false });
+
+            const isReady = await check('/v2/health/ready', 'ready');
+            if (ctrl.signal.aborted) return;
+
+            if (!isReady) {
+                setHealthStatus({ ready: false, live: false });
+            } else {
+                setHealthStatus({ ready: true, live: false });
+                const isLive = await check('/v2/health/live', 'live');
+                if (!ctrl.signal.aborted)
+                    setHealthStatus({ ready: true, live: isLive });
+            }
+        })();
+
+        return () => ctrl.abort();
+    }, [open]);
 
     if (!record) {
         return <></>;
@@ -100,6 +165,79 @@ export const ClientButton = (props: ClientButtonProps) => {
         switch (mode) {
             case 'chat':
                 return <ReaChat />;
+
+            case 'v2': {
+                if (!showTabs) {
+                    return (
+                        <>
+                            <Typography variant="body2" mb={1}>
+                                {translate('pages.http-client.helperText')}
+                            </Typography>
+                            <HttpClient urls={urls} proxy={proxy} />
+                        </>
+                    );
+                }
+                const showTabsContent =
+                    showTabs &&
+                    (!showHealthChecks || healthStatus.live === true);
+
+                return (
+                    <>
+                        <Typography variant="body2" mb={1}>
+                            {translate('pages.http-client.helperText')}
+                        </Typography>
+
+                        {showHealthChecks && (
+                            <HealthChips
+                                ready={healthStatus.ready}
+                                live={healthStatus.live}
+                            />
+                        )}
+
+                        {showTabsContent && (
+                            <>
+                                <Tabs
+                                    value={activeTab}
+                                    onChange={handleTabChange}
+                                    sx={{ mb: 2 }}
+                                >
+                                    <Tab label="Inference" />
+                                    <Tab label="Metadata" />
+                                </Tabs>
+
+                                {activeTab === 0 && (
+                                    <Box>
+                                        <HttpClient
+                                            urls={urls}
+                                            proxy={proxy}
+                                            fixedMethod="POST"
+                                            fixedUrl={
+                                                record.status.service.url +
+                                                `/v2/models/${modelName}/infer`
+                                            }
+                                            fixedContentType="application/json"
+                                            showRequestBody={true}
+                                        />
+                                    </Box>
+                                )}
+
+                                {activeTab === 1 && (
+                                    <HttpClient
+                                        urls={urls}
+                                        proxy={proxy}
+                                        fixedMethod="GET"
+                                        fixedUrl={
+                                            record.status.service.url +
+                                            `/v2/models/${modelName}`
+                                        }
+                                    />
+                                )}
+                            </>
+                        )}
+                    </>
+                );
+            }
+
             case 'http':
             default:
                 return (
@@ -107,16 +245,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                         <Typography variant="body2" mb={1}>
                             {translate('pages.http-client.helperText')}
                         </Typography>
-                        <HttpClient
-                            urls={urls}
-                            proxy={
-                                '/-/' +
-                                projectId +
-                                '/runs/' +
-                                record.id +
-                                '/proxy'
-                            }
-                        />
+                        <HttpClient urls={urls} proxy={proxy} />
                     </>
                 );
         }
@@ -168,7 +297,7 @@ export const ClientButton = (props: ClientButtonProps) => {
     );
 };
 
-export const ClientDialog = styled(Dialog, {
+const ClientDialog = styled(Dialog, {
     name: 'RaCreateInDialogButton',
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme }) => ({

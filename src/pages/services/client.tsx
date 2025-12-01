@@ -34,27 +34,50 @@ import {
 } from 'react-admin';
 import { JSONTree } from 'react-json-tree';
 
-export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
-    const { proxy: proxyUrl = '/proxy', urls: availableUrls } = props;
+interface HttpClientProps {
+    proxy?: string;
+    urls: string[];
+    fixedMethod?: string;
+    fixedUrl?: string;
+    fixedContentType?: string;
+    showRequestBody?: boolean;
+}
+
+export const HttpClient = (props: HttpClientProps) => {
+    const {
+        proxy: proxyUrl = '/proxy',
+        urls: availableUrls,
+        fixedMethod,
+        fixedUrl,
+        fixedContentType,
+        showRequestBody = true,
+    } = props;
+
     const dataProvider = useDataProvider();
     const translate = useTranslate();
-    const [method, setMethod] = useState('GET');
-    const [url, setUrl] = useState(availableUrls[0] || '');
+    const [method, setMethod] = useState(fixedMethod || 'GET');
+    const [url, setUrl] = useState(fixedUrl || availableUrls[0] || '');
     const [body, setBody] = useState('');
     const [headers, setHeaders] = useState([{ key: '', value: '' }]);
-    const [contentType, setContentType] = useState('application/json');
+    const [contentType, setContentType] = useState(
+        fixedContentType || 'application/json'
+    );
     const [response, setResponse] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
     const [history, setHistory] = useState<any[]>([]);
 
-    const handleHeaderChange = (index, field, value) => {
+    const handleHeaderChange = (
+        index: number,
+        field: string,
+        value: string
+    ) => {
         const updated = [...headers];
         updated[index][field] = value;
         setHeaders(updated);
     };
     const addHeader = () => setHeaders([...headers, { key: '', value: '' }]);
 
-    const removeHeader = index => {
+    const removeHeader = (index: number) => {
         setHeaders(headers.filter((_, i) => i !== index));
     };
 
@@ -65,11 +88,6 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
         setResponse(null);
 
         try {
-            // const customHeaders = headers.reduce((acc, h) => {
-            //     if (h.key.trim()) acc[h.key] = h.value;
-            //     return acc;
-            // }, {});
-
             const fullHeaders = new Headers({
                 'Content-Type': 'application/json',
             });
@@ -152,13 +170,16 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
         }
     };
 
-    const loadHistory = entry => {
-        setMethod(entry.method);
-        setUrl(entry.url);
+    const loadHistory = (entry: any) => {
+        if (!fixedMethod) setMethod(entry.method);
+        if (!fixedUrl) setUrl(entry.url);
         setHeaders(entry.headers);
         setBody(entry.body);
-        setContentType(entry.contentType);
+        if (!fixedContentType) setContentType(entry.contentType);
     };
+
+    const shouldShowRequestBody =
+        showRequestBody && ['POST', 'PUT', 'PATCH'].includes(method);
 
     return (
         <>
@@ -210,41 +231,64 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                         marginBottom: '16px',
                     }}
                 >
-                    <TextField
-                        select
-                        value={method}
-                        onChange={e => setMethod(e.target.value)}
-                        sx={{ width: 120 }}
-                        label="Method"
-                        size="small"
-                    >
-                        {['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map(m => (
-                            <MenuItem key={m} value={m}>
-                                {m}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <Autocomplete
-                        freeSolo
-                        options={availableUrls}
-                        value={url}
-                        onChange={(event, newValue) => {
-                            setUrl(newValue || '');
-                        }}
-                        onInputChange={(event, newInputValue) => {
-                            setUrl(newInputValue);
-                        }}
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                label={translate(
-                                    'pages.http-client.requestUrl'
-                                )}
-                                size="small"
-                                fullWidth
-                            />
-                        )}
-                    />
+                    {fixedMethod ? (
+                        <TextField
+                            value={fixedMethod}
+                            disabled
+                            sx={{ width: 120 }}
+                            label="Method"
+                            size="small"
+                        />
+                    ) : (
+                        <TextField
+                            select
+                            value={method}
+                            onChange={e => setMethod(e.target.value)}
+                            sx={{ width: 120 }}
+                            label="Method"
+                            size="small"
+                        >
+                            {['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map(
+                                m => (
+                                    <MenuItem key={m} value={m}>
+                                        {m}
+                                    </MenuItem>
+                                )
+                            )}
+                        </TextField>
+                    )}
+
+                    {fixedUrl ? (
+                        <TextField
+                            value={fixedUrl}
+                            disabled
+                            label={translate('pages.http-client.requestUrl')}
+                            size="small"
+                            fullWidth
+                        />
+                    ) : (
+                        <Autocomplete
+                            freeSolo
+                            options={availableUrls}
+                            value={url}
+                            onChange={(event, newValue) => {
+                                setUrl(newValue || '');
+                            }}
+                            onInputChange={(event, newInputValue) => {
+                                setUrl(newInputValue);
+                            }}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    label={translate(
+                                        'pages.http-client.requestUrl'
+                                    )}
+                                    size="small"
+                                    fullWidth
+                                />
+                            )}
+                        />
+                    )}
                     <Button
                         variant="contained"
                         onClick={sendRequest}
@@ -332,28 +376,38 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                     </AccordionDetails>
                 </Accordion>
 
-                {/* Request Body + Content-Type Selector */}
-                {['POST', 'PUT', 'PATCH'].includes(method) && (
+                {/* Request Body Section */}
+                {shouldShowRequestBody && (
                     <>
-                        <TextField
-                            select
-                            label="Content-Type"
-                            value={contentType}
-                            onChange={e => setContentType(e.target.value)}
-                            sx={{ mt: 2, mb: 2 }}
-                            size="small"
-                        >
-                            <MenuItem value="application/json">
-                                {translate(
-                                    'pages.http-client.contentType.appjson'
-                                )}
-                            </MenuItem>
-                            <MenuItem value="text/plain">
-                                {translate(
-                                    'pages.http-client.contentType.textplain'
-                                )}
-                            </MenuItem>
-                        </TextField>
+                        {fixedContentType ? (
+                            <TextField
+                                label="Content-Type"
+                                value={fixedContentType}
+                                disabled
+                                sx={{ mt: 2, mb: 2 }}
+                                size="small"
+                            />
+                        ) : (
+                            <TextField
+                                select
+                                label="Content-Type"
+                                value={contentType}
+                                onChange={e => setContentType(e.target.value)}
+                                sx={{ mt: 2, mb: 2 }}
+                                size="small"
+                            >
+                                <MenuItem value="application/json">
+                                    {translate(
+                                        'pages.http-client.contentType.appjson'
+                                    )}
+                                </MenuItem>
+                                <MenuItem value="text/plain">
+                                    {translate(
+                                        'pages.http-client.contentType.textplain'
+                                    )}
+                                </MenuItem>
+                            </TextField>
+                        )}
                         <TextField
                             label={translate('pages.http-client.requestBody')}
                             multiline
@@ -375,8 +429,50 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                     <Typography variant="h6" mt={2}>
                         {translate('pages.http-client.response')}
                     </Typography>
-
                     <TabbedShowLayout syncWithLocation={false}>
+                        {typeof response?.body === 'object' && (
+                            <TabbedShowLayout.Tab
+                                label={translate('fields.preview')}
+                            >
+                                <Labeled
+                                    label={translate(
+                                        'pages.http-client.headers'
+                                    )}
+                                    fullWidth
+                                >
+                                    <Box
+                                        sx={{
+                                            backgroundColor: '#002b36',
+                                            px: 2,
+                                            py: 0,
+                                            minHeight: '2vw',
+                                        }}
+                                    >
+                                        <JSONTree
+                                            data={response.headers}
+                                            hideRoot
+                                        />
+                                    </Box>
+                                </Labeled>
+                                <Labeled
+                                    label={translate(
+                                        'pages.http-client.response'
+                                    )}
+                                    fullWidth
+                                >
+                                    <Box
+                                        sx={{
+                                            backgroundColor: '#002b36',
+                                            px: 2,
+                                            py: 0,
+                                            minHeight: '20vw',
+                                        }}
+                                    >
+                                        <JSONTree data={response.body} />
+                                    </Box>
+                                </Labeled>
+                            </TabbedShowLayout.Tab>
+                        )}
                         <TabbedShowLayout.Tab label={translate('raw')}>
                             <div style={{ marginTop: '16px' }}>
                                 {response?.error ? (
@@ -424,49 +520,6 @@ export const HttpClient = (props: { proxy?: string; urls: string[] }) => {
                                 )}
                             </div>
                         </TabbedShowLayout.Tab>
-                        {typeof response?.body === 'object' && (
-                            <TabbedShowLayout.Tab
-                                label={translate('fields.preview')}
-                            >
-                                <Labeled
-                                    label={translate(
-                                        'pages.http-client.headers'
-                                    )}
-                                    fullWidth
-                                >
-                                    <Box
-                                        sx={{
-                                            backgroundColor: '#002b36',
-                                            px: 2,
-                                            py: 0,
-                                            minHeight: '2vw',
-                                        }}
-                                    >
-                                        <JSONTree
-                                            data={response.headers}
-                                            hideRoot
-                                        />
-                                    </Box>
-                                </Labeled>
-                                <Labeled
-                                    label={translate(
-                                        'pages.http-client.response'
-                                    )}
-                                    fullWidth
-                                >
-                                    <Box
-                                        sx={{
-                                            backgroundColor: '#002b36',
-                                            px: 2,
-                                            py: 0,
-                                            minHeight: '20vw',
-                                        }}
-                                    >
-                                        <JSONTree data={response.body} />
-                                    </Box>
-                                </Labeled>
-                            </TabbedShowLayout.Tab>
-                        )}
                     </TabbedShowLayout>
                 </RecordContextProvider>
             </Collapse>
