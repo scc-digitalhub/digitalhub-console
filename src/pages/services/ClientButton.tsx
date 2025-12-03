@@ -36,6 +36,7 @@ import {
     Tab,
     Tabs,
     Box,
+    Alert,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { HealthChips } from '../../components/HealthChips';
@@ -91,7 +92,6 @@ export const ClientButton = (props: ClientButtonProps) => {
     if (record?.status?.service?.urls) {
         urls.push(...record.status.service.urls);
     }
-    const modelName = record?.status?.openai?.model;
     const proxy = '/-/' + projectId + '/runs/' + record?.id + '/proxy';
 
     const isLoading = !record;
@@ -194,6 +194,19 @@ export const ClientButton = (props: ClientButtonProps) => {
                             />
                         )}
 
+                        {showHealthChecks && !healthStatus.ready && (
+                            <Alert severity="warning" sx={{ mb: 2 }}>
+                                Model is not ready.
+                            </Alert>
+                        )}
+                        {showHealthChecks &&
+                            healthStatus.ready &&
+                            !healthStatus.live && (
+                                <Alert severity="info" sx={{ mb: 2 }}>
+                                    Model is ready but not live.
+                                </Alert>
+                            )}
+
                         {showTabsContent && (
                             <>
                                 <Tabs
@@ -211,10 +224,9 @@ export const ClientButton = (props: ClientButtonProps) => {
                                             urls={urls}
                                             proxy={proxy}
                                             fixedMethod="POST"
-                                            fixedUrl={
-                                                record.status.service.url +
-                                                `/v2/models/${modelName}/infer`
-                                            }
+                                            fixedUrl={urls.find(url =>
+                                                url.includes('infer')
+                                            )}
                                             fixedContentType="application/json"
                                             showRequestBody={true}
                                         />
@@ -226,10 +238,9 @@ export const ClientButton = (props: ClientButtonProps) => {
                                         urls={urls}
                                         proxy={proxy}
                                         fixedMethod="GET"
-                                        fixedUrl={
-                                            record.status.service.url +
-                                            `/v2/models/${modelName}`
-                                        }
+                                        fixedUrl={urls
+                                            .find(url => url.includes('infer'))
+                                            ?.replace('/infer', '')}
                                     />
                                 )}
                             </>
