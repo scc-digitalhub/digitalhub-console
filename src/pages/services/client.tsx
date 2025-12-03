@@ -32,6 +32,7 @@ import {
     useDataProvider,
     useTranslate,
 } from 'react-admin';
+import AceEditor from 'react-ace';
 import { JSONTree } from 'react-json-tree';
 
 interface HttpClientProps {
@@ -408,17 +409,36 @@ export const HttpClient = (props: HttpClientProps) => {
                                 </MenuItem>
                             </TextField>
                         )}
-                        <TextField
-                            label={translate('pages.http-client.requestBody')}
-                            multiline
-                            minRows={6}
-                            value={body}
-                            onChange={e => setBody(e.target.value)}
-                            fullWidth
-                            placeholder={translate(
-                                'pages.http-client.jsonOrRaw'
-                            )}
-                        />
+                        <Box sx={{ width: '100%', mb: 2 }}>
+                            <Typography
+                                variant="caption"
+                                color="textSecondary"
+                                sx={{ mb: 0.5, display: 'block' }}
+                            >
+                                {translate('pages.http-client.requestBody')}
+                            </Typography>
+
+                            <Box
+                                sx={{
+                                    border: '1px solid #c4c4c4',
+                                    borderRadius: 1,
+                                }}
+                            >
+                                <AceEditor
+                                    mode="json"
+                                    theme="github"
+                                    name="request_body_editor"
+                                    value={body}
+                                    onChange={newVal => setBody(newVal)}
+                                    width="100%"
+                                    minLines={5}
+                                    maxLines={25}
+                                    placeholder={translate(
+                                        'pages.http-client.jsonOrRaw'
+                                    )}
+                                />
+                            </Box>
+                        </Box>
                     </>
                 )}
             </Box>
@@ -434,26 +454,38 @@ export const HttpClient = (props: HttpClientProps) => {
                             <TabbedShowLayout.Tab
                                 label={translate('fields.preview')}
                             >
-                                <Labeled
-                                    label={translate(
-                                        'pages.http-client.headers'
-                                    )}
-                                    fullWidth
+                                <Accordion
+                                    defaultExpanded={false}
+                                    sx={{ width: '100%', mb: 2 }}
                                 >
-                                    <Box
-                                        sx={{
-                                            backgroundColor: '#002b36',
-                                            px: 2,
-                                            py: 0,
-                                            minHeight: '2vw',
-                                        }}
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore />}
+                                        aria-controls="headers-content"
+                                        id="headers-header"
                                     >
-                                        <JSONTree
-                                            data={response.headers}
-                                            hideRoot
-                                        />
-                                    </Box>
-                                </Labeled>
+                                        <Typography variant="subtitle1">
+                                            {translate(
+                                                'pages.http-client.headers'
+                                            )}
+                                        </Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Box
+                                            sx={{
+                                                backgroundColor: '#002b36',
+                                                px: 2,
+                                                py: 1,
+                                                width: '100%',
+                                                overflowX: 'auto',
+                                            }}
+                                        >
+                                            <JSONTree
+                                                data={response.headers}
+                                                hideRoot
+                                            />
+                                        </Box>
+                                    </AccordionDetails>
+                                </Accordion>
                                 <Labeled
                                     label={translate(
                                         'pages.http-client.response'
