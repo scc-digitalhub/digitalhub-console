@@ -227,15 +227,18 @@ export const RunShowComponent = () => {
                     maxLines={lineCount[1]}
                 />
             </TabbedShowLayout.Tab>
-            {record?.spec?.source && schema?.schema && (
-                <TabbedShowLayout.Tab label={'fields.code'}>
-                    <SourceCodeView
-                        sourceCode={record.spec.source}
-                        schema={schema.schema}
-                        uiSchema={getFunctionUiSpec()}
-                    />
-                </TabbedShowLayout.Tab>
-            )}
+            {(record?.spec?.source || record?.spec?.fab_source) &&
+                schema?.schema && (
+                    <TabbedShowLayout.Tab label={'fields.code'}>
+                        <SourceCodeView
+                            sourceCode={record.spec.source}
+                            fabSourceCode={record.spec.fab_source}
+                            requirements={record.spec.requirements}
+                            schema={schema.schema}
+                            uiSchema={getFunctionUiSpec()}
+                        />
+                    </TabbedShowLayout.Tab>
+                )}
             {(record?.spec?.inputs || record?.spec?.parameters) && (
                 <TabbedShowLayout.Tab label={'fields.inputs.title'}>
                     <Inputs record={record} />
