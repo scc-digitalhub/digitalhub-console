@@ -43,6 +43,7 @@ const ShowComponent = () => {
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const [fabSourceCode, setFabSourceCode] = useState<any>();
+    const [requirements, setRequirements] = useState<string[]>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
 
@@ -82,6 +83,9 @@ const ShowComponent = () => {
         }
         if (record?.spec?.fab_source) {
             setFabSourceCode(record.spec.fab_source);
+        }
+        if (record?.spec?.requirements) {
+            setRequirements(record.spec.requirements);
         }
 
         if (record && resource) {
@@ -207,7 +211,7 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
 
-            {sourceCode && schema?.schema && (
+            {(sourceCode || fabSourceCode) && schema?.schema && (
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
@@ -215,19 +219,8 @@ const ShowComponent = () => {
                 >
                     <SourceCodeView
                         sourceCode={sourceCode}
-                        schema={schema.schema}
-                        uiSchema={getFunctionUiSpec(record.kind)}
-                    />
-                </TabbedShowLayout.Tab>
-            )}
-            {fabSourceCode && schema?.schema && (
-                <TabbedShowLayout.Tab
-                    label={'fields.code'}
-                    key={record.id + ':source_code'}
-                    path="code"
-                >
-                    <SourceCodeView
                         fabSourceCode={fabSourceCode}
+                        requirements={requirements}
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />
