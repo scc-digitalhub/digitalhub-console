@@ -118,6 +118,7 @@ const metadataUiSchemas = {
     'metadata.embedded': MetadataEmbeddedUiSchema,
     'metadata.versioning': MetadataVersioningUiSchema,
     'metadata.audit': MetadataAuditUiSchema,
+    'metadata.relationships': { 'ui:widget': 'hidden' },
 };
 
 export const createMetadataViewUiSchema = (
