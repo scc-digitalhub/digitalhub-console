@@ -6,91 +6,105 @@ import { twMerge } from 'tailwind-merge';
 import './chatTheme.css';
 import { ChatTheme, chatTheme as defaultTheme } from 'reachat';
 
-export const chatTheme: ChatTheme = {
-    ...defaultTheme,
+export const createChatTheme = (
+    primaryColor: string,
+    primaryHoverColor: string
+): ChatTheme => {
+    const bgPrimary = `bg-[${primaryColor}]`;
+    const bgPrimaryAlpha = `bg-[${primaryColor}]/15`;
+    const hoverBgPrimary = `hover:bg-[${primaryHoverColor}]`;
+    const hoverBgPrimaryAlpha = `hover:bg-[${primaryColor}]/10`;
+    const borderPrimary = `border-[${primaryColor}]`;
 
-    base: twMerge(
-        defaultTheme.base,
-        'bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden'
-    ),
+    const ringPrimary = `focus:ring-[${primaryColor}]`;
+    const textPrimary = `text-[${primaryColor}]`;
 
-    sessions: {
-        ...defaultTheme.sessions,
-        console: twMerge(
-            defaultTheme.sessions.console,
-            'bg-gray-50 dark:bg-gray-900 w-[280px] border-r border-gray-200 dark:border-gray-700'
-        ),
-        create: twMerge(
-            defaultTheme.sessions.create,
-            'flex items-center justify-center w-full gap-2 px-4 py-3 mb-4 font-medium text-white transition-all rounded-lg shadow-md bg-[#E0701B] hover:bg-[#cc5f17] hover:shadow-lg active:scale-95 cursor-pointer mx-auto'
-        ),
-        session: {
-            ...defaultTheme.sessions.session,
-            base: twMerge(
-                defaultTheme.sessions.session.base,
-                'rounded-lg px-3 py-3 text-sm font-medium transition-all text-gray-600 mx-2 cursor-pointer',
-                'hover:bg-[#E0701B]/10 '
-            ),
-            active: twMerge(
-                defaultTheme.sessions.session.active,
-                'bg-[#E0701B]/15 border-l-4 border-[#E0701B] shadow-xs'
-            ),
-            delete: 'text-gray-400 hover:text-red-500 p-1',
-        },
-    },
+    return {
+        ...defaultTheme,
 
-    messages: {
-        ...defaultTheme.messages,
         base: twMerge(
-            defaultTheme.messages.base,
-            'bg-white dark:bg-[#0B0B0C] p-4'
+            defaultTheme.base,
+            'bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden'
         ),
 
-        message: {
-            ...defaultTheme.messages.message,
-            base: twMerge(
-                defaultTheme.messages.message.base,
-                'mb-6 gap-3 max-w-3xl mx-auto w-full'
+        sessions: {
+            ...defaultTheme.sessions,
+            console: twMerge(
+                defaultTheme.sessions.console,
+                'bg-gray-50 dark:bg-gray-900 w-[280px] border-r border-gray-200 dark:border-gray-700'
             ),
-
-            question: twMerge(
-                defaultTheme.messages.message.question,
-                'bg-[#E9E9E980] dark:bg-[#2A2A2C] text-gray-700 dark:text-[#E5E5E7]',
-                'rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm ml-auto max-w-[80%]'
+            create: twMerge(
+                defaultTheme.sessions.create,
+                `flex items-center justify-center w-full gap-2 px-4 py-3 mb-4 font-medium text-white transition-all rounded-lg shadow-md ${bgPrimary} ${hoverBgPrimary} hover:shadow-lg active:scale-95 cursor-pointer mx-auto`
             ),
-
-            response: twMerge(
-                defaultTheme.messages.message.response,
-                'bg-white dark:bg-[#1E1E20] text-gray-800 dark:text-[#E5E5E7]',
-                'border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm px-5 py-4 mr-auto max-w-[80%]'
-            ),
-
-            footer: {
-                ...defaultTheme.messages.message.footer,
-                base: 'flex gap-3 mt-2 px-1 text-gray-400',
-                copy: 'hover:text-gray-950 transition-colors cursor-pointer',
-                refresh: 'hover:text-gray-950 transition-colors cursor-pointer',
-                upvote: 'hidden',
-                downvote: 'hidden',
+            session: {
+                ...defaultTheme.sessions.session,
+                base: twMerge(
+                    defaultTheme.sessions.session.base,
+                    'rounded-lg px-3 py-3 text-sm font-medium transition-all text-gray-600 mx-2 cursor-pointer',
+                    hoverBgPrimaryAlpha
+                ),
+                active: twMerge(
+                    defaultTheme.sessions.session.active,
+                    `${bgPrimaryAlpha} border-l-4 ${borderPrimary} ${textPrimary} shadow-xs`
+                ),
+                delete: 'text-gray-400 hover:text-red-500 p-1',
             },
         },
-    },
 
-    input: {
-        ...defaultTheme.input,
-        base: twMerge(
-            defaultTheme.input.base,
-            'bg-white dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-700'
-        ),
-        input: twMerge(
-            defaultTheme.input.input,
-            'bg-white dark:bg-gray-800 text-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-hidden transition-all shadow-inner'
-        ),
-        actions: {
-            ...defaultTheme.input.actions,
-            base: 'flex items-center gap-2 ml-3',
-            send: 'bg-gray-700 hover:bg-[#cc5f17] text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed',
-            stop: 'bg-red-500 hover:bg-red-600 text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 cursor-pointer',
+        messages: {
+            ...defaultTheme.messages,
+            base: twMerge(
+                defaultTheme.messages.base,
+                'bg-white dark:bg-[#0B0B0C] p-4'
+            ),
+
+            message: {
+                ...defaultTheme.messages.message,
+                base: twMerge(
+                    defaultTheme.messages.message.base,
+                    'mb-6 gap-3 max-w-3xl mx-auto w-full'
+                ),
+
+                question: twMerge(
+                    defaultTheme.messages.message.question,
+                    `${bgPrimaryAlpha} text-gray-700`,
+                    'rounded-2xl rounded-tr-sm px-5 py-3 shadow-md ml-auto max-w-[80%]'
+                ),
+
+                response: twMerge(
+                    defaultTheme.messages.message.response,
+                    'bg-white dark:bg-[#1E1E20] text-gray-800 dark:text-[#E5E5E7]',
+                    'border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl rounded-tl-sm px-5 py-4 mr-auto max-w-[80%]'
+                ),
+
+                footer: {
+                    ...defaultTheme.messages.message.footer,
+                    base: 'flex gap-3 mt-2 px-1 text-gray-400',
+                    copy: `hover:${textPrimary} transition-colors cursor-pointer`,
+                    refresh: `hover:${textPrimary} transition-colors cursor-pointer`,
+                    upvote: 'hidden',
+                    downvote: 'hidden',
+                },
+            },
         },
-    },
+
+        input: {
+            ...defaultTheme.input,
+            base: twMerge(
+                defaultTheme.input.base,
+                'bg-white dark:bg-gray-900 p-4 border-t border-gray-200 dark:border-gray-700'
+            ),
+            input: twMerge(
+                defaultTheme.input.input,
+                `bg-white dark:bg-gray-800 text-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 focus:ring-2 ${ringPrimary} focus:border-transparent outline-hidden transition-all shadow-inner`
+            ),
+            actions: {
+                ...defaultTheme.input.actions,
+                base: 'flex items-center gap-2 ml-3',
+                send: `${bgPrimary} text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`,
+                stop: 'bg-red-500 hover:bg-red-600 text-white w-12 h-10 rounded-lg flex items-center justify-center shadow-md transition-transform active:scale-95 cursor-pointer',
+            },
+        },
+    };
 };

@@ -19,7 +19,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import './chatTheme.css';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
-import { chatTheme } from './chatTheme';
+import { createChatTheme } from './chatTheme';
+import { useTheme } from '@mui/material';
 
 const API_KEY: string =
     (globalThis as any).VITE_OPENAI_API_KEY ||
@@ -33,8 +34,6 @@ const API_BASE_URL: string =
 
 const SINGLE_SESSION_ID = 'main-session';
 const THROTTLE_MS = 100;
-const DEFAULT_SESSION_TITLE = 'What is in your mind?';
-
 export const ReaChat = () => {
     return (
         <ThemeProvider theme={reatheme}>
@@ -44,10 +43,14 @@ export const ReaChat = () => {
 };
 
 const OpenAIChat = () => {
+    const theme = useTheme();
+    const primaryColor = theme.palette.primary.main;
+    const primaryHoverColor = theme.palette.primary.dark;
+    const dynamicChatTheme = createChatTheme(primaryColor, primaryHoverColor);
     const [sessions, setSessions] = useState<Session[]>([
         {
             id: SINGLE_SESSION_ID,
-            title: DEFAULT_SESSION_TITLE,
+            title: '',
             createdAt: new Date(),
             updatedAt: new Date(),
             conversations: [],
@@ -191,7 +194,7 @@ const OpenAIChat = () => {
             activeSessionId={SINGLE_SESSION_ID}
             isLoading={loading}
             onSendMessage={handleNewMessage}
-            theme={chatTheme}
+            theme={dynamicChatTheme}
             viewType="chat"
             onStopMessage={handleStop}
             style={{ maxHeight: '60vh' }}
