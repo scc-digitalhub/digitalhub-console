@@ -308,9 +308,12 @@ const ShowToolbar = () => {
         <TopToolbar>
             <BackButton />
             <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
-            {record?.status?.service && <ClientButton />}
-            <ClientButton mode="v2" />
-            <ClientButton mode="chat" />
+            {record?.status?.service?.url && <ClientButton />}
+            {record?.status?.openai ? (
+                <ClientButton mode="chat" />
+            ) : (
+                <ClientButton mode="v2" />
+            )}
             <FunctionField
                 render={record =>
                     record.status?.state == 'RUNNING' ? (
