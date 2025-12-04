@@ -7,17 +7,15 @@ import './chatTheme.css';
 import { ChatTheme, chatTheme as defaultTheme } from 'reachat';
 
 export const createChatTheme = (
-    primaryColor: string,
-    primaryHoverColor: string
-): ChatTheme => {
-    const bgPrimary = `bg-[${primaryColor}]`;
-    const bgPrimaryAlpha = `bg-[${primaryColor}]/15`;
-    const hoverBgPrimary = `hover:bg-[${primaryHoverColor}]`;
-    const hoverBgPrimaryAlpha = `hover:bg-[${primaryColor}]/10`;
-    const borderPrimary = `border-[${primaryColor}]`;
 
-    const ringPrimary = `focus:ring-[${primaryColor}]`;
-    const textPrimary = `text-[${primaryColor}]`;
+): ChatTheme => {
+    const bgPrimary = `bg-[var(--primary)]`;
+    const bgPrimaryAlpha = `bg-[var(--primary-alpha)]`;
+    const hoverBgPrimary = `hover:bg-[var(--primary-hover)]`;
+    const hoverBgPrimaryAlpha = `hover:bg-[var(--primary-hover-alpha)]`;
+    const borderPrimary = `border-[var(--primary)]`;
+    const ringPrimary = `focus:ring-[var(--primary)]`;
+    const textPrimary = `text-[var(--primary)]`;
 
     return {
         ...defaultTheme,

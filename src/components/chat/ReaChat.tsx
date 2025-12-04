@@ -20,7 +20,7 @@ import './chatTheme.css';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
 import { createChatTheme } from './chatTheme';
-import { useTheme } from '@mui/material';
+import { alpha, CSSProperties, useTheme } from '@mui/material';
 
 const API_KEY: string =
     (globalThis as any).VITE_OPENAI_API_KEY ||
@@ -44,9 +44,16 @@ export const ReaChat = () => {
 
 const OpenAIChat = () => {
     const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
     const primaryColor = theme.palette.primary.main;
     const primaryHoverColor = theme.palette.primary.dark;
-    const dynamicChatTheme = createChatTheme(primaryColor, primaryHoverColor);
+    const cssVariables = {
+        '--primary': primaryColor,
+        '--primary-hover': primaryHoverColor,
+        '--primary-alpha': alpha(primaryColor, 0.15),
+        '--primary-hover-alpha': alpha(primaryColor, 0.1),
+    } as CSSProperties;
+    const dynamicChatTheme = createChatTheme();
     const [sessions, setSessions] = useState<Session[]>([
         {
             id: SINGLE_SESSION_ID,
@@ -189,58 +196,66 @@ const OpenAIChat = () => {
     }, []);
 
     return (
-        <Chat
-            sessions={sessions}
-            activeSessionId={SINGLE_SESSION_ID}
-            isLoading={loading}
-            onSendMessage={handleNewMessage}
-            theme={dynamicChatTheme}
-            viewType="chat"
-            onStopMessage={handleStop}
-            style={{ maxHeight: '60vh' }}
+        <div
+            className={isDarkMode ? 'dark' : ''}
+            style={{ height: '100%', ...cssVariables }}
         >
-            <SessionMessagePanel>
-                <SessionMessagesHeader />
-                <SessionMessages>
-                    {(conversations: any[]) =>
-                        conversations.map((conversation, index) => (
-                            <SessionMessage
-                                conversation={conversation}
-                                isLast={index === conversations.length - 1}
-                                key={conversation.id}
-                            >
-                                <MessageQuestion
-                                    question={conversation.question}
-                                />
-                                <MessageResponse
-                                    response={conversation.response}
-                                    isLoading={
-                                        index === conversations.length - 1 &&
-                                        loading
-                                    }
-                                />
+            <Chat
+                sessions={sessions}
+                activeSessionId={SINGLE_SESSION_ID}
+                isLoading={loading}
+                onSendMessage={handleNewMessage}
+                theme={dynamicChatTheme}
+                viewType="chat"
+                onStopMessage={handleStop}
+                style={{ maxHeight: '60vh' }}
+            >
+                <SessionMessagePanel>
+                    <SessionMessagesHeader />
+                    <SessionMessages>
+                        {(conversations: any[]) =>
+                            conversations.map((conversation, index) => (
+                                <SessionMessage
+                                    conversation={conversation}
+                                    isLast={index === conversations.length - 1}
+                                    key={conversation.id}
+                                >
+                                    <MessageQuestion
+                                        question={conversation.question}
+                                    />
+                                    <MessageResponse
+                                        response={conversation.response}
+                                        isLoading={
+                                            index ===
+                                                conversations.length - 1 &&
+                                            loading
+                                        }
+                                    />
 
-                                <MessageSources
-                                    sources={conversation.sources}
-                                />
+                                    <MessageSources
+                                        sources={conversation.sources}
+                                    />
 
-                                <MessageActions
-                                    question={conversation.question}
-                                    response={conversation.response}
-                                    onCopy={() =>
-                                        handleCopy(conversation.response)
-                                    }
-                                    onRefresh={() =>
-                                        handleRegenerate(conversation.question)
-                                    }
-                                />
-                            </SessionMessage>
-                        ))
-                    }
-                </SessionMessages>
+                                    <MessageActions
+                                        question={conversation.question}
+                                        response={conversation.response}
+                                        onCopy={() =>
+                                            handleCopy(conversation.response)
+                                        }
+                                        onRefresh={() =>
+                                            handleRegenerate(
+                                                conversation.question
+                                            )
+                                        }
+                                    />
+                                </SessionMessage>
+                            ))
+                        }
+                    </SessionMessages>
 
-                <ChatInput placeholder="Type your message..." />
-            </SessionMessagePanel>
-        </Chat>
+                    <ChatInput placeholder="Type your message..." />
+                </SessionMessagePanel>
+            </Chat>
+        </div>
     );
 };
