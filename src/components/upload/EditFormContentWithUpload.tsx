@@ -29,7 +29,7 @@ export const EditFormContentWithUpload = (
     //we need to watch it here because path is nested in spec
     const { field } = useInput({ resource, source: 'spec' });
     useEffect(() => {
-        if (uploader && field) {
+        if (uploader && field && uploader.path) {
             field.onChange({ ...field.value, path: uploader.path });
         }
     }, [uploader?.path]);
