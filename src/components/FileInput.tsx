@@ -25,7 +25,7 @@ export const FileInput = (props: FileInputProps) => {
     //update path in source depending on upload
     const { field } = useInput({ resource, source });
     useEffect(() => {
-        if (uploader && field) {
+        if (uploader && field && uploader.path) {
             field.onChange(uploader.path);
         }
     }, [uploader?.path]);
