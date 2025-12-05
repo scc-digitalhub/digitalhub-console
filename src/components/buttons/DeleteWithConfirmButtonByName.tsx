@@ -19,20 +19,23 @@ import {
 } from 'react-admin';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
+//TODO move to a utils file when refactoring, reuse for bulk delete
+export type DeleteButtonOptions = {
+    deleteAll?: boolean;
+    cascade?: boolean;
+    askForDeleteAll?: boolean;
+    askForCascade?: boolean;
+    disableDeleteAll?: boolean;
+    disableCascade?: boolean;
+    onDeleteAll?: (value: boolean) => void;
+    onCascade?: (value: boolean) => void;
+    additionalContent?: ReactNode;
+};
+
 export const DeleteWithConfirmButtonByName = <
     RecordType extends RaRecord = any
 >(
-    props: DeleteWithConfirmButtonProps<RecordType> & {
-        deleteAll?: boolean;
-        cascade?: boolean;
-        askForDeleteAll?: boolean;
-        askForCascade?: boolean;
-        disableDeleteAll?: boolean;
-        disableCascade?: boolean;
-        onDeleteAll?: (value: boolean) => void;
-        onCascade?: (value: boolean) => void;
-        additionalContent?: ReactNode;
-    }
+    props: DeleteWithConfirmButtonProps<RecordType> & DeleteButtonOptions
 ) => {
     const {
         deleteAll: deleteAllFromProps = false,
@@ -79,20 +82,6 @@ export const DeleteWithConfirmButtonByName = <
                 {translate('ra.message.delete_content', { name: 'item' })}
             </DialogContentText>
             {additionalContent}
-            {askForDeleteAll && (
-                <Box>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={deleteAll}
-                                disabled={disableDeleteAll}
-                                onChange={handleDeleteAllChange}
-                            />
-                        }
-                        label={translate('actions.delete_all_versions')}
-                    />
-                </Box>
-            )}
             {askForCascade && (
                 <Box>
                     <FormControlLabel
@@ -104,6 +93,20 @@ export const DeleteWithConfirmButtonByName = <
                             />
                         }
                         label={translate('actions.cascade_delete')}
+                    />
+                </Box>
+            )}
+            {askForDeleteAll && (
+                <Box>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={deleteAll}
+                                disabled={disableDeleteAll}
+                                onChange={handleDeleteAllChange}
+                            />
+                        }
+                        label={translate('actions.delete_all_versions')}
                     />
                 </Box>
             )}

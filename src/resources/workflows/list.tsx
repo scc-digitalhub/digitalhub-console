@@ -91,7 +91,10 @@ export const WorkflowList = () => {
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
                                         deleteAll
+                                        cascade
+                                        askForDeleteAll
                                         askForCascade
+                                        disableDeleteAll
                                     />
                                 }
                             >

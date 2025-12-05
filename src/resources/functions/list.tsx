@@ -91,7 +91,10 @@ export const FunctionList = () => {
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
                                         deleteAll
+                                        cascade
+                                        askForDeleteAll
                                         askForCascade
+                                        disableDeleteAll
                                     />
                                 }
                             >

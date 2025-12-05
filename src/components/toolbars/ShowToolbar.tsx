@@ -59,6 +59,7 @@ export const ShowToolbar = (props: {
             <InspectButton fullWidth />
             <ExportRecordButton language="yaml" color="info" />
             <DeleteWithConfirmButtonByName
+                cascade
                 redirect={redirect}
                 titleTranslateOptions={{ id: record?.id }}
                 askForDeleteAll={askForDeleteAll}
