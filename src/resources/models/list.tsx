@@ -89,7 +89,10 @@ export const ModelList = () => {
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
                                         deleteAll
+                                        cascade
+                                        askForDeleteAll
                                         askForCascade
+                                        disableDeleteAll
                                     />
                                 }
                             >

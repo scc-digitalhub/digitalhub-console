@@ -89,7 +89,10 @@ export const ArtifactList = () => {
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
                                         deleteAll
+                                        cascade
+                                        askForDeleteAll
                                         askForCascade
+                                        disableDeleteAll
                                     />
                                 }
                             >
