@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AwsS3UploadParameters } from '@uppy/aws-s3';
 import { GetListParams } from 'react-admin';
+import { DownloadInfo, FileInfo, UploadInfo } from './types';
 
 //TODO add also /files/stores and /files/delete ?
 
@@ -88,26 +88,4 @@ export type FileProvider = {
             partList: string[];
         }
     ) => Promise<UploadInfo>;
-};
-
-export type DownloadInfo = {
-    path: string;
-    url: string;
-    expiration: any;
-};
-
-export type FileInfo = {
-    path?: string;
-    name: string;
-    contentType: string;
-    size: number;
-    lastModified: any;
-    hash: string;
-};
-
-export type UploadInfo = AwsS3UploadParameters &  {
-    path: string;
-    expiration: any;
-    uploadId?: string;
-    partNumber?: number;
 };

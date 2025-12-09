@@ -3,19 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createContext, ReactElement, useContext, useState } from 'react';
-import { FileProgress } from '@uppy/utils/lib/FileProgress';
-import { Identifier } from 'react-admin';
-
-export type Upload = {
-    id: string;
-    filename?: string;
-    progress: FileProgress;
-    resource: string;
-    resourceId?: Identifier;
-    error?: any;
-    remove: () => void;
-    retry?: () => void;
-};
+import { Upload } from '../types';
 
 interface UploadStatusContextValue {
     uploads: Upload[];

@@ -21,12 +21,10 @@ import {
     useTranslate,
 } from 'react-admin';
 import { UploadProgress } from './UploadProgress';
-import {
-    Upload,
-    useUploadStatusContext,
-} from '../../contexts/UploadStatusContext';
+import { useUploadStatusContext } from '../../upload_rename_as_files/upload/UploadStatusContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Upload } from '../../upload_rename_as_files/types';
 
 export const UploadArea = () => {
     const translate = useTranslate();

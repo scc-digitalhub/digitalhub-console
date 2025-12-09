@@ -13,7 +13,6 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { Upload } from '../../contexts/UploadStatusContext';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
@@ -30,6 +29,7 @@ import {
 import { createElement, useState } from 'react';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { scaleBytes } from '../../common/helper';
+import { Upload } from '../../upload_rename_as_files/types';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;
