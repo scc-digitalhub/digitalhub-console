@@ -35,9 +35,14 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         return <></>;
     }
 
+    //TODO use download hook
     const handleDownload = () => {
         dataProvider
-            .download(resource, { id: record.id, meta: { root }, sub })
+            .download({ meta: { root } }, undefined, {
+                resource,
+                id: record.id,
+                sub,
+            })
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');
