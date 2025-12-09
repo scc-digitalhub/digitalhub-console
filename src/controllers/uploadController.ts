@@ -13,13 +13,14 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Uppy } from 'uppy';
-import AwsS3, { AwsS3UploadParameters } from '@uppy/aws-s3';
+import AwsS3 from '@uppy/aws-s3';
 import { useUploadStatusContext } from '../contexts/UploadStatusContext';
+import { UploadInfo } from '../upload_rename_as_files/FileProvider';
+import { extractInfo, MiB } from '../upload_rename_as_files/utils';
 
 /**
  * private helpers
  */
-const MiB = 0x10_00_00;
 const sizeThreshold = 100;
 function partCount(file): number {
     return file.size <= sizeThreshold * MiB
@@ -30,16 +31,6 @@ function partSize(file): number {
     return file.size <= sizeThreshold * MiB
         ? file.size
         : Math.ceil(file.size / partCount(file));
-}
-function extractInfo(file: any): any {
-    return {
-        //no subfolders support for browser upload!
-        path: file.name,
-        name: file.name,
-        content_type: file.type,
-        last_modified: new Date(file.data?.lastModified).toUTCString(),
-        size: file.size,
-    };
 }
 
 /**
@@ -59,13 +50,6 @@ export type UploadController = {
     path: string | null;
     setName: (name: string) => void;
     upload: (data: any) => void;
-};
-
-type UploadInfo = AwsS3UploadParameters & {
-    path: string;
-    expiration?: any;
-    uploadId?: string;
-    partNumber?: number;
 };
 
 export const useUploadController = (
@@ -98,12 +82,11 @@ export const useUploadController = (
         const filename = file.name;
 
         return dataProvider
-            .invoke({
-                path:
-                    `/-/${projectId}/${resource}/${id}/files/upload?filename=${
-                        dest + filename
-                    }` + (name.current ? `&name=${name.current}` : ''),
-                options: { method: 'POST' },
+            .upload({ meta: { root: projectId } }, undefined, {
+                resource,
+                id,
+                filename: dest + filename,
+                name: name.current ?? undefined,
             })
             .then(json => {
                 return json;
@@ -120,12 +103,11 @@ export const useUploadController = (
         const filename = file.name;
 
         return dataProvider
-            .invoke({
-                path:
-                    `/-/${projectId}/${resource}/${id}/files/multipart/start?filename=${
-                        dest + filename
-                    }` + (name.current ? `&name=${name.current}` : ''),
-                options: { method: 'POST' },
+            .startMultipartUpload({ meta: { root: projectId } }, undefined, {
+                resource,
+                id,
+                filename: dest + filename,
+                name: name.current ?? undefined,
             })
             .then(json => {
                 return json;
@@ -138,9 +120,12 @@ export const useUploadController = (
             throw new Error('missing s3 path');
         }
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/${resource}/${id}/files/multipart/part?path=${uploadInfo.path}&filename=${file.name}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`,
-                options: { method: 'PUT' },
+            .uploadPart({ meta: { root: projectId } }, undefined, {
+                resource,
+                id,
+                path: uploadInfo.path,
+                uploadId: params.uploadId,
+                partNumber: params.partNumber,
             })
             .then(json => {
                 return json;
@@ -153,13 +138,13 @@ export const useUploadController = (
             throw new Error('missing s3 path');
         }
 
-        const eTagPartList = params.eTagPartList
-            ? params.eTagPartList.map(etag => `partList=${etag}`).join('&')
-            : '';
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/${resource}/${id}/files/multipart/complete?path=${uploadInfo.path}&filename=${file.name}&uploadId=${params.uploadId}&${eTagPartList}`,
-                options: { method: 'POST' },
+            .completeMultipartUpload({ meta: { root: projectId } }, undefined, {
+                resource,
+                id,
+                path: uploadInfo.path,
+                uploadId: params.uploadId,
+                partList: params.eTagPartList,
             })
             .then(json => {
                 return json;

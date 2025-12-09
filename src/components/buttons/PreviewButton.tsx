@@ -168,11 +168,16 @@ const PreviewView = (props: PreviewButtonProps) => {
     const notify = useNotify();
     const ref = React.createRef<LazyLog>();
 
+    //TODO use download hook
     const handlePreview = () => {
         if (url) return;
 
         dataProvider
-            .download(resource, { id: record?.id, meta: { root }, sub })
+            .download({ meta: { root } }, undefined, {
+                resource,
+                id: record?.id,
+                sub,
+            })
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);

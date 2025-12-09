@@ -7,26 +7,16 @@ import { useMemo, useState } from 'react';
 import { useDataProvider, useNotify, useTranslate } from 'react-admin';
 import { Uppy } from 'uppy';
 import AwsS3 from '@uppy/aws-s3';
+import { extractInfo, MiB } from '../upload_rename_as_files/utils';
 
 /**
  * private helpers
  */
-const MiB = 0x10_00_00;
 function partSize(file): number {
     if (file.size <= 100 * MiB) return 1;
     else {
         return Math.ceil(file.size / (100 * MiB));
     }
-}
-function extractInfo(file: any): any {
-    return {
-        //no subfolders support for browser upload!
-        path: file.name,
-        name: file.name,
-        content_type: file.type,
-        last_modified: new Date(file.data?.lastModified).toUTCString(),
-        size: file.size,
-    };
 }
 
 /**
@@ -66,12 +56,10 @@ export const useUploadController = (
         const filename = file.name;
 
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/files/upload?path=${
-                    path + dest
-                }&filename=${filename}`,
-                options: { method: 'POST' },
-            })
+            .upload(
+                { meta: { root: projectId } },
+                { path: path + dest, filename }
+            )
             .then(json => {
                 return json;
             });
@@ -79,10 +67,10 @@ export const useUploadController = (
 
     const startMultipartUpload = file => {
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/files/multipart/start?path=${path}&filename=${file.name}`,
-                options: { method: 'POST' },
-            })
+            .startMultipartUpload(
+                { meta: { root: projectId } },
+                { path: path, filename: file.name }
+            )
             .then(json => {
                 return json;
             });
@@ -90,24 +78,31 @@ export const useUploadController = (
 
     const doMultipartUpload = params => {
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/files/multipart/part?path=${path}&filename=${params.filename}&uploadId=${params.uploadId}&partNumber=${params.partNumber}`,
-                options: { method: 'PUT' },
-            })
+            .uploadPart(
+                { meta: { root: projectId } },
+                {
+                    path: path,
+                    filename: params.filename,
+                    uploadId: params.uploadId,
+                    partNumber: params.partNumber,
+                }
+            )
             .then(json => {
                 return json;
             });
     };
 
     const completeMultipartUpload = params => {
-        const eTagPartList = params.eTagPartList
-            ? params.eTagPartList.map(etag => `partList=${etag}`).join('&')
-            : '';
         return dataProvider
-            .invoke({
-                path: `/-/${projectId}/files/multipart/complete?path=${path}&filename=${params.filename}&uploadId=${params.uploadId}&${eTagPartList}`,
-                options: { method: 'POST' },
-            })
+            .completeMultipartUpload(
+                { meta: { root: projectId } },
+                {
+                    path: path,
+                    filename: params.filename,
+                    uploadId: params.uploadId,
+                    partList: params.eTagPartList,
+                }
+            )
             .then(json => {
                 return json;
             });

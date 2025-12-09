@@ -248,13 +248,17 @@ export const FileInfo = () => {
                     setStats(getStats(record.status.files));
                 }
             } else {
+                //TODO use fileinfo hook
                 dataProvider
-                    .fileInfo(resource, { id: record.id, meta: { root } })
+                    .fileInfo({ meta: { root } }, undefined, {
+                        resource,
+                        id: record.id,
+                    })
                     .then(data => {
                         if (isLoading) {
-                            if (data?.info) {
-                                setData(convertFiles(data.info));
-                                setStats(getStats(data.info));
+                            if (data) {
+                                setData(convertFiles(data));
+                                setStats(getStats(data));
                             } else {
                                 notify('ra.message.not_found', {
                                     type: 'error',
