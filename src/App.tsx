@@ -127,7 +127,7 @@ import triggerDefinition from './resources/triggers';
 import { StompContextProvider } from './contexts/StompContext';
 import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
-import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
+import { UploadStatusContextProvider } from './upload_rename_as_files/upload/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
 import { HttpClient } from './pages/services/client';

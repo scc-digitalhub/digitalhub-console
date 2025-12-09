@@ -14,9 +14,9 @@ import {
 } from 'react-admin';
 import { Uppy } from 'uppy';
 import AwsS3 from '@uppy/aws-s3';
-import { useUploadStatusContext } from '../contexts/UploadStatusContext';
-import { UploadInfo } from '../upload_rename_as_files/FileProvider';
+import { useUploadStatusContext } from '../upload_rename_as_files/upload/UploadStatusContext';
 import { extractInfo, MiB } from '../upload_rename_as_files/utils';
+import { UploadInfo } from '../upload_rename_as_files/types';
 
 /**
  * private helpers
