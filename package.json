@@ -70,6 +70,7 @@
         "@xyflow/react": "^12.3.1",
         "change-case": "^5.4.2",
         "env-cmd": "^10.1.0",
+        "html-to-image": "1.11.11",
         "k8s-resource-parser": "^0.2.2",
         "mui-chips-input": "^7.0.0",
         "react": "^18.2.0",
