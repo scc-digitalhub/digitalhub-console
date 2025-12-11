@@ -3,22 +3,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { GetListParams } from 'react-admin';
-import { DownloadInfo, FileInfo, UploadInfo } from './types';
+import { FileInfo, UploadInfo } from './types';
+import {
+    DownloadInfo,
+    DownloadParams,
+    ResourceDownloadParams,
+} from './download/types';
 
-//TODO add also /files/stores and /files/delete ?
+//TODO add also /files/stores and /files/delete
 
 export type FileProvider = {
     download: (
         params: Pick<GetListParams, 'meta'>,
-        downloadParams?: {
-            path: string;
-            duration?: number;
-        },
-        resourceDownloadParams?: {
-            resource: string;
-            id: string;
-            sub?: string;
-        }
+        downloadParams?: DownloadParams,
+        resourceDownloadParams?: ResourceDownloadParams
     ) => Promise<DownloadInfo>;
     fileInfo: (
         params: Pick<GetListParams, 'meta'>,

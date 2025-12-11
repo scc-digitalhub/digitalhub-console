@@ -131,6 +131,7 @@ import { UploadStatusContextProvider } from './upload_rename_as_files/upload/Upl
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
 import { HttpClient } from './pages/services/client';
+import { FileContextProvider } from './upload_rename_as_files/FileContextProvider';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -170,61 +171,65 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <UploadStatusContextProvider>
-                                    <AdminUI
-                                        dashboard={Dashboard}
-                                        layout={WrappedLayout}
-                                        loginPage={MyLoginPage}
-                                        requireAuth={!!authProvider}
-                                        disableTelemetry
-                                    >
-                                        <Resource {...functionDefinition} />
-                                        <Resource {...workflowDefinition} />
-                                        <Resource {...dataitemDefinition} />
-                                        <Resource {...modelDefinition} />
-                                        <Resource {...artifactDefinition} />
-                                        <Resource name="tasks" />
-                                        <Resource {...runDefinition} />
-                                        <Resource {...triggerDefinition} />
-                                        <Resource {...projectDefinition} />
-                                        <Resource {...secretDefinition} />
-                                        <Resource name="schemas" />
-                                        <Resource name="logs" />
-                                        <Resource name="metadatas" />
-                                        <Resource name="labels" />
-                                        <Resource name="templates" />
-                                        <CustomRoutes>
-                                            <Route
-                                                path="/config"
-                                                element={<ProjectConfig />}
-                                            />
-
-                                            <Route
-                                                path="/lineage"
-                                                element={<ProjectLineage />}
-                                            />
-
-                                            <Route
-                                                path="/account"
-                                                element={<MyAccount />}
-                                            />
-                                            <Route
-                                                path="/files"
-                                                element={<Browser />}
-                                            />
-                                            <Route
-                                                path="/services"
-                                                element={<ServiceList />}
-                                            />
-                                            {enableSearch && (
+                                <FileContextProvider
+                                    fileProvider={dataProvider}
+                                >
+                                    <UploadStatusContextProvider>
+                                        <AdminUI
+                                            dashboard={Dashboard}
+                                            layout={WrappedLayout}
+                                            loginPage={MyLoginPage}
+                                            requireAuth={!!authProvider}
+                                            disableTelemetry
+                                        >
+                                            <Resource {...functionDefinition} />
+                                            <Resource {...workflowDefinition} />
+                                            <Resource {...dataitemDefinition} />
+                                            <Resource {...modelDefinition} />
+                                            <Resource {...artifactDefinition} />
+                                            <Resource name="tasks" />
+                                            <Resource {...runDefinition} />
+                                            <Resource {...triggerDefinition} />
+                                            <Resource {...projectDefinition} />
+                                            <Resource {...secretDefinition} />
+                                            <Resource name="schemas" />
+                                            <Resource name="logs" />
+                                            <Resource name="metadatas" />
+                                            <Resource name="labels" />
+                                            <Resource name="templates" />
+                                            <CustomRoutes>
                                                 <Route
-                                                    path="/searchresults"
-                                                    element={<SearchList />}
+                                                    path="/config"
+                                                    element={<ProjectConfig />}
                                                 />
-                                            )}
-                                        </CustomRoutes>
-                                    </AdminUI>
-                                </UploadStatusContextProvider>
+
+                                                <Route
+                                                    path="/lineage"
+                                                    element={<ProjectLineage />}
+                                                />
+
+                                                <Route
+                                                    path="/account"
+                                                    element={<MyAccount />}
+                                                />
+                                                <Route
+                                                    path="/files"
+                                                    element={<Browser />}
+                                                />
+                                                <Route
+                                                    path="/services"
+                                                    element={<ServiceList />}
+                                                />
+                                                {enableSearch && (
+                                                    <Route
+                                                        path="/searchresults"
+                                                        element={<SearchList />}
+                                                    />
+                                                )}
+                                            </CustomRoutes>
+                                        </AdminUI>
+                                    </UploadStatusContextProvider>
+                                </FileContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>
