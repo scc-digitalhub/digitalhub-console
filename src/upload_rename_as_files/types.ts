@@ -6,12 +6,6 @@ import { AwsS3UploadParameters } from '@uppy/aws-s3';
 import { FileProgress } from '@uppy/utils/lib/FileProgress';
 import { Identifier } from 'react-admin';
 
-export type DownloadInfo = {
-    path: string;
-    url: string;
-    expiration: any;
-};
-
 export type FileInfo = {
     path?: string;
     name: string;
