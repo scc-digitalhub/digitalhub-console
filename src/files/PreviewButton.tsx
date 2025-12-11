@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
@@ -55,6 +53,7 @@ import {
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { NoContent } from '../components/NoContent';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from './utils';
+import { useDownload } from '../upload_rename_as_files/download/useDownload';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
@@ -226,11 +225,9 @@ const PreviewDialog = styled(Dialog, {
 }));
 
 const PreviewView = (props: PreviewButtonProps) => {
-    const { path, fileName, fileType = '', contentType = 'text' } = props;
-
-    const { root: projectId } = useRootSelector();
-    const dataProvider = useDataProvider();
+    const { path, fileType = '', contentType = 'text' } = props;
     const notify = useNotify();
+    const download = useDownload();
 
     const [url, setUrl] = useState<any>(undefined);
     const [content, setContent] = useState<any>(undefined);
@@ -238,14 +235,9 @@ const PreviewView = (props: PreviewButtonProps) => {
     const ref = React.createRef<LazyLog>();
 
     const handlePreview = () => {
-        if (url) return;
+        if (url || !path) return;
 
-        dataProvider
-            .invoke({
-                path: '/-/' + projectId + '/files/download',
-                params: { path },
-                options: { method: 'GET' },
-            })
+        download({ path })
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);

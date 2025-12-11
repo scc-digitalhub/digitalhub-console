@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
@@ -15,6 +13,7 @@ import {
 } from 'react-admin';
 import DownloadIcon from '@mui/icons-material/GetApp';
 import { ReactElement } from 'react';
+import { useDownload } from '../upload_rename_as_files/download/useDownload';
 const defaultIcon = <DownloadIcon fontSize="small" />;
 
 export const DownloadButton = (props: DownloadButtonProps) => {
@@ -27,10 +26,9 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         fileName: fileNameProp,
         path: pathProp,
     } = props;
-    const { root: projectId } = useRootSelector();
     const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
     const notify = useNotify();
+    const download = useDownload();
 
     if (!record) {
         return <></>;
@@ -40,12 +38,7 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const fileName = fileNameProp || record?.name;
 
     const handleDownload = () => {
-        dataProvider
-            .invoke({
-                path: '/-/' + projectId + '/files/download',
-                params: { path },
-                options: { method: 'GET' },
-            })
+        download({ path })
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');

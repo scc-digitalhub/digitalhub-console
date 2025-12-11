@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
@@ -45,6 +43,7 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { NoContent } from '../NoContent';
+import { useDownload } from '../../upload_rename_as_files/download/useDownload';
 
 const defaultIcon = <PreviewIcon />;
 
@@ -161,23 +160,19 @@ const PreviewView = (props: PreviewButtonProps) => {
     const { resource, sub, fileType } = props;
     const [url, setUrl] = useState<any>(undefined);
     const [content, setContent] = useState<any>(undefined);
-
-    const { root } = useRootSelector();
     const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
     const notify = useNotify();
+    const download = useDownload();
     const ref = React.createRef<LazyLog>();
 
-    //TODO use download hook
     const handlePreview = () => {
-        if (url) return;
+        if (url || !resource) return;
 
-        dataProvider
-            .download({ meta: { root } }, undefined, {
-                resource,
-                id: record?.id,
-                sub,
-            })
+        download({
+            resource,
+            id: record?.id,
+            sub,
+        })
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);
