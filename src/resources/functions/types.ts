@@ -23,10 +23,10 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:disabled': 'true',
             },
         },
-        requirements: { 
-            "ui:widget": TextArrayWidget 
+        requirements: {
+            'ui:widget': TextArrayWidget,
         },
-                fab_source: {
+        fab_source: {
             'ui:ObjectFieldTemplate': FabSourceCodeTemplate,
             clientbase64: {
                 'ui:widget': SourceCodeEditorWidget,
@@ -41,6 +41,5 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:disabled': 'true',
             },
         },
-
     };
 };
