@@ -3,9 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
-
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
     Button,
     Datagrid,
@@ -15,7 +13,6 @@ import {
     ResourceContextProvider,
     Toolbar,
     TopToolbar,
-    useDataProvider,
     useList,
     useTranslate,
 } from 'react-admin';
@@ -38,87 +35,41 @@ import { FileDetails } from './FileDetails';
 import { FileIcon } from './FileIcon';
 import { UploadButton } from './UploadButton';
 import { BulkDeleteButton } from './BulkDeleteButton';
+import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
+import { useGetStores } from '../upload_rename_as_files/stores/useGetStores';
 
 export const Browser = () => {
-    const dataProvider = useDataProvider();
-    const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const getFileInfo = useGetFileInfo();
+    const getStores = useGetStores();
 
-    const [stores, setStores] = useState<string[] | null>(null);
+    // const [stores, setStores] = useState<string[] | null>(null);
     const [store, setStore] = useState<string | null>(null);
     const [path, setPath] = useState<string | null>(null);
     const [files, setFiles] = useState<any[] | null>(null);
     const [error, setError] = useState<any | null>(null);
 
     useEffect(() => {
-        if (dataProvider && projectId) {
-            dataProvider
-                .invoke({
-                    path: '/-/' + projectId + '/files/stores',
-                    options: { method: 'GET' },
-                })
-                .then(json => {
-                    if (json) {
-                        setStores(json);
-                        if (json.length == 1) {
-                            //select first
-                            setStore(json[0]);
-                        }
+        if (getStores) {
+            getStores().then(json => {
+                if (json) {
+                    // setStores(json);
+                    if (json.length == 1) {
+                        //select first
+                        setStore(json[0]);
                     }
-                });
+                }
+            });
         }
-    }, [dataProvider, projectId, setStores]);
+    }, [getStores]);
 
-    useEffect(() => {
-        if (dataProvider && projectId && store && path != null) {
-            dataProvider
-                .invoke({
-                    path: '/-/' + projectId + '/files/info',
-                    params: { path },
-                    options: { method: 'GET' },
-                })
-                .then(json => {
-                    if (json) {
-                        setFiles(
-                            json.map(j => ({ ...j, id: j.path || j.name }))
-                        );
-                        if (error) {
-                            setError(null);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.log('e', error);
-                    setError(error);
-                });
-        }
-    }, [dataProvider, projectId, store, path]);
-
-    useEffect(() => {
-        if (dataProvider && projectId && store) {
-            const root = store && store.endsWith('/') ? store : store + '/';
-            setPath(root);
-        }
-    }, [dataProvider, projectId, store]);
-
-    // const selectStore = key => {
-    //     setStore(key);
-    // };
-
-    const reload = () => {
-        if (dataProvider && projectId && store != null && path != null) {
-            dataProvider
-                .invoke({
-                    path: '/-/' + projectId + '/files/info',
-                    params: { id: store, path },
-                    options: { method: 'GET' },
-                })
+    const reload = useCallback(() => {
+        if (getFileInfo && path != null) {
+            getFileInfo({ path })
                 .then(json => {
                     if (json) {
                         setFiles(json);
-                        if (error) {
-                            setError(null);
-                        }
+                        setError(null);
                     }
                 })
                 .catch(error => {
@@ -126,29 +77,26 @@ export const Browser = () => {
                     setError(error);
                 });
         }
-    };
+    }, [getFileInfo, path]);
 
-    // const parent = () => {
-    //     if (path && path != store) {
-    //         const cur = path.substring(0, path.length - 1);
-    //         const parent = cur.substring(0, cur.lastIndexOf('/') + 1);
+    useEffect(() => {
+        reload();
+    }, [path, reload]);
 
-    //         if (parent != path) {
-    //             setPath(parent);
-    //         }
-    //     }
-    // };
+    useEffect(() => {
+        if (store) {
+            const root = store.endsWith('/') ? store : store + '/';
+            setPath(root);
+        }
+    }, [store]);
 
     const breadcrumbs: any[] = [];
 
     if (store && path) {
-        const partials =
-            path &&
-            store &&
-            path
-                .substring(store.length)
-                .split('/')
-                .filter(p => !!p);
+        const partials = path
+            .substring(store.length)
+            .split('/')
+            .filter(p => !!p);
         let cp = store + (store.endsWith('/') ? '' : '/');
         breadcrumbs.push({ name: store, path: cp });
 
@@ -170,84 +118,67 @@ export const Browser = () => {
                 sx={{ pl: 0, pr: 0 }}
             />
             <Box sx={{ pt: 0, textAlign: 'left' }}>
-                <>
-                    <TopToolbar>
-                        {path && (
-                            <UploadButton
-                                path={path}
-                                onUpload={files => {
-                                    if (files) {
-                                        reload();
-                                    }
-                                }}
-                            />
-                        )}
-                        <Button
-                            label="ra.action.refresh"
-                            onClick={e => reload()}
-                            size="small"
-                        >
-                            <ReloadIcon />
-                        </Button>
-                    </TopToolbar>
-                    <FlatCard sx={{ pt: 1 }}>
-                        <Toolbar sx={{ minHeight: '48px !important' }}>
-                            <Breadcrumbs aria-label="breadcrumb">
-                                {breadcrumbs &&
-                                    breadcrumbs.map((p, idx) => (
-                                        <a
-                                            key={
-                                                'file-browser-breadcrumb-' + idx
-                                            }
-                                            style={{
-                                                // textDecoration: 'underline',
-                                                cursor: 'pointer',
-                                                fontWeight:
-                                                    idx &&
-                                                    idx ==
-                                                        breadcrumbs.length - 1
-                                                        ? 'bold'
-                                                        : 'normal',
-                                            }}
-                                            onClick={e => setPath(p.path)}
-                                        >
-                                            {p.name}
-                                        </a>
-                                    ))}
-                            </Breadcrumbs>
-                        </Toolbar>
-                        {/* <>
-                        {stores &&
-                            stores.map(k => (
-                                <p onClick={e => selectStore(k)}>{k}</p>
-                            ))}
-                    </> */}
-                        {/* <>
-                        {path && path != store && (
-                            <a onClick={e => parent()}>...</a>
-                        )}
-                    </> */}
-                        {error ? (
-                            <Alert severity="error">
-                                <Typography variant="body2" mb={2}>
-                                    {typeof error == 'string'
-                                        ? error
-                                        : error.message ||
-                                          translate(
-                                              'ra.notification.data_provider_error'
-                                          )}
-                                </Typography>
-                            </Alert>
-                        ) : (
-                            <FileList
-                                files={files}
-                                navigate={setPath}
-                                reload={reload}
-                                path={path}
-                            />
-                        )}
-                    </FlatCard>
-                </>
+                <TopToolbar>
+                    {path && (
+                        <UploadButton
+                            path={path}
+                            onUpload={files => {
+                                if (files) {
+                                    reload();
+                                }
+                            }}
+                        />
+                    )}
+                    <Button
+                        label="ra.action.refresh"
+                        onClick={() => reload()}
+                        size="small"
+                    >
+                        <ReloadIcon />
+                    </Button>
+                </TopToolbar>
+                <FlatCard sx={{ pt: 1 }}>
+                    <Toolbar sx={{ minHeight: '48px !important' }}>
+                        <Breadcrumbs aria-label="breadcrumb">
+                            {breadcrumbs &&
+                                breadcrumbs.map((p, idx) => (
+                                    <a
+                                        key={'file-browser-breadcrumb-' + idx}
+                                        style={{
+                                            cursor: 'pointer',
+                                            fontWeight:
+                                                idx &&
+                                                idx == breadcrumbs.length - 1
+                                                    ? 'bold'
+                                                    : 'normal',
+                                        }}
+                                        onClick={() => setPath(p.path)}
+                                    >
+                                        {p.name}
+                                    </a>
+                                ))}
+                        </Breadcrumbs>
+                    </Toolbar>
+                    {error ? (
+                        <Alert severity="error">
+                            <Typography variant="body2" mb={2}>
+                                {typeof error == 'string'
+                                    ? error
+                                    : error.message ||
+                                      translate(
+                                          'ra.notification.data_provider_error'
+                                      )}
+                            </Typography>
+                        </Alert>
+                    ) : (
+                        <FileList
+                            files={files}
+                            navigate={setPath}
+                            reload={reload}
+                            path={path}
+                        />
+                    )}
+                </FlatCard>
             </Box>
         </Container>
     );
@@ -295,7 +226,6 @@ const FileList = (props: {
     return (
         <ResourceContextProvider value="files">
             <ListContextProvider value={listContext}>
-                {/* <ListView actions={false} aside={<FileDetails file={file} />}> */}
                 <Grid container spacing={0}>
                     <Grid size={'grow'}>
                         <Datagrid
@@ -316,9 +246,6 @@ const FileList = (props: {
                                     <Stack direction={'row'} gap={1}>
                                         <FileIcon fontSize="small" />
                                         {r.name}
-                                        {/* <a onClick={e => handleClick(r)}>
-                                            {r.name}
-                                        </a> */}
                                     </Stack>
                                 )}
                             />
@@ -355,8 +282,6 @@ const FileList = (props: {
                         </Grid>
                     )}
                 </Grid>
-
-                {/* </ListView> */}
             </ListContextProvider>
         </ResourceContextProvider>
     );
