@@ -2,8 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
-
 import { useEffect, useState } from 'react';
 import {
     DateField,
@@ -11,10 +9,8 @@ import {
     Labeled,
     RecordContextProvider,
     TextField,
-    useDataProvider,
 } from 'react-admin';
 import { CardContent, Divider, Stack, Typography } from '@mui/material';
-
 import { PreviewButton } from './PreviewButton';
 import { FlatCard } from '../components/FlatCard';
 import { DownloadButton } from './DownloadButton';
@@ -27,6 +23,8 @@ import { DeleteButton } from './DeleteButton';
 import { FileIcon } from './FileIcon';
 import { IdField } from '../components/IdField';
 import { ShareButton } from './ShareButton';
+import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
+import { FileInfo } from '../upload_rename_as_files/info/types';
 
 export const FileDetails = (props: {
     file: any | null;
@@ -35,26 +33,18 @@ export const FileDetails = (props: {
     onPreview?: (file) => void;
 }) => {
     const { file, onDelete, onDownload, onPreview } = props;
-    const { root: projectId } = useRootSelector();
-
-    const dataProvider = useDataProvider();
-    const [info, setInfo] = useState<any | null>(null);
+    const getFileInfo = useGetFileInfo();
+    const [info, setInfo] = useState<FileInfo | null>(null);
 
     useEffect(() => {
-        if (dataProvider && file) {
-            dataProvider
-                .invoke({
-                    path: '/-/' + projectId + '/files/info',
-                    params: { path: file.path },
-                    options: { method: 'GET' },
-                })
-                .then(json => {
-                    if (json && json.length > 0) {
-                        setInfo({ ...json[0], path: file.path });
-                    }
-                });
+        if (file) {
+            getFileInfo({ path: file.path }).then(json => {
+                if (json && json.length > 0) {
+                    setInfo({ ...json[0], path: file.path });
+                }
+            });
         }
-    }, [dataProvider, file, setInfo]);
+    }, [file, getFileInfo, setInfo]);
 
     if (!file) {
         return <></>;
@@ -152,12 +142,6 @@ export const FileDetails = (props: {
                                     />
                                 </Labeled>
                             )}
-                            {/* <Labeled label="size">
-                                <>{prettyBytes(info.size, 2)}</>
-                            </Labeled>
-                            <Labeled label="mimeType">
-                                {info.content_type}
-                            </Labeled> */}
                         </Stack>
                     </RecordContextProvider>
                 )}

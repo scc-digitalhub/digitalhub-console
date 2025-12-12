@@ -3,13 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { animated, useSpring } from '@react-spring/web';
 
 import clsx from 'clsx';
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Grid, Typography, alpha } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
@@ -17,7 +16,6 @@ import Collapse from '@mui/material/Collapse';
 
 import {
     TopToolbar,
-    useDataProvider,
     useLocaleState,
     useNotify,
     useRecordContext,
@@ -55,6 +53,7 @@ import { DownloadButton } from './buttons/DownloadButton';
 import { PreviewButton } from './buttons/PreviewButton';
 import { NoContent } from './NoContent';
 import { scaleBytes } from '../common/helper';
+import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
 
 const MAX_TREE_DEPTH = 50;
 
@@ -70,9 +69,6 @@ export const extractFileType = (data: any) => {
     ) {
         return 'image';
     }
-    // if (ct === 'application/pdf' || ['pdf'].indexOf(ext) !== -1) {
-    //     return 'pdf';
-    // }
     if (ct === 'text/csv' || ['csv'].indexOf(ext) !== -1) {
         return 'csv';
     }
@@ -211,15 +207,14 @@ const getStats = (
 
 export const FileInfo = () => {
     const record = useRecordContext();
-    const dataProvider = useDataProvider();
-    const { root } = useRootSelector();
     const resource = useResourceContext();
     const notify = useNotify();
     const translate = useTranslate();
+    const getFileInfo = useGetFileInfo();
     const [data, setData] = useState<any[]>();
     const [stats, setStats] = useState<any>();
     const [activeFile, setActiveFile] = useState<any>();
-    let isLoading = false;
+    let isLoading = useRef(false);
 
     const handleItemClick = (item: any) => {
         const a: any = activeFile;
@@ -240,30 +235,27 @@ export const FileInfo = () => {
     };
 
     useEffect(() => {
-        isLoading = true;
-        if (record && dataProvider) {
+        if (record) {
+            isLoading.current = true;
             if (record.status?.files?.length > 0) {
-                if (isLoading) {
-                    setData(convertFiles(record.status.files));
-                    setStats(getStats(record.status.files));
-                }
+                setData(convertFiles(record.status.files));
+                setStats(getStats(record.status.files));
+                isLoading.current = false;
             } else {
-                //TODO use fileinfo hook
-                dataProvider
-                    .fileInfo({ meta: { root } }, undefined, {
-                        resource,
-                        id: record.id,
-                    })
+                getFileInfo({
+                    resource: resource || '',
+                    id: record.id as string,
+                })
                     .then(data => {
-                        if (isLoading) {
-                            if (data) {
-                                setData(convertFiles(data));
-                                setStats(getStats(data));
-                            } else {
-                                notify('ra.message.not_found', {
-                                    type: 'error',
-                                });
-                            }
+                        if (data) {
+                            setData(convertFiles(data));
+                            setStats(getStats(data));
+                            isLoading.current = false;
+                        } else {
+                            notify('ra.message.not_found', {
+                                type: 'error',
+                            });
+                            isLoading.current = false;
                         }
                     })
                     .catch(error => {
@@ -272,14 +264,11 @@ export const FileInfo = () => {
                                 ? error
                                 : error.message || 'error';
                         notify(e);
+                        isLoading.current = false;
                     });
             }
-
-            return () => {
-                isLoading = false;
-            };
         }
-    }, [dataProvider, notify, record, resource, root]);
+    }, [getFileInfo, notify, record, resource]);
 
     return (
         <Box
@@ -291,7 +280,7 @@ export const FileInfo = () => {
                 {translate('fields.status.files')}
             </Typography>
 
-            {isLoading ? (
+            {isLoading.current ? (
                 <Spinner />
             ) : data ? (
                 <>

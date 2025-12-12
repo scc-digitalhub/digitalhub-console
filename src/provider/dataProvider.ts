@@ -439,6 +439,25 @@ const springDataProvider = (
                 };
             });
         },
+        stores: params => {
+            let prefix = '';
+            if (params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+
+            const url = `${apiUrl}${prefix}/files/stores`;
+
+            return httpClient(`${url}`).then(({ status, body }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                if (!body) {
+                    throw new Error('Resource not found');
+                }
+                const jsonBody = JSON.parse(body);
+                return jsonBody;
+            });
+        },
         download: (params, downloadParams, resourceDownloadParams) => {
             let prefix = '';
             if (params.meta?.root) {
