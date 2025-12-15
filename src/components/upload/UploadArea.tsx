@@ -24,7 +24,7 @@ import { UploadProgress } from './UploadProgress';
 import { useUploadStatusContext } from '../../upload_rename_as_files/upload/UploadStatusContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload } from '../../upload_rename_as_files/types';
+import { Upload } from '../../upload_rename_as_files/upload/types';
 
 export const UploadArea = () => {
     const translate = useTranslate();
