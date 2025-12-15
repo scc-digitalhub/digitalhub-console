@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createContext, ReactElement, useContext, useState } from 'react';
-import { Upload } from '../types';
+import { Upload } from './types';
 
 interface UploadStatusContextValue {
     uploads: Upload[];
