@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FabSourceCodeTemplate } from '../../jsonSchema/FabSourceCodeTemplate';
+import { TextArrayWidget } from '../../jsonSchema/TextArrayWidget';
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
@@ -22,6 +23,9 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:disabled': 'true',
             },
         },
+        requirements: {
+            'ui:widget': TextArrayWidget,
+        },
         fab_source: {
             'ui:ObjectFieldTemplate': FabSourceCodeTemplate,
             clientbase64: {
@@ -37,6 +41,5 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:disabled': 'true',
             },
         },
-
     };
 };
