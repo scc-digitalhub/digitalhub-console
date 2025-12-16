@@ -37,6 +37,7 @@ import {
     Tabs,
     Box,
     Alert,
+    Stack,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { HealthChips } from '../../components/HealthChips';
@@ -93,7 +94,8 @@ export const ClientButton = (props: ClientButtonProps) => {
         urls.push(...record.status.service.urls);
     }
     const proxy = '/-/' + projectId + '/runs/' + record?.id + '/proxy';
-
+    const titleText = label ? translate(String(label)) : '';
+    const modelName = record?.status?.openai?.model ?? '';
     const isLoading = !record;
     const isDisabled =
         rest.disabled ||
@@ -282,16 +284,27 @@ export const ClientButton = (props: ClientButtonProps) => {
                 aria-labelledby="client-dialog-title"
                 className={CreateInDialogButtonClasses.dialog}
             >
-                <div className={CreateInDialogButtonClasses.header}>
-                    <DialogTitle
-                        id="client-dialog-title"
-                        className={CreateInDialogButtonClasses.title}
-                    >
-                        {label && typeof label === 'string'
-                            ? translate(label)
-                            : ''}{' '}
-                        #{record?.name}
-                    </DialogTitle>
+                <div
+                    className={CreateInDialogButtonClasses.header}
+                    role="group"
+                    aria-labelledby="client-dialog-title-main"
+                >
+                    <Stack direction="column" spacing={0.5} sx={{ flex: 1 }}>
+                        <DialogTitle
+                            id="client-dialog-title-main"
+                            className={CreateInDialogButtonClasses.title}
+                        >
+                            {titleText} {record?.name ? `#${record.name}` : ''}
+                        </DialogTitle>
+
+                        <Typography
+                            id="client-dialog-model"
+                            className={CreateInDialogButtonClasses.title}
+                        >
+                            {modelName}
+                        </Typography>
+                    </Stack>
+
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}
                         aria-label={translate('ra.action.close')}
