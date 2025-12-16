@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef, React } from 'react';
 import {
     LoadingIndicator,
     RecordContextProvider,
@@ -12,6 +12,8 @@ import {
     Labeled,
     TextField,
     Identifier,
+    IconButtonWithTooltip,
+    useTranslate,
 } from 'react-admin';
 import {
     Box,
@@ -20,11 +22,14 @@ import {
     MenuItem,
     Select,
     Stack,
+    useTheme,
 } from '@mui/material';
 import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 import Parser from 'k8s-resource-parser';
 import { axisClasses, LineChart } from '@mui/x-charts';
 import { formatTimeTick } from '../common/helper';
+import DownloadIcon from '@mui/icons-material/FileDownload';
+import { toPng } from 'html-to-image';
 
 type ChartViewProps = {
     id?: Identifier;
@@ -110,6 +115,7 @@ export const ChartView = (props: ChartViewProps) => {
 
     const LogMetrics = (props: { metrics: any[] }) => {
         const { metrics } = props;
+        const chartRef = useRef<HTMLDivElement>(null);
         const keyToLabel: { [key: string]: string } = {
             cpu: 'Cpu (n)',
             memory: 'Memory (MB)',
@@ -156,41 +162,52 @@ export const ChartView = (props: ChartViewProps) => {
         const maxTime = data.length > 0 ? data[data.length - 1].time : 0;
 
         return (
-            <LineChart
-                xAxis={[
-                    {
-                        dataKey: 'time',
-                        scaleType: 'linear',
-                        tickNumber: 6,
-                        valueFormatter: (value: number) =>
-                            formatTimeTick(value),
-                        label: 'Time',
-                        min: minTime,
-                        max: maxTime,
-                    },
-                ]}
-                yAxis={Object.keys(keyToLabel).map(key => ({
-                    id: key,
-                    scaleType: 'linear',
-                    label: keyToLabel[key],
-                    min: 0,
-                    position: key == 'cpu' ? 'left' : 'right',
-                }))}
-                series={Object.keys(keyToLabel).map(key => ({
-                    dataKey: key,
-                    label: keyToLabel[key],
-                    yAxisId: key,
-                    showMark: false,
-                }))}
-                margin={{ top: 50, right: 50, bottom: 50, left: 65 }}
-                sx={{
-                    [`.${axisClasses.left} .${axisClasses.label}`]: {
-                        transform: 'translateX(-15px)',
-                    },
-                }}
-                dataset={data}
-                height={300}
-            />
+            <>
+                <Stack direction="row-reverse">
+                    <ChartDownloadButton
+                        elementRef={chartRef}
+                        width={1400}
+                        height={400}
+                    />
+                </Stack>
+                <div ref={chartRef} style={{ width: '100%' }}>
+                    <LineChart
+                        xAxis={[
+                            {
+                                dataKey: 'time',
+                                scaleType: 'linear',
+                                tickNumber: 6,
+                                valueFormatter: (value: number) =>
+                                    formatTimeTick(value),
+                                label: 'Time',
+                                min: minTime,
+                                max: maxTime,
+                            },
+                        ]}
+                        yAxis={Object.keys(keyToLabel).map(key => ({
+                            id: key,
+                            scaleType: 'linear',
+                            label: keyToLabel[key],
+                            min: 0,
+                            position: key == 'cpu' ? 'left' : 'right',
+                        }))}
+                        series={Object.keys(keyToLabel).map(key => ({
+                            dataKey: key,
+                            label: keyToLabel[key],
+                            yAxisId: key,
+                            showMark: false,
+                        }))}
+                        margin={{ top: 50, right: 50, bottom: 50, left: 65 }}
+                        sx={{
+                            [`.${axisClasses.left} .${axisClasses.label}`]: {
+                                transform: 'translateX(-15px)',
+                            },
+                        }}
+                        dataset={data}
+                        height={300}
+                    />
+                </div>
+            </>
         );
     };
 
@@ -254,6 +271,64 @@ export const ChartView = (props: ChartViewProps) => {
                     ) : null}
                 </RecordContextProvider>
             </Box>
+        </Stack>
+    );
+};
+
+type ChartDownloadButtonProps = {
+    elementRef: React.RefObject<HTMLElement>;
+    fileName?: string;
+    width?: number;
+    height?: number;
+    pixelRatio?: number;
+};
+const downloadImage = (dataUrl: string, name: string) => {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = name;
+    a.click();
+};
+const ChartDownloadButton: React.FC<ChartDownloadButtonProps> = ({
+    elementRef,
+    fileName,
+    width,
+    height,
+    pixelRatio,
+}: ChartDownloadButtonProps) => {
+    const translate = useTranslate();
+    const theme = useTheme();
+    const onClick = () => {
+        const node = elementRef?.current;
+        if (!node) return;
+        const name =
+            fileName ??
+            `chart_${new Date().toLocaleString()}.png`
+                .replace(/\s/g, '')
+                .replace(/[,/:]/g, '_');
+        const ratio = pixelRatio ?? 2;
+        toPng(node, {
+            backgroundColor: theme.palette.background.paper,
+            width: width,
+            height: height,
+            pixelRatio: ratio,
+            style: {
+                width: '' + width,
+                height: '' + height,
+            },
+        }).then(dataUrl => {
+            downloadImage(dataUrl, name);
+        });
+    };
+    return (
+        <Stack direction="row">
+            <IconButtonWithTooltip
+                color="secondary"
+                size="small"
+                label={translate('actions.download_image')}
+                onClick={onClick}
+            >
+                <DownloadIcon />
+            </IconButtonWithTooltip>
         </Stack>
     );
 };
