@@ -20,14 +20,20 @@ import { useUploadController } from '../../controllers/uploadController';
 import { randomId } from '../../common/helper';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
+import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
 
 export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(randomId());
+    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
+        id: id.current,
+    });
     const uploader = useUploadController({
         id: id.current,
+        onBeforeUpload,
+        onUploadComplete,
     });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =

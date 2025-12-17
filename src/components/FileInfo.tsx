@@ -236,6 +236,8 @@ export const FileInfo = () => {
 
     useEffect(() => {
         if (record) {
+            //reset activeFile
+            setActiveFile(undefined);
             isLoading.current = true;
             if (record.status?.files?.length > 0) {
                 setData(convertFiles(record.status.files));

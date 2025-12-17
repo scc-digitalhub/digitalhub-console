@@ -13,6 +13,7 @@ import {
 } from 'react-admin';
 import { Uppy } from 'uppy';
 import AwsS3, { AwsBody } from '@uppy/aws-s3';
+import { UploadResult } from '@uppy/core';
 import { Meta } from '@uppy/utils/lib/UppyFile';
 import { useUploadStatusContext } from '../upload_rename_as_files/upload/UploadStatusContext';
 import { extractInfo, MiB } from '../upload_rename_as_files/utils';
@@ -44,6 +45,10 @@ export type UploadControllerProps = {
     record?: RaRecord;
     id?: string;
     name?: string;
+    onBeforeUpload?: (data?: any) => Promise<any> | undefined;
+    onUploadComplete?: (
+        result: UploadResult<Meta, AwsBody>
+    ) => Promise<any> | undefined;
 };
 
 export type UploadController = {
@@ -51,13 +56,18 @@ export type UploadController = {
     files: any[];
     path: string | null;
     setName: (name: string) => void;
-    upload: (data: any) => void;
+    upload: (data?: any) => void;
 };
 
 export const useUploadController = (
     props: UploadControllerProps
 ): UploadController => {
-    const { id: idProps, name: nameProps = null } = props;
+    const {
+        id: idProps,
+        name: nameProps = null,
+        onBeforeUpload,
+        onUploadComplete,
+    } = props;
 
     const resource = useResourceContext(props);
     const record = useRecordContext(props);
@@ -115,21 +125,13 @@ export const useUploadController = (
         },
     };
 
-    const upload = (data: any) => {
-        if (dataProvider && resource) {
-            //update resource state to UPLOADING
-            if (!data.status) data.status = {};
-            data.status.state = 'UPLOADING';
-
-            dataProvider
-                .update(resource, {
-                    id: data.id,
-                    data: data,
-                    previousData: null,
-                })
-                .then(() => {
-                    uppy?.upload();
-                });
+    const upload = (data?: any) => {
+        if (onBeforeUpload) {
+            onBeforeUpload(data)?.then(res => {
+                if (res) uppy?.upload();
+            });
+        } else {
+            uppy?.upload();
         }
     };
 
@@ -364,30 +366,7 @@ export const useUploadController = (
                     }
                 })
                 .on('complete', result => {
-                    if (dataProvider && resource) {
-                        //update resource state to READY or ERROR
-                        dataProvider.getOne(resource, { id }).then(res => {
-                            let data = res.data;
-                            if (data) {
-                                const state =
-                                    result.successful &&
-                                    result.successful.length > 0 &&
-                                    result.failed?.length === 0
-                                        ? 'READY'
-                                        : 'ERROR';
-                                data.status.state = state;
-                                data.status.files = result.successful?.map(f =>
-                                    extractInfo(f)
-                                );
-
-                                dataProvider.update(resource, {
-                                    id: data.id,
-                                    data: data,
-                                    previousData: null,
-                                });
-                            }
-                        });
-                    }
+                    if (onUploadComplete) onUploadComplete(result);
                 }),
         [
             doMultipartUpload,
@@ -395,7 +374,7 @@ export const useUploadController = (
             completeMultipartUpload,
             doUpload,
             updateUploads,
-            dataProvider,
+            onUploadComplete,
         ]
     );
 

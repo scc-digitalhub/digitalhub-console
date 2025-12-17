@@ -28,6 +28,7 @@ import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 import { CreateSpecWithUpload } from '../../components/upload/CreateSpecWithUpload';
+import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -35,8 +36,13 @@ export const ArtifactCreate = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
+    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
+        id: id.current,
+    });
     const uploader = useUploadController({
         id: id.current,
+        onBeforeUpload,
+        onUploadComplete,
     });
 
     const transform = data => {
