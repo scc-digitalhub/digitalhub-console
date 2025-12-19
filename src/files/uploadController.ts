@@ -6,21 +6,16 @@ import { useMemo, useState } from 'react';
 import { useNotify, useTranslate } from 'react-admin';
 import { Uppy } from 'uppy';
 import AwsS3, { AwsBody } from '@uppy/aws-s3';
-import { extractInfo, MiB } from '../upload_rename_as_files/utils';
+import {
+    extractInfo,
+    MiB,
+    numberOfParts,
+    sizeThreshold,
+} from '../upload_rename_as_files/utils';
 import { useUpload } from '../upload_rename_as_files/upload/useUpload';
 import { Meta } from '@uppy/utils/lib/UppyFile';
 import { useUploadPart } from '../upload_rename_as_files/upload/useUploadPart';
 import { useCompleteMultipartUpload } from '../upload_rename_as_files/upload/useCompleteMultipartUpload';
-
-/**
- * private helpers
- */
-function partSize(file): number {
-    if (file.size <= 100 * MiB) return 1;
-    else {
-        return Math.ceil(file.size / (100 * MiB));
-    }
-}
 
 /**
  * upload hook
@@ -75,12 +70,12 @@ export const useUploadController = (
                 .use(AwsS3, {
                     id: 'AwsS3',
                     shouldUseMultipart: file =>
-                        file.size !== null && file.size > 100 * MiB,
-                    getChunkSize: file => 100 * MiB,
+                        file.size !== null && numberOfParts(file) > 1,
+                    getChunkSize: file => sizeThreshold * MiB,
                     getUploadParameters: async file => {
                         return {
                             method: 'PUT',
-                            url: file['s3']?.uploadUrl,
+                            url: file['s3']?.url,
                             fields: {},
                             headers: file.type
                                 ? { 'Content-Type': file.type }
@@ -92,7 +87,6 @@ export const useUploadController = (
 
                     async createMultipartUpload(file) {
                         return {
-                            // uploadId: uploadId.current,
                             uploadId: file['s3']?.uploadId,
                             key: file.name || '',
                         };
@@ -141,8 +135,6 @@ export const useUploadController = (
                 })
                 .on('file-added', async file => {
                     if (doUpload) {
-                        const partSizeNumber = partSize(file);
-                        let res: any = null;
                         const dest = file.meta?.relativePath
                             ? file.meta.relativePath.substring(
                                   0,
@@ -150,20 +142,16 @@ export const useUploadController = (
                               )
                             : '';
                         const filename = file.name ?? '';
-                        const params = { path: path + dest, filename };
-                        if (partSizeNumber === 1) {
-                            res = await doUpload(params);
-                            file['s3'] = { uploadUrl: res?.url };
-                        } else {
-                            res = await doUpload(params, true);
-                            file['s3'] = { uploadId: res?.uploadId };
-                        }
+                        file['s3'] = await doUpload(
+                            { path: path + dest, filename },
+                            numberOfParts(file) > 1
+                        );
 
                         const info = {
                             id: file.id,
                             info: extractInfo(file),
                             file: file,
-                            path: res?.path,
+                            path: file['s3']?.path,
                         };
                         setFiles(prev => {
                             const cur = prev.filter(f => f.id != file.id);
