@@ -16,25 +16,15 @@ import AwsS3, { AwsBody } from '@uppy/aws-s3';
 import { UploadResult } from '@uppy/core';
 import { Meta } from '@uppy/utils/lib/UppyFile';
 import { useUploadStatusContext } from '../upload_rename_as_files/upload/UploadStatusContext';
-import { extractInfo, MiB } from '../upload_rename_as_files/utils';
+import {
+    extractInfo,
+    MiB,
+    numberOfParts,
+    sizeThreshold,
+} from '../upload_rename_as_files/utils';
 import { useUpload } from '../upload_rename_as_files/upload/useUpload';
 import { useUploadPart } from '../upload_rename_as_files/upload/useUploadPart';
 import { useCompleteMultipartUpload } from '../upload_rename_as_files/upload/useCompleteMultipartUpload';
-
-/**
- * private helpers
- */
-const sizeThreshold = 100;
-function partCount(file): number {
-    return file.size <= sizeThreshold * MiB
-        ? 1
-        : Math.ceil(file.size / (sizeThreshold * MiB));
-}
-function partSize(file): number {
-    return file.size <= sizeThreshold * MiB
-        ? file.size
-        : Math.ceil(file.size / partCount(file));
-}
 
 /**
  * upload hook
@@ -208,8 +198,8 @@ export const useUploadController = (
                 .use(AwsS3, {
                     id: 'AwsS3',
                     shouldUseMultipart: file =>
-                        file.size !== null && partCount(file) > 1,
-                    getChunkSize: file => partSize(file),
+                        file.size !== null && numberOfParts(file) > 1,
+                    getChunkSize: file => sizeThreshold * MiB,
                     getUploadParameters: async file => {
                         return {
                             method: 'PUT',
@@ -225,7 +215,6 @@ export const useUploadController = (
 
                     async createMultipartUpload(file) {
                         return {
-                            // uploadId: uploadId.current,
                             uploadId: file['s3']?.uploadId,
                             key: file.name || '',
                         };
@@ -283,7 +272,6 @@ export const useUploadController = (
                 })
                 .on('file-added', async file => {
                     if (doUpload && resource && id) {
-                        const count = partCount(file);
                         const dest = file.meta?.relativePath
                             ? file.meta.relativePath.substring(
                                   0,
@@ -298,7 +286,7 @@ export const useUploadController = (
                                 filename: dest + filename,
                                 name: name.current ?? undefined,
                             },
-                            count !== 1
+                            numberOfParts(file) > 1
                         );
 
                         const info = {
