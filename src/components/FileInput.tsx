@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Dashboard } from '@uppy/react';
-import { styled } from '@mui/system';
 import {
     CommonInputProps,
     Labeled,
@@ -11,11 +10,12 @@ import {
     useResourceContext,
     useTheme,
 } from 'react-admin';
-import { Stack } from '@mui/material';
 import { useEffect } from 'react';
-import '@uppy/core/dist/style.min.css';
-import '@uppy/dashboard/dist/style.min.css';
 import { Uploader } from '../upload_rename_as_files/upload/types';
+import {
+    PREFIX,
+    UploadDashboard,
+} from '../upload_rename_as_files/upload/components/UploadDashboard';
 
 export const FileInput = (props: FileInputProps) => {
     const { uploader, source } = props;
@@ -54,20 +54,3 @@ export const FileInput = (props: FileInputProps) => {
 export type FileInputProps = Omit<CommonInputProps, 'defaultValue'> & {
     uploader: Uploader;
 };
-
-const PREFIX = 'UppyUploader';
-export const UploadDashboard = styled(Stack, {
-    name: PREFIX,
-})(({ theme }) => ({
-    width: '100%',
-    [`& .uppy-Dashboard-inner`]: { border: '0 none' },
-    [`& .uppy-Dashboard-AddFiles-title`]: {
-        fontSize: (theme.typography as any)['body1'].fontSize,
-    },
-    [`& .uppy-Dashboard-Item`]: {
-        height: '128px',
-        [`& .uppy-Dashboard-Item-preview`]: {
-            height: '64px',
-        },
-    },
-}));

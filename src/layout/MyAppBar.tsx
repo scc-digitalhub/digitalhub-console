@@ -19,7 +19,7 @@ import { SearchEnabledContext } from '../App';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
 import { useStompContext } from '../contexts/StompContext';
 import { NotificationArea } from '../components/NotificationArea';
-import { UploadArea } from '../components/upload/UploadArea';
+import { UploadArea } from '../upload_rename_as_files/upload/components/UploadArea';
 import { MyUserMenu } from './MyUserMenu';
 
 const APP_VERSION: string =
