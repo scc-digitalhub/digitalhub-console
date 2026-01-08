@@ -5,13 +5,17 @@
 import { ReactElement } from 'react';
 import { FileProvider } from './FileProvider';
 import { FileContext } from './FileContext';
+import { useUploadStatusController } from './upload/uploadStatusController';
 
 // creates a FileContext
 export const FileContextProvider = (props: FileContextProviderParams) => {
     const { fileProvider, children } = props;
+    const uploadStatusController = useUploadStatusController();
 
     return (
-        <FileContext.Provider value={{ provider: fileProvider }}>
+        <FileContext.Provider
+            value={{ provider: fileProvider, uploadStatusController }}
+        >
             {children}
         </FileContext.Provider>
     );

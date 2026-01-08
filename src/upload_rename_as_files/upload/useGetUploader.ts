@@ -13,7 +13,7 @@ import { useUploadPart } from './useUploadPart';
 import { useCompleteMultipartUpload } from './useCompleteMultipartUpload';
 import { extractInfo, MiB, numberOfParts, sizeThreshold } from '../utils';
 import { UploadResult } from '@uppy/core';
-import { useUploadStatusContext } from './UploadStatusContext';
+import { useFileContext } from '../FileContext';
 
 const ID_PREFIX = 'uppy_';
 
@@ -50,8 +50,9 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
     const doUpload = useUpload();
     const doMultipartUpload = useUploadPart();
     const completeMultipartUpload = useCompleteMultipartUpload();
-    //TODO unify context with file context
-    const { updateUploads } = useUploadStatusContext();
+    const {
+        uploadStatusController: { updateUploads },
+    } = useFileContext();
 
     //keep files info
     const [files, setFiles] = useState<any[]>([]);

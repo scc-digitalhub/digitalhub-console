@@ -127,10 +127,8 @@ import triggerDefinition from './resources/triggers';
 import { StompContextProvider } from './contexts/StompContext';
 import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
-import { UploadStatusContextProvider } from './upload_rename_as_files/upload/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { HttpClient } from './pages/services/client';
 import { FileContextProvider } from './upload_rename_as_files/FileContextProvider';
 
 export const SearchEnabledContext = createContext(false);
@@ -174,61 +172,59 @@ const CoreApp = () => {
                                 <FileContextProvider
                                     fileProvider={dataProvider}
                                 >
-                                    <UploadStatusContextProvider>
-                                        <AdminUI
-                                            dashboard={Dashboard}
-                                            layout={WrappedLayout}
-                                            loginPage={MyLoginPage}
-                                            requireAuth={!!authProvider}
-                                            disableTelemetry
-                                        >
-                                            <Resource {...functionDefinition} />
-                                            <Resource {...workflowDefinition} />
-                                            <Resource {...dataitemDefinition} />
-                                            <Resource {...modelDefinition} />
-                                            <Resource {...artifactDefinition} />
-                                            <Resource name="tasks" />
-                                            <Resource {...runDefinition} />
-                                            <Resource {...triggerDefinition} />
-                                            <Resource {...projectDefinition} />
-                                            <Resource {...secretDefinition} />
-                                            <Resource name="schemas" />
-                                            <Resource name="logs" />
-                                            <Resource name="metadatas" />
-                                            <Resource name="labels" />
-                                            <Resource name="templates" />
-                                            <CustomRoutes>
-                                                <Route
-                                                    path="/config"
-                                                    element={<ProjectConfig />}
-                                                />
+                                    <AdminUI
+                                        dashboard={Dashboard}
+                                        layout={WrappedLayout}
+                                        loginPage={MyLoginPage}
+                                        requireAuth={!!authProvider}
+                                        disableTelemetry
+                                    >
+                                        <Resource {...functionDefinition} />
+                                        <Resource {...workflowDefinition} />
+                                        <Resource {...dataitemDefinition} />
+                                        <Resource {...modelDefinition} />
+                                        <Resource {...artifactDefinition} />
+                                        <Resource name="tasks" />
+                                        <Resource {...runDefinition} />
+                                        <Resource {...triggerDefinition} />
+                                        <Resource {...projectDefinition} />
+                                        <Resource {...secretDefinition} />
+                                        <Resource name="schemas" />
+                                        <Resource name="logs" />
+                                        <Resource name="metadatas" />
+                                        <Resource name="labels" />
+                                        <Resource name="templates" />
+                                        <CustomRoutes>
+                                            <Route
+                                                path="/config"
+                                                element={<ProjectConfig />}
+                                            />
 
-                                                <Route
-                                                    path="/lineage"
-                                                    element={<ProjectLineage />}
-                                                />
+                                            <Route
+                                                path="/lineage"
+                                                element={<ProjectLineage />}
+                                            />
 
+                                            <Route
+                                                path="/account"
+                                                element={<MyAccount />}
+                                            />
+                                            <Route
+                                                path="/files"
+                                                element={<Browser />}
+                                            />
+                                            <Route
+                                                path="/services"
+                                                element={<ServiceList />}
+                                            />
+                                            {enableSearch && (
                                                 <Route
-                                                    path="/account"
-                                                    element={<MyAccount />}
+                                                    path="/searchresults"
+                                                    element={<SearchList />}
                                                 />
-                                                <Route
-                                                    path="/files"
-                                                    element={<Browser />}
-                                                />
-                                                <Route
-                                                    path="/services"
-                                                    element={<ServiceList />}
-                                                />
-                                                {enableSearch && (
-                                                    <Route
-                                                        path="/searchresults"
-                                                        element={<SearchList />}
-                                                    />
-                                                )}
-                                            </CustomRoutes>
-                                        </AdminUI>
-                                    </UploadStatusContextProvider>
+                                            )}
+                                        </CustomRoutes>
+                                    </AdminUI>
                                 </FileContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>

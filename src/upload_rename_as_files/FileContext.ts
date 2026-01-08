@@ -4,10 +4,12 @@
 
 import { createContext, useContext } from "react";
 import { FileProvider } from "./FileProvider";
+import { UploadStatusController } from "./upload/types";
 
 // everything that can be stored in file context
 interface FileContextValue {
     provider: FileProvider;
+    uploadStatusController: UploadStatusController;
 }
 
 // context

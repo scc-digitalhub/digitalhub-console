@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+//TODO delete file
+
 import { useMemo, useRef, useState } from 'react';
 import {
     RaRecord,
@@ -15,7 +17,6 @@ import { Uppy } from 'uppy';
 import AwsS3, { AwsBody } from '@uppy/aws-s3';
 import { UploadResult } from '@uppy/core';
 import { Meta } from '@uppy/utils/lib/UppyFile';
-import { useUploadStatusContext } from '../upload_rename_as_files/upload/UploadStatusContext';
 import {
     extractInfo,
     MiB,
@@ -25,6 +26,7 @@ import {
 import { useUpload } from '../upload_rename_as_files/upload/useUpload';
 import { useUploadPart } from '../upload_rename_as_files/upload/useUploadPart';
 import { useCompleteMultipartUpload } from '../upload_rename_as_files/upload/useCompleteMultipartUpload';
+import { useFileContext } from '../upload_rename_as_files/FileContext';
 
 /**
  * upload hook
@@ -71,7 +73,9 @@ export const useUploadController = (
     const doMultipartUpload = useUploadPart();
     const completeMultipartUpload = useCompleteMultipartUpload();
 
-    const { updateUploads } = useUploadStatusContext();
+    const {
+        uploadStatusController: { updateUploads },
+    } = useFileContext();
 
     //keep files info
     const [files, setFiles] = useState<any[]>([]);

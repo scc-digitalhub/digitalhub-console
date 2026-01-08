@@ -5,11 +5,8 @@
 import { AwsBody, AwsS3UploadParameters } from '@uppy/aws-s3';
 import { FileProgress } from '@uppy/utils/lib/FileProgress';
 import { Meta } from '@uppy/utils/lib/UppyFile';
-// import { UppyFile, Meta } from '@uppy/utils/lib/UppyFile';
 import { Identifier } from 'react-admin';
 import { Uppy } from 'uppy';
-
-// export type File = UppyFile<Meta, Record<string, any>>;
 
 export type UploadInfo = AwsS3UploadParameters & {
     path: string;
@@ -80,4 +77,10 @@ export type Upload = {
     error?: any;
     remove: () => void;
     retry?: () => void;
+};
+
+export type UploadStatusController = {
+    uploads: Upload[];
+    updateUploads: (upload: Upload) => void;
+    removeUploads: (toBeRemoved?: Upload) => void;
 };
