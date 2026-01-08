@@ -16,11 +16,11 @@ import { FlatCard } from '../../components/FlatCard';
 import { EditPageTitle } from '../../components/PageTitle';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
-import { useUploadController } from '../../controllers/uploadController';
 import { randomId } from '../../common/helper';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
+import { useGetUploader } from '../../upload_rename_as_files/upload/useGetUploader';
 
 export const ModelEdit = () => {
     const resource = useResourceContext();
@@ -30,8 +30,9 @@ export const ModelEdit = () => {
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
     });
-    const uploader = useUploadController({
+    const uploader = useGetUploader({
         id: id.current,
+        recordId: id.current,
         onBeforeUpload,
         onUploadComplete,
     });

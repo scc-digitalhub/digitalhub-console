@@ -2,10 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { AwsS3UploadParameters } from '@uppy/aws-s3';
+import { AwsBody, AwsS3UploadParameters } from '@uppy/aws-s3';
 import { FileProgress } from '@uppy/utils/lib/FileProgress';
+import { Meta } from '@uppy/utils/lib/UppyFile';
 // import { UppyFile, Meta } from '@uppy/utils/lib/UppyFile';
 import { Identifier } from 'react-admin';
+import { Uppy } from 'uppy';
 
 // export type File = UppyFile<Meta, Record<string, any>>;
 
@@ -56,6 +58,17 @@ export type ResourceCompleteMultipartUploadParams = {
     path: string;
     uploadId: string;
     partList: string[];
+};
+
+/**
+ * Wrapper around Uppy instance
+ */
+export type Uploader = {
+    uppy: Uppy<Meta, AwsBody>;
+    files: any[];
+    upload: (data?: any) => void;
+    path: string | null;
+    setName: (name: string) => void;
 };
 
 export type Upload = {

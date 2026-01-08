@@ -7,14 +7,14 @@ import { useEffect } from 'react';
 import { TextInput, useInput, useResourceContext } from 'react-admin';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
-import { UploadController } from '../../controllers/uploadController';
 import { FileInput } from '../../components/FileInput';
 import { SpecInput } from '../../components/SpecInput';
+import { Uploader } from '../../upload_rename_as_files/upload/types';
 
 export type EditFormContentWithUploadProps = {
     onSpecDirty?: (state: boolean) => void;
     onMetadataVersionDirty?: (state: boolean) => void;
-    uploader?: UploadController;
+    uploader?: Uploader;
     getSpecUiSchema: (kind: string | undefined) => any;
 };
 

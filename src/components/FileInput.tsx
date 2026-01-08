@@ -13,9 +13,9 @@ import {
 } from 'react-admin';
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { UploadController } from '../controllers/uploadController';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
+import { Uploader } from '../upload_rename_as_files/upload/types';
 
 export const FileInput = (props: FileInputProps) => {
     const { uploader, source } = props;
@@ -35,7 +35,7 @@ export const FileInput = (props: FileInputProps) => {
     }
 
     return (
-        <Uploader className={PREFIX} direction={'column'}>
+        <UploadDashboard className={PREFIX} direction={'column'}>
             <Labeled label="fields.files.title">
                 <Dashboard
                     uppy={uploader.uppy}
@@ -47,16 +47,16 @@ export const FileInput = (props: FileInputProps) => {
                     height={'180px'}
                 />
             </Labeled>
-        </Uploader>
+        </UploadDashboard>
     );
 };
 
 export type FileInputProps = Omit<CommonInputProps, 'defaultValue'> & {
-    uploader: UploadController;
+    uploader: Uploader;
 };
 
 const PREFIX = 'UppyUploader';
-export const Uploader = styled(Stack, {
+export const UploadDashboard = styled(Stack, {
     name: PREFIX,
 })(({ theme }) => ({
     width: '100%',

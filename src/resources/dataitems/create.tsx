@@ -20,15 +20,13 @@ import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
 import { useRef } from 'react';
-import {
-    UploadController,
-    useUploadController,
-} from '../../controllers/uploadController';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 import { CreateSpecWithUpload } from '../../components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
+import { useGetUploader } from '../../upload_rename_as_files/upload/useGetUploader';
+import { Uploader } from '../../upload_rename_as_files/upload/types';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
@@ -39,8 +37,9 @@ export const DataItemCreate = () => {
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
     });
-    const uploader = useUploadController({
+    const uploader = useGetUploader({
         id: id.current,
+        recordId: id.current,
         onBeforeUpload,
         onUploadComplete,
     });
@@ -95,7 +94,7 @@ export const DataItemCreate = () => {
     );
 };
 
-export const DataItemForm = (props: { uploader?: UploadController }) => {
+export const DataItemForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
 
     return (
