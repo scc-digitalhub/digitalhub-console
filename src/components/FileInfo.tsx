@@ -49,11 +49,11 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ArticleIcon from '@mui/icons-material/Article';
 import PublicIcon from '@mui/icons-material/Public';
 import TableChart from '@mui/icons-material/TableChart';
-import { DownloadButton } from './buttons/DownloadButton';
 import { PreviewButton } from './buttons/PreviewButton';
 import { NoContent } from './NoContent';
 import { scaleBytes } from '../common/helper';
 import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
+import { DownloadButton } from '../upload_rename_as_files/download/components/DownloadButton';
 
 const MAX_TREE_DEPTH = 50;
 

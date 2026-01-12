@@ -7,21 +7,26 @@ import {
     useNotify,
     Button,
     FieldProps,
-    useResourceContext,
     ButtonProps,
     RaRecord,
+    IconButtonWithTooltip,
+    useResourceContext,
 } from 'react-admin';
 import DownloadIcon from '@mui/icons-material/GetApp';
 import { ReactElement } from 'react';
-import { useDownload } from '../../upload_rename_as_files/download/useDownload';
-const defaultIcon = <DownloadIcon />;
+import { useDownload } from '../useDownload';
+
+const defaultIcon = <DownloadIcon fontSize="small" />;
 
 export const DownloadButton = (props: DownloadButtonProps) => {
     const {
         color = 'info',
-        label = 'download',
+        label = 'actions.download',
         icon = defaultIcon,
-        fileName,
+        size = 'medium',
+        iconButton = false,
+        fileName: fileNameProp,
+        path: pathProp,
         sub,
     } = props;
     const resource = useResourceContext(props);
@@ -29,16 +34,22 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const notify = useNotify();
     const download = useDownload();
 
-    if (!record || !resource) {
+    if (!record || (!resource && !pathProp && !record.path)) {
         return <></>;
     }
 
+    const path = pathProp || record.path;
+    const fileName = fileNameProp || record.name;
+
     const handleDownload = () => {
-        download({
-            resource,
-            id: record.id,
-            sub,
-        })
+        const params = resource
+            ? {
+                  resource,
+                  id: record.id,
+                  sub,
+              }
+            : { path };
+        download(params)
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');
@@ -65,7 +76,16 @@ export const DownloadButton = (props: DownloadButtonProps) => {
             });
     };
 
-    return (
+    return iconButton ? (
+        <IconButtonWithTooltip
+            label={label}
+            color={color}
+            size={size}
+            onClick={handleDownload}
+        >
+            {icon}
+        </IconButtonWithTooltip>
+    ) : (
         <Button label={label} color={color} onClick={handleDownload}>
             {icon}
         </Button>
@@ -76,4 +96,10 @@ export type DownloadButtonProps<RecordType extends RaRecord = any> = Omit<
     FieldProps<RecordType>,
     'source'
 > &
-    ButtonProps & { icon?: ReactElement; fileName?: string; sub?: string };
+    ButtonProps & {
+        icon?: ReactElement;
+        fileName?: string;
+        sub?: string;
+        path?: string;
+        iconButton?: boolean;
+    };
