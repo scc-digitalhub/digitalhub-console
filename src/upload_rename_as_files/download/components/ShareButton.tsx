@@ -34,8 +34,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
-import { IdField } from '../components/IdField';
-import { useDownload } from '../upload_rename_as_files/download/useDownload';
+import { IdField } from '../../../components/IdField';
+import { useDownload } from '../useDownload';
 
 const defaultIcon = <ShareIcon fontSize="small" />;
 
