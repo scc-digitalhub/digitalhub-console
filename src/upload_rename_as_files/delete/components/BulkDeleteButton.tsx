@@ -2,9 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
@@ -16,6 +14,7 @@ import {
 } from 'react-admin';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Fragment, ReactElement, useState } from 'react';
+import { useDeleteFiles } from '../useDeleteFiles';
 
 const defaultIcon = <DeleteIcon />;
 
@@ -27,9 +26,8 @@ export const BulkDeleteButton = (props: BulkDeleteButtonProps) => {
         path,
         onDelete,
     } = props;
-    const { root: projectId } = useRootSelector();
     const { selectedIds, onUnselectItems } = useListContext();
-    const dataProvider = useDataProvider();
+    const deleteFiles = useDeleteFiles();
     const notify = useNotify();
     const translate = useTranslate();
 
@@ -40,18 +38,10 @@ export const BulkDeleteButton = (props: BulkDeleteButtonProps) => {
     }
 
     const handleDelete = () => {
-        if (dataProvider && selectedIds && selectedIds.length > 0) {
+        if (selectedIds && selectedIds.length > 0) {
             const basePath = path && path.endsWith('/') ? path : path + '/';
 
-            Promise.all(
-                selectedIds.map(filename =>
-                    dataProvider.invoke({
-                        path: '/-/' + projectId + '/files/delete',
-                        params: { path: basePath + filename },
-                        options: { method: 'DELETE' },
-                    })
-                )
-            )
+            deleteFiles(selectedIds.map(filename => basePath + filename))
                 .then(() => {
                     onUnselectItems();
                     setOpen(false);

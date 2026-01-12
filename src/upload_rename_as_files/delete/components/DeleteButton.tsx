@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
@@ -17,6 +15,7 @@ import {
 } from 'react-admin';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Fragment, ReactElement, useState } from 'react';
+import { useDeleteFiles } from '../useDeleteFiles';
 
 const defaultIcon = <DeleteIcon fontSize="small" />;
 
@@ -27,13 +26,11 @@ export const DeleteButton = (props: DeleteButtonProps) => {
         icon = defaultIcon,
         size = 'medium',
         iconButton = false,
-        fileName: fileNameProp,
         path: pathProp,
         onDelete,
     } = props;
-    const { root: projectId } = useRootSelector();
     const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
+    const deleteFiles = useDeleteFiles();
     const notify = useNotify();
     const translate = useTranslate();
 
@@ -46,12 +43,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
     const path = pathProp || record?.path;
 
     const handleDelete = () => {
-        dataProvider
-            .invoke({
-                path: '/-/' + projectId + '/files/delete',
-                params: { path },
-                options: { method: 'DELETE' },
-            })
+        deleteFiles([path])
             .then(() => {
                 setOpen(false);
                 notify('ra.notification.deleted', {
@@ -136,7 +128,6 @@ export type DeleteButtonProps<RecordType extends RaRecord = any> = Omit<
     ButtonProps & {
         icon?: ReactElement;
         iconButton?: boolean;
-        fileName?: string;
         path?: string;
         onDelete?: () => void;
     };
