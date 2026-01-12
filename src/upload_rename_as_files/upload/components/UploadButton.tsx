@@ -25,10 +25,9 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import UploadIcon from '@mui/icons-material/Upload';
-//TODO move UploadDashboard to files folder
-import { UploadDashboard } from '../components/FileInput';
 import { Dashboard } from '@uppy/react';
-import { useGetUploader } from '../upload_rename_as_files/upload/useGetUploader';
+import { useGetUploader } from '../useGetUploader';
+import { UploadDashboard } from './UploadDashboard';
 
 const defaultIcon = <UploadIcon />;
 
