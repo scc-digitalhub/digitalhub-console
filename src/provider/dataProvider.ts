@@ -458,6 +458,26 @@ const springDataProvider = (
                 return jsonBody;
             });
         },
+        deleteFiles: (params, paths) => {
+            let prefix = '';
+            if (params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+
+            const url = `${apiUrl}${prefix}/files/delete`;
+            const promises = paths.map(path =>
+                httpClient(`${url}?path=${path}`, {
+                    method: 'DELETE',
+                })
+            );
+            return Promise.all(promises).then(responses => {
+                responses.forEach(r => {
+                    if (r.status !== 200) {
+                        throw new Error('Invalid response status ' + r.status);
+                    }
+                });
+            });
+        },
         download: (params, downloadParams, resourceDownloadParams) => {
             let prefix = '';
             if (params.meta?.root) {

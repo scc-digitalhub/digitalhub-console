@@ -19,10 +19,13 @@ import {
     UploadPartParams,
 } from './upload/types';
 
-//TODO add also /files/delete
-
 export type FileProvider = {
     stores: (params: Pick<GetListParams, 'meta'>) => Promise<string[]>;
+
+    deleteFiles: (
+        params: Pick<GetListParams, 'meta'>,
+        paths: string[]
+    ) => Promise<void>;
 
     download: (
         params: Pick<GetListParams, 'meta'>,
