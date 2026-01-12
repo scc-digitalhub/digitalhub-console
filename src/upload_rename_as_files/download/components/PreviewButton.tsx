@@ -52,16 +52,16 @@ import {
     styled,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import { NoContent } from '../components/NoContent';
+import { NoContent } from '../../../components/NoContent';
 import {
     getMimeTypeFromExtension,
     getTypeFromMimeType,
-} from '../upload_rename_as_files/fileBrowser/utils';
-import { useDownload } from '../upload_rename_as_files/download/useDownload';
+} from '../../fileBrowser/utils';
+import { useDownload } from '../useDownload';
 import {
     DownloadParams,
     ResourceDownloadParams,
-} from '../upload_rename_as_files/download/types';
+} from '../types';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
