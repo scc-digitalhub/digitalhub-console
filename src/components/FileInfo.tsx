@@ -49,14 +49,15 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ArticleIcon from '@mui/icons-material/Article';
 import PublicIcon from '@mui/icons-material/Public';
 import TableChart from '@mui/icons-material/TableChart';
-import { PreviewButton } from './buttons/PreviewButton';
 import { NoContent } from './NoContent';
 import { scaleBytes } from '../common/helper';
 import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
 import { DownloadButton } from '../upload_rename_as_files/download/components/DownloadButton';
+import { PreviewButton } from '../files/PreviewButton';
 
 const MAX_TREE_DEPTH = 50;
 
+//TODO merge with file browser utils
 export const extractFileType = (data: any) => {
     const ext = data.name.indexOf('.') > 0 ? data.name.split('.').pop() : '';
     const ct = data.content_type || '';
@@ -73,7 +74,7 @@ export const extractFileType = (data: any) => {
         return 'csv';
     }
     if (ct === 'text/plain' || ['txt'].indexOf(ext) !== -1) {
-        return 'txt';
+        return 'text';
     }
     if (
         ct === 'text/json' ||

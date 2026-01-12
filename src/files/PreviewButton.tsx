@@ -12,6 +12,7 @@ import {
     LoadingIndicator,
     useTranslate,
     IconButtonWithTooltip,
+    useResourceContext,
 } from 'react-admin';
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
@@ -52,10 +53,31 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { NoContent } from '../components/NoContent';
-import { getMimeTypeFromExtension, getTypeFromMimeType } from './utils';
+import {
+    getMimeTypeFromExtension,
+    getTypeFromMimeType,
+} from '../upload_rename_as_files/fileBrowser/utils';
 import { useDownload } from '../upload_rename_as_files/download/useDownload';
+import {
+    DownloadParams,
+    ResourceDownloadParams,
+} from '../upload_rename_as_files/download/types';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
+
+//whitelisted source languages for code editor
+const languages = {
+    'text/x-python': 'python',
+    'text/x-java': 'java',
+    'text/x-javascript': 'javascript',
+    'text/markdown': 'md',
+    'text/css': 'css',
+    'text/html': 'html',
+    'application/json': 'json',
+    'application/xml': 'xml',
+    'application/x-yaml': 'yaml',
+    'text/x-shellscript': 'sh',
+};
 
 export const PreviewButton = (props: PreviewButtonProps) => {
     const {
@@ -67,53 +89,21 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         size = 'medium',
         iconButton = false,
         fileName: fileNameProp,
+        sub,
         path: pathProp,
         fileType: fileTypeProp,
         contentType: contentTypeProps,
         ...rest
     } = props;
-    const record = useRecordContext(props);
 
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
 
+    const resource = useResourceContext(props);
+    //could be a file or a whole record
+    const record = useRecordContext(props);
+
     const isLoading = !record;
-
-    const path = pathProp || record?.path;
-    const fileName = fileNameProp || record?.name || '';
-    let fileType =
-        fileTypeProp ||
-        (record?.content_type
-            ? getTypeFromMimeType(record.content_type)
-            : undefined) ||
-        getTypeFromMimeType(
-            getMimeTypeFromExtension(fileName.split('.').pop())
-        );
-
-    let contentType = null;
-    const mimeType =
-        contentTypeProps ||
-        record?.content_type ||
-        getMimeTypeFromExtension(fileName.split('.').pop());
-
-    //whitelisted source languages for code editor
-    const languages = {
-        'text/x-python': 'python',
-        'text/x-java': 'java',
-        'text/x-javascript': 'javascript',
-        'text/markdown': 'md',
-        'text/css': 'css',
-        'text/html': 'html',
-        'application/json': 'json',
-        'application/xml': 'xml',
-        'application/x-yaml': 'yaml',
-        'text/x-shellscript': 'sh',
-    };
-
-    if (mimeType && mimeType in languages) {
-        fileType = 'source';
-        contentType = languages[mimeType];
-    }
 
     const handleDialogOpen = e => {
         setOpen(true);
@@ -129,8 +119,31 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         e.stopPropagation();
     }, []);
 
-    if (!record) {
+    if (!record || (!resource && !pathProp && !record.path)) {
         return <></>;
+    }
+
+    const path = pathProp || record.path;
+    const fileName = fileNameProp || record.name || '';
+
+    let fileType =
+        fileTypeProp ||
+        (record.content_type
+            ? getTypeFromMimeType(record.content_type)
+            : undefined) ||
+        getTypeFromMimeType(
+            getMimeTypeFromExtension(fileName.split('.').pop())
+        );
+
+    let contentType = null;
+    const mimeType =
+        contentTypeProps ||
+        record.content_type ||
+        getMimeTypeFromExtension(fileName.split('.').pop());
+
+    if (mimeType && mimeType in languages) {
+        fileType = 'source';
+        contentType = languages[mimeType];
     }
 
     return (
@@ -169,12 +182,11 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         id="logs-dialog-title"
                         className={CreateInDialogButtonClasses.title}
                     >
-                        {translate(
-                            label && typeof label === 'string'
-                                ? label
-                                : 'fields.preview'
-                        )}{' '}
-                        {fileName}
+                        {fileName
+                            ? fileName
+                            : typeof label === 'string'
+                            ? translate(label)
+                            : label}
                     </DialogTitle>
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}
@@ -192,10 +204,12 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         <LoadingIndicator />
                     ) : fileType ? (
                         <PreviewView
-                            fileName={fileName}
-                            path={path}
                             fileType={fileType}
                             contentType={contentType}
+                            path={path}
+                            resource={resource}
+                            id={record.id}
+                            sub={sub}
                         />
                     ) : (
                         <NoContent message="error.preview_not_available" />
@@ -224,8 +238,8 @@ const PreviewDialog = styled(Dialog, {
     },
 }));
 
-const PreviewView = (props: PreviewButtonProps) => {
-    const { path, fileType = '', contentType = 'text' } = props;
+const PreviewView = (props: PreviewViewProps) => {
+    const { path, resource, id, sub, fileType, contentType = 'text' } = props;
     const notify = useNotify();
     const download = useDownload();
 
@@ -234,10 +248,17 @@ const PreviewView = (props: PreviewButtonProps) => {
 
     const ref = React.createRef<LazyLog>();
 
-    const handlePreview = () => {
-        if (url || !path) return;
+    useEffect(() => {
+        let params: DownloadParams | ResourceDownloadParams | undefined =
+            undefined;
+        if (resource && id) {
+            params = { resource, id, sub };
+        } else if (path) {
+            params = { path };
+        }
+        if (!params) return;
 
-        download({ path })
+        download(params)
             .then(data => {
                 if (data?.url) {
                     setUrl(data.url);
@@ -261,11 +282,7 @@ const PreviewView = (props: PreviewButtonProps) => {
                         : error.message || 'error';
                 notify(e);
             });
-    };
-
-    useEffect(() => {
-        handlePreview();
-    }, [url]);
+    }, [download, fileType, id, notify, path, resource, sub]);
 
     return (
         <Stack>
@@ -335,37 +352,34 @@ const CSVViewer = (props: CSVViewerProps) => {
     const notify = useNotify();
 
     useEffect(() => {
-        if (!content) {
-            readRemoteFile(url, {
-                complete: results => {
-                    if (results.data && results.data.length > 0) {
-                        const cols = Object.keys(results.data[0] as any).map(
-                            c => ({ field: c, flex: 1 })
-                        );
-                        const res = {
-                            rows: results.data.map(
-                                (row: any, index: number) => ({
-                                    ...row,
-                                    id: index,
-                                })
-                            ),
-                            columns: cols,
-                        };
-                        setContent(res);
-                    }
-                },
-                error: () => {
-                    notify('ra.message.not_found', {
-                        type: 'error',
-                    });
-                },
-                header: true,
-                download: true,
-                preview: MAX_ROWS,
-                skipEmptyLines: true,
-            });
-        }
-    }, [content]);
+        readRemoteFile(url, {
+            complete: results => {
+                if (results.data && results.data.length > 0) {
+                    const cols = Object.keys(results.data[0] as any).map(c => ({
+                        field: c,
+                        flex: 1,
+                    }));
+                    const res = {
+                        rows: results.data.map((row: any, index: number) => ({
+                            ...row,
+                            id: index,
+                        })),
+                        columns: cols,
+                    };
+                    setContent(res);
+                }
+            },
+            error: () => {
+                notify('ra.message.not_found', {
+                    type: 'error',
+                });
+            },
+            header: true,
+            download: true,
+            preview: MAX_ROWS,
+            skipEmptyLines: true,
+        });
+    }, [notify, readRemoteFile, url]);
 
     return (
         <Box
@@ -377,7 +391,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                 },
             }}
         >
-            {content && (
+            {content ? (
                 <DataGrid
                     rows={content.rows}
                     columns={content.columns}
@@ -385,8 +399,9 @@ const CSVViewer = (props: CSVViewerProps) => {
                     autoHeight
                     disableRowSelectionOnClick
                 />
+            ) : (
+                <NoContent message={'fields.info.empty'} />
             )}
-            {!content && <NoContent message={'fields.info.empty'} />}
         </Box>
     );
 };
@@ -412,13 +427,20 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
     FieldProps<RecordType>,
     'source'
 > &
-    ButtonProps & {
+    ButtonProps &
+    Omit<PreviewViewProps, 'resource' | 'id'> & {
         icon?: ReactElement;
         iconButton?: boolean;
         fileName?: string;
-        path?: string;
         fullWidth?: boolean;
         maxWidth?: Breakpoint;
-        fileType?: string;
-        contentType?: string | null;
     };
+
+type PreviewViewProps = {
+    fileType: string;
+    contentType?: string | null;
+    path?: string;
+    resource?: string;
+    id?: string;
+    sub?: string;
+};
