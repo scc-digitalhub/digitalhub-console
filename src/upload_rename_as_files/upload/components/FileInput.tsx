@@ -11,11 +11,11 @@ import {
     useTheme,
 } from 'react-admin';
 import { useEffect } from 'react';
-import { Uploader } from '../upload_rename_as_files/upload/types';
+import { Uploader } from '../types';
 import {
     PREFIX,
     UploadDashboard,
-} from '../upload_rename_as_files/upload/components/UploadDashboard';
+} from './UploadDashboard';
 
 export const FileInput = (props: FileInputProps) => {
     const { uploader, source } = props;
