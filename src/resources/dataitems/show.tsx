@@ -22,7 +22,6 @@ import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
-import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
@@ -30,6 +29,7 @@ import { StateChips } from '../../components/StateChips';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
+import { FileInfoTree } from '../../files/fileInfoTree/FileInfoTree';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -103,7 +103,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label="fields.files.tab">
-                <FileInfo />
+                <FileInfoTree />
             </TabbedShowLayout.Tab>
             {kind && kind === 'table' && (
                 <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">

@@ -20,7 +20,6 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { MetadataField } from '../../components/MetadataField';
-import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
@@ -28,6 +27,7 @@ import { StateChips } from '../../components/StateChips';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
+import { FileInfoTree } from '../../files/fileInfoTree/FileInfoTree';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -93,7 +93,7 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label="fields.files.tab">
-                <FileInfo />
+                <FileInfoTree />
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
