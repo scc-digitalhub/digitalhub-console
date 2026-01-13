@@ -20,7 +20,7 @@ import { randomId } from '../../common/helper';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
-import { useGetUploader } from '../../upload_rename_as_files/upload/useGetUploader';
+import { useGetUploader } from '../../files/upload/useGetUploader';
 
 export const DataItemEdit = () => {
     const resource = useResourceContext();

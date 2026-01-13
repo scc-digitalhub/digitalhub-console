@@ -51,9 +51,9 @@ import PublicIcon from '@mui/icons-material/Public';
 import TableChart from '@mui/icons-material/TableChart';
 import { NoContent } from './NoContent';
 import { scaleBytes } from '../common/helper';
-import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
-import { DownloadButton } from '../upload_rename_as_files/download/components/DownloadButton';
-import { PreviewButton } from '../upload_rename_as_files/download/components/PreviewButton';
+import { useGetFileInfo } from '../files/info/useGetInfo';
+import { DownloadButton } from '../files/download/components/DownloadButton';
+import { PreviewButton } from '../files/download/components/PreviewButton';
 
 const MAX_TREE_DEPTH = 50;
 

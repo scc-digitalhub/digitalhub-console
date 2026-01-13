@@ -12,7 +12,7 @@ import {
     SearchResults,
 } from '../search/searchbar/SearchProvider';
 import { FUNCTION_OR_WORKFLOW } from '../common/helper';
-import { FileProvider } from '../upload_rename_as_files/FileProvider';
+import { FileProvider } from '../files/FileProvider';
 
 /**
  * Data Provider for Spring REST with Pageable support.

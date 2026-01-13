@@ -25,7 +25,7 @@ import {
 import { ProjectSelectorList } from './resources/projects/list';
 
 import { Dashboard } from './pages/dashboard/Dashboard';
-import { Browser } from './upload_rename_as_files/fileBrowser/Browser';
+import { Browser } from './files/fileBrowser/Browser';
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -129,7 +129,7 @@ import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { FileContextProvider } from './upload_rename_as_files/FileContextProvider';
+import { FileContextProvider } from './files/FileContextProvider';
 
 export const SearchEnabledContext = createContext(false);
 

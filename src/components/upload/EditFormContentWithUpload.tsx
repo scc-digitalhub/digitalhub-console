@@ -7,9 +7,9 @@ import { useEffect } from 'react';
 import { TextInput, useInput, useResourceContext } from 'react-admin';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
-import { FileInput } from '../../upload_rename_as_files/upload/components/FileInput';
+import { FileInput } from '../../files/upload/components/FileInput';
 import { SpecInput } from '../../components/SpecInput';
-import { Uploader } from '../../upload_rename_as_files/upload/types';
+import { Uploader } from '../../files/upload/types';
 
 export type EditFormContentWithUploadProps = {
     onSpecDirty?: (state: boolean) => void;

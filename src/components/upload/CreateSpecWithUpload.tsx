@@ -4,12 +4,12 @@
 
 import { useEffect } from 'react';
 import { FormDataConsumer, useInput, useResourceContext } from 'react-admin';
-import { FileInput } from '../../upload_rename_as_files/upload/components/FileInput';
+import { FileInput } from '../../files/upload/components/FileInput';
 import { KindSelector } from '../../components/KindSelector';
 import { useGetSchemas } from '../../controllers/schemaController';
 import { SpecInput } from '../../components/SpecInput';
 import { SchemaIdPrefixes } from '../../common/schemas';
-import { Uploader } from '../../upload_rename_as_files/upload/types';
+import { Uploader } from '../../files/upload/types';
 
 export type CreateSpecWithUploadProps = {
     uploader?: Uploader;
