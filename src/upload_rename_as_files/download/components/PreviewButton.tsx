@@ -437,7 +437,7 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
     };
 
 type PreviewViewProps = {
-    fileType: string;
+    fileType?: string;
     contentType?: string | null;
     path?: string;
     resource?: string;

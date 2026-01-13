@@ -25,7 +25,7 @@ import {
 import { ProjectSelectorList } from './resources/projects/list';
 
 import { Dashboard } from './pages/dashboard/Dashboard';
-import { Browser } from './files/Browser';
+import { Browser } from './upload_rename_as_files/fileBrowser/Browser';
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
