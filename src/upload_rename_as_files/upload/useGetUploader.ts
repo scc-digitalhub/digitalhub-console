@@ -11,7 +11,7 @@ import { Uploader, UploadInfo } from './types';
 import { useUpload } from './useUpload';
 import { useUploadPart } from './useUploadPart';
 import { useCompleteMultipartUpload } from './useCompleteMultipartUpload';
-import { extractInfo, MiB, numberOfParts, sizeThreshold } from '../utils';
+import { extractInfo, MiB, numberOfParts, sizeThreshold } from './utils';
 import { UploadResult } from '@uppy/core';
 import { useFileContext } from '../FileContext';
 

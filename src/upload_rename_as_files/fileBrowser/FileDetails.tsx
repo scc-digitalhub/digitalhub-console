@@ -14,17 +14,14 @@ import { CardContent, Divider, Stack, Typography } from '@mui/material';
 import { PreviewButton } from '../download/components/PreviewButton';
 import { FlatCard } from '../../components/FlatCard';
 import { DownloadButton } from '../download/components/DownloadButton';
-import {
-    getMimeTypeFromExtension,
-    getTypeFromMimeType,
-    prettyBytes,
-} from './utils';
+import { prettyBytes } from './utils';
 import { DeleteButton } from '../delete/components/DeleteButton';
 import { FileIcon } from './FileIcon';
 import { IdField } from '../../components/IdField';
 import { ShareButton } from '../download/components/ShareButton';
 import { useGetFileInfo } from '../info/useGetInfo';
 import { FileInfo } from '../info/types';
+import { getMimeTypeFromExtension, getTypeFromMimeType } from '../utils';
 
 export const FileDetails = (props: {
     file: any | null;

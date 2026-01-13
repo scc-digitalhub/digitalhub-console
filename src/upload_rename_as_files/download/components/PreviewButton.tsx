@@ -56,7 +56,7 @@ import { NoContent } from '../../../components/NoContent';
 import {
     getMimeTypeFromExtension,
     getTypeFromMimeType,
-} from '../../fileBrowser/utils';
+} from '../../utils';
 import { useDownload } from '../useDownload';
 import {
     DownloadParams,
