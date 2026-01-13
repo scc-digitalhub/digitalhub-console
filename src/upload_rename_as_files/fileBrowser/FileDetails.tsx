@@ -11,20 +11,20 @@ import {
     TextField,
 } from 'react-admin';
 import { CardContent, Divider, Stack, Typography } from '@mui/material';
-import { PreviewButton } from './PreviewButton';
-import { FlatCard } from '../components/FlatCard';
-import { DownloadButton } from './DownloadButton';
+import { PreviewButton } from '../download/components/PreviewButton';
+import { FlatCard } from '../../components/FlatCard';
+import { DownloadButton } from '../download/components/DownloadButton';
 import {
     getMimeTypeFromExtension,
     getTypeFromMimeType,
     prettyBytes,
 } from './utils';
-import { DeleteButton } from './DeleteButton';
+import { DeleteButton } from '../delete/components/DeleteButton';
 import { FileIcon } from './FileIcon';
-import { IdField } from '../components/IdField';
-import { ShareButton } from './ShareButton';
-import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
-import { FileInfo } from '../upload_rename_as_files/info/types';
+import { IdField } from '../../components/IdField';
+import { ShareButton } from '../download/components/ShareButton';
+import { useGetFileInfo } from '../info/useGetInfo';
+import { FileInfo } from '../info/types';
 
 export const FileDetails = (props: {
     file: any | null;
@@ -32,7 +32,7 @@ export const FileDetails = (props: {
     onDownload?: (file) => void;
     onPreview?: (file) => void;
 }) => {
-    const { file, onDelete, onDownload, onPreview } = props;
+    const { file, onDelete } = props;
     const getFileInfo = useGetFileInfo();
     const [info, setInfo] = useState<FileInfo | null>(null);
 

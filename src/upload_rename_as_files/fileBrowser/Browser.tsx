@@ -25,18 +25,18 @@ import {
     Stack,
     Typography,
 } from '@mui/material';
-import { PageTitle } from '../components/PageTitle';
-import BrowserIcon from '@mui/icons-material/Inventory2';
 import ReloadIcon from '@mui/icons-material/Replay';
 
-import { FlatCard } from '../components/FlatCard';
+import { FlatCard } from '../../components/FlatCard';
+import { PageTitle } from '../../components/PageTitle';
 import { prettyBytes } from './utils';
 import { FileDetails } from './FileDetails';
 import { FileIcon } from './FileIcon';
-import { UploadButton } from './UploadButton';
-import { BulkDeleteButton } from './BulkDeleteButton';
-import { useGetFileInfo } from '../upload_rename_as_files/info/useGetInfo';
-import { useGetStores } from '../upload_rename_as_files/stores/useGetStores';
+import { UploadButton } from '../upload/components/UploadButton';
+import { BulkDeleteButton } from '../delete/components/BulkDeleteButton';
+import { useGetFileInfo } from '../info/useGetInfo';
+import { useGetStores } from '../stores/useGetStores';
+import { BrowserIcon } from './icon';
 
 export const Browser = () => {
     const translate = useTranslate();
@@ -68,7 +68,7 @@ export const Browser = () => {
             getFileInfo({ path })
                 .then(json => {
                     if (json) {
-                        setFiles(json);
+                        setFiles(json.map(f => ({ ...f, id: f.path })));
                         setError(null);
                     }
                 })
@@ -210,7 +210,7 @@ const FileList = (props: {
         }
     };
 
-    const rowStyler = (record, idx) => {
+    const rowStyler = record => {
         if (record?.path && file && path && file.path == path + record.path) {
             return { backgroundColor: 'rgba(0, 0, 0, 0.04)' };
         }
