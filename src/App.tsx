@@ -25,7 +25,7 @@ import {
 import { ProjectSelectorList } from './resources/projects/list';
 
 import { Dashboard } from './pages/dashboard/Dashboard';
-import { Browser } from './files/Browser';
+import { Browser } from './files/fileBrowser/Browser';
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -127,10 +127,9 @@ import triggerDefinition from './resources/triggers';
 import { StompContextProvider } from './contexts/StompContext';
 import { ProjectLineage } from './pages/lineage/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
-import { UploadStatusContextProvider } from './contexts/UploadStatusContext';
 import { MyAccount } from './pages/account/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { HttpClient } from './pages/services/client';
+import { FileContextProvider } from './files/FileContextProvider';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -170,7 +169,9 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <UploadStatusContextProvider>
+                                <FileContextProvider
+                                    fileProvider={dataProvider}
+                                >
                                     <AdminUI
                                         dashboard={Dashboard}
                                         layout={WrappedLayout}
@@ -224,7 +225,7 @@ const CoreApp = () => {
                                             )}
                                         </CustomRoutes>
                                     </AdminUI>
-                                </UploadStatusContextProvider>
+                                </FileContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>

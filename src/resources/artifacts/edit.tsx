@@ -16,18 +16,25 @@ import { FlatCard } from '../../components/FlatCard';
 import { EditPageTitle } from '../../components/PageTitle';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
-import { useUploadController } from '../../controllers/uploadController';
 import { randomId } from '../../common/helper';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
+import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
+import { useGetUploader } from '../../files/upload/useGetUploader';
 
 export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
     const id = useRef(randomId());
-    const uploader = useUploadController({
+    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
+    });
+    const uploader = useGetUploader({
+        id: id.current,
+        recordId: id.current,
+        onBeforeUpload,
+        onUploadComplete,
     });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =

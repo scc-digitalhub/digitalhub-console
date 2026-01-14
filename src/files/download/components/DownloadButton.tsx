@@ -2,19 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
-    useDataProvider,
     useNotify,
     Button,
     FieldProps,
     ButtonProps,
     RaRecord,
     IconButtonWithTooltip,
+    useResourceContext,
 } from 'react-admin';
 import DownloadIcon from '@mui/icons-material/GetApp';
 import { ReactElement } from 'react';
+import { useDownload } from '../useDownload';
+
 const defaultIcon = <DownloadIcon fontSize="small" />;
 
 export const DownloadButton = (props: DownloadButtonProps) => {
@@ -26,26 +27,29 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         iconButton = false,
         fileName: fileNameProp,
         path: pathProp,
+        sub,
     } = props;
-    const { root: projectId } = useRootSelector();
+    const resource = useResourceContext(props);
     const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
     const notify = useNotify();
+    const download = useDownload();
 
-    if (!record) {
+    if (!record || (!resource && !pathProp && !record.path)) {
         return <></>;
     }
 
-    const path = pathProp || record?.path;
-    const fileName = fileNameProp || record?.name;
+    const path = pathProp || record.path;
+    const fileName = fileNameProp || record.name;
 
     const handleDownload = () => {
-        dataProvider
-            .invoke({
-                path: '/-/' + projectId + '/files/download',
-                params: { path },
-                options: { method: 'GET' },
-            })
+        const params = resource
+            ? {
+                  resource,
+                  id: record.id,
+                  sub,
+              }
+            : { path };
+        download(params)
             .then(data => {
                 if (data?.url) {
                     const link = document.createElement('a');
@@ -95,6 +99,7 @@ export type DownloadButtonProps<RecordType extends RaRecord = any> = Omit<
     ButtonProps & {
         icon?: ReactElement;
         fileName?: string;
+        sub?: string;
         path?: string;
         iconButton?: boolean;
     };

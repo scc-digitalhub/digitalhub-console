@@ -20,14 +20,13 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { ArtifactIcon } from './icon';
 import { getArtifactSpecUiSchema } from './types';
 import { MetadataInput } from '../../components/MetadataInput';
-import {
-    UploadController,
-    useUploadController,
-} from '../../controllers/uploadController';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 import { CreateSpecWithUpload } from '../../components/upload/CreateSpecWithUpload';
+import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
+import { useGetUploader } from '../../files/upload/useGetUploader';
+import { Uploader } from '../../files/upload/types';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -35,8 +34,14 @@ export const ArtifactCreate = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
-    const uploader = useUploadController({
+    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
+    });
+    const uploader = useGetUploader({
+        id: id.current,
+        recordId: id.current,
+        onBeforeUpload,
+        onUploadComplete,
     });
 
     const transform = data => {
@@ -89,7 +94,7 @@ export const ArtifactCreate = () => {
     );
 };
 
-export const ArtifactForm = (props: { uploader?: UploadController }) => {
+export const ArtifactForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
 
     return (

@@ -3,6 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import BrowserIcon from '@mui/icons-material/Inventory2';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
 
-export default BrowserIcon;
+export const BrowserIcon = Inventory2Icon;

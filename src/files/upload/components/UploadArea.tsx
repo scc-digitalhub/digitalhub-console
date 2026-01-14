@@ -21,18 +21,18 @@ import {
     useTranslate,
 } from 'react-admin';
 import { UploadProgress } from './UploadProgress';
-import {
-    Upload,
-    useUploadStatusContext,
-} from '../../contexts/UploadStatusContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Upload } from '../types';
+import { useFileContext } from '../../FileContext';
 
 export const UploadArea = () => {
     const translate = useTranslate();
     const createPath = useCreatePath();
     const navigate = useNavigate();
-    const { uploads, removeUploads } = useUploadStatusContext();
+    const {
+        uploadStatusController: { uploads, removeUploads },
+    } = useFileContext();
     const [openConfirm, setOpenConfirm] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

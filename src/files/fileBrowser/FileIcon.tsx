@@ -11,7 +11,7 @@ import AudioFileIcon from '@mui/icons-material/AudioFile';
 import TextFileIcon from '@mui/icons-material/Description';
 import ArchiveFileIcon from '@mui/icons-material/FolderZip';
 import { useRecordContext } from 'react-admin';
-import { getMimeTypeFromExtension, getTypeFromMimeType } from './utils';
+import { getMimeTypeFromExtension, getTypeFromMimeType } from '../utils';
 
 export const FileIcon = (props: {
     fileName?: string;

@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Dashboard } from '@uppy/react';
-import { styled } from '@mui/system';
 import {
     CommonInputProps,
     Labeled,
@@ -11,11 +10,12 @@ import {
     useResourceContext,
     useTheme,
 } from 'react-admin';
-import { Stack } from '@mui/material';
 import { useEffect } from 'react';
-import { UploadController } from '../controllers/uploadController';
-import '@uppy/core/dist/style.min.css';
-import '@uppy/dashboard/dist/style.min.css';
+import { Uploader } from '../types';
+import {
+    PREFIX,
+    UploadDashboard,
+} from './UploadDashboard';
 
 export const FileInput = (props: FileInputProps) => {
     const { uploader, source } = props;
@@ -35,7 +35,7 @@ export const FileInput = (props: FileInputProps) => {
     }
 
     return (
-        <Uploader className={PREFIX} direction={'column'}>
+        <UploadDashboard className={PREFIX} direction={'column'}>
             <Labeled label="fields.files.title">
                 <Dashboard
                     uppy={uploader.uppy}
@@ -47,27 +47,10 @@ export const FileInput = (props: FileInputProps) => {
                     height={'180px'}
                 />
             </Labeled>
-        </Uploader>
+        </UploadDashboard>
     );
 };
 
 export type FileInputProps = Omit<CommonInputProps, 'defaultValue'> & {
-    uploader: UploadController;
+    uploader: Uploader;
 };
-
-const PREFIX = 'UppyUploader';
-export const Uploader = styled(Stack, {
-    name: PREFIX,
-})(({ theme }) => ({
-    width: '100%',
-    [`& .uppy-Dashboard-inner`]: { border: '0 none' },
-    [`& .uppy-Dashboard-AddFiles-title`]: {
-        fontSize: (theme.typography as any)['body1'].fontSize,
-    },
-    [`& .uppy-Dashboard-Item`]: {
-        height: '128px',
-        [`& .uppy-Dashboard-Item-preview`]: {
-            height: '64px',
-        },
-    },
-}));

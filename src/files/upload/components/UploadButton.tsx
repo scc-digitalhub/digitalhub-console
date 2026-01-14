@@ -25,9 +25,9 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import UploadIcon from '@mui/icons-material/Upload';
-import { useUploadController } from './uploadController';
-import { Uploader } from '../components/FileInput';
 import { Dashboard } from '@uppy/react';
+import { useGetUploader } from '../useGetUploader';
+import { UploadDashboard } from './UploadDashboard';
 
 const defaultIcon = <UploadIcon />;
 
@@ -45,7 +45,7 @@ export const UploadButton = (props: UploadButtonProps) => {
     const translate = useTranslate();
     const [theme] = useTheme();
 
-    const uploader = useUploadController({ path });
+    const uploader = useGetUploader({ id: path, path });
     const [open, setOpen] = useState(false);
 
     const handleDialogOpen = e => {
@@ -97,14 +97,12 @@ export const UploadButton = (props: UploadButtonProps) => {
 
                 <DialogContent>
                     {uploader ? (
-                        <Uploader direction={'column'}>
+                        <UploadDashboard direction={'column'}>
                             <Labeled label="fields.files.title">
                                 <Dashboard
                                     uppy={uploader.uppy}
                                     theme={theme === 'dark' ? 'dark' : 'light'}
-                                    // hideUploadButton
                                     showProgressDetails
-                                    // hideProgressAfterFinish
                                     doneButtonHandler={() => {
                                         uploader.uppy.cancelAll();
                                         setOpen(false);
@@ -119,7 +117,7 @@ export const UploadButton = (props: UploadButtonProps) => {
                                     height={'240px'}
                                 />
                             </Labeled>
-                        </Uploader>
+                        </UploadDashboard>
                     ) : (
                         <LoadingIndicator />
                     )}

@@ -11,11 +11,11 @@ import {
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { DownloadButton } from '../buttons/DownloadButton';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { DeleteWithConfirmButtonByName } from '../buttons/DeleteWithConfirmButtonByName';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { DownloadButton } from '../../files/download/components/DownloadButton';
 
 /**
  * Top toolbar for show pages. Displays the following buttons:

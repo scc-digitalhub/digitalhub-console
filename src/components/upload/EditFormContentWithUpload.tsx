@@ -7,14 +7,14 @@ import { useEffect } from 'react';
 import { TextInput, useInput, useResourceContext } from 'react-admin';
 import { FormLabel } from '../../components/FormLabel';
 import { MetadataInput } from '../../components/MetadataInput';
-import { UploadController } from '../../controllers/uploadController';
-import { FileInput } from '../../components/FileInput';
+import { FileInput } from '../../files/upload/components/FileInput';
 import { SpecInput } from '../../components/SpecInput';
+import { Uploader } from '../../files/upload/types';
 
 export type EditFormContentWithUploadProps = {
     onSpecDirty?: (state: boolean) => void;
     onMetadataVersionDirty?: (state: boolean) => void;
-    uploader?: UploadController;
+    uploader?: Uploader;
     getSpecUiSchema: (kind: string | undefined) => any;
 };
 
@@ -28,11 +28,19 @@ export const EditFormContentWithUpload = (
     //update path in spec depending on upload
     //we need to watch it here because path is nested in spec
     const { field } = useInput({ resource, source: 'spec' });
+    const { field: nameField } = useInput({ resource, source: 'name' });
     useEffect(() => {
         if (uploader && field && uploader.path) {
             field.onChange({ ...field.value, path: uploader.path });
         }
     }, [uploader?.path]);
+
+    //update name in controller
+    useEffect(() => {
+        if (uploader && nameField.value) {
+            uploader.setName(nameField.value);
+        }
+    }, [uploader, nameField?.value]);
 
     const getUiSchema = (kind: string | undefined) => {
         if (!kind) {

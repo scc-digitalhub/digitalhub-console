@@ -22,7 +22,6 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
-import { FileInfo } from '../../components/FileInfo';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
 import { MetricsGrid } from '../../components/metrics/MetricsGrid';
@@ -32,6 +31,7 @@ import { StateChips } from '../../components/StateChips';
 import { ShowBaseLive } from '../../components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
+import { FileInfoTree } from '../../files/fileInfoTree/FileInfoTree';
 
 const ShowComponent = () => {
     const record = useRecordContext();
@@ -134,7 +134,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label="fields.files.tab">
-                <FileInfo />
+                <FileInfoTree />
             </TabbedShowLayout.Tab>
             {record?.status?.metrics &&
                 Object.keys(record.status.metrics).length > 0 && (

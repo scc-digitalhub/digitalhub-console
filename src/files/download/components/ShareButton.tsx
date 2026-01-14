@@ -11,7 +11,6 @@ import {
     Identifier,
     useRecordContext,
     useTranslate,
-    useDataProvider,
     Toolbar,
     Create,
     SaveButton,
@@ -35,8 +34,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
-import { useRootSelector } from '@dslab/ra-root-selector';
-import { IdField } from '../components/IdField';
+import { IdField } from '../../../components/IdField';
+import { useDownload } from '../useDownload';
 
 const defaultIcon = <ShareIcon fontSize="small" />;
 
@@ -144,9 +143,8 @@ export const ShareButton = (props: ShareButtonProps) => {
 
 const ShareCreateForm = (props: { path?: string; record?: any }) => {
     const { path: pathProp, record: recordFromProps } = props;
-    const { root: projectId } = useRootSelector();
-    const dataProvider = useDataProvider();
     const recordContext = useRecordContext();
+    const download = useDownload();
     const record = recordFromProps || recordContext;
     const path = pathProp || record?.path;
 
@@ -154,15 +152,9 @@ const ShareCreateForm = (props: { path?: string; record?: any }) => {
 
     const onSubmit = data => {
         if (data) {
-            dataProvider
-                .invoke({
-                    path: '/-/' + projectId + '/files/download',
-                    params: { path, duration: data.duration },
-                    options: { method: 'POST' },
-                })
-                .then(data => {
-                    setInfo(data);
-                });
+            download({ path, duration: data.duration }).then(data => {
+                setInfo(data);
+            });
         }
     };
 
