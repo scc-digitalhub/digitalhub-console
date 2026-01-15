@@ -112,8 +112,8 @@ const enableSearch: boolean =
 import { ResourceSchemaProvider } from './provider/schemaProvider';
 import { ProjectConfig } from './resources/projects/config';
 import { LayoutProjects } from './layout/LayoutProjects';
-import { SearchList } from './search/SearchList';
-import { SearchContextProvider } from './search/searchbar/SearchContextProvider';
+import { SearchList } from './features/search/components/SearchList';
+import { SearchContextProvider } from './features/search/SearchContextProvider';
 import { createContext } from 'react';
 import artifactDefinition from './resources/artifacts';
 import dataitemDefinition from './resources/dataitems';

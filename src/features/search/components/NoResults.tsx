@@ -5,8 +5,8 @@
 import { isEmpty, useTranslate } from 'react-admin';
 import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FlatCard } from '../components/FlatCard';
-import { useSearch } from './searchbar/SearchContext';
+import { FlatCard } from '../../../components/FlatCard';
+import { useSearch } from '../SearchContext';
 import Inbox from '@mui/icons-material/Inbox';
 
 export const NoResults = () => {

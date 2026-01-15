@@ -8,7 +8,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from 'react-router-dom';
 
-import { useSearch } from './SearchContext';
+import { useSearch } from '../SearchContext';
 import {
     Box,
     Button,
@@ -24,9 +24,9 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
-import { SearchFilter } from './SearchProvider';
+import { SearchFilter } from '../SearchProvider';
 import { InputProps, useTranslate } from 'ra-core';
-import { alphaNumericName } from '../../common/helper';
+import { alphaNumericName } from '../../../common/helper';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>
