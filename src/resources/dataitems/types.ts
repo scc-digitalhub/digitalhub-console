@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Serializable } from '../../common/schemas';
+import { Serializable } from '../../features/jsonSchema/schemas';
 import { JsonParamsWidget } from '../../features/jsonSchema/components/widgets/JsonParamsWidget';
 
 export const getDataItemSpecUiSchema = (

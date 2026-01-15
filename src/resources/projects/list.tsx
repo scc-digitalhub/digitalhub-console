@@ -36,15 +36,15 @@ import FolderIcon from '@mui/icons-material/Folder';
 import LockIcon from '@mui/icons-material/Lock';
 
 import { grey } from '@mui/material/colors';
-import { GridList } from '../../components/GridList';
+import { GridList } from '../../common/components/GridList';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { ProjectCreateForm } from './create';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import React from 'react';
 import purify from 'dompurify';
 import { useProjectPermissions } from '../../provider/authProvider';
-import { Empty } from '../../components/Empty';
+import { Empty } from '../../common/components/Empty';
 
 export const ProjectSelectorList = props => {
     const perPage = 12;

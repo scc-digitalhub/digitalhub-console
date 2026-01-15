@@ -16,17 +16,17 @@ import {
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
-import { FlatCard } from '../../components/FlatCard';
-import { ListPageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { VersionsList } from '../../components/VersionsList';
+import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/DeleteWithConfirmButtonByName';
+import { FlatCard } from '../../common/components/FlatCard';
+import { ListPageTitle } from '../../common/components/PageTitle';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
+import { VersionsList } from '../../common/components/VersionsList';
 import { DataItemIcon } from './icon';
-import { ChipsField } from '../../components/ChipsField';
-import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
+import { ChipsField } from '../../common/components/ChipsField';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { ListToolbar } from '../../components/toolbars/ListToolbar';
-import { StateChips } from '../../components/StateChips';
+import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
+import { StateChips } from '../../common/components/StateChips';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 

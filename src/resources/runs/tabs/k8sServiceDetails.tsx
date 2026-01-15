@@ -11,8 +11,8 @@ import {
     ArrayField,
 } from 'react-admin';
 import { Stack, Box } from '@mui/material';
-import { ChipsField } from '../../../components/ChipsField';
-import { IdField } from '../../../components/IdField';
+import { ChipsField } from '../../../common/components/ChipsField';
+import { IdField } from '../../../common/components/IdField';
 
 type K8sServiceDetailsProps = {
     record?: RaRecord<Identifier>;

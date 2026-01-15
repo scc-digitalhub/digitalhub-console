@@ -14,18 +14,18 @@ import {
 } from 'react-admin';
 import { Box, Container, Typography } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { FlatCard } from '../../components/FlatCard';
-import { PageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { StateChips } from '../../components/StateChips';
+import { FlatCard } from '../../common/components/FlatCard';
+import { PageTitle } from '../../common/components/PageTitle';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
+import { StateChips } from '../../common/components/StateChips';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser } from '../../common/helper';
 import { ListBaseLive } from '../notifications/components/ListBaseLive';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
-import { LogsButton } from '../../components/buttons/LogsButton';
+import { LogsButton } from '../../common/components/buttons/LogsButton';
 import { ClientButton } from './ClientButton';
-import { IdField } from '../../components/IdField';
+import { IdField } from '../../common/components/IdField';
 import { FunctionIcon } from '../../resources/functions/icon';
 
 const RowActions = () => {

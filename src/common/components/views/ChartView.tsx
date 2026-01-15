@@ -27,7 +27,7 @@ import {
 import { ByteConverter, B as Byte } from '@wtfcode/byte-converter';
 import Parser from 'k8s-resource-parser';
 import { axisClasses, LineChart } from '@mui/x-charts';
-import { formatTimeTick } from '../common/helper';
+import { formatTimeTick } from '../../helper';
 import DownloadIcon from '@mui/icons-material/FileDownload';
 import { toPng } from 'html-to-image';
 

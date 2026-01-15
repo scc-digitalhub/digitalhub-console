@@ -14,16 +14,16 @@ import {
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual, countLines } from '../../common/helper';
-import { FlatCard } from '../../components/FlatCard';
-import { ShowPageTitle } from '../../components/PageTitle';
-import { VersionsListWrapper } from '../../components/VersionsList';
+import { FlatCard } from '../../common/components/FlatCard';
+import { ShowPageTitle } from '../../common/components/PageTitle';
+import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
 import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
-import { IdField } from '../../components/IdField';
+import { IdField } from '../../common/components/IdField';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
-import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
-import { StateChips } from '../../components/StateChips';
+import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
+import { StateChips } from '../../common/components/StateChips';
 import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';

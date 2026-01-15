@@ -16,9 +16,9 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { FlatCard } from '../../components/FlatCard';
-import { VersionsListWrapper } from '../../components/VersionsList';
-import { ShowPageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { VersionsListWrapper } from '../../common/components/VersionsList';
+import { ShowPageTitle } from '../../common/components/PageTitle';
 import { getFunctionUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField } from '@dslab/ra-ace-editor';
@@ -26,11 +26,11 @@ import { FunctionIcon } from './icon';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import deepEqual from 'deep-is';
 import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
-import { IdField } from '../../components/IdField';
-import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { IdField } from '../../common/components/IdField';
+import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
 import { countLines } from '../../common/helper';
-import { SourceCodeView } from '../../components/SourceCodeView';
+import { SourceCodeView } from '../../common/components/views/SourceCodeView';
 
 const ShowComponent = () => {
     const resource = useResourceContext();

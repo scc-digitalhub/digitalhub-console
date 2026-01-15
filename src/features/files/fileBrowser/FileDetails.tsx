@@ -20,8 +20,8 @@ import { ShareButton } from '../download/components/ShareButton';
 import { useGetFileInfo } from '../info/useGetInfo';
 import { FileInfo } from '../info/types';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from '../utils';
-import { FlatCard } from '../../../components/FlatCard';
-import { IdField } from '../../../components/IdField';
+import { FlatCard } from '../../../common/components/FlatCard';
+import { IdField } from '../../../common/components/IdField';
 
 export const FileDetails = (props: {
     file: any | null;

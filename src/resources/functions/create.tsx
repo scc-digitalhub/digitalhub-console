@@ -13,21 +13,21 @@ import {
     required,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
-import { FlatCard } from '../../components/FlatCard';
-import { CreatePageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { CreatePageTitle } from '../../common/components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
-import { KindSelector } from '../../components/KindSelector';
+import { KindSelector } from '../../common/components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import {
     Template,
     TemplatesSelector,
-} from '../../components/TemplatesSelector';
-import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
-import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
+} from '../../common/components/TemplatesSelector';
+import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();

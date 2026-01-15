@@ -28,13 +28,13 @@ import {
     useDataProvider,
     useTranslate,
 } from 'react-admin';
-import { PageTitle } from '../../../components/PageTitle';
+import { PageTitle } from '../../../common/components/PageTitle';
 import { RunsGrid } from './RunsGrid';
 import { convertToDate } from '../helper';
 import { RunIcon } from '../../../resources/runs/icon';
 import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
-import { ShareButton } from '../../../components/buttons/ShareButton';
+import { ShareButton } from '../../../common/components/buttons/ShareButton';
 import { useProjectPermissions } from '../../../provider/authProvider';
 
 export const Dashboard = () => {

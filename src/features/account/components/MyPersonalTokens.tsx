@@ -36,10 +36,10 @@ import {
 } from 'react-admin';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import CloseIcon from '@mui/icons-material/Close';
-import { ChipsField } from '../../../components/ChipsField';
-import { RowButtonGroup } from '../../../components/buttons/RowButtonGroup';
+import { ChipsField } from '../../../common/components/ChipsField';
+import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { formatDuration, isAlphaNumeric } from '../../../common/helper';
-import { IdField } from '../../../components/IdField';
+import { IdField } from '../../../common/components/IdField';
 
 export const MyPersonalTokens = () => {
     const translate = useTranslate();

@@ -28,16 +28,16 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { TriggerIcon } from './icon';
-import { FlatCard } from '../../components/FlatCard';
-import { ShowPageTitle } from '../../components/PageTitle';
-import { StateChips, StateColors } from '../../components/StateChips';
+import { FlatCard } from '../../common/components/FlatCard';
+import { ShowPageTitle } from '../../common/components/PageTitle';
+import { StateChips, StateColors } from '../../common/components/StateChips';
 import { DeactivateButton } from './DeactivateButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { ActivateButton } from './ActivateButton';
-import { IdField } from '../../components/IdField';
+import { IdField } from '../../common/components/IdField';
 import { functionParser, taskParser } from '../../common/helper';
 import {
     useGetRunIds,

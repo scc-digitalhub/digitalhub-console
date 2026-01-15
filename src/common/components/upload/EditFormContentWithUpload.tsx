@@ -5,11 +5,11 @@
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { TextInput, useInput, useResourceContext } from 'react-admin';
-import { FormLabel } from '../../components/FormLabel';
-import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
-import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
-import { Uploader } from '../../features/files/upload/types';
-import { FileInput } from '../../features/files/upload/components/FileInput';
+import { FormLabel } from '../FormLabel';
+import { MetadataInput } from '../../../features/jsonSchema/components/MetadataInput';
+import { SpecInput } from '../../../features/jsonSchema/components/SpecInput';
+import { Uploader } from '../../../features/files/upload/types';
+import { FileInput } from '../../../features/files/upload/components/FileInput';
 
 export type EditFormContentWithUploadProps = {
     onSpecDirty?: (state: boolean) => void;

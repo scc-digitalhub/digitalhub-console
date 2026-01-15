@@ -8,7 +8,7 @@ import {
     AccordionDetails,
     Grid,
 } from '@mui/material';
-import { MetadataCreateUiSchema } from '../../../common/schemas';
+import { MetadataCreateUiSchema } from '../schemas';
 import { useGetSchemas } from '../schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

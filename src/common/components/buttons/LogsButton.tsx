@@ -24,7 +24,7 @@ import {
 import SegmentIcon from '@mui/icons-material/Segment';
 import CloseIcon from '@mui/icons-material/Close';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import { LogsView } from '../LogsView';
+import { LogsView } from '../views/LogsView';
 
 const defaultIcon = <SegmentIcon />;
 

@@ -29,8 +29,8 @@ import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { MyProjects } from './MyProjects';
 import { MyPersonalTokens } from './MyPersonalTokens';
 import { MyRefreshTokens } from './MyRefreshTokens';
-import { PageTitle } from '../../../components/PageTitle';
-import { IdField } from '../../../components/IdField';
+import { PageTitle } from '../../../common/components/PageTitle';
+import { IdField } from '../../../common/components/IdField';
 
 export const MyAccount = () => {
     const translate = useTranslate();

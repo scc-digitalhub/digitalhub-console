@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { NODE_WIDTH, RelationshipDirection } from '../utils';
 import ClearIcon from '@mui/icons-material/Clear';
-import { StateChips } from '../../../components/StateChips';
+import { StateChips } from '../../../common/components/StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { keyParser } from '../../../common/helper';
 

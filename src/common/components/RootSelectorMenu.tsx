@@ -12,7 +12,7 @@ import {
     useRootSelector,
     RootSelectorMenuParams,
 } from '@dslab/ra-root-selector';
-import { useProjectPermissions } from '../provider/authProvider';
+import { useProjectPermissions } from '../../provider/authProvider';
 
 const defaultIcon = <GroupWorkIcon />;
 

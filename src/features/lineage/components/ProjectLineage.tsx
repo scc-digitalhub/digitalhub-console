@@ -15,14 +15,14 @@ import {
     useResourceDefinitions,
     useTranslate,
 } from 'react-admin';
-import { PageTitle } from '../../../components/PageTitle';
+import { PageTitle } from '../../../common/components/PageTitle';
 import { LineageIcon } from './icon';
-import { FlatCard } from '../../../components/FlatCard';
+import { FlatCard } from '../../../common/components/FlatCard';
 import { useEffect, useState } from 'react';
 import { RecordLineage } from './RecordLineage';
 import { Relationship } from '..';
 import { keyParser } from '../../../common/helper';
-import { NoContent } from '../../../components/NoContent';
+import { NoContent } from '../../../common/components/NoContent';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();

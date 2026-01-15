@@ -16,15 +16,15 @@ import {
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
 import { Box, Container, Grid } from '@mui/material';
-import { CreatePageTitle } from '../../components/PageTitle';
+import { CreatePageTitle } from '../../common/components/PageTitle';
 import { SecretIcon } from './icon';
-import { FlatCard } from '../../components/FlatCard';
-import { FormLabel } from '../../components/FormLabel';
+import { FlatCard } from '../../common/components/FlatCard';
+import { FormLabel } from '../../common/components/FormLabel';
 import { useGetSchemas } from '../../features/jsonSchema/schemaController';
 import { SecretUiSchema } from './types';
 import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { useRef } from 'react';
-import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
+import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 
 export const SecretCreate = () => {
     const { root } = useRootSelector();

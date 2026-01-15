@@ -9,7 +9,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { StateChips, StateColors } from '../components/StateChips';
+import { StateChips, StateColors } from '../common/components/StateChips';
 import { ReactElement, useEffect, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
 import { FUNCTION_OR_WORKFLOW } from '../common/helper';

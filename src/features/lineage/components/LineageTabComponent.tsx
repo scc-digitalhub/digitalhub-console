@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { RecordLineage } from './RecordLineage';
-import { NoContent } from '../../../components/NoContent';
+import { NoContent } from '../../../common/components/NoContent';
 
 export const LineageTabComponent = () => {
     const record = useRecordContext();

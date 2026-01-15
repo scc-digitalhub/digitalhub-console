@@ -14,16 +14,16 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { isAlphaNumeric, randomId } from '../../common/helper';
-import { FlatCard } from '../../components/FlatCard';
-import { CreatePageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { CreatePageTitle } from '../../common/components/PageTitle';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { useRef } from 'react';
 import { StepperForm } from '@dslab/ra-stepper';
-import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
-import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
-import { CreateSpecWithUpload } from '../../components/upload/CreateSpecWithUpload';
+import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
+import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';

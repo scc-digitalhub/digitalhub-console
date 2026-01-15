@@ -16,9 +16,9 @@ import {
 } from 'react-admin';
 
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
-import { ChipsField } from '../../../components/ChipsField';
-import { RowButtonGroup } from '../../../components/buttons/RowButtonGroup';
-import { ShareButton } from '../../../components/buttons/ShareButton';
+import { ChipsField } from '../../../common/components/ChipsField';
+import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
+import { ShareButton } from '../../../common/components/buttons/ShareButton';
 import { CreateProjectButton } from '../../../resources/projects/list';
 
 export const MyProjects = () => {

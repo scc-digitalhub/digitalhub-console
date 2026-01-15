@@ -12,13 +12,13 @@ import {
     useRedirect,
     useResourceContext,
 } from 'react-admin';
-import { FlatCard } from '../../components/FlatCard';
-import { EditPageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { EditPageTitle } from '../../common/components/PageTitle';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
 import { randomId } from '../../common/helper';
-import { EditToolbar } from '../../components/toolbars/EditToolbar';
-import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
+import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
+import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 

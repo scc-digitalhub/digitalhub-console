@@ -16,8 +16,8 @@ import { InfoTable } from './InfoTable';
 import { convertFiles } from './utils';
 import { Stats } from './Stats';
 import { FileInfo } from '../info/types';
-import { NoContent } from '../../../components/NoContent';
-import { Spinner } from '../../../components/Spinner';
+import { NoContent } from '../../../common/components/NoContent';
+import { Spinner } from '../../../common/components/Spinner';
 
 const DefaultTitle = () => {
     const translate = useTranslate();

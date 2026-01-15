@@ -12,7 +12,7 @@ import {
     ListItemText,
     Badge,
 } from '@mui/material';
-import { StateColors } from '../../../components/StateChips';
+import { StateColors } from '../../../common/components/StateChips';
 import { convertToDate } from '../helper';
 import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
