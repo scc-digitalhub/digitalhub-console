@@ -10,7 +10,7 @@ import {
     SortPayload,
     useListParams,
 } from 'react-admin';
-import { useSearch } from './searchbar/SearchContext';
+import { useSearch } from './SearchContext';
 
 export const useSearchController = ({
     resultsPerPage = 5,

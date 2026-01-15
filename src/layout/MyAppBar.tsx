@@ -12,8 +12,8 @@ import {
 } from 'react-admin';
 import { Box, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
-import { DateIntervalInput } from '../search/DateIntervalInput';
-import SearchBar from '../search/searchbar/SearchBar';
+import { DateIntervalInput } from '../features/search/components/DateIntervalInput';
+import SearchBar from '../features/search/components/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
