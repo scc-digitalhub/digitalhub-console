@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { mergeUiTemplate } from '../../common/schemas';
+import { mergeUiTemplate } from '../../features/jsonSchema/schemas';
 import { CoreResourceCpuWidget } from '../../features/jsonSchema/components/widgets/CoreResourceCpuWidget';
 import { CoreResourceFieldTemplate } from '../../features/jsonSchema/components/templates/CoreResourceFieldTemplate';
 import { CoreResourceGpuWidget } from '../../features/jsonSchema/components/widgets/CoreResourceGpuWidget';

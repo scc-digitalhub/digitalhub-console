@@ -6,7 +6,7 @@ import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useLocaleState, useTranslate } from 'react-admin';
-import { Spinner } from '../../../components/Spinner';
+import { Spinner } from '../../../common/components/Spinner';
 import { useSchemaDataGridController } from './useSchemaDataGridController';
 
 export const SchemaTabComponent = (props: { record: any }) => {

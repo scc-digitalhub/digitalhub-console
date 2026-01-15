@@ -13,16 +13,16 @@ import {
     useResourceDefinitions,
 } from 'react-admin';
 import { Container, Box, Stack } from '@mui/system';
-import { MetadataSchema } from '../../common/schemas';
-import { FlatCard } from '../../components/FlatCard';
-import { EditPageTitle } from '../../components/PageTitle';
+import { MetadataSchema } from '../../features/jsonSchema/schemas';
+import { FlatCard } from '../../common/components/FlatCard';
+import { EditPageTitle } from '../../common/components/PageTitle';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { FormLabel } from '../../components/FormLabel';
+import { FormLabel } from '../../common/components/FormLabel';
 import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
 import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { useEffect, useState } from 'react';
-import { EditToolbar } from '../../components/toolbars/EditToolbar';
+import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 
 export const ProjectEdit = () => {

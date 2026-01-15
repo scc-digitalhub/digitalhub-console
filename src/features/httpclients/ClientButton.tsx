@@ -40,7 +40,7 @@ import {
     Stack,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import { HealthChips } from '../../components/HealthChips';
+import { HealthChips } from '../../common/components/HealthChips';
 import { HttpClient } from './client';
 import { ReaChat } from '../chat/ReaChat';
 

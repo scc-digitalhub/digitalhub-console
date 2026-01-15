@@ -55,7 +55,7 @@ import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from '../../utils';
 import { useDownload } from '../useDownload';
 import { DownloadParams, ResourceDownloadParams } from '../types';
-import { NoContent } from '../../../../components/NoContent';
+import { NoContent } from '../../../../common/components/NoContent';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 

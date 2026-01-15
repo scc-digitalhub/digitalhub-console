@@ -11,8 +11,8 @@ import {
     ArrayField,
 } from 'react-admin';
 import { Box, Chip, Divider, Stack } from '@mui/material';
-import { IdField } from '../../../components/IdField';
-import { ChipsField } from '../../../components/ChipsField';
+import { IdField } from '../../../common/components/IdField';
+import { ChipsField } from '../../../common/components/ChipsField';
 
 type OpenAIDetailsProps = {
     record?: RaRecord<Identifier>;

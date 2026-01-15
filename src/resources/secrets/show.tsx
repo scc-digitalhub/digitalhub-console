@@ -19,13 +19,13 @@ import { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { ShowPageTitle } from '../../components/PageTitle';
-import { FlatCard } from '../../components/FlatCard';
+import { ShowPageTitle } from '../../common/components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
 import { SecretIcon } from './icon';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
-import { IdField } from '../../components/IdField';
-import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
+import { IdField } from '../../common/components/IdField';
+import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 
 const ShowComponent = () => {
     const translate = useTranslate();

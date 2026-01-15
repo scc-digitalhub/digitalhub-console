@@ -12,7 +12,7 @@ import {
     Confirm,
     useRecordContext,
 } from 'react-admin';
-import { isValidKind } from '../common/helper';
+import { isValidKind } from '../helper';
 import { useFormState } from 'react-hook-form';
 
 export const KindSelector = (props: {

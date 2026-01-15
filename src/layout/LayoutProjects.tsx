@@ -5,7 +5,7 @@
 import { Layout, AppBar } from 'react-admin';
 import { Button, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
-import RootResourceSelectorMenu from '../components/RootSelectorMenu';
+import RootResourceSelectorMenu from '../common/components/RootSelectorMenu';
 import { MyUserMenu } from './MyUserMenu';
 
 const APP_VERSION: string =

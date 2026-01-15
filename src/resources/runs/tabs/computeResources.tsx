@@ -20,12 +20,12 @@ import {
     useListController,
 } from 'react-admin';
 import { ConditionsList } from './conditions';
-import { StateChips } from '../../../components/StateChips';
+import { StateChips } from '../../../common/components/StateChips';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccordionProps } from '@mui/material/Accordion';
 import { styled } from '@mui/material/styles';
 import { JSONTree } from 'react-json-tree';
-import { ChartView } from '../../../components/ChartView';
+import { ChartView } from '../../../common/components/views/ChartView';
 import { formatDuration } from '../../../common/helper';
 import { EventsList } from './events';
 

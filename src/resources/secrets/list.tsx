@@ -15,13 +15,13 @@ import {
 } from 'react-admin';
 
 import { SecretIcon } from './icon';
-import { DeleteWithConfirmButtonByName } from '../../components/buttons/DeleteWithConfirmButtonByName';
-import { ListPageTitle } from '../../components/PageTitle';
-import { FlatCard } from '../../components/FlatCard';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
+import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/DeleteWithConfirmButtonByName';
+import { ListPageTitle } from '../../common/components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { ListToolbar } from '../../components/toolbars/ListToolbar';
+import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 
 const RowActions = () => {
     return (

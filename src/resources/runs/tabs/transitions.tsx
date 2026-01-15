@@ -10,7 +10,7 @@ import {
     TextField,
     useList,
 } from 'react-admin';
-import { StateChips } from '../../../components/StateChips';
+import { StateChips } from '../../../common/components/StateChips';
 
 export const TransitionsList = (props: { record: any }) => {
     const { record } = props;

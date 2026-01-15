@@ -21,7 +21,7 @@ import {
     useGetResourceLabel,
 } from 'react-admin';
 import { Alert } from '@mui/material';
-import { StateColors } from '../../components/StateChips';
+import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
 

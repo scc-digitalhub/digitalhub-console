@@ -6,9 +6,9 @@ import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useLocaleState, useTranslate } from 'react-admin';
-import { Spinner } from '../../../components/Spinner';
+import { Spinner } from '../../../common/components/Spinner';
 import { usePreviewDataGridController } from './usePreviewDataGridController';
-import { NoContent } from '../../../components/NoContent';
+import { NoContent } from '../../../common/components/NoContent';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;

@@ -15,12 +15,12 @@ import {
 } from 'react-admin';
 import { Box, Container } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { FlatCard } from '../../components/FlatCard';
-import { ListPageTitle } from '../../components/PageTitle';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { StateChips } from '../../components/StateChips';
+import { FlatCard } from '../../common/components/FlatCard';
+import { ListPageTitle } from '../../common/components/PageTitle';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
+import { StateChips } from '../../common/components/StateChips';
 import { TriggerIcon } from './icon';
-import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/helper';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';

@@ -16,7 +16,7 @@ import { DateIntervalInput } from '../features/search/components/DateIntervalInp
 import SearchBar from '../features/search/components/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
-import RootResourceSelectorMenu from '../components/RootSelectorMenu';
+import RootResourceSelectorMenu from '../common/components/RootSelectorMenu';
 import { useStompContext } from '../features/notifications/StompContext';
 import { NotificationArea } from '../features/notifications/components/NotificationArea';
 import { MyUserMenu } from './MyUserMenu';

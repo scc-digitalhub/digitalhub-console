@@ -19,7 +19,7 @@ import {
     useEffect,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { CounterBadge } from '../../../components/CounterBadge';
+import { CounterBadge } from '../../../common/components/CounterBadge';
 import { RecentList } from './RecentList';
 import {
     useDataProvider,

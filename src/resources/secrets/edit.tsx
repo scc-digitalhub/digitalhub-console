@@ -14,11 +14,11 @@ import {
 } from 'react-admin';
 import { alphaNumericName } from '../../common/helper';
 import { Box, Container, Grid } from '@mui/material';
-import { EditPageTitle } from '../../components/PageTitle';
+import { EditPageTitle } from '../../common/components/PageTitle';
 import { SecretIcon } from './icon';
-import { FlatCard } from '../../components/FlatCard';
-import { FormLabel } from '../../components/FormLabel';
-import { EditToolbar } from '../../components/toolbars/EditToolbar';
+import { FlatCard } from '../../common/components/FlatCard';
+import { FormLabel } from '../../common/components/FormLabel';
+import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 
 export const SecretEdit = () => {
     const { root } = useRootSelector();

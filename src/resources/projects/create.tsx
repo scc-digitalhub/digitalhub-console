@@ -11,8 +11,8 @@ import {
     useNotify,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
-import { MetadataSchema } from '../../common/schemas';
-import { FormLabel } from '../../components/FormLabel';
+import { MetadataSchema } from '../../features/jsonSchema/schemas';
+import { FormLabel } from '../../common/components/FormLabel';
 import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
 

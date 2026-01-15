@@ -18,13 +18,13 @@ import {
 import { Typography, Box, alpha } from '@mui/material';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
-import { StateChips } from '../../components/StateChips';
+import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
+import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../features/jsonSchema/schemaController';
-import { DropDownButton } from '../../components/buttons/DropdownButton';
+import { DropDownButton } from '../../common/components/buttons/DropdownButton';
 import { TriggerCreateForm } from '../triggers/create';
 import { DeactivateButton } from '../triggers/DeactivateButton';
-import { LoadMore } from '../../components/LoadMore';
+import { LoadMore } from '../../common/components/LoadMore';
 import { sanitizeObj } from '../../common/helper';
 
 export const TaskTriggerList = () => {

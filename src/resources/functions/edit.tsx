@@ -21,15 +21,15 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { FlatCard } from '../../components/FlatCard';
-import { FormLabel } from '../../components/FormLabel';
-import { EditPageTitle } from '../../components/PageTitle';
+import { FlatCard } from '../../common/components/FlatCard';
+import { FormLabel } from '../../common/components/FormLabel';
+import { EditPageTitle } from '../../common/components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
 import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
-import { EditToolbar } from '../../components/toolbars/EditToolbar';
+import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 
 const SpecInput = (props: {
     source: string;

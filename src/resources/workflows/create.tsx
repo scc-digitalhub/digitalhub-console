@@ -14,18 +14,18 @@ import {
     required,
 } from 'react-admin';
 import { isAlphaNumeric } from '../../common/helper';
-import { BlankSchema } from '../../common/schemas';
-import { FlatCard } from '../../components/FlatCard';
-import { CreatePageTitle } from '../../components/PageTitle';
+import { BlankSchema } from '../../features/jsonSchema/schemas';
+import { FlatCard } from '../../common/components/FlatCard';
+import { CreatePageTitle } from '../../common/components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
-import { KindSelector } from '../../components/KindSelector';
+import { KindSelector } from '../../common/components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
-import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
-import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
+import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
+import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();

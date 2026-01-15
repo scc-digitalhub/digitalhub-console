@@ -35,8 +35,8 @@ import { BulkDeleteButton } from '../delete/components/BulkDeleteButton';
 import { useGetFileInfo } from '../info/useGetInfo';
 import { useGetStores } from '../stores/useGetStores';
 import { BrowserIcon } from './icon';
-import { PageTitle } from '../../../components/PageTitle';
-import { FlatCard } from '../../../components/FlatCard';
+import { PageTitle } from '../../../common/components/PageTitle';
+import { FlatCard } from '../../../common/components/FlatCard';
 
 export const Browser = () => {
     const translate = useTranslate();

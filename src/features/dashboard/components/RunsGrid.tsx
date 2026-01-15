@@ -4,8 +4,8 @@
 
 import { Grid, Typography, Button } from '@mui/material';
 import { useCreatePath, useTranslate } from 'react-admin';
-import { StateColors } from '../../../components/StateChips';
-import { CounterBadge } from '../../../components/CounterBadge';
+import { StateColors } from '../../../common/components/StateChips';
+import { CounterBadge } from '../../../common/components/CounterBadge';
 import { Link } from 'react-router-dom';
 
 export const RunsGrid = (props: {

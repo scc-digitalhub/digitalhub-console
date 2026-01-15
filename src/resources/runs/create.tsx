@@ -22,11 +22,11 @@ import yaml from 'yaml';
 import { isValidAgainstSchema } from '../../common/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
+import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { useCallback, useRef } from 'react';
-import { filterProps } from '../../common/schemas';
+import { filterProps } from '../../features/jsonSchema/schemas';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
