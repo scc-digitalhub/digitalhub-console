@@ -5,7 +5,7 @@
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
-} from '../../jsonSchema/SourceCodeTemplate';
+} from '../../features/jsonSchema/components/templates/SourceCodeTemplate';
 
 export const getWorkflowUiSpec = (kind: string | undefined) => {
     return {

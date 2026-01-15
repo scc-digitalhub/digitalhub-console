@@ -5,11 +5,11 @@
 import { alpha } from '@mui/material/styles';
 import { PreviewButton } from '../download/components/PreviewButton';
 import { DownloadButton } from '../download/components/DownloadButton';
-import { useDataGridController } from '../../controllers/useDataGridController';
 import { TopToolbar, useLocaleState } from 'react-admin';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
-import { scaleBytes } from '../../common/helper';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { useDataGridController } from '../../../controllers/useDataGridController';
+import { scaleBytes } from '../../../common/helper';
 
 export const InfoTable = (props: any) => {
     const { info } = props;

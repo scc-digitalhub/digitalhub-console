@@ -12,14 +12,14 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { JsonSchemaInput } from '../../components/JsonSchema';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { getTaskUiSpec } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
-import { checkCpuRequestError } from '../../jsonSchema/CoreResourceCpuWidget';
-import { checkGpuRequestError } from '../../jsonSchema/CoreResourceGpuWidget';
-import { checkMemRequestError } from '../../jsonSchema/CoreResourceMemWidget';
+import { checkCpuRequestError } from '../../features/jsonSchema/components/widgets/CoreResourceCpuWidget';
+import { checkGpuRequestError } from '../../features/jsonSchema/components/widgets/CoreResourceGpuWidget';
+import { checkMemRequestError } from '../../features/jsonSchema/components/widgets/CoreResourceMemWidget';
 
 export interface TaskProp {
     record?: any;

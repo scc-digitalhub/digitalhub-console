@@ -13,8 +13,8 @@ import {
 import { getTaskUiSpec } from '../tasks/types';
 import { getTriggerUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
-import { JsonSchemaInput } from '../../components/JsonSchema';
-import { useGetSchemas } from '../../controllers/schemaController';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
+import { useGetSchemas } from '../../features/jsonSchema/schemaController';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
 import { isAlphaNumeric, isValidAgainstSchema } from '../../common/helper';

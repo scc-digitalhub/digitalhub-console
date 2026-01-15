@@ -13,7 +13,7 @@ import {
 import { isAlphaNumeric } from '../../common/helper';
 import { MetadataSchema } from '../../common/schemas';
 import { FormLabel } from '../../components/FormLabel';
-import { JsonSchemaInput } from '../../components/JsonSchema';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
 
 export const ProjectCreate = () => {

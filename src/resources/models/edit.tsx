@@ -20,7 +20,7 @@ import { randomId } from '../../common/helper';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
-import { useGetUploader } from '../../files/upload/useGetUploader';
+import { useGetUploader } from '../../features/files/upload/useGetUploader';
 
 export const ModelEdit = () => {
     const resource = useResourceContext();

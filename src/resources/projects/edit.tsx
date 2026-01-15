@@ -18,7 +18,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { EditPageTitle } from '../../components/PageTitle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { FormLabel } from '../../components/FormLabel';
-import { JsonSchemaInput } from '../../components/JsonSchema';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
 import { SpecInput } from '../../components/SpecInput';
 import { useEffect, useState } from 'react';

@@ -25,8 +25,8 @@ import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 import { CreateSpecWithUpload } from '../../components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../controllers/useStateUpdateCallbacks';
-import { useGetUploader } from '../../files/upload/useGetUploader';
-import { Uploader } from '../../files/upload/types';
+import { useGetUploader } from '../../features/files/upload/useGetUploader';
+import { Uploader } from '../../features/files/upload/types';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();

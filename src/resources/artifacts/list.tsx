@@ -27,7 +27,7 @@ import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDelete
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../components/toolbars/ListToolbar';
 import { StateChips } from '../../components/StateChips';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
@@ -68,7 +68,7 @@ export const ArtifactList = () => {
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
-                queryOptions={{ meta: { root }}}
+                queryOptions={{ meta: { root } }}
             >
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />

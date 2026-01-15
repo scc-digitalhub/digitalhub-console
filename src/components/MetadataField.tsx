@@ -4,9 +4,9 @@
 
 import { Box } from '@mui/material';
 import { createMetadataViewUiSchema } from '../common/schemas';
-import { useGetSchemas } from '../controllers/schemaController';
+import { useGetSchemas } from '../features/jsonSchema/schemaController';
 import { useRecordContext } from 'react-admin';
-import { JsonSchemaField } from './JsonSchema';
+import { JsonSchemaField } from '../features/jsonSchema/components/JsonSchema';
 import { Fragment } from 'react/jsx-runtime';
 
 export const MetadataField = () => {

@@ -24,8 +24,7 @@ import {
 } from '@dslab/ra-root-selector';
 import { ProjectSelectorList } from './resources/projects/list';
 
-import { Dashboard } from './pages/dashboard/Dashboard';
-import { Browser } from './files/fileBrowser/Browser';
+import { Dashboard } from './features/dashboard/components/Dashboard';
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -124,12 +123,13 @@ import secretDefinition from './resources/secrets';
 import projectDefinition from './resources/projects';
 import runDefinition from './resources/runs';
 import triggerDefinition from './resources/triggers';
-import { StompContextProvider } from './contexts/StompContext';
-import { ProjectLineage } from './pages/lineage/ProjectLineage';
+import { StompContextProvider } from './features/notifications/StompContext';
+import { ProjectLineage } from './features/lineage/components/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
-import { MyAccount } from './pages/account/MyAccount';
+import { MyAccount } from './features/account/components/MyAccount';
 import { ServiceList } from './pages/services/list';
-import { FileContextProvider } from './files/FileContextProvider';
+import { FileContextProvider } from './features/files/FileContextProvider';
+import { Browser } from './features/files/fileBrowser/Browser';
 
 export const SearchEnabledContext = createContext(false);
 

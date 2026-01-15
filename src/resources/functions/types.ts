@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { FabSourceCodeTemplate } from '../../jsonSchema/FabSourceCodeTemplate';
-import { TextArrayWidget } from '../../jsonSchema/TextArrayWidget';
+import { FabSourceCodeTemplate } from '../../features/jsonSchema/components/templates/FabSourceCodeTemplate';
+import { TextArrayWidget } from '../../features/jsonSchema/components/widgets/TextArrayWidget';
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
-} from '../../jsonSchema/SourceCodeTemplate';
+} from '../../features/jsonSchema/components/templates/SourceCodeTemplate';
 
 //TODO cleanup implementation and properly check for source definition in schema!
 export const getFunctionUiSpec = (kind?: string) => {

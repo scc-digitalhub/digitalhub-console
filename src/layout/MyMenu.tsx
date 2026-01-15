@@ -12,9 +12,9 @@ import { ProjectIcon } from '../resources/projects/icon';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Box, Divider } from '@mui/material';
-import { LineageIcon } from '../pages/lineage/icon';
-import { BrowserIcon } from '../files/fileBrowser/icon';
+import { LineageIcon } from '../features/lineage/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
+import { BrowserIcon } from '../features/files/fileBrowser/icon';
 
 export const MyMenu = () => {
     const basename = useBasename();
