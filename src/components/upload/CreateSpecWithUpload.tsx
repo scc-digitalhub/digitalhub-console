@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { FormDataConsumer, useInput, useResourceContext } from 'react-admin';
 import { KindSelector } from '../../components/KindSelector';
 import { useGetSchemas } from '../../features/jsonSchema/schemaController';
-import { SpecInput } from '../../components/SpecInput';
+import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { SchemaIdPrefixes } from '../../common/schemas';
 import { Uploader } from '../../features/files/upload/types';
 import { FileInput } from '../../features/files/upload/components/FileInput';

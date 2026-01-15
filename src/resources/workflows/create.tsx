@@ -20,10 +20,10 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
-import { MetadataInput } from '../../components/MetadataInput';
+import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
-import { SpecInput } from '../../components/SpecInput';
+import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 

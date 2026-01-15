@@ -29,7 +29,7 @@ import {
     CreateButton,
     useCreatePath,
 } from 'react-admin';
-import { ResourceIcon } from '../../../components/ResourceIcon';
+import { ResourceIcon } from './ResourceIcon';
 import { EmptyList } from './EmptyList';
 import { alpha } from '@mui/material';
 

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Labeled, useTranslate } from 'react-admin';
-import { HttpClient } from '../../../pages/services/client';
+import { HttpClient } from '../../../features/httpclients/client';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Typography } from '@mui/material';
 

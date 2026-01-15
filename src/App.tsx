@@ -127,7 +127,7 @@ import { StompContextProvider } from './features/notifications/StompContext';
 import { ProjectLineage } from './features/lineage/components/ProjectLineage';
 import { StoreResetter } from './components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
-import { ServiceList } from './pages/services/list';
+import { ServiceList } from './features/httpclients/list';
 import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/Browser';
 

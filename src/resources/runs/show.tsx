@@ -31,7 +31,7 @@ import { StateChips, StateColors } from '../../components/StateChips';
 import { LogsView } from '../../components/LogsView';
 import { StopButton } from './StopButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -48,7 +48,7 @@ import { Inputs, Outputs } from './tabs/inputOutputs';
 
 import { CloneButton } from './CloneButton';
 import ComputeResources from './tabs/computeResources';
-import { ClientButton } from '../../pages/services/ClientButton';
+import { ClientButton } from '../../features/httpclients/ClientButton';
 import { SourceCodeView } from '../../components/SourceCodeView';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/MetricsGrid';

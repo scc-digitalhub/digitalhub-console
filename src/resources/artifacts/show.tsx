@@ -19,7 +19,7 @@ import { ShowPageTitle } from '../../components/PageTitle';
 import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ArtifactIcon } from './icon';
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';

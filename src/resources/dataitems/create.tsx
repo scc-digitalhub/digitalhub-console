@@ -18,7 +18,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
-import { MetadataInput } from '../../components/MetadataInput';
+import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { useRef } from 'react';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';

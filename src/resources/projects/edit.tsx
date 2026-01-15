@@ -20,7 +20,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { FormLabel } from '../../components/FormLabel';
 import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
-import { SpecInput } from '../../components/SpecInput';
+import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { useEffect, useState } from 'react';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 import { useSchemaProvider } from '../../provider/schemaProvider';

@@ -33,7 +33,7 @@ import { ShowPageTitle } from '../../components/PageTitle';
 import { StateChips, StateColors } from '../../components/StateChips';
 import { DeactivateButton } from './DeactivateButton';
 import { AceEditorField } from '@dslab/ra-ace-editor';
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { ActivateButton } from './ActivateButton';

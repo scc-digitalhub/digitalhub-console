@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box } from '@mui/material';
-import { createMetadataViewUiSchema } from '../common/schemas';
-import { useGetSchemas } from '../features/jsonSchema/schemaController';
+import { createMetadataViewUiSchema } from '../../../common/schemas';
+import { useGetSchemas } from '../schemaController';
 import { useRecordContext } from 'react-admin';
-import { JsonSchemaField } from '../features/jsonSchema/components/JsonSchema';
+import { JsonSchemaField } from './JsonSchema';
 import { Fragment } from 'react/jsx-runtime';
 
 export const MetadataField = () => {

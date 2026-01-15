@@ -12,8 +12,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { useSchemaProvider } from '../provider/schemaProvider';
-import { JsonSchemaInput } from '../features/jsonSchema/components/JsonSchema';
+import { useSchemaProvider } from '../../../provider/schemaProvider';
+import { JsonSchemaInput } from './JsonSchema';
 import { get } from 'lodash';
 
 export const SpecInput = (

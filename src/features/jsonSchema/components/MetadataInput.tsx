@@ -8,13 +8,13 @@ import {
     AccordionDetails,
     Grid,
 } from '@mui/material';
-import { MetadataCreateUiSchema } from '../common/schemas';
-import { useGetSchemas } from '../features/jsonSchema/schemaController';
+import { MetadataCreateUiSchema } from '../../../common/schemas';
+import { useGetSchemas } from '../schemaController';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useRecordContext, useTranslate } from 'react-admin';
 import { styled } from '@mui/material/styles';
-import { JsonSchemaInput } from '../features/jsonSchema/components/JsonSchema';
+import { JsonSchemaInput } from './JsonSchema';
 import { useEffect } from 'react';
 import deepEqual from 'deep-is';
 import { get } from 'lodash';
