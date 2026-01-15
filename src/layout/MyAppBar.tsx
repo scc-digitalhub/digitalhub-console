@@ -17,10 +17,10 @@ import SearchBar from '../features/search/components/SearchBar';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import RootResourceSelectorMenu from '../components/RootSelectorMenu';
-import { useStompContext } from '../contexts/StompContext';
-import { NotificationArea } from '../components/NotificationArea';
-import { UploadArea } from '../files/upload/components/UploadArea';
+import { useStompContext } from '../features/notifications/StompContext';
+import { NotificationArea } from '../features/notifications/components/NotificationArea';
 import { MyUserMenu } from './MyUserMenu';
+import { UploadArea } from '../features/files/upload/components/UploadArea';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||

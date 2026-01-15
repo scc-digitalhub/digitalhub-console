@@ -5,8 +5,8 @@
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 import { useTranslate } from 'react-admin';
-import { scaleBytes } from '../../common/helper';
 import { FileInfo } from '../info/types';
+import { scaleBytes } from '../../../common/helper';
 
 const getStats = (
     data: FileInfo[]

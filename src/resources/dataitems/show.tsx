@@ -23,13 +23,13 @@ import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { FlatCard } from '../../components/FlatCard';
 import { MetadataField } from '../../components/MetadataField';
 import { IdField } from '../../components/IdField';
-import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
+import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';
 import { StateChips } from '../../components/StateChips';
-import { ShowBaseLive } from '../../components/ShowBaseLive';
+import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
-import { FileInfoTree } from '../../files/fileInfoTree/FileInfoTree';
+import { FileInfoTree } from '../../features/files/fileInfoTree/FileInfoTree';
 
 const ShowComponent = () => {
     const record = useRecordContext();

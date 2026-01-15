@@ -20,7 +20,7 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { SecretIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
-import { useGetSchemas } from '../../controllers/schemaController';
+import { useGetSchemas } from '../../features/jsonSchema/schemaController';
 import { SecretUiSchema } from './types';
 import { SpecInput } from '../../components/SpecInput';
 import { useRef } from 'react';

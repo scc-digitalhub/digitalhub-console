@@ -13,19 +13,21 @@ import {
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useSchemaProvider } from '../provider/schemaProvider';
-import { JsonSchemaInput } from './JsonSchema';
+import { JsonSchemaInput } from '../features/jsonSchema/components/JsonSchema';
 import { get } from 'lodash';
 
-export const SpecInput = (props: InputProps & {
-    source: string;
-    onDirty?: (state: boolean) => void;
-    getUiSchema: (kind: string) => any;
-    schema?: any;
-    kind?: string;
-    label?: string;
-    helperText?: string;
-    kindSource?: string;
-}) => {
+export const SpecInput = (
+    props: InputProps & {
+        source: string;
+        onDirty?: (state: boolean) => void;
+        getUiSchema: (kind: string) => any;
+        schema?: any;
+        kind?: string;
+        label?: string;
+        helperText?: string;
+        kindSource?: string;
+    }
+) => {
     const {
         source,
         onDirty,
@@ -43,7 +45,8 @@ export const SpecInput = (props: InputProps & {
     const kindValue = useWatch({ name: kindSource });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>(schemaProp);
-    const kind = kindProp || kindValue || (record ? get(record, kindSource) : null);
+    const kind =
+        kindProp || kindValue || (record ? get(record, kindSource) : null);
 
     useEffect(() => {
         if (!kind) {

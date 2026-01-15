@@ -7,7 +7,7 @@ import { UpdateResult, useDataProvider, useResourceContext } from 'react-admin';
 import { AwsBody } from '@uppy/aws-s3';
 import { UploadResult } from '@uppy/core';
 import { Meta } from '@uppy/utils/lib/UppyFile';
-import { extractInfo } from '../files/upload/utils';
+import { extractInfo } from '../features/files/upload/utils';
 
 type StateUpdateCallbacks = {
     onBeforeUpload: (record?: any) => Promise<UpdateResult<any> | undefined>;

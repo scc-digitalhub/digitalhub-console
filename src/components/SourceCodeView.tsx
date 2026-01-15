@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { RecordContextProvider } from 'react-admin';
-import { JsonSchemaField } from './JsonSchema';
+import { JsonSchemaField } from '../features/jsonSchema/components/JsonSchema';
 
 export const SourceCodeView = (props: {
     sourceCode?: any;

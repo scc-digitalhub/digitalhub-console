@@ -27,7 +27,7 @@ import { EditPageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { JsonSchemaInput } from '../../components/JsonSchema';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
 import { MetadataInput } from '../../components/MetadataInput';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 

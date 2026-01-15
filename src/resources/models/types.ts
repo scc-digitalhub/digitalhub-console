@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Serializable } from '../../common/schemas';
-import { JsonParamsWidget } from '../../jsonSchema/JsonParamsWidget';
+import { JsonParamsWidget } from '../../features/jsonSchema/components/widgets/JsonParamsWidget';
 
 export enum ModelTypes {
     MODEL = 'Model',

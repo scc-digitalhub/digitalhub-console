@@ -15,8 +15,8 @@ import {
 import { getTaskUiSpec } from '../tasks/types';
 import { getRunUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
-import { JsonSchemaInput } from '../../components/JsonSchema';
-import { useGetManySchemas } from '../../controllers/schemaController';
+import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
+import { useGetManySchemas } from '../../features/jsonSchema/schemaController';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
 import { isValidAgainstSchema } from '../../common/helper';

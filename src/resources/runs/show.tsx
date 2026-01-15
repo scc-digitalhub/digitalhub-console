@@ -40,9 +40,8 @@ import { ResumeButton } from './ResumeButton';
 import { countLines, functionParser } from '../../common/helper';
 import { IdField } from '../../components/IdField';
 import { WorkflowView } from '../workflows/WorkflowView';
-import { LineageTabComponent } from '../../components/lineage/LineageTabComponent';
-import { MetricsGrid } from '../../components/metrics/MetricsGrid';
-import { ShowBaseLive } from '../../components/ShowBaseLive';
+import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
+import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
 import { TransitionsList } from './tabs/transitions';
 import { Inputs, Outputs } from './tabs/inputOutputs';
@@ -52,6 +51,7 @@ import ComputeResources from './tabs/computeResources';
 import { ClientButton } from '../../pages/services/ClientButton';
 import { SourceCodeView } from '../../components/SourceCodeView';
 import { getFunctionUiSpec } from '../functions/types';
+import { MetricsGrid } from '../../features/metrics/MetricsGrid';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();

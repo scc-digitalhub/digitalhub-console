@@ -20,7 +20,7 @@ import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
-import { useGetManySchemas } from '../../controllers/schemaController';
+import { useGetManySchemas } from '../../features/jsonSchema/schemaController';
 import { DropDownButton } from '../../components/buttons/DropdownButton';
 import { TriggerCreateForm } from '../triggers/create';
 import { DeactivateButton } from '../triggers/DeactivateButton';

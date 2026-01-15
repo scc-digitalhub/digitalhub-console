@@ -27,8 +27,6 @@ import {
 } from '@mui/material';
 import ReloadIcon from '@mui/icons-material/Replay';
 
-import { FlatCard } from '../../components/FlatCard';
-import { PageTitle } from '../../components/PageTitle';
 import { prettyBytes } from './utils';
 import { FileDetails } from './FileDetails';
 import { FileIcon } from './FileIcon';
@@ -37,6 +35,8 @@ import { BulkDeleteButton } from '../delete/components/BulkDeleteButton';
 import { useGetFileInfo } from '../info/useGetInfo';
 import { useGetStores } from '../stores/useGetStores';
 import { BrowserIcon } from './icon';
+import { PageTitle } from '../../../components/PageTitle';
+import { FlatCard } from '../../../components/FlatCard';
 
 export const Browser = () => {
     const translate = useTranslate();

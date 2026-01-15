@@ -11,7 +11,7 @@ import {
     useListParams,
     useRecordContext,
 } from 'react-admin';
-import { Relationship } from '../components/lineage';
+import { Relationship } from '../features/lineage';
 import { keyParser } from '../common/helper';
 
 type RunIdsResult = {

@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { mergeUiTemplate } from '../../common/schemas';
-import { CoreResourceCpuWidget } from '../../jsonSchema/CoreResourceCpuWidget';
-import { CoreResourceFieldTemplate } from '../../jsonSchema/CoreResourceFieldTemplate';
-import { CoreResourceGpuWidget } from '../../jsonSchema/CoreResourceGpuWidget';
-import { CoreResourceMemWidget } from '../../jsonSchema/CoreResourceMemWidget';
+import { CoreResourceCpuWidget } from '../../features/jsonSchema/components/widgets/CoreResourceCpuWidget';
+import { CoreResourceFieldTemplate } from '../../features/jsonSchema/components/templates/CoreResourceFieldTemplate';
+import { CoreResourceGpuWidget } from '../../features/jsonSchema/components/widgets/CoreResourceGpuWidget';
+import { CoreResourceMemWidget } from '../../features/jsonSchema/components/widgets/CoreResourceMemWidget';
 
 export const getTaskUiSpec = (schema: any | undefined) => {
     //filter and merge with template

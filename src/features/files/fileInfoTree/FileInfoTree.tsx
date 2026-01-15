@@ -9,15 +9,15 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { NoContent } from '../../components/NoContent';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { useGetFileInfo } from '../info/useGetInfo';
-import { Spinner } from '../../components/Spinner';
 import { Tree } from './Tree';
 import { InfoTable } from './InfoTable';
 import { convertFiles } from './utils';
 import { Stats } from './Stats';
 import { FileInfo } from '../info/types';
+import { NoContent } from '../../../components/NoContent';
+import { Spinner } from '../../../components/Spinner';
 
 const DefaultTitle = () => {
     const translate = useTranslate();

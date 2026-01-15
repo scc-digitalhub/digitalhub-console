@@ -22,7 +22,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { MetadataSchema } from '../../common/schemas';
-import { JsonSchemaField } from '../../components/JsonSchema';
+import { JsonSchemaField } from '../../features/jsonSchema/components/JsonSchema';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
 import { ProjectMetadataViewUiSchema } from './types';
 import { ShareButton } from '../../components/buttons/ShareButton';

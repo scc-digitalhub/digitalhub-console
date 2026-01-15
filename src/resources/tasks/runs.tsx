@@ -19,13 +19,13 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
 import { LogsButton } from '../../components/buttons/LogsButton';
-import { useGetManySchemas } from '../../controllers/schemaController';
+import { useGetManySchemas } from '../../features/jsonSchema/schemaController';
 import { Empty } from '../../components/Empty';
 import { StopButton } from '../runs/StopButton';
 import { DropDownButton } from '../../components/buttons/DropdownButton';
 import { RunCreateForm } from '../runs/create';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { CloneButton } from '../runs/CloneButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 
@@ -94,7 +94,7 @@ export const TaskRunList = () => {
                 sort={{ field: 'created', order: 'DESC' }}
                 filter={{ task: taskKey }}
                 disableSyncWithLocation
-                queryOptions={{ meta: { root }}}
+                queryOptions={{ meta: { root } }}
             >
                 <ListView
                     component={Box}

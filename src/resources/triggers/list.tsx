@@ -23,7 +23,7 @@ import { TriggerIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/helper';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 
 const RowActions = () => {
@@ -46,7 +46,7 @@ export const TriggerList = () => {
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.updated', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
-                queryOptions={{ meta: { root }}}
+                queryOptions={{ meta: { root } }}
             >
                 <>
                     <ListPageTitle icon={<TriggerIcon fontSize={'large'} />} />

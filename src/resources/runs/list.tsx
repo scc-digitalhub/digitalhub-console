@@ -24,7 +24,7 @@ import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../components/buttons/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { formatDuration, functionParser } from '../../common/helper';
-import { ListBaseLive } from '../../components/ListBaseLive';
+import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useGetFilters } from '../../controllers/filtersController';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
@@ -82,7 +82,7 @@ export const RunList = () => {
                 exporter={yamlExporter}
                 sort={{ field: 'metadata.created', order: 'DESC' }}
                 storeKey={`${root}.${resource}.listParams`}
-                queryOptions={{ meta: { root }}}
+                queryOptions={{ meta: { root } }}
             >
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
