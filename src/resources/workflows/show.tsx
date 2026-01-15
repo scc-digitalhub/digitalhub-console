@@ -25,7 +25,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 
 import deepEqual from 'deep-is';
 
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../components/IdField';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';

@@ -12,7 +12,7 @@ import {
     Button as RaButton,
 } from 'react-admin';
 import { Link } from 'react-router-dom';
-import { ResourceIcon } from '../../../components/ResourceIcon';
+import { ResourceIcon } from './ResourceIcon';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ContentAdd from '@mui/icons-material/Add';
 

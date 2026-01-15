@@ -28,7 +28,7 @@ import { useSchemaProvider } from '../../provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { JsonSchemaInput } from '../../features/jsonSchema/components/JsonSchema';
-import { MetadataInput } from '../../components/MetadataInput';
+import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { EditToolbar } from '../../components/toolbars/EditToolbar';
 
 const SpecInput = (props: {

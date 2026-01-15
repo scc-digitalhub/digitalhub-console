@@ -19,7 +19,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { CreatePageTitle } from '../../components/PageTitle';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
-import { MetadataInput } from '../../components/MetadataInput';
+import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';

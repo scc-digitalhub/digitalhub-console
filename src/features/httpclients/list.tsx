@@ -20,7 +20,7 @@ import { RowButtonGroup } from '../../components/buttons/RowButtonGroup';
 import { StateChips } from '../../components/StateChips';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser } from '../../common/helper';
-import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
+import { ListBaseLive } from '../notifications/components/ListBaseLive';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { LogsButton } from '../../components/buttons/LogsButton';

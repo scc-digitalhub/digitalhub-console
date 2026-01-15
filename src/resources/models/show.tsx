@@ -21,7 +21,7 @@ import { VersionsListWrapper } from '../../components/VersionsList';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { ModelIcon } from './icon';
 import { FlatCard } from '../../components/FlatCard';
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
 import { ChipsField } from '../../components/ChipsField';

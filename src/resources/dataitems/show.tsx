@@ -21,7 +21,7 @@ import { DataItemIcon } from './icon';
 import { PreviewTabComponent } from './preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './schema-table/SchemaTabComponent';
 import { FlatCard } from '../../components/FlatCard';
-import { MetadataField } from '../../components/MetadataField';
+import { MetadataField } from '../../features/jsonSchema/components/MetadataField';
 import { IdField } from '../../components/IdField';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
 import { ShowToolbar } from '../../components/toolbars/ShowToolbar';

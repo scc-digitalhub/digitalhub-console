@@ -22,7 +22,7 @@ import { FlatCard } from '../../components/FlatCard';
 import { FormLabel } from '../../components/FormLabel';
 import { useGetSchemas } from '../../features/jsonSchema/schemaController';
 import { SecretUiSchema } from './types';
-import { SpecInput } from '../../components/SpecInput';
+import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
 import { useRef } from 'react';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 

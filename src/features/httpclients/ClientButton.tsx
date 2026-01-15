@@ -42,7 +42,7 @@ import {
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { HealthChips } from '../../components/HealthChips';
 import { HttpClient } from './client';
-import { ReaChat } from '../../features/chat/ReaChat';
+import { ReaChat } from '../chat/ReaChat';
 
 const defaultIcon = <SignpostIcon />;
 

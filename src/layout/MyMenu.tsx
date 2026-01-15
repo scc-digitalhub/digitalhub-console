@@ -13,7 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Box, Divider } from '@mui/material';
 import { LineageIcon } from '../features/lineage/components/icon';
-import { ServiceIcon } from '../pages/services/icon';
+import { ServiceIcon } from '../features/httpclients/icon';
 import { BrowserIcon } from '../features/files/fileBrowser/icon';
 
 export const MyMenu = () => {

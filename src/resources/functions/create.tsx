@@ -18,11 +18,14 @@ import { CreatePageTitle } from '../../components/PageTitle';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { MetadataInput } from '../../components/MetadataInput';
+import { MetadataInput } from '../../features/jsonSchema/components/MetadataInput';
 import { KindSelector } from '../../components/KindSelector';
 import { StepperForm } from '@dslab/ra-stepper';
-import { SpecInput } from '../../components/SpecInput';
-import { Template, TemplatesSelector } from '../../components/TemplatesSelector';
+import { SpecInput } from '../../features/jsonSchema/components/SpecInput';
+import {
+    Template,
+    TemplatesSelector,
+} from '../../components/TemplatesSelector';
 import { StepperToolbar } from '../../components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../components/toolbars/CreateToolbar';
 
