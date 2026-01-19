@@ -13,7 +13,6 @@ import {
 import { Box, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { RootResourceSelectorMenu } from '@dslab/ra-root-selector';
-import { SearchBar } from '@melloware/react-logviewer';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import { UploadArea } from '../../features/files/upload/components/UploadArea';
@@ -21,6 +20,7 @@ import { NotificationArea } from '../../features/notifications/components/Notifi
 import { useStompContext } from '../../features/notifications/StompContext';
 import { DateIntervalInput } from '../../features/search/components/DateIntervalInput';
 import { MyUserMenu } from './MyUserMenu';
+import SearchBar from '../../features/search/components/SearchBar';
 
 
 const APP_VERSION: string =
