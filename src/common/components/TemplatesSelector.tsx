@@ -29,7 +29,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useFormState, useFormContext } from 'react-hook-form';
 import { useRef, useState } from 'react';
 import { KindSelector } from './KindSelector';
-import { ChipsField } from './ChipsField';
+import { ChipsField } from './fields/ChipsField';
 
 export type Template = {
     id: string;

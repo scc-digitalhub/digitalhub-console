@@ -6,7 +6,7 @@ import dagre from '@dagrejs/dagre';
 
 import { RaRecord } from 'react-admin';
 import { Node, Edge, Position } from '@xyflow/react';
-import { keyParser } from '../../common/helper';
+import { keyParser } from '../../common/utils/helper';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));

@@ -5,9 +5,9 @@
 import { useEffect } from 'react';
 import { FormDataConsumer, useInput, useResourceContext } from 'react-admin';
 import { KindSelector } from '../KindSelector';
-import { useGetSchemas } from '../../../features/jsonSchema/schemaController';
-import { SpecInput } from '../../../features/jsonSchema/components/SpecInput';
-import { SchemaIdPrefixes } from '../../../features/jsonSchema/schemas';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { SchemaIdPrefixes } from '../../../common/jsonSchema/schemas';
 import { Uploader } from '../../../features/files/upload/types';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
 

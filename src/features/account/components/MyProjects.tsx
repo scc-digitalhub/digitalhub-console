@@ -16,10 +16,10 @@ import {
 } from 'react-admin';
 
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
-import { ChipsField } from '../../../common/components/ChipsField';
+import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
-import { ShareButton } from '../../../common/components/buttons/ShareButton';
-import { CreateProjectButton } from '../../../resources/projects/list';
+import { ShareProjectButton } from '../../../common/components/buttons/ShareProjectButton';
+import { CreateProjectButton } from '../../../app/pages/projects/list';
 
 export const MyProjects = () => {
     const { data: identity, isLoading: identityLoading } = useGetIdentity();
@@ -69,7 +69,7 @@ export const MyProjects = () => {
                         />
                         <RowButtonGroup>
                             <RootSelectorButton />
-                            <ShareButton />
+                            <ShareProjectButton />
                             <DeleteWithDialogButton
                                 redirect="/account"
                                 mutationOptions={{
