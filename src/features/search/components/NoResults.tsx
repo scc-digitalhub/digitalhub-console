@@ -5,7 +5,7 @@
 import { isEmpty, useTranslate } from 'react-admin';
 import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { FlatCard } from '../../../common/components/FlatCard';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { useSearch } from '../SearchContext';
 import Inbox from '@mui/icons-material/Inbox';
 

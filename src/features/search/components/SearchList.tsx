@@ -26,13 +26,13 @@ import {
     Typography,
 } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
-import { FlatCard } from '../../../common/components/FlatCard';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { useSearchController } from '../useSearchController';
 import { useSearch } from '../SearchContext';
 import { createElement, useState } from 'react';
 import { NoResults } from './NoResults';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
-import { ChipsField } from '../../../common/components/ChipsField';
+import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { MultiField } from './MultiField';
 
 const replaceWithHighlights = res => {

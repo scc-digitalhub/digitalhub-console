@@ -24,7 +24,7 @@ import {
 } from 'react-admin';
 
 import { useMemo } from 'react';
-import { FlatCard } from './FlatCard';
+import { FlatCard } from './layout/FlatCard';
 
 export type VersionListProps = VersionsListWrapperProps & {
     showActions?: boolean;

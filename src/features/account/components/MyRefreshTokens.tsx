@@ -14,7 +14,7 @@ import {
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
-import { ChipsField } from '../../../common/components/ChipsField';
+import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 
 export const MyRefreshTokens = () => {

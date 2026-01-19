@@ -29,7 +29,7 @@ import {
 import { createElement, useState } from 'react';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { Upload } from '../types';
-import { scaleBytes } from '../../../../common/helper';
+import { scaleBytes } from '../../../../common/utils/helper';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;

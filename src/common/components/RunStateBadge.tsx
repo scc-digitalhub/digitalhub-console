@@ -12,7 +12,7 @@ import {
 } from 'react-admin';
 import { StateColors } from './StateChips';
 import { useNavigate } from 'react-router-dom';
-import { FUNCTION_OR_WORKFLOW } from '../helper';
+import { FUNCTION_OR_WORKFLOW } from '../utils/helper';
 
 export type RunStateBadgeProps = {
     state?: string;

@@ -11,7 +11,7 @@ import {
     SearchProvider,
     SearchResults,
 } from '../features/search/SearchProvider';
-import { FUNCTION_OR_WORKFLOW } from '../common/helper';
+import { FUNCTION_OR_WORKFLOW } from '../common/utils/helper';
 import { FileProvider } from '../files/FileProvider';
 
 /**
