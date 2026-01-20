@@ -25,7 +25,7 @@ import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { ClientButton } from './ClientButton';
 import { IdField } from '../../../common/components/fields/IdField';
-import { FunctionIcon } from '../../../app/pages/functions/icon';
+import { FunctionIcon } from '../../../pages/functions/icon';
 import { LogsButton } from '../../logs/components/LogsButton';
 
 const RowActions = () => {

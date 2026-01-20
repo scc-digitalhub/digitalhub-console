@@ -24,7 +24,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
-import { SearchFilter } from '../SearchProvider';
+import { SearchFilter } from '../searchProvider';
 import { InputProps, useTranslate } from 'ra-core';
 import { alphaNumericName } from '../../../common/utils/helper';
 

@@ -1,0 +1,111 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { Box, Container } from '@mui/material';
+import { useRef, useState } from 'react';
+import {
+    EditBase,
+    EditView,
+    SimpleForm,
+    useNotify,
+    useRedirect,
+    useResourceContext,
+} from 'react-admin';
+import { FlatCard } from '../../common/components/layout/FlatCard';
+import { EditPageTitle } from '../../common/components/layout/PageTitle';
+import { DataItemIcon } from './icon';
+import { getDataItemSpecUiSchema } from './types';
+import { randomId } from '../../common/utils/helper';
+import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
+import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
+import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
+import { useGetUploader } from '../../features/files/upload/useGetUploader';
+
+export const DataItemEdit = () => {
+    const resource = useResourceContext();
+    const notify = useNotify();
+    const redirect = useRedirect();
+    const id = useRef(randomId());
+    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
+        id: id.current,
+    });
+    const uploader = useGetUploader({
+        id: id.current,
+        recordId: id.current,
+        onBeforeUpload,
+        onUploadComplete,
+    });
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
+        useState<boolean>(false);
+
+    //overwrite onSuccess and use onSettled to handle optimistic rendering
+    const onSuccess = () => {};
+    const onSettled = (data, error) => {
+        if (error) {
+            //onError already handles notify
+            return;
+        }
+
+        //post save we start uploading
+        if (uploader.files.length > 0) {
+            uploader.upload(data);
+        }
+
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        redirect('show', resource, data.id, data);
+    };
+
+    const transform = data => {
+        //strip path tl which is a transient field
+        const { path, ...rest } = data;
+        const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
+
+        //reset status if new version
+        //reset metadata version if new version, unless manually filled
+        return {
+            ...rest,
+            status: isSpecDirty ? {} : rest.status,
+            metadata: resetMetadataVersion
+                ? { ...rest.metadata, version: undefined }
+                : rest.metadata,
+        };
+    };
+
+    return (
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <EditBase
+                mutationMode="optimistic"
+                transform={transform}
+                mutationOptions={{
+                    meta: { update: !isSpecDirty, id: id.current },
+                    onSuccess,
+                    onSettled,
+                }}
+            >
+                <>
+                    <EditPageTitle icon={<DataItemIcon fontSize={'large'} />} />
+
+                    <EditView component={Box}>
+                        <FlatCard sx={{ paddingBottom: '12px' }}>
+                            <SimpleForm toolbar={<EditToolbar />}>
+                                <EditFormContentWithUpload
+                                    onSpecDirty={setIsSpecDirty}
+                                    onMetadataVersionDirty={
+                                        setIsMetadataVersionDirty
+                                    }
+                                    uploader={uploader}
+                                    getSpecUiSchema={getDataItemSpecUiSchema}
+                                />
+                            </SimpleForm>
+                        </FlatCard>
+                    </EditView>
+                </>
+            </EditBase>
+        </Container>
+    );
+};

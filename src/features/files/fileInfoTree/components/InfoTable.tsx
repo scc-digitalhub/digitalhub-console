@@ -8,7 +8,7 @@ import { DownloadButton } from '../../download/components/DownloadButton';
 import { TopToolbar, useLocaleState } from 'react-admin';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { useDataGridController } from '../../../../hooks/useDataGridController';
+import { useDataGridController } from '../../../../common/hooks/useDataGridController';
 import { scaleBytes } from '../../../../common/utils/helper';
 
 export const InfoTable = (props: any) => {
