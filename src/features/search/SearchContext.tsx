@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createContext, useContext } from 'react';
-import { SearchParams, SearchProvider } from './searchProvider';
+import { SearchParams, SearchProvider } from './SearchProvider';
 
 // everything that can be stored in search context
 interface SearchContextValue {

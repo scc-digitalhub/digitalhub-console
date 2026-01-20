@@ -109,7 +109,6 @@ export const TaskRunList = () => {
                                 closeOnClickOutside={false}
                             >
                                 <RunCreateForm
-                                    runtime={runtime}
                                     runSchema={runSchema.schema}
                                     taskSchema={taskSchema.schema}
                                 />
@@ -126,7 +125,6 @@ export const TaskRunList = () => {
                             closeOnClickOutside={false}
                         >
                             <RunCreateForm
-                                runtime={runtime}
                                 runSchema={runSchema.schema}
                                 taskSchema={taskSchema.schema}
                             />
