@@ -4,7 +4,7 @@
 
 import { ReactElement, useMemo, useState } from 'react';
 import { SearchContext } from './SearchContext';
-import { SearchParams, SearchProvider } from './searchProvider';
+import { SearchParams, SearchProvider } from './SearchProvider';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { withRootSelector } from './utils';
 

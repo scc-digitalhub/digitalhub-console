@@ -10,7 +10,7 @@ import {
     SearchParams,
     SearchProvider,
     SearchResults,
-} from '../../features/search/searchProvider';
+} from '../../features/search/SearchProvider';
 import { FUNCTION_OR_WORKFLOW } from '../utils/helper';
 import { FileProvider } from '../../features/files/FileProvider';
 
