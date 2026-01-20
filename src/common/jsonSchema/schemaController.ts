@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSchemaProvider } from '../../provider/schemaProvider';
+import { useSchemaProvider } from '../provider/schemaProvider';
 
 export const useGetSchemas = (
     resource: string,

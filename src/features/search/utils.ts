@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { SearchProvider } from './SearchProvider';
+import { SearchProvider } from './searchProvider';
 
 export const withRootSelector = (
     searchProvider: SearchProvider,
