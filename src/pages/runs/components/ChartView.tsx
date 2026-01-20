@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useState, useRef, React } from 'react';
+import { useEffect, useMemo, useState, useRef, RefObject, FC } from 'react';
 import {
     LoadingIndicator,
     RecordContextProvider,
@@ -276,7 +276,7 @@ export const ChartView = (props: ChartViewProps) => {
 };
 
 type ChartDownloadButtonProps = {
-    elementRef: React.RefObject<HTMLElement>;
+    elementRef: RefObject<HTMLElement>;
     fileName?: string;
     width?: number;
     height?: number;
@@ -288,7 +288,7 @@ const downloadImage = (dataUrl: string, name: string) => {
     a.download = name;
     a.click();
 };
-const ChartDownloadButton: React.FC<ChartDownloadButtonProps> = ({
+const ChartDownloadButton: FC<ChartDownloadButtonProps> = ({
     elementRef,
     fileName,
     width,

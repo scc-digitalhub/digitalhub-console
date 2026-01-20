@@ -4,7 +4,6 @@
 
 import {
     Datagrid,
-    DateField,
     DeleteWithConfirmButton,
     FunctionField,
     InfiniteListBase,

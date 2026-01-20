@@ -12,7 +12,6 @@ import { Relationship } from '../../../features/lineage';
 import { keyParser } from '../../../common/utils/helper';
 import { RunIdsResult } from './types';
 
-
 export const useGetRunIds = (): RunIdsResult => {
     const dataProvider = useDataProvider();
     const record = useRecordContext();

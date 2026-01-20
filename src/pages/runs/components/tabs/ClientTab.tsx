@@ -20,7 +20,7 @@ export const ClientTab = (props: { record: any }) => {
                     {translate('pages.http-client.helperText')}
                 </Typography>
                 <HttpClient
-                    url={url}
+                    urls={[url]}
                     proxy={'/-/' + projectId + '/runs/' + record.id + '/proxy'}
                 />
             </>
