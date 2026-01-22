@@ -56,8 +56,8 @@ export const k8sSpec = {
         'ui:expandable': true,
         'ui:title': 'fields.k8s.resources.title',
         'ui:description': 'fields.k8s.resources.description',
-        'ui:order': ['cpu', 'mem', 'gpu'],
-        'ui:layout': [4, 6, 2],
+        'ui:order': ['cpu', 'mem', 'gpu', 'disk'],
+        'ui:layout': [3, 3, 3, 3],
         cpu: {
             'ui:widget': CoreResourceCpuWidget,
             'ui:title': 'fields.k8s.resources.cpu.title',
@@ -79,6 +79,13 @@ export const k8sSpec = {
                 'ui:title': 'fields.k8s.resources.gpu.title',
             },
         },
+        disk: {
+            'ui:widget': CoreResourceMemWidget,
+            'ui:title': 'fields.k8s.resources.disk.title',
+            'ui:options': {
+                'ui:title': 'fields.k8s.resources.disk.title',
+            },
+        },        
     },
 
     envs: {

@@ -490,6 +490,15 @@
                     "title": "Richieste"
                 }
             },
+            "disk": {
+                "title": "Spazio disco",
+                "limits": {
+                    "title": "Limiti"
+                },
+                "requests": {
+                    "title": "Richieste"
+                }
+            },              
             "title": "Risorse"
         },
         "secrets": {

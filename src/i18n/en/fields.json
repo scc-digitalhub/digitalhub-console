@@ -490,6 +490,15 @@
                     "title": "Requests"
                 }
             },
+            "disk": {
+                "title": "Disk space",
+                "limits": {
+                    "title": "Limits"
+                },
+                "requests": {
+                    "title": "Requests"
+                }
+            },            
             "title": "Resources"
         },
         "secrets": {
