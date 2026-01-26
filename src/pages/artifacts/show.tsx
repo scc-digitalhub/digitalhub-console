@@ -9,7 +9,6 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
-    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -28,12 +27,7 @@ import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLi
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
-
-const ShowComponent = () => {
-    const record = useRecordContext();
-
-    return <ArtifactShowLayout record={record} />;
-};
+import { ShowComponent } from '../../common/components/ShowComponent';
 
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
@@ -43,7 +37,6 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     const translate = useTranslate();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || undefined;
     const recordSpec = record?.spec;
     const lineCount = countLines(recordSpec);
 
@@ -126,7 +119,7 @@ export const ArtifactShow = () => {
                         component={FlatCard}
                         aside={<VersionsListWrapper />}
                     >
-                        <ShowComponent />
+                        <ShowComponent InnerShow={ArtifactShowLayout} />
                     </ShowView>
                 </>
             </ShowBaseLive>
