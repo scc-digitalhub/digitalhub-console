@@ -11,7 +11,6 @@ import {
     TabbedShowLayout,
     TextField,
     TextInput,
-    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -32,12 +31,7 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
-
-const ShowComponent = () => {
-    const record = useRecordContext();
-
-    return <ModelShowLayout record={record} />;
-};
+import { ShowComponent } from '../../common/components/ShowComponent';
 
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
@@ -45,7 +39,6 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const translate = useTranslate();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || undefined;
     const recordSpec = record?.spec;
     const lineCount = countLines(recordSpec);
 
@@ -196,7 +189,7 @@ export const ModelShow = () => {
                         component={StyledFlatCard}
                         aside={<VersionsListWrapper />}
                     >
-                        <ShowComponent />
+                        <ShowComponent InnerShow={ModelShowLayout} />
                     </ShowView>
                 </>
             </ShowBaseLive>

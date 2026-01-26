@@ -9,7 +9,6 @@ import {
     ShowView,
     TabbedShowLayout,
     TextField,
-    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -18,7 +17,6 @@ import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { DataItemIcon } from './icon';
-
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { IdField } from '../../common/components/fields/IdField';
@@ -31,12 +29,7 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
 import { PreviewTabComponent } from './components/preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './components/schema-table/SchemaTabComponent';
-
-const ShowComponent = () => {
-    const record = useRecordContext();
-
-    return <DataItemShowLayout record={record} />;
-};
+import { ShowComponent } from '../../common/components/ShowComponent';
 
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     record: any;
@@ -166,7 +159,7 @@ export const DataItemShow = () => {
                         component={StyledFlatCard}
                         aside={<VersionsListWrapper />}
                     >
-                        <ShowComponent />
+                        <ShowComponent InnerShow={DataItemShowLayout} />
                     </ShowView>
                 </>
             </ShowBaseLive>
