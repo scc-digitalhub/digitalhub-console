@@ -121,7 +121,7 @@ import secretDefinition from './pages/secrets';
 import projectDefinition from './pages/projects';
 import runDefinition from './pages/runs';
 import triggerDefinition from './pages/triggers';
-import { StompContextProvider } from './features/notifications/StompContext';
+import { StompContextProvider } from './features/notifications/StompContextProvider';
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
 import { StoreResetter } from './common/utils/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';

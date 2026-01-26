@@ -2,15 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    ReactElement,
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { Client as StompClient } from '@stomp/stompjs';
 import {
     Link,
@@ -24,19 +16,9 @@ import { Alert } from '@mui/material';
 import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { StompContext } from './StompContext';
 
-interface StompContextValue {
-    client: StompClient;
-    messages: any[];
-    remove: (message: any) => void;
-    removeAll: (message: any[]) => void;
-    markAsRead: (message: any) => void;
-    markAllAsRead: (message: any[]) => void;
-}
-
-const StompContext = createContext<StompContextValue | undefined>(undefined);
-
-export const filterOnStates = (message: any) => {
+const filterOnStates = (message: any) => {
     const ignore = ['DELETING', 'BUILT', 'STOP', 'RESUME'];
     if (
         message.record?.status?.state &&
@@ -281,12 +263,4 @@ export type StompContextProviderParams = {
     topics: string[];
     onMessage?: (message: any) => void;
     onReceive?: (message: any) => any | false;
-};
-
-export const useStompContext = () => {
-    const stompContext = useContext(StompContext);
-    if (stompContext === undefined) {
-        throw new Error('useStompContext must be used inside a StompContext');
-    }
-    return stompContext;
 };
