@@ -16,7 +16,6 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
-    Button,
     Confirm,
     DateField,
     IconButtonWithTooltip,
@@ -27,9 +26,9 @@ import {
     useTranslate,
 } from 'react-admin';
 import { createElement, useState } from 'react';
-import ReplayIcon from '@mui/icons-material/Replay';
 import { Upload } from '../types';
 import { scaleBytes } from '../../../../common/utils/helper';
+import { RetryButton } from '../../../../common/components/buttons/RetryButton';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;
@@ -167,12 +166,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                     />
                 )}
                 {upload.error && upload.retry && (
-                    <Button
-                        label="actions.retry"
-                        onClick={() => upload.retry?.()}
-                    >
-                        <ReplayIcon />
-                    </Button>
+                    <RetryButton onClick={() => upload.retry?.()} />
                 )}
             </CardActions>
             <Confirm
