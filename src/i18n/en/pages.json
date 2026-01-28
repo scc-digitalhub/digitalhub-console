@@ -138,6 +138,10 @@
         "send": "Send",
         "addHeader": "Add Header",
         "requestBody": "Request Body",
-        "jsonOrRaw": "JSON or raw text"
+        "jsonOrRaw": "JSON or raw text",
+        "tabs": {
+            "inference": "Inference",
+            "metadata": "Metadata"
+        }
     }
 }

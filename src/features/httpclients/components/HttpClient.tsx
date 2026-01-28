@@ -35,7 +35,7 @@ import {
 import AceEditor from 'react-ace';
 import { JSONTree } from 'react-json-tree';
 
-interface HttpClientProps {
+export interface HttpClientProps {
     proxy?: string;
     urls: string[];
     fixedMethod?: string;

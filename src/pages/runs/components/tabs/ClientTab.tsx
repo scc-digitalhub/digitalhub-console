@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Labeled, useTranslate } from 'react-admin';
-import { HttpClient } from '../../../../features/httpclients/components/HttpClient';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Typography } from '@mui/material';
+import { StandardHttpClient } from '../../../../features/httpclients/components/StandardHttpClient';
 
 export const ClientTab = (props: { record: any }) => {
     const { record } = props;
@@ -19,7 +19,7 @@ export const ClientTab = (props: { record: any }) => {
                 <Typography variant="body2" mb={1}>
                     {translate('pages.http-client.helperText')}
                 </Typography>
-                <HttpClient
+                <StandardHttpClient
                     urls={[url]}
                     proxy={'/-/' + projectId + '/runs/' + record.id + '/proxy'}
                 />
