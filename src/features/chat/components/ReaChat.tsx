@@ -21,6 +21,9 @@ import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
 import { createChatTheme } from '../chatTheme';
 import { alpha, CSSProperties, useTheme } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorDisplay } from '../../../common/ErrorDisplay';
+import { useTranslate } from 'react-admin';
 
 const API_KEY: string =
     (globalThis as any).VITE_OPENAI_API_KEY ||
@@ -34,10 +37,17 @@ const API_BASE_URL: string =
 
 const SINGLE_SESSION_ID = 'main-session';
 const THROTTLE_MS = 100;
+
+const CriticalErrorFallback = ({ error, retry }: any) => {
+    return <ErrorDisplay error={error} onRetry={retry} />;
+};
+
 export const ReaChat = () => {
     return (
         <ThemeProvider theme={reatheme}>
-            <OpenAIChat />
+            <ErrorBoundary FallbackComponent={CriticalErrorFallback}>
+                <OpenAIChat />
+            </ErrorBoundary>
         </ThemeProvider>
     );
 };
@@ -47,6 +57,7 @@ const OpenAIChat = () => {
     const isDarkMode = theme.palette.mode === 'dark';
     const primaryColor = theme.palette.primary.main;
     const primaryHoverColor = theme.palette.primary.dark;
+    const translate = useTranslate();
     const cssVariables = {
         '--primary': primaryColor,
         '--primary-hover': primaryHoverColor,
@@ -122,7 +133,10 @@ const OpenAIChat = () => {
 
         const conversationId = Date.now().toString();
 
-        const updateSessionState = (currentResponse: string) => {
+        const updateSessionState = (
+            currentResponse: string,
+            isError: boolean = false
+        ) => {
             setSessions(prevSessions => {
                 const sessionIndex = prevSessions.findIndex(
                     s => s.id === SINGLE_SESSION_ID
@@ -134,6 +148,7 @@ const OpenAIChat = () => {
                     id: conversationId,
                     question: message,
                     response: currentResponse,
+                    isError: isError,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 };
@@ -151,6 +166,7 @@ const OpenAIChat = () => {
                     conversations[convIndex] = {
                         ...conversations[convIndex],
                         response: currentResponse,
+                        isError: isError,
                         updatedAt: new Date(),
                     };
                 }
@@ -187,7 +203,8 @@ const OpenAIChat = () => {
             updateSessionState(accumulatedResponse);
         } catch (error: any) {
             if (error.name !== 'AbortError') {
-                console.error('Error calling OpenAI API:', error);
+                const errorMessage = error?.message;
+                updateSessionState(errorMessage, true);
             }
         } finally {
             setIsLoading(false);
@@ -214,46 +231,76 @@ const OpenAIChat = () => {
                     <SessionMessagesHeader />
                     <SessionMessages>
                         {(conversations: any[]) =>
-                            conversations.map((conversation, index) => (
-                                <SessionMessage
-                                    conversation={conversation}
-                                    isLast={index === conversations.length - 1}
-                                    key={conversation.id}
-                                >
-                                    <MessageQuestion
-                                        question={conversation.question}
-                                    />
-                                    <MessageResponse
-                                        response={conversation.response}
-                                        isLoading={
-                                            index ===
-                                                conversations.length - 1 &&
-                                            loading
-                                        }
-                                    />
+                            conversations.map((conversation, index) => {
+                                const isLastMessage =
+                                    index === conversations.length - 1;
+                                const showLoading = isLastMessage && loading;
+                                const isError = conversation.isError;
 
-                                    <MessageSources
-                                        sources={conversation.sources}
-                                    />
+                                return (
+                                    <SessionMessage
+                                        conversation={conversation}
+                                        isLast={isLastMessage}
+                                        key={conversation.id}
+                                    >
+                                        <MessageQuestion
+                                            question={conversation.question}
+                                        />
 
-                                    <MessageActions
-                                        question={conversation.question}
-                                        response={conversation.response}
-                                        onCopy={() =>
-                                            handleCopy(conversation.response)
-                                        }
-                                        onRefresh={() =>
-                                            handleRegenerate(
-                                                conversation.question
-                                            )
-                                        }
-                                    />
-                                </SessionMessage>
-                            ))
+                                        {isError ? (
+                                            <ErrorDisplay
+                                                error={
+                                                    new Error(
+                                                        conversation.response
+                                                    )
+                                                }
+                                                onRetry={
+                                                    isLastMessage
+                                                        ? () =>
+                                                              handleRegenerate(
+                                                                  conversation.question
+                                                              )
+                                                        : undefined
+                                                }
+                                            />
+                                        ) : (
+                                            <MessageResponse
+                                                response={conversation.response}
+                                                isLoading={showLoading}
+                                            />
+                                        )}
+
+                                        <MessageSources
+                                            sources={conversation.sources}
+                                        />
+
+                                        {!isError && (
+                                            <MessageActions
+                                                question={conversation.question}
+                                                response={conversation.response}
+                                                onCopy={() =>
+                                                    handleCopy(
+                                                        conversation.response
+                                                    )
+                                                }
+                                                onRefresh={() =>
+                                                    handleRegenerate(
+                                                        conversation.question
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </SessionMessage>
+                                );
+                            })
                         }
                     </SessionMessages>
 
-                    <ChatInput placeholder="Type your message..." />
+                    <ChatInput
+                        placeholder={translate(
+                            'messages.chat.type_your_message'
+                        )}
+                    />
                 </SessionMessagePanel>
             </Chat>
         </div>
