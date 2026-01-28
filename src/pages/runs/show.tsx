@@ -47,11 +47,11 @@ import { Inputs, Outputs } from './components/tabs/inputOutputs';
 
 import { CloneButton } from './components/CloneButton';
 import ComputeResources from './components/tabs/computeResources';
-import { ClientButton } from '../../features/httpclients/components/ClientButton';
 import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
+import { ClientButton } from '../../features/httpclients/components/ClientButton';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
