@@ -31,6 +31,7 @@ import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helper';
 import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
+import { exporter } from './exporter';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -247,7 +248,7 @@ export const FunctionShow = () => {
                 <>
                     <ShowPageTitle icon={<FunctionIcon fontSize={'large'} />} />
                     <ShowView
-                        actions={<ShowToolbar />}
+                        actions={<ShowToolbar exporter={exporter} />}
                         sx={{
                             width: '100%',
                             '& .RaShow-main': {
