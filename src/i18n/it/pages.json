@@ -142,6 +142,8 @@
         "tabs": {
             "inference": "Inferenza",
             "metadata": "Metadati"
-        }
+        },
+        "modelNotReady": "Il modello non è pronto.",
+        "modelNotLive": "Il modello è pronto ma non attivo."
     }
 }

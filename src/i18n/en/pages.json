@@ -142,6 +142,8 @@
         "tabs": {
             "inference": "Inference",
             "metadata": "Metadata"
-        }
+        },
+        "modelNotReady": "Model is not ready.",
+        "modelNotLive": "Model is ready but not live."
     }
 }
