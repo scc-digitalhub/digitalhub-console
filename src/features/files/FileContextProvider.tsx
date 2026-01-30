@@ -5,7 +5,7 @@
 import { ReactElement } from 'react';
 import { FileProvider } from './FileProvider';
 import { FileContext } from './FileContext';
-import { useUploadStatusController } from './upload/uploadStatusController';
+import { useUploadStatusController } from './upload/useUploadStatusController';
 
 // creates a FileContext
 export const FileContextProvider = (props: FileContextProviderParams) => {
