@@ -6,6 +6,7 @@ import { BackButton } from '@dslab/ra-back-button';
 import { useState } from 'react';
 import {
     EditButton,
+    Exporter,
     TopToolbar,
     useGetList,
     useRecordContext,
@@ -23,10 +24,11 @@ import { DownloadButton } from '../../../features/files/download/components/Down
  * @returns
  */
 export const ShowToolbar = (props: {
+    exporter?: Exporter;
     askForDeleteAll?: boolean;
     askForCascade?: boolean;
 }) => {
-    const { askForDeleteAll = true, askForCascade = true } = props;
+    const { askForDeleteAll = true, askForCascade = true, exporter } = props;
     const record = useRecordContext();
     const resource = useResourceContext();
     const { root } = useRootSelector();
@@ -57,7 +59,11 @@ export const ShowToolbar = (props: {
             <EditButton style={{ marginLeft: 'auto' }} />
             {record?.status?.files?.length === 1 && <DownloadButton />}
             <InspectButton fullWidth />
-            <ExportRecordButton language="yaml" color="info" />
+            <ExportRecordButton
+                language="yaml"
+                color="info"
+                exporter={exporter}
+            />
             <DeleteWithConfirmButtonByName
                 cascade
                 redirect={redirect}

@@ -16,7 +16,7 @@ import { ShowInDialogButton, EditInDialogButton } from '@dslab/ra-dialog-crud';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { TaskEditComponent } from './edit';
 import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
+import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 
 export const TaskShowComponent = () => {
     return (
@@ -63,6 +63,7 @@ const TaskToolbar = () => {
                 <TaskEditComponent />
             </EditInDialogButton>
             <InspectButton fullWidth />
+            <ExportRecordButton language="yaml" color="info" />
         </TopToolbar>
     );
 };
