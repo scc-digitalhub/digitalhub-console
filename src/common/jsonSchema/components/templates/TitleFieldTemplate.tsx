@@ -16,7 +16,7 @@ import { useTranslate } from 'react-admin';
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<
+export default function TitleFieldTemplate<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
