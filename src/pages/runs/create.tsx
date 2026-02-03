@@ -14,7 +14,7 @@ import { getRunUiSpec } from './types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
-import { isValidAgainstSchema } from '../../common/utils/helper';
+import { isValidAgainstSchema } from '../../common/jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';

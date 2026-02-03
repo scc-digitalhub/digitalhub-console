@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { isEmpty, regex } from 'react-admin';
-import { ValidatorType, RJSFSchema } from '@rjsf/utils';
 import memoize from 'lodash/memoize';
 import { B } from '@wtfcode/byte-converter';
 import { round } from 'lodash';
@@ -11,11 +10,12 @@ import { toYaml } from '@dslab/ra-export-record-button';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
-export const FUNCTION_OR_WORKFLOW = 'functionOrWorkflow'; //TODO
+export const FUNCTION_OR_WORKFLOW = 'functionOrWorkflow';
 
 export const hasWhiteSpace = s => {
     return /\s/g.test(s);
 };
+
 export const alphaNumericName = s => {
     return ALPHANUMERIC_REGEX.test(s);
 };
@@ -34,27 +34,6 @@ export const isValidKind = (kinds: any[]) => (value, values?) => {
         ? 'messages.validation.invalidKind'
         : undefined;
 };
-
-export const isValidAgainstSchema =
-    (ajv: ValidatorType<any, RJSFSchema, any>, schema: any) => value => {
-        if (ajv == null || ajv == undefined) {
-            return undefined;
-        }
-        if (!schema || !value) return undefined;
-        try {
-            const validation = ajv.validateFormData(value, schema);
-            if (!validation.errors) {
-                return undefined;
-            }
-
-            const errors = validation.errors?.map(
-                e => e.property + ': ' + e.message
-            );
-            return errors?.join(',');
-        } catch (error) {
-            return 'error with validator';
-        }
-    };
 
 export const sanitizeObj = value => {
     //remove undefined values

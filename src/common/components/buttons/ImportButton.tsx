@@ -38,7 +38,7 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import yaml from 'yaml';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { get } from 'lodash';
-import { isValidAgainstSchema } from '../../utils/helper';
+import { isValidAgainstSchema } from '../../jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { useGetManySchemas } from '../../jsonSchema/schemaController';
