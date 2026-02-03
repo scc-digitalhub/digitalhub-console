@@ -18,7 +18,7 @@ import { isValidAgainstSchema } from '../../common/utils/helper';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
-import { JsonSchemaInput } from '@dslab/ra-jsonschema-input';
+import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { filterProps } from '../../common/jsonSchema/schemas';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });

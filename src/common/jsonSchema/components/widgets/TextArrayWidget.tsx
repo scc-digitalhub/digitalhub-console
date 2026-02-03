@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Grid, TextField } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { useState } from 'react';

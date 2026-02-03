@@ -14,7 +14,7 @@ import { CoreResourceFieldTemplate } from './templates/CoreResourceFieldTemplate
 import { KeyValueFieldTemplate } from './templates/KeyValueFieldTemplate';
 import { VolumeResourceFieldTemplate } from './templates/VolumeResourceFieldTemplate';
 import { AceEditorWidget } from './widgets/AceEditorWidget';
-import TitleField from './fields/TitleField';
+import TitleFieldTemplate from './templates/TitleFieldTemplate';
 import { JsonParamsWidget } from './widgets/JsonParamsWidget';
 import MultiSchemaFieldTemplate from './templates/MultiSchemaFieldTemplate';
 import WrapIfAdditionalTemplate from './templates/WrapIfAdditionalTemplate';
@@ -40,7 +40,7 @@ const customTemplates = {
     CoreResourceFieldTemplate,
     KeyValueFieldTemplate,
     VolumeResourceFieldTemplate,
-    TitleFieldTemplate: TitleField,
+    TitleFieldTemplate,
     MultiSchemaFieldTemplate,
     WrapIfAdditionalTemplate,
 };
