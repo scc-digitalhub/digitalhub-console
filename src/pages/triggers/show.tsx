@@ -37,7 +37,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { ActivateButton } from './components/ActivateButton';
 import { IdField } from '../../common/components/fields/IdField';
-import { functionParser, taskParser } from '../../common/utils/helper';
+import { functionParser, taskParser } from '../../common/utils/parsers';
 
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { useGetRunIds } from './hooks/useGetRunIds';
