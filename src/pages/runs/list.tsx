@@ -21,7 +21,7 @@ import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { RunIcon } from './icon';
-import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { formatDuration } from '../../common/utils/helper';
 import { functionParser } from '../../common/utils/parsers';

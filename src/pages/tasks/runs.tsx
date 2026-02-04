@@ -23,7 +23,7 @@ import { Empty } from '../../common/components/layout/Empty';
 import { StopButton } from '../runs/components/StopButton';
 import { DropDownButton } from '../../common/components/buttons/DropdownButton';
 import { RunCreateForm } from '../runs/create';
-import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { CloneButton } from '../runs/components/CloneButton';
 import { useRootSelector } from '@dslab/ra-root-selector';

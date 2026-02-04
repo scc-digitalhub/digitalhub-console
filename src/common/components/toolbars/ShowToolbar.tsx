@@ -14,7 +14,7 @@ import {
 } from 'react-admin';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { DeleteWithConfirmButtonByName } from '../buttons/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../buttons/delete/DeleteWithConfirmButtonByName';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { DownloadButton } from '../../../features/files/download/components/DownloadButton';
 
