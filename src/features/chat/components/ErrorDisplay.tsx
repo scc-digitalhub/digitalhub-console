@@ -4,8 +4,8 @@
 
 import { Box, Typography, useTheme } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { RetryButton } from './components/buttons/RetryButton';
 import { useTranslate } from 'react-admin';
+import { RetryButton } from '../../../common/components/buttons/RetryButton';
 
 interface ErrorDisplayProps {
     error: Error | string;

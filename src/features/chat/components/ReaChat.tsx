@@ -8,7 +8,6 @@ import {
     SessionMessages,
     SessionMessagePanel,
     SessionMessagesHeader,
-    Session,
     SessionMessage,
     MessageQuestion,
     MessageResponse,
@@ -16,14 +15,16 @@ import {
     MessageActions,
 } from 'reachat';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import '../chatTheme.css';
+import { useParams } from 'react-router-dom';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
-import { createChatTheme } from '../chatTheme';
 import { alpha, CSSProperties, useTheme } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
-import { ErrorDisplay } from '../../../common/ErrorDisplay';
 import { useTranslate } from 'react-admin';
+import { ErrorDisplay } from './ErrorDisplay';
+import { createChatTheme } from '../chatTheme';
+import '../chatTheme.css';
+import { useChatContext } from './ChatContext';
 
 const API_KEY: string =
     (globalThis as any).VITE_OPENAI_API_KEY ||
@@ -35,7 +36,6 @@ const API_BASE_URL: string =
     import.meta.env.VITE_OPENAI_BASE_URL ||
     '';
 
-const SINGLE_SESSION_ID = 'main-session';
 const THROTTLE_MS = 100;
 
 const CriticalErrorFallback = ({ error, retry }: any) => {
@@ -53,29 +53,18 @@ export const ReaChat = () => {
 };
 
 const OpenAIChat = () => {
-    const theme = useTheme();
-    const isDarkMode = theme.palette.mode === 'dark';
-    const primaryColor = theme.palette.primary.main;
-    const primaryHoverColor = theme.palette.primary.dark;
-    const translate = useTranslate();
-    const cssVariables = {
-        '--primary': primaryColor,
-        '--primary-hover': primaryHoverColor,
-        '--primary-alpha': alpha(primaryColor, 0.15),
-        '--primary-hover-alpha': alpha(primaryColor, 0.1),
-    } as CSSProperties;
-    const dynamicChatTheme = createChatTheme();
-    const [sessions, setSessions] = useState<Session[]>([
-        {
-            id: SINGLE_SESSION_ID,
-            title: '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            conversations: [],
-        },
-    ]);
+    const { id } = useParams();
+    const currentRunId = id || 'general-session';
+    const { sessions, updateSession, ensureSessionForRun } = useChatContext();
 
     const [loading, setIsLoading] = useState<boolean>(false);
+
+    const isRegeneratingRef = useRef(false);
+
+    useEffect(() => {
+        ensureSessionForRun(currentRunId);
+    }, [currentRunId, ensureSessionForRun]);
+
     const openai = useRef<OpenAI | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -89,6 +78,20 @@ const OpenAIChat = () => {
         }
     }, []);
 
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
+    const primaryColor = theme.palette.primary.main;
+    const translate = useTranslate();
+
+    const cssVariables = {
+        '--primary': primaryColor,
+        '--primary-hover': theme.palette.primary.dark,
+        '--primary-alpha': alpha(primaryColor, 0.15),
+        '--primary-hover-alpha': alpha(primaryColor, 0.1),
+    } as CSSProperties;
+
+    const dynamicChatTheme = createChatTheme();
+
     const handleStop = useCallback(() => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
@@ -99,52 +102,33 @@ const OpenAIChat = () => {
 
     const handleCopy = useCallback((text?: string) => {
         if (!text) return;
-        navigator.clipboard.writeText(text).catch(err => {
-            console.error('Failed to copy:', err);
-        });
+        navigator.clipboard.writeText(text).catch(err => console.error(err));
     }, []);
 
-    const handleRegenerate = useCallback(
-        (question: string) => {
-            if (loading || !question) return;
-            setSessions(prev => {
-                const updated = [...prev];
-                const idx = updated.findIndex(s => s.id === SINGLE_SESSION_ID);
-                if (idx !== -1) {
-                    updated[idx] = {
-                        ...updated[idx],
-                        conversations: updated[idx].conversations.slice(0, -1),
-                    };
-                }
-                return updated;
-            });
+    const handleNewMessage = useCallback(
+        async (message: string) => {
+            if (!openai.current) return console.error('OpenAI not initialized');
+            if (!message) return;
 
-            handleNewMessage(question);
-        },
-        [loading]
-    );
+            const currentSession = sessions.find(s => s.id === currentRunId);
+            if (!currentSession) return;
 
-    const handleNewMessage = useCallback(async (message: string) => {
-        if (!openai.current) return console.error('OpenAI not initialized');
-        if (!message) return;
+            setIsLoading(true);
+            abortControllerRef.current = new AbortController();
 
-        setIsLoading(true);
-        abortControllerRef.current = new AbortController();
+            let baseConversations = currentSession.conversations;
+            if (isRegeneratingRef.current) {
+                baseConversations = baseConversations.slice(0, -1);
+                isRegeneratingRef.current = false;
+            }
 
-        const conversationId = Date.now().toString();
+            const conversationId = Date.now().toString();
 
-        const updateSessionState = (
-            currentResponse: string,
-            isError: boolean = false
-        ) => {
-            setSessions(prevSessions => {
-                const sessionIndex = prevSessions.findIndex(
-                    s => s.id === SINGLE_SESSION_ID
-                );
-                if (sessionIndex === -1) return prevSessions;
-
+            const updateSessionState = (
+                currentResponse: string,
+                isError: boolean = false
+            ) => {
                 const newConversation = {
-                    title: message,
                     id: conversationId,
                     question: message,
                     response: currentResponse,
@@ -153,64 +137,61 @@ const OpenAIChat = () => {
                     updatedAt: new Date(),
                 };
 
-                const updatedSessions = [...prevSessions];
-                const session = updatedSessions[sessionIndex];
-                const conversations = [...session.conversations];
-                const convIndex = conversations.findIndex(
-                    c => c.id === conversationId
+                const conversations = [...baseConversations, newConversation];
+
+                updateSession({
+                    ...currentSession,
+                    updatedAt: new Date(),
+                    conversations,
+                });
+            };
+
+            updateSessionState('');
+
+            try {
+                const stream = await openai.current.chat.completions.create(
+                    {
+                        model: 'qwen-test-cpu',
+                        messages: [{ role: 'user', content: message }],
+                        stream: true,
+                    },
+                    { signal: abortControllerRef.current.signal }
                 );
 
-                if (convIndex === -1) {
-                    conversations.push(newConversation);
-                } else {
-                    conversations[convIndex] = {
-                        ...conversations[convIndex],
-                        response: currentResponse,
-                        isError: isError,
-                        updatedAt: new Date(),
-                    };
+                let accumulatedResponse = '';
+                let lastUpdateTime = 0;
+
+                for await (const chunk of stream) {
+                    const content = chunk.choices[0]?.delta?.content || '';
+                    accumulatedResponse += content;
+                    const now = Date.now();
+                    if (now - lastUpdateTime > THROTTLE_MS) {
+                        updateSessionState(accumulatedResponse);
+                        lastUpdateTime = now;
+                    }
                 }
-
-                updatedSessions[sessionIndex] = { ...session, conversations };
-                return updatedSessions;
-            });
-        };
-
-        updateSessionState('');
-
-        try {
-            const stream = await openai.current.chat.completions.create(
-                {
-                    model: 'qwen-test-cpu',
-                    messages: [{ role: 'user', content: message }],
-                    stream: true,
-                },
-                { signal: abortControllerRef.current.signal }
-            );
-
-            let accumulatedResponse = '';
-            let lastUpdateTime = 0;
-
-            for await (const chunk of stream) {
-                const content = chunk.choices[0]?.delta?.content || '';
-                accumulatedResponse += content;
-                const now = Date.now();
-                if (now - lastUpdateTime > THROTTLE_MS) {
-                    updateSessionState(accumulatedResponse);
-                    lastUpdateTime = now;
+                updateSessionState(accumulatedResponse);
+            } catch (error: any) {
+                if (error.name !== 'AbortError') {
+                    updateSessionState(error?.message, true);
                 }
+            } finally {
+                setIsLoading(false);
+                abortControllerRef.current = null;
             }
-            updateSessionState(accumulatedResponse);
-        } catch (error: any) {
-            if (error.name !== 'AbortError') {
-                const errorMessage = error?.message;
-                updateSessionState(errorMessage, true);
-            }
-        } finally {
-            setIsLoading(false);
-            abortControllerRef.current = null;
-        }
-    }, []);
+        },
+        [currentRunId, sessions, updateSession]
+    );
+
+    const handleRegenerate = useCallback(
+        (question: string) => {
+            if (loading || !question) return;
+
+            isRegeneratingRef.current = true;
+            handleNewMessage(question);
+        },
+        [loading, handleNewMessage]
+    );
 
     return (
         <div
@@ -219,7 +200,7 @@ const OpenAIChat = () => {
         >
             <Chat
                 sessions={sessions}
-                activeSessionId={SINGLE_SESSION_ID}
+                activeSessionId={currentRunId}
                 isLoading={loading}
                 onSendMessage={handleNewMessage}
                 theme={dynamicChatTheme}
@@ -232,15 +213,14 @@ const OpenAIChat = () => {
                     <SessionMessages>
                         {(conversations: any[]) =>
                             conversations.map((conversation, index) => {
-                                const isLastMessage =
+                                const isLast =
                                     index === conversations.length - 1;
-                                const showLoading = isLastMessage && loading;
                                 const isError = conversation.isError;
 
                                 return (
                                     <SessionMessage
                                         conversation={conversation}
-                                        isLast={isLastMessage}
+                                        isLast={isLast}
                                         key={conversation.id}
                                     >
                                         <MessageQuestion
@@ -255,7 +235,7 @@ const OpenAIChat = () => {
                                                     )
                                                 }
                                                 onRetry={
-                                                    isLastMessage
+                                                    isLast
                                                         ? () =>
                                                               handleRegenerate(
                                                                   conversation.question
@@ -266,7 +246,7 @@ const OpenAIChat = () => {
                                         ) : (
                                             <MessageResponse
                                                 response={conversation.response}
-                                                isLoading={showLoading}
+                                                isLoading={isLast && loading}
                                             />
                                         )}
 

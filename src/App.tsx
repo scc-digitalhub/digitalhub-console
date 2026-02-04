@@ -16,7 +16,10 @@ import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
-import { OidcAuthProvider, BasicAuthProvider } from './common/provider/authProvider';
+import {
+    OidcAuthProvider,
+    BasicAuthProvider,
+} from './common/provider/authProvider';
 import {
     RootSelectorContextProvider,
     RootSelectorInitialWrapper,
@@ -130,6 +133,7 @@ import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
+import { ChatContextProvider } from './features/chat/components/ChatContextProvider';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -169,63 +173,65 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <FileContextProvider
-                                    fileProvider={dataProvider}
-                                >
-                                    <AdminUI
-                                        dashboard={Dashboard}
-                                        layout={WrappedLayout}
-                                        loginPage={MyLoginPage}
-                                        requireAuth={!!authProvider}
-                                        disableTelemetry
+                                <ChatContextProvider>
+                                    <FileContextProvider
+                                        fileProvider={dataProvider}
                                     >
-                                        <Resource {...functionDefinition} />
-                                        <Resource {...workflowDefinition} />
-                                        <Resource {...dataitemDefinition} />
-                                        <Resource {...modelDefinition} />
-                                        <Resource {...artifactDefinition} />
-                                        <Resource name="tasks" />
-                                        <Resource {...runDefinition} />
-                                        <Resource {...triggerDefinition} />
-                                        <Resource {...projectDefinition} />
-                                        <Resource {...secretDefinition} />
-                                        <Resource name="schemas" />
-                                        <Resource name="logs" />
-                                        <Resource name="metadatas" />
-                                        <Resource name="labels" />
-                                        <Resource name="templates" />
-                                        <CustomRoutes>
-                                            <Route
-                                                path="/config"
-                                                element={<ProjectConfig />}
-                                            />
-
-                                            <Route
-                                                path="/lineage"
-                                                element={<ProjectLineage />}
-                                            />
-
-                                            <Route
-                                                path="/account"
-                                                element={<MyAccount />}
-                                            />
-                                            <Route
-                                                path="/files"
-                                                element={<Browser />}
-                                            />
-                                            <Route
-                                                path="/services"
-                                                element={<ServiceList />}
-                                            />
-                                            {enableSearch && (
+                                        <AdminUI
+                                            dashboard={Dashboard}
+                                            layout={WrappedLayout}
+                                            loginPage={MyLoginPage}
+                                            requireAuth={!!authProvider}
+                                            disableTelemetry
+                                        >
+                                            <Resource {...functionDefinition} />
+                                            <Resource {...workflowDefinition} />
+                                            <Resource {...dataitemDefinition} />
+                                            <Resource {...modelDefinition} />
+                                            <Resource {...artifactDefinition} />
+                                            <Resource name="tasks" />
+                                            <Resource {...runDefinition} />
+                                            <Resource {...triggerDefinition} />
+                                            <Resource {...projectDefinition} />
+                                            <Resource {...secretDefinition} />
+                                            <Resource name="schemas" />
+                                            <Resource name="logs" />
+                                            <Resource name="metadatas" />
+                                            <Resource name="labels" />
+                                            <Resource name="templates" />
+                                            <CustomRoutes>
                                                 <Route
-                                                    path="/searchresults"
-                                                    element={<SearchList />}
+                                                    path="/config"
+                                                    element={<ProjectConfig />}
                                                 />
-                                            )}
-                                        </CustomRoutes>
-                                    </AdminUI>
-                                </FileContextProvider>
+
+                                                <Route
+                                                    path="/lineage"
+                                                    element={<ProjectLineage />}
+                                                />
+
+                                                <Route
+                                                    path="/account"
+                                                    element={<MyAccount />}
+                                                />
+                                                <Route
+                                                    path="/files"
+                                                    element={<Browser />}
+                                                />
+                                                <Route
+                                                    path="/services"
+                                                    element={<ServiceList />}
+                                                />
+                                                {enableSearch && (
+                                                    <Route
+                                                        path="/searchresults"
+                                                        element={<SearchList />}
+                                                    />
+                                                )}
+                                            </CustomRoutes>
+                                        </AdminUI>
+                                    </FileContextProvider>
+                                </ChatContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>
