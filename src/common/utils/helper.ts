@@ -10,13 +10,10 @@ import { toYaml } from '@dslab/ra-export-record-button';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
+
 export const FUNCTION_OR_WORKFLOW = 'functionOrWorkflow';
 
-export const hasWhiteSpace = s => {
-    return /\s/g.test(s);
-};
-
-export const alphaNumericName = s => {
+export const alphaNumericName = (s: string) => {
     return ALPHANUMERIC_REGEX.test(s);
 };
 
@@ -35,8 +32,10 @@ export const isValidKind = (kinds: any[]) => (value, values?) => {
         : undefined;
 };
 
+/**
+ * Removes undefined values from the given object
+ */
 export const sanitizeObj = value => {
-    //remove undefined values
     return Object.keys(value)
         .filter(key => value[key] !== undefined)
         .reduce((obj, key) => {
@@ -50,20 +49,25 @@ export const sanitizeObj = value => {
         }, {});
 };
 
+/**
+ * Generates a ~random id from (time + rand)
+ */
 export const randomId = () => {
-    //generate a ~random id from (time + rand)
     let p3 = Date.now().toString(36);
     let p2 = Math.random().toString(16).substring(2, 7);
     let p1 = Math.random().toString(36).substring(2);
     return p1 + p2 + p3;
 };
 
+/**
+ * Autoscales the given byte number and returns the converted number, rounded to the given
+ * precision, formatted as "\<number\> \<unit\>"
+ */
 export const scaleBytes = (bytes: number, precision: number = 1) => {
     const unit = B.value(bytes).autoScale({ type: 'decimal' });
     return `${round(unit.value, precision)} ${unit.unit.unit}`;
 };
 
-//TODO replaces same function in pods tab
 export const formatDuration = (
     ms: number
 ): {
@@ -98,6 +102,9 @@ export const formatDuration = (
     return { days, hours, minutes, seconds, asString };
 };
 
+/**
+ * Calculates the number of lines of the given record spec converted to string
+ */
 export const countLines = recordSpec => {
     const specString =
         recordSpec == null
@@ -113,6 +120,10 @@ export const countLines = recordSpec => {
     return [lineCount, maxLines];
 };
 
+/**
+ * Formats the given value as a string, e.g. "1d 12h 30m"
+ * @param value in seconds
+ */
 export const formatTimeTick = (value: number) => {
     if (value < 60) {
         return `${value}s`;
