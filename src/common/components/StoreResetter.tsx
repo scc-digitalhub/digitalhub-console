@@ -11,6 +11,11 @@ import {
 } from 'react-admin';
 import { isEqual } from 'lodash';
 
+/**
+ * Wrapper component that removes selectedIds from RA store
+ * when switching project to avoid inconsistencies with lists,
+ * as RA stores list state (e.g. "store.runs.selectedIds")
+ */
 export const StoreResetter = ({ children }: { children?: AdminChildren }) => {
     const { root } = useRootSelector();
     const remove = useRemoveFromStore();
@@ -18,7 +23,6 @@ export const StoreResetter = ({ children }: { children?: AdminChildren }) => {
 
     useEffect(() => {
         if (!isEqual(root, prevRoot.current)) {
-            console.log('resetting selection state');
             prevRoot.current = root ?? null;
 
             //clear selection state

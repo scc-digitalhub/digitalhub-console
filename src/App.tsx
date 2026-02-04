@@ -126,7 +126,7 @@ import runDefinition from './pages/runs';
 import triggerDefinition from './pages/triggers';
 import { StompContextProvider } from './features/notifications/StompContextProvider';
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
-import { StoreResetter } from './common/utils/StoreResetter';
+import { StoreResetter } from './common/components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
 import { ServiceList } from './features/httpclients/components/list';
 import { FileContextProvider } from './features/files/FileContextProvider';
