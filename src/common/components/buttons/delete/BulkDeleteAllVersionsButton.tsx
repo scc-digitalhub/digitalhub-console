@@ -2,40 +2,30 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    Box,
-    DialogContentText,
-    FormControlLabel,
-    Switch,
-    Typography,
-} from '@mui/material';
 import { useState } from 'react';
 import {
     BulkDeleteButton,
     BulkDeleteButtonProps,
+    BulkDeleteWithConfirmButtonProps,
+    RaRecord,
     useListContext,
-    useTranslate,
 } from 'react-admin';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import { DeleteButtonOptions } from './DeleteWithConfirmButtonByName';
+import { ConfirmContent } from './ConfirmContent';
+import { DeleteButtonOptions } from './types';
+import { extractDeleteButtonOptions, sanitizeDeleteButtonProps } from './utils';
 
-export const BulkDeleteAllVersionsButton = (
-    props: BulkDeleteButtonProps & DeleteButtonOptions
+export const BulkDeleteAllVersionsButton = <RecordType extends RaRecord = any>(
+    props: BulkDeleteButtonProps &
+        DeleteButtonOptions &
+        Pick<BulkDeleteWithConfirmButtonProps<RecordType>, 'confirmContent'>
 ) => {
     const {
         mutationMode = 'pessimistic',
         deleteAll: deleteAllFromProps = false,
         cascade: cascadeFromProps = false,
-        askForDeleteAll = false,
-        askForCascade = false,
-        disableDeleteAll = false,
-        disableCascade = false,
-        additionalContent,
         confirmContent,
         ...rest
     } = props;
-    const translate = useTranslate();
-    //if deleteAll, force cascade
     const [deleteAll, setDeleteAll] = useState(deleteAllFromProps);
     const [cascade, setCascade] = useState(cascadeFromProps);
     const { data, selectedIds } = useListContext();
@@ -52,73 +42,20 @@ export const BulkDeleteAllVersionsButton = (
         },
     };
 
-    const handleDeleteAllChange = (e: any) => {
-        setDeleteAll(e.target.checked);
-    };
-
-    const handleCascadeChange = (e: any) => {
-        setCascade(e.target.checked);
-    };
-
     const defaultConfirmContent = (
-        <Box>
-            <DialogContentText>
-                {translate('ra.message.bulk_delete_content', {
-                    name: 'item',
-                    smart_count: selectedIds.length,
-                })}
-            </DialogContentText>
-            {additionalContent}
-            {askForCascade && (
-                <Box>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={cascade}
-                                onChange={handleCascadeChange}
-                                disabled={disableCascade}
-                            />
-                        }
-                        label={translate('actions.cascade_delete')}
-                    />
-                </Box>
-            )}
-            {askForDeleteAll && (
-                <Box>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={deleteAll}
-                                onChange={handleDeleteAllChange}
-                                disabled={disableDeleteAll}
-                            />
-                        }
-                        label={translate('actions.delete_all_versions')}
-                    />
-                </Box>
-            )}
-            {(deleteAll || cascade) && (
-                <Typography
-                    variant="body2"
-                    color="error"
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        ml: 2,
-                    }}
-                >
-                    <WarningAmberIcon fontSize="small" sx={{ mr: 0.5 }} />
-                    {selectedData.some(sd => sd.status?.files !== undefined)
-                        ? translate('messages.cascade_warning.no_undone_files')
-                        : translate('messages.cascade_warning.no_undone')}
-                </Typography>
-            )}
-        </Box>
+        <ConfirmContent
+            {...extractDeleteButtonOptions(rest)}
+            deleteAll={deleteAll}
+            cascade={cascade}
+            setDeleteAll={setDeleteAll}
+            setCascade={setCascade}
+            records={selectedData}
+        />
     );
 
     return (
         <BulkDeleteButton
-            {...rest}
+            {...sanitizeDeleteButtonProps(rest)}
             mutationOptions={mutationOptions}
             mutationMode={mutationMode}
             confirmContent={confirmContent ?? defaultConfirmContent}
