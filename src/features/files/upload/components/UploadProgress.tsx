@@ -27,7 +27,7 @@ import {
 } from 'react-admin';
 import { createElement, useState } from 'react';
 import { Upload } from '../types';
-import { scaleBytes } from '../../../../common/utils/helper';
+import { scaleBytes } from '../../../../common/utils/helpers';
 import { RetryButton } from '../../../../common/components/buttons/RetryButton';
 
 export const UploadProgress = (props: UploadProgressProps) => {

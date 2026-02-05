@@ -38,7 +38,7 @@ import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
-import { formatDuration, isAlphaNumeric } from '../../../common/utils/helper';
+import { formatDuration, isAlphaNumeric } from '../../../common/utils/helpers';
 import { IdField } from '../../../common/components/fields/IdField';
 
 export const MyPersonalTokens = () => {

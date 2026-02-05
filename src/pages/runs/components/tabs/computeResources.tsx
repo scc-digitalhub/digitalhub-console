@@ -26,7 +26,7 @@ import { AccordionProps } from '@mui/material/Accordion';
 import { styled } from '@mui/material/styles';
 import { JSONTree } from 'react-json-tree';
 import { ChartView } from '../ChartView';
-import { formatDuration } from '../../../../common/utils/helper';
+import { formatDuration } from '../../../../common/utils/helpers';
 import { EventsList } from './events';
 
 const AccordionStyle = styled((props: AccordionProps) => (

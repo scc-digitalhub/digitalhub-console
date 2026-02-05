@@ -12,7 +12,7 @@ import {
     EditBase,
     EditView,
 } from 'react-admin';
-import { alphaNumericName } from '../../common/utils/helper';
+import { alphaNumericName } from '../../common/utils/helpers';
 import { Box, Container, Grid } from '@mui/material';
 import { EditPageTitle } from '../../common/components/layout/PageTitle';
 import { SecretIcon } from './icon';

@@ -24,7 +24,7 @@ import { DropDownButton } from '../../common/components/buttons/DropdownButton';
 import { TriggerCreateForm } from '../triggers/create';
 import { DeactivateButton } from '../triggers/components/DeactivateButton';
 import { LoadMore } from '../../common/components/layout/LoadMore';
-import { sanitizeObj } from '../../common/utils/helper';
+import { sanitizeObj } from '../../common/utils/helpers';
 
 export const TaskTriggerList = () => {
     //task is the current record

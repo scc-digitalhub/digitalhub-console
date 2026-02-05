@@ -12,7 +12,7 @@ import {
 import { StateChips, StateColors } from '../components/StateChips';
 import { ReactElement, useEffect, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
-import { FUNCTION_OR_WORKFLOW } from '../utils/helper';
+import { FUNCTION_OR_WORKFLOW } from '../utils/helpers';
 
 const fileRelatedStates = ['CREATED', 'ERROR', 'READY', 'UPLOADING'];
 

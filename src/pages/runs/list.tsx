@@ -23,7 +23,7 @@ import { StateChips } from '../../common/components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { formatDuration } from '../../common/utils/helper';
+import { formatDuration } from '../../common/utils/helpers';
 import { functionParser } from '../../common/utils/parsers';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useGetFilters } from '../../common/hooks/useGetFilters';

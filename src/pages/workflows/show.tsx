@@ -31,7 +31,7 @@ import { IdField } from '../../common/components/fields/IdField';
 import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 import { RunStateBadge } from '../../common/components/RunStateBadge';
 import { WorkflowTaskShow } from './tasks';
-import { countLines } from '../../common/utils/helper';
+import { countLines } from '../../common/utils/helpers';
 import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { getWorkflowUiSpec } from './types';
 

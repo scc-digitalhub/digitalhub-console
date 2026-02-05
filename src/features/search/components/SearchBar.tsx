@@ -26,7 +26,7 @@ import { Form, RecordContextProvider } from 'react-admin';
 import { useFormContext, useFormState, useController } from 'react-hook-form';
 import { SearchFilter } from '../SearchProvider';
 import { InputProps, useTranslate } from 'ra-core';
-import { alphaNumericName } from '../../../common/utils/helper';
+import { alphaNumericName } from '../../../common/utils/helpers';
 
 const getEntries = (o, prefix = '') =>
     Object.entries(o).flatMap(([k, v]) =>

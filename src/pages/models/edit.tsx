@@ -16,7 +16,7 @@ import { FlatCard } from '../../common/components/layout/FlatCard';
 import { EditPageTitle } from '../../common/components/layout/PageTitle';
 import { ModelIcon } from './icon';
 import { getModelSpecUiSchema } from './types';
-import { randomId } from '../../common/utils/helper';
+import { randomId } from '../../common/utils/helpers';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
