@@ -36,10 +36,12 @@ export const FunctionCreate = () => {
     const [template, setTemplate] = useState<Template | null>(null);
 
     const isLoading = !schemas?.length;
-    const kinds = schemas?.map(s => ({
-        id: s.kind,
-        name: s.kind,
-    }));
+    const kinds = schemas
+        ?.map(s => ({
+            id: s.kind,
+            name: s.kind,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     const transform = data => ({
         ...data,
