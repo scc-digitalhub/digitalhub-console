@@ -34,7 +34,7 @@ import { NODE_WIDTH, RelationshipDirection } from '../utils';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StateChips } from '../../../common/components/StateChips';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { keyParser } from '../../../common/utils/helper';
+import { keyParser } from '../../../common/utils/parsers';
 
 const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
     const { data, direction } = props;

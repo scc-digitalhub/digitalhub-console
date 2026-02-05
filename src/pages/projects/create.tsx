@@ -10,7 +10,7 @@ import {
     useAuthProvider,
     useNotify,
 } from 'react-admin';
-import { isAlphaNumeric } from '../../common/utils/helper';
+import { isAlphaNumeric } from '../../common/utils/helpers';
 import { MetadataSchema } from '../../common/jsonSchema/schemas';
 import { FormLabel } from '../../common/components/layout/FormLabel';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';

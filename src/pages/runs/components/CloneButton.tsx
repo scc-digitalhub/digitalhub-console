@@ -6,7 +6,7 @@ import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { RunCreateForm } from '../create';
 import { useRecordContext, useTranslate } from 'react-admin';
-import { taskParser } from '../../../common/utils/helper';
+import { taskParser } from '../../../common/utils/parsers';
 import { Alert } from '@mui/material';
 import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
 

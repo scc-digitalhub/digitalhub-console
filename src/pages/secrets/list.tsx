@@ -15,11 +15,11 @@ import {
 } from 'react-admin';
 
 import { SecretIcon } from './icon';
-import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
-import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 

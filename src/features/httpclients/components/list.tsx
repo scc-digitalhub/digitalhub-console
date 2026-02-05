@@ -19,7 +19,7 @@ import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../../common/components/StateChips';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser } from '../../../common/utils/helper';
+import { functionParser } from '../../../common/utils/parsers';
 import { ListBaseLive } from '../../notifications/components/ListBaseLive';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';

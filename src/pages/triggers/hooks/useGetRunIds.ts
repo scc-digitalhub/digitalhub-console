@@ -9,7 +9,7 @@ import {
     useRecordContext,
 } from 'react-admin';
 import { Relationship } from '../../../features/lineage';
-import { keyParser } from '../../../common/utils/helper';
+import { keyParser } from '../../../common/utils/parsers';
 import { RunIdsResult } from './types';
 
 export const useGetRunIds = (): RunIdsResult => {

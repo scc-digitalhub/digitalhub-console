@@ -9,7 +9,7 @@ import { TopToolbar, useLocaleState } from 'react-admin';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { useDataGridController } from '../../../../common/hooks/useDataGridController';
-import { scaleBytes } from '../../../../common/utils/helper';
+import { scaleBytes } from '../../../../common/utils/helpers';
 
 export const InfoTable = (props: any) => {
     const { info } = props;

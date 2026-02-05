@@ -12,7 +12,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual, countLines } from '../../common/utils/helper';
+import { arePropsEqual, countLines } from '../../common/utils/helpers';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';

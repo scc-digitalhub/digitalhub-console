@@ -13,7 +13,7 @@ import {
     useRedirect,
     useResourceContext,
 } from 'react-admin';
-import { isAlphaNumeric, randomId } from '../../common/utils/helper';
+import { isAlphaNumeric, randomId } from '../../common/utils/helpers';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { DataItemIcon } from './icon';

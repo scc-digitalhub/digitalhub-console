@@ -19,7 +19,7 @@ import {
 } from '../utils';
 import { useCallback, useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { keyParser } from '../../../common/utils/helper';
+import { keyParser } from '../../../common/utils/parsers';
 
 export const RecordLineage = (props: {
     relationships: Relationship[];

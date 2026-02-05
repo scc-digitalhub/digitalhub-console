@@ -21,7 +21,7 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { useEffect, useState } from 'react';
 import { RecordLineage } from '../../../features/lineage/components/RecordLineage';
 import { Relationship } from '../../../features/lineage';
-import { keyParser } from '../../../common/utils/helper';
+import { keyParser } from '../../../common/utils/parsers';
 import { NoContent } from '../../../common/components/layout/NoContent';
 
 export const ProjectLineage = () => {

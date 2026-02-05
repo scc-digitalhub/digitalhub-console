@@ -18,14 +18,14 @@ import {
     useRecordContext,
     useResourceContext,
 } from 'react-admin';
-import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/DeleteWithConfirmButtonByName';
+import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { VersionsList } from '../../common/components/VersionsList';
 import { WorkflowIcon } from './icon';
 import { ChipsField } from '../../common/components/fields/ChipsField';
-import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/BulkDeleteAllVersionsButton';
+import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 import { RunStateBadge } from '../../common/components/RunStateBadge';

@@ -14,7 +14,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual, countLines } from '../../common/utils/helper';
+import { arePropsEqual, countLines } from '../../common/utils/helpers';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';

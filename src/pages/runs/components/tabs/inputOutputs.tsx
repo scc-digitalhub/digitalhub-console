@@ -13,7 +13,7 @@ import {
     useList,
 } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { keyParser } from '../../../../common/utils/helper';
+import { keyParser } from '../../../../common/utils/parsers';
 import { Stack } from '@mui/system';
 import { Box } from '@mui/material';
 

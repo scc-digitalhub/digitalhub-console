@@ -12,7 +12,7 @@ import {
     TextInput,
     required,
 } from 'react-admin';
-import { isAlphaNumeric } from '../../common/utils/helper';
+import { isAlphaNumeric } from '../../common/utils/helpers';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';

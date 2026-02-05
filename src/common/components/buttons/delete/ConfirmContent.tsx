@@ -9,37 +9,24 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { ReactNode, useState } from 'react';
-import {
-    RaRecord,
-    DeleteWithConfirmButton,
-    DeleteWithConfirmButtonProps,
-    useRecordContext,
-    useTranslate,
-} from 'react-admin';
+import { useTranslate } from 'react-admin';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { DeleteButtonOptions } from './types';
 
-//TODO move to a utils file when refactoring, reuse for bulk delete
-export type DeleteButtonOptions = {
-    deleteAll?: boolean;
-    cascade?: boolean;
-    askForDeleteAll?: boolean;
-    askForCascade?: boolean;
-    disableDeleteAll?: boolean;
-    disableCascade?: boolean;
-    onDeleteAll?: (value: boolean) => void;
-    onCascade?: (value: boolean) => void;
-    additionalContent?: ReactNode;
+export type ConfirmContentProps = {
+    setDeleteAll: (value: boolean) => void;
+    setCascade: (value: boolean) => void;
+    records: any[];
 };
 
-export const DeleteWithConfirmButtonByName = <
-    RecordType extends RaRecord = any
->(
-    props: DeleteWithConfirmButtonProps<RecordType> & DeleteButtonOptions
+export const ConfirmContent = (
+    props: DeleteButtonOptions & ConfirmContentProps
 ) => {
     const {
-        deleteAll: deleteAllFromProps = false,
-        cascade: cascadeFromProps = false,
+        deleteAll = false,
+        cascade = false,
+        setDeleteAll,
+        setCascade,
         askForDeleteAll = false,
         askForCascade = false,
         disableDeleteAll = false,
@@ -47,24 +34,9 @@ export const DeleteWithConfirmButtonByName = <
         additionalContent,
         onDeleteAll,
         onCascade,
-        titleTranslateOptions,
-        confirmContent,
-        ...rest
+        records,
     } = props;
-    const record = useRecordContext(rest);
     const translate = useTranslate();
-    const [deleteAll, setDeleteAll] = useState(deleteAllFromProps);
-    const [cascade, setCascade] = useState(cascadeFromProps);
-
-    if (!record) return <></>;
-
-    const mutationsOptions = {
-        meta: {
-            deleteAll,
-            name: record.name,
-            cascade,
-        },
-    };
 
     const handleDeleteAllChange = (e: any) => {
         setDeleteAll(e.target.checked);
@@ -76,10 +48,13 @@ export const DeleteWithConfirmButtonByName = <
         if (onCascade) onCascade(e.target.checked);
     };
 
-    const defaultConfirmContent = (
+    return (
         <Box>
             <DialogContentText>
-                {translate('ra.message.delete_content', { name: 'item' })}
+                {translate('ra.message.bulk_delete_content', {
+                    name: 'item',
+                    smart_count: records.length,
+                })}
             </DialogContentText>
             {additionalContent}
             {askForCascade && (
@@ -88,8 +63,8 @@ export const DeleteWithConfirmButtonByName = <
                         control={
                             <Switch
                                 checked={cascade}
-                                disabled={disableCascade}
                                 onChange={handleCascadeChange}
+                                disabled={disableCascade}
                             />
                         }
                         label={translate('actions.cascade_delete')}
@@ -102,8 +77,8 @@ export const DeleteWithConfirmButtonByName = <
                         control={
                             <Switch
                                 checked={deleteAll}
-                                disabled={disableDeleteAll}
                                 onChange={handleDeleteAllChange}
+                                disabled={disableDeleteAll}
                             />
                         }
                         label={translate('actions.delete_all_versions')}
@@ -121,20 +96,11 @@ export const DeleteWithConfirmButtonByName = <
                     }}
                 >
                     <WarningAmberIcon fontSize="small" sx={{ mr: 0.5 }} />
-                    {record.status.files !== undefined
+                    {records.some(r => r.status?.files !== undefined)
                         ? translate('messages.cascade_warning.no_undone_files')
                         : translate('messages.cascade_warning.no_undone')}
                 </Typography>
             )}
         </Box>
-    );
-
-    return (
-        <DeleteWithConfirmButton
-            titleTranslateOptions={titleTranslateOptions ?? { id: record.name }}
-            {...rest}
-            mutationOptions={mutationsOptions}
-            confirmContent={confirmContent ?? defaultConfirmContent}
-        />
     );
 };

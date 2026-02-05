@@ -14,7 +14,7 @@ import {
     useRedirect,
     useResourceContext,
 } from 'react-admin';
-import { isAlphaNumeric } from '../../common/utils/helper';
+import { isAlphaNumeric } from '../../common/utils/helpers';
 import { Box, Container, Grid } from '@mui/material';
 import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { SecretIcon } from './icon';
