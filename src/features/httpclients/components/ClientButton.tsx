@@ -9,7 +9,6 @@ import {
     FieldProps,
     ButtonProps,
     RaRecord,
-    LoadingIndicator,
     useTranslate,
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
@@ -21,6 +20,7 @@ import {
     useState,
     useEffect,
     SyntheticEvent,
+    useRef,
 } from 'react';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-json';
@@ -33,16 +33,15 @@ import {
     IconButton,
     styled,
     Typography,
-    Tab,
-    Tabs,
-    Box,
-    Alert,
     Stack,
+    Alert,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import { HealthChips } from './HealthChips';
-import { HttpClient } from './HttpClient';
 import { ReaChat } from '../../chat/components/ReaChat';
+
+import { StandardHttpClient } from './StandardHttpClient';
+import { InferenceV2Client } from './InferenceV2Client';
+import { HealthChips } from './HealthChips';
 
 const defaultIcon = <SignpostIcon />;
 
@@ -60,7 +59,6 @@ export interface ClientButtonProps<RecordType extends RaRecord = any>
     maxWidth?: Breakpoint;
     mode?: ClientButtonMode;
     showHealthChecks?: boolean;
-    showTabs?: boolean;
 }
 
 export const ClientButton = (props: ClientButtonProps) => {
@@ -72,38 +70,29 @@ export const ClientButton = (props: ClientButtonProps) => {
         maxWidth = 'lg',
         mode = 'http',
         showHealthChecks = mode === 'v2',
-        showTabs = mode === 'v2',
+        disabled,
         ...rest
     } = props;
 
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState(0);
-    const [healthStatus, setHealthStatus] = useState<HealthStatus>({
-        ready: false,
-        live: false,
-    });
     const record = useRecordContext(props);
-    const { root: projectId } = useRootSelector();
-    const urls: string[] = [];
+    const urls = useRef<string[]>([]);
 
-    if (record?.status?.service?.url) {
-        urls.push(record.status.service.url);
-    }
-    if (record?.status?.service?.urls) {
-        urls.push(...record.status.service.urls);
-    }
-    const proxy = '/-/' + projectId + '/runs/' + record?.id + '/proxy';
-    const titleText = label ? translate(String(label)) : '';
-    const modelName = record?.status?.openai?.model ?? '';
-    const isLoading = !record;
-    const isDisabled =
-        rest.disabled ||
-        record?.status?.state !== 'RUNNING' ||
-        (mode !== 'chat' && urls.length === 0);
+    useEffect(() => {
+        const serviceUrls: string[] = [];
+        if (record?.status?.service) {
+            if (record.status?.service?.url) {
+                serviceUrls.push(record.status.service.url);
+            }
+            if (record.status?.service?.urls) {
+                serviceUrls.push(...record.status.service.urls);
+            }
+        }
+        urls.current = serviceUrls;
+    }, [record?.status?.service]);
 
     const handleDialogOpen = (e: SyntheticEvent) => {
-        if (isDisabled) return;
         setOpen(true);
         e.stopPropagation();
     };
@@ -111,158 +100,21 @@ export const ClientButton = (props: ClientButtonProps) => {
     const handleDialogClose = (e: SyntheticEvent) => {
         e.stopPropagation();
         setOpen(false);
-        setActiveTab(0);
-        setHealthStatus({ ready: false, live: false });
     };
 
     const handleClick = useCallback((e: SyntheticEvent) => {
         e.stopPropagation();
     }, []);
 
-    const handleTabChange = (event: SyntheticEvent, newValue: number) => {
-        setActiveTab(newValue);
-    };
-
-    useEffect(() => {
-        const base = urls[0];
-        if (!open || !base) return;
-        // DEBUG: both health flags true for testing
-        // setHealthStatus({ ready: true, live: true });
-        // return;
-
-        const ctrl = new AbortController();
-
-        const check = (path, key) =>
-            fetch(`${base}${path}`, { signal: ctrl.signal })
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => d?.[key] === true)
-                .catch(() => false);
-
-        (async () => {
-            setHealthStatus({ ready: false, live: false });
-
-            const isReady = await check('/v2/health/ready', 'ready');
-            if (ctrl.signal.aborted) return;
-
-            if (!isReady) {
-                setHealthStatus({ ready: false, live: false });
-            } else {
-                setHealthStatus({ ready: true, live: false });
-                const isLive = await check('/v2/health/live', 'live');
-                if (!ctrl.signal.aborted)
-                    setHealthStatus({ ready: true, live: isLive });
-            }
-        })();
-
-        return () => ctrl.abort();
-    }, [open]);
-
     if (!record) {
         return <></>;
     }
 
-    const renderContent = () => {
-        if (isLoading) return <LoadingIndicator />;
-
-        switch (mode) {
-            case 'chat':
-                return <ReaChat />;
-
-            case 'v2': {
-                if (!showTabs) {
-                    return (
-                        <>
-                            <Typography variant="body2" mb={1}>
-                                {translate('pages.http-client.helperText')}
-                            </Typography>
-                            <HttpClient urls={urls} proxy={proxy} />
-                        </>
-                    );
-                }
-                const showTabsContent =
-                    showTabs &&
-                    (!showHealthChecks || healthStatus.live === true);
-
-                return (
-                    <>
-                        <Typography variant="body2" mb={1}>
-                            {translate('pages.http-client.helperText')}
-                        </Typography>
-
-                        {showHealthChecks && (
-                            <HealthChips
-                                ready={healthStatus.ready}
-                                live={healthStatus.live}
-                            />
-                        )}
-
-                        {showHealthChecks && !healthStatus.ready && (
-                            <Alert severity="warning" sx={{ mb: 2 }}>
-                                Model is not ready.
-                            </Alert>
-                        )}
-                        {showHealthChecks &&
-                            healthStatus.ready &&
-                            !healthStatus.live && (
-                                <Alert severity="info" sx={{ mb: 2 }}>
-                                    Model is ready but not live.
-                                </Alert>
-                            )}
-
-                        {showTabsContent && (
-                            <>
-                                <Tabs
-                                    value={activeTab}
-                                    onChange={handleTabChange}
-                                    sx={{ mb: 2 }}
-                                >
-                                    <Tab label="Inference" />
-                                    <Tab label="Metadata" />
-                                </Tabs>
-
-                                {activeTab === 0 && (
-                                    <Box>
-                                        <HttpClient
-                                            urls={urls}
-                                            proxy={proxy}
-                                            fixedMethod="POST"
-                                            fixedUrl={urls.find(url =>
-                                                url.includes('infer')
-                                            )}
-                                            fixedContentType="application/json"
-                                            showRequestBody={true}
-                                        />
-                                    </Box>
-                                )}
-
-                                {activeTab === 1 && (
-                                    <HttpClient
-                                        urls={urls}
-                                        proxy={proxy}
-                                        fixedMethod="GET"
-                                        fixedUrl={urls
-                                            .find(url => url.includes('infer'))
-                                            ?.replace('/infer', '')}
-                                    />
-                                )}
-                            </>
-                        )}
-                    </>
-                );
-            }
-
-            case 'http':
-            default:
-                return (
-                    <>
-                        <Typography variant="body2" mb={1}>
-                            {translate('pages.http-client.helperText')}
-                        </Typography>
-                        <HttpClient urls={urls} proxy={proxy} />
-                    </>
-                );
-        }
-    };
+    const titleText = label ? translate(String(label)) : '';
+    const isDisabled =
+        disabled ||
+        record.status?.state !== 'RUNNING' ||
+        (mode !== 'chat' && urls.current.length === 0);
 
     return (
         <Fragment>
@@ -297,12 +149,14 @@ export const ClientButton = (props: ClientButtonProps) => {
                             {titleText} {record?.name ? `#${record.name}` : ''}
                         </DialogTitle>
 
-                        <Typography
-                            id="client-dialog-model"
-                            className={CreateInDialogButtonClasses.title}
-                        >
-                            {modelName}
-                        </Typography>
+                        {record.status?.openai?.model && (
+                            <Typography
+                                id="client-dialog-model"
+                                className={CreateInDialogButtonClasses.title}
+                            >
+                                {record.status?.openai?.model}
+                            </Typography>
+                        )}
                     </Stack>
 
                     <IconButton
@@ -315,9 +169,106 @@ export const ClientButton = (props: ClientButtonProps) => {
                         <CloseIcon fontSize="small" />
                     </IconButton>
                 </div>
-                <DialogContent>{renderContent()}</DialogContent>
+                <DialogContent>
+                    {mode === 'chat' ? (
+                        <ReaChat />
+                    ) : (
+                        <Client
+                            showHealthChecks={showHealthChecks}
+                            mode={mode}
+                            recordId={record.id}
+                            urls={urls.current}
+                        />
+                    )}
+                </DialogContent>
             </ClientDialog>
         </Fragment>
+    );
+};
+
+type ClientProps = Pick<ClientButtonProps, 'showHealthChecks' | 'mode'> & {
+    recordId: string;
+    urls: string[];
+};
+
+const Client = (props: ClientProps) => {
+    const { showHealthChecks, recordId, mode, urls } = props;
+    const translate = useTranslate();
+    const { root: projectId } = useRootSelector();
+    const [healthStatus, setHealthStatus] = useState<HealthStatus>({
+        ready: false,
+        live: false,
+    });
+    const showContent = !showHealthChecks || healthStatus.live === true;
+    const proxy = '/-/' + projectId + '/runs/' + recordId + '/proxy';
+
+    useEffect(() => {
+        const base = urls[0];
+        if (!base) return;
+        // DEBUG: both health flags true for testing
+        // setHealthStatus({ ready: true, live: true });
+        // return;
+        const ctrl = new AbortController();
+
+        const check = (path, key) =>
+            fetch(`${base}${path}`, { signal: ctrl.signal })
+                .then(r => (r.ok ? r.json() : null))
+                .then(d => d?.[key] === true)
+                .catch(() => false);
+
+        (async () => {
+            setHealthStatus({ ready: false, live: false });
+
+            const isReady = await check('/v2/health/ready', 'ready');
+            if (ctrl.signal.aborted) return;
+
+            if (!isReady) {
+                setHealthStatus({ ready: false, live: false });
+            } else {
+                setHealthStatus({ ready: true, live: false });
+                const isLive = await check('/v2/health/live', 'live');
+                if (!ctrl.signal.aborted)
+                    setHealthStatus({ ready: true, live: isLive });
+            }
+        })();
+
+        return () => ctrl.abort();
+    }, [showHealthChecks, urls]);
+
+    return (
+        <>
+            <Typography variant="body2" mb={1}>
+                {translate('pages.http-client.helperText')}
+            </Typography>
+
+            {showHealthChecks && (
+                <HealthChips
+                    ready={healthStatus.ready}
+                    live={healthStatus.live}
+                />
+            )}
+
+            {showHealthChecks && !healthStatus.ready && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                    {translate('pages.http-client.modelNotReady')}
+                </Alert>
+            )}
+            {showHealthChecks && healthStatus.ready && !healthStatus.live && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    {translate('pages.http-client.modelNotLive')}
+                </Alert>
+            )}
+
+            {/* Using InferenceV2Client */}
+            {showContent && mode === 'v2' && (
+                <InferenceV2Client urls={urls} proxy={proxy} />
+            )}
+
+            {/* Using StandardHttpClient */}
+            {showContent && mode === 'http' && (
+                <StandardHttpClient urls={urls} proxy={proxy} />
+            )}
+        </>
     );
 };
 

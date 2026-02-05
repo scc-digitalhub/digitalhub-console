@@ -23,10 +23,10 @@ import { functionParser } from '../../../common/utils/helper';
 import { ListBaseLive } from '../../notifications/components/ListBaseLive';
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
-import { ClientButton } from './ClientButton';
 import { IdField } from '../../../common/components/fields/IdField';
 import { FunctionIcon } from '../../../pages/functions/icon';
 import { LogsButton } from '../../logs/components/LogsButton';
+import { ClientButton } from './ClientButton';
 
 const RowActions = () => {
     return (

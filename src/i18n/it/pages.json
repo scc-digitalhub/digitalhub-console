@@ -138,6 +138,12 @@
         "send": "Invia",
         "addHeader": "Aggiungi Intestazione",
         "requestBody": "Body della richiesta",
-        "jsonOrRaw": "JSON o testo"
+        "jsonOrRaw": "JSON o testo",
+        "tabs": {
+            "inference": "Inferenza",
+            "metadata": "Metadati"
+        },
+        "modelNotReady": "Il modello non è pronto.",
+        "modelNotLive": "Il modello è pronto ma non attivo."
     }
 }

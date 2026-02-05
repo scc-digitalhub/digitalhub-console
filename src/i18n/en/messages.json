@@ -25,7 +25,7 @@
     "search": {
         "no_results": "Your search gave no results",
         "current_filters": "Current search filters:",
-        "enter_filters" : "Enter some filters to start searching",
+        "enter_filters": "Enter some filters to start searching",
         "group_results": "Group versions of the same resource"
     },
     "templates": {
@@ -65,5 +65,9 @@
         "required_field": "Required field: %{field}",
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
+    },
+    "chat": {
+        "generation_error": "Generation failed",
+        "type_your_message": "Type your message..."
     }
 }
