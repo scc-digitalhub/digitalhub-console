@@ -4,12 +4,14 @@
 
 import { CreateButton, TopToolbar } from "react-admin";
 import { ImportButton } from "../buttons/ImportButton";
+import { UploadCreateButton } from "../buttons/UploadCreateButton";
 
 export const ListToolbar = (props: ListToolbarProps) => {
-    const { canImport = true } = props;
+    const { canImport = true, uploadCreate = false } = props;
 
     return (
         <TopToolbar>
+            {uploadCreate && <UploadCreateButton />}
             <CreateButton />
             {canImport && <ImportButton />}
         </TopToolbar>
@@ -18,4 +20,5 @@ export const ListToolbar = (props: ListToolbarProps) => {
 
 export type ListToolbarProps = {
     canImport?: boolean;
+    uploadCreate?: boolean;
 };

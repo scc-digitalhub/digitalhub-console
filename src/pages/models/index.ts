@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ModelCreate } from "./create";
-import { ModelEdit } from "./edit";
-import { ModelIcon } from "./icon";
-import { ModelList } from "./list";
-import { ModelShow } from "./show";
+import { ModelCreate } from './create';
+import { ModelEdit } from './edit';
+import { ModelIcon } from './icon';
+import { ModelList } from './list';
+import { ModelShow } from './show';
+import { getModelSpecUiSchema } from './types';
 
 export default {
     name: 'models',
@@ -17,5 +18,6 @@ export default {
     edit: ModelEdit,
     options: {
         type: 'model',
+        getSpecUiSchema: getModelSpecUiSchema,
     },
 };

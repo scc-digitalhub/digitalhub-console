@@ -73,7 +73,7 @@ export const DataItemList = () => {
                 <>
                     <ListPageTitle icon={<DataItemIcon fontSize={'large'} />} />
 
-                    <ListToolbar />
+                    <ListToolbar uploadCreate />
 
                     <FlatCard>
                         <ListView

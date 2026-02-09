@@ -73,7 +73,7 @@ export const ModelList = () => {
                 <>
                     <ListPageTitle icon={<ModelIcon fontSize={'large'} />} />
 
-                    <ListToolbar />
+                    <ListToolbar uploadCreate />
 
                     <FlatCard>
                         <ListView

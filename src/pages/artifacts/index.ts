@@ -7,6 +7,7 @@ import { ArtifactEdit } from './edit';
 import { ArtifactIcon } from './icon';
 import { ArtifactList } from './list';
 import { ArtifactShow } from './show';
+import { getArtifactSpecUiSchema } from './types';
 
 export default {
     name: 'artifacts',
@@ -17,5 +18,6 @@ export default {
     edit: ArtifactEdit,
     options: {
         type: 'artifact',
+        getSpecUiSchema: getArtifactSpecUiSchema,
     },
 };
