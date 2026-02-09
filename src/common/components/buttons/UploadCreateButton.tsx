@@ -20,7 +20,6 @@ import {
 } from 'react-admin';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { isAlphaNumeric, randomId } from '../../utils/helpers';
-import UploadIcon from '@mui/icons-material/Upload';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
@@ -36,8 +35,7 @@ import {
     styled,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
-const defaultIcon = <UploadIcon />;
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 
 //TODO add props (icon, label)
 export const UploadCreateButton = () => {
@@ -66,7 +64,7 @@ export const UploadCreateButton = () => {
                 onClick={handleDialogOpen}
                 className={CreateInDialogButtonClasses.button}
             >
-                {defaultIcon}
+                <NoteAddOutlinedIcon />
             </Button>
             <CreateDialog
                 maxWidth={'lg'}
