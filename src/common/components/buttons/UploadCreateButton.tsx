@@ -21,7 +21,7 @@ import {
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { isAlphaNumeric, randomId } from '../../utils/helpers';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
@@ -96,11 +96,13 @@ const UploadCreateForm = (props: any) => {
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
     });
+    const uppyRestrictions = useMemo(() => ({ maxNumberOfFiles: 1 }), []);
     const uploader = useGetUploader({
         id: id.current,
         recordId: id.current,
         onBeforeUpload,
         onUploadComplete,
+        uppyRestrictions,
     });
 
     if (!uploader || !resource) return <></>;
@@ -198,7 +200,7 @@ const BaseStep = ({ uploader }: { uploader: Uploader }) => {
 
     //update name in record
     useEffect(() => {
-        if (uploader.path) {
+        if (uploader.path && !nameField.value) {
             const fileName = new URL(uploader.path).pathname.replace(
                 /^.*[\\/]/,
                 ''

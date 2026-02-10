@@ -42,7 +42,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
         if (uploader?.path && nameField && !nameField.value) {
             //set name as fileName from path
             const fileName = new URL(uploader.path).pathname.replace(
-                /^.*[\\\/]/,
+                /^.*[\\/]/,
                 ''
             );
             nameField.onChange(fileName);
