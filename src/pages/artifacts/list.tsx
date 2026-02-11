@@ -73,7 +73,7 @@ export const ArtifactList = () => {
                 <>
                     <ListPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
 
-                    <ListToolbar />
+                    <ListToolbar uploadCreate />
 
                     <FlatCard>
                         <ListView

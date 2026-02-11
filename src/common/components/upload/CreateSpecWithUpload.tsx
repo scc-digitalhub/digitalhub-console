@@ -14,10 +14,11 @@ import { FileInput } from '../../../features/files/upload/components/FileInput';
 export type CreateSpecWithUploadProps = {
     uploader?: Uploader;
     getSpecUiSchema: (kind: string | undefined) => any;
+    showFileInput?: boolean;
 };
 
 export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
-    const { uploader, getSpecUiSchema } = props;
+    const { uploader, getSpecUiSchema, showFileInput = true } = props;
     const resource = useResourceContext();
 
     const { data: schemas } = useGetSchemas(resource || '');
@@ -41,7 +42,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
         if (uploader?.path && nameField && !nameField.value) {
             //set name as fileName from path
             const fileName = new URL(uploader.path).pathname.replace(
-                /^.*[\\\/]/,
+                /^.*[\\/]/,
                 ''
             );
             nameField.onChange(fileName);
@@ -90,7 +91,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
                             getUiSchema={getUiSchema}
                         />
 
-                        {formData.kind && uploader && (
+                        {formData.kind && uploader && showFileInput && (
                             <FileInput uploader={uploader} source="path" />
                         )}
                     </>

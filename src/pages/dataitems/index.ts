@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { DataItemCreate } from "./create";
-import { DataItemEdit } from "./edit";
-import { DataItemIcon } from "./icon";
-import { DataItemList } from "./list";
-import { DataItemShow } from "./show";
+import { DataItemCreate } from './create';
+import { DataItemEdit } from './edit';
+import { DataItemIcon } from './icon';
+import { DataItemList } from './list';
+import { DataItemShow } from './show';
+import { getDataItemSpecUiSchema } from './types';
 
 export default {
     name: 'dataitems',
@@ -17,5 +18,6 @@ export default {
     edit: DataItemEdit,
     options: {
         type: 'dataitem',
+        getSpecUiSchema: getDataItemSpecUiSchema,
     },
 };
