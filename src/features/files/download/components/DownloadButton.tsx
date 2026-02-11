@@ -42,13 +42,14 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const fileName = fileNameProp || record.name;
 
     const handleDownload = () => {
-        const params = resource
-            ? {
-                  resource,
-                  id: record.id,
-                  sub,
-              }
-            : { path };
+        const params =
+            resource && record.id
+                ? {
+                      resource,
+                      id: record.id,
+                      sub,
+                  }
+                : { path };
         download(params)
             .then(data => {
                 if (data?.url) {
