@@ -61,11 +61,17 @@ export const randomId = () => {
 
 /**
  * Autoscales the given byte number and returns the converted number, rounded to the given
- * precision, formatted as "\<number\> \<unit\>"
+ * precision, formatted as "\<number\> \<unit\>" using binary units (1024 byte logic)
+ * Units: B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
  */
 export const scaleBytes = (bytes: number, precision: number = 1) => {
-    const unit = B.value(bytes).autoScale({ type: 'decimal' });
-    return `${round(unit.value, precision)} ${unit.unit.unit}`;
+    if (bytes === 0) return '0 B';
+
+    const k = 1024;
+    const sizes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${round(bytes / Math.pow(k, i), precision)} ${sizes[i]}`;
 };
 
 export const formatDuration = (

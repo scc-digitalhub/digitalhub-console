@@ -118,7 +118,7 @@ export const ChartView = (props: ChartViewProps) => {
         const chartRef = useRef<HTMLDivElement>(null);
         const keyToLabel: { [key: string]: string } = {
             cpu: 'Cpu (n)',
-            memory: 'Memory (MB)',
+            memory: 'Memory (MiB)',
         };
 
         const data = useMemo(() => {
@@ -145,7 +145,7 @@ export const ChartView = (props: ChartViewProps) => {
                         const bytes = Parser.memoryParser(m.usage.memory);
                         val['memory'] = ByteConverter.convert(
                             Byte.value(bytes),
-                            'MB'
+                            'MiB'
                         ).value;
                     }
                     if (m.usage.cpu) {
