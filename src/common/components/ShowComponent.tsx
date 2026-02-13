@@ -11,7 +11,7 @@ import {
     useResourceContext,
     useUpdate,
 } from 'react-admin';
-import { useGetFileInfo } from '../../features/files/info/useGetInfo';
+import { useGetNestedFileInfo } from '../../features/files/info/useGetNestedInfo';
 
 const filesDiffer = (
     files: FileInfo[],
@@ -37,7 +37,7 @@ export const ShowComponent = (props: {
     const resource = useResourceContext();
     const record = useRecordContext();
     const [update, { data, isPending }] = useUpdate();
-    const getFileInfo = useGetFileInfo();
+    const getFileInfo = useGetNestedFileInfo();
 
     useEffect(() => {
         if (record?.spec?.path && resource && !isPending && !data) {
