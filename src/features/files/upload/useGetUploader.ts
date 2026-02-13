@@ -231,7 +231,8 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                         {
                             resource: resource ?? '',
                             id: recordId ?? '',
-                            filename: dest + filename,
+                            filename:
+                                (file.meta?.relativePath as string) ?? filename,
                             name: name.current ?? undefined,
                         },
                         numberOfParts(file) > 1
@@ -356,7 +357,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                     ? files[0].path
                     : files[0].path.substring(
                           0,
-                          files[0].path.lastIndexOf('/') + 1
+                          files[0].path.length - files[0].info.path.length
                       )
                 : null;
 
