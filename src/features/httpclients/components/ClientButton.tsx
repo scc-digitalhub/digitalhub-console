@@ -10,6 +10,7 @@ import {
     ButtonProps,
     RaRecord,
     useTranslate,
+    useDataProvider,
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
@@ -194,6 +195,7 @@ type ClientProps = Pick<ClientButtonProps, 'showHealthChecks' | 'mode'> & {
 const Client = (props: ClientProps) => {
     const { showHealthChecks, recordId, mode, urls } = props;
     const translate = useTranslate();
+    const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const [healthStatus, setHealthStatus] = useState<HealthStatus>({
         ready: false,
@@ -210,11 +212,27 @@ const Client = (props: ClientProps) => {
         // return;
         const ctrl = new AbortController();
 
-        const check = (path, key) =>
-            fetch(`${base}${path}`, { signal: ctrl.signal })
-                .then(r => (r.ok ? r.json() : null))
-                .then(d => d?.[key] === true)
-                .catch(() => false);
+        const check = async (path: string, key: string) => {
+            try {
+                const targetUrl = `${base}${path}`;
+                const apiUrl = await dataProvider.apiUrl();
+                const proxyEndpoint = `${apiUrl}${proxy}`;
+
+                const { json } = await dataProvider.client(proxyEndpoint, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'X-Proxy-URL': targetUrl,
+                        'X-Proxy-Method': 'GET',
+                        'Content-Type': 'application/json',
+                    }),
+                    signal: ctrl.signal,
+                });
+
+                return json?.[key] === true;
+            } catch (error) {
+                return false;
+            }
+        };
 
         (async () => {
             setHealthStatus({ ready: false, live: false });
@@ -233,7 +251,7 @@ const Client = (props: ClientProps) => {
         })();
 
         return () => ctrl.abort();
-    }, [showHealthChecks, urls]);
+    }, [showHealthChecks, urls, dataProvider, proxy]);
 
     return (
         <>
