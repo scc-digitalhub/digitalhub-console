@@ -3,6 +3,10 @@
         "no_undone": "Questa azione non può essere annullata",
         "no_undone_files": "Questa azione eliminerà i file dallo store e non può essere annullata"
     },
+    "chat": {
+        "generation_error": "Generazione fallita",
+        "type_your_message": "Digita il tuo messaggio..."
+    },
     "content_copied_x": "%{x} copiato",
     "documentation": "Documentazione",
     "double_click_to_edit": "Doppio click per modificare",
@@ -37,6 +41,7 @@
         "file_too_big": "Il file supera il limite di 100 GiB",
         "remote_files_unsupported": "I file remoti non sono supportati",
         "single_zip_file_supported": "I file zip devono essere caricati singolarmente",
+        "single_file_allowed": "È possibile caricare solo un singolo file o cartella",
         "upload_error": "Errore durante l'upload del file %{fileName}. %{error}",
         "header": "Upload",
         "subheader_no_results": "Nessun upload trovato",
@@ -65,9 +70,5 @@
         "required_field": "Campo obbligatorio: %{field}",
         "unsupportedField": "Campo non supportato",
         "wrongChar": "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini. I trattini non possono trovarsi all'inizio o alla fine della parola."
-    },
-    "chat": {
-        "generation_error": "Generazione fallita",
-        "type_your_message": "Digita il tuo messaggio..."
     }
 }

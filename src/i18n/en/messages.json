@@ -3,6 +3,10 @@
         "no_undone": "This action cannot be undone",
         "no_undone_files": "This action will delete files from the store and cannot be undone"
     },
+    "chat": {
+        "generation_error": "Generation failed",
+        "type_your_message": "Type your message..."
+    },
     "content_copied_x": "%{x} copied",
     "documentation": "Documentation",
     "double_click_to_edit": "Double click to edit",
@@ -37,6 +41,7 @@
         "file_too_big": "File exceeds the maximum allowed size of 100 GiB",
         "remote_files_unsupported": "Remote files are not supported",
         "single_zip_file_supported": "Zip files must be uploaded individually",
+        "single_file_allowed": "Only a single file or folder can be uploaded",
         "upload_error": "Error during upload of %{fileName} %{error}",
         "header": "Uploads",
         "subheader_no_results": "No uploads found",
@@ -65,9 +70,5 @@
         "required_field": "Required field: %{field}",
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
-    },
-    "chat": {
-        "generation_error": "Generation failed",
-        "type_your_message": "Type your message..."
     }
 }

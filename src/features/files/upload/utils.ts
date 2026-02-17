@@ -18,8 +18,7 @@ export function numberOfParts(file: UppyFile<Meta, Body>): number {
 
 export function extractInfo(file: UppyFile<Meta, Body>): any {
     return {
-        //no subfolders support for browser upload!
-        path: file.name,
+        path: file.meta?.relativePath ?? file.name,
         name: file.name,
         content_type: file.type,
         last_modified: new Date(file.data?.lastModified).toUTCString(),

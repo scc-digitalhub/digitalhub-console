@@ -43,6 +43,7 @@ export const FileInput = (props: FileInputProps) => {
                     hideUploadButton
                     disableThumbnailGenerator
                     proudlyDisplayPoweredByUppy={false}
+                    fileManagerSelectionType="both"
                     width={'100%'}
                     height={'180px'}
                 />
