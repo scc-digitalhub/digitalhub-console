@@ -21,7 +21,13 @@ import {
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { isAlphaNumeric, randomId } from '../../utils/helpers';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import {
+    MouseEventHandler,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
@@ -37,7 +43,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 
-//TODO add props (icon, label)
 export const UploadCreateButton = () => {
     const [open, setOpen] = useState(false);
 
@@ -96,13 +101,33 @@ const UploadCreateForm = (props: any) => {
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
     });
-    const uppyRestrictions = useMemo(() => ({ maxNumberOfFiles: 1 }), []);
+    const onBeforeFileAdded = useCallback(
+        (file, files) => {
+            //if there is more than one folder or more than one file outside folder, return false
+            if (Object.keys(files).length > 0) {
+                const relativePaths = Object.values(files).map((f: any) => {
+                    return f.meta?.relativePath ?? f.name;
+                });
+                const currentPath =
+                    file.meta?.relativePath?.split('/')[0] ?? file.name;
+                if (relativePaths.some(p => !p.startsWith(currentPath))) {
+                    notify(translate('messages.upload.single_file_allowed'), {
+                        type: 'error',
+                    });
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        [notify, translate]
+    );
     const uploader = useGetUploader({
         id: id.current,
         recordId: id.current,
         onBeforeUpload,
         onUploadComplete,
-        uppyRestrictions,
+        onBeforeFileAdded,
     });
 
     if (!uploader || !resource) return <></>;
@@ -200,14 +225,11 @@ const BaseStep = ({ uploader }: { uploader: Uploader }) => {
 
     //update name in record
     useEffect(() => {
-        if (uploader.path && !nameField.value) {
-            const fileName = new URL(uploader.path).pathname.replace(
-                /^.*[\\/]/,
-                ''
-            );
+        if (uploader.files.length > 0 && !nameField.value) {
+            const fileName = uploader.files[0].info.path.split('/')[0];
             nameField.onChange(fileName);
         }
-    }, [nameField, uploader.path]);
+    }, [nameField, uploader.files]);
 
     //update name in controller
     useEffect(() => {

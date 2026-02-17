@@ -14,7 +14,6 @@ import { useCompleteMultipartUpload } from './useCompleteMultipartUpload';
 import { extractInfo, MiB, numberOfParts, sizeThreshold } from './utils';
 import { UploadResult } from '@uppy/core';
 import { useFileContext } from '../FileContext';
-import { Restrictions } from '@uppy/core/lib/Restricter';
 
 const ID_PREFIX = 'uppy_';
 
@@ -24,7 +23,7 @@ export type GetUploaderProps = {
     onUploadComplete?: (
         result: UploadResult<Meta, AwsBody>
     ) => Promise<any> | undefined;
-    uppyRestrictions?: Partial<Restrictions>;
+    onBeforeFileAdded?: (currentFile, files) => boolean;
     //resource-related props
     resource?: string;
     recordId?: string;
@@ -41,7 +40,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
         id,
         onBeforeUpload,
         onUploadComplete,
-        uppyRestrictions,
+        onBeforeFileAdded,
         path: pathFromProps,
         recordId,
         name: nameProps = null,
@@ -63,7 +62,6 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
     const uppyConfig = useMemo(() => {
         return {
             id: ID_PREFIX + id,
-            restrictions: uppyRestrictions,
             onBeforeFileAdded: (currentFile, files) => {
                 //disallow all remote
                 if (currentFile.isRemote) {
@@ -111,10 +109,15 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                     }
                 }
 
+                //if function with additional checks has been passed, call it
+                if (onBeforeFileAdded) {
+                    return onBeforeFileAdded(currentFile, files);
+                }
+
                 return true;
             },
         };
-    }, [id, notify, resource, translate, uppyRestrictions]);
+    }, [id, notify, resource, translate, onBeforeFileAdded]);
 
     //memoize uppy instantiation
     //NOTE: event handlers *have* to be attached once to avoid double firing!
