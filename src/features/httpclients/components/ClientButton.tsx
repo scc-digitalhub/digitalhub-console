@@ -35,7 +35,6 @@ import {
     styled,
     Typography,
     Stack,
-    Alert,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { ReaChat } from '../../chat/components/ReaChat';
@@ -50,6 +49,7 @@ export type ClientButtonMode = 'http' | 'chat' | 'v2';
 interface HealthStatus {
     ready: boolean;
     live: boolean;
+    message?: string;
 }
 
 export interface ClientButtonProps<RecordType extends RaRecord = any>
@@ -201,57 +201,69 @@ const Client = (props: ClientProps) => {
         ready: false,
         live: false,
     });
-    const showContent = !showHealthChecks || healthStatus.live === true;
     const proxy = '/-/' + projectId + '/runs/' + recordId + '/proxy';
 
     useEffect(() => {
         const base = urls[0];
-        if (!base) return;
+        if (!base || !showHealthChecks || !dataProvider) return;
         // DEBUG: both health flags true for testing
         // setHealthStatus({ ready: true, live: true });
         // return;
         const ctrl = new AbortController();
+        setHealthStatus({ ready: false, live: false });
 
-        const check = async (path: string, key: string) => {
+        const checkHealth = async () => {
             try {
-                const targetUrl = `${base}${path}`;
-                const apiUrl = await dataProvider.apiUrl();
-                const proxyEndpoint = `${apiUrl}${proxy}`;
+                const readyRes = await dataProvider.checkHealth(
+                    base,
+                    '/v2/health/ready',
+                    'ready',
+                    proxy,
+                    ctrl.signal
+                );
+                if (ctrl.signal.aborted) return;
 
-                const { json } = await dataProvider.client(proxyEndpoint, {
-                    method: 'POST',
-                    headers: new Headers({
-                        'X-Proxy-URL': targetUrl,
-                        'X-Proxy-Method': 'GET',
-                        'Content-Type': 'application/json',
-                    }),
-                    signal: ctrl.signal,
-                });
+                if (readyRes?.status !== 200 || !readyRes?.ok) {
+                    return setHealthStatus({
+                        ready: false,
+                        live: false,
+                        message:
+                            readyRes?.status !== 200
+                                ? readyRes?.message
+                                : translate('pages.http-client.modelNotReady'),
+                    });
+                }
 
-                return json?.[key] === true;
+                const liveRes = await dataProvider.checkHealth(
+                    base,
+                    '/v2/health/live',
+                    'live',
+                    proxy,
+                    ctrl.signal
+                );
+                if (ctrl.signal.aborted) return;
+
+                if (liveRes?.status !== 200 || !liveRes?.ok) {
+                    return setHealthStatus({
+                        ready: true,
+                        live: false,
+                        message:
+                            liveRes?.status !== 200
+                                ? liveRes?.message
+                                : translate('pages.http-client.modelNotLive'),
+                    });
+                }
+
+                setHealthStatus({ ready: true, live: true });
             } catch (error) {
-                return false;
+                if (!ctrl.signal.aborted) {
+                    setHealthStatus({ ready: false, live: false });
+                }
             }
         };
-
-        (async () => {
-            setHealthStatus({ ready: false, live: false });
-
-            const isReady = await check('/v2/health/ready', 'ready');
-            if (ctrl.signal.aborted) return;
-
-            if (!isReady) {
-                setHealthStatus({ ready: false, live: false });
-            } else {
-                setHealthStatus({ ready: true, live: false });
-                const isLive = await check('/v2/health/live', 'live');
-                if (!ctrl.signal.aborted)
-                    setHealthStatus({ ready: true, live: isLive });
-            }
-        })();
-
+        checkHealth();
         return () => ctrl.abort();
-    }, [showHealthChecks, urls, dataProvider, proxy]);
+    }, [showHealthChecks, urls, dataProvider, proxy, translate]);
 
     return (
         <>
@@ -263,27 +275,15 @@ const Client = (props: ClientProps) => {
                 <HealthChips
                     ready={healthStatus.ready}
                     live={healthStatus.live}
+                    message={healthStatus.message}
                 />
             )}
 
-            {showHealthChecks && !healthStatus.ready && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
-                    {translate('pages.http-client.modelNotReady')}
-                </Alert>
-            )}
-            {showHealthChecks && healthStatus.ready && !healthStatus.live && (
-                <Alert severity="info" sx={{ mb: 2 }}>
-                    {translate('pages.http-client.modelNotLive')}
-                </Alert>
-            )}
-
             {/* Using InferenceV2Client */}
-            {showContent && mode === 'v2' && (
-                <InferenceV2Client urls={urls} proxy={proxy} />
-            )}
+            {mode === 'v2' && <InferenceV2Client urls={urls} proxy={proxy} />}
 
             {/* Using StandardHttpClient */}
-            {showContent && mode === 'http' && (
+            {mode === 'http' && (
                 <StandardHttpClient urls={urls} proxy={proxy} />
             )}
         </>
