@@ -51,6 +51,49 @@ const springDataProvider = (
     return {
         apiUrl: async () => apiUrl,
         client: (url, opts) => httpClient(url, opts),
+        /**
+         * Performs a proxied health check POST to the API proxy endpoint.
+         * Returns true if the returned JSON contains key === true.
+         */
+        checkHealth: (
+            base: string,
+            path: string,
+            key: string,
+            proxy: string,
+            signal?: AbortSignal
+        ): Promise<{
+            ok: boolean;
+            status?: number;
+            message?: string;
+            json?: any;
+        }> => {
+            if (!base) return Promise.resolve({ ok: false });
+
+            return httpClient(`${apiUrl}${proxy}`, {
+                method: 'POST',
+                headers: new Headers({
+                    'X-Proxy-URL': `${base}${path}`,
+                    'X-Proxy-Method': 'GET',
+                    'Content-Type': 'application/json',
+                }),
+                signal,
+            } as any)
+                .then(({ status, json }) => {
+                    return {
+                        ok: !!json?.[key],
+                        status,
+                        message: json?.message?.toString(),
+                        json,
+                    };
+                })
+                .catch(error => {
+                    return {
+                        ok: false,
+                        status: error?.status,
+                        message: error?.body?.message || error?.message,
+                    };
+                });
+        },
         invoke: ({
             path,
             params,
