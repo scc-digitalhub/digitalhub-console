@@ -24,9 +24,12 @@ import {
     Chip,
     Box,
     useTheme,
+    Container,
 } from '@mui/material';
 
 import catalogData from './../../../data.json';
+import { PageTitle } from './layout/PageTitle';
+import { FlatCard } from './layout/FlatCard';
 
 const extractFilters = (items: any[]) => {
     const filters: Record<string, Set<string>> = {};
@@ -241,7 +244,6 @@ const HubCardList = () => {
 
 // 3. Layout Wrapper
 const HubLayout = () => {
-    const theme = useTheme();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const { resource = 'functions' } = useListContext();
@@ -255,64 +257,39 @@ const HubLayout = () => {
     );
 
     return (
-        <Box sx={{ pb: 5 }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    mt: 3,
-                    mb: 4,
-                    px: 1,
-                }}
-            >
-                <Box>
-                    <Typography
-                        variant="h4"
-                        color="text.primary"
-                        fontWeight={500}
-                        mb={1}
-                    >
-                        {translate('pages.hub.title', {
-                            _: `Create a new ${singularLabel}`,
-                            resource: singularLabel,
-                        })}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        {translate('pages.hub.subtitle', {
-                            _: 'Browse the available templates',
-                        })}
-                    </Typography>
-                </Box>
-                <DataObjectIcon
-                    sx={{ fontSize: 32, color: 'text.secondary' }}
-                />
-            </Box>
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <PageTitle
+                text={translate('pages.hub.title', {
+                    _: `Create a new ${singularLabel}`,
+                    resource: singularLabel,
+                })}
+                secondaryText={translate('pages.hub.subtitle', {
+                    _: 'Browse the available templates',
+                })}
+                icon={<DataObjectIcon fontSize={'large'} />}
+            />
 
-            <Box
+            <FlatCard
                 sx={{
                     display: 'flex',
                     flexDirection: { xs: 'column', md: 'row' },
                     gap: 4,
-                    bgcolor: 'background.paper',
                     p: { xs: 3, md: 4 },
-                    borderRadius: 2,
-                    boxShadow: theme.shadows[1],
                 }}
             >
                 <HubSidebar availableFilters={availableFilters} />
                 <HubCardList />
-            </Box>
-        </Box>
+            </FlatCard>
+        </Container>
     );
 };
 
 // 4. Page Root Component
 export const HubPage = () => {
-    const fullItems = catalogData.catalog.functions;
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
 
     const filteredItems = useMemo(() => {
+        const fullItems = catalogData.catalog.functions;
         return fullItems.filter(item => {
             const searchLower = (filterValues.q || '').toLowerCase();
             if (
