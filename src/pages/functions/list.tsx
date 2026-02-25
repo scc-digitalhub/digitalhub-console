@@ -72,7 +72,7 @@ export const FunctionList = () => {
             >
                 <>
                     <ListPageTitle icon={<FunctionIcon fontSize={'large'} />} />
-                    <ListToolbar />
+                    <ListToolbar hub />
                     <FlatCard>
                         <ListView
                             filters={getFilters()}

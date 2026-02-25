@@ -19,5 +19,6 @@
     "retry": "Riprova",
     "revoke": "Revoca",
     "toggle_x": "Mostra/Nascondi %{el}",
-    "upload": "Carica"
+    "upload": "Carica",
+    "hub": "Hub"
 }

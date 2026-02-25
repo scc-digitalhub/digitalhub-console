@@ -134,6 +134,7 @@ import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
 import { ChatContextProvider } from './features/chat/components/ChatContextProvider';
+import { HubPage } from './common/components/HubPage';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -221,6 +222,10 @@ const CoreApp = () => {
                                                 <Route
                                                     path="/services"
                                                     element={<ServiceList />}
+                                                />
+                                                <Route
+                                                    path="/functions/hub"
+                                                    element={<HubPage />}
                                                 />
                                                 {enableSearch && (
                                                     <Route

@@ -19,5 +19,6 @@
     "retry": "Retry",
     "revoke": "Revoke",
     "toggle_x": "Show/Hide %{el}",
-    "upload": "Upload"
+    "upload": "Upload",
+    "hub": "Hub"
 }
