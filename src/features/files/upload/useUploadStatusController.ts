@@ -2,11 +2,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Upload, UploadStatusController } from './types';
 
 export const useUploadStatusController = (): UploadStatusController => {
     const [uploads, setUploads] = useState<Upload[]>([]);
+    const [uploading, setUploading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (
+            uploads.some(
+                u => u.progress.percentage && u.progress.percentage < 100
+            )
+        ) {
+            setUploading(true);
+        } else {
+            setUploading(false);
+        }
+    }, [uploads]);
 
     const updateUploads = (upload: Upload) => {
         setUploads(prev => {
@@ -31,5 +44,5 @@ export const useUploadStatusController = (): UploadStatusController => {
         }
     };
 
-    return { uploads, updateUploads, removeUploads };
+    return { uploads, updateUploads, removeUploads, uploading };
 };

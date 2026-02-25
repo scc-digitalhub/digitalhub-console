@@ -81,6 +81,7 @@ export type Upload = {
 
 export type UploadStatusController = {
     uploads: Upload[];
+    uploading: boolean;
     updateUploads: (upload: Upload) => void;
     removeUploads: (toBeRemoved?: Upload) => void;
 };
