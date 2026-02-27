@@ -12,7 +12,7 @@ import {
 } from 'react-admin';
 import { Box, Typography } from '@mui/material';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
-import { RootResourceSelectorMenu } from '@dslab/ra-root-selector';
+import RootResourceSelectorMenu from './RootSelectorMenu';
 import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import { UploadArea } from '../features/files/upload/components/UploadArea';
