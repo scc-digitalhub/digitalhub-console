@@ -140,7 +140,7 @@ import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
 import { HttpClientContext } from './features/httpclients/HttpClientContext';
-import { HubPage } from './common/components/HubPage';
+import { HubPage } from './features/hub/components/HubPage';
 
 export const SearchEnabledContext = createContext(false);
 
