@@ -131,7 +131,7 @@ export const SourceCodeEditorWidget = function (props: WidgetProps) {
                 width={'50vw'}
                 setOptions={{
                     showPrintMargin: false,
-                    minLines: lineCount,
+                    minLines: 16,
                     maxLines: Math.max(lineCount, 25),
                 }}
                 value={code}
