@@ -425,5 +425,37 @@
     "table": {
         "description": "",
         "title": "Table"
+    },
+    "openinference": {
+        "description": "",
+        "title": "OpenInference"
+    },
+    "openinference+serve": {
+        "description": "OpenInference model serving task definition",
+        "title": "OpenInference model serve task"
+    },
+    "openinference+build": {
+        "description": "OpenInference model build task definition",
+        "title": "OpenInference model build task"
+    },
+    "openinference+serve:run": {
+        "description": "OpenInference model serving run definition",
+        "title": "OpenInference model serve task"
+    },
+    "openinference+build:run": {
+        "description": "OpenInference model build task definition",
+        "title": "OpenInference model build task"
+    },
+    "servicegraph": {
+        "description": "",
+        "title": "Servicegraph"
+    },
+    "servicegraph+serve": {
+        "description": "Servicegraph serve definition",
+        "title": "Servicegraph serve"
+    },
+    "servicegraph+serve:run": {
+        "description": "Servicegraph serve definition",
+        "title": "Servicegraph serve"
     }
 }

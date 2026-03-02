@@ -236,7 +236,7 @@ export const RunShowComponent = () => {
                             fabSourceCode={record.spec.fab_source}
                             requirements={record.spec.requirements}
                             schema={schema.schema}
-                            uiSchema={getFunctionUiSpec()}
+                            uiSchema={getFunctionUiSpec(record.kind)}
                         />
                     </TabbedShowLayout.Tab>
                 )}

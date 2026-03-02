@@ -5,6 +5,8 @@
 
 import { TextArrayWidget } from '../../common/jsonSchema/components/widgets/TextArrayWidget';
 import { FabSourceCodeTemplate } from '../../features/sourcecode/components/FabSourceCodeTemplate';
+import { ServicegraphSourceCodeTemplate } from '../../features/sourcecode/components/ServicegraphSourceCodeTemplate';
+
 import {
     SourceCodeTemplate,
     SourceCodeEditorWidget,
@@ -12,6 +14,34 @@ import {
 
 //TODO cleanup implementation and properly check for source definition in schema!
 export const getFunctionUiSpec = (kind?: string) => {
+    if (kind?.startsWith('servicegraph')) {
+        return {
+            source: {
+                'ui:ObjectFieldTemplate': ServicegraphSourceCodeTemplate,
+                base64: {
+                    'ui:widget': SourceCodeEditorWidget,
+                    'ui:disabled': 'true',
+                },
+                code: {
+                    'ui:widget': 'hidden',
+                    'ui:disabled': 'true',
+                },
+                handler: {
+                    'ui:widget': 'hidden',
+                    'ui:disabled': 'true',
+                },
+                source: {
+                    'ui:widget': 'hidden',
+                    'ui:disabled': 'true',
+                },
+                lang: {
+                    'ui:widget': 'hidden',
+                    'ui:disabled': 'true',
+                },
+            },
+        }
+    }
+
     return {
         source: {
             'ui:ObjectFieldTemplate': SourceCodeTemplate,
@@ -41,6 +71,6 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
             },
-        },
+        }
     };
 };
