@@ -14,9 +14,7 @@ import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../features/httpclients/components/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
 import { ProjectIcon } from '../pages/projects/icon';
-import { useFileContext } from '../features/files/FileContext';
-import { forwardRef } from 'react';
-import { LinkProps, useHref, useLinkClickHandler } from 'react-router-dom';
+import { UploadSafeLink } from './UploadSafeLink';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -65,73 +63,9 @@ export const MyMenu = () => {
                     to={'/projects'}
                     primaryText={<>{getResourceLabel('projects', 2)}</>}
                     selected={false}
-                    component={LinkRef}
+                    component={UploadSafeLink}
                 />
             </Box>
         </Menu>
     );
 };
-
-/**
- * Adaptation of react-router Link
- */
-const LinkRef = forwardRef<HTMLAnchorElement, LinkProps>(function LinkWithRef(
-    props,
-    forwardedRef
-) {
-    const {
-        onClick,
-        discover = 'render',
-        prefetch = 'none',
-        relative,
-        reloadDocument,
-        replace,
-        state,
-        target,
-        to,
-        preventScrollReset,
-        viewTransition,
-        ...rest
-    } = props;
-
-    const {
-        uploadStatusController: { uploading },
-    } = useFileContext();
-
-    const isAbsolute =
-        typeof to === 'string' && /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(to);
-
-    const href = useHref(to, { relative });
-
-    const internalOnClick = useLinkClickHandler(to, {
-        replace,
-        state,
-        target,
-        preventScrollReset,
-        relative,
-        viewTransition,
-    });
-
-    const handleClick = event => {
-        if (onClick) onClick(event);
-        if (!event.defaultPrevented) {
-            //if uploading, beforeunload event is already handled
-            if (!uploading) {
-                internalOnClick(event);
-            }
-        }
-    };
-
-    return (
-        <a
-            {...rest}
-            href={href}
-            onClick={reloadDocument ? onClick : handleClick}
-            ref={forwardedRef}
-            target={target}
-            data-discover={
-                !isAbsolute && discover === 'render' ? 'true' : undefined
-            }
-        />
-    );
-});
