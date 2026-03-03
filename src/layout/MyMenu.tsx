@@ -9,13 +9,12 @@ import {
     useGetResourceLabel,
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
-
 import { Box, Divider } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../features/httpclients/components/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
 import { ProjectIcon } from '../pages/projects/icon';
-
+import { UploadSafeLink } from './UploadSafeLink';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -64,6 +63,7 @@ export const MyMenu = () => {
                     to={'/projects'}
                     primaryText={<>{getResourceLabel('projects', 2)}</>}
                     selected={false}
+                    component={UploadSafeLink}
                 />
             </Box>
         </Menu>

@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState, MouseEvent } from 'react';
-import { useDataProvider, useTranslate } from 'react-admin';
-import { Box, Button, MenuItem, Menu, ListItemText } from '@mui/material';
+import { MenuItemLink, useDataProvider, useTranslate } from 'react-admin';
+import { Box, Button, Menu } from '@mui/material';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -13,6 +13,7 @@ import {
     RootSelectorMenuParams,
 } from '@dslab/ra-root-selector';
 import { useProjectPermissions } from '../common/provider/authProvider';
+import { UploadSafeLink } from './UploadSafeLink';
 
 const defaultIcon = <GroupWorkIcon />;
 
@@ -118,13 +119,20 @@ export const RootResourceSelectorMenu = (props: RootSelectorMenuParams) => {
                 {records
                     ?.filter(r => hasAccess(r.id))
                     .map(record => (
-                        <MenuItem
+                        <MenuItemLink
                             key={record.id}
-                            onClick={() => handleClick(record)}
+                            to={'/-/' + record.id}
+                            primaryText={getRowLabel(record)}
                             selected={isSelected(record)}
-                        >
-                            <ListItemText>{getRowLabel(record)} </ListItemText>
-                        </MenuItem>
+                            component={
+                                root === null ? undefined : UploadSafeLink
+                            }
+                            onClick={() => handleClick(record)}
+                            sx={{
+                                margin: 0,
+                                padding: '6px 16px',
+                            }}
+                        />
                     ))}
             </Menu>
         </Box>
