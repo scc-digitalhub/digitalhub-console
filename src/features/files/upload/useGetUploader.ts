@@ -151,17 +151,21 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                 async abortMultipartUpload() {},
 
                 async signPart(file, options) {
-                    const { signal, uploadId } = options;
+                    const { signal, uploadId, partNumber } = options;
 
                     signal?.throwIfAborted();
+
+                    if (!uploadId || !file['s3']?.uploadId) {
+                        throw new Error('missing uploadId');
+                    }
 
                     let data: UploadInfo;
                     if (pathFromProps && !resource) {
                         data = await doMultipartUpload({
                             path: pathFromProps,
                             filename: file.name ?? '',
-                            uploadId,
-                            partNumber: options.partNumber,
+                            uploadId: uploadId ?? file['s3'].uploadId,
+                            partNumber: partNumber,
                         });
                     } else {
                         const { s3: uploadInfo } = file;
@@ -172,8 +176,8 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                             resource: resource ?? '',
                             id: recordId ?? '',
                             path: uploadInfo.path,
-                            uploadId: options.uploadId,
-                            partNumber: options.partNumber,
+                            uploadId: uploadId ?? file['s3'].uploadId,
+                            partNumber: partNumber,
                         });
                     }
 
