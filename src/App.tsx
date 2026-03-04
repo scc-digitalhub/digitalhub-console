@@ -139,7 +139,6 @@ import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { ChatContextProvider } from './features/chat/ChatContextProvider';
 import { HttpClientContext } from './features/httpclients/HttpClientContext';
 
 export const SearchEnabledContext = createContext(false);
@@ -180,8 +179,9 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <HttpClientContext.Provider value={{provider: httpClientProvider}}>
-                                <ChatContextProvider>
+                                <HttpClientContext.Provider
+                                    value={{ provider: httpClientProvider }}
+                                >
                                     <FileContextProvider
                                         fileProvider={fileProvider}
                                     >
@@ -239,7 +239,6 @@ const CoreApp = () => {
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>
-                                </ChatContextProvider>
                                 </HttpClientContext.Provider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>

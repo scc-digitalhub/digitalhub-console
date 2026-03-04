@@ -37,6 +37,7 @@ import {
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { ReaChat } from '../../chat/components/ReaChat';
+import { ChatContextProvider } from '../../chat/ChatContextProvider';
 
 import { StandardHttpClient } from './StandardHttpClient';
 import { InferenceV2Client } from './InferenceV2Client';
@@ -172,7 +173,9 @@ export const ClientButton = (props: ClientButtonProps) => {
                 </div>
                 <DialogContent>
                     {mode === 'chat' ? (
-                        <ReaChat />
+                        <ChatContextProvider>
+                            <ReaChat />
+                        </ChatContextProvider>
                     ) : (
                         <Client
                             showHealthChecks={showHealthChecks}
