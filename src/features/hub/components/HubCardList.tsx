@@ -1,9 +1,4 @@
-import {
-    useListContext,
-    useTranslate,
-    RecordContextProvider,
-    useRecordContext,
-} from 'react-admin';
+import { useTranslate, useRecordContext, ListView } from 'react-admin';
 import {
     Box,
     Card,
@@ -12,6 +7,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import { GridList } from '../../../common/components/layout/GridList';
 
 const HubCard = () => {
     const theme = useTheme();
@@ -45,19 +41,16 @@ const HubCard = () => {
                     >
                         {item.metadata?.name}
                     </Typography>
-                    {[`v${item.metadata?.version}`].map(lbl => (
-                        <Chip
-                            key={lbl}
-                            label={lbl}
-                            size="small"
-                            variant="outlined"
-                            sx={{
-                                borderRadius: 1,
-                                height: 22,
-                                fontSize: '0.75rem',
-                            }}
-                        />
-                    ))}
+                    <Chip
+                        label={`v${item.metadata?.version}`}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                            borderRadius: 1,
+                            height: 22,
+                            fontSize: '0.75rem',
+                        }}
+                    />
                 </Box>
                 <Typography variant="body2" color="text.secondary" mb={2}>
                     {item.name}
@@ -92,28 +85,29 @@ const HubCard = () => {
 };
 
 export const HubCardList = () => {
-    const translate = useTranslate();
-    const { data: items, isLoading } = useListContext();
-
-    if (isLoading) return null;
-
-    if (!items || items.length === 0) {
-        return (
-            <Typography variant="body1" color="text.secondary" mt={4}>
-                {translate('pages.hub.empty', {
-                    _: 'No templates match your current filters.',
-                })}
-            </Typography>
-        );
-    }
-
     return (
-        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-            {items.map((item, index) => (
-                <RecordContextProvider key={item.id || index} value={item}>
-                    <HubCard />
-                </RecordContextProvider>
-            ))}
-        </Box>
+        <ListView actions={false} pagination={false} component={Box}>
+            <HubCardListContent />
+        </ListView>
+    );
+};
+
+const HubCardListContent = () => {
+    const translate = useTranslate();
+    return (
+        <GridList
+            spacing={0}
+            component={<Box sx={{ width: '100%' }} />}
+            empty={
+                <Typography variant="body1" color="text.secondary" mt={4}>
+                    {translate('pages.hub.empty', {
+                        _: 'No templates match your current filters.',
+                    })}
+                </Typography>
+            }
+            linkType={false}
+        >
+            <HubCard />
+        </GridList>
     );
 };
