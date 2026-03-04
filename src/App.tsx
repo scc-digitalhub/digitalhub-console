@@ -14,6 +14,8 @@ import {
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
+import initFileProvider from './common/provider/fileProvider';
+import initSearchProvider from './common/provider/searchProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
 import {
@@ -101,6 +103,8 @@ const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
 };
 
 const dataProvider = appDataProvider(API_URL, httpClient);
+const fileProvider = initFileProvider(API_URL, httpClient);
+const searchProvider = initSearchProvider(API_URL, httpClient);
 const MyLoginPage =
     authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
 
@@ -163,7 +167,7 @@ const CoreApp = () => {
                 store={localStorageStore('dh')}
             >
                 <StoreResetter>
-                    <SearchContextProvider searchProvider={dataProvider}>
+                    <SearchContextProvider searchProvider={searchProvider}>
                         <ResourceSchemaProvider
                             dataProvider={dataProvider}
                             resource="schemas"
@@ -175,7 +179,7 @@ const CoreApp = () => {
                             >
                                 <ChatContextProvider>
                                     <FileContextProvider
-                                        fileProvider={dataProvider}
+                                        fileProvider={fileProvider}
                                     >
                                         <AdminUI
                                             dashboard={Dashboard}
