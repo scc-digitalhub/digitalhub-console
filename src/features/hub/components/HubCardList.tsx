@@ -1,102 +1,160 @@
-import { useTranslate, useRecordContext, ListView } from 'react-admin';
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {
+    useTranslate,
+    useRecordContext,
+    ListView,
+    TextField,
+    FunctionField,
+} from 'react-admin';
 import {
     Box,
-    Card,
     CardContent,
+    CardActionArea,
     Chip,
     Typography,
     useTheme,
 } from '@mui/material';
 import { GridList } from '../../../common/components/layout/GridList';
+import { StyledTemplate } from '../../../common/components/layout/StyledTemplate';
 
-const HubCard = () => {
+interface HubCardProps {
+    onSelectTemplate?: (template: any) => void;
+    selected?: boolean;
+}
+
+const HubCard = ({ onSelectTemplate, selected = false }: HubCardProps) => {
     const theme = useTheme();
-    const item = useRecordContext();
+    const record = useRecordContext();
 
-    if (!item) return null;
+    if (!record) return null;
 
     return (
-        <Card
+        <StyledTemplate
+            className={selected ? 'selected' : ''}
+            elevation={0}
             sx={{
-                mb: 2,
-                borderRadius: 2,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                borderRadius: 1,
                 border: `1px solid ${theme.palette.divider}`,
             }}
         >
-            <CardContent sx={{ pb: '16px !important' }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mb: 0.5,
-                        gap: 1.5,
-                        flexWrap: 'wrap',
-                    }}
-                >
-                    <Typography
-                        variant="h6"
-                        color="primary"
-                        fontWeight="bold"
-                        fontSize="1.1rem"
-                    >
-                        {item.metadata?.name}
-                    </Typography>
-                    <Chip
-                        label={`v${item.metadata?.version}`}
-                        size="small"
-                        variant="outlined"
+            <CardActionArea
+                onClick={() => onSelectTemplate && onSelectTemplate(record)}
+                sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                }}
+            >
+                <CardContent sx={{ p: 2, width: '100%' }}>
+                    <Box
                         sx={{
-                            borderRadius: 1,
-                            height: 22,
-                            fontSize: '0.75rem',
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                        }}
+                    >
+                        <TextField
+                            source="metadata.name"
+                            sx={{
+                                color: 'text.primary',
+                                fontSize: '1.25rem',
+                                lineHeight: 1.2,
+                            }}
+                        />
+                        <FunctionField
+                            render={(rec: any) =>
+                                rec?.metadata?.version ? (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                    >
+                                        v{rec.metadata.version}
+                                    </Typography>
+                                ) : null
+                            }
+                        />
+                    </Box>
+                    <TextField
+                        source="name"
+                        sx={{
+                            display: 'block',
+                            color: 'text.secondary',
+                            mb: 1.5,
+                            fontSize: '0.875rem',
                         }}
                     />
-                </Box>
-                <Typography variant="body2" color="text.secondary" mb={2}>
-                    {item.name}
-                </Typography>
-                <Typography
-                    variant="body2"
-                    color="text.primary"
-                    mb={3}
-                    lineHeight={1.5}
-                >
-                    {item.metadata?.description}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {item.metadata?.labels?.map(
-                        (label: string, idx: number) => (
-                            <Chip
-                                key={idx}
-                                label={label.split(':')[1] || label}
-                                size="small"
+
+                    <FunctionField
+                        render={(rec: any) => (
+                            <Box
                                 sx={{
-                                    bgcolor: 'action.hover',
-                                    border: 'none',
-                                    height: 24,
+                                    display: 'flex',
+                                    gap: 1,
+                                    flexWrap: 'wrap',
+                                    mb: 2,
                                 }}
-                            />
-                        )
-                    )}
-                </Box>
-            </CardContent>
-        </Card>
+                            >
+                                {rec?.metadata?.labels?.map(
+                                    (label: string, idx: number) => (
+                                        <Chip
+                                            key={idx}
+                                            label={label.split(':')[1] || label}
+                                            size="small"
+                                            sx={{
+                                                bgcolor: 'action.selected',
+                                                color: 'text.primary',
+                                                border: 'none',
+                                                height: 24,
+                                                fontSize: '0.75rem',
+                                            }}
+                                        />
+                                    )
+                                )}
+                            </Box>
+                        )}
+                    />
+
+                    <TextField
+                        source="metadata.description"
+                        sx={{
+                            display: 'block',
+                            color: 'text.primary',
+                            lineHeight: 1.4,
+                            fontSize: '0.875rem',
+                        }}
+                    />
+                </CardContent>
+            </CardActionArea>
+        </StyledTemplate>
     );
 };
 
-export const HubCardList = () => {
+interface HubCardListProps {
+    onSelectTemplate?: (template: any) => void;
+}
+
+export const HubCardList = ({ onSelectTemplate }: HubCardListProps) => {
     return (
         <ListView actions={false} pagination={false} component={Box}>
-            <HubCardListContent />
+            <HubCardListContent onSelectTemplate={onSelectTemplate} />
         </ListView>
     );
 };
 
-const HubCardListContent = () => {
+const HubCardListContent = ({ onSelectTemplate }: HubCardListProps) => {
     const translate = useTranslate();
     return (
         <GridList
-            spacing={0}
+            spacing={2}
             component={<Box sx={{ width: '100%' }} />}
             empty={
                 <Typography variant="body1" color="text.secondary" mt={4}>
@@ -107,7 +165,7 @@ const HubCardListContent = () => {
             }
             linkType={false}
         >
-            <HubCard />
+            <HubCard onSelectTemplate={onSelectTemplate} />
         </GridList>
     );
 };
