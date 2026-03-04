@@ -3,13 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    Card,
     CardContent,
     CardHeader,
     Typography,
     CardActionArea,
-    styled,
-    alpha,
     Grid,
     Avatar,
     Stack,
@@ -30,6 +27,7 @@ import { useFormState, useFormContext } from 'react-hook-form';
 import { useRef, useState } from 'react';
 import { KindSelector } from './KindSelector';
 import { ChipsField } from './fields/ChipsField';
+import { StyledTemplate } from './layout/StyledTemplate';
 
 export type Template = {
     id: string;
@@ -232,36 +230,3 @@ const TemplateCard = (props: {
         </RecordContextProvider>
     );
 };
-
-const StyledTemplate = styled(Card, {
-    name: 'StyledCard',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme, className }) => ({
-    backgroundColor:
-        className == 'selected'
-            ? alpha(theme.palette?.primary?.main, 0.12)
-            : theme.palette.common.white,
-    ...theme.applyStyles('dark', {
-        backgroundColor:
-            className == 'selected'
-                ? alpha(theme.palette?.primary?.main, 0.12)
-                : theme.palette.common.black,
-    }),
-    color: className == 'selected' ? theme.palette?.primary?.main : 'inherit',
-    ...theme.applyStyles('dark', {
-        color:
-            className == 'selected' ? theme.palette?.primary?.main : 'inherit',
-    }),
-    ['&:hover']: {
-        backgroundColor:
-            className == 'selected'
-                ? alpha(theme.palette?.primary?.main, 0.2)
-                : theme.palette.grey[100],
-        ...theme.applyStyles('dark', {
-            backgroundColor:
-                className == 'selected'
-                    ? alpha(theme.palette?.primary?.main, 0.2)
-                    : theme.palette.grey[800],
-        }),
-    },
-}));
