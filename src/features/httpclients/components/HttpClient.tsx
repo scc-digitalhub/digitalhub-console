@@ -29,11 +29,11 @@ import {
     Labeled,
     RecordContextProvider,
     TabbedShowLayout,
-    useDataProvider,
     useTranslate,
 } from 'react-admin';
 import AceEditor from 'react-ace';
 import { JSONTree } from 'react-json-tree';
+import { useHttpClientProvider } from '../HttpClientContext';
 
 export interface HttpClientProps {
     proxy?: string;
@@ -54,7 +54,7 @@ export const HttpClient = (props: HttpClientProps) => {
         showRequestBody = true,
     } = props;
 
-    const dataProvider = useDataProvider();
+    const provider = useHttpClientProvider();
     const translate = useTranslate();
     const [method, setMethod] = useState(fixedMethod || 'GET');
     const [url, setUrl] = useState(fixedUrl || availableUrls[0] || '');
@@ -118,8 +118,8 @@ export const HttpClient = (props: HttpClientProps) => {
             fullHeaders.set('X-Proxy-Method', method);
 
             // const res = await fetch(fullUrl, options);
-            const fullUrl = (await dataProvider.apiUrl()) + proxyUrl;
-            const res = await dataProvider.client(fullUrl, {
+            const fullUrl = provider.apiUrl() + proxyUrl;
+            const res = await provider.client(fullUrl, {
                 method: 'POST',
                 headers: fullHeaders,
                 body: fullBody,
@@ -147,7 +147,7 @@ export const HttpClient = (props: HttpClientProps) => {
 
             const responseObj = {
                 status: res.status,
-                statusText: res.statusText,
+                // statusText: res.statusText, //this field does not exist in response
                 headers: responseHeaders,
                 body: parsedBody,
             };

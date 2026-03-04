@@ -10,7 +10,6 @@ import {
     ButtonProps,
     RaRecord,
     useTranslate,
-    useDataProvider,
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
@@ -42,6 +41,7 @@ import { ReaChat } from '../../chat/components/ReaChat';
 import { StandardHttpClient } from './StandardHttpClient';
 import { InferenceV2Client } from './InferenceV2Client';
 import { HealthChips } from './HealthChips';
+import { useHttpClientProvider } from '../HttpClientContext';
 
 const defaultIcon = <SignpostIcon />;
 
@@ -195,7 +195,7 @@ type ClientProps = Pick<ClientButtonProps, 'showHealthChecks' | 'mode'> & {
 const Client = (props: ClientProps) => {
     const { showHealthChecks, recordId, mode, urls } = props;
     const translate = useTranslate();
-    const dataProvider = useDataProvider();
+    const provider = useHttpClientProvider();
     const { root: projectId } = useRootSelector();
     const [healthStatus, setHealthStatus] = useState<HealthStatus>({
         ready: false,
@@ -205,7 +205,7 @@ const Client = (props: ClientProps) => {
 
     useEffect(() => {
         const base = urls[0];
-        if (!base || !showHealthChecks || !dataProvider) return;
+        if (!base || !showHealthChecks || !provider) return;
         // DEBUG: both health flags true for testing
         // setHealthStatus({ ready: true, live: true });
         // return;
@@ -214,7 +214,7 @@ const Client = (props: ClientProps) => {
 
         const checkHealth = async () => {
             try {
-                const readyRes = await dataProvider.checkHealth(
+                const readyRes = await provider.checkHealth(
                     base,
                     '/v2/health/ready',
                     'ready',
@@ -234,7 +234,7 @@ const Client = (props: ClientProps) => {
                     });
                 }
 
-                const liveRes = await dataProvider.checkHealth(
+                const liveRes = await provider.checkHealth(
                     base,
                     '/v2/health/live',
                     'live',
@@ -263,7 +263,7 @@ const Client = (props: ClientProps) => {
         };
         checkHealth();
         return () => ctrl.abort();
-    }, [showHealthChecks, urls, dataProvider, proxy, translate]);
+    }, [showHealthChecks, urls, provider, proxy, translate]);
 
     return (
         <>
