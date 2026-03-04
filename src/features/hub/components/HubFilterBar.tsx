@@ -7,9 +7,10 @@ import {
     useTranslate,
     FilterForm,
     SearchInput,
+    SelectArrayInput,
 } from 'react-admin';
 import { Box, Button, Chip, Typography, useTheme } from '@mui/material';
-import { FilterDropdown } from './FilterDropdown';
+import { useMemo } from 'react';
 
 interface HubFilterBarProps {
     availableFilters: Record<string, string[]>;
@@ -21,60 +22,70 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
 
     const { filterValues, setFilters } = useListContext();
 
-    const handleToggle = (category: string, value: string) => {
-        const currentCatFilters = filterValues[category] || [];
-        const newCatFilters = currentCatFilters.includes(value)
-            ? currentCatFilters.filter((v: string) => v !== value)
-            : [...currentCatFilters, value];
-
-        setFilters({ ...filterValues, [category]: newCatFilters });
-    };
-
     const handleClearAll = () => {
         setFilters({ q: filterValues.q || '' });
     };
 
-    const activeFilters = Object.entries(filterValues).filter(
-        ([key, vals]) => key !== 'q' && Array.isArray(vals) && vals.length > 0
+    const handleRemoveFilter = (category: string, value: string) => {
+        const currentCatFilters = Array.isArray(filterValues[category])
+            ? filterValues[category]
+            : [];
+        const newCatFilters = currentCatFilters.filter(
+            (v: string) => v !== value
+        );
+        setFilters({ ...filterValues, [category]: newCatFilters });
+    };
+
+    const searchFilters = useMemo(
+        () => [
+            <SearchInput
+                key="q"
+                source="q"
+                alwaysOn
+                placeholder={translate('pages.hub.search', {
+                    _: 'Search by name or description',
+                })}
+                sx={{ width: 300 }}
+            />,
+        ],
+        [translate]
     );
 
-    const searchFilters = [
-        <SearchInput
-            key="q"
-            source="q"
-            alwaysOn
-            placeholder={translate('pages.hub.search', {
-                _: 'Search by name or description',
-            })}
-            sx={{ width: 300 }}
-        />,
-    ];
+    const filterInputs = useMemo(
+        () =>
+            Object.entries(availableFilters).map(([category, values]) => (
+                <SelectArrayInput
+                    key={category}
+                    source={category}
+                    label={category}
+                    choices={values.map(val => ({ id: val, name: val }))}
+                    alwaysOn
+                />
+            )),
+        [availableFilters]
+    );
+
+    const activeFilterChips = useMemo(
+        () =>
+            Object.entries(filterValues).reduce<
+                { category: string; value: string }[]
+            >((acc, [category, values]) => {
+                if (category === 'q' || !Array.isArray(values)) return acc;
+                values.forEach(value => acc.push({ category, value }));
+                return acc;
+            }, []),
+        [filterValues]
+    );
 
     return (
         <Box sx={{ width: '100%', mb: 1 }}>
-            {' '}
-            <Box sx={{ mb: 3 }}>
+            <Box sx={{ mb: 1 }}>
                 <FilterForm filters={searchFilters} />
             </Box>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    gap: 1,
-                }}
-            >
-                {Object.entries(availableFilters).map(([category, values]) => (
-                    <FilterDropdown
-                        key={category}
-                        category={category}
-                        values={values}
-                        filterValues={filterValues}
-                        handleToggle={handleToggle}
-                    />
-                ))}
+            <Box sx={{ mt: 1 }}>
+                <FilterForm filters={filterInputs} />
             </Box>
-            {activeFilters.length > 0 && (
+            {activeFilterChips.length > 0 && (
                 <Box
                     sx={{
                         display: 'flex',
@@ -94,47 +105,45 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
                         })}
                     </Typography>
 
-                    {activeFilters.flatMap(([category, values]) =>
-                        (values as string[]).map(val => (
-                            <Chip
-                                key={`${category}-${val}`}
-                                size="small"
-                                onDelete={() => handleToggle(category, val)}
-                                label={
-                                    <Box
+                    {activeFilterChips.map(({ category, value }) => (
+                        <Chip
+                            key={`${category}-${value}`}
+                            size="small"
+                            onDelete={() => handleRemoveFilter(category, value)}
+                            label={
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 0.5,
+                                    }}
+                                >
+                                    <Typography
+                                        variant="caption"
                                         sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 0.5,
+                                            fontWeight: 'bold',
+                                            textTransform: 'capitalize',
                                         }}
                                     >
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                fontWeight: 'bold',
-                                                textTransform: 'capitalize',
-                                            }}
-                                        >
-                                            {category}:
-                                        </Typography>
-                                        <Typography variant="caption">
-                                            {val}
-                                        </Typography>
-                                    </Box>
-                                }
-                                sx={{
-                                    bgcolor: 'action.hover',
-                                    border: `1px solid ${theme.palette.divider}`,
-                                    borderRadius: 1,
-                                    height: 26,
-                                    '& .MuiChip-deleteIcon': {
-                                        color: 'text.secondary',
-                                        '&:hover': { color: 'error.main' },
-                                    },
-                                }}
-                            />
-                        ))
-                    )}
+                                        {category}:
+                                    </Typography>
+                                    <Typography variant="caption">
+                                        {value}
+                                    </Typography>
+                                </Box>
+                            }
+                            sx={{
+                                bgcolor: 'action.hover',
+                                border: `1px solid ${theme.palette.divider}`,
+                                borderRadius: 1,
+                                height: 26,
+                                '& .MuiChip-deleteIcon': {
+                                    color: 'text.secondary',
+                                    '&:hover': { color: 'error.main' },
+                                },
+                            }}
+                        />
+                    ))}
 
                     <Button
                         size="small"
