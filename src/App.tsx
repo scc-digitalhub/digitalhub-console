@@ -139,7 +139,7 @@ import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { ChatContextProvider } from './features/chat/components/ChatContextProvider';
+import { ChatContextProvider } from './features/chat/ChatContextProvider';
 import { HttpClientContext } from './features/httpclients/HttpClientContext';
 
 export const SearchEnabledContext = createContext(false);
