@@ -43,7 +43,7 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
                 source="q"
                 alwaysOn
                 placeholder={translate('pages.hub.search', {
-                    _: 'Search by name or description',
+                    _: 'Name or Description',
                 })}
                 sx={{ width: 300 }}
             />,
