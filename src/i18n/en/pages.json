@@ -118,6 +118,15 @@
         "title": "Files explorer",
         "helperText": "Explore and manage project files"
     },
+
+    "hub": {
+        "title": "Create a new function from a template",
+        "subtitle": "Browse the available templates",
+        "search": {
+            "title": "Name or Description",
+            "helperText": "Explore and reuse functions from the hub"
+        }
+    },
     "services": {
         "title": "Services",
         "helperText": "Explore and visualize runs exposing a service endpoint"
