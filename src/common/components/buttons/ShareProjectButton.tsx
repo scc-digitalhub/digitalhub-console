@@ -140,10 +140,8 @@ const ShareList = (props: { record?: any }) => {
 
     const reload = () => {
         if (record) {
-            const url = '/projects/' + record.id + '/share';
-
             dataProvider
-                .invoke({ path: url, options: { method: 'GET' } })
+                .getShareList('projects', { id: record.id })
                 .then(json => {
                     if (json) {
                         setData(json);
@@ -155,13 +153,10 @@ const ShareList = (props: { record?: any }) => {
     const handleRevoke = data => {
         return function (event) {
             if (data?.id) {
-                const url = '/projects/' + record.id + '/share';
-
                 dataProvider
-                    .invoke({
-                        path: url,
-                        options: { method: 'DELETE' },
-                        params: { id: data.id },
+                    .deleteShare('projects', {
+                        id: record.id,
+                        meta: { id: data.id },
                     })
                     .then(() => {
                         reload();
@@ -211,13 +206,10 @@ const ShareCreateForm = (props: { record?: any; reload: () => void }) => {
     const record = recordFromProps || recordContext;
     const onSubmit = data => {
         if (record) {
-            const url = '/projects/' + record.id + '/share';
-
             dataProvider
-                .invoke({
-                    path: url,
-                    options: { method: 'POST' },
-                    params: { user: data.user.trim() },
+                .createShare('projects', {
+                    id: record.id,
+                    meta: { user: data.user.trim() },
                 })
                 .then(() => {
                     reload();

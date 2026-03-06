@@ -4,15 +4,9 @@
 
 import { stringify } from 'query-string';
 import { fetchUtils, DataProvider } from 'ra-core';
-import { GetListParams, Options } from 'react-admin';
-import {
-    SearchFilter,
-    SearchParams,
-    SearchProvider,
-    SearchResults,
-} from '../../features/search/SearchProvider';
+import { Options } from 'react-admin';
 import { FUNCTION_OR_WORKFLOW } from '../utils/helpers';
-import { FileProvider } from '../../features/files/FileProvider';
+import { FetchFunction } from './types';
 
 /**
  * Data Provider for Spring REST with Pageable support.
@@ -38,62 +32,9 @@ import { FileProvider } from '../../features/files/FileProvider';
 
 const springDataProvider = (
     apiUrl: string,
-    httpClient: (
-        url: any,
-        options?: fetchUtils.Options | undefined
-    ) => Promise<{
-        status: number;
-        headers: Headers;
-        body: string;
-        json: any;
-    }> = fetchUtils.fetchJson
-): DataProvider & SearchProvider & FileProvider => {
+    httpClient: FetchFunction = fetchUtils.fetchJson
+): DataProvider => {
     return {
-        apiUrl: async () => apiUrl,
-        client: (url, opts) => httpClient(url, opts),
-        /**
-         * Performs a proxied health check POST to the API proxy endpoint.
-         * Returns true if the returned JSON contains key === true.
-         */
-        checkHealth: (
-            base: string,
-            path: string,
-            key: string,
-            proxy: string,
-            signal?: AbortSignal
-        ): Promise<{
-            ok: boolean;
-            status?: number;
-            message?: string;
-            json?: any;
-        }> => {
-            if (!base) return Promise.resolve({ ok: false });
-
-            return httpClient(`${apiUrl}${proxy}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'X-Proxy-URL': `${base}${path}`,
-                    'X-Proxy-Method': 'GET',
-                    'Content-Type': 'application/json',
-                }),
-                signal,
-            } as any)
-                .then(({ status, json }) => {
-                    return {
-                        ok: !!json?.[key],
-                        status,
-                        message: json?.message?.toString(),
-                        json,
-                    };
-                })
-                .catch(error => {
-                    return {
-                        ok: false,
-                        status: error?.status,
-                        message: error?.body?.message || error?.message,
-                    };
-                });
-        },
         invoke: ({
             path,
             params,
@@ -113,7 +54,7 @@ const springDataProvider = (
             if (body) {
                 opts.body = body;
             }
-            return httpClient(url, opts).then(({ headers, json }) => {
+            return httpClient(url, opts).then(({ json }) => {
                 return json;
             });
         },
@@ -420,205 +361,18 @@ const springDataProvider = (
                 };
             });
         },
-        search: (
-            searchParams: SearchParams,
-            params: GetListParams
-        ): Promise<SearchResults> => {
-            const { page, perPage } = params.pagination || {
-                page: 1,
-                perPage: 10,
-            };
-            const { field, order } = params.sort || {
-                field: 'id',
-                order: 'ASC',
-            };
-            const query = {
-                ...fetchUtils.flattenObject(params.filter), //additional filter parameters as-is
-                sort: field + ',' + order, //sorting
-                page: page - 1, //page starts from zero
-                size: perPage,
-            };
-
-            const q = searchParams.q
-                ? `q=${encodeURIComponent(searchParams.q)}`
-                : '';
-
-            const fq = searchParams.fq
-                ?.map(
-                    (filter: SearchFilter) =>
-                        `fq=${encodeURIComponent(filter.filter)}`
-                )
-                .join('&');
-
-            const pageQuery = stringify(query);
-
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-            const url = `${apiUrl}${prefix}/solr/search/${
-                params.meta?.group ? 'group' : 'item'
-            }?`;
-
-            return httpClient(
-                `${url}${[q, fq, pageQuery].filter(Boolean).join('&')}`,
-                {
-                    method: 'GET',
-                }
-            ).then(({ status, json }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!json) {
-                    throw new Error('Empty response from server');
-                }
-                if (!json.content) {
-                    throw new Error('the response must match page<> model');
-                }
-                //extract data from content
-                return {
-                    data: json.content,
-                    total: parseInt(json.totalElements),
-                };
-            });
-        },
-        stores: params => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            const url = `${apiUrl}${prefix}/files/stores`;
-
-            return httpClient(`${url}`).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
-                return jsonBody;
-            });
-        },
-        deleteFiles: (params, paths) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            const url = `${apiUrl}${prefix}/files/delete`;
-            const promises = paths.map(path =>
-                httpClient(`${url}?path=${path}`, {
-                    method: 'DELETE',
-                })
-            );
-            return Promise.all(promises).then(responses => {
-                responses.forEach(r => {
-                    if (r.status !== 200) {
-                        throw new Error('Invalid response status ' + r.status);
-                    }
-                });
-            });
-        },
-        download: (params, downloadParams, resourceDownloadParams) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            let resourcePath = '';
-            if (resourceDownloadParams) {
-                resourcePath = `/${resourceDownloadParams.resource}/${resourceDownloadParams.id}`;
-            }
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/download`;
-
-            let query = {};
-            if (downloadParams) {
-                query = {
-                    path: downloadParams.path,
-                    duration: downloadParams.duration,
-                };
-            } else if (resourceDownloadParams) {
-                query = {
-                    sub: resourceDownloadParams.sub,
-                };
-            }
-
-            return httpClient(`${url}?${stringify(query)}`).then(
-                ({ status, body }) => {
-                    if (status !== 200) {
-                        throw new Error('Invalid response status ' + status);
-                    }
-                    if (!body) {
-                        throw new Error('Resource not found');
-                    }
-                    const jsonBody = JSON.parse(body);
-                    return jsonBody;
-                }
-            );
-        },
-        fileInfo: (params, fileInfoParams, resourceFileInfoParams) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            let resourcePath = '';
-            if (resourceFileInfoParams) {
-                resourcePath = `/${resourceFileInfoParams.resource}/${resourceFileInfoParams.id}`;
-            }
-
-            let query = '';
-            if (fileInfoParams) query = `?path=${fileInfoParams.path}`;
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/info${query}`;
-
-            return httpClient(url).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
-                return jsonBody;
-            });
-        },
-        //Lineage for Entities
         getLineage: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/relationships`;
-            return httpClient(url).then(({ status, body }) => {
+            return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
                 return {
-                    lineage: jsonBody,
-                };
-            });
-        },
-        //Lineage for whole project
-        getProjectLineage: (resource, params) => {
-            const url = `${apiUrl}/${resource}/${params.id}/relationships`;
-            return httpClient(url).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    lineage: jsonBody,
+                    lineage: json,
                 };
             });
         },
@@ -628,46 +382,31 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/metrics`;
-            return httpClient(url).then(({ status, body }) => {
+            return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
                 return {
-                    metrics: jsonBody,
+                    metrics: json,
                 };
             });
         },
-        upload: (params, uploadParams, resourceUploadParams) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
+        getShareList: (resource, params) => {
+            const url = `${apiUrl}/${resource}/${params.id}/share`;
+            return httpClient(url).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return json;
+            });
+        },
+        createShare: (resource, params) => {
+            let query = '';
+            if (params.meta?.user) {
+                query = `?user=${params.meta.user}`;
             }
-
-            let resourcePath = '';
-            if (resourceUploadParams) {
-                resourcePath = `/${resourceUploadParams.resource}/${resourceUploadParams.id}`;
-            }
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/upload`;
-
-            let query = {};
-            if (uploadParams) {
-                query = {
-                    path: uploadParams.path,
-                    filename: uploadParams.filename,
-                };
-            } else if (resourceUploadParams) {
-                query = {
-                    filename: resourceUploadParams.filename,
-                    name: resourceUploadParams.name,
-                };
-            }
-
-            return httpClient(`${url}?${stringify(query)}`, {
+            const url = `${apiUrl}/${resource}/${params.id}/share${query}`;
+            return httpClient(url, {
                 method: 'POST',
             }).then(({ status, json }) => {
                 if (status !== 200) {
@@ -676,114 +415,14 @@ const springDataProvider = (
                 return json;
             });
         },
-        startMultipartUpload: (params, uploadParams, resourceUploadParams) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
+        deleteShare: (resource, params) => {
+            let query = '';
+            if (params.meta?.id) {
+                query = `?id=${params.meta.id}`;
             }
-
-            let resourcePath = '';
-            if (resourceUploadParams) {
-                resourcePath = `/${resourceUploadParams.resource}/${resourceUploadParams.id}`;
-            }
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/multipart/start`;
-
-            let query = {};
-            if (uploadParams) {
-                query = {
-                    path: uploadParams.path,
-                    filename: uploadParams.filename,
-                };
-            } else if (resourceUploadParams) {
-                query = {
-                    filename: resourceUploadParams.filename,
-                    name: resourceUploadParams.name,
-                };
-            }
-
-            return httpClient(`${url}?${stringify(query)}`, {
-                method: 'POST',
-            }).then(({ status, json }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                return json;
-            });
-        },
-        uploadPart: (params, uploadParams, resourceUploadParams) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            let resourcePath = '';
-            if (resourceUploadParams) {
-                resourcePath = `/${resourceUploadParams.resource}/${resourceUploadParams.id}`;
-            }
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/multipart/part`;
-
-            let query = {};
-            if (uploadParams) {
-                query = {
-                    path: uploadParams.path,
-                    filename: uploadParams.filename,
-                    uploadId: uploadParams.uploadId,
-                    partNumber: uploadParams.partNumber,
-                };
-            } else if (resourceUploadParams) {
-                query = {
-                    path: resourceUploadParams.path,
-                    uploadId: resourceUploadParams.uploadId,
-                    partNumber: resourceUploadParams.partNumber,
-                };
-            }
-
-            return httpClient(`${url}?${stringify(query)}`, {
-                method: 'PUT',
-            }).then(({ status, json }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                return json;
-            });
-        },
-        completeMultipartUpload: (
-            params,
-            uploadParams,
-            resourceUploadParams
-        ) => {
-            let prefix = '';
-            if (params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-
-            let resourcePath = '';
-            if (resourceUploadParams) {
-                resourcePath = `/${resourceUploadParams.resource}/${resourceUploadParams.id}`;
-            }
-
-            const url = `${apiUrl}${prefix}${resourcePath}/files/multipart/complete`;
-
-            let query = {};
-            if (uploadParams) {
-                query = {
-                    path: uploadParams.path,
-                    filename: uploadParams.filename,
-                    uploadId: uploadParams.uploadId,
-                    partList: uploadParams.partList,
-                };
-            } else if (resourceUploadParams) {
-                query = {
-                    path: resourceUploadParams.path,
-                    uploadId: resourceUploadParams.uploadId,
-                    partList: resourceUploadParams.partList,
-                };
-            }
-
-            return httpClient(`${url}?${stringify(query)}`, {
-                method: 'POST',
+            const url = `${apiUrl}/${resource}/${params.id}/share${query}`;
+            return httpClient(url, {
+                method: 'DELETE',
             }).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);

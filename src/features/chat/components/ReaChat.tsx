@@ -24,7 +24,7 @@ import { useTranslate } from 'react-admin';
 import { ErrorDisplay } from './ErrorDisplay';
 import { createChatTheme } from '../chatTheme';
 import '../chatTheme.css';
-import { useChatContext } from './ChatContext';
+import { useChatContext } from '../ChatContext';
 
 const API_KEY: string =
     (globalThis as any).VITE_OPENAI_API_KEY ||

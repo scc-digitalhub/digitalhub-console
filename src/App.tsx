@@ -14,6 +14,9 @@ import {
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
+import initFileProvider from './common/provider/fileProvider';
+import initHttpClientProvider from './common/provider/httpClientProvider';
+import initSearchProvider from './common/provider/searchProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
 import {
@@ -101,6 +104,9 @@ const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
 };
 
 const dataProvider = appDataProvider(API_URL, httpClient);
+const fileProvider = initFileProvider(API_URL, httpClient);
+const httpClientProvider = initHttpClientProvider(API_URL, httpClient);
+const searchProvider = initSearchProvider(API_URL, httpClient);
 const MyLoginPage =
     authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
 
@@ -133,7 +139,7 @@ import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { ChatContextProvider } from './features/chat/components/ChatContextProvider';
+import { HttpClientContext } from './features/httpclients/HttpClientContext';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -163,7 +169,7 @@ const CoreApp = () => {
                 store={localStorageStore('dh')}
             >
                 <StoreResetter>
-                    <SearchContextProvider searchProvider={dataProvider}>
+                    <SearchContextProvider searchProvider={searchProvider}>
                         <ResourceSchemaProvider
                             dataProvider={dataProvider}
                             resource="schemas"
@@ -173,9 +179,11 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <ChatContextProvider>
+                                <HttpClientContext.Provider
+                                    value={{ provider: httpClientProvider }}
+                                >
                                     <FileContextProvider
-                                        fileProvider={dataProvider}
+                                        fileProvider={fileProvider}
                                     >
                                         <AdminUI
                                             dashboard={Dashboard}
@@ -231,7 +239,7 @@ const CoreApp = () => {
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>
-                                </ChatContextProvider>
+                                </HttpClientContext.Provider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>
