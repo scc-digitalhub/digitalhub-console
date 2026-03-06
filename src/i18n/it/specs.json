@@ -425,5 +425,37 @@
     "table": {
         "description": "",
         "title": "Tabella"
+    },
+    "openinference": {
+        "description": "",
+        "title": "OpenInference"
+    },
+    "openinference+serve": {
+        "description": "Definizione dell'operazione di serving del modello OpenInference",
+        "title": "Operazione di serving del modello OpenInference"
+    },
+    "openinference+build": {
+        "description": "Definizione dell'operazione di build del modello OpenInference",
+        "title": "Operazione di build del modello OpenInference"
+    },
+    "openinference+serve:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di serving del modello OpenInference",
+        "title": "Esecuzione dell'operazione di serving del modello OpenInference"
+    },
+    "openinference+build:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di build del modello OpenInference",
+        "title": "Esecuzione dell'operazione di build del modello OpenInference"
+    },
+    "servicegraph": {
+        "description": "",
+        "title": "Servicegraph"
+    },
+    "servicegraph+serve": {
+        "description": "Definizione dell'operazione di serving del modello Servicegraph",
+        "title": "Operazione di serving del modello Servicegraph"
+    },
+    "servicegraph+serve:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di serving del modello Servicegraph",
+        "title": "Esecuzione dell'operazione di serving del modello Servicegraph"
     }
 }
