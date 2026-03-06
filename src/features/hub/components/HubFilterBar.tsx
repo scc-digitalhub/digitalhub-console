@@ -6,10 +6,11 @@ import {
     useListContext,
     useTranslate,
     FilterForm,
-    SearchInput,
+    ListNoResults,
     SelectArrayInput,
+    TextInput,
 } from 'react-admin';
-import { Box, Button, Chip, Typography, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { useMemo } from 'react';
 
 interface HubFilterBarProps {
@@ -18,34 +19,16 @@ interface HubFilterBarProps {
 
 export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
     const translate = useTranslate();
-    const theme = useTheme();
-
-    const { filterValues, setFilters } = useListContext();
-
-    const handleClearAll = () => {
-        setFilters({ q: filterValues.q || '' });
-    };
-
-    const handleRemoveFilter = (category: string, value: string) => {
-        const currentCatFilters = Array.isArray(filterValues[category])
-            ? filterValues[category]
-            : [];
-        const newCatFilters = currentCatFilters.filter(
-            (v: string) => v !== value
-        );
-        setFilters({ ...filterValues, [category]: newCatFilters });
-    };
+    const { filterValues, total } = useListContext();
 
     const searchFilters = useMemo(
         () => [
-            <SearchInput
+            <TextInput
                 key="q"
                 source="q"
+                label={translate('pages.hub.search.title')}
                 alwaysOn
-                placeholder={translate('pages.hub.search', {
-                    _: 'Name or Description',
-                })}
-                sx={{ width: 300 }}
+                resettable
             />,
         ],
         [translate]
@@ -57,110 +40,45 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
                 <SelectArrayInput
                     key={category}
                     source={category}
-                    label={category}
                     choices={values.map(val => ({ id: val, name: val }))}
                     alwaysOn
+                    sx={{
+                        '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)': {
+                            transform: 'none',
+                            bottom: 0,
+                            left: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+                        },
+                    }}
                 />
             )),
         [availableFilters]
     );
 
-    const activeFilterChips = useMemo(
+    const hasActiveFilters = useMemo(
         () =>
-            Object.entries(filterValues).reduce<
-                { category: string; value: string }[]
-            >((acc, [category, values]) => {
-                if (category === 'q' || !Array.isArray(values)) return acc;
-                values.forEach(value => acc.push({ category, value }));
-                return acc;
-            }, []),
+            Object.entries(filterValues).some(([key, value]) => {
+                if (key === 'q') return !!String(value || '').trim();
+                return Array.isArray(value) ? value.length > 0 : !!value;
+            }),
         [filterValues]
     );
 
+    const showNoFilteredResults = hasActiveFilters && (total || 0) === 0;
+
     return (
-        <Box sx={{ width: '100%', mb: 1 }}>
+        <Box>
             <Box sx={{ mb: 1 }}>
                 <FilterForm filters={searchFilters} />
             </Box>
-            <Box sx={{ mt: 1 }}>
+            <Box>
                 <FilterForm filters={filterInputs} />
             </Box>
-            {activeFilterChips.length > 0 && (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 1.5,
-                        mt: 3,
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ fontWeight: 500, mr: 0.5 }}
-                    >
-                        {translate('pages.hub.active_filters', {
-                            _: 'Active Filters:',
-                        })}
-                    </Typography>
 
-                    {activeFilterChips.map(({ category, value }) => (
-                        <Chip
-                            key={`${category}-${value}`}
-                            size="small"
-                            onDelete={() => handleRemoveFilter(category, value)}
-                            label={
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.5,
-                                    }}
-                                >
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            fontWeight: 'bold',
-                                            textTransform: 'capitalize',
-                                        }}
-                                    >
-                                        {category}:
-                                    </Typography>
-                                    <Typography variant="caption">
-                                        {value}
-                                    </Typography>
-                                </Box>
-                            }
-                            sx={{
-                                bgcolor: 'action.hover',
-                                border: `1px solid ${theme.palette.divider}`,
-                                borderRadius: 1,
-                                height: 26,
-                                '& .MuiChip-deleteIcon': {
-                                    color: 'text.secondary',
-                                    '&:hover': { color: 'error.main' },
-                                },
-                            }}
-                        />
-                    ))}
-
-                    <Button
-                        size="small"
-                        onClick={handleClearAll}
-                        sx={{
-                            textTransform: 'none',
-                            ml: 1,
-                            minWidth: 'auto',
-                            color: 'text.secondary',
-                            '&:hover': {
-                                color: 'error.main',
-                                bgcolor: 'transparent',
-                            },
-                        }}
-                    >
-                        {translate('pages.hub.clear_all', { _: 'Clear all' })}
-                    </Button>
+            {showNoFilteredResults && (
+                <Box>
+                    <ListNoResults resource="functions" />
                 </Box>
             )}
         </Box>

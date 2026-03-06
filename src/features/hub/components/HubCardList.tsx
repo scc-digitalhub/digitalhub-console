@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
-//
+
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    useTranslate,
     useRecordContext,
     ListView,
     TextField,
+    RecordContextProvider,
     FunctionField,
+    SimpleShowLayout,
 } from 'react-admin';
 import {
     Box,
@@ -15,36 +16,193 @@ import {
     CardActionArea,
     Chip,
     Typography,
-    useTheme,
 } from '@mui/material';
 import { GridList } from '../../../common/components/layout/GridList';
 import { StyledTemplate } from '../../../common/components/layout/StyledTemplate';
 
 interface HubCardProps {
     onSelectTemplate?: (template: any) => void;
-    selected?: boolean;
+    selectedTemplate?: any | null;
 }
 
-const HubCard = ({ onSelectTemplate, selected = false }: HubCardProps) => {
-    const theme = useTheme();
-    const record = useRecordContext();
+const LabelChips = ({ labels }: { labels: string[] }) => (
+    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+        {labels.map(label => (
+            <Chip
+                key={label}
+                label={label.split(':')[1]}
+                size="small"
+                sx={{
+                    bgcolor: 'action.selected',
+                    color: 'text.primary',
+                    border: 'none',
+                    height: 24,
+                    fontSize: '0.75rem',
+                }}
+            />
+        ))}
+    </Box>
+);
 
+export const HubTemplateSummary = ({
+    template,
+    variant = 'card',
+}: {
+    template: any;
+    variant?: 'card' | 'header';
+}) => {
+    if (!template) return null;
+
+    const displayName = template.metadata?.name || template.name;
+    const labels = template.metadata?.labels || [];
+    const version = template.metadata?.version;
+
+    if (variant === 'header') {
+        return (
+            <Box sx={{ width: '100%', minWidth: 0 }}>
+                <Typography
+                    variant="h4"
+                    sx={{
+                        mb: 3,
+                        color: 'primary.main',
+                        fontWeight: 'bold',
+                        overflowWrap: 'anywhere',
+                        fontSize: '1.5rem',
+                    }}
+                >
+                    {displayName}
+                </Typography>
+
+                <Box
+                    sx={{
+                        bgcolor: 'action.hover',
+                        borderRadius: 2,
+                        p: 1,
+                        width: '100%',
+                    }}
+                >
+                    <SimpleShowLayout
+                        record={template}
+                        sx={{
+                            p: 0,
+                            '& .RaLabeled-label': {
+                                color: 'text.primary',
+                                fontWeight: 'bold',
+                                fontSize: '1.25em',
+                                mb: 0.5,
+                            },
+                            '& .RaLabeled-value': {
+                                color: 'text.secondary',
+                                overflowWrap: 'anywhere',
+                            },
+                            '& .RaSimpleShowLayout-row': { mb: 2, mt: 0 },
+                        }}
+                    >
+                        <FunctionField
+                            label="Name"
+                            render={() => displayName}
+                        />
+                        <TextField
+                            source="metadata.description"
+                            label="Description"
+                            emptyText="-"
+                        />
+                        <TextField
+                            source="metadata.version"
+                            label="Version"
+                            emptyText="-"
+                        />
+                        {labels.length > 0 && (
+                            <FunctionField
+                                label="Labels"
+                                render={() => <LabelChips labels={labels} />}
+                            />
+                        )}
+                    </SimpleShowLayout>
+                </Box>
+            </Box>
+        );
+    }
+
+    return (
+        <RecordContextProvider value={template}>
+            <Box sx={{ width: '100%', minWidth: 0 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 1,
+                        mb: 0.5,
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            color: 'primary.main',
+                            fontWeight: 'bold',
+                            lineHeight: 1.2,
+                            overflowWrap: 'anywhere',
+                        }}
+                    >
+                        {displayName}
+                    </Typography>
+                    {version && (
+                        <Typography variant="caption" color="text.secondary">
+                            v{version}
+                        </Typography>
+                    )}
+                </Box>
+
+                <TextField
+                    source="name"
+                    sx={{
+                        display: 'block',
+                        color: 'text.secondary',
+                        mb: 1.5,
+                        fontSize: '0.875rem',
+                        overflowWrap: 'anywhere',
+                    }}
+                />
+
+                {labels.length > 0 && <LabelChips labels={labels} />}
+
+                <TextField
+                    source="metadata.description"
+                    sx={{
+                        display: 'block',
+                        color: 'text.primary',
+                        lineHeight: 1.4,
+                        fontSize: '0.875rem',
+                        overflowWrap: 'anywhere',
+                    }}
+                />
+            </Box>
+        </RecordContextProvider>
+    );
+};
+
+const HubCard = ({ onSelectTemplate, selectedTemplate }: HubCardProps) => {
+    const record = useRecordContext();
     if (!record) return null;
+
+    const isSelected =
+        selectedTemplate?.name === record.name &&
+        selectedTemplate?.metadata?.version === record.metadata?.version;
 
     return (
         <StyledTemplate
-            className={selected ? 'selected' : ''}
+            className={isSelected ? 'selected' : ''}
             elevation={0}
             sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: 1,
-                border: `1px solid ${theme.palette.divider}`,
+                border: '1px solid',
+                borderColor: 'divider',
             }}
         >
             <CardActionArea
-                onClick={() => onSelectTemplate && onSelectTemplate(record)}
+                onClick={() => onSelectTemplate?.(record)}
                 sx={{
                     height: '100%',
                     display: 'flex',
@@ -54,118 +212,21 @@ const HubCard = ({ onSelectTemplate, selected = false }: HubCardProps) => {
                 }}
             >
                 <CardContent sx={{ p: 2, width: '100%' }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                        }}
-                    >
-                        <TextField
-                            source="metadata.name"
-                            sx={{
-                                color: 'text.primary',
-                                fontSize: '1.25rem',
-                                lineHeight: 1.2,
-                            }}
-                        />
-                        <FunctionField
-                            render={(rec: any) =>
-                                rec?.metadata?.version ? (
-                                    <Typography
-                                        variant="caption"
-                                        color="text.secondary"
-                                    >
-                                        v{rec.metadata.version}
-                                    </Typography>
-                                ) : null
-                            }
-                        />
-                    </Box>
-                    <TextField
-                        source="name"
-                        sx={{
-                            display: 'block',
-                            color: 'text.secondary',
-                            mb: 1.5,
-                            fontSize: '0.875rem',
-                        }}
-                    />
-
-                    <FunctionField
-                        render={(rec: any) => (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    flexWrap: 'wrap',
-                                    mb: 2,
-                                }}
-                            >
-                                {rec?.metadata?.labels?.map(
-                                    (label: string, idx: number) => (
-                                        <Chip
-                                            key={idx}
-                                            label={label.split(':')[1] || label}
-                                            size="small"
-                                            sx={{
-                                                bgcolor: 'action.selected',
-                                                color: 'text.primary',
-                                                border: 'none',
-                                                height: 24,
-                                                fontSize: '0.75rem',
-                                            }}
-                                        />
-                                    )
-                                )}
-                            </Box>
-                        )}
-                    />
-
-                    <TextField
-                        source="metadata.description"
-                        sx={{
-                            display: 'block',
-                            color: 'text.primary',
-                            lineHeight: 1.4,
-                            fontSize: '0.875rem',
-                        }}
-                    />
+                    <HubTemplateSummary template={record} />
                 </CardContent>
             </CardActionArea>
         </StyledTemplate>
     );
 };
 
-interface HubCardListProps {
-    onSelectTemplate?: (template: any) => void;
-}
-
-export const HubCardList = ({ onSelectTemplate }: HubCardListProps) => {
-    return (
-        <ListView actions={false} pagination={false} component={Box}>
-            <HubCardListContent onSelectTemplate={onSelectTemplate} />
-        </ListView>
-    );
-};
-
-const HubCardListContent = ({ onSelectTemplate }: HubCardListProps) => {
-    const translate = useTranslate();
-    return (
+export const HubCardList = (props: HubCardProps) => (
+    <ListView actions={false} pagination={false} component={Box}>
         <GridList
             spacing={2}
             component={<Box sx={{ width: '100%' }} />}
-            empty={
-                <Typography variant="body1" color="text.secondary" mt={4}>
-                    {translate('pages.hub.empty', {
-                        _: 'No templates match your current filters.',
-                    })}
-                </Typography>
-            }
             linkType={false}
         >
-            <HubCard onSelectTemplate={onSelectTemplate} />
+            <HubCard {...props} />
         </GridList>
-    );
-};
+    </ListView>
+);
