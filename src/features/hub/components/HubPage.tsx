@@ -25,6 +25,7 @@ export const HubPage = () => {
     };
 
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
+    const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
 
     const fullItems = catalogData.catalog.functions;
 
@@ -57,7 +58,6 @@ export const HubPage = () => {
         });
     }, [filterValues, fullItems]);
 
-    // @ts-ignore - Data structure doesn't have id field from catalog
     const listContext = useList({ data: filteredItems });
 
     const availableFilters = useMemo(
@@ -65,11 +65,26 @@ export const HubPage = () => {
         [fullItems]
     );
 
+    const activeTemplate = useMemo(() => {
+        if (!selectedTemplate) return null;
+
+        return (
+            filteredItems.find(
+                item =>
+                    item.name === selectedTemplate.name &&
+                    item.metadata?.version ===
+                        selectedTemplate.metadata?.version
+            ) || null
+        );
+    }, [filteredItems, selectedTemplate]);
+
     const customContext = {
         ...listContext,
         filterValues,
         setFilters: (filters: any) => setFilterValues(filters),
         availableFilters,
+        selectedTemplate: activeTemplate,
+        setSelectedTemplate,
     } as any;
 
     return (
