@@ -1058,5 +1058,39 @@
     "workflow": {
         "description": "Riferimento statico al workflow",
         "title": "Workflow"
-    }
+    },
+    "openinference": {
+        "inputs": {
+            "description": "Definizione dei input tensor del protocollo Open Inference v2",
+            "item": {
+                "description": "",
+                "title": "Input"
+            },
+            "title": "Input Tensor"
+        },
+        "outputs": {
+            "description": "Definizione dei output tensor del protocollo Open Inference v2",
+            "item": {
+                "description": "",
+                "title": "Output"
+            },
+            "title": "Output Tensor"
+        },
+        "modelname": {
+            "description": "",
+            "title": "Nome del modello esposto"
+        }
+    },
+    "datatype": {
+        "description": "",
+        "title": "Tipo di Dato"
+    },
+    "shape": {
+        "description": "",
+        "title": "Forma del Tensor",
+        "item": {
+            "description": "",
+            "title": "Elemento della Forma del Tensor"
+        }
+    }   
 }
