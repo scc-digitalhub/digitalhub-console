@@ -42,7 +42,12 @@
         "remote_files_unsupported": "I file remoti non sono supportati",
         "single_zip_file_supported": "I file zip devono essere caricati singolarmente",
         "single_file_allowed": "È possibile caricare solo un singolo file o cartella",
-        "upload_error": "Errore durante l'upload del file %{fileName}. %{error}",
+        "upload_start_error": "Si è verificato un errore e non è possibile fare l'upload",
+        "create_multipart_error": "Impossibile fare l'upload multipart, uploadId non è presente nel file object",
+        "sign_part_error": "Impossibile richiedere il signed URL per la parte %{partNumber} del file %{fileName}, manca %{missingField}",
+        "upload_part_error": "Errore durante la richiesta del signed URL per la parte %{partNumber} del file %{fileName}. Il server ha risposto: %{message}",
+        "complete_multipart_error": "Impossibile completare l'upload multipart del file %{fileName}, manca %{missingField}",
+        "complete_multipart_server_error": "Errore durante il completamento dell'upload multipart del file %{fileName}. Il server ha risposto: %{message}",
         "header": "Upload",
         "subheader_no_results": "Nessun upload trovato",
         "subheader": {
