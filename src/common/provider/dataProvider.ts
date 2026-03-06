@@ -54,7 +54,7 @@ const springDataProvider = (
             if (body) {
                 opts.body = body;
             }
-            return httpClient(url, opts).then(({ headers, json }) => {
+            return httpClient(url, opts).then(({ json }) => {
                 return json;
             });
         },
@@ -361,39 +361,18 @@ const springDataProvider = (
                 };
             });
         },
-        //Lineage for Entities
         getLineage: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/relationships`;
-            return httpClient(url).then(({ status, body }) => {
+            return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
                 return {
-                    lineage: jsonBody,
-                };
-            });
-        },
-        //Lineage for whole project
-        getProjectLineage: (resource, params) => {
-            const url = `${apiUrl}/${resource}/${params.id}/relationships`;
-            return httpClient(url).then(({ status, body }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
-                return {
-                    lineage: jsonBody,
+                    lineage: json,
                 };
             });
         },
@@ -403,17 +382,52 @@ const springDataProvider = (
                 prefix = '/-/' + params.meta.root;
             }
             const url = `${apiUrl}${prefix}/${resource}/${params.id}/metrics`;
-            return httpClient(url).then(({ status, body }) => {
+            return httpClient(url).then(({ status, json }) => {
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
-                if (!body) {
-                    throw new Error('Resource not found');
-                }
-                const jsonBody = JSON.parse(body);
                 return {
-                    metrics: jsonBody,
+                    metrics: json,
                 };
+            });
+        },
+        getShareList: (resource, params) => {
+            const url = `${apiUrl}/${resource}/${params.id}/share`;
+            return httpClient(url).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return json;
+            });
+        },
+        createShare: (resource, params) => {
+            let query = '';
+            if (params.meta?.user) {
+                query = `?user=${params.meta.user}`;
+            }
+            const url = `${apiUrl}/${resource}/${params.id}/share${query}`;
+            return httpClient(url, {
+                method: 'POST',
+            }).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return json;
+            });
+        },
+        deleteShare: (resource, params) => {
+            let query = '';
+            if (params.meta?.id) {
+                query = `?id=${params.meta.id}`;
+            }
+            const url = `${apiUrl}/${resource}/${params.id}/share${query}`;
+            return httpClient(url, {
+                method: 'DELETE',
+            }).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return json;
             });
         },
     };
