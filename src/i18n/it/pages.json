@@ -118,6 +118,14 @@
         "title": "Esplora file",
         "helperText": "Esplora e gestisci i file del progetto"
     },
+    "hub": {
+        "title": "Crea una nuova funzione da un modello",
+        "subtitle": "Esplora le funzioni disponibili",
+        "search": {
+            "title": "Nome o Descrizione",
+            "helperText": "Esplora e riutilizza le funzioni dall'hub"
+        }
+    },
     "services": {
         "title": "Servizi",
         "helperText": "Esplora e visualizza i servizi in esecuzione"
