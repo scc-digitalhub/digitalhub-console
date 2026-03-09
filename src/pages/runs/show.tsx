@@ -229,7 +229,7 @@ export const RunShowComponent = () => {
                 />
             </TabbedShowLayout.Tab>
             {(record?.spec?.source || record?.spec?.fab_source) &&
-                schema?.schema && (
+                schema?.schema && !(record?.status?.dockerfile) && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
                         <SourceCodeView
                             sourceCode={record.spec.source}
@@ -240,6 +240,18 @@ export const RunShowComponent = () => {
                         />
                     </TabbedShowLayout.Tab>
                 )}
+            {record?.status?.dockerfile && (
+                <TabbedShowLayout.Tab label={'fields.code'}>
+                    <AceEditorField
+                        source="status.dockerfile"
+                        mode="text" 
+                        theme='monokai'
+                        parse={atob}
+                        minLines={10}
+                        maxLines={50}
+                    />
+                </TabbedShowLayout.Tab>
+            )}
             {(record?.spec?.inputs || record?.spec?.parameters) && (
                 <TabbedShowLayout.Tab label={'fields.inputs.title'}>
                     <Inputs record={record} />
