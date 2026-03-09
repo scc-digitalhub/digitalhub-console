@@ -183,6 +183,9 @@ const fileProvider = (
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
+                if (!json.uploadId) {
+                    throw new Error('Invalid response, uploadId is missing');
+                }
                 return json;
             });
         },
@@ -213,6 +216,12 @@ const fileProvider = (
                     uploadId: resourceUploadParams.uploadId,
                     partNumber: resourceUploadParams.partNumber,
                 };
+            }
+
+            if (!Object.keys(query).includes('uploadId')) {
+                throw new Error(
+                    'Invalid request parameters, uploadId is missing'
+                );
             }
 
             return httpClient(`${url}?${stringify(query)}`, {
