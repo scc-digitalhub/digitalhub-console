@@ -66,6 +66,7 @@
         "@react-spring/web": "^10.0.1",
         "@stomp/stompjs": "^7.0.0",
         "@tailwindcss/vite": "^4.1.17",
+        "@uiw/react-markdown-preview": "^5.1.5",
         "@uppy/react": "^4.2.3",
         "@wtfcode/byte-converter": "^2.0.8",
         "@xyflow/react": "^12.3.1",
