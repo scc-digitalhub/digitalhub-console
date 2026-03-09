@@ -88,7 +88,7 @@ export const HubTemplateSummary = ({
                             '& .RaLabeled-label': {
                                 color: 'text.primary',
                                 fontWeight: 'bold',
-                                fontSize: '1.25em',
+                                fontSize: '1.25rem',
                                 mb: 0.5,
                             },
                             '& .RaLabeled-value': {

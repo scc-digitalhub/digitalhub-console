@@ -7,27 +7,26 @@ import { ListContextProvider, useList } from 'react-admin';
 import { HubLayout } from './HubLayout';
 import catalogData from '../../../../data.json';
 
-export const HubPage = () => {
-    const extractFilters = (items: any[]) => {
-        const filters: Record<string, Set<string>> = {};
-        items.forEach(item => {
-            item.metadata?.labels?.forEach((label: string) => {
-                const [category, value] = label.split(':');
-                if (category && value)
-                    (filters[category] ??= new Set()).add(value);
-            });
-        });
-        return Object.fromEntries(
-            Object.entries(filters)
-                .sort()
-                .map(([k, v]) => [k, Array.from(v).sort()])
-        );
-    };
+const fullItems = catalogData.catalog.functions;
 
+const extractFilters = (items: any[]) => {
+    const filters: Record<string, Set<string>> = {};
+    items.forEach(item => {
+        item.metadata?.labels?.forEach((label: string) => {
+            const [category, value] = label.split(':');
+            if (category && value) (filters[category] ??= new Set()).add(value);
+        });
+    });
+    return Object.fromEntries(
+        Object.entries(filters)
+            .sort()
+            .map(([k, v]) => [k, Array.from(v).sort()])
+    );
+};
+
+export const HubPage = () => {
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
     const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
-
-    const fullItems = catalogData.catalog.functions;
 
     const filteredItems = useMemo(() => {
         return fullItems.filter(item => {
@@ -56,14 +55,11 @@ export const HubPage = () => {
                 )
             );
         });
-    }, [filterValues, fullItems]);
+    }, [filterValues]);
 
     const listContext = useList({ data: filteredItems });
 
-    const availableFilters = useMemo(
-        () => extractFilters(fullItems),
-        [fullItems]
-    );
+    const availableFilters = useMemo(() => extractFilters(fullItems), []);
 
     const activeTemplate = useMemo(() => {
         if (!selectedTemplate) return null;
