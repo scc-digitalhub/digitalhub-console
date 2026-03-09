@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
     Button as RaButton,
-    LoadingIndicator,
+    Error as RaError,
     useListContext,
     useTranslate,
 } from 'react-admin';
@@ -17,17 +17,18 @@ import {
     ArrowBack as ArrowBackIcon,
     Download as DownloadIcon,
 } from '@mui/icons-material';
-import Markdown from 'react-markdown';
-
+import MarkdownPreview from '@uiw/react-markdown-preview';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { HubFilterBar } from './HubFilterBar';
 import { HubCardList, HubTemplateSummary } from './HubCardList';
-import { MarkdownContainer, toRepositoryAssetUrl } from '../utils';
+import { toRepositoryAssetUrl } from '../utils';
+import { Spinner } from '../../../common/components/layout/Spinner';
 
 const HubTemplateDetail = ({ template }: { template: any }) => {
     const [readme, setReadme] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
     const readmeUrl = useMemo(
         () => toRepositoryAssetUrl(template?.metadata?.repository, 'README.md'),
@@ -35,16 +36,38 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
     );
 
     useEffect(() => {
-        if (!readmeUrl) return setReadme('');
+        if (!readmeUrl) {
+            setReadme('');
+            setLoading(false);
+            setError(null);
+            return;
+        }
 
         const controller = new AbortController();
         setLoading(true);
+        setError(null);
 
         fetch(readmeUrl, { signal: controller.signal })
-            .then(res => (res.ok ? res.text() : Promise.reject('Not Found')))
-            .then(setReadme)
-            .catch(() => setReadme(''))
-            .finally(() => setLoading(false));
+            .then(res =>
+                res.ok ? res.text() : Promise.reject(new Error('Not Found'))
+            )
+            .then(text => {
+                if (!controller.signal.aborted) {
+                    setReadme(text);
+                    setLoading(false);
+                }
+            })
+            .catch(err => {
+                if (err.name !== 'AbortError' && !controller.signal.aborted) {
+                    setReadme('');
+                    setLoading(false);
+                    setError(
+                        err instanceof Error
+                            ? err
+                            : new Error('README fetch failed')
+                    );
+                }
+            });
 
         return () => controller.abort();
     }, [readmeUrl]);
@@ -63,11 +86,29 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
             <HubTemplateSummary template={template} variant="header" />
             <Divider />
             {loading ? (
-                <LoadingIndicator />
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                    <Spinner />
+                </Box>
+            ) : error ? (
+                <RaError
+                    error={error}
+                    resetErrorBoundary={() => setError(null)}
+                />
             ) : (
-                <MarkdownContainer>
-                    <Markdown>{readme}</Markdown>
-                </MarkdownContainer>
+                <Box
+                    sx={{
+                        '& .wmde-markdown': {
+                            '& pre, & code': {
+                                whiteSpace: 'pre-wrap !important',
+                            },
+                            '& .copied': {
+                                visibility: 'visible !important',
+                            },
+                        },
+                    }}
+                >
+                    <MarkdownPreview source={readme} />
+                </Box>
             )}
         </Box>
     );
