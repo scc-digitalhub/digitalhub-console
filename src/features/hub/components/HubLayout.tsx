@@ -76,8 +76,12 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
 export const HubLayout = () => {
     const translate = useTranslate();
 
-    const { availableFilters, selectedTemplate, setSelectedTemplate } =
+    const { availableFilters, hubInfo, selectedTemplate, setSelectedTemplate } =
         useListContext() as any;
+
+    const pageTitle = hubInfo?.name || translate('pages.hub.title');
+    const pageSubtitle =
+        hubInfo?.description || translate('pages.hub.subtitle');
 
     const handleNotebookDownload = async () => {
         const url = toRepositoryAssetUrl(
@@ -104,8 +108,8 @@ export const HubLayout = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2, overflowX: 'hidden' }}>
             <PageTitle
-                text={translate('pages.hub.title')}
-                secondaryText={translate('pages.hub.subtitle')}
+                text={pageTitle}
+                secondaryText={pageSubtitle}
                 icon={<DataObject fontSize="large" />}
             />
 
