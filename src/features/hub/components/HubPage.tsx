@@ -83,6 +83,10 @@ export const HubPage = () => {
         filterValues,
         setFilters: (filters: any) => setFilterValues(filters),
         availableFilters,
+        hubInfo: {
+            name: catalogData.name,
+            description: catalogData.description,
+        },
         selectedTemplate: activeTemplate,
         setSelectedTemplate,
     } as any;
