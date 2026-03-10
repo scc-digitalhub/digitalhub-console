@@ -19,6 +19,7 @@ import initHttpClientProvider from './common/provider/httpClientProvider';
 import initSearchProvider from './common/provider/searchProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
+import { FunctionHubImport } from './features/hub/components/HubImport';
 import {
     OidcAuthProvider,
     BasicAuthProvider,
@@ -234,6 +235,12 @@ const CoreApp = () => {
                                                 <Route
                                                     path="/functions/hub"
                                                     element={<HubPage />}
+                                                />
+                                                <Route
+                                                    path="/functions/hubimport"
+                                                    element={
+                                                        <FunctionHubImport />
+                                                    }
                                                 />
                                                 {enableSearch && (
                                                     <Route

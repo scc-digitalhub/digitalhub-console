@@ -1,0 +1,759 @@
+{
+    "catalog": {
+        "datasets": [],
+        "functions": [
+            {
+                "kind": "sklearnserve",
+                "metadata": {
+                    "name": "Example Cancer classifier Serve (Sklearn Serve)",
+                    "version": "1.0.0",
+                    "description": "Cancer Classifier Sklearn Serve With MLFlow. The model is deployed as a service to assist with automated annotation and classification of official documents. It exposes an API using the \"serve\" task.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:model-serving",
+                        "framework:sklearn",
+                        "inference:custom"
+                    ],
+                    "path": "functions/cancer-classifier-serve-mlflow-example",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/cancer-classifier-serve-mlflow-example",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/cancer-classifier-serve-mlflow-example:1.0.0"
+                        }
+                    ]
+                },
+                "name": "cancer-classifier-serve-mlflow-example",
+                "python_version": "PYTHON3_10"
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example Cancer Classifier Training With MLFLow (Python Job)",
+                    "version": "1.0.0",
+                    "description": "Train a cancer classifier ML model using MLFlow framework to structure and represent the model data. The trained model then can be deployed with the MLFlowServe framework or used for batch classifications loading it using the MLFlow framework.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:model-training",
+                        "framework:sklearn",
+                        "application:healthcare"
+                    ],
+                    "path": "functions/cancer-classifier-train-mlflow-example",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/cancer-classifier-train-mlflow-example",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/cancer-classifier-train-mlflow-example:1.0.0"
+                        }
+                    ]
+                },
+                "name": "cancer-classifier-train-mlflow-example",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "requirements": [
+                        "scikit-learn==1.2.2",
+                        "numpy<2"
+                    ],
+                    "source": {
+                        "handler": "train",
+                        "base64": "ZnJvbSBkaWdpdGFsaHViX3J1bnRpbWVfcHl0aG9uIGltcG9ydCBoYW5kbGVyCgpmcm9tIGRpZ2l0YWxodWIgaW1wb3J0IGZyb21fbWxmbG93X3J1bgppbXBvcnQgbWxmbG93Cgpmcm9tIHNrbGVhcm4gaW1wb3J0IGRhdGFzZXRzLCBzdm0KZnJvbSBza2xlYXJuLm1vZGVsX3NlbGVjdGlvbiBpbXBvcnQgR3JpZFNlYXJjaENWCgpAaGFuZGxlcigpCmRlZiB0cmFpbihwcm9qZWN0KToKICAgIG1sZmxvdy5za2xlYXJuLmF1dG9sb2cobG9nX2RhdGFzZXRzPVRydWUpCgogICAgaXJpcyA9IGRhdGFzZXRzLmxvYWRfaXJpcygpCiAgICBwYXJhbWV0ZXJzID0geyJrZXJuZWwiOiAoImxpbmVhciIsICJyYmYiKSwgIkMiOiBbMSwgMTBdfQogICAgc3ZjID0gc3ZtLlNWQygpCiAgICBjbGYgPSBHcmlkU2VhcmNoQ1Yoc3ZjLCBwYXJhbWV0ZXJzKQoKICAgIGNsZi5maXQoaXJpcy5kYXRhLCBpcmlzLnRhcmdldCkKICAgIHJ1bl9pZCA9IG1sZmxvdy5sYXN0X2FjdGl2ZV9ydW4oKS5pbmZvLnJ1bl9pZAoKICAgICMgdXRpbGl0eSB0byBtYXAgbWxmbG93IHJ1biBhcnRpZmFjdHMgdG8gbW9kZWwgbWV0YWRhdGEKICAgIG1vZGVsX3BhcmFtcyA9IGZyb21fbWxmbG93X3J1bihydW5faWQpCgogICAgcHJvamVjdC5sb2dfbW9kZWwoCiAgICAgICAgbmFtZT0ibW9kZWwtbWxmbG93IiwKICAgICAgICBraW5kPSJtbGZsb3ciLAogICAgICAgICoqbW9kZWxfcGFyYW1zCik=",
+                        "lang": "python"
+                    }
+                }
+            },
+            {
+                "kind": "python+serve",
+                "metadata": {
+                    "name": "Document Classifier Serve With Bert Model (Python Serve)",
+                    "version": "1.0.0",
+                    "description": "Document Classifier Serve With Bert Model. The model is deployed as a service to assist with automated annotation and classification of official documents. It exposes an API using the \"serve\" task.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:model-serving",
+                        "inference:custom",
+                        "application:pa"
+                    ],
+                    "path": "functions/document-classifier-serve-example",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/document-classifier-serve-example",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/document-classifier-serve-example:1.0.0"
+                        }
+                    ]
+                },
+                "name": "document-classifier-serve",
+                "requirements": [
+                    "numpy==2.1.3",
+                    "pandas==2.2.3",
+                    "torchmetrics==1.6.0",
+                    "transformer_engine==1.12.0",
+                    "transformer_engine_cu12==1.12.0",
+                    "transformers==4.46.3",
+                    "torch==2.5.1",
+                    "torchmetrics==1.6.0"
+                ],
+                "python_version": "PYTHON3_10",
+                "source": {
+                    "handler": "serve",
+                    "base64": "CmZyb20gdHJhbnNmb3JtZXJzIGltcG9ydCBBdXRvVG9rZW5pemVyLCBBdXRvQ29uZmlnLCBBdXRvTW9kZWxGb3JTZXF1ZW5jZUNsYXNzaWZpY2F0aW9uCmltcG9ydCBqc29uCmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IG51bXB5IGFzIG5wCgppbXBvcnQgdG9yY2gKZnJvbSB0b3JjaCBpbXBvcnQgbm4KZnJvbSB0b3JjaC51dGlscy5kYXRhIGltcG9ydCBEYXRhTG9hZGVyCmZyb20gdG9yY2gub3B0aW0gaW1wb3J0IEFkYW1XCmZyb20gdG9yY2htZXRyaWNzLmNsYXNzaWZpY2F0aW9uIGltcG9ydCBNdWx0aWNsYXNzRjFTY29yZSwgQWNjdXJhY3kKCmZyb20gdHJhbnNmb3JtZXJzIGltcG9ydCBBdXRvTW9kZWxGb3JTZXF1ZW5jZUNsYXNzaWZpY2F0aW9uLCBBdXRvTW9kZWwKZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IFByZVRyYWluZWRNb2RlbApmcm9tIHRyYW5zZm9ybWVycy5tb2RlbGluZ19vdXRwdXRzIGltcG9ydCBTZXF1ZW5jZUNsYXNzaWZpZXJPdXRwdXQKCmNsYXNzIEJlcnRGb3JTZW50ZW5jZUNsYXNzaWZpY2F0aW9uKFByZVRyYWluZWRNb2RlbCk6CgogICAgIiIiCiAgICBCRVJUIGFyY2hpdGVjdHVyZSBpcyBpbnRlbmRlZCB0byBiZSBmcm9tICJkYm1kei9iZXJ0LWJhc2UtaXRhbGlhbi14eGwtY2FzZWQiCiAgICBidXQgb3RoZXIgbW9kZWxzIGNhbiBiZSB0cmllZC4KICAgICIiIgoKCiAgICBkZWYgX19pbml0X18oc2VsZiwgY29uZmlnLCBtb2RlbF9uYW1lLCBudW1fbGFiZWxzLCBjbGFzc193ZWlnaHRzPU5vbmUpOgogICAgICAgIHN1cGVyKCkuX19pbml0X18oY29uZmlnKQogICAgICAgIHNlbGYubnVtX2xhYmVscyA9IG51bV9sYWJlbHMKICAgICAgICBzZWxmLmJlcnQgPSBBdXRvTW9kZWwuZnJvbV9wcmV0cmFpbmVkKG1vZGVsX25hbWUpCiAgICAgICAgc2VsZi5jbGFzc2lmaWVyID0gbm4uTGluZWFyKHNlbGYuYmVydC5jb25maWcuaGlkZGVuX3NpemUsIG51bV9sYWJlbHMpCiAgICAgICAgc2VsZi5jbGFzc193ZWlnaHRzID0gY2xhc3Nfd2VpZ2h0cwogICAgICAgIHNlbGYuYWNjdXJhY3kgPSBBY2N1cmFjeShudW1fY2xhc3Nlcz1udW1fbGFiZWxzLCB0YXNrPSdtdWx0aWNsYXNzJykKICAgICAgICBzZWxmLmYxID0gTXVsdGljbGFzc0YxU2NvcmUobnVtX2NsYXNzZXM9bnVtX2xhYmVscywgYXZlcmFnZT0nbWljcm8nKSAjIGNoYW5nZWQgd2VpZ2h0CgogICAgZGVmIGZvcndhcmQoc2VsZiwgaW5wdXRfaWRzLCBhdHRlbnRpb25fbWFzaz1Ob25lLCBsYWJlbHM9Tm9uZSk6CiAgICAgICAgb3V0cHV0cyA9IHNlbGYuYmVydChpbnB1dF9pZHM9aW5wdXRfaWRzLCBhdHRlbnRpb25fbWFzaz1hdHRlbnRpb25fbWFzaykKICAgICAgICBsb2dpdHMgPSBzZWxmLmNsYXNzaWZpZXIob3V0cHV0cy5sYXN0X2hpZGRlbl9zdGF0ZVs6LCAwLCA6XSkKCiAgICAgICAgbG9zcyA9IE5vbmUKICAgICAgICBpZiBsYWJlbHMgaXMgbm90IE5vbmU6CgogICAgICAgICAgICBsb3NzX2ZjdCA9IG5uLkNyb3NzRW50cm9weUxvc3MobGFiZWxfc21vb3RoaW5nPTAuMSkgIyx3ZWlnaHQ9c2VsZi5jbGFzc193ZWlnaHRzCiAgICAgICAgICAgIGxvc3MgPSBsb3NzX2ZjdChsb2dpdHMsIGxhYmVscykKCiAgICAgICAgICAgIGYxX3Njb3JlID0gc2VsZi5mMShsb2dpdHMuYXJnbWF4KGRpbT0xKSwgbGFiZWxzKQogICAgICAgICAgICBhY2N1cmFjeV9zY29yZSA9IHNlbGYuYWNjdXJhY3kobG9naXRzLmFyZ21heChkaW09MSksIGxhYmVscykKCiAgICAgICAgcmV0dXJuIFNlcXVlbmNlQ2xhc3NpZmllck91dHB1dChsb3NzPWxvc3MsIGxvZ2l0cz1sb2dpdHMpCgpkZWYgaW5pdChjb250ZXh0KToKICAgIG1vZGVsX25hbWUgPSAiZG9jdW1lbnQtY2xhc3NpZmllciIKICAgCiAgICBtb2RlbCA9IGNvbnRleHQucHJvamVjdC5nZXRfbW9kZWwobW9kZWxfbmFtZSkKICAgIGxvY2FsX3BhdGhfbW9kZWwgPSBtb2RlbC5kb3dubG9hZChvdmVyd3JpdGU9VHJ1ZSkKCiAgICB0b2tlbml6ZXIgPSBBdXRvVG9rZW5pemVyLmZyb21fcHJldHJhaW5lZChsb2NhbF9wYXRoX21vZGVsKQogICAgY29uZmlnID0gQXV0b0NvbmZpZy5mcm9tX3ByZXRyYWluZWQobG9jYWxfcGF0aF9tb2RlbCkKICAgIAogICAgbW0gPSBCZXJ0Rm9yU2VudGVuY2VDbGFzc2lmaWNhdGlvbi5mcm9tX3ByZXRyYWluZWQoCiAgICAgICAgbG9jYWxfcGF0aF9tb2RlbCwKICAgICAgICBjb25maWc9Y29uZmlnLAogICAgICAgIG1vZGVsX25hbWU9ImRibWR6L2JlcnQtYmFzZS1pdGFsaWFuLXh4bC1jYXNlZCIsCiAgICAgICAgbnVtX2xhYmVscz1jb25maWcubnVtX2xhYmVscwogICAgKSAKCiAgICBsYWJlbF9tYXBwaW5nID0gewogICAgICAgIDA6IDAsCiAgICAgICAgMTogMiwKICAgICAgICAyOiA0LAogICAgICAgIDM6IDcsCiAgICAgICAgNDogOCwKICAgICAgICA1OiAxMCwJCiAgICAgICAgNjogMTEsCiAgICAgICAgNzogMTUsCiAgICAgICAgODogMTYsCiAgICAgICAgOTogMTcsCiAgICAgICAgMTA6IDIwLAogICAgICAgIDExOiAyMiwKICAgICAgICAxMjogMjUsCiAgICAgICAgMTM6IDI3LAogICAgICAgIDE0OiAyOCwKICAgICAgICAxNTogMjksCiAgICAgICAgMTY6IDM2LAogICAgICAgIDE3OiAzOSwKICAgICAgICAxODogNDUsCiAgICAgICAgMTk6IDUwLAogICAgICAgIDIwOiA1MSwKICAgICAgICAyMTogNTMsCiAgICAgICAgMjI6IDU0LAogICAgICAgIDIzOiA1NSwKICAgICAgICAyNDogNTYsCiAgICAgICAgMjU6IDU3LAogICAgICAgIDI2OiA2MSwKICAgICAgICAyNzogNjIsCiAgICAgICAgMjg6IDYzLAogICAgICAgIDI5OiA2NCwKICAgICAgICAzMDogNjUsCiAgICAgICAgMzE6IDY3LAogICAgICAgIDMyOiA2OCwKICAgICAgICAzMzogNjksCiAgICAgICAgMzQ6IDcyLAogICAgICAgIDM1OiA3NCwKICAgICAgICAzNjogODEsCiAgICAgICAgMzc6IDg4LAogICAgICAgIDM4OiA4OSwKICAgICAgICAzOTogOTEsCiAgICAgICAgNDA6IDk2LAogICAgICAgIDQxOiAxMDIsCiAgICAgICAgNDI6IDEwNywKICAgICAgICA0MzogMTA4LAogICAgICAgIDQ0OiAxMDksCiAgICAgICAgNDU6IDExMiwKICAgICAgICA0NjogMTEzLAogICAgICAgIDQ3OiAxMTUsCiAgICAgICAgNDg6IDExNiwKICAgICAgICA0OTogMTE5LAogICAgICAgIDUwOiAxMjAsCiAgICAgICAgNTE6IDEyNiwKICAgICAgICA1MjogMTMwLAogICAgICAgIDUzOiAxMzMsCiAgICAgICAgNTQ6IDEzNCwKICAgICAgICA1NTogMTk1CiAgICB9CgogICAgc2V0YXR0cihjb250ZXh0LCAibW9kZWwiLCBtbSkKICAgIHNldGF0dHIoY29udGV4dCwgInRva2VuaXplciIsIHRva2VuaXplcikKICAgIHNldGF0dHIoY29udGV4dCwgImxhYmVsX21hcHBpbmciLCBsYWJlbF9tYXBwaW5nKQoKZGVmIHNlcnZlKGNvbnRleHQsIGV2ZW50KToKCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYiUmVjZWl2ZWQgZXZlbnQ6IHtldmVudH0iKQogICAgCiAgICBpZiBpc2luc3RhbmNlKGV2ZW50LmJvZHksIGJ5dGVzKToKICAgICAgICBib2R5ID0ganNvbi5sb2FkcyhldmVudC5ib2R5KQogICAgZWxzZToKICAgICAgICBib2R5ID0gZXZlbnQuYm9keQogICAgICAgIAogICAgaW5mZXJlbmNlX2lucHV0ID0gYm9keVsiaW5mZXJlbmNlX2lucHV0Il0KICAgIAogICAgcGRmID0gcGQuRGF0YUZyYW1lKGluZmVyZW5jZV9pbnB1dCwgaW5kZXg9WzBdKQogICAgayA9IGludChwZGZbJ2snXSkKICAgIGlucHV0cyA9IGNvbnRleHQudG9rZW5pemVyKHN0cihwZGZbJ3RleHQnXSksIHJldHVybl90ZW5zb3JzPSJwdCIsIHRydW5jYXRpb249VHJ1ZSwgcGFkZGluZz1UcnVlLCByZXR1cm5fdG9rZW5fdHlwZV9pZHM9RmFsc2UpCiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYiayByZWNlaXZlZDoge2t9IikKICAgIAogICAgd2l0aCB0b3JjaC5ub19ncmFkKCk6CiAgICAgICAgbG9naXRzID0gY29udGV4dC5tb2RlbCgqKmlucHV0cykubG9naXRzCiAgICAgICAgc2lnbW9pZCA9IHRvcmNoLm5uLlNpZ21vaWQoKQogICAgICAgIHByb2JzID0gc2lnbW9pZChsb2dpdHMuc3F1ZWV6ZSgpLmNwdSgpKQogICAgICAgIGluZGljZXNfYWJvdmVfdGhyZXNob2xkID0gKHByb2JzID49IDAuNikubm9uemVybyhhc190dXBsZT1UcnVlKVswXQogICAgICAgIHByb2JzX2Fib3ZlX3RocmVzaG9sZCA9IHByb2JzW2luZGljZXNfYWJvdmVfdGhyZXNob2xkXQogICAgICAgIHNvcnRlZF9pbmRpY2VzID0gcHJvYnNfYWJvdmVfdGhyZXNob2xkLmFyZ3NvcnQoZGVzY2VuZGluZz1UcnVlKQogICAgICAgIHRvcF9rX2luZGljZXMgPSBpbmRpY2VzX2Fib3ZlX3RocmVzaG9sZFtzb3J0ZWRfaW5kaWNlc11bOmtdCiAgICAgICAgcmVzdWx0ID0gW2NvbnRleHQubGFiZWxfbWFwcGluZ1tpbnQoaWR4KV0gKyAxIGZvciBpZHggaW4gdG9wX2tfaW5kaWNlc10KICAgICAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYicmVzdWx0OiB7cmVzdWx0fSIpCiAgICAgICAgCiAgICAjIENvbnZlcnQgdGhlIHJlc3VsdCB0byBhIGpzb24gc3RyaW5nLgogICAganNvbnN0ciA9ICd7InJlc3VsdHMiOiAnICsgc3RyKGxpc3QocmVzdWx0KSkgKyAnfScKIAogICAgcmV0dXJuIGpzb24ubG9hZHMoanNvbnN0cikK",
+                    "lang": "python",
+                    "init_function": "init"
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Document Classifier Training With Bert Model (Python Job)",
+                    "version": "1.0.0",
+                    "description": "Document classifier relying on LLM implementations for different languages. This example uses Italian language BERT model (dbmdz/bert-base-italian-xxl-cased) for document classification. Built using HuggingFace transformers library.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:nlp",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:model-training",
+                        "framework:pytorch",
+                        "application:pa"
+                    ],
+                    "path": "functions/document-classifier-train-example",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/document-classifier-train-example",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/document-classifier-train-example:1.0.0"
+                        }
+                    ]
+                },
+                "name": "document-classifier-train",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "requirements": [
+                        "accelerate==1.1.1",
+                        "evaluate",
+                        "datasets==3.1.0",
+                        "torch==2.5.1",
+                        "torch_tensorrt==2.5.0",
+                        "torchmetrics==1.6.0",
+                        "torchtext==0.18.0",
+                        "transformer_engine==1.12.0",
+                        "transformer_engine_cu12==1.12.0",
+                        "transformers==4.46.3",
+                        "pandas==2.2.3",
+                        "numpy==2.1.3",
+                        "numpyencoder==0.3.0",
+                        "scikit-learn==1.5.2",
+                        "scipy==1.14.1",
+                        "GitPython==3.1.43",
+                        "attrs==24.2.0",
+                        "async-timeout==5.0.1",
+                        "aiosignal==1.3.1",
+                        "aiohappyeyeballs==2.4.4",
+                        "aiohttp==3.11.9",
+                        "Unidecode==1.3.8"
+                    ],
+                    "source": {
+                        "handler": "train",
+                        "base64": "CmltcG9ydCBwYW5kYXMgYXMgcGQKaW1wb3J0IG51bXB5IGFzIG5wCmltcG9ydCBqc29uCmltcG9ydCB0b3JjaApmcm9tIG51bXB5ZW5jb2RlciBpbXBvcnQgTnVtcHlFbmNvZGVyCmZyb20gc2tsZWFybi5tb2RlbF9zZWxlY3Rpb24gaW1wb3J0IFN0cmF0aWZpZWRTaHVmZmxlU3BsaXQKZnJvbSBkYXRhc2V0cyBpbXBvcnQgRGF0YXNldCwgRGF0YXNldERpY3QKZnJvbSBvcyBpbXBvcnQgcGF0aCwgbWFrZWRpcnMsIGxpc3RkaXIKCmNsYXNzIERhdGFsb2FkZXI6CiAgICBkZWYgX19pbml0X18oc2VsZiwgZmlsZV9wYXRoLCBmaWxlX3R5cGU9Tm9uZSwgbGFiZWxfY29sdW1uPSdsYWJlbCcsIHRlc3Rfc2l6ZT0wLjIsIHZhbF9zaXplPTAuMjUsIHJhbmRvbV9zdGF0ZT0yNSwgKiprd2FyZ3MpOgogICAgICAgICIiIgogICAgICAgIEluaXRpYWxpemUgdGhlIERhdGFsb2FkZXIgb2JqZWN0IGZvciB0cmFpbmluZyBDdXN0b21CZXJ0Rm9yU2VxdWVuY2VDbGFzc2lmaWNhdGlvbgogICAgICAgIEFyZ3M6CiAgICAgICAgICAgIGZpbGVfcGF0aCAoc3RyKTogUGF0aCB0byB0aGUgcGFycXVldCBmaWxlLgogICAgICAgICAgICBsYWJlbF9jb2x1bW4gKHN0cik6IFRoZSBjb2x1bW4gbmFtZSByZXByZXNlbnRpbmcgbGFiZWxzIGluIHRoZSBkYXRhc2V0LgogICAgICAgICAgICB0ZXN0X3NpemUgKGZsb2F0KTogUHJvcG9ydGlvbiBvZiB0aGUgZGF0YXNldCB0byB1c2UgYXMgdGhlIHRlc3Qgc2V0LgogICAgICAgICAgICB2YWxfc2l6ZSAoZmxvYXQpOiBQcm9wb3J0aW9uIG9mIHRoZSB0cmFpbi92YWxpZGF0aW9uIHNwbGl0IHRvIHVzZSBhcyB0aGUgdmFsaWRhdGlvbiBzZXQuCiAgICAgICAgICAgIHJhbmRvbV9zdGF0ZSAoaW50KTogU2VlZCBmb3IgcmVwcm9kdWNpYmlsaXR5LgogICAgICAgICIiIgogICAgICAgIHNlbGYuZmlsZV9wYXRoID0gZmlsZV9wYXRoCiAgICAgICAgc2VsZi5maWxlX3R5cGUgPSBmaWxlX3BhdGguc3BsaXQoJy4nKVstMV0KICAgICAgICBzZWxmLmxhYmVsX2NvbHVtbiA9IGxhYmVsX2NvbHVtbgogICAgICAgIHNlbGYudGVzdF9zaXplID0gdGVzdF9zaXplCiAgICAgICAgc2VsZi52YWxfc2l6ZSA9IHZhbF9zaXplCiAgICAgICAgc2VsZi5yYW5kb21fc3RhdGUgPSByYW5kb21fc3RhdGUKICAgICAgICBzZWxmLmt3YXJncyA9IGt3YXJncwogICAgICAgIHNlbGYuZGYgPSBOb25lCiAgICAgICAgc2VsZi5kYXRhc2V0ID0gTm9uZQogICAgICAgIHNlbGYubnVtX2xhYmVscyA9IE5vbmUKICAgICAgICBzZWxmLmNsYXNzX3dlaWdodHMgPSBOb25lCiAgICAgICAgc2VsZi5lbmNvZGluZywgc2VsZi5yZXZlcnNlX2VuY29kaW5nID0gTm9uZSwgTm9uZQoKICAgIGRlZiBsb2FkX2RhdGEoc2VsZik6CiAgICAgICAgICAgICIiIkxvYWRzIHRoZSBmaWxlIGFuZCBwcmVwYXJlcyB0aGUgZGF0YXNldC4iIiIKICAgICAgICAgICAgbG9hZGVycyA9IHsKICAgICAgICAgICAgICAgICdjc3YnOiBwZC5yZWFkX2NzdiwKICAgICAgICAgICAgICAgICdnemlwJzogcGQucmVhZF9wYXJxdWV0LAogICAgICAgICAgICAgICAgJ2V4Y2VsJzogcGQucmVhZF9leGNlbCwKICAgICAgICAgICAgICAgICdqc29uJzogcGQucmVhZF9qc29uLAogICAgICAgICAgICAgICAgJ2ZlYXRoZXInOiBwZC5yZWFkX2ZlYXRoZXIsCiAgICAgICAgICAgIH0KICAgIAogICAgICAgICAgICBpZiBzZWxmLmZpbGVfdHlwZSBub3QgaW4gbG9hZGVyczoKICAgICAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoZiJVbnN1cHBvcnRlZCBmaWxlIHR5cGU6IHtzZWxmLmZpbGVfdHlwZX0iKQogICAgICAgICAgICBzZWxmLmRmID0gbG9hZGVyc1tzZWxmLmZpbGVfdHlwZV0oc2VsZi5maWxlX3BhdGgsICoqc2VsZi5rd2FyZ3MpLnJlc2V0X2luZGV4KCkKICAgIAogICAgICAgICAgICAjIExhYmVscyBzaG91bGQgc3RhcnQgZnJvbSAwOyB0aGV5IHdpbGwgYmUgbWFwcGVkIGJhY2sKICAgICAgICAgICAgIyB3aGVuIHNhdmluZyB0aGUgcHJlZGljdGVkIHJlc3VsdHMKICAgICAgICAgICAgaWYgc2VsZi5kZltzZWxmLmxhYmVsX2NvbHVtbl0ubWluKCkgPT0gMToKICAgICAgICAgICAgICAgIHNlbGYuZGZbc2VsZi5sYWJlbF9jb2x1bW5dIC09IDEKICAgIAogICAgICAgICAgICAjIE1hcCBsYWJlbHMgdG8gZGVuc2UgZm9yIENyb3NzRW50cm9weUwgKHRoZSBpdGFsaWFuIEJFUlQgZG9lc24ndCBsaWtlIHNwYXJzZSBhcnJheXMpCiAgICAgICAgICAgIHVuaXF1ZV9sYWJlbHMsIGxhYmVsX2NvdW50cyA9IG5wLnVuaXF1ZShzZWxmLmRmW3NlbGYubGFiZWxfY29sdW1uXSwgcmV0dXJuX2NvdW50cz1UcnVlKQogICAgICAgICAgICBzZWxmLm51bV9sYWJlbHMgPSBsZW4odW5pcXVlX2xhYmVscykKICAgICAgICAgICAgc2VsZi5lbmNvZGluZyA9IHtsYWJlbDppZHggZm9yIGlkeCxsYWJlbCBpbiBlbnVtZXJhdGUodW5pcXVlX2xhYmVscyl9CiAgICAgICAgICAgIHNlbGYucmV2ZXJzZV9lbmNvZGluZyA9IHtpZHg6bGFiZWwgZm9yIGlkeCxsYWJlbCBpbiBlbnVtZXJhdGUodW5pcXVlX2xhYmVscyl9CiAgICAgICAgICAgIHNlbGYuZGZbc2VsZi5sYWJlbF9jb2x1bW5dID0gc2VsZi5kZltzZWxmLmxhYmVsX2NvbHVtbl0ubWFwKHNlbGYuZW5jb2RpbmcpCiAgICAgICAgICAgICMgc2F2aW5nIHRoZSByZXZlcnNlIGluZGV4aW5nCiAgICAgICAgICAgIHdpdGggb3BlbigicmV2ZXJzZV9lbmNvZGluZy5qc29uIiwgInciKSBhcyBmOgogICAgICAgICAgICAgICAganNvbi5kdW1wKHNlbGYucmV2ZXJzZV9lbmNvZGluZywgZiwKICAgICAgICAgICAgICAgICAgICAgICAgICBpbmRlbnQ9NCwgc29ydF9rZXlzPVRydWUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgc2VwYXJhdG9ycz0oJywgJywgJzogJyksIGVuc3VyZV9hc2NpaT1GYWxzZSwKICAgICAgICAgICAgICAgICAgICAgICAgICBjbHM9TnVtcHlFbmNvZGVyKQogICAgCiAgICAgICAgICAgICMgQ2xhc3Mgd2VpZ2h0cwogICAgICAgICAgICBpbnZlcnNlID0gMSAvIGxhYmVsX2NvdW50cwogICAgICAgICAgICBub3JtYWxpemVkX3dlaWdodHMgPSBpbnZlcnNlIC8gaW52ZXJzZS5zdW0oKQogICAgICAgICAgICBwcmludChzZWxmLmRmLmhlYWQoKSkKICAgICAgICAgICAgIyBzZWxmLmNsYXNzX3dlaWdodHMgPSB0b3JjaC5GbG9hdFRlbnNvcihub3JtYWxpemVkX3dlaWdodHMpLnRvKCdjdWRhJykKCgogICAgZGVmIHN0cmF0aWZpZWRfc3BsaXQoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUGVyZm9ybXMgc3RyYXRpZmllZCB0cmFpbi92YWxpZGF0aW9uL3Rlc3Qgc3BsaXQuCiAgICAgICAgR2l2ZW4gdGhhdCB0aGUgZGF0YSBoYXMgbWFueSBsYWJlbHMgYW5kIHRoZXkgYXJlIG9mdGVuIHVuZXF1YWxseSBkaXN0cmlidXRlZCwKICAgICAgICBtYW55IGNsYXNzZXMgY2FuIGJlIG5vdCByZXByZXNlbnRlZCBhdCBhbGwgaW4gdGhlIHRyYWluaW5nIHNlc3Npb24uCiAgICAgICAgVGhpcyBtZXRob2QgZm9yY2VzIHNpbWlsYXIgY2xhc3MgZGlzdHJpYnV0aW9ucy4KICAgICAgICBJZiBzb21lIGNsYXNzZXMgYXJlIGluIGxlc3MgdGhhbiAzIG9ic2VydmF0aW9ucywgaXQgd2lsbCByYWlzZSBhbiBlcnJvci4KICAgICAgICAiIiIKICAgICAgICBpZiBzZWxmLmRmIGlzIE5vbmU6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIkRhdGEgbm90IGxvYWRlZC4gQ2FsbCBsb2FkX2RhdGEoKSBmaXJzdC4iKQoKICAgICAgICAjIEZpcnN0IHNwbGl0OiB0cmFpbit2YWwvdGVzdAogICAgICAgIHNwbGl0ID0gU3RyYXRpZmllZFNodWZmbGVTcGxpdChuX3NwbGl0cz0xLCB0ZXN0X3NpemU9c2VsZi50ZXN0X3NpemUsIHJhbmRvbV9zdGF0ZT1zZWxmLnJhbmRvbV9zdGF0ZSkKICAgICAgICB0cmFpbl92YWxfaWR4LCB0ZXN0X2lkeCA9IG5leHQoc3BsaXQuc3BsaXQoc2VsZi5kZiwgc2VsZi5kZltzZWxmLmxhYmVsX2NvbHVtbl0pKQogICAgICAgIHRyYWluX3ZhbF9kYXRhID0gc2VsZi5kZi5pbG9jW3RyYWluX3ZhbF9pZHhdLnJlc2V0X2luZGV4KGRyb3A9VHJ1ZSkKICAgICAgICB0ZXN0X3NldCA9IHNlbGYuZGYuaWxvY1t0ZXN0X2lkeF0ucmVzZXRfaW5kZXgoZHJvcD1UcnVlKQoKICAgICAgICAjIFNlY29uZCBzcGxpdDogdHJhaW4vdmFsaWRhdGlvbgogICAgICAgIHNwbGl0ID0gU3RyYXRpZmllZFNodWZmbGVTcGxpdChuX3NwbGl0cz0xLCB0ZXN0X3NpemU9c2VsZi52YWxfc2l6ZSwgcmFuZG9tX3N0YXRlPXNlbGYucmFuZG9tX3N0YXRlKQogICAgICAgIHRyYWluX2lkeCwgdmFsX2lkeCA9IG5leHQoc3BsaXQuc3BsaXQodHJhaW5fdmFsX2RhdGEsIHRyYWluX3ZhbF9kYXRhW3NlbGYubGFiZWxfY29sdW1uXSkpCiAgICAgICAgdHJhaW5fc2V0ID0gdHJhaW5fdmFsX2RhdGEuaWxvY1t0cmFpbl9pZHhdLnJlc2V0X2luZGV4KGRyb3A9VHJ1ZSkKICAgICAgICB2YWxfc2V0ID0gdHJhaW5fdmFsX2RhdGEuaWxvY1t2YWxfaWR4XS5yZXNldF9pbmRleChkcm9wPVRydWUpCgogICAgICAgICMgQ29udmVydCB0byBIdWdnaW5nIEZhY2UgRGF0YXNldERpY3QKICAgICAgICBzZWxmLmRhdGFzZXQgPSBEYXRhc2V0RGljdCh7CiAgICAgICAgICAgICd0cmFpbic6IERhdGFzZXQuZnJvbV9wYW5kYXModHJhaW5fc2V0KSwKICAgICAgICAgICAgJ3ZhbGlkYXRpb24nOiBEYXRhc2V0LmZyb21fcGFuZGFzKHZhbF9zZXQpLAogICAgICAgICAgICAndGVzdCc6IERhdGFzZXQuZnJvbV9wYW5kYXModGVzdF9zZXQpCiAgICAgICAgfSkKCiAgICBkZWYgZ2V0X2RhdGFzZXQoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUmV0cmlldmVzIHRoZSBkYXRhc2V0IGRpY3Rpb25hcnkgY29udGFpbmluZyB0cmFpbiwgdmFsaWRhdGlvbiwgYW5kIHRlc3Qgc2V0cy4KCiAgICAgICAgUmV0dXJuczoKICAgICAgICAgICAgRGF0YXNldERpY3Q6IEEgZGljdGlvbmFyeSBjb250YWluaW5nIHRoZSBzcGxpdHMgYXMgSHVnZ2luZyBGYWNlIGRhdGFzZXRzLgogICAgICAgICIiIgogICAgICAgIGlmIHNlbGYuZGF0YXNldCBpcyBOb25lOgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJEYXRhc2V0IG5vdCBjcmVhdGVkLiBDYWxsIHN0cmF0aWZpZWRfc3BsaXQoKSBmaXJzdC4iKQogICAgICAgIHJldHVybiBzZWxmLmRhdGFzZXQKCiAgICBkZWYgZ2V0X2NsYXNzX3dlaWdodHMoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUmV0cmlldmVzIHRoZSBjbGFzcyB3ZWlnaHRzLgoKICAgICAgICBSZXR1cm5zOgogICAgICAgICAgICB0b3JjaC5GbG9hdFRlbnNvcjogQ2xhc3Mgd2VpZ2h0cyBmb3IgaGFuZGxpbmcgaW1iYWxhbmNlZCBjbGFzc2VzLgogICAgICAgICIiIgogICAgICAgIGlmIHNlbGYuY2xhc3Nfd2VpZ2h0cyBpcyBOb25lOgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJDbGFzcyB3ZWlnaHRzIG5vdCBjb21wdXRlZC4gQ2FsbCBsb2FkX2RhdGEoKSBmaXJzdC4iKQogICAgICAgIHJldHVybiBzZWxmLmNsYXNzX3dlaWdodHMKCiAgICBkZWYgZ2V0X251bV9sYWJlbHMoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUmV0cmlldmVzIHRoZSBudW1iZXIgb2YgdW5pcXVlIGxhYmVscy4KCiAgICAgICAgUmV0dXJuczoKICAgICAgICAgICAgaW50OiBOdW1iZXIgb2YgdW5pcXVlIGxhYmVscyBpbiB0aGUgZGF0YXNldC4KICAgICAgICAiIiIKICAgICAgICBpZiBzZWxmLm51bV9sYWJlbHMgaXMgTm9uZToKICAgICAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiTnVtYmVyIG9mIGxhYmVscyBub3QgYXZhaWxhYmxlLiBDYWxsIGxvYWRfZGF0YSgpIGZpcnN0LiIpCiAgICAgICAgcmV0dXJuIHNlbGYubnVtX2xhYmVscwoKICAgIGRlZiBnZXRfZW5jb2Rpbmcoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUmV0cmlldmVzIHRoZSBtYXBwaW5nIG9mIGxhYmVscyB0byBjYXRlZ29yaWVzLgoKICAgICAgICBSZXR1cm5zOgogICAgICAgICAgICBkaWN0OiBNYXBwaW5nIG9mIGxhYmVsIElEcyB0byB0aGVpciByZXNwZWN0aXZlIGNhdGVnb3JpZXMuCiAgICAgICAgIiIiCiAgICAgICAgaWYgc2VsZi5lbmNvZGluZyBpcyBOb25lOgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJMYWJlbCBtYXBwaW5nIG5vbmV4aXN0ZW50LiBDYWxsIGxvYWRfZGF0YSgpIGZpcnN0LiIpCiAgICAgICAgcmV0dXJuIHNlbGYuZW5jb2RpbmcKCiAgICBkZWYgZ2V0X3JfZW5jb2Rpbmcoc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgUmV0cmlldmVzIHRoZSBtYXBwaW5nIG9mIGxhYmVscyB0byBjYXRlZ29yaWVzLgoKICAgICAgICBSZXR1cm5zOgogICAgICAgICAgICBkaWN0OiBNYXBwaW5nIG9mIGxhYmVsIElEcyB0byB0aGVpciByZXNwZWN0aXZlIGNhdGVnb3JpZXMuCiAgICAgICAgIiIiCiAgICAgICAgaWYgc2VsZi5yZXZlcnNlX2VuY29kaW5nIGlzIE5vbmU6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIkxhYmVsIG1hcHBpbmcgbm9uZXhpc3RlbnQuIENhbGwgbG9hZF9kYXRhKCkgZmlyc3QuIikKICAgICAgICByZXR1cm4gc2VsZi5yZXZlcnNlX2VuY29kaW5nCgoKZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IEF1dG9Ub2tlbml6ZXIKCmNsYXNzIFRva2VuaXplckZ1bmN0aW9uOgogICAgZGVmIF9faW5pdF9fKHNlbGYsIG1vZGVsX25hbWUsIG1heF9sZW5ndGg9NTEyLCB1c2VfZmFzdD1UcnVlLCB1c2VfY2FjaGU9RmFsc2UpOgogICAgICAgICIiIgogICAgICAgIEluaXRpYWxpemUgdGhlIHRva2VuaXplciBmdW5jdGlvbiB3cmFwcGVyIPCfjK8KICAgICAgICBBcmdzOgogICAgICAgICAgICBtb2RlbF9uYW1lIChzdHIpOiBOYW1lIG9mIHRoZSBwcmUtdHJhaW5lZCBtb2RlbC4KICAgICAgICAgICAgbWF4X2xlbmd0aCAoaW50KTogTWF4aW11bSBzZXF1ZW5jZSBsZW5ndGggZm9yIHRva2VuaXphdGlvbi4KICAgICAgICAgICAgdXNlX2Zhc3QgKGJvb2wpOiBXaGV0aGVyIHRvIHVzZSB0aGUgZmFzdCB0b2tlbml6ZXIgaW1wbGVtZW50YXRpb24uCiAgICAgICAgICAgIHVzZV9jYWNoZSAoYm9vbCk6IFdoZXRoZXIgdG8gY2FjaGUgdGhlIHRva2VuaXplciByZXN1bHRzLgogICAgICAgICIiIgogICAgICAgIHNlbGYudG9rZW5pemVyID0gQXV0b1Rva2VuaXplci5mcm9tX3ByZXRyYWluZWQobW9kZWxfbmFtZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1c2VfZmFzdD11c2VfZmFzdCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1c2VfY2FjaGU9dXNlX2NhY2hlKQogICAgICAgIHNlbGYubWF4X2xlbmd0aCA9IG1heF9sZW5ndGgKCiAgICBkZWYgX19jYWxsX18oc2VsZiwgZGF0YSk6CiAgICAgICAgIiIiCiAgICAgICAgVG9rZW5pemVzIHRoZSBpbnB1dCBkYXRhLgoKICAgICAgICBBcmdzOgogICAgICAgICAgICBkYXRhIChkaWN0KTogQSBkaWN0aW9uYXJ5IGNvbnRhaW5pbmcgdGhlICd0ZXh0JyBmaWVsZCB0byB0b2tlbml6ZS4KCiAgICAgICAgUmV0dXJuczoKICAgICAgICAgICAgZGljdDogVG9rZW5pemVkIGRhdGEgaW5jbHVkaW5nIGlucHV0IElEcywgYXR0ZW50aW9uIG1hc2tzLCBldGMuCiAgICAgICAgIiIiCiAgICAgICAgcmV0dXJuIHNlbGYudG9rZW5pemVyKGRhdGFbJ3RleHQnXSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGFkZGluZz0nbWF4X2xlbmd0aCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRydW5jYXRpb249VHJ1ZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWF4X2xlbmd0aD1zZWxmLm1heF9sZW5ndGgsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybl90ZW5zb3JzPSJwdCIpCgogICAgZGVmIGdldF90b2tlbml6ZXIoc2VsZik6CiAgICAgICAgcmV0dXJuIHNlbGYudG9rZW5pemVyCgoKCmltcG9ydCB0b3JjaApmcm9tIHRvcmNoIGltcG9ydCBubgpmcm9tIHRvcmNoLnV0aWxzLmRhdGEgaW1wb3J0IERhdGFMb2FkZXIKZnJvbSB0b3JjaC5vcHRpbSBpbXBvcnQgQWRhbVcKZnJvbSB0b3JjaG1ldHJpY3MuY2xhc3NpZmljYXRpb24gaW1wb3J0IE11bHRpY2xhc3NGMVNjb3JlLCBBY2N1cmFjeQoKZnJvbSB0cmFuc2Zvcm1lcnMgaW1wb3J0IEF1dG9Nb2RlbEZvclNlcXVlbmNlQ2xhc3NpZmljYXRpb24sIEF1dG9Nb2RlbApmcm9tIHRyYW5zZm9ybWVycyBpbXBvcnQgUHJlVHJhaW5lZE1vZGVsCmZyb20gdHJhbnNmb3JtZXJzLm1vZGVsaW5nX291dHB1dHMgaW1wb3J0IFNlcXVlbmNlQ2xhc3NpZmllck91dHB1dApmcm9tIHRyYW5zZm9ybWVycyBpbXBvcnQgQXV0b0NvbmZpZywgVHJhaW5pbmdBcmd1bWVudHMsIEVhcmx5U3RvcHBpbmdDYWxsYmFjaywgVHJhaW5lcgoKZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZSwgZGF0ZXRpbWUKaW1wb3J0IG9zCgppbXBvcnQganNvbgojIGltcG9ydCB3YW5kYgoKY2xhc3MgQmVydEZvclNlbnRlbmNlQ2xhc3NpZmljYXRpb24oUHJlVHJhaW5lZE1vZGVsKToKCiAgICAiIiIKICAgIEJFUlQgYXJjaGl0ZWN0dXJlIGlzIGludGVuZGVkIHRvIGJlIGZyb20gImRibWR6L2JlcnQtYmFzZS1pdGFsaWFuLXh4bC1jYXNlZCIKICAgIGJ1dCBvdGhlciBtb2RlbHMgY2FuIGJlIHRyaWVkLgogICAgIiIiCgoKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBjb25maWcsIG1vZGVsX25hbWUsIG51bV9sYWJlbHMsIGNsYXNzX3dlaWdodHM9Tm9uZSk6CiAgICAgICAgc3VwZXIoKS5fX2luaXRfXyhjb25maWcpCiAgICAgICAgc2VsZi5udW1fbGFiZWxzID0gbnVtX2xhYmVscwogICAgICAgIHNlbGYuYmVydCA9IEF1dG9Nb2RlbC5mcm9tX3ByZXRyYWluZWQobW9kZWxfbmFtZSkKICAgICAgICBzZWxmLmNsYXNzaWZpZXIgPSBubi5MaW5lYXIoc2VsZi5iZXJ0LmNvbmZpZy5oaWRkZW5fc2l6ZSwgbnVtX2xhYmVscykKICAgICAgICBzZWxmLmNsYXNzX3dlaWdodHMgPSBjbGFzc193ZWlnaHRzCiAgICAgICAgc2VsZi5hY2N1cmFjeSA9IEFjY3VyYWN5KG51bV9jbGFzc2VzPW51bV9sYWJlbHMsIHRhc2s9J211bHRpY2xhc3MnKQogICAgICAgIHNlbGYuZjEgPSBNdWx0aWNsYXNzRjFTY29yZShudW1fY2xhc3Nlcz1udW1fbGFiZWxzLCBhdmVyYWdlPSdtYWNybycpICMgY2hhbmdlZCB3ZWlnaHQsbWljcm8gTm9uZSwg4oCYYmluYXJ54oCZIChkZWZhdWx0KSwg4oCYbWljcm/igJksIOKAmG1hY3Jv4oCZLCDigJhzYW1wbGVz4oCZLCDigJh3ZWlnaHRlZOKAmV0KCiAgICBkZWYgZm9yd2FyZChzZWxmLCBpbnB1dF9pZHMsIGF0dGVudGlvbl9tYXNrPU5vbmUsIGxhYmVscz1Ob25lKToKICAgICAgICBvdXRwdXRzID0gc2VsZi5iZXJ0KGlucHV0X2lkcz1pbnB1dF9pZHMsIGF0dGVudGlvbl9tYXNrPWF0dGVudGlvbl9tYXNrKQogICAgICAgIGxvZ2l0cyA9IHNlbGYuY2xhc3NpZmllcihvdXRwdXRzLmxhc3RfaGlkZGVuX3N0YXRlWzosIDAsIDpdKQoKICAgICAgICBsb3NzID0gTm9uZQogICAgICAgIGlmIGxhYmVscyBpcyBub3QgTm9uZToKCiAgICAgICAgICAgIGxvc3NfZmN0ID0gbm4uQ3Jvc3NFbnRyb3B5TG9zcyhsYWJlbF9zbW9vdGhpbmc9MC4xKSAjLHdlaWdodD1zZWxmLmNsYXNzX3dlaWdodHMKICAgICAgICAgICAgbG9zcyA9IGxvc3NfZmN0KGxvZ2l0cywgbGFiZWxzKQoKICAgICAgICAgICAgZjFfc2NvcmUgPSBzZWxmLmYxKGxvZ2l0cy5hcmdtYXgoZGltPTEpLCBsYWJlbHMpCiAgICAgICAgICAgIGFjY3VyYWN5X3Njb3JlID0gc2VsZi5hY2N1cmFjeShsb2dpdHMuYXJnbWF4KGRpbT0xKSwgbGFiZWxzKQogICAgIAogICAgICAgIHJldHVybiBTZXF1ZW5jZUNsYXNzaWZpZXJPdXRwdXQobG9zcz1sb3NzLCBsb2dpdHM9bG9naXRzKQoKY2xhc3MgVHJhaW5lckhhbmRsZXI6CiAgICBkZWYgX19pbml0X18oc2VsZiwgdHJhaW5lciwgdG9rZW5pemVkX2RhdGFzZXRzLCBudW1fbGFiZWxzLCBlbmNvZGluZywgbW9kZWxfbmFtZSwKICAgICAgICAgICAgICAgICBtb2RlbF9zYXZlX3BhdGgpOgogICAgICAgICIiIgogICAgICAgIEFyZ3M6CiAgICAgICAgICAgIHRyYWluZXI6IEh1Z2dpbmcgRmFjZSBUcmFpbmVyIGluc3RhbmNlLgogICAgICAgICAgICB0b2tlbml6ZWRfZGF0YXNldHM6IERhdGFzZXREaWN0IHdpdGggdHJhaW4vdmFsL3Rlc3Qgc3BsaXRzLgogICAgICAgICAgICBudW1fbGFiZWxzOiBOdW1iZXIgb2YgbGFiZWxzIGluIHRoZSBjbGFzc2lmaWNhdGlvbiB0YXNrLgogICAgICAgICAgICBlbmNvZGluZzogTWFwcGluZyBmcm9tIGRlbnNlIHRvIHNwYXJzZSBvcmlnaW5hbCBsYWJlbGxpbmcuCiAgICAgICAgICAgIG1vZGVsX25hbWUKICAgICAgICAgICAgbW9kZWxfc2F2ZV9wYXRoOiBQYXRoIHRvIHNhdmUgdGhlIGNvbmZpZ3VyYXRpb24sIHdlaWdodHMgYW5kIHRva2VuaXplciBmb3IgcmVwcm9kdWNpYmlsaXR5LgogICAgICAgICIiIgogICAgICAgIHNlbGYudHJhaW5lciA9IHRyYWluZXIKICAgICAgICBzZWxmLnRva2VuaXplZF9kYXRhc2V0cyA9IHRva2VuaXplZF9kYXRhc2V0cwogICAgICAgIHNlbGYubnVtX2xhYmVscyA9IG51bV9sYWJlbHMKICAgICAgICBzZWxmLmVuY29kaW5nID0gZW5jb2RpbmcKICAgICAgICBzZWxmLm1vZGVsX25hbWUgPSBtb2RlbF9uYW1lCiAgICAgICAgc2VsZi5tb2RlbF9zYXZlX3BhdGggPSBtb2RlbF9zYXZlX3BhdGgKCiAgICBkZWYgY29tcHV0ZV9mMV9zY29yZShzZWxmLCBwcmVkaWN0aW9ucyk6CiAgICAgICAgIiIiCiAgICAgICAgTWljcm8gRjEgc2NvcmUgZnJvbQoKICAgICAgICBBcmdzOgogICAgICAgICAgICBwcmVkaWN0aW9uczogT3V0cHV0IGZyb20gdGhlIHRyYWluZXIucHJlZGljdCgpIG1ldGhvZC4KCiAgICAgICAgUmV0dXJuczoKICAgICAgICAgICAgZjFfc2NvcmU6IFRoZSBjYWxjdWxhdGVkIEYxIHNjb3JlLgogICAgICAgICIiIgogICAgICAgIGxvZ2l0cyA9IHRvcmNoLnRlbnNvcihwcmVkaWN0aW9ucy5wcmVkaWN0aW9ucykKICAgICAgICBsYWJlbHMgPSB0b3JjaC50ZW5zb3IocHJlZGljdGlvbnMubGFiZWxfaWRzKQogICAgICAgIGYxID0gTXVsdGljbGFzc0YxU2NvcmUobnVtX2NsYXNzZXM9c2VsZi5udW1fbGFiZWxzLCBhdmVyYWdlPSdtaWNybycpICMgd2VpZ2h0CiAgICAgICAgZjFfc2NvcmUgPSBmMShsb2dpdHMuYXJnbWF4KGRpbT0xKSwgbGFiZWxzLmZsb2F0KCkpCiAgICAgICAgcmV0dXJuIGYxX3Njb3JlLCBsb2dpdHMsIGxhYmVscwoKICAgIGRlZiBzYXZlX2YxX3Jlc3VsdHMoc2VsZiwgZjFfc2NvcmUpOgogICAgICAgICIiIgogICAgICAgIFNhdmUgdGhlIEYxIHNjb3JlIHRvIGEgQ1NWIGZpbGUuCgogICAgICAgIEFyZ3M6CiAgICAgICAgICAgIGYxX3Njb3JlOiBieSBkZWZhdWx0LCBpdCdzIHRoZSBtaWNybyBGMSB3ZWlnaHRlZCBvbiBjbGFzcyBmcmVxdWVuY3kuCiAgICAgICAgIiIiCiAgICAgICAgbm93ID0gZGF0ZXRpbWUudG9kYXkoKQogICAgICAgIAogICAgICAgIGNzdkZpbGUgPSBzZWxmLm1vZGVsX3NhdmVfcGF0aCArICcvJyArICBmJ3tzZWxmLm1vZGVsX25hbWV9LmNzdic7CgogICAgICAgIGRmID0gcGQuRGF0YUZyYW1lKHsKICAgICAgICAgICAgJ0YxJzogW2YxX3Njb3JlLml0ZW0oKV0sCiAgICAgICAgICAgICdtb2RlbGxvJzogW3NlbGYubW9kZWxfbmFtZV0sCiAgICAgICAgICAgICdUJzogW25vd10sCiAgICAgICAgfSkKICAgICAgICAKICAgICAgICBpZiBub3Qgb3MucGF0aC5pc2ZpbGUoY3N2RmlsZSk6CiAgICAgICAgICAgIGRmLnRvX2Nzdihjc3ZGaWxlLCBoZWFkZXI9J2NvbHVtbl9uYW1lcycsIGluZGV4PUZhbHNlKQogICAgICAgIGVsc2U6ICAjIGVsc2UgaXQgZXhpc3RzIHNvIGFwcGVuZCB3aXRob3V0IHdyaXRpbmcgdGhlIGhlYWRlcgogICAgICAgICAgICBkZi50b19jc3YoY3N2RmlsZSwgbW9kZT0nYScsIGhlYWRlcj1GYWxzZSwgaW5kZXg9RmFsc2UpICAgICAgICAKICAgICAgICAKICAgICAgICBwcmludChmIkYxIHNjb3JlIHNhdmVkIHRvIHtzZWxmLm1vZGVsX25hbWV9LmNzdiIpCgogICAgZGVmIHNhdmVfcHJlZGljdGlvbnMoc2VsZiwgbG9naXRzLCBsYWJlbHMpOgogICAgICAgICIiIgogICAgICAgIFNhdmUgcHJlZGljdGVkIGFuZCB0cnVlIGxhYmVscyB0byBhIENTViBmaWxlLgoKICAgICAgICBBcmdzOgogICAgICAgICAgICBsb2dpdHM6IE1vZGVsIGxvZ2l0cyBmcm9tIHRoZSBwcmVkaWN0aW9ucy4KICAgICAgICAgICAgbGFiZWxzOiBHcm91bmQgdHJ1dGggbGFiZWwgaW5kZXhlcyBmcm9tIHRoZSBwcmVkaWN0aW9ucy4KICAgICAgICAiIiIKICAgICAgICBub3cgPSBkYXRldGltZS50b2RheSgpCiAgICAgICAgaW52ZXJ0ZWRfZW5jb2RpbmcgPSB7aW50KHYpOiBrIGZvciBrLCB2IGluIHNlbGYuZW5jb2RpbmcuaXRlbXMoKX0KICAgICAgICBwcmVkaWN0ZWRfaW5kaWNlcyA9IGxvZ2l0cy5hcmdtYXgoZGltPTEpCiAgICAgICAgcHJlZGljdGVkX2xhYmVscyA9IFtpbnZlcnRlZF9lbmNvZGluZ1tpZHguaXRlbSgpXSBmb3IgaWR4IGluIHByZWRpY3RlZF9pbmRpY2VzXQogICAgICAgIHRydWVfbGFiZWxzID0gW2ludmVydGVkX2VuY29kaW5nW2lkeC5pdGVtKCldIGZvciBpZHggaW4gbGFiZWxzXQoKICAgICAgICBvcmlnaW5hbF9pbmRleCA9IHNlbGYudG9rZW5pemVkX2RhdGFzZXRzWyd0ZXN0J11bJ2luZGV4J10gI29yaWdpbmFsIGluZGV4ZXMgZm9yIHRlc3Qgb2JzZXJ2YXRpb25zIGluIHRoZSBpbnB1dCBkZgoKICAgICAgICByZXN1bHRzID0gcGQuRGF0YUZyYW1lKHsKICAgICAgICAgICAgJ29yaWdpbmFsX2luZGV4Jzogb3JpZ2luYWxfaW5kZXgsCiAgICAgICAgICAgICd0cnVlX2xhYmVsJzogdHJ1ZV9sYWJlbHMsCiAgICAgICAgICAgICdwcmVkaWN0ZWRfbGFiZWwnOiBwcmVkaWN0ZWRfbGFiZWxzLAogICAgICAgIH0pCgogICAgICAgIHJlc3VsdHMudHJ1ZV9sYWJlbCwgcmVzdWx0cy5wcmVkaWN0ZWRfbGFiZWwgPSByZXN1bHRzLnRydWVfbGFiZWwgKyAxLCByZXN1bHRzLnByZWRpY3RlZF9sYWJlbCArIDEKCiAgICAgICAgZmlsZV9uYW1lID0gZid7c2VsZi5tb2RlbF9uYW1lfV97bm93Lm1vbnRofV97bm93LmRheX0te25vdy5ob3VyfV97bm93Lm1pbnV0ZX0uY3N2JwogICAgICAgIHJlc3VsdHMudG9fY3N2KHNlbGYubW9kZWxfc2F2ZV9wYXRoICsgJy8nICsgZmlsZV9uYW1lLCBpbmRleD1GYWxzZSkKICAgICAgICBwcmludChmIlByZWRpY3Rpb25zIHNhdmVkIHRvIHtmaWxlX25hbWV9IikKCiAgICBkZWYgc2F2ZV9tb2RlbF9hbmRfdG9rZW5pemVyKHNlbGYpOgogICAgICAgICIiIgogICAgICAgIFNhdmUgdGhlIHRyYWluZWQgbW9kZWwgYW5kIHRva2VuaXplciB0byB0aGUgc3BlY2lmaWVkIHBhdGguCiAgICAgICAgIiIiCiAgICAgICAgcHJpbnQoZiJTYXZpbmcgdGhlIHRyYWluZWQgbW9kZWwgYXMge3NlbGYubW9kZWxfbmFtZX0uLi4iKQogICAgICAgIHNlbGYudHJhaW5lci5tb2RlbC5zYXZlX3ByZXRyYWluZWQoc2VsZi5tb2RlbF9zYXZlX3BhdGgpCiAgICAgICAgc2VsZi50cmFpbmVyLnRva2VuaXplci5zYXZlX3ByZXRyYWluZWQoc2VsZi5tb2RlbF9zYXZlX3BhdGgpCiAgICAgICAgcHJpbnQoZiJNb2RlbCBhbmQgdG9rZW5pemVyIHNhdmVkIHRvIHtzZWxmLm1vZGVsX3NhdmVfcGF0aH0iKQoKICAgIGRlZiBydW4oc2VsZik6CiAgICAgICAgIiIiCiAgICAgICAgRXhlY3V0ZSB0aGUgdHJhaW5pbmcgYW5kIHNhdmUgdGhlIG91dHB1dHMuCiAgICAgICAgIiIiCiAgICAgICAgcHJpbnQoIlN0YXJ0aW5nIHRyYWluaW5nLi4uIikKICAgICAgICAjc2VsZi50cmFpbmVyLnRyYWluKHJlc3VtZV9mcm9tX2NoZWNrcG9pbnQ9VHJ1ZSkKICAgICAgICBzZWxmLnRyYWluZXIudHJhaW4oKQogICAgICAgIHNlbGYudHJhaW5lci5zYXZlX3N0YXRlKCkKCiAgICAgICAgcHJpbnQoIkV2YWx1YXRpbmcgdGVzdCBzZXQuLi4iKQogICAgICAgIHByZWRpY3Rpb25zID0gc2VsZi50cmFpbmVyLnByZWRpY3Qoc2VsZi50b2tlbml6ZWRfZGF0YXNldHNbJ3Rlc3QnXSkKCiAgICAgICAgZjFfc2NvcmUsIGxvZ2l0cywgbGFiZWxzID0gc2VsZi5jb21wdXRlX2YxX3Njb3JlKHByZWRpY3Rpb25zKQogICAgICAgIHByaW50KGYiRjEgc2NvcmU6IHtmMV9zY29yZS5pdGVtKCl9XG4iKQoKICAgICAgICBzZWxmLnNhdmVfZjFfcmVzdWx0cyhmMV9zY29yZSkKICAgICAgICBzZWxmLnNhdmVfcHJlZGljdGlvbnMobG9naXRzLCBsYWJlbHMpCiAgICAgICAgc2VsZi5zYXZlX21vZGVsX2FuZF90b2tlbml6ZXIoKQogICAgICAgIHByaW50KCJEb25lLiIpCgoKICAgIApmaWxlX2Jhc2VwYXRoID0gIi9sb2NhbC1kYXRhIgoKaW1wb3J0IGV2YWx1YXRlCmRlZiBjb21wdXRlX21ldHJpY3MoZXZhbF9wcmVkKToKICAgIG1ldHJpY3MgPSBbImYxIiwiYWNjdXJhY3kiLCAicmVjYWxsIiwgInByZWNpc2lvbiJdICNMaXN0IG9mIG1ldHJpY3MgdG8gcmV0dXJuICwKICAgIG1ldHJpYz17fQogICAgZm9yIG1ldCBpbiBtZXRyaWNzOgogICAgICAgIG1ldHJpY1ttZXRdID0gZXZhbHVhdGUubG9hZChtZXQpI2xvYWRfbWV0cmljKG1ldCkKICAgIGxvZ2l0cywgbGFiZWxzID0gZXZhbF9wcmVkCiAgICBwcmVkaWN0aW9ucyA9IG5wLmFyZ21heChsb2dpdHMsIGF4aXM9LTEpCiAgICBtZXRyaWNfcmVzPXt9CiAgICBmb3IgbWV0IGluIG1ldHJpY3M6CiAgICAgICAgaWYgKG1ldCAhPSAnYWNjdXJhY3knKToKICAgICAgICAgICAgbWV0cmljX3Jlc1ttZXRdPW1ldHJpY1ttZXRdLmNvbXB1dGUocHJlZGljdGlvbnM9cHJlZGljdGlvbnMsIHJlZmVyZW5jZXM9bGFiZWxzLCBhdmVyYWdlPSdtYWNybycpW21ldF0KICAgICAgICBlbHNlOgogICAgICAgICAgICBtZXRyaWNfcmVzW21ldF09bWV0cmljW21ldF0uY29tcHV0ZShwcmVkaWN0aW9ucz1wcmVkaWN0aW9ucywgcmVmZXJlbmNlcz1sYWJlbHMpW21ldF0KICAgICAgICAgICAgCiAgICBkYXRhX2ZpbGVuYW1lID0gJ3RyYWluX21ldHJpY3MuY3N2JwogICAgcm93ID0gcGQuRGF0YUZyYW1lKHtrOiBbdl0gZm9yIGssIHYgaW4gbWV0cmljX3Jlcy5pdGVtcygpfSkKICAgIAogICAgZGF0YWZyYW1lX2FwcGVuZChkaXJlY3Rvcnk9bW9kZWxfZGlyLCBkYXRhX2ZpbGVuYW1lPWRhdGFfZmlsZW5hbWUsIHJvdz1yb3cpCgogICAgcmV0dXJuIG1ldHJpY19yZXMKCmRlZiBkYXRhZnJhbWVfYXBwZW5kKGRpcmVjdG9yeSwgZGF0YV9maWxlbmFtZSwgcm93KToKICAgICMgbW9kdWxlIGZvciB1c2UgaW4gZGlmZmVyZW50IHN0YWdlcyBvZiB0cmFpbmluZyBhbmQgdGVzdGluZwogICAgaWYgbm90IHBhdGguZXhpc3RzKG1vZGVsX2Rpcik6CiAgICAgICAgbWFrZWRpcnMobW9kZWxfZGlyKQogICAgRk4gPSBkaXJlY3RvcnkgKyAnLycgKyBkYXRhX2ZpbGVuYW1lCgogICAgaWYgbm90IChwYXRoLmV4aXN0cyhGTikpOgogICAgICAgIHJvdy50b19jc3YoRk4sIGluZGV4PUZhbHNlLCBoZWFkZXI9VHJ1ZSkKICAgIGVsc2U6CiAgICAgICAgcm93LnRvX2NzdihGTiwgbW9kZT0nYScsIGluZGV4PUZhbHNlLCBoZWFkZXI9RmFsc2UpCiAgICAKZGVmIHRyYWluKHByb2plY3QsICAgICAgICAgIAogICAgICAgICAgdGFyZ2V0X21vZGVsX25hbWU9IiIsCiAgICAgICAgICBudW1fdHJhaW5fZXBvY2hzPTMsCiAgICAgICAgICBwZXJfZGV2aWNlX3RyYWluX2JhdGNoX3NpemU9MTYsCiAgICAgICAgICBwZXJfZGV2aWNlX2V2YWxfYmF0Y2hfc2l6ZT0xNiwKICAgICAgICAgIGdyYWRpZW50X2FjY3VtdWxhdGlvbl9zdGVwcz0yLAogICAgICAgICAgd2VpZ2h0X2RlY2F5PTAuMDA1LAogICAgICAgICAgbGVhcm5pbmdfcmF0ZT0xZS01LAogICAgICAgICAgbHJfc2NoZWR1bGVyX3R5cGU9J2xpbmVhcicpOgoKICAgIGdsb2JhbCBtb2RlbF9kaXIKICAgIG1vZGVsX2RpciA9IGYie2ZpbGVfYmFzZXBhdGh9L21vZGVsIgogICAgZGF0YV9kaXIgPSBmIntmaWxlX2Jhc2VwYXRofS9kYXRhIgogICAgbG9nZ2luZ19kaXIgPSBmIntmaWxlX2Jhc2VwYXRofS9sb2dnaW5nIgogICAgb3V0cHV0X2RpciA9IGYie2ZpbGVfYmFzZXBhdGh9L3R1bmVkX21vZGVsIgogICAgCiAgICB0cnk6CiAgICAgICAgc2h1dGlsLnJtdHJlZShkYXRhX2RpcikKICAgIGV4Y2VwdDoKICAgICAgICBwcmludCgiRXJyb3IgZGVsZXRpbmcgZGF0YSBkaXIiKQogICAgICAgICAgICAgICAgCiAgICAjIENyZWF0ZSB0aGUgZGlyZWN0b3J5IGZvciB0aGUgZGF0YQogICAgaWYgbm90IHBhdGguZXhpc3RzKGRhdGFfZGlyKToKICAgICAgICBtYWtlZGlycyhkYXRhX2RpcikKCiAgICB0cnk6CiAgICAgICAgc2h1dGlsLnJtdHJlZShtb2RlbF9kaXIpCiAgICBleGNlcHQ6CiAgICAgICAgcHJpbnQoIkVycm9yIGRlbGV0aW5nIG1vZGVsIGRpciIpCiAgICAgICAgCiAgICAgIyBDcmVhdGUgdGhlIGRpcmVjdG9yeSBmb3IgdGhlIG1vZGVsCiAgICBpZiBub3QgcGF0aC5leGlzdHMobW9kZWxfZGlyKToKICAgICAgICBtYWtlZGlycyhtb2RlbF9kaXIpCiAgICBpZiBub3QgcGF0aC5leGlzdHMobG9nZ2luZ19kaXIpOgogICAgICAgIG1ha2VkaXJzKGxvZ2dpbmdfZGlyKSAgICAKICAgIGlmIG5vdCBwYXRoLmV4aXN0cyhvdXRwdXRfZGlyKToKICAgICAgICBtYWtlZGlycyhvdXRwdXRfZGlyKQoKICAgIG1vZGVsX3BhcmFtcyA9IHsKICAgICAgICAibnVtX3RyYWluX2Vwb2NocyI6IG51bV90cmFpbl9lcG9jaHMsCiAgICAgICAgInBlcl9kZXZpY2VfdHJhaW5fYmF0Y2hfc2l6ZSI6IHBlcl9kZXZpY2VfdHJhaW5fYmF0Y2hfc2l6ZSwKICAgICAgICAicGVyX2RldmljZV9ldmFsX2JhdGNoX3NpemUiOiBwZXJfZGV2aWNlX2V2YWxfYmF0Y2hfc2l6ZSwKICAgICAgICAiZ3JhZGllbnRfYWNjdW11bGF0aW9uX3N0ZXBzIjogZ3JhZGllbnRfYWNjdW11bGF0aW9uX3N0ZXBzLAogICAgICAgICJ3ZWlnaHRfZGVjYXkiOiB3ZWlnaHRfZGVjYXksCiAgICAgICAgImxlYXJuaW5nX3JhdGUiOiBsZWFybmluZ19yYXRlLAogICAgICAgICJscl9zY2hlZHVsZXJfdHlwZSI6IGxyX3NjaGVkdWxlcl90eXBlCiAgICB9CgogICAgVVJMPSdodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vdG4tYWl4cGEvZG9jdW1lbnQtY2xhc3NpZmllci9yZWZzL2hlYWRzL21haW4vc3JjL3RyYWluX2RhdGEuY3N2JwogICAgZGF0YSA9IHBkLnJlYWRfY3N2KFVSTCkKICAgIGRhdGEgPSBkYXRhLmxvY1s6LCB+ZGF0YS5jb2x1bW5zLnN0ci5jb250YWlucygnXlVubmFtZWQnKV0KICAgIGZpbGVfaW5wdXQgPSBkYXRhLnRvX2NzdihmJ3tkYXRhX2Rpcn0vZGF0YS5jc3YnLCBlbmNvZGluZz0nVVRGLTgnLCBpbmRleD1GYWxzZSkgICAgICAgICAgCiAgICBwcmludChmaWxlX2lucHV0KQogICAgICAgICAgICAgIAogICAgbW9kZWxfbmFtZSA9ICJkYm1kei9iZXJ0LWJhc2UtaXRhbGlhbi14eGwtY2FzZWQiCiAgICAKICAgIGRhdGFsb2FkZXIgPSBEYXRhbG9hZGVyKGZpbGVfcGF0aD1mJ3tkYXRhX2Rpcn0vZGF0YS5jc3YnKQogICAgZGF0YWxvYWRlci5sb2FkX2RhdGEoKQogICAgZGF0YWxvYWRlci5zdHJhdGlmaWVkX3NwbGl0KCkKICAgIGRhdGFzZXQgPSBkYXRhbG9hZGVyLmdldF9kYXRhc2V0KCkKICAgIG51bV9sYWJlbHMgPSBkYXRhbG9hZGVyLmdldF9udW1fbGFiZWxzKCkKICAgIGVuY29kaW5nID0gZGF0YWxvYWRlci5nZXRfZW5jb2RpbmcoKQogICAgCiAgICB0b2tlbml6ZV9mdW5jdGlvbiA9IFRva2VuaXplckZ1bmN0aW9uKG1vZGVsX25hbWU9bW9kZWxfbmFtZSwgbWF4X2xlbmd0aD01MTIpCiAgICB0b2tlbml6ZWRfZGF0YXNldHMgPSAoZGF0YXNldC5tYXAodG9rZW5pemVfZnVuY3Rpb24sIGJhdGNoZWQ9VHJ1ZSkKICAgICAgICAgICAgICAgICAgICAgICAgICAuc2h1ZmZsZShzZWVkPTI1KQogICAgICAgICAgICAgICAgICAgICAgICAgIC5yZW1vdmVfY29sdW1ucyhbJ3RleHQnLCAndG9rZW5fdHlwZV9pZHMnXSkpCiAgICBwcmludChmJy0tTG9hZGluZyB0aGUgbW9kZWwgZm9yIHByZWRpY3Rpbmcge251bV9sYWJlbHN9IGxhYmVscy0tJykKICAgIGNvbmZpZyA9IEF1dG9Db25maWcuZnJvbV9wcmV0cmFpbmVkKG1vZGVsX25hbWUsIG51bV9sYWJlbHM9bnVtX2xhYmVscykgICNmb3IgbGF0ZXIgc2F2aW5nIHRoZSBjb25maWcKICAgIG1vZGVsID0gKEJlcnRGb3JTZW50ZW5jZUNsYXNzaWZpY2F0aW9uCiAgICAgICAgIC5mcm9tX3ByZXRyYWluZWQocHJldHJhaW5lZF9tb2RlbF9uYW1lX29yX3BhdGg9bW9kZWxfbmFtZSwKICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbF9uYW1lPW1vZGVsX25hbWUsCiAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZmlnPWNvbmZpZywKICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fbGFiZWxzPW51bV9sYWJlbHMpKSAjY2xhc3Nfd2VpZ2h0cz1jbGFzc193ZWlnaHRzCiAgICB0cmFpbmluZ19hcmdzID0gVHJhaW5pbmdBcmd1bWVudHMoCiAgICAgICAgb3V0cHV0X2Rpcj1vdXRwdXRfZGlyLAogICAgICAgIGxvZ2dpbmdfZGlyPWxvZ2dpbmdfZGlyLAogICAgICAgIGV2YWxfc3RyYXRlZ3k9J2Vwb2NoJywKICAgICAgICBzYXZlX3N0cmF0ZWd5PSdlcG9jaCcsCiAgICAgICAgc2F2ZV90b3RhbF9saW1pdD0yLAogICAgICAgIG51bV90cmFpbl9lcG9jaHM9bnVtX3RyYWluX2Vwb2NocywKICAgICAgICBwZXJfZGV2aWNlX3RyYWluX2JhdGNoX3NpemU9cGVyX2RldmljZV90cmFpbl9iYXRjaF9zaXplLAogICAgICAgIHBlcl9kZXZpY2VfZXZhbF9iYXRjaF9zaXplPXBlcl9kZXZpY2VfZXZhbF9iYXRjaF9zaXplLAogICAgICAgIGdyYWRpZW50X2FjY3VtdWxhdGlvbl9zdGVwcz1ncmFkaWVudF9hY2N1bXVsYXRpb25fc3RlcHMsCiAgICAgICAgd2VpZ2h0X2RlY2F5PXdlaWdodF9kZWNheSwKICAgICAgICBsZWFybmluZ19yYXRlPWxlYXJuaW5nX3JhdGUsCiAgICAgICAgbHJfc2NoZWR1bGVyX3R5cGU9bHJfc2NoZWR1bGVyX3R5cGUsCiAgICAgICAgbG9hZF9iZXN0X21vZGVsX2F0X2VuZD1UcnVlLAogICAgICAgIGV2YWx1YXRpb25fc3RyYXRlZ3kgPSAiZXBvY2giLCAjVG8gY2FsY3VsYXRlIG1ldHJpY3MgcGVyIGVwb2NoCiAgICAgICAgbG9nZ2luZ19zdHJhdGVneT0iZXBvY2giCiAgICAgICAgCiAgICApCiAgICB0cmFpbmVyID0gVHJhaW5lcigKICAgICAgICBtb2RlbD1tb2RlbCwKICAgICAgICBhcmdzPXRyYWluaW5nX2FyZ3MsCiAgICAgICAgdHJhaW5fZGF0YXNldD10b2tlbml6ZWRfZGF0YXNldHNbJ3RyYWluJ10sCiAgICAgICAgZXZhbF9kYXRhc2V0PXRva2VuaXplZF9kYXRhc2V0c1sndmFsaWRhdGlvbiddLAogICAgICAgIGNhbGxiYWNrcz1bRWFybHlTdG9wcGluZ0NhbGxiYWNrKGVhcmx5X3N0b3BwaW5nX3BhdGllbmNlPTEpXSwKICAgICAgICBjb21wdXRlX21ldHJpY3M9Y29tcHV0ZV9tZXRyaWNzCiAgICApCiAgICB0cmFpbmVyLnRva2VuaXplciA9IHRva2VuaXplX2Z1bmN0aW9uLmdldF90b2tlbml6ZXIoKQogICAgCiAgICBoYW5kbGVyID0gVHJhaW5lckhhbmRsZXIoCiAgICAgICAgdHJhaW5lcj10cmFpbmVyLAogICAgICAgIHRva2VuaXplZF9kYXRhc2V0cz10b2tlbml6ZWRfZGF0YXNldHMsCiAgICAgICAgbnVtX2xhYmVscz1udW1fbGFiZWxzLAogICAgICAgIGVuY29kaW5nPWVuY29kaW5nLAogICAgICAgIG1vZGVsX25hbWU9dGFyZ2V0X21vZGVsX25hbWUsCiAgICAgICAgbW9kZWxfc2F2ZV9wYXRoPW1vZGVsX2RpcgogICAgKQogICAgaGFuZGxlci5ydW4oKQoKICAgIGRmID0gcGQucmVhZF9jc3YobW9kZWxfZGlyICsgJy90cmFpbl9tZXRyaWNzLmNzdicpCiAgICBsYXN0X3JvdyA9IGRmLnRhaWwoMSkKICAgIG1vZGVsX21ldHJpY3MgPSBbImYxIiwiYWNjdXJhY3kiLCAicmVjYWxsIiwgInByZWNpc2lvbiJdCiAgICBtZXRyaWNzID0ge30KICAgIGZvciBtZXQgaW4gbW9kZWxfbWV0cmljczogICAgCiAgICAgICAgbWV0cmljc1ttZXRdID0gbGFzdF9yb3dbbWV0XS52YWx1ZXNbMF0KICAgIG1kbCA9IHByb2plY3QubG9nX21vZGVsKAogICAgICAgIG5hbWU9dGFyZ2V0X21vZGVsX25hbWUsCiAgICAgICAga2luZD0iaHVnZ2luZ2ZhY2UiLAogICAgICAgIGJhc2VfbW9kZWw9ImRibWR6L2JlcnQtYmFzZS1pdGFsaWFuLXh4bC1jYXNlZCIsCiAgICAgICAgcGFyYW1ldGVycz1tb2RlbF9wYXJhbXMsCiAgICAgICAgc291cmNlPW1vZGVsX2RpciwKICAgICkgICAgICAgICAgICAKICAgIGZvciBrIGluIG1ldHJpY3M6CiAgICAgICAgbWRsLmxvZ19tZXRyaWMoaywgbWV0cmljc1trXSkKCg==",
+                        "lang": "python"
+                    }
+                }
+            },
+            {
+                "kind": "container",
+                "metadata": {
+                    "name": "Download Sentinel Data (Container Job)",
+                    "description": "Function for Sentinel image download and preprocessing",
+                    "version": "0.14.6",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:geo",
+                        "application:pa",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:data-preparation"
+                    ],
+                    "path": "functions/download-sentinel-data",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/download-sentinel-data",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/download-sentinel-data:0.14.6"
+                        }
+                    ]
+                },
+                "name": "download-sentinel-data",
+                "spec": {
+                    "image": "ghcr.io/tn-aixpa/sentinel-tools:0.14.6",
+                    "command": "python"
+                }
+            },
+            {
+                "name": "echoService",
+                "metadata": {
+                    "name": "Example Echo Service (Python Serve)",
+                    "version": "1.0.0",
+                    "description": "A simple python-based API responding to a POST message with the \"text\" field. The function exposes an API using \"serve\" task.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:utility"
+                    ],
+                    "path": "functions/echo-service",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/echo-service",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/echo-service:1.0.0"
+                        }
+                    ]
+                },
+                "kind": "python+serve",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "source": {
+                        "handler": "serve",
+                        "base64": "aW1wb3J0IGpzb24KCmRlZiBpbml0KGNvbnRleHQpOgogICAgcHJpbnQoInNvbWUgaW5pdGlhbGl6YXRpb24gZnVuY3Rpb24iKQogICAgc2V0YXR0cihjb250ZXh0LCAidmFsdWUiLCAic29tZSB2YWx1ZSIpCgpkZWYgc2VydmUoY29udGV4dCwgZXZlbnQpOgoKICAgIGlmIGlzaW5zdGFuY2UoZXZlbnQuYm9keSwgYnl0ZXMpOgogICAgICAgIGJvZHkgPSBqc29uLmxvYWRzKGV2ZW50LmJvZHkpCiAgICBlbHNlOgogICAgICAgIGJvZHkgPSBldmVudC5ib2R5CiAgICBjb250ZXh0LmxvZ2dlci5pbmZvKGYiUmVjZWl2ZWQgZXZlbnQ6IHtib2R5fSIpCiAgICB0ZXh0ID0gYm9keVsidGV4dCJdCgogICAgcmV0dXJuIHsicmVzdWx0IjogZiJoZWxsbyB7dGV4dH0gZnJvbSAne2NvbnRleHQudmFsdWV9JyJ9",
+                        "lang": "python",
+                        "init_function": "init"
+                    }
+                }
+            },
+            {
+                "kind": "container",
+                "metadata": {
+                    "name": "Flood Mapping Analysis (Container Job)",
+                    "description": "Function to elaborate  Sentinel-2 imagery data for flood mapping analysis",
+                    "version": "0.14.6",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:geo",
+                        "application:pa",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:feature-extraction"
+                    ],
+                    "path": "functions/elaborate-flood-data",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/elaborate-flood-data",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/elaborate-flood-data:0.14.6"
+                        }
+                    ]
+                },
+                "name": "elaborate-flood-data",
+                "spec": {
+                    "image": "ghcr.io/tn-aixpa/rs-flood-mapping:0.14.6",
+                    "command": "/bin/bash",
+                    "source": {
+                        "source": "launch.sh",
+                        "base64": "IyEvYmluL2Jhc2gKbHMgLWxhIC9zaGFyZWQKY2Qgfgpwd2QKc291cmNlIC5iYXNocmMKZXhwb3J0IFBBVEg9Ii9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zbmFwL2JpbjokUEFUSCIKZXhwb3J0IFBST0pfTElCPS9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zaGFyZS9wcm9qCmV4cG9ydCBHREFMX0RBVEE9L2hvbWUvbm9ucm9vdC9taW5pZm9yZ2UzL3NoYXJlL2dkYWwKZXhwb3J0IEdEQUxfRFJJVkVSX1BBVEg9L2hvbWUvbm9ucm9vdC9taW5pZm9yZ2UzL2xpYi9nZGFscGx1Z2lucwpleHBvcnQgUFJPSl9EQVRBPS9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zaGFyZS9wcm9qCmdkYWwtY29uZmlnIC0tdmVyc2lvbgpweXRob24gLS12ZXJzaW9uCmVjaG8gIkdEQUwgREFUQSBBRlRFUiBFWFBPUlQ6IgplY2hvICRHREFMX0RBVEEKZWNobyAiUFJPSl9MSUIgQUZURVIgRVhQT1JUIgplY2hvICRQUk9KX0xJQgplY2hvICJSdW5uaW5nIGZsb29kIG1hcHBpbmcgc2NyaXB0IHdpdGggcGFyYW1ldGVyczoiCmVjaG8gInsnczFQcmVGbG9vZCc6ICckMScsICdzMVBvc3RGbG9vZCc6JyQyJywgJ3MyUHJlRmxvb2QnOickMycsJ3MyUG9zdEZsb29kJzonJDQnLCdnZW9tV0tUJzonJDUnLCdzbG9wZUFydGlmYWN0JzonJDYnLCdzbG9wZUZpbGVOYW1lJzonJDcnLCdsYWtlU2hhcGVBcnRpZmFjdE5hbWUnOickOCcsJ2xha2VTaGFwZUZpbGVOYW1lJzonJDknLCdyaXZlclNoYXBlQXJ0aWZhY3ROYW1lJzonJHsxMH0nLCdyaXZlclNoYXBlRmlsZU5hbWUnOickezExfScsJ291dHB1dCc6JyR7MTJ9JywnZXZlbnREYXRlJzonJHsxM30nLCd0YXJnZXRDUlMnOickezE0fScsJ3BvbGFyaXphdGlvbic6JHsxNX0sJ2RlbV90aHJlc2hvbGQnOiR7MTZ9LCdzbG9wZV90aHJlc2hvbGQnOiR7MTd9LCdub2lzZV9taW5fcGl4ZWxzJzokezE4fSwncml2ZXJfYnVmZmVyX21ldGVycyc6JHsxOX19LCAnYW9pX25hbWUnOickezIwfSd9IgpjZCAvYXBwCnB5dGhvbiBtYWluLnB5ICJ7J3MxUHJlRmxvb2QnOickMScsICdzMVBvc3RGbG9vZCc6JyQyJywgJ3MyUHJlRmxvb2QnOickMycsJ3MyUG9zdEZsb29kJzonJDQnLCdnZW9tV0tUJzonJDUnLCdzbG9wZUFydGlmYWN0JzonJDYnLCdzbG9wZUZpbGVOYW1lJzonJDcnLCdsYWtlU2hhcGVBcnRpZmFjdE5hbWUnOickOCcsJ2xha2VTaGFwZUZpbGVOYW1lJzonJDknLCdyaXZlclNoYXBlQXJ0aWZhY3ROYW1lJzonJHsxMH0nLCdyaXZlclNoYXBlRmlsZU5hbWUnOickezExfScsJ291dHB1dCc6JyR7MTJ9JywnZXZlbnREYXRlJzonJHsxM30nLCd0YXJnZXRDUlMnOickezE0fScsJ3BvbGFyaXphdGlvbic6JHsxNX0sJ2RlbV90aHJlc2hvbGQnOiR7MTZ9LCdzbG9wZV90aHJlc2hvbGQnOiR7MTd9LCdub2lzZV9taW5fcGl4ZWxzJzokezE4fSwncml2ZXJfYnVmZmVyX21ldGVycyc6JHsxOX0sICdhb2lfbmFtZSc6JyR7MjB9J30iCmV4aXQ="
+                    }
+                }
+            },
+            {
+                "kind": "container",
+                "metadata": {
+                    "name": "Deforestation Analysis (Container Job)",
+                    "description": "Function to elaborate Sentinel-2 imagery data for deforestation analysis",
+                    "version": "0.14.6",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:geo",
+                        "application:pa",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:feature-extraction"
+                    ],
+                    "path": "functions/elaborate-forest-data",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/elaborate-forest-data",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/elaborate-forest-data:0.14.6"
+                        }
+                    ]
+                },
+                "name": "elaborate-forest-data",
+                "spec": {
+                    "image": "ghcr.io/tn-aixpa/rs-deforestation:0.14.6",
+                    "command": "/bin/bash",
+                    "source": {
+                        "source": "launch.sh",
+                        "base64": "IyEvYmluL2Jhc2gKbHMgLWxhIC9zaGFyZWQKY2Qgfgpwd2QKc291cmNlIC5iYXNocmMKZWNobyAiR0RBTCB2ZXJzaW9uOiIKZ2RhbC1jb25maWcgLS12ZXJzaW9uCnB5dGhvbiAtLXZlcnNpb24KZWNobyAiR0RBTCBEQVRBOiIKZWNobyAkR0RBTF9EQVRBCmVjaG8gIlBST0pfTElCIgplY2hvICRQUk9KX0xJQgpjZCAvYXBwCmVjaG8gInsnc2hhcGVBcnRpZmFjdE5hbWUnOiAnJDEnLCAnZGF0YUFydGlmYWN0TmFtZSc6ICckMicsICd5ZWFycyc6JDMsICdvdXRwdXRBcnRpZmFjdE5hbWUnOiAnJDQnfSIKZXhwb3J0IFBST0pfTElCPS9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zaGFyZS9wcm9qCmV4cG9ydCBHREFMX0RBVEE9L2hvbWUvbm9ucm9vdC9taW5pZm9yZ2UzL3NoYXJlL2dkYWwKI2V4cG9ydCBQQVRIPSIvaG9tZS9ub25yb290L21pbmlmb3JnZTMvc25hcC8uc25hcC9hdXhkYXRhL2dkYWwvZ2RhbC0zLTAtMC9iaW4vOiRQQVRIIgplY2hvICJHREFMIERBVEEgQUZURVIgRVhQT1JUOiIKZWNobyAkR0RBTF9EQVRBCmVjaG8gIlBST0pfTElCIEFGVEVSIEVYUE9SVCIKZWNobyAkUFJPSl9MSUIKcHl0aG9uIG1haW4ucHkgInsnc2hhcGVBcnRpZmFjdE5hbWUnOiAnJDEnLCAnZGF0YUFydGlmYWN0TmFtZSc6ICckMicsICd5ZWFycyc6JDMsICdvdXRwdXRBcnRpZmFjdE5hbWUnOiAnJDQnfSIKZXhpdA=="
+                    }
+                }
+            },
+            {
+                "kind": "container",
+                "metadata": {
+                    "name": "Landslide Monitoring (Container Job)",
+                    "description": "Function to elaborate Sentinel-1 imagery data for landslide monitoring",
+                    "version": "0.14.6",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:geo",
+                        "application:pa",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:feature-extraction"
+                    ],
+                    "path": "functions/elaborate-geological-data",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/elaborate-geological-data",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/elaborate-geological-data:0.14.6"
+                        }
+                    ]
+                },
+                "name": "elaborate-geological-data",
+                "spec": {
+                    "image": "ghcr.io/tn-aixpa/rs-landslide-monitoring:0.14.6",
+                    "command": "/bin/bash",
+                    "source": {
+                        "source": "launch.sh",
+                        "base64": "IyEvYmluL2Jhc2gKbHMgLWxhIC9zaGFyZWQKY2Qgfgpwd2QKc291cmNlIC5iYXNocmMKZXhwb3J0IFBBVEg9Ii9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zbmFwL2JpbjokUEFUSCIKZXhwb3J0IFBST0pfTElCPS9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zaGFyZS9wcm9qCmV4cG9ydCBHREFMX0RBVEE9L2hvbWUvbm9ucm9vdC9taW5pZm9yZ2UzL3NoYXJlL2dkYWwKZXhwb3J0IEdEQUxfRFJJVkVSX1BBVEg9L2hvbWUvbm9ucm9vdC9taW5pZm9yZ2UzL2xpYi9nZGFscGx1Z2lucwpleHBvcnQgUFJPSl9EQVRBPS9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zaGFyZS9wcm9qCmNkIC9hcHAKZWNobyAieydzMV9hc2NlbmRpbmcnOiAnJDEnLCAnczFfZGVzY2VuZGluZyc6ICckMicsICdzdGFydERhdGUnOickMycsICdlbmREYXRlJzonJDQnLCAnb3V0cHV0QXJ0aWZhY3ROYW1lJzogJyQ1JywgJ3NoYXBlQXJ0aWZhY3ROYW1lJzogJyQ2JywgJ3NoYXBlRmlsZU5hbWUnOiAnJDcnLCAnbWFwQXJ0aWZhY3ROYW1lJzogJyQ4JywgJ2dlb21XS1QnOickOSd9IgojZXhwb3J0IFBBVEg9Ii9ob21lL25vbnJvb3QvbWluaWZvcmdlMy9zbmFwLy5zbmFwL2F1eGRhdGEvZ2RhbC9nZGFsLTMtMC0wL2Jpbi86JFBBVEgiCmVjaG8gIkdEQUwgREFUQSBBRlRFUiBFWFBPUlQ6IgplY2hvICRHREFMX0RBVEEKZWNobyAiUFJPSl9MSUIgQUZURVIgRVhQT1JUIgplY2hvICRQUk9KX0xJQgpweXRob24gbWFpbi5weSAieydzMV9hc2NlbmRpbmcnOiAnJDEnLCAnczFfZGVzY2VuZGluZyc6ICckMicsICdzdGFydERhdGUnOickMycsICdlbmREYXRlJzonJDQnLCAnb3V0cHV0QXJ0aWZhY3ROYW1lJzogJyQ1JywgJ3NoYXBlQXJ0aWZhY3ROYW1lJzogJyQ2JywgJ3NoYXBlRmlsZU5hbWUnOiAnJDcnLCAnbWFwQXJ0aWZhY3ROYW1lJzogJyQ4JywgJ2dlb21XS1QnOickOSd9IgpleGl0"
+                    }
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example Container Job (Python Job)",
+                    "version": "1.0.0",
+                    "description": "A simple example function demonstrating how to create a Python job that can be run in a containerized environment using predefined base images. This function serves as a template for building custom container jobs within the platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:utility"
+                    ],
+                    "path": "functions/example-container-job",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-container-job",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-container-job:1.0.0"
+                        }
+                    ]
+                },
+                "name": "example-container-job",
+                "spec": {
+                    "image": "hello-world:latest"
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example Container Serve (Python Serve)",
+                    "version": "1.0.0",
+                    "description": "A simple example function demonstrating how to create a Python job that can be run in a containerized environment using predefined base images. This function serves as a template for serving containerized functions within the platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:utility"
+                    ],
+                    "path": "functions/example-container-serve",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-container-serve",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-container-serve:1.0.0"
+                        }
+                    ]
+                },
+                "name": "example-container-serve",
+                "spec": {
+                    "image": "hashicorp/http-echo:latest"
+                }
+            },
+            {
+                "kind": "dbt",
+                "metadata": {
+                    "name": "Example DBT Transform (DBT Job)",
+                    "version": "1.0.0",
+                    "description": "This function demonstrates how to create a DBT transformation job. It performs a simple SQL query on a sample dataitem named 'employees'. It further processes the data to extract all records and filters them based on a specific department ID. The resulting dataset is logged for verification. This example serves as a foundational template for building more complex DBT transformations within your data workflows.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:tabular",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:data-preparation"
+                    ],
+                    "path": "functions/example-dbt-transform",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-dbt-transform",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-dbt-transform:1.0.0"
+                        }
+                    ]
+                },
+                "name": "dbt-transform",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "source": {
+                        "base64": "V0lUSCB0YWIgQVMgKAogICAgU0VMRUNUICAqCiAgICBGUk9NICAgIHt7IHJlZignZW1wbG95ZWVzJykgfX0KKQpTRUxFQ1QgICoKRlJPTSAgICB0YWIKV0hFUkUgICB0YWIuIkRFUEFSVE1FTlRfSUQiID0gJzYwJwo=",
+                        "lang": "sql"
+                    }
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example ETL (Python Job)",
+                    "version": "1.0.0",
+                    "description": "A simple extract transform load (ETL) procedure in Python that downloads a csv file and then returns the result as a dataframe that is stored in the project repository as table(data-item).",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:tabular",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:data-preparation"
+                    ],
+                    "path": "functions/example-etl",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-etl",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-etl:1.0.0"
+                        }
+                    ]
+                },
+                "name": "example-etl",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "source": {
+                        "base64": "aW1wb3J0IHBhbmRhcyBhcyBwZApmcm9tIGRpZ2l0YWxodWJfcnVudGltZV9weXRob24gaW1wb3J0IGhhbmRsZXIKCiMgVVJMPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vZGF0YXNldHMvd29ybGQtY2l0aWVzL3JlZnMvaGVhZHMvbWFpbi9kYXRhL3dvcmxkLWNpdGllcy5jc3YiCgpAaGFuZGxlcigpI291dHB1dHM9WyJ3b3JsZC1jaXRpZXMiXQpkZWYgZG93bmxvYWRfYW5kX3Byb2Nlc3MocHJvamVjdCwgdXJsLCBvdXRwdXRfdGFibGUpOgogICAgZGYgPSBwZC5yZWFkX2Nzdih1cmwpCiAgICBkZi5yZXNldF9pbmRleChpbnBsYWNlPVRydWUpCiAgICBwcm9qZWN0LmxvZ19kYXRhaXRlbShuYW1lPW91dHB1dF90YWJsZSwga2luZD0ndGFibGUnLCBkYXRhPWRmKQogICAgI3JldHVybiBkZg==",
+                        "lang": "python"
+                    }
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example Hello World (Python Job)",
+                    "version": "1.0.0",
+                    "description": "Hello world with python: write a string to stdout",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:utility"
+                    ],
+                    "path": "functions/example-hello-world",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-hello-world",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-hello-world:1.0.0"
+                        }
+                    ]
+                },
+                "name": "hello-world",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "requirements": [
+                        "scikit-learn==1.5.0",
+                        "mlflow==2.15.1"
+                    ],
+                    "source": {
+                        "handler": "train",
+                        "base64": "ZnJvbSBkaWdpdGFsaHViX3J1bnRpbWVfcHl0aG9uIGltcG9ydCBoYW5kbGVyCgpmcm9tIGRpZ2l0YWxodWIgaW1wb3J0IGZyb21fbWxmbG93X3J1bgppbXBvcnQgbWxmbG93Cgpmcm9tIHNrbGVhcm4gaW1wb3J0IGRhdGFzZXRzLCBzdm0KZnJvbSBza2xlYXJuLm1vZGVsX3NlbGVjdGlvbiBpbXBvcnQgR3JpZFNlYXJjaENWCgpAaGFuZGxlcigpCmRlZiB0cmFpbihwcm9qZWN0KToKICAgIG1sZmxvdy5za2xlYXJuLmF1dG9sb2cobG9nX2RhdGFzZXRzPVRydWUpCgogICAgaXJpcyA9IGRhdGFzZXRzLmxvYWRfaXJpcygpCiAgICBwYXJhbWV0ZXJzID0geyJrZXJuZWwiOiAoImxpbmVhciIsICJyYmYiKSwgIkMiOiBbMSwgMTBdfQogICAgc3ZjID0gc3ZtLlNWQygpCiAgICBjbGYgPSBHcmlkU2VhcmNoQ1Yoc3ZjLCBwYXJhbWV0ZXJzKQoKICAgIGNsZi5maXQoaXJpcy5kYXRhLCBpcmlzLnRhcmdldCkKICAgIHJ1bl9pZCA9IG1sZmxvdy5sYXN0X2FjdGl2ZV9ydW4oKS5pbmZvLnJ1bl9pZAoKICAgICMgdXRpbGl0eSB0byBtYXAgbWxmbG93IHJ1biBhcnRpZmFjdHMgdG8gbW9kZWwgbWV0YWRhdGEKICAgIG1vZGVsX3BhcmFtcyA9IGZyb21fbWxmbG93X3J1bihydW5faWQpCgogICAgcHJvamVjdC5sb2dfbW9kZWwoCiAgICAgICAgbmFtZT0ibW9kZWwtbWxmbG93IiwKICAgICAgICBraW5kPSJtbGZsb3ciLAogICAgICAgICoqbW9kZWxfcGFyYW1zCik=",
+                        "lang": "python"
+                    }
+                }
+            },
+            {
+                "kind": "python",
+                "metadata": {
+                    "name": "Example Validate Table (Python Job)",
+                    "version": "1.0.0",
+                    "description": "A simple example function that downloads a CSV file from a given URL, validate its content, and loads the report into a specified output table.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "domain:tabular",
+                        "platform:0.14",
+                        "type:job",
+                        "phase:data-preparation"
+                    ],
+                    "path": "functions/example-validate-table",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/example-validate-table",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/example-validate-table:1.0.0"
+                        }
+                    ]
+                },
+                "name": "example-validate-table",
+                "spec": {
+                    "python_version": "PYTHON3_10",
+                    "requirements": [
+                        "frictionless",
+                        "frictionless[parquet]"
+                    ],
+                    "source": {
+                        "base64": "aW1wb3J0IGRpZ2l0YWxodWIgYXMgZGgKZnJvbSBkaWdpdGFsaHViX3J1bnRpbWVfcHl0aG9uIGltcG9ydCBoYW5kbGVyCmZyb20gZnJpY3Rpb25sZXNzIGltcG9ydCBDaGVja2xpc3QsIHZhbGlkYXRlCmltcG9ydCBvcwoKQGhhbmRsZXIob3V0cHV0cz1bInJlcG9ydCJdKQpkZWYgbWFpbihwcm9qZWN0LCBkaSk6CiAgICAjIGRvd25sb2FkIGFzIGxvY2FsIGZpbGUKICAgIHBhdGggPSBkaS5kb3dubG9hZChvdmVyd3JpdGU9VHJ1ZSkKICAgICMgdmFsaWRhdGUKICAgIHJlcG9ydCA9IHZhbGlkYXRlKHBhdGgpCiAgICAjIHVwZGF0ZSBhcnRpZmFjdCB3aXRoIGxhYmVsICAgIAogICAgbGFiZWwgPSAiVkFMSUQiIGlmIHJlcG9ydC52YWxpZCBlbHNlICJJTlZBTElEIgogICAgZGkubWV0YWRhdGEubGFiZWxzID0gZGkubWV0YWRhdGEubGFiZWxzLmFwcGVuZChsYWJlbCkgaWYgZGkubWV0YWRhdGEubGFiZWxzIGVsc2UgW2xhYmVsXQogICAgZGkuc2F2ZSh1cGRhdGU9VHJ1ZSkgICAgCiAgICAjY2xlYW51cAogICAgb3MucmVtb3ZlKHBhdGgpIAoKICAgIHdpdGggb3BlbigicmVwb3J0Lmpzb24iLCAidyIpIGFzIGY6CiAgICAgIGYud3JpdGUocmVwb3J0LnRvX2pzb24oKSkKCiAgICBwcm9qZWN0LmxvZ19hcnRpZmFjdChraW5kPSJhcnRpZmFjdCIsIG5hbWU9ZiJ7ZGkubmFtZX1fdmFsaWRhdGlvbi1yZXBvcnQuanNvbiIsIHNvdXJjZT0icmVwb3J0Lmpzb24iKQogICAgICAgIAogICAgIyBwZXJzaXN0IHJlcG9ydAogICAgcmV0dXJuIHJlcG9ydC50b19qc29uKCk=",
+                        "lang": "python"
+                    }
+                }
+            },
+            {
+                "kind": "flower-app",
+                "metadata": {
+                    "name": "Flower App (flower-app)",
+                    "version": "1.0.0",
+                    "description": "This function implements a Flower client application that connects to a Flower server, fetches data partitions, and sends results back to the server. It includes a sample implementation of the client-side logic for handling data partitions and communicating with the server.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "framework:flower"
+                    ],
+                    "path": "functions/flower-app",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/flower-app",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/flower-app:1.0.0"
+                        }
+                    ]
+                },
+                "name": "flower-app",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "fab_source": {
+                        "clientapp": "app",
+                        "serverapp": "app",
+                        "clientbase64": "IiIicGFuZGFzX2V4YW1wbGU6IEEgRmxvd2VyIC8gUGFuZGFzIGFwcC4iIiIKCmltcG9ydCB3YXJuaW5ncwoKaW1wb3J0IG51bXB5IGFzIG5wCmZyb20gZmx3cl9kYXRhc2V0cyBpbXBvcnQgRmVkZXJhdGVkRGF0YXNldApmcm9tIGZsd3JfZGF0YXNldHMucGFydGl0aW9uZXIgaW1wb3J0IElpZFBhcnRpdGlvbmVyCgpmcm9tIGZsd3IuY2xpZW50IGltcG9ydCBDbGllbnRBcHAKZnJvbSBmbHdyLmNvbW1vbiBpbXBvcnQgQ29udGV4dCwgTWVzc2FnZSwgTWV0cmljUmVjb3JkLCBSZWNvcmREaWN0CgpmZHMgPSBOb25lICAjIENhY2hlIEZlZGVyYXRlZERhdGFzZXQKCndhcm5pbmdzLmZpbHRlcndhcm5pbmdzKCJpZ25vcmUiLCBjYXRlZ29yeT1Vc2VyV2FybmluZykKCgpkZWYgZ2V0X2NsaWVudGFwcF9kYXRhc2V0KHBhcnRpdGlvbl9pZDogaW50LCBudW1fcGFydGl0aW9uczogaW50KToKICAgICMgT25seSBpbml0aWFsaXplIGBGZWRlcmF0ZWREYXRhc2V0YCBvbmNlCiAgICBnbG9iYWwgZmRzCiAgICBpZiBmZHMgaXMgTm9uZToKICAgICAgICBwYXJ0aXRpb25lciA9IElpZFBhcnRpdGlvbmVyKG51bV9wYXJ0aXRpb25zPW51bV9wYXJ0aXRpb25zKQogICAgICAgIGZkcyA9IEZlZGVyYXRlZERhdGFzZXQoCiAgICAgICAgICAgIGRhdGFzZXQ9InNjaWtpdC1sZWFybi9pcmlzIiwKICAgICAgICAgICAgcGFydGl0aW9uZXJzPXsidHJhaW4iOiBwYXJ0aXRpb25lcn0sCiAgICAgICAgKQoKICAgIGRhdGFzZXQgPSBmZHMubG9hZF9wYXJ0aXRpb24ocGFydGl0aW9uX2lkLCAidHJhaW4iKS53aXRoX2Zvcm1hdCgicGFuZGFzIilbOl0KICAgICMgVXNlIGp1c3QgdGhlIHNwZWNpZmllZCBjb2x1bW5zCiAgICByZXR1cm4gZGF0YXNldFtbIlNlcGFsTGVuZ3RoQ20iLCAiU2VwYWxXaWR0aENtIl1dCgoKIyBGbG93ZXIgQ2xpZW50QXBwCmFwcCA9IENsaWVudEFwcCgpCgoKQGFwcC5xdWVyeSgpCmRlZiBxdWVyeShtc2c6IE1lc3NhZ2UsIGNvbnRleHQ6IENvbnRleHQpOgogICAgIiIiQ29uc3RydWN0IGhpc3RvZ3JhbSBvZiBsb2NhbCBkYXRhc2V0IGFuZCByZXBvcnQgdG8gYFNlcnZlckFwcGAuIiIiCgogICAgIyBSZWFkIHRoZSBub2RlX2NvbmZpZyB0byBmZXRjaCBkYXRhIHBhcnRpdGlvbiBhc3NvY2lhdGVkIHRvIHRoaXMgbm9kZQogICAgcGFydGl0aW9uX2lkID0gY29udGV4dC5ub2RlX2NvbmZpZ1sicGFydGl0aW9uLWlkIl0KICAgIG51bV9wYXJ0aXRpb25zID0gY29udGV4dC5ub2RlX2NvbmZpZ1sibnVtLXBhcnRpdGlvbnMiXQoKICAgIGRhdGFzZXQgPSBnZXRfY2xpZW50YXBwX2RhdGFzZXQocGFydGl0aW9uX2lkLCBudW1fcGFydGl0aW9ucykKCiAgICBtZXRyaWNzID0ge30KICAgICMgQ29tcHV0ZSBzb21lIHN0YXRpc3RpY3MgZm9yIGVhY2ggY29sdW1uIGluIHRoZSBkYXRhZnJhbWUKICAgIGZvciBmZWF0dXJlX25hbWUgaW4gZGF0YXNldC5jb2x1bW5zOgogICAgICAgICMgQ29tcHV0ZSBoaXN0b2dyYW0KICAgICAgICBmcmVxcywgXyA9IG5wLmhpc3RvZ3JhbShkYXRhc2V0W2ZlYXR1cmVfbmFtZV0sIGJpbnM9bnAubGluc3BhY2UoMi4wLCAxMC4wLCAxMCkpCiAgICAgICAgbWV0cmljc1tmZWF0dXJlX25hbWVdID0gZnJlcXMudG9saXN0KCkKCiAgICAgICAgIyBDb21wdXRlIHdlaWdodGVkIGF2ZXJhZ2UKICAgICAgICBtZXRyaWNzW2Yie2ZlYXR1cmVfbmFtZX1fYXZnIl0gPSBkYXRhc2V0W2ZlYXR1cmVfbmFtZV0ubWVhbigpICogbGVuKGRhdGFzZXQpCiAgICAgICAgbWV0cmljc1tmIntmZWF0dXJlX25hbWV9X2NvdW50Il0gPSBsZW4oZGF0YXNldCkKCiAgICByZXBseV9jb250ZW50ID0gUmVjb3JkRGljdCh7InF1ZXJ5X3Jlc3VsdHMiOiBNZXRyaWNSZWNvcmQobWV0cmljcyl9KQoKICAgIHJldHVybiBNZXNzYWdlKHJlcGx5X2NvbnRlbnQsIHJlcGx5X3RvPW1zZyk=",
+                        "serverbase64": "IiIicGFuZGFzX2V4YW1wbGU6IEEgRmxvd2VyIC8gUGFuZGFzIGFwcC4iIiIKCmltcG9ydCByYW5kb20KaW1wb3J0IHRpbWUKZnJvbSBjb2xsZWN0aW9ucy5hYmMgaW1wb3J0IEl0ZXJhYmxlCmZyb20gbG9nZ2luZyBpbXBvcnQgSU5GTwoKaW1wb3J0IG51bXB5IGFzIG5wCgpmcm9tIGZsd3IuY29tbW9uIGltcG9ydCBDb250ZXh0LCBNZXNzYWdlLCBNZXNzYWdlVHlwZSwgUmVjb3JkRGljdApmcm9tIGZsd3IuY29tbW9uLmxvZ2dlciBpbXBvcnQgbG9nCmZyb20gZmx3ci5zZXJ2ZXIgaW1wb3J0IEdyaWQsIFNlcnZlckFwcAoKYXBwID0gU2VydmVyQXBwKCkKCgpAYXBwLm1haW4oKQpkZWYgbWFpbihncmlkOiBHcmlkLCBjb250ZXh0OiBDb250ZXh0KSAtPiBOb25lOgogICAgIiIiVGhpcyBgU2VydmVyQXBwYCBjb25zdHJ1Y3QgYSBoaXN0b2dyYW0gZnJvbSBwYXJ0aWFsLWhpc3RvZ3JhbXMgcmVwb3J0ZWQgYnkgdGhlCiAgICBgQ2xpZW50QXBwYHMuIiIiCgogICAgbnVtX3JvdW5kcyA9IGNvbnRleHQucnVuX2NvbmZpZ1sibnVtLXNlcnZlci1yb3VuZHMiXQogICAgbWluX25vZGVzID0gMgogICAgZnJhY3Rpb25fc2FtcGxlID0gY29udGV4dC5ydW5fY29uZmlnWyJmcmFjdGlvbi1zYW1wbGUiXQoKICAgIGZvciBzZXJ2ZXJfcm91bmQgaW4gcmFuZ2UobnVtX3JvdW5kcyk6CiAgICAgICAgbG9nKElORk8sICIiKSAgIyBBZGQgbmV3bGluZSBmb3IgbG9nIHJlYWRhYmlsaXR5CiAgICAgICAgbG9nKElORk8sICJTdGFydGluZyByb3VuZCAlcy8lcyIsIHNlcnZlcl9yb3VuZCArIDEsIG51bV9yb3VuZHMpCgogICAgICAgICMgTG9vcCBhbmQgd2FpdCB1bnRpbCBlbm91Z2ggbm9kZXMgYXJlIGF2YWlsYWJsZS4KICAgICAgICBhbGxfbm9kZV9pZHM6IGxpc3RbaW50XSA9IFtdCiAgICAgICAgd2hpbGUgbGVuKGFsbF9ub2RlX2lkcykgPCBtaW5fbm9kZXM6CiAgICAgICAgICAgIGFsbF9ub2RlX2lkcyA9IGxpc3QoZ3JpZC5nZXRfbm9kZV9pZHMoKSkKICAgICAgICAgICAgaWYgbGVuKGFsbF9ub2RlX2lkcykgPj0gbWluX25vZGVzOgogICAgICAgICAgICAgICAgIyBTYW1wbGUgbm9kZXMKICAgICAgICAgICAgICAgIG51bV90b19zYW1wbGUgPSBpbnQobGVuKGFsbF9ub2RlX2lkcykgKiBmcmFjdGlvbl9zYW1wbGUpCiAgICAgICAgICAgICAgICBub2RlX2lkcyA9IHJhbmRvbS5zYW1wbGUoYWxsX25vZGVfaWRzLCBudW1fdG9fc2FtcGxlKQogICAgICAgICAgICAgICAgYnJlYWsKICAgICAgICAgICAgbG9nKElORk8sICJXYWl0aW5nIGZvciBub2RlcyB0byBjb25uZWN0Li4uIikKICAgICAgICAgICAgdGltZS5zbGVlcCgyKQoKICAgICAgICBsb2coSU5GTywgIlNhbXBsZWQgJXMgbm9kZXMgKG91dCBvZiAlcykiLCBsZW4obm9kZV9pZHMpLCBsZW4oYWxsX25vZGVfaWRzKSkKCiAgICAgICAgIyBDcmVhdGUgbWVzc2FnZXMKICAgICAgICByZWNvcmRkaWN0ID0gUmVjb3JkRGljdCgpCiAgICAgICAgbWVzc2FnZXMgPSBbXQogICAgICAgIGZvciBub2RlX2lkIGluIG5vZGVfaWRzOiAgIyBvbmUgbWVzc2FnZSBmb3IgZWFjaCBub2RlCiAgICAgICAgICAgIG1lc3NhZ2UgPSBNZXNzYWdlKAogICAgICAgICAgICAgICAgY29udGVudD1yZWNvcmRkaWN0LAogICAgICAgICAgICAgICAgbWVzc2FnZV90eXBlPU1lc3NhZ2VUeXBlLlFVRVJZLCAgIyB0YXJnZXQgYHF1ZXJ5YCBtZXRob2QgaW4gQ2xpZW50QXBwCiAgICAgICAgICAgICAgICBkc3Rfbm9kZV9pZD1ub2RlX2lkLAogICAgICAgICAgICAgICAgZ3JvdXBfaWQ9c3RyKHNlcnZlcl9yb3VuZCksCiAgICAgICAgICAgICkKICAgICAgICAgICAgbWVzc2FnZXMuYXBwZW5kKG1lc3NhZ2UpCgogICAgICAgICMgU2VuZCBtZXNzYWdlcyBhbmQgd2FpdCBmb3IgYWxsIHJlc3VsdHMKICAgICAgICByZXBsaWVzID0gZ3JpZC5zZW5kX2FuZF9yZWNlaXZlKG1lc3NhZ2VzKQogICAgICAgIGxvZyhJTkZPLCAiUmVjZWl2ZWQgJXMvJXMgcmVzdWx0cyIsIGxlbihyZXBsaWVzKSwgbGVuKG1lc3NhZ2VzKSkKCiAgICAgICAgIyBBZ2dyZWdhdGUgcGFydGlhbCBoaXN0b2dyYW1zCiAgICAgICAgYWdncmVnYXRlZF9oaXN0ID0gYWdncmVnYXRlX3BhcnRpYWxfaGlzdG9ncmFtcyhyZXBsaWVzKQoKICAgICAgICAjIERpc3BsYXkgYWdncmVnYXRlZCBoaXN0b2dyYW0KICAgICAgICBsb2coSU5GTywgIkFnZ3JlZ2F0ZWQgaGlzdG9ncmFtOiAlcyIsIGFnZ3JlZ2F0ZWRfaGlzdCkKCgpkZWYgYWdncmVnYXRlX3BhcnRpYWxfaGlzdG9ncmFtcyhtZXNzYWdlczogSXRlcmFibGVbTWVzc2FnZV0pOgogICAgIiIiQWdncmVnYXRlIHBhcnRpYWwgaGlzdG9ncmFtcy4iIiIKCiAgICBhZ2dyZWdhdGVkX2hpc3QgPSB7fQogICAgdG90YWxfY291bnQgPSAwCiAgICBmb3IgcmVwIGluIG1lc3NhZ2VzOgogICAgICAgIGlmIHJlcC5oYXNfZXJyb3IoKToKICAgICAgICAgICAgY29udGludWUKICAgICAgICBxdWVyeV9yZXN1bHRzID0gcmVwLmNvbnRlbnRbInF1ZXJ5X3Jlc3VsdHMiXQogICAgICAgICMgU3VtIG1ldHJpY3MKICAgICAgICBmb3IgaywgdiBpbiBxdWVyeV9yZXN1bHRzLml0ZW1zKCk6CiAgICAgICAgICAgIGlmIGsgaW4gWyJTZXBhbExlbmd0aENtIiwgIlNlcGFsV2lkdGhDbSJdOgogICAgICAgICAgICAgICAgaWYgayBpbiBhZ2dyZWdhdGVkX2hpc3Q6CiAgICAgICAgICAgICAgICAgICAgYWdncmVnYXRlZF9oaXN0W2tdICs9IG5wLmFycmF5KHYpCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIGFnZ3JlZ2F0ZWRfaGlzdFtrXSA9IG5wLmFycmF5KHYpCiAgICAgICAgICAgIGlmICJfY291bnQiIGluIGs6CiAgICAgICAgICAgICAgICB0b3RhbF9jb3VudCArPSB2CgogICAgIyBWZXJpZnkgYWdncmVnYXRlZCBoaXN0b2dyYW0gYWRkcyB1cCB0byB0b3RhbCByZXBvcnRlZCBjb3VudAogICAgYXNzZXJ0IHRvdGFsX2NvdW50ID09IHN1bShbc3VtKHYpIGZvciB2IGluIGFnZ3JlZ2F0ZWRfaGlzdC52YWx1ZXMoKV0pCiAgICByZXR1cm4gYWdncmVnYXRlZF9oaXN0"
+                    }
+                }
+            },
+            {
+                "kind": "flower-client",
+                "metadata": {
+                    "name": "Flower Client (flower-client)",
+                    "version": "1.0.0",
+                    "description": "This function demonstrates the Supernode client function to interact with the Flower server, how to build the corresponding image, and activates client nodes container with the dependencies and the node-specific configuration.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "framework:flower"
+                    ],
+                    "path": "functions/flower-client",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/flower-client",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/flower-client:1.0.0"
+                        }
+                    ]
+                },
+                "name": "flower-client",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "requirements": [
+                        "pandas==2.2.3",
+                        "flwr-datasets[vision]==0.5.0"
+                    ]
+                }
+            },
+            {
+                "kind": "flower-server",
+                "metadata": {
+                    "name": "Flower Serve (flower-server)",
+                    "version": "1.0.0",
+                    "description": "This function serves as a demonstration of the Flower Supernode server functionality. It builds the corresponding Docker image, and activate server node containers with the necessary dependencies and specific configurations tailored for each node.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "framework:flower"
+                    ],
+                    "path": "functions/flower-serve",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/flower-serve",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/flower-serve:1.0.0"
+                        }
+                    ]
+                },
+                "name": "flower-serve",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "requirements": [
+                        "pandas==2.2.3",
+                        "flwr-datasets[vision]==0.5.0"
+                    ]
+                }
+            },
+            {
+                "kind": "kubeai-text",
+                "metadata": {
+                    "name": "LLM Ollama Serve (Kubeai-Text Serve)",
+                    "version": "1.0.0",
+                    "description": "This function demonstrates how to deploy and interact with the Llama 3.2 model using Ollama inside the DigitalHub platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:model-serving",
+                        "inference:openai"
+                    ],
+                    "path": "functions/llm-ollama-serve",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/llm-ollama-serve",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/llm-ollama-serve:1.0.0"
+                        }
+                    ]
+                },
+                "name": "llm-ollama-serve",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "features": [
+                        "TextGeneration"
+                    ],
+                    "model_name": "model",
+                    "engine": "OLlama",
+                    "url": "ollama://llama3.2:1b"
+                }
+            },
+            {
+                "kind": "kubeai-text",
+                "metadata": {
+                    "name": "LLM VLLM Serve (Kubeai-Text Serve)",
+                    "version": "1.0.0",
+                    "description": "This function demonstrates how to deploy and interact with the VLLM model using the KubeAI Text Serving framework inside the DigitalHub platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:model-serving",
+                        "inference:openai"
+                    ],
+                    "path": "functions/llm-vllm-kubeai-serve",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/llm-vllm-kubeai-serve",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/llm-vllm-kubeai-serve:1.0.0"
+                        }
+                    ]
+                },
+                "name": "vllm-kubeai-serve",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "features": [
+                        "TextGeneration"
+                    ],
+                    "model_name": "model",
+                    "engine": "VLLM",
+                    "url": "hf://Qwen/Qwen2.5-0.5B-Instruct"
+                }
+            },
+            {
+                "kind": "kubeai-text",
+                "metadata": {
+                    "name": "LLM VLLM Serve (vllmserve-text)",
+                    "version": "1.0.0",
+                    "description": "This function demonstrates how to deploy and interact with the VLLM model using the openAI Text Serving framework inside the DigitalHub platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:model-serving",
+                        "inference:openai"
+                    ],
+                    "path": "functions/llm-vllm-text-serve",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/llm-vllm-text-serve",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/llm-vllm-text-serve:1.0.0"
+                        }
+                    ]
+                },
+                "name": "vllm-text-serve",
+                "python_version": "PYTHON3_10",
+                "spec": {
+                    "model_name": "model",
+                    "url": "hf://Qwen/Qwen2.5-0.5B-Instruct"
+                }
+            },
+            {
+                "name": "tika",
+                "kind": "python+serve",
+                "metadata": {
+                    "name": "Text Extraction Service (Project)",
+                    "project": "tika",
+                    "version": "1.0.0",
+                    "description": "This project demonstrates how to deploy a text extraction service using Apache Tika in a container and a Python function to interact with it, all orchestrated within the DigitalHub platform.",
+                    "labels": [
+                        "license:apache-2.0",
+                        "platform:0.14",
+                        "type:service",
+                        "phase:utility"
+                    ],
+                    "path": "functions/text-extraction-service",
+                    "repository": "https://github.com/scc-digitalhub/hub/tree/main/catalog/functions/text-extraction-service",
+                    "relationships": [
+                        {
+                            "type": "part_of",
+                            "dest": "hub://functions/text-extraction-service:1.0.0"
+                        }
+                    ]
+                },
+                "spec": {
+                    "functions": [
+                        {
+                            "kind": "container",
+                            "metadata": {
+                                "name": "tika",
+                                "project": "tika"
+                            },
+                            "name": "tika",
+                            "spec": {
+                                "image": "apache/tika:latest-full"
+                            }
+                        },
+                        {
+                            "kind": "python",
+                            "metadata": {
+                                "name": "extract",
+                                "project": "tika"
+                            },
+                            "name": "extract",
+                            "project": "tika",
+                            "spec": {
+                                "python_version": "PYTHON3_10"
+                            },
+                            "source": {
+                                "base64": "aW1wb3J0IHJlcXVlc3RzCgpkZWYgZXh0cmFjdF90ZXh0KHRpa2FfdXJsLCBhcnRpZmFjdCwgcHJvamVjdCk6CiAgICBwcmludChmIkRvd25sb2FkaW5nIGFydGlmYWN0IHthcnRpZmFjdC5uYW1lfS4uLiIpCiAgICBmcCA9IGFydGlmYWN0LmFzX2ZpbGUoKQogICAgaWYgbm90ICh0aWthX3VybClbOjRdID09ICJodHRwIjogCiAgICAgICAgdGlrYV91cmwgPSAiaHR0cDovLyIrdGlrYV91cmwKICAgIHByaW50KGYiU2VuZGluZyB7ZnB9IHRvIHt0aWthX3VybH0uLi4iKSAgICAKICAgIHJlc3BvbnNlID0gcmVxdWVzdHMucHV0KHRpa2FfdXJsKyIvdGlrYSIsaGVhZGVycz17IkFjY2VwdCI6InRleHQvaHRtbCJ9LCBkYXRhPW9wZW4oZnAsJ3JiJykucmVhZCgpKQogICAgaWYgcmVzcG9uc2Uuc3RhdHVzX2NvZGUgPT0gMjAwOgogICAgICAgIHByaW50KCJFeHRyYWN0ZWQgdGV4dCB3aXRoIHN1Y2Nlc3MiKQogICAgICAgIHJlcyA9ICIvdG1wL291dHB1dC5odG1sIgogICAgICAgIHdpdGggb3BlbihyZXMsICJ3IikgYXMgdGY6CiAgICAgICAgICAgIHRmLndyaXRlKHJlc3BvbnNlLnRleHQpCiAgICAgICAgcHJvamVjdC5sb2dfYXJ0aWZhY3Qoa2luZD0iYXJ0aWZhY3QiLCBuYW1lPWFydGlmYWN0Lm5hbWUrIl9vdXRwdXQuaHRtbCIsIHNvdXJjZT1yZXMpCiAgICAgICAgcmV0dXJuIHJlcwogICAgZWxzZToKICAgICAgICBwcmludChmIlJlY2VpdmVkIGVycm9yOiB7cmVzcG9uc2Uuc3RhdHVzX2NvZGV9IikKICAgICAgICByYWlzZSBFeGNlcHRpb24oIkVycm9yIikK",
+                                "lang": "python"
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "models": []
+    },
+    "license": "Apache-2.0",
+    "catalog_url": "https://github.com/scc-digitalhub/hub/tree/main/catalog/"
+}
