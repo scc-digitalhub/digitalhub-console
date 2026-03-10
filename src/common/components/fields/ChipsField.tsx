@@ -23,7 +23,7 @@ export const ChipsField = <
     if (!value) return null;
 
     return (
-        <Stack direction={'row'} columnGap={0} alignItems={'flex-start'}>
+        <Stack direction={'row'} columnGap={0} alignItems={'flex-start'} sx={{ flexWrap: 'wrap', gap: '5px' }}>
             {typeof value === 'string' ? (
                 <Chip key={value} label={value} sx={{ mr: '5px' }}></Chip>
             ) : (

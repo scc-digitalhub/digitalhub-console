@@ -8,7 +8,6 @@ import {
     Error as RaError,
     useCreatePath,
     useListContext,
-    useResourceContext,
     useTheme,
     useTranslate,
 } from 'react-admin';
@@ -33,7 +32,7 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
     const [readme, setReadme] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
-    const [theme, setTheme] = useTheme();
+    const [theme] = useTheme();
     const readmeUrl = useMemo(
         () => toRepositoryAssetUrl(template?.metadata?.repository, 'README.md'),
         [template?.metadata?.repository]
@@ -111,11 +110,20 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
                         },
                     }}
                 >
-                    <MarkdownPreview source={readme}
-                    style={{ padding: 16 , borderRadius: 10,backgroundColor:'rgba(255, 255, 255, 0.08)' }}
-                      wrapperElement={{
-                      "data-color-mode": theme 
-                          }} />
+                    <MarkdownPreview
+                        source={readme}
+                        style={{
+                            padding: 16,
+                            borderRadius: 10,
+                            backgroundColor:
+                                theme === 'dark'
+                                    ? 'rgba(255, 255, 255, 0.08)'
+                                    : 'rgba(0, 0, 0, 0.04)',
+                        }}
+                        wrapperElement={{
+                            'data-color-mode': theme,
+                        }}
+                    />
                 </Box>
             )}
         </Box>
@@ -131,16 +139,17 @@ export const HubLayout = () => {
     const pageTitle = hubInfo?.name || translate('pages.hub.title');
     const pageSubtitle =
         hubInfo?.description || translate('pages.hub.subtitle');
-        const navigate = useNavigate();
-        const createPath = useCreatePath();
+    const navigate = useNavigate();
+    const createPath = useCreatePath();
 
-        const handleImport = (template: any) => {
-            const path = createPath({ resource:'functions', type: 'list' })+'/hubimport'
-            
-            navigate(path, {
-                state: { hubTemplate: template },
-            });
-        }
+    const handleImport = (template: any) => {
+        const path =
+            createPath({ resource: 'functions', type: 'list' }) + '/hubimport';
+
+        navigate(path, {
+            state: { hubTemplate: template },
+        });
+    };
     const handleNotebookDownload = async () => {
         const url = toRepositoryAssetUrl(
             selectedTemplate?.metadata?.repository,
