@@ -20,5 +20,6 @@
     "revoke": "Revoke",
     "toggle_x": "Show/Hide %{el}",
     "upload": "Upload",
-    "hub": "Hub"
+    "hub": "Hub",
+    "upload_x_files": "Upload %{files} file |||| Upload %{files} files"
 }

@@ -5,6 +5,10 @@
 import { useEffect, useState } from 'react';
 import { Upload, UploadStatusController } from './types';
 
+/**
+ * Hook to get the controller that manages uploads displayed in the UploadArea
+ * @returns UploadStatusController
+ */
 export const useUploadStatusController = (): UploadStatusController => {
     const [uploads, setUploads] = useState<Upload[]>([]);
     const [uploading, setUploading] = useState<boolean>(false);

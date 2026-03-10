@@ -264,6 +264,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                             });
                         }
                     } catch (error: any) {
+                        console.log(error)
                         throw new Error(
                             translate(
                                 'messages.upload.complete_multipart_server_error',
@@ -340,16 +341,14 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-progress', file => {
                 if (file) {
-                    if (resource) {
-                        updateUploads({
-                            id: file.id + `_${recordId}`,
-                            filename: file.name,
-                            progress: file.progress,
-                            resource,
-                            resourceId: recordId,
-                            remove: () => uppy?.removeFile(file.id),
-                        });
-                    }
+                    updateUploads({
+                        id: file.id + (recordId ? `_${recordId}` : ''),
+                        filename: file.name,
+                        progress: file.progress,
+                        resource,
+                        resourceId: recordId,
+                        remove: () => uppy?.removeFile(file.id),
+                    });
                     setFiles(prev => {
                         return prev.map(f =>
                             f.id === file.id ? { ...f, file: file } : f
@@ -368,46 +367,44 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-error', (file, error) => {
                 if (file) {
-                    if (resource) {
-                        updateUploads({
-                            id: file.id + `_${recordId}`,
-                            filename: file.name,
-                            progress: file.progress,
-                            resource,
-                            resourceId: recordId,
-                            remove: () => uppy?.removeFile(file.id),
-                            error,
-                            retry: () => {
-                                const postRetryCallback = () => {
-                                    let result: UploadResult<Meta, AwsBody> = {
-                                        successful: [],
-                                        failed: [],
-                                    };
-                                    result.successful = uppy
-                                        ?.getFiles()
-                                        .filter(f => f.progress.uploadComplete);
-                                    result.failed = uppy
-                                        ?.getFiles()
-                                        .filter(f => f.error);
-                                    if (onUploadComplete) {
-                                        onUploadComplete(result);
-                                    }
+                    updateUploads({
+                        id: file.id + (recordId ? `_${recordId}` : ''),
+                        filename: file.name,
+                        progress: file.progress,
+                        resource,
+                        resourceId: recordId,
+                        remove: () => uppy?.removeFile(file.id),
+                        error,
+                        retry: () => {
+                            const postRetryCallback = () => {
+                                let result: UploadResult<Meta, AwsBody> = {
+                                    successful: [],
+                                    failed: [],
                                 };
-                                if (onBeforeUpload) {
-                                    onBeforeUpload()?.then(res => {
-                                        if (res)
-                                            uppy?.retryUpload(file.id).then(
-                                                postRetryCallback
-                                            );
-                                    });
-                                } else {
-                                    uppy?.retryUpload(file.id).then(
-                                        postRetryCallback
-                                    );
+                                result.successful = uppy
+                                    ?.getFiles()
+                                    .filter(f => f.progress.uploadComplete);
+                                result.failed = uppy
+                                    ?.getFiles()
+                                    .filter(f => f.error);
+                                if (onUploadComplete) {
+                                    onUploadComplete(result);
                                 }
-                            },
-                        });
-                    }
+                            };
+                            if (onBeforeUpload) {
+                                onBeforeUpload()?.then(res => {
+                                    if (res)
+                                        uppy?.retryUpload(file.id).then(
+                                            postRetryCallback
+                                        );
+                                });
+                            } else {
+                                uppy?.retryUpload(file.id).then(
+                                    postRetryCallback
+                                );
+                            }
+                        },
+                    });
                     setFiles(prev => {
                         return prev.map(f =>
                             f.id === file.id ? { ...f, file: file } : f

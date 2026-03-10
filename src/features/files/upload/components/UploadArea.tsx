@@ -219,7 +219,9 @@ export const UploadArea = () => {
                                 <UploadProgress
                                     upload={upl}
                                     removeUploads={removeUploads}
-                                    onShow={handleShow}
+                                    onShow={
+                                        upl.resource ? handleShow : undefined
+                                    }
                                 />
                             </ErrorBoundary>
                         </MenuItem>

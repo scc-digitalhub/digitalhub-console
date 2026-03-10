@@ -20,5 +20,6 @@
     "revoke": "Revoca",
     "toggle_x": "Mostra/Nascondi %{el}",
     "upload": "Carica",
-    "hub": "Hub"
+    "hub": "Hub",
+    "upload_x_files": "Carica %{files} file |||| Carica %{files} file"
 }
