@@ -220,7 +220,7 @@ const HubCard = ({ onSelectTemplate, selectedTemplate }: HubCardProps) => {
 };
 
 export const HubCardList = (props: HubCardProps) => (
-    <ListView actions={false} pagination={false} component={Box}>
+    <ListView actions={false} pagination={false} component={Box} empty={false}>
         <GridList
             spacing={2}
             component={<Box sx={{ width: '100%' }} />}
