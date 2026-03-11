@@ -264,7 +264,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                             });
                         }
                     } catch (error: any) {
-                        console.log(error)
+                        console.log(error);
                         throw new Error(
                             translate(
                                 'messages.upload.complete_multipart_server_error',
@@ -341,12 +341,21 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-progress', file => {
                 if (file) {
+                    const path = pathFromProps
+                        ? file.meta?.relativePath
+                            ? file.meta.relativePath.substring(
+                                  0,
+                                  file.meta.relativePath.lastIndexOf(file.name)
+                              )
+                            : ''
+                        : undefined;
                     updateUploads({
                         id: file.id + (recordId ? `_${recordId}` : ''),
                         filename: file.name,
                         progress: file.progress,
                         resource,
                         resourceId: recordId,
+                        path,
                         remove: () => uppy?.removeFile(file.id),
                     });
                     setFiles(prev => {
@@ -367,12 +376,21 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-error', (file, error) => {
                 if (file) {
+                    const path = pathFromProps
+                        ? file.meta?.relativePath
+                            ? file.meta.relativePath.substring(
+                                  0,
+                                  file.meta.relativePath.lastIndexOf(file.name)
+                              )
+                            : ''
+                        : undefined;
                     updateUploads({
                         id: file.id + (recordId ? `_${recordId}` : ''),
                         filename: file.name,
                         progress: file.progress,
                         resource,
                         resourceId: recordId,
+                        path,
                         remove: () => uppy?.removeFile(file.id),
                         error,
                         retry: () => {

@@ -11,6 +11,7 @@
     "delete_all_versions": "Rimuovi tutte le versioni",
     "download": "Scarica",
     "download_image": "Scarica come immagine PNG",
+    "hub": "Hub",
     "import_one": "Importa",
     "load_more": "Carica altro",
     "share": "Condividi",
@@ -20,6 +21,6 @@
     "revoke": "Revoca",
     "toggle_x": "Mostra/Nascondi %{el}",
     "upload": "Carica",
-    "hub": "Hub",
-    "upload_x_files": "Carica %{files} file |||| Carica %{files} file"
+    "upload_x_files": "Carica %{files} file |||| Carica %{files} file",
+    "view": "Visualizza"
 }

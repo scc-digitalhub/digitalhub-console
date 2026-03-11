@@ -15,10 +15,12 @@ import {
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import {
+    Button,
     Confirm,
     DateField,
     IconButtonWithTooltip,
     ShowButton,
+    useCreatePath,
     useGetOne,
     useGetResourceLabel,
     useResourceDefinition,
@@ -29,10 +31,13 @@ import { Upload } from '../types';
 import { scaleBytes } from '../../../../common/utils/helpers';
 import { RetryButton } from '../../../../common/components/buttons/RetryButton';
 import { FileIcon } from '../../fileBrowser/components/FileIcon';
+import { Link } from 'react-router-dom';
+import StartIcon from '@mui/icons-material/Start';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;
     const translate = useTranslate();
+    const createPath = useCreatePath();
     const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
     const definition = useResourceDefinition({ resource: upload.resource });
@@ -163,7 +168,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 )}
             </CardContent>
             <CardActions disableSpacing>
-                {onShow && (
+                {onShow && upload.resource && (
                     <ShowButton
                         resource={upload.resource}
                         record={record}
@@ -171,6 +176,21 @@ export const UploadProgress = (props: UploadProgressProps) => {
                         color="info"
                         onClick={() => onShow(upload)}
                     />
+                )}
+                {onShow && upload.path !== undefined && (
+                    <StyledShowButton
+                        component={Link}
+                        to={createPath({
+                            resource: 'files?path=' + upload.path,
+                            type: 'list',
+                        })}
+                        label="actions.view"
+                        variant="text"
+                        color="info"
+                        onClick={() => onShow(upload)}
+                    >
+                        <StartIcon />
+                    </StyledShowButton>
                 )}
                 {upload.error && upload.retry && (
                     <RetryButton onClick={() => upload.retry?.()} />
@@ -233,6 +253,11 @@ const UploadProgressCard = styled(Card, {
         paddingLeft: 16,
     },
 }));
+
+const StyledShowButton = styled(Button, {
+    name: 'RaShowButton',
+    overridesResolver: (props, styles) => styles.root,
+})({});
 
 type UploadProgressProps = {
     upload: Upload;

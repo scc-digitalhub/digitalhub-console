@@ -21,6 +21,7 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
+    Stack,
     styled,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
@@ -115,7 +116,7 @@ export const UploadButton = (props: UploadButtonProps) => {
 
                 <DialogContent>
                     {uploader ? (
-                        <>
+                        <Stack sx={{ alignItems: 'center' }}>
                             <UploadDashboard direction={'column'}>
                                 <Labeled label="fields.files.title">
                                     <Dashboard
@@ -144,7 +145,7 @@ export const UploadButton = (props: UploadButtonProps) => {
                                     variant="contained"
                                 />
                             )}
-                        </>
+                        </Stack>
                     ) : (
                         <LoadingIndicator />
                     )}
