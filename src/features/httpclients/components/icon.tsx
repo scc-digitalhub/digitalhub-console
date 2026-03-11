@@ -2,6 +2,5 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import HubIcon from '@mui/icons-material/Hub';
-
-export const ServiceIcon = HubIcon;
+import LanguageIcon from '@mui/icons-material/Language';
+export const ServiceIcon = LanguageIcon;
