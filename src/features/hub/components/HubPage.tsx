@@ -5,7 +5,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ListContextProvider, useList } from 'react-admin';
 import { HubLayout } from './HubLayout';
-const CATALOG_URL: string = import.meta.env.VITE_CATALOG_URL || '/data.json';
+ const CATALOG_URL: string =
+(globalThis as any).REACT_APP_HUB_CATALOG_URL ||
+(process.env.REACT_APP_HUB_CATALOG_URL as string)
 
 const extractFilters = (items: any[]): Record<string, string[]> => {
     const filters: Record<string, Set<string>> = {};
