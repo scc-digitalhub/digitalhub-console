@@ -42,7 +42,12 @@
         "remote_files_unsupported": "Remote files are not supported",
         "single_zip_file_supported": "Zip files must be uploaded individually",
         "single_file_allowed": "Only a single file or folder can be uploaded",
-        "upload_error": "Error during upload of %{fileName} %{error}",
+        "upload_start_error": "An error occurred and the upload cannot be performed",
+        "create_multipart_error": "Cannot perform multipart upload, uploadId is missing in file object",
+        "sign_part_error": "Cannot request signed URL for part %{partNumber} of file %{fileName}, %{missingField} is missing",
+        "upload_part_error": "Error requesting signed URL for part %{partNumber} of file %{fileName}. Server response is: %{message}",
+        "complete_multipart_error": "Cannot complete multipart upload of file %{fileName}, %{missingField} is missing",
+        "complete_multipart_server_error": "Error completing multipart upload of file %{fileName}. Server response is: %{message}",
         "header": "Uploads",
         "subheader_no_results": "No uploads found",
         "subheader": {

@@ -17,19 +17,14 @@ import {
     Confirm,
     Error,
     IconButtonWithTooltip,
-    useCreatePath,
     useTranslate,
 } from 'react-admin';
 import { UploadProgress } from './UploadProgress';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Upload } from '../types';
 import { useFileContext } from '../../FileContext';
 
 export const UploadArea = () => {
     const translate = useTranslate();
-    const createPath = useCreatePath();
-    const navigate = useNavigate();
     const {
         uploadStatusController: { uploads, removeUploads },
     } = useFileContext();
@@ -49,20 +44,8 @@ export const UploadArea = () => {
 
     const isOpen = Boolean(anchorEl);
 
-    const handleShow = (upload: Upload) => {
-        if (upload.resource && upload.resourceId) {
-            const path = createPath({
-                resource: upload.resource,
-                id: upload.resourceId,
-                type: 'show',
-            });
-
-            //navigate
-            navigate(path);
-
-            //close
-            handleClose();
-        }
+    const handleShow = () => {
+        handleClose();
     };
 
     const uploadCount = uploads.length;

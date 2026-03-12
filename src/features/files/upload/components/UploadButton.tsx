@@ -21,6 +21,7 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
+    Stack,
     styled,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
@@ -45,7 +46,17 @@ export const UploadButton = (props: UploadButtonProps) => {
     const translate = useTranslate();
     const [theme] = useTheme();
 
-    const uploader = useGetUploader({ id: path, path });
+    const onUploadComplete = useCallback(
+        result => {
+            if (onUpload) {
+                onUpload(result.successful);
+            }
+            return undefined;
+        },
+        [onUpload]
+    );
+
+    const uploader = useGetUploader({ id: path, path, onUploadComplete });
     const [open, setOpen] = useState(false);
 
     const handleDialogOpen = e => {
@@ -61,6 +72,14 @@ export const UploadButton = (props: UploadButtonProps) => {
     const handleClick = useCallback(e => {
         e.stopPropagation();
     }, []);
+
+    const handleUpload = e => {
+        e.stopPropagation();
+        if (uploader.files.length > 0) {
+            uploader.upload();
+        }
+        setOpen(false);
+    };
 
     return (
         <Fragment>
@@ -97,27 +116,36 @@ export const UploadButton = (props: UploadButtonProps) => {
 
                 <DialogContent>
                     {uploader ? (
-                        <UploadDashboard direction={'column'}>
-                            <Labeled label="fields.files.title">
-                                <Dashboard
-                                    uppy={uploader.uppy}
-                                    theme={theme === 'dark' ? 'dark' : 'light'}
-                                    showProgressDetails
-                                    doneButtonHandler={() => {
-                                        uploader.uppy.cancelAll();
-                                        setOpen(false);
-                                        if (onUpload) {
-                                            onUpload(uploader.files);
+                        <Stack sx={{ alignItems: 'center' }}>
+                            <UploadDashboard direction={'column'}>
+                                <Labeled label="fields.files.title">
+                                    <Dashboard
+                                        uppy={uploader.uppy}
+                                        theme={
+                                            theme === 'dark' ? 'dark' : 'light'
                                         }
-                                    }}
-                                    fileManagerSelectionType={'both'}
-                                    disableThumbnailGenerator
-                                    proudlyDisplayPoweredByUppy={false}
-                                    width={'100%'}
-                                    height={'240px'}
+                                        hideUploadButton
+                                        fileManagerSelectionType={'both'}
+                                        disableThumbnailGenerator
+                                        proudlyDisplayPoweredByUppy={false}
+                                        width={'100%'}
+                                        height={'240px'}
+                                    />
+                                </Labeled>
+                            </UploadDashboard>
+                            {uploader.uppy.getFiles().length > 0 && (
+                                <Button
+                                    label={translate('actions.upload_x_files', {
+                                        files: uploader.uppy.getFiles().length,
+                                        smart_count:
+                                            uploader.uppy.getFiles().length,
+                                    })}
+                                    onClick={handleUpload}
+                                    color="success"
+                                    variant="contained"
                                 />
-                            </Labeled>
-                        </UploadDashboard>
+                            )}
+                        </Stack>
                     ) : (
                         <LoadingIndicator />
                     )}

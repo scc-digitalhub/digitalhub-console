@@ -142,8 +142,13 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                 // The following methods are only useful for multipart uploads:
 
                 async createMultipartUpload(file) {
+                    if (!file['s3']?.uploadId) {
+                        throw new Error(
+                            translate('messages.upload.create_multipart_error')
+                        );
+                    }
                     return {
-                        uploadId: file['s3']?.uploadId,
+                        uploadId: file['s3'].uploadId,
                         key: file.name || '',
                     };
                 },
@@ -151,33 +156,63 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                 async abortMultipartUpload() {},
 
                 async signPart(file, options) {
-                    const { signal, uploadId } = options;
+                    const { signal, uploadId, partNumber } = options;
 
                     signal?.throwIfAborted();
 
-                    let data: UploadInfo;
-                    if (pathFromProps && !resource) {
-                        data = await doMultipartUpload({
-                            path: pathFromProps,
-                            filename: file.name ?? '',
-                            uploadId,
-                            partNumber: options.partNumber,
-                        });
-                    } else {
-                        const { s3: uploadInfo } = file;
-                        if (!uploadInfo?.path) {
-                            throw new Error('missing s3 path');
-                        }
-                        data = await doMultipartUpload({
-                            resource: resource ?? '',
-                            id: recordId ?? '',
-                            path: uploadInfo.path,
-                            uploadId: options.uploadId,
-                            partNumber: options.partNumber,
-                        });
+                    if (!uploadId && !file['s3']?.uploadId) {
+                        throw new Error(
+                            translate('messages.upload.sign_part_error', {
+                                partNumber,
+                                fileName: file.name,
+                                missingField: 'uploadId',
+                            })
+                        );
                     }
 
-                    return data;
+                    try {
+                        let data: UploadInfo;
+                        if (pathFromProps && !resource) {
+                            data = await doMultipartUpload({
+                                path: pathFromProps,
+                                filename: file.name ?? '',
+                                uploadId: uploadId ?? file['s3'].uploadId,
+                                partNumber: partNumber,
+                            });
+                        } else {
+                            const { s3: uploadInfo } = file;
+                            if (!uploadInfo?.path) {
+                                throw new Error(
+                                    translate(
+                                        'messages.upload.sign_part_error',
+                                        {
+                                            partNumber,
+                                            fileName: file.name,
+                                            missingField: 'path',
+                                        }
+                                    )
+                                );
+                            }
+                            data = await doMultipartUpload({
+                                resource: resource ?? '',
+                                id: recordId ?? '',
+                                path: uploadInfo.path,
+                                uploadId: uploadId ?? file['s3'].uploadId,
+                                partNumber: partNumber,
+                            });
+                        }
+
+                        return data;
+                    } catch (error: any) {
+                        console.log(error);
+                        throw new Error(
+                            translate('messages.upload.upload_part_error', {
+                                partNumber,
+                                fileName: file.name,
+                                message: error.message,
+                            })
+                        );
+                    }
                 },
 
                 async listParts() {
@@ -187,29 +222,58 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
 
                 async completeMultipartUpload(file, { uploadId, parts }) {
                     //parts is array of part
+                    if (!uploadId && !file['s3']?.uploadId) {
+                        throw new Error(
+                            translate(
+                                'messages.upload.complete_multipart_error',
+                                {
+                                    fileName: file.name,
+                                    missingField: 'uploadId',
+                                }
+                            )
+                        );
+                    }
+
                     try {
                         if (pathFromProps && !resource) {
                             await completeMultipartUpload({
                                 path: pathFromProps,
                                 filename: file.name ?? '',
-                                uploadId,
+                                uploadId: uploadId ?? file['s3'].uploadId,
                                 partList: parts.map((part: any) => part.etag),
                             });
                         } else {
                             const { s3: uploadInfo } = file;
                             if (!uploadInfo?.path) {
-                                throw new Error('missing s3 path');
+                                throw new Error(
+                                    translate(
+                                        'messages.upload.complete_multipart_error',
+                                        {
+                                            fileName: file.name,
+                                            missingField: 'path',
+                                        }
+                                    )
+                                );
                             }
                             await completeMultipartUpload({
                                 resource: resource ?? '',
                                 id: recordId ?? '',
                                 path: uploadInfo.path,
-                                uploadId,
+                                uploadId: uploadId ?? file['s3'].uploadId,
                                 partList: parts.map((part: any) => part.etag),
                             });
                         }
-                    } catch (error) {
-                        throw new Error('Unsuccessful request');
+                    } catch (error: any) {
+                        console.log(error);
+                        throw new Error(
+                            translate(
+                                'messages.upload.complete_multipart_server_error',
+                                {
+                                    fileName: file.name,
+                                    message: error.message,
+                                }
+                            )
+                        );
                     }
 
                     return {};
@@ -224,34 +288,49 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                     : '';
                 const filename = file.name ?? '';
 
-                if (pathFromProps && !resource) {
-                    file['s3'] = await doUpload(
-                        { path: pathFromProps + dest, filename },
-                        numberOfParts(file) > 1
-                    );
-                } else {
-                    file['s3'] = await doUpload(
+                try {
+                    if (pathFromProps && !resource) {
+                        file['s3'] = await doUpload(
+                            { path: pathFromProps + dest, filename },
+                            numberOfParts(file) > 1
+                        );
+                    } else {
+                        file['s3'] = await doUpload(
+                            {
+                                resource: resource ?? '',
+                                id: recordId ?? '',
+                                filename:
+                                    (file.meta?.relativePath as string) ??
+                                    filename,
+                                name: name.current ?? undefined,
+                            },
+                            numberOfParts(file) > 1
+                        );
+                    }
+
+                    const info = {
+                        id: file.id,
+                        info: extractInfo(file),
+                        file: file,
+                        path: file['s3'].path,
+                    };
+                    setFiles(prev => {
+                        const cur = prev.filter(f => f.id != file.id);
+                        return [...cur, info];
+                    });
+                } catch (error: any) {
+                    console.log(error);
+                    uppy.info(
                         {
-                            resource: resource ?? '',
-                            id: recordId ?? '',
-                            filename:
-                                (file.meta?.relativePath as string) ?? filename,
-                            name: name.current ?? undefined,
+                            message: translate(
+                                'messages.upload.upload_start_error'
+                            ),
+                            details: error.message,
                         },
-                        numberOfParts(file) > 1
+                        'error',
+                        5000
                     );
                 }
-
-                const info = {
-                    id: file.id,
-                    info: extractInfo(file),
-                    file: file,
-                    path: file['s3']?.path,
-                };
-                setFiles(prev => {
-                    const cur = prev.filter(f => f.id != file.id);
-                    return [...cur, info];
-                });
             })
             .on('file-removed', file => {
                 if (file) {
@@ -262,16 +341,23 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-progress', file => {
                 if (file) {
-                    if (resource) {
-                        updateUploads({
-                            id: file.id + `_${recordId}`,
-                            filename: file.name,
-                            progress: file.progress,
-                            resource,
-                            resourceId: recordId,
-                            remove: () => uppy?.removeFile(file.id),
-                        });
-                    }
+                    const path = pathFromProps
+                        ? file.meta?.relativePath
+                            ? file.meta.relativePath.substring(
+                                  0,
+                                  file.meta.relativePath.lastIndexOf(file.name)
+                              )
+                            : ''
+                        : undefined;
+                    updateUploads({
+                        id: file.id + (recordId ? `_${recordId}` : ''),
+                        filename: file.name,
+                        progress: file.progress,
+                        resource,
+                        resourceId: recordId,
+                        path,
+                        remove: () => uppy?.removeFile(file.id),
+                    });
                     setFiles(prev => {
                         return prev.map(f =>
                             f.id === file.id ? { ...f, file: file } : f
@@ -290,46 +376,53 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
             })
             .on('upload-error', (file, error) => {
                 if (file) {
-                    if (resource) {
-                        updateUploads({
-                            id: file.id + `_${recordId}`,
-                            filename: file.name,
-                            progress: file.progress,
-                            resource,
-                            resourceId: recordId,
-                            remove: () => uppy?.removeFile(file.id),
-                            error,
-                            retry: () => {
-                                const postRetryCallback = () => {
-                                    let result: UploadResult<Meta, AwsBody> = {
-                                        successful: [],
-                                        failed: [],
-                                    };
-                                    result.successful = uppy
-                                        ?.getFiles()
-                                        .filter(f => f.progress.uploadComplete);
-                                    result.failed = uppy
-                                        ?.getFiles()
-                                        .filter(f => f.error);
-                                    if (onUploadComplete) {
-                                        onUploadComplete(result);
-                                    }
+                    const path = pathFromProps
+                        ? file.meta?.relativePath
+                            ? file.meta.relativePath.substring(
+                                  0,
+                                  file.meta.relativePath.lastIndexOf(file.name)
+                              )
+                            : ''
+                        : undefined;
+                    updateUploads({
+                        id: file.id + (recordId ? `_${recordId}` : ''),
+                        filename: file.name,
+                        progress: file.progress,
+                        resource,
+                        resourceId: recordId,
+                        path,
+                        remove: () => uppy?.removeFile(file.id),
+                        error,
+                        retry: () => {
+                            const postRetryCallback = () => {
+                                let result: UploadResult<Meta, AwsBody> = {
+                                    successful: [],
+                                    failed: [],
                                 };
-                                if (onBeforeUpload) {
-                                    onBeforeUpload()?.then(res => {
-                                        if (res)
-                                            uppy?.retryUpload(file.id).then(
-                                                postRetryCallback
-                                            );
-                                    });
-                                } else {
-                                    uppy?.retryUpload(file.id).then(
-                                        postRetryCallback
-                                    );
+                                result.successful = uppy
+                                    ?.getFiles()
+                                    .filter(f => f.progress.uploadComplete);
+                                result.failed = uppy
+                                    ?.getFiles()
+                                    .filter(f => f.error);
+                                if (onUploadComplete) {
+                                    onUploadComplete(result);
                                 }
-                            },
-                        });
-                    }
+                            };
+                            if (onBeforeUpload) {
+                                onBeforeUpload()?.then(res => {
+                                    if (res)
+                                        uppy?.retryUpload(file.id).then(
+                                            postRetryCallback
+                                        );
+                                });
+                            } else {
+                                uppy?.retryUpload(file.id).then(
+                                    postRetryCallback
+                                );
+                            }
+                        },
+                    });
                     setFiles(prev => {
                         return prev.map(f =>
                             f.id === file.id ? { ...f, file: file } : f
@@ -349,6 +442,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
         pathFromProps,
         recordId,
         resource,
+        translate,
         updateUploads,
         uppyConfig,
     ]);

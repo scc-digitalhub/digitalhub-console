@@ -72,8 +72,9 @@ export type Upload = {
     id: string;
     filename?: string;
     progress: FileProgress;
-    resource: string;
+    resource?: string;
     resourceId?: Identifier;
+    path?: string;
     error?: any;
     remove: () => void;
     retry?: () => void;

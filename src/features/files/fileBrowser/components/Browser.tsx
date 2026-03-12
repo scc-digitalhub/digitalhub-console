@@ -37,11 +37,24 @@ import { useGetStores } from '../../stores/useGetStores';
 import { BrowserIcon } from './icon';
 import { PageTitle } from '../../../../common/components/layout/PageTitle';
 import { FlatCard } from '../../../../common/components/layout/FlatCard';
+import { Location, useLocation } from 'react-router';
+
+const getPathFromLocation = (location: Location) => {
+    if (location.search?.length > 0 && location.search.includes('path=')) {
+        const path = location.search
+            .split('&')
+            .find(s => s.includes('path='))
+            ?.split('=')[1];
+        if (path) return path;
+    }
+    return null;
+};
 
 export const Browser = () => {
     const translate = useTranslate();
     const getFileInfo = useGetFileInfo();
     const getStores = useGetStores();
+    const location = useLocation();
 
     // const [stores, setStores] = useState<string[] | null>(null);
     const [store, setStore] = useState<string | null>(null);
@@ -86,9 +99,10 @@ export const Browser = () => {
     useEffect(() => {
         if (store) {
             const root = store.endsWith('/') ? store : store + '/';
-            setPath(root);
+            const p = getPathFromLocation(location) ?? '';
+            setPath(root + p);
         }
-    }, [store]);
+    }, [location, store]);
 
     const breadcrumbs: any[] = [];
 

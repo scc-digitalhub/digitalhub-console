@@ -14,12 +14,13 @@ import {
     Typography,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
+    Button,
     Confirm,
     DateField,
     IconButtonWithTooltip,
     ShowButton,
+    useCreatePath,
     useGetOne,
     useGetResourceLabel,
     useResourceDefinition,
@@ -29,14 +30,18 @@ import { createElement, useState } from 'react';
 import { Upload } from '../types';
 import { scaleBytes } from '../../../../common/utils/helpers';
 import { RetryButton } from '../../../../common/components/buttons/RetryButton';
+import { FileIcon } from '../../fileBrowser/components/FileIcon';
+import { Link } from 'react-router-dom';
+import StartIcon from '@mui/icons-material/Start';
 
 export const UploadProgress = (props: UploadProgressProps) => {
     const { upload, removeUploads, onShow } = props;
     const translate = useTranslate();
+    const createPath = useCreatePath();
     const [open, setOpen] = useState(false);
     const getResourceLabel = useGetResourceLabel();
     const definition = useResourceDefinition({ resource: upload.resource });
-    const { data: record } = useGetOne(upload.resource, {
+    const { data: record } = useGetOne(upload.resource ?? '', {
         id: upload.resourceId,
     });
 
@@ -44,15 +49,17 @@ export const UploadProgress = (props: UploadProgressProps) => {
         return <></>;
     }
 
-    const title = translate('pages.pageTitle.show.title', {
-        resource: getResourceLabel(upload.resource, 1),
-        name: record?.name || upload.resourceId,
-    });
+    const title = upload.resource
+        ? translate('pages.pageTitle.show.title', {
+              resource: getResourceLabel(upload.resource, 1),
+              name: record?.name || upload.resourceId,
+          })
+        : upload.filename;
 
     const icon = definition.icon ? (
         createElement(definition.icon, { fontSize: 'small' })
     ) : (
-        <FileUploadIcon fontSize="small" />
+        <FileIcon fontSize="small" fileName={upload.filename} />
     );
 
     const uploading =
@@ -109,9 +116,14 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 }
             />
             <CardContent>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {upload.filename}
-                </Typography>
+                {upload.resource && (
+                    <Typography
+                        variant="body2"
+                        sx={{ color: 'text.secondary' }}
+                    >
+                        {upload.filename}
+                    </Typography>
+                )}
                 {!upload.error &&
                     upload.progress.bytesUploaded &&
                     upload.progress.bytesTotal && (
@@ -156,7 +168,7 @@ export const UploadProgress = (props: UploadProgressProps) => {
                 )}
             </CardContent>
             <CardActions disableSpacing>
-                {onShow && (
+                {onShow && upload.resource && (
                     <ShowButton
                         resource={upload.resource}
                         record={record}
@@ -164,6 +176,21 @@ export const UploadProgress = (props: UploadProgressProps) => {
                         color="info"
                         onClick={() => onShow(upload)}
                     />
+                )}
+                {onShow && upload.path !== undefined && (
+                    <StyledShowButton
+                        component={Link}
+                        to={createPath({
+                            resource: 'files?path=' + upload.path,
+                            type: 'list',
+                        })}
+                        label="actions.view"
+                        variant="text"
+                        color="info"
+                        onClick={() => onShow(upload)}
+                    >
+                        <StartIcon />
+                    </StyledShowButton>
                 )}
                 {upload.error && upload.retry && (
                     <RetryButton onClick={() => upload.retry?.()} />
@@ -226,6 +253,11 @@ const UploadProgressCard = styled(Card, {
         paddingLeft: 16,
     },
 }));
+
+const StyledShowButton = styled(Button, {
+    name: 'RaShowButton',
+    overridesResolver: (props, styles) => styles.root,
+})({});
 
 type UploadProgressProps = {
     upload: Upload;
