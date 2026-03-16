@@ -212,16 +212,36 @@ const ShowComponent = () => {
                 </TabbedShowLayout.Tab>
             )}
 
-            {(sourceCode || fabSourceCode) && schema?.schema && (
+            {sourceCode && schema?.schema && (
                 <TabbedShowLayout.Tab
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
                 >
                     <SourceCodeView
-                        sourceCode={sourceCode}
-                        fabSourceCode={fabSourceCode}
-                        requirements={requirements}
+                        field="source"
+                        code={sourceCode}
+                        additionalFields={
+                            requirements ? { requirements } : undefined
+                        }
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
+                </TabbedShowLayout.Tab>
+            )}
+
+            {fabSourceCode && schema?.schema && (
+                <TabbedShowLayout.Tab
+                    label={'fields.code'}
+                    key={record.id + ':fab_source_code'}
+                    path="code"
+                >
+                    <SourceCodeView
+                        field="fab_source"
+                        code={fabSourceCode}
+                        additionalFields={
+                            requirements ? { requirements } : undefined
+                        }
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />

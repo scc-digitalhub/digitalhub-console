@@ -228,14 +228,41 @@ export const RunShowComponent = () => {
                     maxLines={lineCount[1]}
                 />
             </TabbedShowLayout.Tab>
-            {(record?.spec?.source || record?.spec?.fab_source) &&
+            {record?.spec?.source &&
                 schema?.schema &&
                 !record?.status?.dockerfile && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
                         <SourceCodeView
-                            sourceCode={record.spec.source}
-                            fabSourceCode={record.spec.fab_source}
-                            requirements={record.spec.requirements}
+                            field="source"
+                            code={record.spec.source}
+                            additionalFields={
+                                record.spec.requirements
+                                    ? {
+                                          requirements:
+                                              record.spec.requirements,
+                                      }
+                                    : undefined
+                            }
+                            schema={schema.schema}
+                            uiSchema={getFunctionUiSpec(record.kind)}
+                        />
+                    </TabbedShowLayout.Tab>
+                )}
+            {record?.spec?.fab_source &&
+                schema?.schema &&
+                !record?.status?.dockerfile && (
+                    <TabbedShowLayout.Tab label={'fields.code'}>
+                        <SourceCodeView
+                            field="fab_source"
+                            code={record.spec.fab_source}
+                            additionalFields={
+                                record.spec.requirements
+                                    ? {
+                                          requirements:
+                                              record.spec.requirements,
+                                      }
+                                    : undefined
+                            }
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />

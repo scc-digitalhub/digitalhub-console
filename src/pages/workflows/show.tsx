@@ -213,7 +213,8 @@ const ShowComponent = () => {
                     path="code"
                 >
                     <SourceCodeView
-                        sourceCode={sourceCode}
+                        field="source"
+                        code={sourceCode}
                         schema={schema.schema}
                         uiSchema={getWorkflowUiSpec(record.kind)}
                     />
