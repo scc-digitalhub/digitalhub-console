@@ -13,7 +13,6 @@ import { StepperToolbar } from './toolbars/StepperToolbar';
 
 interface ResourceStepperCreateProps {
     specStep: ReactNode;
-    // opzionale: se presente viene aggiunto come Step 1 (kind)
     kindStep?: ReactNode;
     onCancel?: () => void;
     cancelUrl?: string;
@@ -43,8 +42,15 @@ export const ResourceStepperCreate = ({
                     }
                 >
                         <StepperForm.Step label={kindStepLabel}>
-                            {kindStep}
-                        </StepperForm.Step>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                p: 4,
+                            }}
+                        >
+                                {kindStep}
+                        </Box>                        </StepperForm.Step>
 
                     <StepperForm.Step label={metadataStepLabel}>
                         <TextInput
