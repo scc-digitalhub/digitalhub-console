@@ -45,6 +45,9 @@
         }
     },
     "functions": {
+        "template_selector": {
+            "title": "Select a template"
+        },
         "fields": {
             "key": "Key",
             "name": "Name"

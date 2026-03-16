@@ -23,9 +23,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
-import { useFormState, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useRef, useState } from 'react';
-import { KindSelector } from './KindSelector';
 import { ChipsField } from './fields/ChipsField';
 import { StyledTemplate } from './layout/StyledTemplate';
 
@@ -40,7 +39,11 @@ export type Template = {
     };
     spec: any;
 };
-
+const useSafeIsDirty = (): boolean => {
+    const formContext = useFormContext();
+    if (!formContext) return false;
+    return formContext.formState.isDirty;
+};
 export const TemplatesSelector = (props: {
     template: string | null;
     kinds?: any[] | undefined;
@@ -50,10 +53,12 @@ export const TemplatesSelector = (props: {
     const resource = useResourceContext();
     const translate = useTranslate();
     const record = useRecordContext(props);
-    const { reset } = useFormContext();
+    const formContext = useFormContext();
+    const isDirty = useSafeIsDirty();
+
+    
     const [open, setOpen] = useState(false);
     const cur = useRef<Template | null>(null);
-    const { isDirty } = useFormState();
 
     const { data: templates, isLoading } = useGetList('templates', {
         pagination: { page: 1, perPage: 100 },
@@ -61,61 +66,56 @@ export const TemplatesSelector = (props: {
         filter: { type: resource?.slice(0, -1) },
     });
 
-    const handleConfirm = () => {
-        //confirmed
-        doSelect(cur.current);
-        cur.current = null;
-        setOpen(false);
-    };
-    const handleDialogClose = () => {
-        //no-op, reset cur
-        cur.current = null;
-        setOpen(false);
-    };
+    const doSelect = (template: Template | null) => {
+        // Reset form solo se il form context esiste (fase 1 con CreateBase)
+        if (formContext) {
+            const r = template
+                ? {
+                      ...record,
+                      name: '',
+                      kind: template.kind,
+                      metadata: {
+                          ...record?.metadata,
+                          description: template.metadata?.description,
+                          labels: template.metadata?.labels,
+                      },
+                      spec: template.spec,
+                  }
+                : record || { kind: undefined };
 
-    const doSelect = template => {
-        //copy values into form merging record
-        //note: fallback to obj with kind, otherwise input in scratch selector will become detached
-        const r = template
-            ? {
-                  ...record,
-                  name: '',
-                  kind: template.kind,
-                  metadata: {
-                      ...record?.metadata,
-                      description: template.metadata?.description,
-                      labels: template.metadata?.labels,
-                  },
-                  spec: template.spec,
-              }
-            : record || { kind: undefined };
-
-        //reset whole form to new defaults
-        reset(r);
+            formContext.reset(r);
+        }
 
         if (onSelected) {
             onSelected(template);
         }
     };
 
+    const handleConfirm = () => {
+        doSelect(cur.current);
+        cur.current = null;
+        setOpen(false);
+    };
+
+    const handleDialogClose = () => {
+        cur.current = null;
+        setOpen(false);
+    };
+
     const handleSelection = (e, template) => {
-        if (template?.id == selected) {
-            //no-op
-        } else if (isDirty) {
-            //ask confirm for dirty
+        if (template?.id === selected) {
+            // no-op
+        } else if (isDirty && formContext) {
+            // chiedi conferma solo se il form esiste ed è dirty
             cur.current = template;
             setOpen(true);
         } else {
-            //not dirty, proceed
             doSelect(template);
         }
-
         e.stopPropagation();
     };
 
-    if (isLoading) {
-        return <LoadingIndicator />;
-    }
+    if (isLoading) return <LoadingIndicator />;
 
     return (
         <ResourceContextProvider value={'templates'}>
@@ -153,7 +153,7 @@ export const TemplateScratch = (props: {
     selected: boolean;
     onSelected?: (event, template: Template | null) => void;
 }) => {
-    const { selected, onSelected, kinds } = props;
+    const { selected, onSelected } = props;  // ← rimuovi kinds dal destructuring
     const translate = useTranslate();
 
     const handleClick = e => {
@@ -181,7 +181,7 @@ export const TemplateScratch = (props: {
                         <Typography variant="h6">
                             {translate('messages.templates.start_from_scratch')}
                         </Typography>
-                        {selected && kinds && <KindSelector kinds={kinds} />}
+                        {/* ← KindSelector rimosso, ora è Step 1 dello stepper */}
                     </Stack>
                 </CardContent>
             </CardActionArea>
