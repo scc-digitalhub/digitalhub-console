@@ -183,7 +183,6 @@ export const HubLayout = () => {
                 secondaryText={pageSubtitle}
                 icon={<DataObject fontSize="large" />}
             />
-                <BackButton />
 
             {selectedTemplate && (
                 <Box

@@ -12,23 +12,23 @@ import { FlatCard } from './layout/FlatCard';
 import { StepperToolbar } from './toolbars/StepperToolbar';
 
 interface ResourceStepperCreateProps {
-    specStep: ReactNode;
-    kindStep?: ReactNode;
-    onCancel?: () => void;
-    cancelUrl?: string;
     kindStepLabel?: string;
+    kindStep?: ReactNode;
     metadataStepLabel?: string;
     specStepLabel?: string;
+    specStep: ReactNode;
+    onCancel?: () => void;
+    cancelUrl?: string;
 }
 
 export const ResourceStepperCreate = ({
+    kindStepLabel = 'fields.kind',
+    metadataStepLabel = 'fields.base',
+    specStepLabel = 'fields.spec.title',
     specStep,
     kindStep,
     onCancel,
     cancelUrl,
-    kindStepLabel = 'fields.kind',
-    metadataStepLabel = 'fields.base',
-    specStepLabel = 'fields.spec.title',
 }: ResourceStepperCreateProps) => {
     return (
         <CreateView component={Box}>

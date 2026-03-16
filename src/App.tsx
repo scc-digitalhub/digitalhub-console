@@ -11,6 +11,7 @@ import {
     fetchUtils,
     localStorageStore,
 } from 'react-admin';
+import 'ace-builds/src-noconflict/ace'; 
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
