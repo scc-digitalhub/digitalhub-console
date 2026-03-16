@@ -2,51 +2,56 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { useCallback, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
-import {
-    CreateBase,
-    CreateView,
-    LoadingIndicator,
-    TextInput,
-    required,
-} from 'react-admin';
-import { isAlphaNumeric } from '../../common/utils/helpers';
-import { FlatCard } from '../../common/components/layout/FlatCard';
-import { CreatePageTitle } from '../../common/components/layout/PageTitle';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import { FunctionIcon } from './icon';
-import { getFunctionUiSpec } from './types';
-import { MetadataInput } from '../../features/metadata/components/MetadataInput';
+import { Container } from '@mui/material';
+import { CreateBase, useCreatePath, useTranslate } from 'react-admin';
 import { KindSelector } from '../../common/components/KindSelector';
-import { StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import {
-    Template,
-    TemplatesSelector,
-} from '../../common/components/TemplatesSelector';
-import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
-import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
+    CreatePageTitle,
+    PageTitle,
+} from '../../common/components/layout/PageTitle';
+import { getFunctionUiSpec } from './types';
+import { FunctionIcon } from './icon';
+
+import { useEffect } from 'react';
+import { useCreateFlow } from '../../common/hooks/useCreateFlow';
+import { TemplatesSelector } from '../../common/components/TemplatesSelector';
+import { useSchemaProvider } from '../../common/provider/schemaProvider';
+import { BackButton } from '@dslab/ra-back-button';
+import { ResourceStepperCreate } from '../../common/components/ResourceStepperCreate';
+
+// ─── FunctionCreate ───────────────────────────────────────────────────────────
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();
-    const [schemas, setSchemas] = useState<any[]>();
-    const [template, setTemplate] = useState<Template | null>(null);
+    const createPath = useCreatePath();
+    const cancelUrl = createPath({ resource: 'functions', type: 'list' });
 
-    const isLoading = !schemas?.length;
+    const {
+        template,
+        isSelector,
+        isFromTemplate,
+        startFromScratch,
+        startFromTemplate,
+        reset,
+    } = useCreateFlow();
+    const translate = useTranslate();
+
+    const transform = useCallback(
+        (data: any) => ({ ...data, project: root || '' }),
+        [root]
+    );
+    const [schemas, setSchemas] = useState<any[]>();
+
     const kinds = schemas
         ?.map(s => ({
             id: s.kind,
             name: s.kind,
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
-
-    const transform = data => ({
-        ...data,
-        project: root || '',
-    });
 
     useEffect(() => {
         if (schemaProvider && !schemas?.length) {
@@ -57,55 +62,67 @@ export const FunctionCreate = () => {
             });
         }
     }, [schemaProvider]);
+    const defaultValues =
+        isFromTemplate && template
+            ? {
+                  kind: template.kind ?? '',
+                  metadata: {
+                      name: template.metadata?.name ?? '',
+                      description: template.metadata?.description ?? '',
+                      labels: template.metadata?.labels ?? [],
+                  },
+                  spec: template.spec ?? {},
+              }
+            : {};
 
-    const selectTemplate = selected => {
-        setTemplate(selected);
-    };
-
-    if (isLoading) {
-        return <LoadingIndicator />;
+    // seleziono modalita'
+    if (isSelector) {
+        return (
+            <Container maxWidth={false} sx={{ pb: 2 }}>
+                <PageTitle
+                    text={translate(
+                        'resources.functions.template_selector.title'
+                    )}
+                    icon={<FunctionIcon fontSize={'large'} />}
+                />
+                <BackButton />
+                <TemplatesSelector
+                    template={null}
+                    onSelected={template => {
+                        if (template) startFromTemplate(template);
+                        else startFromScratch();
+                    }}
+                />
+            </Container>
+        );
     }
-
+    // oppure stepper di creaazione
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
-            <CreateBase transform={transform} redirect="list">
+            <CreateBase
+                resource="functions"
+                transform={transform}
+                redirect="list"
+                record={defaultValues}
+            >
                 <>
-                    <CreatePageTitle
-                        icon={<FunctionIcon fontSize={'large'} />}
+                    <CreatePageTitle icon={<FunctionIcon fontSize="large" />} />
+                    <ResourceStepperCreate
+                        cancelUrl={cancelUrl}
+                        onCancel={isFromTemplate ? undefined : reset}
+                        kindStep={
+                            <KindSelector
+                                kinds={kinds}
+                                readOnly={isFromTemplate}
+                            />
+                        }
+                        specStep={
+                            <SpecInput
+                                source="spec"
+                                getUiSchema={getFunctionUiSpec}
+                            />
+                        }
                     />
-
-                    <CreateView component={Box} actions={<CreateToolbar />}>
-                        <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <StepperForm toolbar={<StepperToolbar />}>
-                                <StepperForm.Step label={'fields.kind'}>
-                                    <TemplatesSelector
-                                        kinds={kinds}
-                                        template={template?.id || null}
-                                        onSelected={selectTemplate}
-                                    />
-                                </StepperForm.Step>
-
-                                <StepperForm.Step label={'fields.base'}>
-                                    <TextInput
-                                        source="name"
-                                        placeholder={template?.name}
-                                        validate={[
-                                            required(),
-                                            isAlphaNumeric(),
-                                        ]}
-                                    />
-                                    <MetadataInput />
-                                </StepperForm.Step>
-                                <StepperForm.Step label={'fields.spec.title'}>
-                                    <KindSelector kinds={kinds} readOnly />
-                                    <SpecInput
-                                        source="spec"
-                                        getUiSchema={getFunctionUiSpec}
-                                    />
-                                </StepperForm.Step>
-                            </StepperForm>
-                        </FlatCard>
-                    </CreateView>
                 </>
             </CreateBase>
         </Container>
