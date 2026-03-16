@@ -27,6 +27,7 @@ import { HubCardList, HubTemplateSummary } from './HubCardList';
 import { toRepositoryAssetUrl } from '../utils';
 import { Spinner } from '../../../common/components/layout/Spinner';
 import { useNavigate } from 'react-router';
+import { BackButton } from '@dslab/ra-back-button';
 
 const HubTemplateDetail = ({ template }: { template: any }) => {
     const [readme, setReadme] = useState('');
@@ -182,6 +183,7 @@ export const HubLayout = () => {
                 secondaryText={pageSubtitle}
                 icon={<DataObject fontSize="large" />}
             />
+                <BackButton />
 
             {selectedTemplate && (
                 <Box
