@@ -96,7 +96,6 @@ export const FunctionCreate = () => {
             </Container>
         );
     }
-    // oppure stepper di creaazione
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
@@ -108,8 +107,10 @@ export const FunctionCreate = () => {
                 <>
                     <CreatePageTitle icon={<FunctionIcon fontSize="large" />} />
                     <ResourceStepperCreate
-                        cancelUrl={cancelUrl}
-                        onCancel={isFromTemplate ? undefined : reset}
+                        {...(isFromTemplate 
+                            ? { cancelUrl } 
+                            : { onCancel: reset }
+                        )}
                         kindStep={
                             <KindSelector
                                 kinds={kinds}
