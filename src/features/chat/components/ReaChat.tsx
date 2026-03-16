@@ -42,17 +42,22 @@ const CriticalErrorFallback = ({ error, retry }: any) => {
     return <ErrorDisplay error={error} onRetry={retry} />;
 };
 
-export const ReaChat = () => {
+interface ReaChatProps {
+    modelName?: string;
+    baseUrl?: string;
+}
+
+export const ReaChat = ({ modelName, baseUrl }: ReaChatProps) => {
     return (
         <ThemeProvider theme={reatheme}>
             <ErrorBoundary FallbackComponent={CriticalErrorFallback}>
-                <OpenAIChat />
+                <OpenAIChat modelName={modelName} baseUrl={baseUrl} />
             </ErrorBoundary>
         </ThemeProvider>
     );
 };
 
-const OpenAIChat = () => {
+const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
     const { id } = useParams();
     const currentRunId = id || 'general-session';
     const { sessions, updateSession, ensureSessionForRun } = useChatContext();
@@ -72,12 +77,13 @@ const OpenAIChat = () => {
         if (API_KEY) {
             openai.current = new OpenAI({
                 apiKey: API_KEY,
-                baseURL: API_BASE_URL,
+                baseURL: API_BASE_URL || baseUrl,
                 dangerouslyAllowBrowser: true,
+                maxRetries: 3,
+                timeout: 180 * 1000,
             });
         }
-    }, []);
-
+    }, [baseUrl]);
     const theme = useTheme();
     const isDarkMode = theme.palette.mode === 'dark';
     const primaryColor = theme.palette.primary.main;
@@ -148,18 +154,19 @@ const OpenAIChat = () => {
 
             updateSessionState('');
 
+            let accumulatedResponse = '';
+            let lastUpdateTime = 0;
+
             try {
                 const stream = await openai.current.chat.completions.create(
                     {
-                        model: 'qwen-test-cpu',
+                        model: modelName,
                         messages: [{ role: 'user', content: message }],
                         stream: true,
+                        max_completion_tokens: 10000,
                     },
                     { signal: abortControllerRef.current.signal }
                 );
-
-                let accumulatedResponse = '';
-                let lastUpdateTime = 0;
 
                 for await (const chunk of stream) {
                     const content = chunk.choices[0]?.delta?.content || '';
@@ -173,14 +180,18 @@ const OpenAIChat = () => {
                 updateSessionState(accumulatedResponse);
             } catch (error: any) {
                 if (error.name !== 'AbortError') {
-                    updateSessionState(error?.message, true);
+                    const finalMessage = accumulatedResponse
+                        ? `${accumulatedResponse}\n\n[Error: ${error?.message}]`
+                        : error?.message;
+
+                    updateSessionState(finalMessage, true);
                 }
             } finally {
                 setIsLoading(false);
                 abortControllerRef.current = null;
             }
         },
-        [currentRunId, sessions, updateSession]
+        [currentRunId, sessions, updateSession, modelName]
     );
 
     const handleRegenerate = useCallback(
