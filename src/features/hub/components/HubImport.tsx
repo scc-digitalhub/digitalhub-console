@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Container } from '@mui/material';
 import { CreateBase, LoadingIndicator, useCreatePath } from 'react-admin';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FunctionIcon } from '../../../pages/functions/icon';
 import { getFunctionUiSpec } from '../../../pages/functions/types';
 import { KindSelector } from '../../../common/components/KindSelector';
@@ -21,6 +21,7 @@ export const FunctionHubImport = () => {
     const hubTemplate = state?.hubTemplate;
     const createPath = useCreatePath();
     const cancelUrl = createPath({ resource: 'functions', type: 'list' });
+    const navigate = useNavigate();
 
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
@@ -37,7 +38,14 @@ export const FunctionHubImport = () => {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const transform = data => ({ ...data, project: root || '' });
-
+    const handleSuccess = (data: any) => {
+        const showPath = createPath({ 
+            resource: 'functions', 
+            type: 'show', 
+            id: data.id 
+        });
+        navigate(showPath, { replace: true }); 
+    };
     const defaultValues = hubTemplate
         ? {
               kind: hubTemplate.kind,
@@ -59,7 +67,7 @@ export const FunctionHubImport = () => {
             <CreateBase
                 transform={transform}
                 resource="functions"
-                redirect="show"
+                mutationOptions={{ onSuccess: handleSuccess }} 
                 record={defaultValues}
             >
                 <>
@@ -69,7 +77,7 @@ export const FunctionHubImport = () => {
                         kindStep={
                             <KindSelector
                                 kinds={kinds}
-                                readOnly // ← sempre readOnly, viene dall'hub
+                                readOnly 
                             />
                         }
                         specStep={

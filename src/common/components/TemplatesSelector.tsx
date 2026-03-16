@@ -181,7 +181,6 @@ export const TemplateScratch = (props: {
                         <Typography variant="h6">
                             {translate('messages.templates.start_from_scratch')}
                         </Typography>
-                        {/* ← KindSelector rimosso, ora è Step 1 dello stepper */}
                     </Stack>
                 </CardContent>
             </CardActionArea>
