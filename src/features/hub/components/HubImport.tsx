@@ -1,35 +1,26 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
 //
 // SPDX-License-Identifier: Apache-2.0
-import 'ace-builds/src-noconflict/ace';
+
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container } from '@mui/material';
-import {
-    CreateBase,
-    CreateView,
-    LoadingIndicator,
-    TextInput,
-    required,
-} from 'react-admin';
+import { Container } from '@mui/material';
+import { CreateBase, LoadingIndicator, useCreatePath } from 'react-admin';
 import { useLocation } from 'react-router-dom';
-import { StepperForm } from '@dslab/ra-stepper';
 import { FunctionIcon } from '../../../pages/functions/icon';
 import { getFunctionUiSpec } from '../../../pages/functions/types';
-import { MetadataInput } from '../../metadata/components/MetadataInput';
 import { KindSelector } from '../../../common/components/KindSelector';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
-import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
-import { CreateToolbar } from '../../../common/components/toolbars/CreateToolbar';
-import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
-import { isAlphaNumeric } from '../../../common/utils/helpers';
+import { ResourceStepperCreate } from '../../../common/components/ResourceStepperCreate';
 
 export const FunctionHubImport = () => {
     const { root } = useRootSelector();
     const { state } = useLocation();
     const hubTemplate = state?.hubTemplate;
+    const createPath = useCreatePath();
+    const cancelUrl = createPath({ resource: 'functions', type: 'list' });
 
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
@@ -40,20 +31,12 @@ export const FunctionHubImport = () => {
             });
         }
     }, [schemaProvider]);
-    const isLoading = !schemas?.length;
+
     const kinds = schemas
-        ?.map(s => ({
-            id: s.kind,
-            name: s.kind,
-        }))
+        ?.map(s => ({ id: s.kind, name: s.kind }))
         .sort((a, b) => a.name.localeCompare(b.name));
 
-    const transform = data => ({
-        ...data,
-        project: root || '',
-    });
-
-
+    const transform = data => ({ ...data, project: root || '' });
 
     const defaultValues = hubTemplate
         ? {
@@ -67,7 +50,7 @@ export const FunctionHubImport = () => {
           }
         : {};
 
-    if (isLoading) {
+    if (!schemas?.length) {
         return <LoadingIndicator />;
     }
 
@@ -80,41 +63,22 @@ export const FunctionHubImport = () => {
                 record={defaultValues}
             >
                 <>
-                    <CreatePageTitle
-                        icon={<FunctionIcon fontSize={'large'} />}
+                    <CreatePageTitle icon={<FunctionIcon fontSize="large" />} />
+                    <ResourceStepperCreate
+                        cancelUrl={cancelUrl}
+                        kindStep={
+                            <KindSelector
+                                kinds={kinds}
+                                readOnly // ← sempre readOnly, viene dall'hub
+                            />
+                        }
+                        specStep={
+                            <SpecInput
+                                source="spec"
+                                getUiSchema={getFunctionUiSpec}
+                            />
+                        }
                     />
-                    <CreateView component={Box} actions={<CreateToolbar />}>
-                        <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <StepperForm toolbar={<StepperToolbar />}>
-
-                                {/* Step 1: Base */}
-                                <StepperForm.Step label={'fields.base'}>
-                                    <KindSelector
-                                        kinds={kinds}
-                                        readOnly
-                                    />
-                                    <TextInput
-                                        source="name"
-                                        placeholder={hubTemplate?.name}
-                                        validate={[
-                                            required(),
-                                            isAlphaNumeric(),
-                                        ]}
-                                    />
-                                    <MetadataInput />
-                                </StepperForm.Step>
-
-                                {/* Step 2: Spec */}
-                                <StepperForm.Step label={'fields.spec.title'}>
-                                    <SpecInput
-                                        source="spec"
-                                        getUiSchema={getFunctionUiSpec}
-                                    />
-                                </StepperForm.Step>
-
-                            </StepperForm>
-                        </FlatCard>
-                    </CreateView>
                 </>
             </CreateBase>
         </Container>

@@ -132,23 +132,26 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
 
 export const HubLayout = () => {
     const translate = useTranslate();
-
+    const navigate = useNavigate();
+    const createPath = useCreatePath();
     const { availableFilters, hubInfo, selectedTemplate, setSelectedTemplate } =
         useListContext() as any;
 
     const pageTitle = hubInfo?.name || translate('pages.hub.title');
     const pageSubtitle =
         hubInfo?.description || translate('pages.hub.subtitle');
-    const navigate = useNavigate();
-    const createPath = useCreatePath();
+
 
     const handleImport = (template: any) => {
         const path =
-            createPath({ resource: 'functions', type: 'list' }) + '/hubimport';
+        createPath({ resource: 'functions', type: 'list' }) + '/hubimport';
 
         navigate(path, {
             state: { hubTemplate: template },
         });
+        navigate(path, { state: { hubTemplate: template } });
+  
+
     };
     const handleNotebookDownload = async () => {
         const url = toRepositoryAssetUrl(

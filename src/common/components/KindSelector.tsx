@@ -16,7 +16,7 @@ import { isValidKind } from '../utils/helpers';
 import { useFormState } from 'react-hook-form';
 
 export const KindSelector = (props: {
-    kinds: any[] | undefined;
+    kinds?: any[] | undefined;
     readOnly?: boolean;
 }) => {
     const { kinds = [], readOnly = false } = props;

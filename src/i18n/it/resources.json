@@ -45,6 +45,9 @@
         }
     },
     "functions": {
+        "template_selector": {
+            "title": "Seleziona un template"
+        },
         "fields": {
             "key": "Chiave",
             "name": "Nome"
