@@ -14,11 +14,11 @@ import {
     MessageSources,
     MessageActions,
 } from 'reachat';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
-import { alpha, CSSProperties, useTheme } from '@mui/material';
+import { alpha, useTheme, CSSProperties } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useTranslate } from 'react-admin';
 import { ErrorDisplay } from './ErrorDisplay';
@@ -38,65 +38,44 @@ const API_BASE_URL: string =
 
 const THROTTLE_MS = 100;
 
-const CriticalErrorFallback = ({ error, retry }: any) => {
-    return <ErrorDisplay error={error} onRetry={retry} />;
-};
+const CriticalErrorFallback = ({ error, retry }: any) => (
+    <ErrorDisplay error={error} onRetry={retry} />
+);
 
 interface ReaChatProps {
-    modelName?: string;
+    modelName: string;
     baseUrl?: string;
 }
 
-export const ReaChat = ({ modelName, baseUrl }: ReaChatProps) => {
-    return (
-        <ThemeProvider theme={reatheme}>
-            <ErrorBoundary FallbackComponent={CriticalErrorFallback}>
-                <OpenAIChat modelName={modelName} baseUrl={baseUrl} />
-            </ErrorBoundary>
-        </ThemeProvider>
-    );
-};
+export const ReaChat = ({ modelName, baseUrl }: ReaChatProps) => (
+    <ThemeProvider theme={reatheme}>
+        <ErrorBoundary FallbackComponent={CriticalErrorFallback}>
+            <OpenAIChat modelName={modelName} baseUrl={baseUrl} />
+        </ErrorBoundary>
+    </ThemeProvider>
+);
 
 const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
     const { id } = useParams();
     const currentRunId = id || 'general-session';
     const { sessions, updateSession, ensureSessionForRun } = useChatContext();
+    const translate = useTranslate();
+    const theme = useTheme();
 
     const [loading, setIsLoading] = useState<boolean>(false);
-
-    const isRegeneratingRef = useRef(false);
+    const abortControllerRef = useRef<AbortController | null>(null);
+    const openai = useMemo(() => {
+        if (!API_KEY) return null;
+        return new OpenAI({
+            apiKey: API_KEY,
+            baseURL: API_BASE_URL || baseUrl,
+            dangerouslyAllowBrowser: true,
+        });
+    }, [baseUrl]);
 
     useEffect(() => {
         ensureSessionForRun(currentRunId);
     }, [currentRunId, ensureSessionForRun]);
-
-    const openai = useRef<OpenAI | null>(null);
-    const abortControllerRef = useRef<AbortController | null>(null);
-
-    useEffect(() => {
-        if (API_KEY) {
-            openai.current = new OpenAI({
-                apiKey: API_KEY,
-                baseURL: API_BASE_URL || baseUrl,
-                dangerouslyAllowBrowser: true,
-                maxRetries: 3,
-                timeout: 180 * 1000,
-            });
-        }
-    }, [baseUrl]);
-    const theme = useTheme();
-    const isDarkMode = theme.palette.mode === 'dark';
-    const primaryColor = theme.palette.primary.main;
-    const translate = useTranslate();
-
-    const cssVariables = {
-        '--primary': primaryColor,
-        '--primary-hover': theme.palette.primary.dark,
-        '--primary-alpha': alpha(primaryColor, 0.15),
-        '--primary-hover-alpha': alpha(primaryColor, 0.1),
-    } as CSSProperties;
-
-    const dynamicChatTheme = createChatTheme();
 
     const handleStop = useCallback(() => {
         if (abortControllerRef.current) {
@@ -107,13 +86,12 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
     }, []);
 
     const handleCopy = useCallback((text?: string) => {
-        if (!text) return;
-        navigator.clipboard.writeText(text).catch(err => console.error(err));
+        if (text) navigator.clipboard.writeText(text).catch(console.error);
     }, []);
 
-    const handleNewMessage = useCallback(
-        async (message: string) => {
-            if (!openai.current) return console.error('OpenAI not initialized');
+    const processMessage = useCallback(
+        async (message: string, isRegeneration: boolean = false) => {
+            if (!openai) return console.error('OpenAI not initialized');
             if (!message) return;
 
             const currentSession = sessions.find(s => s.id === currentRunId);
@@ -122,11 +100,9 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             setIsLoading(true);
             abortControllerRef.current = new AbortController();
 
-            let baseConversations = currentSession.conversations;
-            if (isRegeneratingRef.current) {
-                baseConversations = baseConversations.slice(0, -1);
-                isRegeneratingRef.current = false;
-            }
+            const baseConversations = isRegeneration
+                ? currentSession.conversations.slice(0, -1)
+                : currentSession.conversations;
 
             const conversationId = Date.now().toString();
 
@@ -138,17 +114,15 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
                     id: conversationId,
                     question: message,
                     response: currentResponse,
-                    isError: isError,
+                    isError,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 };
 
-                const conversations = [...baseConversations, newConversation];
-
                 updateSession({
                     ...currentSession,
                     updatedAt: new Date(),
-                    conversations,
+                    conversations: [...baseConversations, newConversation],
                 });
             };
 
@@ -158,19 +132,18 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             let lastUpdateTime = 0;
 
             try {
-                const stream = await openai.current.chat.completions.create(
+                const stream = await openai.chat.completions.create(
                     {
                         model: modelName,
                         messages: [{ role: 'user', content: message }],
                         stream: true,
-                        max_completion_tokens: 10000,
                     },
                     { signal: abortControllerRef.current.signal }
                 );
 
                 for await (const chunk of stream) {
-                    const content = chunk.choices[0]?.delta?.content || '';
-                    accumulatedResponse += content;
+                    accumulatedResponse +=
+                        chunk.choices[0]?.delta?.content || '';
                     const now = Date.now();
                     if (now - lastUpdateTime > THROTTLE_MS) {
                         updateSessionState(accumulatedResponse);
@@ -191,17 +164,32 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
                 abortControllerRef.current = null;
             }
         },
-        [currentRunId, sessions, updateSession, modelName]
+        [currentRunId, sessions, updateSession, modelName, openai]
+    );
+
+    const handleNewMessage = useCallback(
+        (message: string) => processMessage(message, false),
+        [processMessage]
     );
 
     const handleRegenerate = useCallback(
         (question: string) => {
-            if (loading || !question) return;
-
-            isRegeneratingRef.current = true;
-            handleNewMessage(question);
+            if (!loading && question) processMessage(question, true);
         },
-        [loading, handleNewMessage]
+        [loading, processMessage]
+    );
+
+    const isDarkMode = theme.palette.mode === 'dark';
+    const dynamicChatTheme = useMemo(() => createChatTheme(), []);
+    const cssVariables = useMemo(
+        () =>
+            ({
+                '--primary': theme.palette.primary.main,
+                '--primary-hover': theme.palette.primary.dark,
+                '--primary-alpha': alpha(theme.palette.primary.main, 0.15),
+                '--primary-hover-alpha': alpha(theme.palette.primary.main, 0.1),
+            } as CSSProperties),
+        [theme.palette.primary]
     );
 
     return (
