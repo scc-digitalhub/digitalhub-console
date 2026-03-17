@@ -229,7 +229,8 @@ export const RunShowComponent = () => {
                 />
             </TabbedShowLayout.Tab>
             {(record?.spec?.source || record?.spec?.fab_source) &&
-                schema?.schema && !(record?.status?.dockerfile) && (
+                schema?.schema &&
+                !record?.status?.dockerfile && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
                         <SourceCodeView
                             sourceCode={record.spec.source}
@@ -244,8 +245,8 @@ export const RunShowComponent = () => {
                 <TabbedShowLayout.Tab label={'fields.code'}>
                     <AceEditorField
                         source="status.dockerfile"
-                        mode="text" 
-                        theme='monokai'
+                        mode="text"
+                        theme="monokai"
                         parse={atob}
                         minLines={10}
                         maxLines={50}
@@ -321,11 +322,12 @@ const ShowToolbar = () => {
         <TopToolbar>
             <BackButton />
             <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
-            {record?.status?.service?.url && <ClientButton />}
-            {record?.status?.openai ? (
+            {record?.status?.inference_v2 ? (
+                <ClientButton mode="v2" />
+            ) : record?.status?.openai ? (
                 <ClientButton mode="chat" />
             ) : (
-                <ClientButton mode="v2" />
+                <ClientButton mode="http" />
             )}
             <FunctionField
                 render={record =>

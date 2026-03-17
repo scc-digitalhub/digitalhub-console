@@ -174,7 +174,10 @@ export const ClientButton = (props: ClientButtonProps) => {
                 <DialogContent>
                     {mode === 'chat' ? (
                         <ChatContextProvider>
-                            <ReaChat />
+                            <ReaChat
+                                modelName={record.status?.openai?.model}
+                                baseUrl={record.status?.openai?.baseUrl}
+                            />
                         </ChatContextProvider>
                     ) : (
                         <Client
