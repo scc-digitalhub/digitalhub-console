@@ -25,7 +25,9 @@ import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
 
-export const ServicegraphSourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
+export const ServicegraphSourceCodeTemplate = (
+    props: ObjectFieldTemplateProps
+) => {
     const { formData, properties, formContext } = props;
 
     //explode struct
@@ -42,7 +44,6 @@ export const ServicegraphSourceCodeTemplate = (props: ObjectFieldTemplateProps) 
         ) as ObjectFieldTemplatePropertyType,
         value: formData ? formData['base64'] || '' : '',
     };
-    
 
     //hack: expose lang via context for editor widget
     //TODO refactor

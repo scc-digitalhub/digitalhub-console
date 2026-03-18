@@ -5,10 +5,8 @@
 import {
     ObjectFieldTemplateProps,
     ObjectFieldTemplatePropertyType,
-    WidgetProps,
 } from '@rjsf/utils';
 import { Grid } from '@mui/material';
-import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -26,7 +24,6 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import { Fragment } from 'react';
 
 export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     const { formData, properties, formContext } = props;
@@ -98,45 +95,5 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
                 ))}
             </Grid>
         </div>
-    );
-};
-
-export const SourceCodeEditorWidget = function (props: WidgetProps) {
-    const { id, value, readonly, onChange, formContext } = props;
-
-    //extract language hint from context
-    const lang = formContext.sourceLang ? formContext.sourceLang : undefined;
-
-    const handleChange = (data: string) => {
-        const encodedValue = btoa(data);
-        onChange(encodedValue);
-    };
-
-    let code = '';
-    let lineCount = 0;
-    try {
-        code = atob(value);
-        lineCount = code.split('\n').length;
-    } catch (e: any) {
-        code = '';
-    }
-
-    return (
-        <Fragment key={id}>
-            <AceEditor
-                mode={lang}
-                readOnly={readonly}
-                theme={'monokai'}
-                wrapEnabled
-                width={'50vw'}
-                setOptions={{
-                    showPrintMargin: false,
-                    minLines: 16,
-                    maxLines: Math.max(lineCount, 25),
-                }}
-                value={code}
-                onChange={handleChange}
-            />
-        </Fragment>
     );
 };
