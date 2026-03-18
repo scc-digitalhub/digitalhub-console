@@ -119,8 +119,19 @@
         "helperText": "Esplora e gestisci i file del progetto"
     },
     "hub": {
+        "menu":"Hub",
         "title": "Crea una nuova funzione da un modello",
-        "subtitle": "Esplora le funzioni disponibili",
+        "subtitle": "Esplora le risorse disponibili",
+        "title_functions": "Crea una nuova funzione da un modello",
+        "subtitle_functions": "Esplora le funzioni disponibili nell'hub",
+        "title_projects": "Importa un progetto",
+        "subtitle_projects": "Esplora i progetti disponibili nell'hub",
+        "title_artifacts": "Importa un artifact",
+        "subtitle_artifacts": "Esplora gli artifact disponibili nell'hub",
+        "title_datasets": "Importa un dataset",
+        "subtitle_datasets": "Esplora i dataset disponibili nell'hub",
+        "title_models": "Importa un modello",
+        "subtitle_models": "Esplora i modelli disponibili nell'hub",
         "search": {
             "title": "Nome o Descrizione",
             "helperText": "Esplora e riutilizza le funzioni dall'hub"

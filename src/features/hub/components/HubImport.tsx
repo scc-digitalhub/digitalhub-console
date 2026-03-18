@@ -15,7 +15,7 @@ import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ResourceStepperCreate } from '../../../common/components/ResourceStepperCreate';
 
-export const FunctionHubImport = () => {
+export const HubImport = () => {
     const { root } = useRootSelector();
     const { state } = useLocation();
     const hubTemplate = state?.hubTemplate;

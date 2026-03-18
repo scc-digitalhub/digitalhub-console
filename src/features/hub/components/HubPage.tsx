@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ListContextProvider, useList } from 'react-admin';
 import { HubLayout } from './HubLayout';
+import { HubResourceType } from '../types';
  const CATALOG_URL: string =
 (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
 (process.env.REACT_APP_HUB_CATALOG_URL as string)
@@ -24,8 +25,13 @@ const extractFilters = (items: any[]): Record<string, string[]> => {
         Object.entries(filters).map(([k, v]) => [k, Array.from(v)])
     );
 };
+interface HubPageProps {
+    resourceType?: HubResourceType; 
+}
 
-export const HubPage = () => {
+export const ALL_TYPES: HubResourceType[] = ['functions', 'datasets', 'models', 'artifacts', 'projects'];
+
+export const HubPage = ({ resourceType }: HubPageProps) => {
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
     const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
     const [catalogData, setCatalogData] = useState<any>(null);
@@ -33,28 +39,27 @@ export const HubPage = () => {
     useEffect(() => {
         fetch(CATALOG_URL)
             .then(res => res.json())
-            .then(data => {
-                console.log('Catalog data loaded:', data);
-                return setCatalogData(data);
-            })
-
+            .then(data => setCatalogData(data))
             .catch(err => console.error('Failed to load catalog:', err));
     }, []);
 
-    const fullItems = useMemo(
-        () => catalogData?.catalog?.functions || [],
-        [catalogData]
-    );
-    const hubInfo = useMemo(
-        () =>
-            catalogData
-                ? {
-                      name: catalogData.name || '',
-                      description: catalogData.description || '',
-                  }
-                : null,
-        [catalogData]
-    );
+    const fullItems = useMemo(() => {
+        if (!catalogData?.catalog) return [];
+
+        if (resourceType) {
+            return (catalogData.catalog[resourceType] || []).map(item => ({
+                ...item,
+                resourceType: resourceType,
+            }));
+        }
+
+        return ALL_TYPES.flatMap(type =>
+            (catalogData.catalog[type] || []).map(item => ({
+                ...item,
+                resourceType: type,
+            }))
+        );
+    }, [catalogData, resourceType]);
     const filteredItems = useMemo(() => {
         return fullItems.filter(item => {
             const searchLower = (filterValues.q || '').toLowerCase();
@@ -69,10 +74,12 @@ export const HubPage = () => {
                 )
             )
                 return false;
-
-            const activeCats = Object.keys(filterValues).filter(
-                c => c !== 'q' && filterValues[c]?.length > 0
-            );
+                if (filterValues.resourceType?.length > 0) {
+                    if (!filterValues.resourceType.includes(item.resourceType)) return false;
+                }
+                const activeCats = Object.keys(filterValues).filter(
+                    c => c !== 'q' && c !== 'resourceType' && filterValues[c]?.length > 0
+                );
             if (!activeCats.length) return true;
 
             const labels = item.metadata?.labels || [];
@@ -107,14 +114,15 @@ export const HubPage = () => {
         filterValues,
         setFilters: setFilterValues,
         availableFilters,
-        hubInfo,
         selectedTemplate: activeTemplate,
         setSelectedTemplate,
     } as any;
 
     return (
         <ListContextProvider value={customContext}>
-            <HubLayout />
+            <HubLayout 
+            showTypeFilter={!resourceType} 
+            resourceType={resourceType} />
         </ListContextProvider>
     );
 
