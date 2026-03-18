@@ -32,8 +32,8 @@ import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 import { RunStateBadge } from '../../common/components/RunStateBadge';
 import { WorkflowTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helpers';
-import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { getWorkflowUiSpec } from './types';
+import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -212,9 +212,10 @@ const ShowComponent = () => {
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeView
-                        field="source"
-                        code={sourceCode}
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{ spec: { source: sourceCode } }}
+                        fields={['source']}
                         schema={schema.schema}
                         uiSchema={getWorkflowUiSpec(record.kind)}
                     />

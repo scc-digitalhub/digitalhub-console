@@ -30,8 +30,8 @@ import { IdField } from '../../common/components/fields/IdField';
 import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
 import { FunctionTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helpers';
-import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { exporter } from './exporter';
+import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -218,12 +218,10 @@ const ShowComponent = () => {
                     key={record.id + ':source_code'}
                     path="code"
                 >
-                    <SourceCodeView
-                        field="source"
-                        code={sourceCode}
-                        additionalFields={
-                            requirements ? { requirements } : undefined
-                        }
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{ spec: { source: sourceCode, requirements } }}
+                        fields={['source', 'requirements']}
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />
@@ -236,12 +234,12 @@ const ShowComponent = () => {
                     key={record.id + ':fab_source_code'}
                     path="code"
                 >
-                    <SourceCodeView
-                        field="fab_source"
-                        code={fabSourceCode}
-                        additionalFields={
-                            requirements ? { requirements } : undefined
-                        }
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{
+                            spec: { fab_source: fabSourceCode, requirements },
+                        }}
+                        fields={['fab_source', 'requirements']}
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />

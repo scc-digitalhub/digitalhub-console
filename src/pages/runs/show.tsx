@@ -48,11 +48,11 @@ import { Inputs, Outputs } from './components/tabs/inputOutputs';
 
 import { CloneButton } from './components/CloneButton';
 import ComputeResources from './components/tabs/computeResources';
-import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { ClientButton } from '../../features/httpclients/components/ClientButton';
+import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -232,17 +232,10 @@ export const RunShowComponent = () => {
                 schema?.schema &&
                 !record?.status?.dockerfile && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
-                        <SourceCodeView
-                            field="source"
-                            code={record.spec.source}
-                            additionalFields={
-                                record.spec.requirements
-                                    ? {
-                                          requirements:
-                                              record.spec.requirements,
-                                      }
-                                    : undefined
-                            }
+                        <FilteredJsonSchemaField
+                            sourceName="spec"
+                            record={record}
+                            fields={['source', 'requirements']}
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />
@@ -252,17 +245,10 @@ export const RunShowComponent = () => {
                 schema?.schema &&
                 !record?.status?.dockerfile && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
-                        <SourceCodeView
-                            field="fab_source"
-                            code={record.spec.fab_source}
-                            additionalFields={
-                                record.spec.requirements
-                                    ? {
-                                          requirements:
-                                              record.spec.requirements,
-                                      }
-                                    : undefined
-                            }
+                        <FilteredJsonSchemaField
+                            sourceName="spec"
+                            record={record}
+                            fields={['fab_source', 'requirements']}
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />
