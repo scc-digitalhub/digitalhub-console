@@ -11,7 +11,7 @@ import {
     fetchUtils,
     localStorageStore,
 } from 'react-admin';
-import 'ace-builds/src-noconflict/ace'; 
+import 'ace-builds/src-noconflict/ace';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
@@ -20,7 +20,7 @@ import initHttpClientProvider from './common/provider/httpClientProvider';
 import initSearchProvider from './common/provider/searchProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
-import { FunctionHubImport } from './features/hub/components/HubImport';
+import {HubImport } from './features/hub/components/HubImport';
 import {
     OidcAuthProvider,
     BasicAuthProvider,
@@ -143,6 +143,7 @@ import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
 import { HttpClientContext } from './features/httpclients/HttpClientContext';
 import { HubPage } from './features/hub/components/HubPage';
+import { HubProjectImport } from './features/hub/components/HubProjectImport';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -216,12 +217,10 @@ const CoreApp = () => {
                                                     path="/config"
                                                     element={<ProjectConfig />}
                                                 />
-
                                                 <Route
                                                     path="/lineage"
                                                     element={<ProjectLineage />}
                                                 />
-
                                                 <Route
                                                     path="/account"
                                                     element={<MyAccount />}
@@ -235,13 +234,25 @@ const CoreApp = () => {
                                                     element={<ServiceList />}
                                                 />
                                                 <Route
-                                                    path="/functions/hub"
+                                                    path="/hub"
                                                     element={<HubPage />}
+                                                />{' '}
+                                                <Route
+                                                    path="/projects/projectimport"
+                                                    element={
+                                                        <HubProjectImport />
+                                                    }
+                                                />
+                                                <Route
+                                                    path="/functions/hub"
+                                                    element={
+                                                        <HubPage resourceType="functions" />
+                                                    }
                                                 />
                                                 <Route
                                                     path="/functions/hubimport"
                                                     element={
-                                                        <FunctionHubImport />
+                                                        <HubImport />
                                                     }
                                                 />
                                                 {enableSearch && (

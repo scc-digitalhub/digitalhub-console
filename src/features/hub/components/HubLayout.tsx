@@ -8,10 +8,10 @@ import {
     Error as RaError,
     useCreatePath,
     useListContext,
-    useTheme,
+    
     useTranslate,
 } from 'react-admin';
-import { Box, Container, Divider } from '@mui/material';
+import { Box, Container, Divider, useTheme } from '@mui/material';
 import {
     DataObject,
     Code as CodeIcon,
@@ -27,13 +27,12 @@ import { HubCardList, HubTemplateSummary } from './HubCardList';
 import { toRepositoryAssetUrl } from '../utils';
 import { Spinner } from '../../../common/components/layout/Spinner';
 import { useNavigate } from 'react-router';
-import { BackButton } from '@dslab/ra-back-button';
 
 const HubTemplateDetail = ({ template }: { template: any }) => {
     const [readme, setReadme] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
-    const [theme] = useTheme();
+    const theme= useTheme();
     const readmeUrl = useMemo(
         () => toRepositoryAssetUrl(template?.metadata?.repository, 'README.md'),
         [template?.metadata?.repository]
@@ -117,12 +116,12 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
                             padding: 16,
                             borderRadius: 10,
                             backgroundColor:
-                                theme === 'dark'
+                                theme.palette.mode === 'dark'
                                     ? 'rgba(255, 255, 255, 0.08)'
                                     : 'rgba(0, 0, 0, 0.04)',
                         }}
                         wrapperElement={{
-                            'data-color-mode': theme,
+                            'data-color-mode': theme.palette.mode,
                         }}
                     />
                 </Box>
@@ -131,28 +130,45 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
     );
 };
 
-export const HubLayout = () => {
+export const HubLayout = ({
+    showTypeFilter = false,
+    resourceType
+
+}: {
+    showTypeFilter?: boolean;
+    resourceType?: string;
+
+}) => {
     const translate = useTranslate();
     const navigate = useNavigate();
     const createPath = useCreatePath();
     const { availableFilters, hubInfo, selectedTemplate, setSelectedTemplate } =
         useListContext() as any;
 
-    const pageTitle = hubInfo?.name || translate('pages.hub.title');
-    const pageSubtitle =
-        hubInfo?.description || translate('pages.hub.subtitle');
-
+        const pageTitle = useMemo(() => {
+            if (resourceType) {
+                return translate(`pages.hub.title_${resourceType}`, {
+                    _: translate('pages.hub.title', { _: resourceType }),
+                });
+            }
+            return hubInfo?.name || translate('pages.hub.title');
+        }, [resourceType, hubInfo, translate]);
+    
+        const pageSubtitle = useMemo(() => {
+            if (resourceType) {
+                return translate(`pages.hub.subtitle_${resourceType}`, {
+                    _: translate('pages.hub.subtitle'),
+                });
+            }
+            return hubInfo?.description || translate('pages.hub.subtitle');
+        }, [resourceType, hubInfo, translate]);
 
     const handleImport = (template: any) => {
-        const path =
-        createPath({ resource: 'functions', type: 'list' }) + '/hubimport';
-
-        navigate(path, {
-            state: { hubTemplate: template },
-        });
+        const resource = template.resourceType || 'functions';
+        const suffix =
+            template.resourceType === 'projects' ? '/projectimport' : '/hubimport';
+        const path = createPath({ resource, type: 'list' }) + suffix;
         navigate(path, { state: { hubTemplate: template } });
-  
-
     };
     const handleNotebookDownload = async () => {
         const url = toRepositoryAssetUrl(
@@ -265,10 +281,14 @@ export const HubLayout = () => {
                     <HubTemplateDetail template={selectedTemplate} />
                 ) : (
                     <>
-                        <HubFilterBar availableFilters={availableFilters} />
+                        <HubFilterBar
+                            availableFilters={availableFilters}
+                            showTypeFilter={showTypeFilter}
+                        />{' '}
                         <HubCardList
                             onSelectTemplate={setSelectedTemplate}
                             selectedTemplate={selectedTemplate}
+                            showType={showTypeFilter}
                         />
                     </>
                 )}

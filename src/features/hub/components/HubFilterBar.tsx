@@ -12,12 +12,13 @@ import {
 } from 'react-admin';
 import { Box } from '@mui/material';
 import { useMemo } from 'react';
+import { ALL_TYPES } from './HubPage';
 
 interface HubFilterBarProps {
     availableFilters: Record<string, string[]>;
-}
+    showTypeFilter?: boolean; }
 
-export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
+export const HubFilterBar = ({ availableFilters, showTypeFilter }: HubFilterBarProps) => {
     const translate = useTranslate();
     const { filterValues, total } = useListContext();
 
@@ -64,7 +65,18 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
             }),
         [filterValues]
     );
-
+    const typeFilter = useMemo(
+        () => showTypeFilter ? [
+            <SelectArrayInput
+                key="resourceType"
+                source="resourceType"
+                label="Resource Type"
+                choices={ALL_TYPES.map(t => ({ id: t, name: t }))}
+                alwaysOn
+            />
+        ] : [],
+        [showTypeFilter]
+    );
     const showNoFilteredResults = hasActiveFilters && (total || 0) === 0;
 
     return (
@@ -72,15 +84,15 @@ export const HubFilterBar = ({ availableFilters }: HubFilterBarProps) => {
             <Box sx={{ mb: 1 }}>
                 <FilterForm filters={searchFilters} />
             </Box>
+            {showTypeFilter && (
+                <Box>
+                    <FilterForm filters={typeFilter} />
+                </Box>
+            )}
             <Box>
                 <FilterForm filters={filterInputs} />
             </Box>
-
-            {showNoFilteredResults && (
-                <Box>
-                    <ListNoResults resource="functions" />
-                </Box>
-            )}
+            {showNoFilteredResults && <ListNoResults resource="hub" />}
         </Box>
     );
 };

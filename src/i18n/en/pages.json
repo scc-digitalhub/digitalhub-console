@@ -120,8 +120,19 @@
     },
 
     "hub": {
+        "menu": "Hub",
         "title": "Create a new function from a template",
         "subtitle": "Browse the available templates",
+        "title_functions": "Create a new function from a template",
+        "subtitle_functions": "Browse the available functions in the hub",
+        "title_projects": "Import a project",
+        "subtitle_projects": "Browse the available projects in the hub",
+        "title_artifacts": "Import an artifact",
+        "subtitle_artifacts": "Browse the available artifacts in the hub",
+        "title_datasets": "Import a dataset",
+        "subtitle_datasets": "Browse the available datasets in the hub",
+        "title_models": "Import a model",
+        "subtitle_models": "Browse the available models in the hub",
         "search": {
             "title": "Name or Description",
             "helperText": "Explore and reuse functions from the hub"
