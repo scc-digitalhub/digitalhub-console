@@ -23,6 +23,7 @@ import { StyledTemplate } from '../../../common/components/layout/StyledTemplate
 interface HubCardProps {
     onSelectTemplate?: (template: any) => void;
     selectedTemplate?: any | null;
+    showType?: boolean;
 }
 
 const LabelChips = ({ labels }: { labels: string[] }) => (
@@ -180,7 +181,7 @@ export const HubTemplateSummary = ({
     );
 };
 
-const HubCard = ({ onSelectTemplate, selectedTemplate }: HubCardProps) => {
+const HubCard = ({ onSelectTemplate, selectedTemplate,showType }: HubCardProps) => {
     const record = useRecordContext();
     if (!record) return null;
 
@@ -212,6 +213,14 @@ const HubCard = ({ onSelectTemplate, selectedTemplate }: HubCardProps) => {
                 }}
             >
                 <CardContent sx={{ p: 2, width: '100%' }}>
+                {showType && record.resourceType && (                        <Chip
+                            label={record.resourceType}
+                            size="small"
+                            color="primary"
+                            variant="outlined"
+                            sx={{ mb: 1, fontSize: '0.7rem' }}
+                        />
+                    )}
                     <HubTemplateSummary template={record} />
                 </CardContent>
             </CardActionArea>

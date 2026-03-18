@@ -15,6 +15,7 @@ import { ServiceIcon } from '../features/httpclients/components/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
 import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
+import { HubIcon } from '../features/hub/components/HubIcon';
 
 export const MyMenu = () => {
     const basename = useBasename();
@@ -57,6 +58,11 @@ export const MyMenu = () => {
                     leftIcon={<LineageIcon />}
                     to={`${basename}/lineage`}
                     primaryText={'pages.lineage.title'}
+                />
+                <MenuItemLink
+                    leftIcon={<HubIcon />}
+                    to={`${basename}/hub`}
+                    primaryText={'pages.hub.menu'}
                 />
                 <MenuItemLink
                     leftIcon={<ProjectIcon />}

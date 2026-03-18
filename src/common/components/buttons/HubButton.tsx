@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import {
     Button,
     ButtonProps,
     useResourceContext,
     useCreatePath,
 } from 'react-admin';
+import { HubIcon } from '../../../features/hub/components/HubIcon';
 
 export interface HubButtonProps extends Omit<ButtonProps, 'to'> {
     icon?: React.ReactElement;
@@ -14,7 +14,7 @@ export interface HubButtonProps extends Omit<ButtonProps, 'to'> {
 }
 
 export const HubButton = ({
-    icon = <DeviceHubIcon />,
+    icon = <HubIcon />,
     label = 'actions.hub',
     to,
     color = 'primary',
