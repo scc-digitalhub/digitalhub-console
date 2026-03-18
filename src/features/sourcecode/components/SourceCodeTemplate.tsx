@@ -26,7 +26,7 @@ import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/theme-solarized_dark';
 import 'ace-builds/src-noconflict/theme-solarized_light';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     const { formData, properties, formContext } = props;
@@ -107,19 +107,36 @@ export const SourceCodeEditorWidget = function (props: WidgetProps) {
     //extract language hint from context
     const lang = formContext.sourceLang ? formContext.sourceLang : undefined;
 
-    const handleChange = (data: string) => {
-        const encodedValue = btoa(data);
-        onChange(encodedValue);
+    const decodeValue = (encodedValue?: string): string => {
+        if (!encodedValue) return '';
+        try {
+            const decoded = atob(encodedValue);
+            const bytes = Uint8Array.from(decoded, c => c.charCodeAt(0));
+            return new TextDecoder().decode(bytes);
+        } catch {
+            return '';
+        }
     };
 
-    let code = '';
-    let lineCount = 0;
-    try {
-        code = atob(value);
-        lineCount = code.split('\n').length;
-    } catch (e: any) {
-        code = '';
-    }
+    const encodeValue = (plainValue: string): string => {
+        if (!plainValue) return '';
+        const bytes = new TextEncoder().encode(plainValue);
+        const binary = Array.from(bytes, b => String.fromCharCode(b)).join('');
+        return btoa(binary);
+    };
+
+    const [code, setCode] = useState(() => decodeValue(value));
+    useEffect(() => {
+        const decodedValue = decodeValue(value);
+        setCode(prevCode =>
+            decodedValue !== prevCode ? decodedValue : prevCode
+        );
+    }, [value]);
+
+    const handleChange = (data: string) => {
+        setCode(data);
+        onChange(encodeValue(data));
+    };
 
     return (
         <Fragment key={id}>
@@ -127,12 +144,12 @@ export const SourceCodeEditorWidget = function (props: WidgetProps) {
                 mode={lang}
                 readOnly={readonly}
                 theme={'monokai'}
-                wrapEnabled
+                wrapEnabled={false}
                 width={'50vw'}
                 setOptions={{
                     showPrintMargin: false,
                     minLines: 16,
-                    maxLines: Math.max(lineCount, 25),
+                    maxLines: Math.max(code.split('\n').length, 25),
                 }}
                 value={code}
                 onChange={handleChange}
