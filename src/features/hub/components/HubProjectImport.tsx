@@ -36,14 +36,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { HubIcon } from './HubIcon';
+import { RESOURCE_MAP } from '../types';
 
-// mappa tipo risorsa hub → resource name nel dataProvider
-const RESOURCE_MAP: Record<string, string> = {
-    functions: 'functions',
-    datasets: 'dataitems',
-    models: 'models',
-    artifacts: 'artifacts',
-};
 
 interface ImportItem {
     name: string;
@@ -68,10 +62,8 @@ export const HubProjectImport = () => {
     const notify = useNotify();
     const { root } = useRootSelector();
     const basename = useBasename();
-
     const hubTemplate = state?.hubTemplate;
 
-    // stato selezione: { 'functions:vllm-text-serve': true, ... }
     const allItems: ImportItem[] = useMemo(() => {
         if (!hubTemplate?.spec) return [];
         return Object.entries(hubTemplate.spec).flatMap(([type, items]) =>
@@ -89,9 +81,7 @@ export const HubProjectImport = () => {
         Object.fromEntries(allItems.map(item => [`${item.resourceType}:${item.name}`, true]))
     );
 
-    // modale conferma
     const [confirmOpen, setConfirmOpen] = useState(false);
-    // modale progress/risultati
     const [progressOpen, setProgressOpen] = useState(false);
     const [importing, setImporting] = useState(false);
     const [results, setResults] = useState<ImportResult[]>([]);

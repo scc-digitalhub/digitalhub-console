@@ -38,6 +38,7 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
         [template?.metadata?.repository]
     );
 
+    // Fetch README content when template or its repository changes
     useEffect(() => {
         if (!readmeUrl) {
             setReadme('');
@@ -130,6 +131,8 @@ const HubTemplateDetail = ({ template }: { template: any }) => {
     );
 };
 
+//show type filter in the filter bar
+//resource type used for set title, subtitle and description
 export const HubLayout = ({
     showTypeFilter = false,
     resourceType
@@ -144,7 +147,8 @@ export const HubLayout = ({
     const createPath = useCreatePath();
     const { availableFilters, hubInfo, selectedTemplate, setSelectedTemplate } =
         useListContext() as any;
-
+        //set title, subtitle and description based on resource type if provided
+        // otherwise use hubInfo (?) or default translation
         const pageTitle = useMemo(() => {
             if (resourceType) {
                 return translate(`pages.hub.title_${resourceType}`, {
@@ -163,13 +167,21 @@ export const HubLayout = ({
             return hubInfo?.description || translate('pages.hub.subtitle');
         }, [resourceType, hubInfo, translate]);
 
-    const handleImport = (template: any) => {
-        const resource = template.resourceType || 'functions';
-        const suffix =
-            template.resourceType === 'projects' ? '/projectimport' : '/hubimport';
-        const path = createPath({ resource, type: 'list' }) + suffix;
-        navigate(path, { state: { hubTemplate: template } });
-    };
+        //function to handle import
+        // if resourceType is projects, navigate to projectimport
+        // otherwise navigate to create of the resource with the template in state
+        const handleImport = (template: any) => {
+            const resource = template.resourceType || 'functions';
+    
+            if (template.resourceType === 'projects') {
+                const path = createPath({ resource: 'projects', type: 'list' }) + '/projectimport';
+                navigate(path, { state: { hubTemplate: template } });
+                return;
+            }
+    
+            const path = createPath({ resource, type: 'create' });
+            navigate(path, { state: { hubTemplate: template } });
+        };
     const handleNotebookDownload = async () => {
         const url = toRepositoryAssetUrl(
             selectedTemplate?.metadata?.repository,
@@ -277,6 +289,9 @@ export const HubLayout = ({
                     boxSizing: 'border-box',
                 }}
             >
+                {/* Show template details if a template is selected, 
+                otherwise show the list and filters */}
+
                 {selectedTemplate ? (
                     <HubTemplateDetail template={selectedTemplate} />
                 ) : (

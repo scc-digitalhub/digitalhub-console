@@ -181,7 +181,11 @@ export const HubTemplateSummary = ({
     );
 };
 
-const HubCard = ({ onSelectTemplate, selectedTemplate,showType }: HubCardProps) => {
+const HubCard = ({
+    onSelectTemplate,
+    selectedTemplate,
+    showType,
+}: HubCardProps) => {
     const record = useRecordContext();
     if (!record) return null;
 
@@ -213,7 +217,8 @@ const HubCard = ({ onSelectTemplate, selectedTemplate,showType }: HubCardProps) 
                 }}
             >
                 <CardContent sx={{ p: 2, width: '100%' }}>
-                {showType && record.resourceType && (                        <Chip
+                    {showType && record.resourceType && (
+                        <Chip
                             label={record.resourceType}
                             size="small"
                             color="primary"
