@@ -100,28 +100,45 @@ export const ModelForm = (props: { uploader?: Uploader }) => {
     //check if any extension is available
     const { data: schemas } = useGetSchemas('extensions');
 
-    return (
-        <StepperForm toolbar={<StepperToolbar />}>
-            <StepperForm.Step label="fields.base">
-                <TextInput
-                    source="name"
-                    validate={[required(), isAlphaNumeric()]}
-                />
-                <MetadataInput />
-            </StepperForm.Step>
-            <StepperForm.Step label="fields.spec.title">
-                <CreateSpecWithUpload
-                    uploader={uploader}
-                    getSpecUiSchema={getModelSpecUiSchema}
-                />
-            </StepperForm.Step>
-            {schemas && schemas.length > 0 ? (
+    //TODO fix stepperform handling for empty (null) children
+    if (schemas && schemas.length > 0) {
+        return (
+            <StepperForm toolbar={<StepperToolbar />}>
+                <StepperForm.Step label="fields.base">
+                    <TextInput
+                        source="name"
+                        validate={[required(), isAlphaNumeric()]}
+                    />
+                    <MetadataInput />
+                </StepperForm.Step>
+                <StepperForm.Step label="fields.spec.title">
+                    <CreateSpecWithUpload
+                        uploader={uploader}
+                        getSpecUiSchema={getModelSpecUiSchema}
+                    />
+                </StepperForm.Step>
                 <StepperForm.Step label={'fields.extensions.title'}>
                     <ExtensionsForm source="extensions" />
                 </StepperForm.Step>
-            ) : (
-                <></>
-            )}
-        </StepperForm>
-    );
+            </StepperForm>
+        );
+    } else {
+        return (
+            <StepperForm toolbar={<StepperToolbar />}>
+                <StepperForm.Step label="fields.base">
+                    <TextInput
+                        source="name"
+                        validate={[required(), isAlphaNumeric()]}
+                    />
+                    <MetadataInput />
+                </StepperForm.Step>
+                <StepperForm.Step label="fields.spec.title">
+                    <CreateSpecWithUpload
+                        uploader={uploader}
+                        getSpecUiSchema={getModelSpecUiSchema}
+                    />
+                </StepperForm.Step>
+            </StepperForm>
+        );
+    }
 };
