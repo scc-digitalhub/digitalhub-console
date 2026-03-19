@@ -22,7 +22,7 @@ import {
 function mapType(resource: string) {
     //remove s + capitalize
     //ex functions => FUNCTION
-    return resource.slice(0, -1).toUpperCase();
+    return resource.slice(0, -1);
     // if (resource === 'functions') {
     //     return 'FUNCTION';
     // }

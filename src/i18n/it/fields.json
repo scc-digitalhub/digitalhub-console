@@ -1092,5 +1092,9 @@
             "description": "",
             "title": "Elemento della Forma del Tensor"
         }
-    }   
+    },
+    "extensions": {
+        "description": "Estensioni aggiuntive per la risorsa corrente",
+        "title": "Estensioni"
+    }       
 }

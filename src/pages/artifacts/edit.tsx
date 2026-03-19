@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container } from '@mui/material';
+import { Box, Container, Divider } from '@mui/material';
 import { useRef, useState } from 'react';
 import {
     EditBase,
@@ -21,6 +21,8 @@ import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
+import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const ArtifactEdit = () => {
     const resource = useResourceContext();
@@ -39,6 +41,9 @@ export const ArtifactEdit = () => {
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
+
+    //check if any extension is available
+    const { data: schemas } = useGetSchemas('extensions');
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -101,6 +106,12 @@ export const ArtifactEdit = () => {
                                     uploader={uploader}
                                     getSpecUiSchema={getArtifactSpecUiSchema}
                                 />
+                                {schemas && schemas.length > 0 && (
+                                    <>
+                                        <Divider />
+                                        <ExtensionsForm source="extensions" />
+                                    </>
+                                )}
                             </SimpleForm>
                         </FlatCard>
                     </EditView>

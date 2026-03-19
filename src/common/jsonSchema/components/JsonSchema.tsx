@@ -19,6 +19,8 @@ import { JsonParamsWidget } from './widgets/JsonParamsWidget';
 import MultiSchemaFieldTemplate from './templates/MultiSchemaFieldTemplate';
 import WrapIfAdditionalTemplate from './templates/WrapIfAdditionalTemplate';
 import AceField from './fields/AceField';
+import { HtmlPreview } from './widgets/HtmlPreview';
+import { JsonPreview } from './widgets/JsonPreview';
 
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
@@ -35,6 +37,8 @@ const customWidgets = {
     richtext: AceEditorWidget,
     xml: AceEditorWidget,
     ace: AceEditorWidget,
+    'html-preview': HtmlPreview,
+    'json-preview': JsonPreview,
 };
 const customTemplates = {
     CoreResourceFieldTemplate,
