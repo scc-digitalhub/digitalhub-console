@@ -22,8 +22,6 @@ import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { BackButton } from '@dslab/ra-back-button';
 import { ResourceStepperCreate } from '../../common/components/ResourceStepperCreate';
 
-// ─── FunctionCreate ───────────────────────────────────────────────────────────
-
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const schemaProvider = useSchemaProvider();

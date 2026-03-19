@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export type CreateFlowMode = 'selector' | 'scratch' | 'template';
 
@@ -12,10 +13,12 @@ interface CreateFlowState {
 }
 
 export const useCreateFlow = () => {
-    const [state, setState] = useState<CreateFlowState>({
-        mode: 'selector',
-        template: null,
-    });
+    const location = useLocation();
+    const hubTemplate = location.state?.hubTemplate;
+    const [state, setState] = useState<CreateFlowState>(() => ({
+        mode: hubTemplate ? 'template' : 'selector',
+        template: hubTemplate ?? null,
+    }));
 
     const startFromScratch = useCallback(() => {
         setState({ mode: 'scratch', template: null });

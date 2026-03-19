@@ -12,16 +12,20 @@ import {
 } from 'react-admin';
 import { Box } from '@mui/material';
 import { useMemo } from 'react';
-import { ALL_TYPES } from './HubPage';
+import { ALL_TYPES } from '../types';
 
 interface HubFilterBarProps {
     availableFilters: Record<string, string[]>;
-    showTypeFilter?: boolean; }
+    showTypeFilter?: boolean;
+}
 
-export const HubFilterBar = ({ availableFilters, showTypeFilter }: HubFilterBarProps) => {
+export const HubFilterBar = ({
+    availableFilters,
+    showTypeFilter,
+}: HubFilterBarProps) => {
     const translate = useTranslate();
     const { filterValues, total } = useListContext();
-
+    //free text search filter
     const searchFilters = useMemo(
         () => [
             <TextInput
@@ -35,6 +39,8 @@ export const HubFilterBar = ({ availableFilters, showTypeFilter }: HubFilterBarP
         [translate]
     );
 
+    //filters for each category
+    //select multiple values
     const filterInputs = useMemo(
         () =>
             Object.entries(availableFilters).map(([category, values]) => (
@@ -65,16 +71,21 @@ export const HubFilterBar = ({ availableFilters, showTypeFilter }: HubFilterBarP
             }),
         [filterValues]
     );
+    //if I'm in the generic hub page. show type filter,
+    //  otherwise if I'm already filtering by type, hide it
     const typeFilter = useMemo(
-        () => showTypeFilter ? [
-            <SelectArrayInput
-                key="resourceType"
-                source="resourceType"
-                label="Resource Type"
-                choices={ALL_TYPES.map(t => ({ id: t, name: t }))}
-                alwaysOn
-            />
-        ] : [],
+        () =>
+            showTypeFilter
+                ? [
+                      <SelectArrayInput
+                          key="resourceType"
+                          source="resourceType"
+                          label="Resource Type"
+                          choices={ALL_TYPES.map(t => ({ id: t, name: t }))}
+                          alwaysOn
+                      />,
+                  ]
+                : [],
         [showTypeFilter]
     );
     const showNoFilteredResults = hasActiveFilters && (total || 0) === 0;
