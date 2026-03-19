@@ -27,6 +27,8 @@ import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecW
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
+import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
@@ -97,6 +99,8 @@ export const DataItemCreate = () => {
 export const DataItemForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
 
+    //check if any extension is available
+    const { data: schemas } = useGetSchemas('extensions');
     return (
         <StepperForm toolbar={<StepperToolbar />}>
             <StepperForm.Step label={'fields.base'}>
@@ -112,6 +116,13 @@ export const DataItemForm = (props: { uploader?: Uploader }) => {
                     getSpecUiSchema={getDataItemSpecUiSchema}
                 />
             </StepperForm.Step>
+            {schemas && schemas.length > 0 ? (
+                <StepperForm.Step label={'fields.extensions.title'}>
+                    <ExtensionsForm source="extensions" />
+                </StepperForm.Step>
+            ) : (
+                <></>
+            )}
         </StepperForm>
     );
 };

@@ -209,6 +209,7 @@ const CoreApp = () => {
                                             <Resource name="metadatas" />
                                             <Resource name="labels" />
                                             <Resource name="templates" />
+                                            <Resource name="extensions" />
                                             <CustomRoutes>
                                                 <Route
                                                     path="/config"

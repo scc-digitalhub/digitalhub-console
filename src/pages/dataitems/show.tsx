@@ -30,6 +30,7 @@ import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileI
 import { PreviewTabComponent } from './components/preview-table/PreviewTabComponent';
 import { SchemaTabComponent } from './components/schema-table/SchemaTabComponent';
 import { ShowComponent } from '../../common/components/ShowComponent';
+import { ExtensionsField } from '../../features/extensions/Field';
 
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     record: any;
@@ -94,6 +95,13 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                             maxLines={lineCount[1]}
                         />
                     </Box>
+                </TabbedShowLayout.Tab>
+            )}
+            {record.extensions && record.extensions.length > 0 && (
+                <TabbedShowLayout.Tab
+                    label={translate('fields.extensions.title')}
+                >
+                    <ExtensionsField source="extensions" />
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label="fields.files.tab">

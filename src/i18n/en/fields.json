@@ -1092,5 +1092,9 @@
             "description": "",
             "title": "Tensor shape element"
         }
-    }   
+    },
+    "extensions": {
+        "description": "Additional extensions for the current resource",
+        "title": "Extensions"
+    }
 }

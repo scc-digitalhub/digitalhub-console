@@ -32,6 +32,7 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { ShowComponent } from '../../common/components/ShowComponent';
+import { ExtensionsField } from '../../features/extensions/Field';
 
 const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     const { record } = props;
@@ -124,6 +125,13 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                             maxLines={lineCount[1]}
                         />
                     </Box>
+                </TabbedShowLayout.Tab>
+            )}
+            {record.extensions && record.extensions.length > 0 && (
+                <TabbedShowLayout.Tab
+                    label={translate('fields.extensions.title')}
+                >
+                    <ExtensionsField source="extensions" />
                 </TabbedShowLayout.Tab>
             )}
             <TabbedShowLayout.Tab label="fields.files.tab">
