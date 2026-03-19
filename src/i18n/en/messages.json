@@ -74,6 +74,7 @@
         "required": "Required",
         "required_field": "Required field: %{field}",
         "unsupportedField": "Unsupported field",
-        "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens. Hyphens cannot be at the beginning or end of the word."
+        "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens",
+        "wrongLength": "Value must be between %{min} and %{max} characters long"
     }
 }
