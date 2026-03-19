@@ -2,10 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    SourceCodeTemplate,
-    SourceCodeEditorWidget,
-} from '../../features/sourcecode/components/SourceCodeTemplate';
+import { SourceCodeTemplate } from '../../common/jsonSchema/components/templates/SourceCodeTemplate';
+import { SourceCodeEditorWidget } from '../../common/jsonSchema/components/widgets/SourceCodeEditorWidget';
 
 export const getWorkflowUiSpec = (kind: string | undefined) => {
     return {

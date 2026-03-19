@@ -48,11 +48,11 @@ import { Inputs, Outputs } from './components/tabs/inputOutputs';
 
 import { CloneButton } from './components/CloneButton';
 import ComputeResources from './components/tabs/computeResources';
-import { SourceCodeView } from '../../features/sourcecode/components/SourceCodeView';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { ClientButton } from '../../features/httpclients/components/ClientButton';
+import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -228,14 +228,27 @@ export const RunShowComponent = () => {
                     maxLines={lineCount[1]}
                 />
             </TabbedShowLayout.Tab>
-            {(record?.spec?.source || record?.spec?.fab_source) &&
+            {record?.spec?.source &&
                 schema?.schema &&
                 !record?.status?.dockerfile && (
                     <TabbedShowLayout.Tab label={'fields.code'}>
-                        <SourceCodeView
-                            sourceCode={record.spec.source}
-                            fabSourceCode={record.spec.fab_source}
-                            requirements={record.spec.requirements}
+                        <FilteredJsonSchemaField
+                            sourceName="spec"
+                            record={record}
+                            fields={['source', 'requirements']}
+                            schema={schema.schema}
+                            uiSchema={getFunctionUiSpec(record.kind)}
+                        />
+                    </TabbedShowLayout.Tab>
+                )}
+            {record?.spec?.fab_source &&
+                schema?.schema &&
+                !record?.status?.dockerfile && (
+                    <TabbedShowLayout.Tab label={'fields.code'}>
+                        <FilteredJsonSchemaField
+                            sourceName="spec"
+                            record={record}
+                            fields={['fab_source', 'requirements']}
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />

@@ -2,15 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-
 import { TextArrayWidget } from '../../common/jsonSchema/components/widgets/TextArrayWidget';
-import { FabSourceCodeTemplate } from '../../features/sourcecode/components/FabSourceCodeTemplate';
-import { ServicegraphSourceCodeTemplate } from '../../features/sourcecode/components/ServicegraphSourceCodeTemplate';
+import { FabSourceCodeTemplate } from '../../common/jsonSchema/components/templates/FabSourceCodeTemplate';
+import { ServicegraphSourceCodeTemplate } from '../../common/jsonSchema/components/templates/ServicegraphSourceCodeTemplate';
 
-import {
-    SourceCodeTemplate,
-    SourceCodeEditorWidget,
-} from '../../features/sourcecode/components/SourceCodeTemplate';
+import { SourceCodeTemplate } from '../../common/jsonSchema/components/templates/SourceCodeTemplate';
+import { SourceCodeEditorWidget } from '../../common/jsonSchema/components/widgets/SourceCodeEditorWidget';
 
 //TODO cleanup implementation and properly check for source definition in schema!
 export const getFunctionUiSpec = (kind?: string) => {
@@ -39,7 +36,7 @@ export const getFunctionUiSpec = (kind?: string) => {
                     'ui:disabled': 'true',
                 },
             },
-        }
+        };
     }
 
     return {
@@ -71,6 +68,6 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
             },
-        }
+        },
     };
 };
