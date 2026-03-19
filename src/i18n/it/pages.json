@@ -153,5 +153,8 @@
         },
         "modelNotReady": "Il modello non è pronto.",
         "modelNotLive": "Il modello è pronto ma non attivo."
+    },
+    "preview": {
+        "trustContent": "Contenuto attendibile"
     }
 }

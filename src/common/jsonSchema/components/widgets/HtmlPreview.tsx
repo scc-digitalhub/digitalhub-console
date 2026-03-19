@@ -10,10 +10,12 @@ import {
     getTemplate,
     titleId,
 } from '@rjsf/utils';
-import { useTranslate } from 'react-admin';
+import { Labeled, useTranslate } from 'react-admin';
 
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import DOMPurify from 'dompurify';
+import { Box, Divider, Switch } from '@mui/material';
+import { PreviewButton } from '../../../components/PreviewButton';
 
 export const HtmlPreview = function <
     T = any,
@@ -33,6 +35,7 @@ export const HtmlPreview = function <
         required,
     } = props;
     const translate = useTranslate();
+    const [trusted, setTrusted] = useState(false);
 
     const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
         'TitleFieldTemplate',
@@ -62,8 +65,13 @@ export const HtmlPreview = function <
             code = '<pre>' + code + '</pre>';
         }
 
-        source = DOMPurify.sanitize(code);
+        if (trusted === true) {
+            source = code;
+        } else {
+            source = DOMPurify.sanitize(code);
+        }
     }
+
     return (
         <Fragment key={id}>
             {label && !hideLabel && (
@@ -75,14 +83,52 @@ export const HtmlPreview = function <
                     registry={registry}
                 />
             )}
-            {/* <div dangerouslySetInnerHTML={{ __html: source }} /> */}
-            <iframe
-                title="preview-ext"
-                srcDoc={source}
-                width={'100%'}
-                height={'auto'}
-                style={{ border: 'none' }}
-            ></iframe>
+
+            {source?.length > 1024 ? (
+                <PreviewButton
+                    title={label ? translate(label) : undefined}
+                    maxWidth="xl"
+                    fullWidth
+                    color="secondary"
+                >
+                    <Box p={1}>
+                        <Labeled label="pages.preview.trustContent">
+                            <Switch
+                                checked={trusted === true}
+                                onChange={() => {
+                                    setTrusted(!trusted);
+                                }}
+                            />
+                        </Labeled>
+                        <Divider />
+                        <iframe
+                            title="preview-ext"
+                            srcDoc={source}
+                            width={'100%'}
+                            height={'100%'}
+                            style={{ border: 'none', minHeight: '70vh' }}
+                        ></iframe>
+                    </Box>
+                </PreviewButton>
+            ) : (
+                <>
+                    <Labeled label="pages.preview.trustContent">
+                        <Switch
+                            checked={trusted === true}
+                            onChange={() => {
+                                setTrusted(!trusted);
+                            }}
+                        />
+                    </Labeled>
+                    <iframe
+                        title="preview-ext"
+                        srcDoc={source}
+                        width={'100%'}
+                        height={'auto'}
+                        style={{ border: 'none' }}
+                    ></iframe>
+                </>
+            )}
         </Fragment>
     );
 };

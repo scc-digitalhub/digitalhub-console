@@ -154,5 +154,8 @@
         },
         "modelNotReady": "Model is not ready.",
         "modelNotLive": "Model is ready but not live."
-    }
+    },
+    "preview": {
+        "trustContent": "Trusted content"
+    }    
 }

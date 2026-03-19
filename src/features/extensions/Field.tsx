@@ -70,7 +70,6 @@ export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
                 uischema[key]['ui:widget'] = 'json-preview';
             }
         });
-        console.log('uischema', uischema);
         return uischema;
     };
 
@@ -81,6 +80,7 @@ export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
                 borderColor: 'divider',
                 padding: 2,
                 marginBottom: 2,
+                width: '100%',
             }}
         >
             <Stack direction={'row'} spacing={3}>
