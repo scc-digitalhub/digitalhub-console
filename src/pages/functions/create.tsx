@@ -64,6 +64,7 @@ export const FunctionCreate = () => {
         isFromTemplate && template
             ? {
                   kind: template.kind ?? '',
+                  name: template.name ?? '',
                   metadata: {
                       name: template.metadata?.name ?? '',
                       description: template.metadata?.description ?? '',

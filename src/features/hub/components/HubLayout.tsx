@@ -49,7 +49,7 @@ export const HubLayout = ({
     }, [resourceName, translate]);
 
     const handleImport = (template: any) => {
-        const type = template.resourceType;
+        const type = template.resourceName;
         const resource = template.resourceName;
 
         if (type === 'projects') {
