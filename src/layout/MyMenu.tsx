@@ -11,6 +11,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StorageIcon from '@mui/icons-material/Storage';
 import { Box, Divider, Popover, Stack, Typography } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
@@ -80,6 +81,11 @@ export const MyMenu = () => {
                     leftIcon={<BrowserIcon />}
                     to={`${basename}/files`}
                     primaryText={'fields.files.title'}
+                />
+                <MenuItemLink
+                    leftIcon={<StorageIcon />}
+                    to={`${basename}/sql-editor`}
+                    primaryText={'SQL Editor'}
                 />
 
                 <Divider />

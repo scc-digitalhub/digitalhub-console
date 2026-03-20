@@ -152,6 +152,7 @@ import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
 import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
+import MyTrinoApp from './features/sql/components/MyTrinoApp';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 
 export const SearchEnabledContext = createContext(false);
@@ -273,6 +274,10 @@ const CoreApp = () => {
                                                         element={<SearchList />}
                                                     />
                                                 )}
+                                                <Route
+                                                    path="/sql-editor"
+                                                    element={<MyTrinoApp />}
+                                                />
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>
