@@ -36,15 +36,16 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { HubIcon } from './HubIcon';
-import { RESOURCE_MAP } from '../types';
+import { useHubResources } from '../useHubResources';
 
 
 interface ImportItem {
     name: string;
     kind: string;
     displayName: string;
-    resourceType: string;
-    data: any;
+    resourceName: string;
+    catalogKey: string; 
+        data: any;
 }
 
 interface ImportResult {
@@ -55,6 +56,7 @@ interface ImportResult {
 
 export const HubProjectImport = () => {
     const { state } = useLocation();
+    const hubResources = useHubResources();
     const navigate = useNavigate();
     const translate = useTranslate();
     const createPath = useCreatePath();
@@ -64,21 +66,27 @@ export const HubProjectImport = () => {
     const basename = useBasename();
     const hubTemplate = state?.hubTemplate;
 
+    const catalogKeyToResource = useMemo(
+        () => Object.fromEntries(hubResources.map(r => [r.catalogKey, r.name])),
+        [hubResources]
+    );
     const allItems: ImportItem[] = useMemo(() => {
         if (!hubTemplate?.spec) return [];
-        return Object.entries(hubTemplate.spec).flatMap(([type, items]) =>
-            (items as any[]).map(item => ({
+        return Object.entries(hubTemplate.spec).flatMap(([catalogKey, items]) => {
+            const resourceName = catalogKeyToResource[catalogKey] ?? catalogKey;
+            return (items as any[]).map(item => ({
                 name: item.name,
                 kind: item.kind,
                 displayName: item.metadata?.name || item.name,
-                resourceType: type,
+                resourceName,  
+                catalogKey,
                 data: item,
-            }))
-        );
-    }, [hubTemplate]);
+            }));
+        });
+    }, [hubTemplate, catalogKeyToResource]);
 
     const [selection, setSelection] = useState<Record<string, boolean>>(
-        Object.fromEntries(allItems.map(item => [`${item.resourceType}:${item.name}`, true]))
+        Object.fromEntries(allItems.map(item => [`${item.catalogKey}:${item.name}`, true]))
     );
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -87,7 +95,7 @@ export const HubProjectImport = () => {
     const [results, setResults] = useState<ImportResult[]>([]);
 
     const selectedItems = allItems.filter(
-        item => selection[`${item.resourceType}:${item.name}`]
+        item => selection[`${item.catalogKey}:${item.name}`]
     );
 
     const toggle = (key: string) => {
@@ -95,14 +103,14 @@ export const HubProjectImport = () => {
     };
 
     const toggleAllOfType = (type: string) => {
-        const typeItems = allItems.filter(i => i.resourceType === type);
+        const typeItems = allItems.filter(i => i.catalogKey === type);
         const allSelected = typeItems.every(
-            i => selection[`${i.resourceType}:${i.name}`]
+            i => selection[`${i.catalogKey}:${i.name}`]
         );
         setSelection(prev => ({
             ...prev,
             ...Object.fromEntries(
-                typeItems.map(i => [`${i.resourceType}:${i.name}`, !allSelected])
+                typeItems.map(i => [`${i.catalogKey}:${i.name}`, !allSelected])
             ),
         }));
     };
@@ -115,7 +123,6 @@ export const HubProjectImport = () => {
 
         const importResults = await Promise.allSettled(
             selectedItems.map(item => {
-                const resource = RESOURCE_MAP[item.resourceType] || item.resourceType;
                 const payload = {
                     ...item.data,
                     project: root || '',
@@ -125,7 +132,7 @@ export const HubProjectImport = () => {
                     },
                 };
                 return dataProvider
-                    .create(resource, {
+                    .create(item.resourceName, {
                         data: payload,
                         meta: { root },
                     })
@@ -164,18 +171,12 @@ export const HubProjectImport = () => {
         navigate(`${basename}/hub`);
     };
 
-    const TYPE_COLOR: Record<string, any> = {
-        functions: 'primary',
-        datasets: 'secondary',
-        models: 'success',
-        artifacts: 'warning',
-    };
 
     const groupedByType = useMemo(() => {
         const groups: Record<string, ImportItem[]> = {};
         allItems.forEach(item => {
-            if (!groups[item.resourceType]) groups[item.resourceType] = [];
-            groups[item.resourceType].push(item);
+            if (!groups[item.catalogKey]) groups[item.catalogKey] = [];
+            groups[item.catalogKey].push(item);
         });
         return groups;
     }, [allItems]);
@@ -199,7 +200,7 @@ export const HubProjectImport = () => {
             {/* sezioni per tipo */}
             {Object.entries(groupedByType).map(([type, items]) => {
                 const allSelected = items.every(
-                    i => selection[`${i.resourceType}:${i.name}`]
+                    i => selection[`${i.catalogKey}:${i.name}`]
                 );
                 return (
                     <Box key={type} sx={{ mb: 3 }}>
@@ -213,10 +214,10 @@ export const HubProjectImport = () => {
                                 <Chip
                                     label={type}
                                     size="small"
-                                    color={TYPE_COLOR[type] ?? 'default'}
+                                    color={'primary'}
                                 />
                                 <Typography variant="caption" color="text.secondary">
-                                    {items.filter(i => selection[`${i.resourceType}:${i.name}`]).length}
+                                    {items.filter(i => selection[`${i.catalogKey}:${i.name}`]).length}
                                     /{items.length} selected
                                 </Typography>
                             </Stack>
@@ -227,7 +228,7 @@ export const HubProjectImport = () => {
 
                         <Stack gap={1}>
                             {items.map(item => {
-                                const key = `${item.resourceType}:${item.name}`;
+                                const key = `${item.catalogKey}:${item.name}`;
                                 return (
                                     <Stack
                                         key={key}
@@ -295,10 +296,10 @@ export const HubProjectImport = () => {
                     </Typography>
                     <List dense>
                         {selectedItems.map(item => (
-                            <ListItem key={`${item.resourceType}:${item.name}`}>
+                            <ListItem key={`${item.catalogKey}:${item.name}`}>
                                 <ListItemText
                                     primary={item.displayName}
-                                    secondary={`${item.resourceType} · ${item.kind}`}
+                                    secondary={`${item.catalogKey} · ${item.kind}`}
                                 />
                             </ListItem>
                         ))}
@@ -339,7 +340,7 @@ export const HubProjectImport = () => {
                                         primary={r.item?.displayName}
                                         secondary={
                                             r.success
-                                                ? `${r.item?.resourceType} · ${r.item?.kind}`
+                                                ? `${r.item?.catalogKey} · ${r.item?.kind}`
                                                 : r.error
                                         }
                                     />

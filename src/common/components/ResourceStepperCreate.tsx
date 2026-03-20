@@ -41,7 +41,7 @@ export const ResourceStepperCreate = ({
                         />
                     }
                 >
-                        <StepperForm.Step label={kindStepLabel}>
+                    <StepperForm.Step label={kindStepLabel}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -49,8 +49,9 @@ export const ResourceStepperCreate = ({
                                 p: 4,
                             }}
                         >
-                                {kindStep}
-                        </Box>                        </StepperForm.Step>
+                            {kindStep}
+                        </Box>{' '}
+                    </StepperForm.Step>
 
                     <StepperForm.Step label={metadataStepLabel}>
                         <TextInput

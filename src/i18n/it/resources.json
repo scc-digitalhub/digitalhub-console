@@ -179,5 +179,9 @@
             "summary": "Riepilogo",
             "test": "Test"
         }
+    },
+    "hub": {
+        "empty": "Nessuna risorsa disponibile",
+        "empty_hint": "Il catalogo non contiene risorse per questa categoria"
     }
 }
