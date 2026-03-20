@@ -16,7 +16,7 @@ import { InfoTable } from './InfoTable';
 import { convertFiles } from '../utils';
 import { Stats } from './Stats';
 import { FileInfo } from '../../info/types';
-import { NoContent } from '../../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 import { Spinner } from '../../../../common/components/layout/Spinner';
 
 const DefaultTitle = () => {
@@ -29,7 +29,7 @@ const DefaultTitle = () => {
     );
 };
 
-const DefaultNoContent = <NoContent message={'fields.info.empty'} />;
+const DefaultNoContent = <EmptyMessage message="fields.info.empty" />;
 
 export const FileInfoTree = (props: {
     title?: false | ReactElement;

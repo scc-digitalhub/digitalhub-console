@@ -55,7 +55,7 @@ import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from '../../utils';
 import { useDownload } from '../useDownload';
 import { DownloadParams, ResourceDownloadParams } from '../types';
-import { NoContent } from '../../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
@@ -206,7 +206,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                             sub={sub}
                         />
                     ) : (
-                        <NoContent message="error.preview_not_available" />
+                        <EmptyMessage message="error.preview_not_available" />
                     )}
                 </DialogContent>
             </PreviewDialog>
@@ -394,7 +394,7 @@ const CSVViewer = (props: CSVViewerProps) => {
                     disableRowSelectionOnClick
                 />
             ) : (
-                <NoContent message={'fields.info.empty'} />
+                <EmptyMessage message="fields.info.empty" />
             )}
         </Box>
     );

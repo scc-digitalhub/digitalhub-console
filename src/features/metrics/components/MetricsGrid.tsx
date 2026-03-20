@@ -42,7 +42,7 @@ import {
     Series,
 } from '../utils';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
-import { NoContent } from '../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 import { Spinner } from '../../../common/components/layout/Spinner';
 
 type MetricsGridProps = SelectorProps & {
@@ -238,7 +238,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                     )}
             </Grid>
         ) : (
-            <NoContent message={'fields.info.empty'} />
+            <EmptyMessage message="fields.info.empty" />
         );
 
     return (

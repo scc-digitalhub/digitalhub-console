@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import { RecordLineage } from '../../../features/lineage/components/RecordLineage';
 import { Relationship } from '../../../features/lineage';
 import { keyParser } from '../../../common/utils/parsers';
-import { NoContent } from '../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
@@ -176,7 +176,7 @@ const Lineage = () => {
                     filterRelationships={r => r.type !== 'run_of'}
                 />
             ) : (
-                <NoContent message={'messages.lineage.noLineage'} />
+                <EmptyMessage message="messages.lineage.noLineage" />
             )}
         </Box>
     );
