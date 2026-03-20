@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { RecordLineage } from './RecordLineage';
-import { NoContent } from '../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 
 export const LineageTabComponent = () => {
     const record = useRecordContext();
@@ -77,7 +77,7 @@ export const LineageTabComponent = () => {
                     filterRelationships={r => r.type !== 'run_of'}
                 />
             ) : (
-                <NoContent message={'messages.lineage.noLineage'} />
+                <EmptyMessage message="messages.lineage.noLineage" />
             )}
         </Box>
     );

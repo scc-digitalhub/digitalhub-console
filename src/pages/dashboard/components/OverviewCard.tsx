@@ -28,10 +28,11 @@ import {
     ListButton,
     CreateButton,
     useCreatePath,
+    useGetResourceLabel,
 } from 'react-admin';
 import { ResourceIcon } from './ResourceIcon';
-import { EmptyList } from './EmptyList';
 import { alpha } from '@mui/material';
+import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 
 export const OverviewCard = (props: {
     resource: string;
@@ -49,6 +50,7 @@ export const OverviewCard = (props: {
     const translate = useTranslate();
     const createPath = useCreatePath();
     const theme = useTheme();
+    const getResourceLabel = useGetResourceLabel();
 
     const [data, setData] = useState<GetListResult<any>>();
 
@@ -78,7 +80,7 @@ export const OverviewCard = (props: {
         return () => {
             loading = false;
         };
-    }, [dataProvider]);
+    }, [dataProvider, resource]);
 
     const total = data?.total;
     const records = data?.data || [];
@@ -115,7 +117,17 @@ export const OverviewCard = (props: {
                 {!isEmpty ? (
                     <RecentList resource={resource} records={records} />
                 ) : (
-                    <EmptyList resource={resource} />
+                    <EmptyMessage
+                        message={translate('ra.page.empty', {
+                            name: translate(
+                                `resources.${resource}.forcedCaseName`,
+                                {
+                                    smart_count: 1,
+                                    _: getResourceLabel(resource, 1),
+                                }
+                            ),
+                        })}
+                    />
                 )}
             </CardContent>
             <CardActions

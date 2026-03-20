@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Stack } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
@@ -18,7 +16,6 @@ import {
     useRecordContext,
     useRedirect,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { FlatCard } from '../../common/components/layout/FlatCard';
@@ -30,13 +27,13 @@ import { getFunctionUiSpec } from './types';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
+import { EmptyMessage } from '../../common/components/layout/EmptyMessage';
 
 const SpecInput = (props: {
     source: string;
     onDirty?: (state: boolean) => void;
 }) => {
     const { source, onDirty } = props;
-    const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
@@ -58,18 +55,7 @@ const SpecInput = (props: {
     }, [eq]);
 
     if (!record || !record.kind || !spec) {
-        return (
-            <Card
-                sx={{
-                    width: 1,
-                    textAlign: 'center',
-                }}
-            >
-                <CardContent>
-                    {translate('resources.common.emptySpec')}{' '}
-                </CardContent>
-            </Card>
-        );
+        return <EmptyMessage message="resources.common.emptySpec" />;
     }
     return (
         <JsonSchemaInput

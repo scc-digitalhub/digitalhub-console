@@ -2,19 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Card, CardContent } from '@mui/material';
 import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
-import {
-    InputProps,
-    useRecordContext,
-    useResourceContext,
-    useTranslate,
-} from 'react-admin';
+import { InputProps, useRecordContext, useResourceContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { useSchemaProvider } from '../../provider/schemaProvider';
 import { JsonSchemaInput } from './JsonSchema';
 import { get } from 'lodash';
+import { EmptyMessage } from '../../components/layout/EmptyMessage';
 
 export const SpecInput = (
     props: InputProps & {
@@ -38,7 +33,6 @@ export const SpecInput = (
         helperText,
         kindSource = 'kind',
     } = props;
-    const translate = useTranslate();
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
@@ -66,18 +60,7 @@ export const SpecInput = (
     }, [record, value]);
 
     if (!kind || !schema) {
-        return (
-            <Card
-                sx={{
-                    width: 1,
-                    textAlign: 'center',
-                }}
-            >
-                <CardContent>
-                    {translate('resources.common.emptySpec')}{' '}
-                </CardContent>
-            </Card>
-        );
+        return <EmptyMessage message="resources.common.emptySpec" />;
     }
 
     const jsonSchema = { ...schema, title: label };

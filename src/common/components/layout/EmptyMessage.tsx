@@ -2,17 +2,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Typography from '@mui/material/Typography';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import { useTranslate } from 'react-admin';
 
-export const NoContent = (props: { message: string }) => {
-    const { message } = props;
+export const EmptyMessage = (props: TypographyProps & { message: string }) => {
+    const { message, ...rest } = props;
     const translate = useTranslate();
 
     return (
         <Typography
             variant="body1"
-            sx={{ textAlign: 'center', paddingY: 4, color: 'gray' }}
+            color="gray"
+            sx={{ textAlign: 'center', paddingY: 4 }}
+            {...rest}
         >
             {translate(message)}
         </Typography>

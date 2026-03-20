@@ -8,7 +8,7 @@ import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { usePreviewDataGridController } from './usePreviewDataGridController';
 import { Spinner } from '../../../../common/components/layout/Spinner';
-import { NoContent } from '../../../../common/components/layout/NoContent';
+import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 
 export const PreviewTabComponent = (props: { record: any }) => {
     const { record } = props;
@@ -94,9 +94,7 @@ export const PreviewTabComponent = (props: { record: any }) => {
                     </Typography>
                 </>
             ) : (
-                <NoContent
-                    message={'resources.dataitems.preview.notAvailable'}
-                />
+                <EmptyMessage message="resources.dataitems.preview.notAvailable" />
             )}
         </Box>
     );
