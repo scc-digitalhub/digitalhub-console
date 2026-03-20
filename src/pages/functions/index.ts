@@ -17,5 +17,6 @@ export default {
     edit: FunctionEdit,
     options: {
         type: 'function',
+        hub:true 
     },
 };

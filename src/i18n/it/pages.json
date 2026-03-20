@@ -135,7 +135,12 @@
         "search": {
             "title": "Nome o Descrizione",
             "helperText": "Esplora e riutilizza le funzioni dall'hub"
-        }
+        },
+        "resource_type": "Tipo risorsa",
+        "no_results": "Nessun risultato",
+        "no_results_hint": "Prova a modificare o rimuovere i filtri attivi",
+        "clear_filters": "Rimuovi filtri"
+        
     },
     "services": {
         "title": "Servizi",

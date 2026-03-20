@@ -13,5 +13,6 @@ export default {
     edit: ProjectEdit,
     options: {
         type: 'project',
+        hub: true
     },
 };
