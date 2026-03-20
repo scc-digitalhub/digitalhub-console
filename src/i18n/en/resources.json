@@ -179,5 +179,9 @@
             "summary": "Recap",
             "test": "Test"
         }
+    },
+    "hub": {
+        "empty": "No resource available",
+        "empty_hint": "The catalog does not contain resources for this category"
     }
 }

@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { Hub } from '@mui/icons-material';
 import { DataItemCreate } from './create';
 import { DataItemEdit } from './edit';
 import { DataItemIcon } from './icon';
@@ -18,6 +19,8 @@ export default {
     edit: DataItemEdit,
     options: {
         type: 'dataitem',
+        hub: true,
+        catalogKey: 'dataitems',
         getSpecUiSchema: getDataItemSpecUiSchema,
     },
 };

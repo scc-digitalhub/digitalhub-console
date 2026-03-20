@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ListContextProvider, useList } from 'react-admin';
 import { HubLayout } from './HubLayout';
-import { ALL_TYPES, HubResourceType } from '../types';
+import { useHubResources } from '../useHubResources';
 
 //load catalog url from env variable, with fallback to globalThis for older react-scripts versions that don't support env variables starting with REACT_APP
 const CATALOG_URL: string =
@@ -29,14 +29,19 @@ const extractFilters = (items: any[]): Record<string, string[]> => {
 };
 //type of resource passed as prop to filter by type and show/hide type filter
 interface HubPageProps {
-    resourceType?: HubResourceType;
+    resourceName?: string;
 }
 
-export const HubPage = ({ resourceType }: HubPageProps) => {
+export const HubPage = ({ resourceName }: HubPageProps) => {
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
     const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
     const [catalogData, setCatalogData] = useState<any>(null);
 
+    const hubResources = useHubResources();
+    const currentResource = useMemo(
+        () => hubResources.find(r => r.name === resourceName) ?? null,
+        [hubResources, resourceName]
+    );
     //download the catalog only once
     useEffect(() => {
         fetch(CATALOG_URL)
@@ -46,25 +51,30 @@ export const HubPage = ({ resourceType }: HubPageProps) => {
     }, []);
 
     //prepare the list of items to show based on the catalog and
-    //the selected resource type, adding the resourceType as property to each item for easier filtering later
-    //if resourceType is not specified, show all items from all types  
+    //the selected resource type, adding the resourceName as property to each item for easier filtering later
+    //if resourceName is not specified, show all items from all types  
     const fullItems = useMemo(() => {
         if (!catalogData?.catalog) return [];
 
-        if (resourceType) {
-            return (catalogData.catalog[resourceType] || []).map(item => ({
-                ...item,
-                resourceType: resourceType,
-            }));
+        if (currentResource) {
+            return (catalogData.catalog[currentResource.catalogKey] || []).map(
+                (item: any) => ({
+                    ...item,
+                    resourceName: currentResource.name,
+                    catalogKey: currentResource.catalogKey,
+                })
+            );
         }
 
-        return ALL_TYPES.flatMap(type =>
-            (catalogData.catalog[type] || []).map(item => ({
+        return hubResources.flatMap(res =>
+            (catalogData.catalog[res.catalogKey] || []).map((item: any) => ({
                 ...item,
-                resourceType: type,
+                resourceName: res.name,       
+                catalogKey: res.catalogKey,   
+
             }))
         );
-    }, [catalogData, resourceType]);
+    }, [catalogData, currentResource, hubResources]);
     //filter items based on search query, resource type filter and other label filters
     //useMemo for performance optimization, so that filtering is only recalculated when fullItems or filterValues change
     const filteredItems = useMemo(() => {
@@ -81,14 +91,14 @@ export const HubPage = ({ resourceType }: HubPageProps) => {
                 )
             )
                 return false;
-            if (filterValues.resourceType?.length > 0) {
-                if (!filterValues.resourceType.includes(item.resourceType))
+            if (filterValues.resourceName?.length > 0) {
+                if (!filterValues.resourceName.includes(item.resourceName))
                     return false;
             }
             const activeCats = Object.keys(filterValues).filter(
                 c =>
                     c !== 'q' &&
-                    c !== 'resourceType' &&
+                    c !== 'resourceName' &&
                     filterValues[c]?.length > 0
             );
             if (!activeCats.length) return true;
@@ -139,12 +149,12 @@ export const HubPage = ({ resourceType }: HubPageProps) => {
     } as any;
 //showTypeFilter for showing filter by resource or not, generic hub page shows the filter, 
 // while specific pages for resource types hide it, since they are already filtered by type
-//resourceType for title, subtitle and description
+//resourceName for title, subtitle and description
     return (
         <ListContextProvider value={customContext}>
             <HubLayout
-                showTypeFilter={!resourceType}
-                resourceType={resourceType}
+                showTypeFilter={!resourceName}   
+                resourceName={resourceName}
             />
         </ListContextProvider>
     );

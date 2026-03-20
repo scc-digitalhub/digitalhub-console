@@ -136,7 +136,12 @@
         "search": {
             "title": "Name or Description",
             "helperText": "Explore and reuse functions from the hub"
-        }
+        },
+        "resource_type": "Resource type",
+        "no_results": "No results",
+        "no_results_hint": "Try to modify or remove active filters",
+        "clear_filters": "Clear filters"
+       
     },
     "services": {
         "title": "Services",

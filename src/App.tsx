@@ -245,13 +245,13 @@ const CoreApp = () => {
                                                 <Route
                                                     path="/functions/hub"
                                                     element={
-                                                        <HubPage resourceType="functions" />
+                                                        <HubPage resourceName="functions" />
                                                     }
                                                 />{' '}
                                                 <Route
                                                     path="/artifacts/hub"
                                                     element={
-                                                        <HubPage resourceType="artifacts" />
+                                                        <HubPage resourceName="artifacts" />
                                                     }
                                                 />
                                                 {enableSearch && (

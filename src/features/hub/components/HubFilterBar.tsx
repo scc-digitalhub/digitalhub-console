@@ -1,32 +1,27 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
-
+//
 // SPDX-License-Identifier: Apache-2.0
 
+import { useMemo } from 'react';
 import {
     useListContext,
     useTranslate,
     FilterForm,
-    ListNoResults,
     SelectArrayInput,
     TextInput,
 } from 'react-admin';
-import { Box } from '@mui/material';
-import { useMemo } from 'react';
-import { ALL_TYPES } from '../types';
+import { Box, Divider } from '@mui/material';
+import { useHubResources } from '../useHubResources';
 
 interface HubFilterBarProps {
-    availableFilters: Record<string, string[]>;
     showTypeFilter?: boolean;
 }
 
-export const HubFilterBar = ({
-    availableFilters,
-    showTypeFilter,
-}: HubFilterBarProps) => {
+export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
     const translate = useTranslate();
-    const { filterValues, total } = useListContext();
-    //free text search filter
-    const searchFilters = useMemo(
+    const { availableFilters } = useListContext() as any;
+    const hubResources = useHubResources();
+    const searchFilter = useMemo(
         () => [
             <TextInput
                 key="q"
@@ -34,21 +29,44 @@ export const HubFilterBar = ({
                 label={translate('pages.hub.search.title')}
                 alwaysOn
                 resettable
+                fullWidth
+                helperText={false}
             />,
         ],
         [translate]
     );
 
-    //filters for each category
-    //select multiple values
-    const filterInputs = useMemo(
+    const typeFilter = useMemo(
         () =>
-            Object.entries(availableFilters).map(([category, values]) => (
+            showTypeFilter
+                ? [
+                      <SelectArrayInput
+                          key="resourceName"
+                          source="resourceName"
+                          label="Resource Type"
+                          choices={hubResources.map(r => ({
+                              id: r.name,
+                              name: r.name
+                          }))}
+                          alwaysOn
+                          helperText={false}
+                      />,
+                  ]
+                : [],
+                [showTypeFilter, hubResources, translate]
+            );
+
+    const labelFilters = useMemo(
+        () =>
+            Object.entries(availableFilters || {}).map(([category, values]) => (
                 <SelectArrayInput
                     key={category}
                     source={category}
-                    choices={values.map(val => ({ id: val, name: val }))}
-                    alwaysOn
+                    label={category}
+                    choices={(values as string[]).map(val => ({
+                        id: val,
+                        name: val,
+                    }))}
                     sx={{
                         '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)': {
                             transform: 'none',
@@ -58,52 +76,52 @@ export const HubFilterBar = ({
                             alignItems: 'center',
                         },
                     }}
+                    alwaysOn
+                    helperText={false}
                 />
             )),
         [availableFilters]
     );
 
-    const hasActiveFilters = useMemo(
-        () =>
-            Object.entries(filterValues).some(([key, value]) => {
-                if (key === 'q') return !!String(value || '').trim();
-                return Array.isArray(value) ? value.length > 0 : !!value;
-            }),
-        [filterValues]
-    );
-    //if I'm in the generic hub page. show type filter,
-    //  otherwise if I'm already filtering by type, hide it
-    const typeFilter = useMemo(
-        () =>
-            showTypeFilter
-                ? [
-                      <SelectArrayInput
-                          key="resourceType"
-                          source="resourceType"
-                          label="Resource Type"
-                          choices={ALL_TYPES.map(t => ({ id: t, name: t }))}
-                          alwaysOn
-                      />,
-                  ]
-                : [],
-        [showTypeFilter]
-    );
-    const showNoFilteredResults = hasActiveFilters && (total || 0) === 0;
-
     return (
-        <Box>
-            <Box sx={{ mb: 1 }}>
-                <FilterForm filters={searchFilters} />
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                width: '100%',
+            }}
+        >
+            {/* search: full width */}
+            <Box
+                sx={{
+                    width: '100%',
+                    '& .RaFilterForm-filterFormInput': { width: '100%' },
+                }}
+            >
+                <FilterForm filters={searchFilter} />
             </Box>
-            {showTypeFilter && (
-                <Box>
-                    <FilterForm filters={typeFilter} />
-                </Box>
+
+            {/* select filtri: wrap su più righe */}
+            {(showTypeFilter || labelFilters.length > 0) && (
+                <>
+                    <Divider />
+                    <Box
+                        sx={{
+                            flexWrap: 'wrap',
+                            gap: 1,
+                            '& .RaFilterForm-filterFormInput': {
+                                minWidth: 160,
+                                paddingTop: 0,
+                            },
+                        }}
+                    >
+                        <FilterForm
+                            filters={[...typeFilter, ...labelFilters]}
+                        />
+                    </Box>
+                </>
             )}
-            <Box>
-                <FilterForm filters={filterInputs} />
-            </Box>
-            {showNoFilteredResults && <ListNoResults resource="hub" />}
         </Box>
     );
 };
