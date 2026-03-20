@@ -9,6 +9,7 @@ import {
     useGetResourceLabel,
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StorageIcon from '@mui/icons-material/Storage';
 import { Box, Divider } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../features/httpclients/components/icon';
@@ -46,6 +47,11 @@ export const MyMenu = () => {
                     leftIcon={<ServiceIcon />}
                     to={`${basename}/services`}
                     primaryText={'pages.services.title'}
+                />
+                <MenuItemLink
+                    leftIcon={<StorageIcon />}
+                    to={`${basename}/sql-editor`}
+                    primaryText={'SQL Editor'}
                 />
                 <Divider />
                 <MenuItemLink

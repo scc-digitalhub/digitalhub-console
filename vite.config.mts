@@ -11,6 +11,14 @@ export default defineConfig({
     },
     server: {
         host: true,
+        // Proxies Trino API requests to Docker container(for local testing)
+        // proxy: {
+        //     '/v1': {
+        //         target: 'http://localhost:8080',
+        //         changeOrigin: true,
+        //         secure: false,
+        //     },
+        // },
     },
     base: './',
     build: {
@@ -18,7 +26,6 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ['@mui/material/Tooltip'],
-        exclude: ['js-big-decimal']
-
+        exclude: ['js-big-decimal'],
     },
 });

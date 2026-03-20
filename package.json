@@ -89,6 +89,7 @@
         "react-router-dom": "^7.1.1",
         "react-syntax-highlighter": "^15.5.0",
         "tailwindcss": "4.1.17",
+        "trino-query-ui": "^0.1.1",
         "uppy": "^4.15.0"
     },
     "devDependencies": {
