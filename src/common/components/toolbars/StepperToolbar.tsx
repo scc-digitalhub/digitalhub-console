@@ -20,10 +20,11 @@ type StepperToolbarProps = {
     beforeNext?: MouseEventHandler<HTMLButtonElement>;
     disableNext?: boolean;
     saveProps?: SaveButtonProps;
+    alwaysEnableSave?: boolean;
 };
 
 export const StepperToolbar = (props: StepperToolbarProps) => {
-    const { beforeNext, saveProps, disableNext = false,onCancel, cancelUrl } = props;
+    const { beforeNext, saveProps, disableNext = false,onCancel, cancelUrl , alwaysEnableSave} = props;
     const { steps, currentStep } = useStepper();
     const translate = useTranslate();
     const navigate = useNavigate();
@@ -67,7 +68,8 @@ export const StepperToolbar = (props: StepperToolbarProps) => {
                         disabled={disableNext}
                     />
                     {steps && currentStep === steps.length - 1 && (
-                        <SaveButton {...saveProps} />
+                        <SaveButton {...saveProps}
+                        alwaysEnable={alwaysEnableSave}  />
                     )}
                 </Box>
             </Stack>

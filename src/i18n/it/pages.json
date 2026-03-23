@@ -139,7 +139,8 @@
         "resource_type": "Tipo risorsa",
         "no_results": "Nessun risultato",
         "no_results_hint": "Prova a modificare o rimuovere i filtri attivi",
-        "clear_filters": "Rimuovi filtri"
+        "clear_filters": "Rimuovi filtri",
+        "import_success":"Risorse importate con successo"
         
     },
     "services": {

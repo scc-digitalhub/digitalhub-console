@@ -48,6 +48,15 @@ export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
                               id: r.name,
                               name: r.name
                           }))}
+                          sx={{
+                            '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)': {
+                                transform: 'none',
+                                bottom: 0,
+                                left: 10,
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                        }}
                           alwaysOn
                           helperText={false}
                       />,
