@@ -274,7 +274,7 @@ export const HubProjectImport = () => {
             <Stack direction="row" justifyContent="space-between" sx={{ mt: 2 }}>
                 <Button
                     variant="text"
-                    onClick={() => navigate(createPath({ resource: 'projects', type: 'list' }))}
+                    onClick={() => navigate(`${basename}/hub`)} 
                 >
                     {translate('ra.action.cancel')}
                 </Button>

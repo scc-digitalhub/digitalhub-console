@@ -140,7 +140,8 @@
         "resource_type": "Resource type",
         "no_results": "No results",
         "no_results_hint": "Try to modify or remove active filters",
-        "clear_filters": "Clear filters"
+        "clear_filters": "Clear filters",
+        "import_success":"Resources imported successfully"
        
     },
     "services": {

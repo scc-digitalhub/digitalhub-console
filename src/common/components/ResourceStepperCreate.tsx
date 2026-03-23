@@ -19,6 +19,7 @@ interface ResourceStepperCreateProps {
     specStep: ReactNode;
     onCancel?: () => void;
     cancelUrl?: string;
+    alwaysEnableSave?: boolean;
 }
 
 export const ResourceStepperCreate = ({
@@ -29,6 +30,7 @@ export const ResourceStepperCreate = ({
     kindStep,
     onCancel,
     cancelUrl,
+    alwaysEnableSave = false,
 }: ResourceStepperCreateProps) => {
     return (
         <CreateView component={Box}>
@@ -38,6 +40,7 @@ export const ResourceStepperCreate = ({
                         <StepperToolbar
                             cancelUrl={cancelUrl}
                             onCancel={onCancel}
+                            alwaysEnableSave={alwaysEnableSave}
                         />
                     }
                 >

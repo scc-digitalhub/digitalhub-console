@@ -122,6 +122,7 @@ export const FunctionCreate = () => {
                                 getUiSchema={getFunctionUiSpec}
                             />
                         }
+                        alwaysEnableSave={true}
                     />
                 </>
             </CreateBase>
