@@ -57,7 +57,7 @@ export const SpecInput = (
         if (onDirty && record) {
             onDirty(!deepEqual(get(record, source, {}), value));
         }
-    }, [record, value]);
+    }, [onDirty, record, source, value]);
 
     if (!kind || !schema) {
         return <EmptyMessage message="resources.common.emptySpec" />;
@@ -71,7 +71,7 @@ export const SpecInput = (
     return (
         <JsonSchemaInput
             source={source}
-            schema={{ ...schema, title: 'Spec' }}
+            schema={jsonSchema}
             uiSchema={getUiSchema(kind)}
         />
     );
