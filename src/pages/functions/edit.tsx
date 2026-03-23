@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Stack } from '@mui/material';
-import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
     EditBase,
@@ -13,58 +12,18 @@ import {
     SimpleForm,
     TextInput,
     useNotify,
-    useRecordContext,
     useRedirect,
     useResourceContext,
 } from 'react-admin';
-import { useWatch } from 'react-hook-form';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { FormLabel } from '../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../common/components/layout/PageTitle';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { FunctionIcon } from './icon';
 import { getFunctionUiSpec } from './types';
-import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
-import { EmptyMessage } from '../../common/components/layout/EmptyMessage';
-
-const SpecInput = (props: {
-    source: string;
-    onDirty?: (state: boolean) => void;
-}) => {
-    const { source, onDirty } = props;
-    const resource = useResourceContext();
-    const record = useRecordContext();
-    const value = useWatch({ name: source });
-    const eq = deepEqual(record?.[source], value);
-    const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || null;
-
-    useEffect(() => {
-        if (schemaProvider && record && resource) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
-        }
-    }, [record, schemaProvider, resource]);
-
-    useEffect(() => {
-        if (onDirty) {
-            onDirty(!eq);
-        }
-    }, [eq]);
-
-    if (!record || !record.kind || !spec) {
-        return <EmptyMessage message="resources.common.emptySpec" />;
-    }
-    return (
-        <JsonSchemaInput
-            source={source}
-            schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getFunctionUiSpec(record.kind)}
-        />
-    );
-};
+import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 
 export const FunctionEdit = () => {
     const notify = useNotify();
@@ -151,6 +110,7 @@ export const FunctionEdit = () => {
                                 <SpecInput
                                     source="spec"
                                     onDirty={setIsSpecDirty}
+                                    getUiSchema={getFunctionUiSpec}
                                 />
                             </SimpleForm>
                         </FlatCard>
