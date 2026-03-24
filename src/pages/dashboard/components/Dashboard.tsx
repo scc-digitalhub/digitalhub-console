@@ -21,30 +21,34 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
+    CreateButton,
     ListButton,
     LoadingIndicator,
     RecordContextProvider,
     ResourceContextProvider,
     SortPayload,
     useDataProvider,
+    useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { RunsGrid } from './RunsGrid';
 import { convertToDate } from '../helper';
 import { RunIcon } from '../../runs/icon';
-import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
 import { ShareProjectButton } from '../../../common/components/buttons/ShareProjectButton';
 import { useProjectPermissions } from '../../../common/provider/authProvider';
 import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
-
 import { MetricsField } from '../../../features/k8smetrics/MetricsField';
+import { DropDownButton } from '../../../common/components/buttons/DropdownButton';
+import { ResourceIcon } from './ResourceIcon';
+import ContentAdd from '@mui/icons-material/Add';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
     const { isAdmin } = useProjectPermissions();
 
     const [project, setProject] = useState<any>();
@@ -123,19 +127,6 @@ export const Dashboard = () => {
                         }
                         secondaryText={project.metadata?.description}
                         icon={<DashboardIcon fontSize={'large'} />}
-                        // icon={
-                        //     <>
-                        //         <DashboardIcon fontSize={'large'} />
-                        //         <CreateDropDownButton
-                        //             resources={[
-                        //                 'functions',
-                        //                 'models',
-                        //                 'dataitems',
-                        //                 'artifacts',
-                        //             ]}
-                        //         />
-                        //     </>
-                        // }
                         sx={{ pl: 0, pr: 0 }}
                     />
                     <Box sx={{ pt: 0, textAlign: 'left' }}>
@@ -181,14 +172,29 @@ export const Dashboard = () => {
                                 />
                             </ResourceContextProvider>
                         )}
-                        <CreateDropDownButton
-                            resources={[
+                        <DropDownButton
+                            icon={<ContentAdd />}
+                            label="ra.action.create"
+                        >
+                            {[
                                 'functions',
                                 'models',
                                 'dataitems',
                                 'workflows',
-                            ]}
-                        />
+                            ].map(res => (
+                                <CreateButton
+                                    label={getResourceLabel(res, 1)}
+                                    key={res}
+                                    resource={res}
+                                    sx={{
+                                        padding: '8px 16px',
+                                        width: '100%',
+                                        justifyContent: 'flex-start',
+                                    }}
+                                    icon={<ResourceIcon resource={res} />}
+                                />
+                            ))}
+                        </DropDownButton>
                     </Stack>
                     <Grid container spacing={2}>
                         {Object.keys(metrics?.usage || {}).length > 0 && (
