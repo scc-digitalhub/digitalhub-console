@@ -21,26 +21,31 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
+    CreateButton,
     ListButton,
     LoadingIndicator,
     ResourceContextProvider,
     SortPayload,
     useDataProvider,
+    useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { RunsGrid } from './RunsGrid';
 import { convertToDate } from '../helper';
 import { RunIcon } from '../../runs/icon';
-import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
 import { ShareProjectButton } from '../../../common/components/buttons/ShareProjectButton';
 import { useProjectPermissions } from '../../../common/provider/authProvider';
+import { DropDownButton } from '../../../common/components/buttons/DropdownButton';
+import { ResourceIcon } from './ResourceIcon';
+import ContentAdd from '@mui/icons-material/Add';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
     const { isAdmin } = useProjectPermissions();
 
     const [project, setProject] = useState<any>();
@@ -102,19 +107,6 @@ export const Dashboard = () => {
                 text={project.metadata ? project.metadata.name : project.id}
                 secondaryText={project.metadata?.description}
                 icon={<DashboardIcon fontSize={'large'} />}
-                // icon={
-                //     <>
-                //         <DashboardIcon fontSize={'large'} />
-                //         <CreateDropDownButton
-                //             resources={[
-                //                 'functions',
-                //                 'models',
-                //                 'dataitems',
-                //                 'artifacts',
-                //             ]}
-                //         />
-                //     </>
-                // }
                 sx={{ pl: 0, pr: 0 }}
             />
             <Box sx={{ pt: 0, textAlign: 'left' }}>
@@ -154,17 +146,29 @@ export const Dashboard = () => {
             >
                 {isAdmin(project.id) && (
                     <ResourceContextProvider value="projects">
-                        <ShareProjectButton variant="contained" record={project} />
+                        <ShareProjectButton
+                            variant="contained"
+                            record={project}
+                        />
                     </ResourceContextProvider>
                 )}
-                <CreateDropDownButton
-                    resources={[
-                        'functions',
-                        'models',
-                        'dataitems',
-                        'workflows',
-                    ]}
-                />
+                <DropDownButton icon={<ContentAdd />} label="ra.action.create">
+                    {['functions', 'models', 'dataitems', 'workflows'].map(
+                        res => (
+                            <CreateButton
+                                label={getResourceLabel(res, 1)}
+                                key={res}
+                                resource={res}
+                                sx={{
+                                    padding: '8px 16px',
+                                    width: '100%',
+                                    justifyContent: 'flex-start',
+                                }}
+                                icon={<ResourceIcon resource={res} />}
+                            />
+                        )
+                    )}
+                </DropDownButton>
             </Stack>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 12, md: 12, xl: 12 }}>

@@ -61,7 +61,7 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                     direction={'column'}
                     sx={{
                         minWidth: '80px',
-                        marginLeft: '10px',
+                        marginX: '10px',
                         alignItems: 'flex-start',
                     }}
                 >
