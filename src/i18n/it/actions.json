@@ -14,6 +14,7 @@
     "hub": "Hub",
     "fullscreen": "Schermo intero",
     "import_one": "Importa",
+    "customize": "Personalizza",
     "load_more": "Carica altro",
     "share": "Condividi",
     "stop": "Interrompi",
@@ -23,5 +24,7 @@
     "toggle_x": "Mostra/Nascondi %{el}",
     "upload": "Carica",
     "upload_x_files": "Carica %{files} file |||| Carica %{files} file",
-    "view": "Visualizza"
+    "view": "Visualizza",
+    "import": "Importa",
+    "download_notebook": "Notebook"
 }

@@ -13,7 +13,7 @@
     "download_image": "Download as PNG image",
     "fullscreen": "Fullscreen",
     "hub": "Hub",
-    "import_one": "Import",
+    "customize": "Customize",
     "load_more": "Load more",
     "share": "Share",
     "stop": "Stop",
@@ -23,5 +23,8 @@
     "toggle_x": "Show/Hide %{el}",
     "upload": "Upload",
     "upload_x_files": "Upload %{files} file |||| Upload %{files} files",
-    "view": "View"
+    "view": "View",
+    "import": "Import",
+    "download_notebook": "Notebook"
+
 }

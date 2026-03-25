@@ -19,7 +19,7 @@ export default {
     edit: DataItemEdit,
     options: {
         type: 'dataitem',
-        hub: true,
+        hub: false,
         catalogKey: 'dataitems',
         getSpecUiSchema: getDataItemSpecUiSchema,
     },
