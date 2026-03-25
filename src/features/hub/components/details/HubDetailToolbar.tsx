@@ -21,12 +21,14 @@ import {
     Download as DownloadIcon,
 } from '@mui/icons-material';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import { useNavigate } from 'react-router';
 
 interface HubDetailToolbarProps {
     template: any;
     onBack: () => void;
     onImport: (template: any) => void;
     onNotebookDownload: () => void;
+    redirectPath?: string;
 }
 
 export const HubDetailToolbar = ({
@@ -34,11 +36,13 @@ export const HubDetailToolbar = ({
     onBack,
     onImport,
     onNotebookDownload,
+    redirectPath,
 }: HubDetailToolbarProps) => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const { root } = useRootSelector();
+    const navigate = useNavigate(); 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -59,6 +63,9 @@ export const HubDetailToolbar = ({
                 meta: { root },
             });
             notify('pages.hub.add_direct_success', { type: 'success' });
+                        if (redirectPath) {
+                navigate(redirectPath);
+                        }
         } catch (err: any) {
             notify('pages.hub.add_direct_error', {
                 type: 'error',
