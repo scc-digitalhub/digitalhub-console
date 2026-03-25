@@ -140,7 +140,11 @@
         "no_results": "Nessun risultato",
         "no_results_hint": "Prova a modificare o rimuovere i filtri attivi",
         "clear_filters": "Rimuovi filtri",
-        "import_success":"Risorse importate con successo"
+        "import_success":"Risorse importate con successo",
+        "add_direct_confirm_title": "Aggiungi risorsa direttamente",
+        "add_direct_confirm_content": "Aggiungi \"%{name}\" direttamente al progetto senza configurazione?",
+        "add_direct_success": "Risorsa aggiunta con successo",
+        "add_direct_error": "Errore durante l'aggiunta della risorsa: %{error}"
         
     },
     "services": {

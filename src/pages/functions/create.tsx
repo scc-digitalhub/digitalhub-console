@@ -63,14 +63,7 @@ export const FunctionCreate = () => {
     const defaultValues =
         isFromTemplate && template
             ? {
-                  kind: template.kind ?? '',
-                  name: template.name ?? '',
-                  metadata: {
-                      name: template.metadata?.name ?? '',
-                      description: template.metadata?.description ?? '',
-                      labels: template.metadata?.labels ?? [],
-                  },
-                  spec: template.spec ?? {},
+                  ...template,
               }
             : {};
 

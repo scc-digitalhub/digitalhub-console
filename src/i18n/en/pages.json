@@ -141,7 +141,11 @@
         "no_results": "No results",
         "no_results_hint": "Try to modify or remove active filters",
         "clear_filters": "Clear filters",
-        "import_success":"Resources imported successfully"
+        "import_success":"Resources imported successfully",
+        "add_direct_confirm_title": "Add resource directly",
+        "add_direct_confirm_content": "Add \"%{name}\" directly to the project without configuration?",
+        "add_direct_success": "Resource added successfully",
+        "add_direct_error": "Error adding resource: %{error}"
        
     },
     "services": {
