@@ -85,6 +85,12 @@ export const HubLayout = ({
         }
     };
 
+    const getRedirectPath = (template: any) => {
+        const resource = template.resourceName;
+        if (!resource || resource === 'projects') return undefined;
+        return createPath({ resource, type: 'list' });
+    };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2, overflowX: 'hidden' }}>
             <PageTitle
@@ -100,6 +106,7 @@ export const HubLayout = ({
                     onBack={() => setSelectedTemplate(null)}
                     onImport={handleImport}
                     onNotebookDownload={handleNotebookDownload}
+                    redirectPath={getRedirectPath(selectedTemplate)}
                 />
             ) : null}
 
