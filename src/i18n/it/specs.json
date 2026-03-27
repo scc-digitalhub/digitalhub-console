@@ -457,5 +457,9 @@
     "servicegraph+serve:run": {
         "description": "Definizione dell'esecuzione dell'operazione di serving del modello Servicegraph",
         "title": "Esecuzione dell'operazione di serving del modello Servicegraph"
+    },
+    "envoygw": {
+        "description": "Estensioni di Envoy Gateway",
+        "title": "Estensioni di Envoy Gateway"
     }
 }

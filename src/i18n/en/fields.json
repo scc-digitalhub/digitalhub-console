@@ -1096,5 +1096,19 @@
     "extensions": {
         "description": "Additional extensions for the current resource",
         "title": "Extensions"
-    }
+    },
+    "gatewayextension": {
+        "guardrails": {
+            "description": "",
+            "title": "Guardrail references"
+        }
+    },
+    "guardrails": {
+        "description": "Guardrail references to be applied",
+        "title": "Guardrails",
+        "item": {
+            "description": "",
+            "title": "Guardrail service URL"
+        }
+    }   
 }

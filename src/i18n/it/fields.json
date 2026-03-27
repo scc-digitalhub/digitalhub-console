@@ -1096,5 +1096,19 @@
     "extensions": {
         "description": "Estensioni aggiuntive per la risorsa corrente",
         "title": "Estensioni"
-    }       
+    },
+     "gatewayextension": {
+        "guardrails": {
+            "description": "",
+            "title": "Guardrail"
+        }
+    },
+    "guardrails": {
+        "description": "Riferimenti ai guardrail da applicare",
+        "title": "Guardrail",
+        "item": {
+            "description": "",
+            "title": "URL del servizio Guardrail"
+        }
+    }        
 }

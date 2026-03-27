@@ -457,5 +457,9 @@
     "servicegraph+serve:run": {
         "description": "Servicegraph serve definition",
         "title": "Servicegraph serve"
-    }
+    },
+        "envoygw": {
+            "description": "Envoy Gateway Extensions",
+            "title": "Envoy Gateway Extensions"
+        }
 }

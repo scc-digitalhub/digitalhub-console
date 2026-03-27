@@ -53,6 +53,7 @@ import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { ClientButton } from '../../features/httpclients/components/ClientButton';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { ExtensionsField } from '../../features/extensions/Field';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -321,6 +322,13 @@ export const RunShowComponent = () => {
                         />
                     </TabbedShowLayout.Tab>
                 )}
+            {record.extensions && record.extensions.length > 0 && (
+                <TabbedShowLayout.Tab
+                    label={translate('fields.extensions.title')}
+                >
+                    <ExtensionsField source="extensions" />
+                </TabbedShowLayout.Tab>
+            )}                
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
