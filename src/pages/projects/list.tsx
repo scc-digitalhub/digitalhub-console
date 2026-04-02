@@ -45,6 +45,7 @@ import React from 'react';
 import purify from 'dompurify';
 import { useProjectPermissions } from '../../common/provider/authProvider';
 import { Empty } from '../../common/components/layout/Empty';
+import { MetricsField } from '../../features/k8smetrics/MetricsField';
 
 export const ProjectSelectorList = props => {
     const perPage = 12;
@@ -266,6 +267,11 @@ const ProjectsGridItem = (props: any) => {
                             </>
                         )}
                     </Box>
+                    {isAccessible && (
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <MetricsField size="small" />
+                        </Box>
+                    )}
                 </CardContent>
             </CardActionArea>
             {/* <CardActions disableSpacing sx={{ mt: 'auto' }}>
@@ -308,7 +314,7 @@ const RowActions = () => {
 };
 
 const cardStyle = {
-    height: '280px',
+    height: '320px',
     // width: '250px',
     // display: 'flex',
     // flexDirection: 'column',

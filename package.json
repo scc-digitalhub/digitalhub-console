@@ -56,6 +56,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@fontsource/open-sans": "^5.1.0",
+        "@kotaicode/k8s-resources": "^0.1.4",
         "@melloware/react-logviewer": "^5.0.6",
         "@mui/icons-material": "^7.0.0",
         "@mui/material": "^7.0.0",

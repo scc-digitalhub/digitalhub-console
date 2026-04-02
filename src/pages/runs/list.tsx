@@ -29,6 +29,7 @@ import { ListBaseLive } from '../../features/notifications/components/ListBaseLi
 import { useGetFilters } from '../../common/hooks/useGetFilters';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
+import { MetricsField } from '../../features/k8smetrics/MetricsField';
 
 const RowActions = () => {
     return (
@@ -188,6 +189,17 @@ export const RunList = () => {
                                 <StateChips
                                     source="status.state"
                                     label="fields.status.state"
+                                />
+                                <FunctionField
+                                    label="fields.metrics.title"
+                                    render={r =>
+                                        r.status.state === 'RUNNING' ? (
+                                            <MetricsField
+                                                size="small"
+                                                fontSize={'small'}
+                                            />
+                                        ) : null
+                                    }
                                 />
 
                                 <RowActions />

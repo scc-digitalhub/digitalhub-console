@@ -743,6 +743,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@kotaicode/k8s-resources@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@kotaicode/k8s-resources/-/k8s-resources-0.1.4.tgz#aba18c4c3c064421eb5da2afb1577c474746e697"
+  integrity sha512-sTFUxPQ/0iJ3KRh+5ZlByNys9Od4L/QLLKOKycfwZeFZd1AutIf4yUcCGwWV4B38vvbAhSxOko9rDV3dgxzHaQ==
+
 "@melloware/react-logviewer@^5.0.6":
   version "5.0.6"
   resolved "https://registry.npmjs.org/@melloware/react-logviewer/-/react-logviewer-5.0.6.tgz"

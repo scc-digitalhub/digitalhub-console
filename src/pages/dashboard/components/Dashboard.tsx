@@ -23,6 +23,7 @@ import { useEffect, useState } from 'react';
 import {
     ListButton,
     LoadingIndicator,
+    RecordContextProvider,
     ResourceContextProvider,
     SortPayload,
     useDataProvider,
@@ -36,6 +37,9 @@ import { CreateDropDownButton } from './CreateDropdownButton';
 import { OverviewCard } from './OverviewCard';
 import { ShareProjectButton } from '../../../common/components/buttons/ShareProjectButton';
 import { useProjectPermissions } from '../../../common/provider/authProvider';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
+
+import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
@@ -44,6 +48,7 @@ export const Dashboard = () => {
     const { isAdmin } = useProjectPermissions();
 
     const [project, setProject] = useState<any>();
+    const [metrics, setMetrics] = useState<any>();
 
     const [completed, setCompleted] = useState<number>();
     const [running, setRunning] = useState<number>();
@@ -83,6 +88,16 @@ export const Dashboard = () => {
                         setError(res.total);
                     }
                 });
+            dataProvider
+                .invoke({
+                    path: '/projects/' + projectId + '/metrics/k8s',
+                    options: { method: 'GET' },
+                })
+                .then(res => {
+                    if (res) {
+                        setMetrics(res);
+                    }
+                });
         }
     }, [dataProvider, projectId]);
 
@@ -97,126 +112,169 @@ export const Dashboard = () => {
     };
 
     return (
-        <Container maxWidth={false}>
-            <PageTitle
-                text={project.metadata ? project.metadata.name : project.id}
-                secondaryText={project.metadata?.description}
-                icon={<DashboardIcon fontSize={'large'} />}
-                // icon={
-                //     <>
-                //         <DashboardIcon fontSize={'large'} />
-                //         <CreateDropDownButton
-                //             resources={[
-                //                 'functions',
-                //                 'models',
-                //                 'dataitems',
-                //                 'artifacts',
-                //             ]}
-                //         />
-                //     </>
-                // }
-                sx={{ pl: 0, pr: 0 }}
-            />
-            <Box sx={{ pt: 0, textAlign: 'left' }}>
-                {project.metadata && (
-                    <MuiList sx={{ pt: 0 }}>
-                        {project.user && (
-                            <ListItem disableGutters sx={{ pt: 0 }}>
-                                {translate('fields.createdBy.title')}{' '}
-                                {project.user}
-                            </ListItem>
+        <ResourceContextProvider value="projects">
+            <RecordContextProvider value={project}>
+                <Container maxWidth={false}>
+                    <PageTitle
+                        text={
+                            project.metadata
+                                ? project.metadata.name
+                                : project.id
+                        }
+                        secondaryText={project.metadata?.description}
+                        icon={<DashboardIcon fontSize={'large'} />}
+                        // icon={
+                        //     <>
+                        //         <DashboardIcon fontSize={'large'} />
+                        //         <CreateDropDownButton
+                        //             resources={[
+                        //                 'functions',
+                        //                 'models',
+                        //                 'dataitems',
+                        //                 'artifacts',
+                        //             ]}
+                        //         />
+                        //     </>
+                        // }
+                        sx={{ pl: 0, pr: 0 }}
+                    />
+                    <Box sx={{ pt: 0, textAlign: 'left' }}>
+                        {project.metadata && (
+                            <MuiList sx={{ pt: 0 }}>
+                                {project.user && (
+                                    <ListItem disableGutters sx={{ pt: 0 }}>
+                                        {translate('fields.createdBy.title')}{' '}
+                                        {project.user}
+                                    </ListItem>
+                                )}
+                                <ListItem disableGutters sx={{ pt: 0 }}>
+                                    {translate('pages.dashboard.created')}{' '}
+                                    {convertToDate(
+                                        project.metadata.created
+                                    ).toLocaleString()}
+                                </ListItem>
+                                <ListItem disableGutters sx={{ pt: 0 }}>
+                                    {translate('pages.dashboard.updated')}{' '}
+                                    {convertToDate(
+                                        project.metadata.updated
+                                    ).toLocaleString()}
+                                </ListItem>
+                            </MuiList>
                         )}
-                        <ListItem disableGutters sx={{ pt: 0 }}>
-                            {translate('pages.dashboard.created')}{' '}
-                            {convertToDate(
-                                project.metadata.created
-                            ).toLocaleString()}
-                        </ListItem>
-                        <ListItem disableGutters sx={{ pt: 0 }}>
-                            {translate('pages.dashboard.updated')}{' '}
-                            {convertToDate(
-                                project.metadata.updated
-                            ).toLocaleString()}
-                        </ListItem>
-                    </MuiList>
-                )}
-            </Box>
-            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                {project.metadata?.labels?.map((label: string) => (
-                    <Chip key={label} label={label} />
-                ))}
-            </Stack>
-            <Stack
-                direction="row"
-                justifyContent="flex-end"
-                spacing={2}
-                sx={{ mb: 2 }}
-            >
-                {isAdmin(project.id) && (
-                    <ResourceContextProvider value="projects">
-                        <ShareProjectButton variant="contained" record={project} />
-                    </ResourceContextProvider>
-                )}
-                <CreateDropDownButton
-                    resources={[
-                        'functions',
-                        'models',
-                        'dataitems',
-                        'workflows',
-                    ]}
-                />
-            </Stack>
-            <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 12, md: 12, xl: 12 }}>
-                    <Card sx={cardStyle}>
-                        <CardHeader
-                            title={translate('pages.dashboard.runs.title')}
-                            avatar={<RunIcon />}
-                            slotProps={{
-                                title: {
-                                    variant: 'h5',
-                                    color: 'secondary.main',
-                                },
-                            }}
+                    </Box>
+                    <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                        {project.metadata?.labels?.map((label: string) => (
+                            <Chip key={label} label={label} />
+                        ))}
+                    </Stack>
+                    <Stack
+                        direction="row"
+                        justifyContent="flex-end"
+                        spacing={2}
+                        sx={{ mb: 2 }}
+                    >
+                        {isAdmin(project.id) && (
+                            <ResourceContextProvider value="projects">
+                                <ShareProjectButton
+                                    variant="contained"
+                                    record={project}
+                                />
+                            </ResourceContextProvider>
+                        )}
+                        <CreateDropDownButton
+                            resources={[
+                                'functions',
+                                'models',
+                                'dataitems',
+                                'workflows',
+                            ]}
                         />
-                        <CardContent>
-                            <RunsGrid
-                                runs={{
-                                    completed: completed,
-                                    running: running,
-                                    error: error,
-                                }}
-                            />
-                        </CardContent>
-                        <CardActions
-                            disableSpacing
-                            sx={{
-                                mt: 'auto',
-                                justifyContent: 'left',
-                            }}
-                        >
-                            <ListButton resource={'runs'} variant="text" />
-                        </CardActions>
-                    </Card>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
-                    <OverviewCard resource="functions" />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
-                    <OverviewCard resource="models" />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
-                    <OverviewCard resource="dataitems" />
-                </Grid>
+                    </Stack>
+                    <Grid container spacing={2}>
+                        {Object.keys(metrics?.usage || {}).length > 0 && (
+                            <Grid size={{ xs: 12, sm: 12, md: 12, xl: 12 }}>
+                                <Card sx={cardStyle}>
+                                    <CardHeader
+                                        title={translate(
+                                            'fields.metrics.title'
+                                        )}
+                                        avatar={<DeveloperBoardIcon />}
+                                        slotProps={{
+                                            title: {
+                                                variant: 'h5',
+                                                color: 'secondary.main',
+                                            },
+                                        }}
+                                    />
+                                    <CardContent>
+                                        <MetricsField
+                                            size="64px"
+                                            fontSize={'h7.fontSize'}
+                                            gap={3}
+                                            labels
+                                            metrics={true}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        )}
+                        <Grid size={{ xs: 12, sm: 12, md: 12, xl: 12 }}>
+                            <Card sx={cardStyle}>
+                                <CardHeader
+                                    title={translate(
+                                        'pages.dashboard.runs.title'
+                                    )}
+                                    avatar={<RunIcon />}
+                                    slotProps={{
+                                        title: {
+                                            variant: 'h5',
+                                            color: 'secondary.main',
+                                        },
+                                    }}
+                                />
+                                <CardContent>
+                                    <RunsGrid
+                                        runs={{
+                                            completed: completed,
+                                            running: running,
+                                            error: error,
+                                        }}
+                                    />
+                                </CardContent>
+                                <CardActions
+                                    disableSpacing
+                                    sx={{
+                                        mt: 'auto',
+                                        justifyContent: 'left',
+                                    }}
+                                >
+                                    <ListButton
+                                        resource={'runs'}
+                                        variant="text"
+                                    />
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
+                            <OverviewCard resource="functions" />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
+                            <OverviewCard resource="models" />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
+                            <OverviewCard resource="dataitems" />
+                        </Grid>
 
-                <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
-                    <OverviewCard resource="workflows" />
-                </Grid>
-            </Grid>
+                        <Grid size={{ xs: 12, sm: 12, md: 6, xl: 3 }}>
+                            <OverviewCard resource="workflows" />
+                        </Grid>
+                    </Grid>
 
-            <Typography variant="body1" sx={{ mt: 2, pt: 1, pb: 1 }}>
-                {translate('pages.dashboard.text')}
-            </Typography>
-        </Container>
+                    <Typography variant="body1" sx={{ mt: 2, pt: 1, pb: 1 }}>
+                        {translate('pages.dashboard.text')}
+                    </Typography>
+                </Container>
+            </RecordContextProvider>
+        </ResourceContextProvider>
     );
 };

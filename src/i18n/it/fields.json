@@ -498,7 +498,13 @@
                 "requests": {
                     "title": "Richieste"
                 }
-            },              
+            },           
+            "pods": {
+                "title": "Pods"
+            },
+            "containers": {
+                "title": "Containers"
+            },               
             "title": "Risorse"
         },
         "secrets": {
