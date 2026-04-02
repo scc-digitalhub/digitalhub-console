@@ -117,7 +117,7 @@ export const ChartView = (props: ChartViewProps) => {
         const { metrics } = props;
         const chartRef = useRef<HTMLDivElement>(null);
         const keyToLabel: { [key: string]: string } = {
-            cpu: 'Cpu (n)',
+            cpu: 'Cpu (m)',
             memory: 'Memory (MiB)',
         };
 
