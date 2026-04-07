@@ -13,16 +13,12 @@ import {
     ListView,
     ShowButton,
     TextField,
-    useDatagridContext,
-    useExpanded,
-    useRecordContext,
     useResourceContext,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
-import { VersionsList } from '../../common/components/VersionsList';
 import { WorkflowIcon } from './icon';
 import { ChipsField } from '../../common/components/fields/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
@@ -31,32 +27,19 @@ import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 import { RunStateBadge } from '../../common/components/RunStateBadge';
 import { useGetFilters } from '../../common/hooks/useGetFilters';
 
-const RowActions = () => {
-    const resource = useResourceContext();
-    const record = useRecordContext();
-    const context = useDatagridContext();
-    const [expanded] = useExpanded(
-        resource || '',
-        record?.id || '',
-        context && context.expandSingle
-    );
-    if (!resource || !record) return null;
-
-    return (
-        <RowButtonGroup>
-            <ShowButton disabled={expanded} />
-            <EditButton disabled={expanded} />
-            <DeleteWithConfirmButtonByName
-                deleteAll
-                cascade
-                disabled={expanded}
-                askForDeleteAll
-                askForCascade
-                disableDeleteAll
-            />
-        </RowButtonGroup>
-    );
-};
+const RowActions = () => (
+    <RowButtonGroup>
+        <ShowButton />
+        <EditButton />
+        <DeleteWithConfirmButtonByName
+            deleteAll
+            cascade
+            askForDeleteAll
+            askForCascade
+            disableDeleteAll
+        />
+    </RowButtonGroup>
+);
 
 export const WorkflowList = () => {
     const resource = useResourceContext();
@@ -82,12 +65,6 @@ export const WorkflowList = () => {
                         >
                             <Datagrid
                                 rowClick="show"
-                                expand={
-                                    <VersionsList
-                                        leftIcon={() => <RunStateBadge />}
-                                    />
-                                }
-                                expandSingle={true}
                                 bulkActionButtons={
                                     <BulkDeleteAllVersionsButton
                                         deleteAll
