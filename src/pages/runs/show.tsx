@@ -358,7 +358,7 @@ const ShowToolbar = () => {
                     record.status?.state == 'RUNNING' ? (
                         <StopButton record={record} />
                     ) : record.status?.state == 'STOPPED' ? (
-                        <ResumeButton record={record} />
+                        <StopButton disabled />
                     ) : null
                 }
             />
