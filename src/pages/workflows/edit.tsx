@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Stack } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import deepEqual from 'deep-is';
 import { useEffect, useState } from 'react';
 import {
     EditBase,
@@ -15,72 +12,18 @@ import {
     SimpleForm,
     TextInput,
     useNotify,
-    useRecordContext,
     useRedirect,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
-import { useWatch } from 'react-hook-form';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { FormLabel } from '../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../common/components/layout/PageTitle';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
-import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-
-const SpecInput = (props: {
-    source: string;
-    onDirty?: (state: boolean) => void;
-}) => {
-    const { source, onDirty } = props;
-    const translate = useTranslate();
-    const resource = useResourceContext();
-    const record = useRecordContext();
-    const value = useWatch({ name: source });
-    const eq = deepEqual(record?.[source], value);
-
-    const schemaProvider = useSchemaProvider();
-    const [spec, setSpec] = useState<any>();
-    const kind = record?.kind || null;
-
-    useEffect(() => {
-        if (schemaProvider && record && resource) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
-        }
-    }, [record, schemaProvider, resource]);
-
-    useEffect(() => {
-        if (onDirty) {
-            onDirty(!eq);
-        }
-    }, [eq]);
-
-    if (!record || !record.kind || !spec) {
-        return (
-            <Card
-                sx={{
-                    width: 1,
-                    textAlign: 'center',
-                }}
-            >
-                <CardContent>
-                    {translate('resources.common.emptySpec')}{' '}
-                </CardContent>
-            </Card>
-        );
-    }
-
-    return (
-        <JsonSchemaInput
-            source={source}
-            schema={{ ...spec.schema, title: 'Spec' }}
-            uiSchema={getWorkflowUiSpec(record.kind)}
-        />
-    );
-};
+import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 
 export const WorkflowEdit = () => {
     const notify = useNotify();
@@ -167,6 +110,7 @@ export const WorkflowEdit = () => {
                                 <SpecInput
                                     source="spec"
                                     onDirty={setIsSpecDirty}
+                                    getUiSchema={getWorkflowUiSpec}
                                 />
                             </SimpleForm>
                         </FlatCard>
