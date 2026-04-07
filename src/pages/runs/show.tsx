@@ -35,7 +35,6 @@ import { useEffect, useState } from 'react';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
-import { ResumeButton } from './components/ResumeButton';
 import { countLines } from '../../common/utils/helpers';
 import { functionParser } from '../../common/utils/parsers';
 import { IdField } from '../../common/components/fields/IdField';
