@@ -20,7 +20,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Container, Divider, Stack } from '@mui/material';
+import { Box, Container, Divider, Stack, Typography } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -54,6 +54,8 @@ import { ClientButton } from '../../features/httpclients/components/ClientButton
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';
+import { MetricsField } from '../../features/k8smetrics/MetricsField';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -282,7 +284,7 @@ export const RunShowComponent = () => {
                     <LogsView id={record.id as string} resource={resource} />
                 )}
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
+            <TabbedShowLayout.Tab label={'fields.k8s.title'} >
                 <ComputeResources record={record} />
             </TabbedShowLayout.Tab>
             {record?.status?.service && (
@@ -369,11 +371,31 @@ const ShowToolbar = () => {
 };
 
 export const RunShow = () => {
+    const translate = useTranslate();
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBaseLive>
                 <>
                     <ShowPageTitle icon={<RunIcon fontSize={'large'} />} />
+
+                    <Box sx={{ mb: 2, mt: 1, pl: 1 }}>
+                        <MetricsField
+                            size="48px"
+                            fontSize={'h7.fontSize'}
+                            gap={3}
+                            labels
+                            metrics={true}
+                            title={
+                                <Stack direction="row" alignItems="center" spacing={1} sx={{ color: 'secondary.main', mr: 2 }}>
+                                    <DeveloperBoardIcon />
+                                    <Typography variant="h6" fontWeight="500">
+                                        {translate('fields.metrics.title')}
+                                    </Typography>
+                                </Stack>
+                            }
+                        />
+                    </Box>
                     <ShowView
                         actions={<ShowToolbar />}
                         sx={{
