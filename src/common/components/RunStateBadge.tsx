@@ -24,7 +24,7 @@ export type RunStateBadgeProps = {
 export const RunStateBadge = (props: RunStateBadgeProps) => {
     const {
         state = 'RUNNING',
-        filterById = true,
+        filterById = false,
         sx: sxProps = {},
         getListFilters: additionalFilters = {},
     } = props;
