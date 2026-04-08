@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import yamlExporter from '@dslab/ra-export-yaml';
-import { Box, Container } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import {
     Datagrid,
     DateField,
@@ -14,6 +14,7 @@ import {
     ShowButton,
     TextField,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../common/components/layout/FlatCard';
@@ -45,6 +46,7 @@ export const FunctionList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const getFilters = useGetFilters();
+    const translate = useTranslate();
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -93,9 +95,15 @@ export const FunctionList = () => {
                                     sortable={false}
                                 />
                                 <FunctionField
-                                    label={'fields.activeRuns'}
+                                    label={translate('resources.runs.name', {
+                                        smart_count: 2,
+                                    })}
                                     render={() => (
-                                        <RunStateBadge filterById={false} />
+                                        <Stack direction="row" spacing={0.5}>
+                                            <RunStateBadge />
+                                            <RunStateBadge state="COMPLETED" />
+                                            <RunStateBadge state="ERROR" />
+                                        </Stack>
                                     )}
                                 />
                                 <RowActions />

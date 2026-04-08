@@ -29,7 +29,6 @@ import { MetadataField } from '../../features/metadata/components/MetadataField'
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { IdField } from '../../common/components/fields/IdField';
 import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
-import { RunStateBadge } from '../../common/components/RunStateBadge';
 import { WorkflowTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helpers';
 import { getWorkflowUiSpec } from './types';
@@ -262,11 +261,7 @@ export const WorkflowShow = () => {
                             },
                         }}
                         component={FlatCard}
-                        aside={
-                            <VersionsListWrapper
-                                leftIcon={() => <RunStateBadge />}
-                            />
-                        }
+                        aside={<VersionsListWrapper />}
                     >
                         <ShowComponent />
                     </ShowView>
