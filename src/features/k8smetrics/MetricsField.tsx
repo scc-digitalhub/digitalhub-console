@@ -8,11 +8,17 @@ import {
 } from 'react-admin';
 import { MetricBadge, MetricProps } from './MetricBadge';
 import { formatMetricsValue } from './utils';
-
+import React from 'react';
 export const MetricsField = (
     props: Omit<MetricProps, 'value' | 'name' | 'icon' | 'title'> & {
         record?: any;
-    } & { icon?: false; labels?: boolean; metrics?: string[] | boolean }
+    } & {
+        icon?: false;
+        labels?: boolean;
+        metrics?: string[] | boolean;
+        link?: string;
+        title?: React.ReactNode;
+    }
 ) => {
     const {
         metrics: metricsKeys = ['cpu', 'memory', 'disk'],
@@ -21,13 +27,13 @@ export const MetricsField = (
         size,
         fontSize,
         gap = 1,
+        title,
         ...rest
     } = props;
     const resource = useResourceContext();
     const record = useRecordContext(props);
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
-
     const [metrics, setMetrics] = useState<any>();
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -73,7 +79,14 @@ export const MetricsField = (
     }
 
     return (
-        <Stack direction={'row'} gap={gap}>
+        <Stack
+            direction={'row'}
+            gap={gap}
+            alignItems="center"
+
+        >
+            {' '}
+            {title}
             {Object.entries(metrics.usage)
                 .filter(([key]) =>
                     Array.isArray(metricsKeys)
