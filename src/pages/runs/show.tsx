@@ -54,6 +54,7 @@ import { MetadataField } from '../../features/metadata/components/MetadataField'
 import { ClientButton } from '../../features/httpclients/components/ClientButton';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 import { ExtensionsField } from '../../features/extensions/Field';
+import { CHAT_FEATURES } from '../../features/chat/utils';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -328,7 +329,7 @@ export const RunShowComponent = () => {
                 >
                     <ExtensionsField source="extensions" />
                 </TabbedShowLayout.Tab>
-            )}                
+            )}
             <TabbedShowLayout.Tab label="pages.lineage.title">
                 <LineageTabComponent />
             </TabbedShowLayout.Tab>
@@ -345,7 +346,9 @@ const ShowToolbar = () => {
             <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
             {record?.status?.inference_v2 ? (
                 <ClientButton mode="v2" />
-            ) : record?.status?.openai ? (
+            ) : record?.status?.openai?.features?.every(f =>
+                  CHAT_FEATURES.includes(f)
+              ) ? (
                 <ClientButton mode="chat" />
             ) : (
                 <ClientButton mode="http" />

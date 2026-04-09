@@ -11,7 +11,6 @@ import {
     SelectInput,
     SimpleFormIterator,
     TextInput,
-    useRecordContext,
     useSourceContext,
     useTranslate,
 } from 'react-admin';
@@ -124,7 +123,7 @@ const KindSelector = (props: {
         isDirty = () => false,
     } = props;
     const sourceContext = useSourceContext();
-    const { setValue, getValues } = useFormContext();
+    const { setValue } = useFormContext();
 
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
