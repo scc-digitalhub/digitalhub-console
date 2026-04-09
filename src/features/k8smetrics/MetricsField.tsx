@@ -15,7 +15,6 @@ export const MetricsField = (
         icon?: false;
         labels?: boolean;
         metrics?: string[] | boolean;
-        link?: string;
     }
 ) => {
     const {
