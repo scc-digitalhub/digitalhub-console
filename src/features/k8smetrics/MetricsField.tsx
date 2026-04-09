@@ -8,7 +8,6 @@ import {
 } from 'react-admin';
 import { MetricBadge, MetricProps } from './MetricBadge';
 import { formatMetricsValue } from './utils';
-import React from 'react';
 export const MetricsField = (
     props: Omit<MetricProps, 'value' | 'name' | 'icon' | 'title'> & {
         record?: any;
@@ -17,7 +16,6 @@ export const MetricsField = (
         labels?: boolean;
         metrics?: string[] | boolean;
         link?: string;
-        title?: React.ReactNode;
     }
 ) => {
     const {
@@ -27,7 +25,6 @@ export const MetricsField = (
         size,
         fontSize,
         gap = 1,
-        title,
         ...rest
     } = props;
     const resource = useResourceContext();
@@ -86,7 +83,6 @@ export const MetricsField = (
 
         >
             {' '}
-            {title}
             {Object.entries(metrics.usage)
                 .filter(([key]) =>
                     Array.isArray(metricsKeys)

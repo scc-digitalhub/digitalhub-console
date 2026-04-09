@@ -20,7 +20,7 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { Box, Container, Divider, Stack, Typography } from '@mui/material';
+import { Box, Container, Divider, Stack } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
@@ -55,7 +55,6 @@ import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/Filt
 import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
-import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -371,8 +370,6 @@ const ShowToolbar = () => {
 };
 
 export const RunShow = () => {
-    const translate = useTranslate();
-
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBaseLive>
@@ -386,14 +383,6 @@ export const RunShow = () => {
                             gap={3}
                             labels
                             metrics={true}
-                            title={
-                                <Stack direction="row" alignItems="center" spacing={1} sx={{ color: 'secondary.main', mr: 2 }}>
-                                    <DeveloperBoardIcon />
-                                    <Typography variant="h6" fontWeight="500">
-                                        {translate('fields.metrics.title')}
-                                    </Typography>
-                                </Stack>
-                            }
                         />
                     </Box>
                     <ShowView
