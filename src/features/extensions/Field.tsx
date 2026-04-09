@@ -44,13 +44,6 @@ export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
     const { schemas = [] } = props;
     const record = useRecordContext();
 
-    const kinds = schemas
-        ?.map(s => ({
-            id: s.kind,
-            name: s.kind,
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
-
     if (!record || !schemas) {
         return <></>;
     }
