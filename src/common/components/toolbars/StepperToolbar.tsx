@@ -13,6 +13,7 @@ import {
     Button,
 } from 'react-admin';
 import { useNavigate } from 'react-router';
+import { useFormContext } from 'react-hook-form';
 
 type StepperToolbarProps = {
     cancelUrl?: string;
@@ -28,10 +29,26 @@ export const StepperToolbar = (props: StepperToolbarProps) => {
     const { steps, currentStep } = useStepper();
     const translate = useTranslate();
     const navigate = useNavigate();
+    const { trigger } = useFormContext();
+
     const handleCancel = () => {
         if (onCancel) onCancel();
         else if (cancelUrl) navigate(cancelUrl);
     };
+
+    const handleNext: MouseEventHandler<HTMLButtonElement> = async (e) => {
+       const rhfValid = await trigger();
+
+        if (!rhfValid) {
+            e.preventDefault();
+            e.stopPropagation();
+            return; 
+        }
+        if (beforeNext) beforeNext(e);
+    };
+
+    const isLastStep = steps && currentStep === steps.length - 1;
+    
     return (
         <Toolbar sx={{ justifyContent: 'space-between' }}>
         {(cancelUrl || onCancel) ? (
@@ -64,12 +81,12 @@ export const StepperToolbar = (props: StepperToolbarProps) => {
                 </Box>
                 <Box>
                     <StepperForm.NextButton
-                        onClick={beforeNext}
+                        onClick={handleNext}
                         disabled={disableNext}
                     />
-                    {steps && currentStep === steps.length - 1 && (
+                    {isLastStep && (
                         <SaveButton {...saveProps}
-                        alwaysEnable={alwaysEnableSave}  />
+                        alwaysEnable={alwaysEnableSave ?? true}  />
                     )}
                 </Box>
             </Stack>

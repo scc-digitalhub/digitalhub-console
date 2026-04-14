@@ -35,7 +35,7 @@ export const CreateSpecWithUpload = (props: CreateSpecWithUploadProps) => {
     const { field } = useInput({ resource, source: 'spec' });
     const { field: nameField } = useInput({ resource, source: 'name' });
     useEffect(() => {
-        if (uploader && field) {
+        if (uploader && uploader.path && uploader.path !== field.value?.path) {
             field.onChange({ ...field.value, path: uploader.path });
         }
 
