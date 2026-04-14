@@ -24,6 +24,7 @@
     "upload_x_files": "Upload %{files} file |||| Upload %{files} files",
     "view": "View",
     "import": "Import",
-    "download_notebook": "Notebook"
+    "download_notebook": "Notebook",
+    "import_one": "Import"
 
 }
