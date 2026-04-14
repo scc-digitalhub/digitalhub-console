@@ -69,7 +69,7 @@ export const MetricBadge = (props: MetricProps) => {
         title && isValidElement(title) ? (
             title
         ) : typeof title === 'string' ? (
-            <Typography variant="body1" color={color} sx={{ fontSize: '90%' }}>
+            <Typography variant="body1" fontSize={fontSize} color={color}>
                 {translate(title)}
             </Typography>
         ) : null;

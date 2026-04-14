@@ -378,8 +378,8 @@ export const RunShow = () => {
 
                     <Box sx={{ mb: 2, mt: 1, pl: 1 }}>
                         <MetricsField
-                            size="48px"
-                            fontSize={'h7.fontSize'}
+                                                size="small"
+                                                fontSize={'small'}
                             gap={3}
                             labels
                             metrics={true}
