@@ -7,7 +7,7 @@ import {
     JsonSchemaFieldProps,
     JSONSchemaFormatInputProps,
 } from '@dslab/ra-jsonschema-input';
-import {    JsonSchemaInput as RaJsonSchemaInput} from './JsonSchemaInput';
+import { JsonSchemaInput as RaJsonSchemaInput} from './JsonSchemaInput';
 import { MuiChipsInputWidget } from './widgets/MuiChipsInputWidget';
 import { CoreResourceFieldTemplate } from './templates/CoreResourceFieldTemplate';
 import { KeyValueFieldTemplate } from './templates/KeyValueFieldTemplate';
