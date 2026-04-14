@@ -39,8 +39,8 @@ export const SpecInput = (
     const kindValue = useWatch({ name: kindSource });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>(schemaProp);
-    const kind =
-        kindProp || kindValue || (record ? get(record, kindSource) : null);
+    
+    const kind = kindProp || kindValue || (record ? get(record, kindSource) : null);
 
     useEffect(() => {
         if (!kind) {
@@ -49,7 +49,7 @@ export const SpecInput = (
         if (schemaProp) {
             setSchema(schemaProp);
         } else if (schemaProvider && resource) {
-            schemaProvider.get(resource, kind).then(s => setSchema(s.schema));
+            schemaProvider.get(resource, kind).then(s => setSchema(s?.schema));
         }
     }, [kind, schemaProvider, schemaProp, resource]);
 
