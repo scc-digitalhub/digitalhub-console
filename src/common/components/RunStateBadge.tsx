@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Chip, SxProps, Theme } from '@mui/material';
+import { Chip, SxProps, Theme, Tooltip } from '@mui/material';
 import { useMemo } from 'react';
 import {
     useCreatePath,
@@ -76,20 +76,22 @@ export const RunStateBadge = (props: RunStateBadgeProps) => {
     };
 
     return (
-        <Chip
-            color={StateColors[state]}
-            size="small"
-            label={total <= MAX ? total : `${MAX}+`}
-            onClick={e => handleClick(e, state)}
-            sx={{
-                '.MuiChip-label': {
-                    fontSize: '12px',
-                    lineHeight: '12px',
-                    paddingX: '6px',
-                },
-                height: '20px',
-                ...sxProps,
-            }}
-        />
+        <Tooltip title={`${total} ${state}`} placement="top">
+            <Chip
+                color={StateColors[state]}
+                size="small"
+                label={total <= MAX ? total : `${MAX}+`}
+                onClick={e => handleClick(e, state)}
+                sx={{
+                    '.MuiChip-label': {
+                        fontSize: '12px',
+                        lineHeight: '12px',
+                        paddingX: '6px',
+                    },
+                    height: '20px',
+                    ...sxProps,
+                }}
+            />
+        </Tooltip>
     );
 };
