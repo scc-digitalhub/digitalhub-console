@@ -22,6 +22,7 @@ import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
+import { BulkStopButton } from './components/BulkStopButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { formatDuration } from '../../common/utils/helpers';
 import { functionParser } from '../../common/utils/parsers';
@@ -103,7 +104,10 @@ export const RunList = () => {
                             <Datagrid
                                 rowClick="show"
                                 bulkActionButtons={
-                                    <BulkDeleteAllVersionsButton />
+                                    <>
+                                        <BulkStopButton />
+                                        <BulkDeleteAllVersionsButton />
+                                    </>
                                 }
                             >
                                 <FunctionField

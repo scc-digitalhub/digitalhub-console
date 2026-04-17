@@ -2,17 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    Button,
-    ButtonProps,
-    RaRecord,
-    useDataProvider,
-    useRecordContext,
-} from 'react-admin';
+import { Button, ButtonProps, RaRecord, useRecordContext } from 'react-admin';
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import { ReactElement } from 'react';
+import { useStopRun } from '../../../common/hooks/useStopRun';
 
 const defaultIcon = <StopCircleIcon />;
 
@@ -24,16 +18,14 @@ export const StopButton = (props: StopButtonProps) => {
         record: recordProp,
         ...rest
     } = props;
-    const { root: projectId } = useRootSelector();
-    const dataProvider = useDataProvider();
 
     const recordContext = useRecordContext();
     const record = recordProp || recordContext;
     const id = idProp || record?.id;
+    const stopRun = useStopRun();
 
     const onClick = () => {
-        const url = '/-/' + projectId + '/runs/' + id + '/stop';
-        dataProvider.invoke({ path: url, options: { method: 'POST' } });
+        stopRun(id);
     };
 
     //TODO evaluate using dialog
