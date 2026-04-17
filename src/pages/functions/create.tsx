@@ -132,7 +132,6 @@ export const FunctionForm = (props: {
         <StepperToolbar
             cancelUrl={cancelUrl}
             onCancel={onCancel}
-            alwaysEnableSave={true}
         />
     );
 
