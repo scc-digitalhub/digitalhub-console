@@ -1,4 +1,7 @@
 {
+    "bulk_stop_content": "Sei sicuro di voler interrompere questo elemento? |||| Sei sicuro di voler interrompere questi %{smart_count} elementi?",
+    "bulk_stop_title": "Interrompi %{name} |||| Interrompi %{smart_count} %{name}",
+    "bulk_stopped": "Elemento interrotto |||| %{smart_count} elementi interrotti",
     "cascade_warning": {
         "no_undone": "Questa azione non può essere annullata",
         "no_undone_files": "Questa azione eliminerà i file dallo store e non può essere annullata"
