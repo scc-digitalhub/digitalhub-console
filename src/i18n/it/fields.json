@@ -352,6 +352,7 @@
             "title": "Versione modello HuggingFace"
         },
         "path": {
+            "title": "Path per il modello",
             "description": "Path per il modello, come cartella o .zip, oppure remoto come `huggingface://<>`"
         },
         "returnprobabilities": {
@@ -829,7 +830,7 @@
     },
     "path": {
         "description": "URI che punta al contenuto",
-        "title": "Percorso"
+        "title": "Path"
     },
     "port": {
         "description": "Numero di porta per il traffico in ingresso al servizio",

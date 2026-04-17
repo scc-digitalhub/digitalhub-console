@@ -329,10 +329,10 @@
     react-syntax-highlighter "^15.5.0"
     yaml "^2.3.4"
 
-"@dslab/ra-jsonschema-input@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.2.tgz#5c9f7eb7b362b236d0c0cbff460cd00ba77d58ed"
-  integrity sha512-D3Ub1UcgT7LxP0rsEsxT+bKUz9GSABmkNl4UhgVQFYCkZyLRCvx/tIPOYq9zZASEstEx1J8IBiYpXVyByDxI+g==
+"@dslab/ra-jsonschema-input@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@dslab/ra-jsonschema-input/-/ra-jsonschema-input-3.0.3.tgz#a788b107e4252ecc3bc50f2894bda080a43552c0"
+  integrity sha512-E+T1hMU10rSyUG4BSmXMr86UNlZ06NNiXrHTlG3RplwjSQDVWp1uyUaZucziQBFuN3CYWLIqYaZYL10FhY8wFA==
   dependencies:
     "@rjsf/core" "6.0.0-beta.11"
     "@rjsf/mui" "6.0.0-beta.11"

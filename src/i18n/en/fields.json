@@ -352,6 +352,7 @@
             "title": "HuggingFace Model Revision"
         },
         "path": {
+            "title": "HuggingFace Model Path",
             "description": "Path for the full model, either as folder or .zip, or a remote model as `huggingface://<>`"
         },
         "returnprobabilities": {
@@ -609,6 +610,7 @@
             "title": "Model Configuration"
         },
         "path": {
+            "title": "Path",
             "description": "Path for MLFlow model, either as folder or .zip file"
         },
         "signature": {
