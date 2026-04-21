@@ -59,7 +59,6 @@ export const HubProjectImport = () => {
     const hubResources = useHubResources();
     const navigate = useNavigate();
     const translate = useTranslate();
-    const createPath = useCreatePath();
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const { root } = useRootSelector();
