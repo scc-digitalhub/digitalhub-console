@@ -6,7 +6,6 @@ import { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
     useTranslate,
-    useCreatePath,
     useDataProvider,
     useNotify,
     useBasename,
@@ -37,7 +36,9 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { HubIcon } from './HubIcon';
 import { useHubResources } from '../useHubResources';
-
+import {
+    createItemWithChildren,
+} from '../utils';
 
 interface ImportItem {
     name: string;
@@ -121,26 +122,14 @@ export const HubProjectImport = () => {
         setResults([]);
 
         const importResults = await Promise.allSettled(
-            selectedItems.map(item => {
-                const payload = {
-                    ...item.data,
-                    project: root || '',
-                    metadata: {
-                        ...item.data.metadata,
-                        project: root || '',
-                    },
-                };
-                return dataProvider
-                    .create(item.resourceName, {
-                        data: payload,
-                        meta: { root },
-                    })
-                    .then(() => ({ item, success: true }))
-                    .catch(err => ({
-                        item,
-                        success: false,
-                        error: err?.message || 'Error',
-                    }));
+            selectedItems.map(async item => {
+                await createItemWithChildren(
+                    item.data,
+                    item.resourceName,
+                    root || '',
+                    dataProvider
+                );
+                return { item, success: true };
             })
         );
 

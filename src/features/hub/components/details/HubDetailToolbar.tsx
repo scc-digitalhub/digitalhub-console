@@ -23,6 +23,10 @@ import {
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useNavigate } from 'react-router';
 import { useHubResources } from '../../useHubResources';
+import {
+    createItemWithChildren,
+    loadProjectItems,
+} from '../../utils';
 
 interface HubDetailToolbarProps {
     template: any;
@@ -54,47 +58,28 @@ export const HubDetailToolbar = ({
         setConfirmOpen(false);
         setLoading(true);
         try {
-            if (template.resourceName === 'projects' && template.spec) {
-                // Caso Progetto: Crea batch di promise per tutti gli item in template.spec
-                const promises = Object.entries(template.spec).flatMap(([catalogKey, items]) => {
-                    const resourceName = catalogKeyToResource[catalogKey] ?? catalogKey;
-                    return (items as any[]).map(item => {
-                        const payload = {
-                            ...item,
-                            project: root || '',
-                            metadata: {
-                                ...(item.metadata || {}),
-                                project: root || '',
-                            },
-                        };
-                        return dataProvider.create(resourceName, {
-                            data: payload,
-                            meta: { root },
-                        });
-                    });
-                });
-                // Esegue il salvataggio di tutti gli elementi in parallelo
-                await Promise.all(promises);
+            if (template.resourceName === 'projects') {
+                // Scarica il YAML del progetto e usa i suoi item
+                const items = template.metadata?.repository
+                    ? await loadProjectItems(template.metadata.repository, catalogKeyToResource)
+                    : [];
+
+                await Promise.all(
+                    items.map(({ item, resourceName }) =>
+                        createItemWithChildren(item, resourceName, root || '', dataProvider)
+                    )
+                );
             } else {
-                // Caso Risorsa Singola Normale
-                const payload = {
-                    ...template,
-                    project: root || '',
-                    metadata: {
-                        ...template.metadata,
-                        project: root || '',
-                    },
-                };
-                await dataProvider.create(template.resourceName, {
-                    data: payload,
-                    meta: { root },
-                });
+                await createItemWithChildren(
+                    template,
+                    template.resourceName,
+                    root || '',
+                    dataProvider
+                );
             }
 
             notify('pages.hub.add_direct_success', { type: 'success' });
-            if (redirectPath) {
-                navigate(redirectPath);
-            }
+            if (redirectPath) navigate(redirectPath);
         } catch (err: any) {
             notify('pages.hub.add_direct_error', {
                 type: 'error',
