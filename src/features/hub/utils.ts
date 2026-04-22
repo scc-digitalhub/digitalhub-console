@@ -60,10 +60,44 @@ export const loadProjectItems = async (
 };
 
 /**
- * Crea una singola risorsa scaricando il YAML se disponibile,
- * altrimenti usa i dati JSON del catalogo come fallback.
- * TODO: gestire i documenti figli dopo la creazione del padre
+ * Gestisce la creazione dei documenti figli in base al tipo di risorsa padre.
+ * Ogni tipo di risorsa ha la sua logica di creazione dei figli.
  */
+const createChildren = async (
+    childDocs: any[],
+    parentResourceName: string,
+    parentData: any,
+    createdParent: any,
+    root: string,
+    dataProvider: any
+): Promise<void> => {
+    if (parentResourceName === 'functions') {
+        // I figli delle funzioni sono tasks, collegati tramite spec.function
+        for (const childDoc of childDocs) {
+            const childPayload = {
+                kind: childDoc.kind,
+                project: root,
+                metadata: { ...(childDoc.metadata || {}) },
+                name: childDoc.name,
+                spec: {
+                    ...(childDoc.spec || {}),
+                    function: buildParentRef(
+                        parentData.kind,
+                        root,
+                        createdParent.data.name,
+                        createdParent.data.id
+                    ),
+                },
+            };
+            await dataProvider.create('tasks', {
+                data: childPayload,
+                meta: { root },
+            });
+        }
+    }
+    // TODO: gestire i figli per altri tipi di risorse (es. workflows, pipelines...)
+};
+
 export const createItemWithChildren = async (
     item: any,
     resourceName: string,
@@ -78,13 +112,22 @@ export const createItemWithChildren = async (
     const payload = {
         ...sourceData,
         project: root,
-        metadata: { ...(sourceData.metadata || {}), project: root },
+        metadata: { ...(sourceData.metadata || {}) },
     };
 
-    return dataProvider.create(resourceName, {
+    const created = await dataProvider.create(resourceName, {
         data: payload,
         meta: { root },
     });
+
+    // Se non ci sono figli, esci subito
+    const childDocs = docs.slice(1).filter(doc => isChildDocument(doc.kind || ''));
+    if (!childDocs.length) return created;
+
+    // Delega la creazione dei figli alla funzione specifica per tipo di risorsa
+    await createChildren(childDocs, resourceName, sourceData, created, root, dataProvider);
+
+    return created;
 };
 
 /**
