@@ -59,7 +59,7 @@ export const HubLayout = ({
                 try {
                     const docs = await loadDefinitionYaml(template.metadata.repository);
                     if (docs.length > 0) {
-                        // Sostituisce il template con i dati dello YAML (spec completo)
+                        // Sostituisce il template con i dati dello YAML 
                         hubTemplate = {
                             ...docs[0],
                             resourceName: template.resourceName,
