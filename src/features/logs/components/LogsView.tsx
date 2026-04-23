@@ -182,10 +182,11 @@ const LogsDetail = (props: { record?: any; refresh?: () => void }) => {
                 </Button>
                 <DownloadButton label="" record={record} />
             </TopToolbar>
-            <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
+            <LogViewer sx={{ minHeight: '520px' }}>
                 <LazyLog
                     key={record.id}
                     ref={ref}
+                    height={520}
                     text={text}
                     caseInsensitive={true}
                     enableLineNumbers={true}
