@@ -207,7 +207,6 @@ const Client = (props: ClientProps) => {
         ready: false,
         live: false,
     });
-    const proxy = '/-/' + projectId + '/runs/' + recordId + '/proxy';
 
     useEffect(() => {
         const base = urls[0];
@@ -220,42 +219,48 @@ const Client = (props: ClientProps) => {
 
         const checkHealth = async () => {
             try {
-                const readyRes = await provider.checkHealth(
-                    base,
-                    '/v2/health/ready',
-                    'ready',
-                    proxy,
+                const readyRes = await provider.get(
+                    base + '/v2/health/ready',
+                    {
+                        meta: {
+                            projectId,
+                            recordId,
+                        },
+                    },
                     ctrl.signal
                 );
                 if (ctrl.signal.aborted) return;
 
-                if (readyRes?.status !== 200 || !readyRes?.ok) {
+                if (readyRes?.status !== 200 || !readyRes?.json?.ready) {
                     return setHealthStatus({
                         ready: false,
                         live: false,
                         message:
                             readyRes?.status !== 200
-                                ? readyRes?.message
+                                ? readyRes?.json?.message?.toString()
                                 : translate('pages.http-client.modelNotReady'),
                     });
                 }
 
-                const liveRes = await provider.checkHealth(
-                    base,
-                    '/v2/health/live',
-                    'live',
-                    proxy,
+                const liveRes = await provider.get(
+                    base + '/v2/health/live',
+                    {
+                        meta: {
+                            projectId,
+                            recordId,
+                        },
+                    },
                     ctrl.signal
                 );
                 if (ctrl.signal.aborted) return;
 
-                if (liveRes?.status !== 200 || !liveRes?.ok) {
+                if (liveRes?.status !== 200 || !liveRes?.json?.live) {
                     return setHealthStatus({
                         ready: true,
                         live: false,
                         message:
                             liveRes?.status !== 200
-                                ? liveRes?.message
+                                ? liveRes?.json?.message?.toString()
                                 : translate('pages.http-client.modelNotLive'),
                     });
                 }
@@ -269,7 +274,7 @@ const Client = (props: ClientProps) => {
         };
         checkHealth();
         return () => ctrl.abort();
-    }, [showHealthChecks, urls, provider, proxy, translate]);
+    }, [showHealthChecks, urls, provider, translate, projectId, recordId]);
 
     return (
         <>
@@ -286,12 +291,10 @@ const Client = (props: ClientProps) => {
             )}
 
             {/* Using InferenceV2Client */}
-            {mode === 'v2' && <InferenceV2Client urls={urls} proxy={proxy} />}
+            {mode === 'v2' && <InferenceV2Client urls={urls} />}
 
             {/* Using StandardHttpClient */}
-            {mode === 'http' && (
-                <StandardHttpClient urls={urls} proxy={proxy} />
-            )}
+            {mode === 'http' && <StandardHttpClient urls={urls} />}
         </>
     );
 };

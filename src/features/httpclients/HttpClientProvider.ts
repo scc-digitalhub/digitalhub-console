@@ -2,33 +2,48 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { fetchUtils } from 'react-admin';
-
 export type HttpClientProvider = {
-    apiUrl: () => string;
-    client: (
+    get: (
         url: string,
-        options?: fetchUtils.Options
-    ) => Promise<{
-        status: number;
-        headers: Headers;
-        body: string;
-        json: any;
-    }>;
-    /**
-     * Performs a proxied health check POST to the API proxy endpoint.
-     * Returns true if the returned JSON contains key === true.
-     */
-    checkHealth: (
-        base: string,
-        path: string,
-        key: string,
-        proxy: string,
+        params: Params,
         signal?: AbortSignal
-    ) => Promise<{
-        ok: boolean;
-        status?: number;
-        message?: string;
-        json?: any;
-    }>;
+    ) => Promise<HttpClientResponse>;
+    post: (
+        url: string,
+        params: PostParams,
+        signal?: AbortSignal
+    ) => Promise<HttpClientResponse>;
+    put: (
+        url: string,
+        params: PostParams,
+        signal?: AbortSignal
+    ) => Promise<HttpClientResponse>;
+    patch: (
+        url: string,
+        params: PostParams,
+        signal?: AbortSignal
+    ) => Promise<HttpClientResponse>;
+    delete: (
+        url: string,
+        params: Params,
+        signal?: AbortSignal
+    ) => Promise<HttpClientResponse>;
+};
+
+export type Params = {
+    headers?: Headers;
+    meta?: any;
+};
+
+export type PostParams = Params & {
+    body: string;
+    contentType: string;
+};
+
+export type HttpClientResponse = {
+    status: number;
+    headers?: Headers;
+    body: string;
+    json?: any;
+    error?: any;
 };

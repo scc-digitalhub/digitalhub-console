@@ -9,10 +9,9 @@ import { useTranslate } from 'react-admin';
 
 interface InferenceV2ClientProps {
     urls: string[];
-    proxy: string;
 }
 
-export const InferenceV2Client = ({ urls, proxy }: InferenceV2ClientProps) => {
+export const InferenceV2Client = ({ urls }: InferenceV2ClientProps) => {
     const [activeTab, setActiveTab] = useState(0);
     const translate = useTranslate();
 
@@ -31,7 +30,6 @@ export const InferenceV2Client = ({ urls, proxy }: InferenceV2ClientProps) => {
                 <Box>
                     <HttpClient
                         urls={urls}
-                        proxy={proxy}
                         fixedMethod="POST"
                         fixedUrl={urls.find(url => url.includes('infer'))}
                         fixedContentType="application/json"
@@ -43,7 +41,6 @@ export const InferenceV2Client = ({ urls, proxy }: InferenceV2ClientProps) => {
             {activeTab === 1 && (
                 <HttpClient
                     urls={urls}
-                    proxy={proxy}
                     fixedMethod="GET"
                     fixedUrl={urls
                         .find(url => url.includes('infer'))

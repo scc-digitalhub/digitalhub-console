@@ -29,14 +29,15 @@ import {
     Labeled,
     RecordContextProvider,
     TabbedShowLayout,
+    useRecordContext,
     useTranslate,
 } from 'react-admin';
 import AceEditor from 'react-ace';
 import { JSONTree } from 'react-json-tree';
 import { useHttpClientProvider } from '../HttpClientContext';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 export interface HttpClientProps {
-    proxy?: string;
     urls: string[];
     fixedMethod?: string;
     fixedUrl?: string;
@@ -46,7 +47,6 @@ export interface HttpClientProps {
 
 export const HttpClient = (props: HttpClientProps) => {
     const {
-        proxy: proxyUrl = '/proxy',
         urls: availableUrls,
         fixedMethod,
         fixedUrl,
@@ -55,6 +55,8 @@ export const HttpClient = (props: HttpClientProps) => {
     } = props;
 
     const provider = useHttpClientProvider();
+    const { root } = useRootSelector();
+    const record = useRecordContext();
     const translate = useTranslate();
     const [method, setMethod] = useState(fixedMethod || 'GET');
     const [url, setUrl] = useState(fixedUrl || availableUrls[0] || '');
@@ -89,67 +91,32 @@ export const HttpClient = (props: HttpClientProps) => {
         setResponse(null);
 
         try {
-            const fullHeaders = new Headers({
-                'Content-Type': 'application/json',
-            });
-
+            const reqHeaders = new Headers({});
             headers.forEach(e => {
-                if (e.key?.trim()) fullHeaders.set(e.key, e.value);
+                if (e.key?.trim()) reqHeaders.set(e.key, e.value);
             });
 
-            let fullBody = '';
-            if (['POST', 'PUT', 'PATCH'].includes(method)) {
-                if (body.trim()) {
-                    if (contentType === 'application/json') {
-                        try {
-                            fullBody = JSON.stringify(JSON.parse(body));
-                        } catch {
-                            fullBody = body;
-                            fullHeaders.set('Content-Type', 'text/plain');
-                        }
-                    } else {
-                        fullBody = body;
-                        fullHeaders.set('Content-Type', 'text/plain');
-                    }
-                }
-            }
-
-            fullHeaders.set('X-Proxy-URL', url);
-            fullHeaders.set('X-Proxy-Method', method);
-
-            // const res = await fetch(fullUrl, options);
-            const fullUrl = provider.apiUrl() + proxyUrl;
-            const res = await provider.client(fullUrl, {
-                method: 'POST',
-                headers: fullHeaders,
-                body: fullBody,
+            const res = await provider[method.toLowerCase()](url, {
+                headers: reqHeaders,
+                body: body.trim(),
+                contentType,
+                meta: {
+                    projectId: root,
+                    recordId: record?.id as string,
+                },
             });
 
-            const contentTypeRes = res.headers.get('content-type') || '';
-            let parsedBody;
+            const parsedBody = res.json ?? res.body;
 
-            if (contentTypeRes.includes('application/json')) {
-                parsedBody = res.json;
-            } else {
-                parsedBody = res.body;
-            }
-
-            //extract proxied headers
-            let responseHeaders = {};
-            if (res.headers) {
-                const rh = Object.fromEntries(res.headers.entries());
-                Object.keys(rh)
-                    .filter(k => k.toLowerCase().startsWith('x-proxy-'))
-                    .forEach(k => {
-                        responseHeaders[k.substring(8)] = rh[k];
-                    });
-            }
+            let responseHeaders = res.headers
+                ? Object.fromEntries(res.headers.entries())
+                : {};
 
             const responseObj = {
                 status: res.status,
-                // statusText: res.statusText, //this field does not exist in response
                 headers: responseHeaders,
                 body: parsedBody,
+                error: res.error,
             };
 
             setResponse(responseObj);
@@ -516,9 +483,7 @@ export const HttpClient = (props: HttpClientProps) => {
                                         <Typography>
                                             Status:{' '}
                                             {response?.headers?.status ||
-                                                response?.status +
-                                                    '' +
-                                                    response?.statusText}
+                                                response?.status}
                                         </Typography>
                                         <Typography
                                             variant="subtitle1"
