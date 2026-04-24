@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import {
     useRecordContext,
     Button,
@@ -202,7 +201,6 @@ const Client = (props: ClientProps) => {
     const { showHealthChecks, recordId, mode, urls } = props;
     const translate = useTranslate();
     const provider = useHttpClientProvider();
-    const { root: projectId } = useRootSelector();
     const [healthStatus, setHealthStatus] = useState<HealthStatus>({
         ready: false,
         live: false,
@@ -223,7 +221,6 @@ const Client = (props: ClientProps) => {
                     base + '/v2/health/ready',
                     {
                         meta: {
-                            projectId,
                             recordId,
                         },
                     },
@@ -246,7 +243,6 @@ const Client = (props: ClientProps) => {
                     base + '/v2/health/live',
                     {
                         meta: {
-                            projectId,
                             recordId,
                         },
                     },
@@ -274,7 +270,7 @@ const Client = (props: ClientProps) => {
         };
         checkHealth();
         return () => ctrl.abort();
-    }, [showHealthChecks, urls, provider, translate, projectId, recordId]);
+    }, [showHealthChecks, urls, provider, translate, recordId]);
 
     return (
         <>

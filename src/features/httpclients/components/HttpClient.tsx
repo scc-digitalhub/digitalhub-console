@@ -35,7 +35,6 @@ import {
 import AceEditor from 'react-ace';
 import { JSONTree } from 'react-json-tree';
 import { useHttpClientProvider } from '../HttpClientContext';
-import { useRootSelector } from '@dslab/ra-root-selector';
 
 export interface HttpClientProps {
     urls: string[];
@@ -55,7 +54,6 @@ export const HttpClient = (props: HttpClientProps) => {
     } = props;
 
     const provider = useHttpClientProvider();
-    const { root } = useRootSelector();
     const record = useRecordContext();
     const translate = useTranslate();
     const [method, setMethod] = useState(fixedMethod || 'GET');
@@ -101,7 +99,6 @@ export const HttpClient = (props: HttpClientProps) => {
                 body: body.trim(),
                 contentType,
                 meta: {
-                    projectId: root,
                     recordId: record?.id as string,
                 },
             });

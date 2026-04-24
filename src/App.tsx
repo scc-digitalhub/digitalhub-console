@@ -149,7 +149,7 @@ import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { HttpClientContext } from './features/httpclients/HttpClientContext';
+import { HttpClientContextProvider } from './features/httpclients/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 
@@ -191,8 +191,8 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <HttpClientContext.Provider
-                                    value={{ provider: httpClientProvider }}
+                                <HttpClientContextProvider
+                                    httpClientProvider={httpClientProvider}
                                 >
                                     <FileContextProvider
                                         fileProvider={fileProvider}
@@ -272,7 +272,7 @@ const CoreApp = () => {
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>
-                                </HttpClientContext.Provider>
+                                </HttpClientContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>

@@ -171,7 +171,7 @@ export const DefaultHttpProxyProvider = (
 ): HttpClientProvider => {
     const getProxyUrl = (projectId, recordId) => {
         if (!projectId || !recordId)
-            throw new Error('project Id and recordId are required');
+            throw new Error('projectId and recordId are required');
         return apiUrl + '/-/' + projectId + '/runs/' + recordId + '/proxy';
     };
 
@@ -214,7 +214,7 @@ export const DefaultHttpProxyProvider = (
     return {
         get: (url, params, signal) => {
             const proxyUrl = getProxyUrl(
-                params.meta?.projectId,
+                params.meta?.root,
                 params.meta?.recordId
             );
             const requestHeaders = getRequestHeaders(
@@ -244,7 +244,7 @@ export const DefaultHttpProxyProvider = (
             }
 
             const proxyUrl = getProxyUrl(
-                params.meta?.projectId,
+                params.meta?.root,
                 params.meta?.recordId
             );
             const requestHeaders = getRequestHeaders(
@@ -277,7 +277,7 @@ export const DefaultHttpProxyProvider = (
             }
 
             const proxyUrl = getProxyUrl(
-                params.meta?.projectId,
+                params.meta?.root,
                 params.meta?.recordId
             );
             const requestHeaders = getRequestHeaders(
@@ -310,7 +310,7 @@ export const DefaultHttpProxyProvider = (
             }
 
             const proxyUrl = getProxyUrl(
-                params.meta?.projectId,
+                params.meta?.root,
                 params.meta?.recordId
             );
             const requestHeaders = getRequestHeaders(
@@ -336,7 +336,7 @@ export const DefaultHttpProxyProvider = (
         },
         delete: (url, params, signal) => {
             const proxyUrl = getProxyUrl(
-                params.meta?.projectId,
+                params.meta?.root,
                 params.meta?.recordId
             );
             const requestHeaders = getRequestHeaders(
