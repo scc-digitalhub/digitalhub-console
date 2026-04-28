@@ -144,12 +144,12 @@ import { StompContextProvider } from './features/notifications/StompContextProvi
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
 import { StoreResetter } from './common/components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
-import { ServiceList } from './features/httpclients/components/list';
+import { ServiceList } from './pages/services/list';
 import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { HttpClientContextProvider } from './features/httpclients/HttpClientContextProvider';
+import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 

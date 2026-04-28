@@ -11,7 +11,7 @@ import {
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Divider } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
-import { ServiceIcon } from '../features/httpclients/components/icon';
+import { ServiceIcon } from '../pages/services/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
 import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
