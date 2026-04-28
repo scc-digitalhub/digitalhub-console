@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import {
@@ -11,6 +11,9 @@ import {
     TextInput,
     required,
     useCreatePath,
+    useDataProvider,
+    useNotify,
+    useRedirect,
     useTranslate,
 } from 'react-admin';
 import { KindSelector } from '../../common/components/KindSelector';
@@ -33,27 +36,68 @@ import { isAlphaNumeric } from '../../common/utils/helpers';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
+import { buildParentRef } from '../../features/hub/utils';
+
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
+    const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
     const createPath = useCreatePath();
+    const redirect = useRedirect();
+    const notify = useNotify();
     const cancelUrl = createPath({ resource: 'functions', type: 'list' });
 
     const {
         template,
+        childDocs,
         isSelector,
         isFromTemplate,
         startFromScratch,
         startFromTemplate,
         reset,
     } = useCreateFlow();
+    
     const translate = useTranslate();
 
+
     const transform = useCallback(
-        (data: any) => ({ ...data, project: root || '' }),
+        (data: any) => {
+            const { id, ...rest } = data;
+            return { ...rest, project: root || '' };
+        },
         [root]
     );
+    const mutationOptions = useMemo(() => ({
+        onSuccess: async (created: any) => {
+            if (childDocs?.length) {
+
+            for (const childDoc of childDocs) {
+                const childPayload = {
+                    kind: childDoc.kind,
+                    project: root || '',
+                    metadata: { ...(childDoc.metadata || {}), project: root || '' },
+                    name: childDoc.name,
+                    spec: {
+                        ...(childDoc.spec || {}),
+                        function: buildParentRef(
+                            created.kind,
+                            root || '',
+                            created.name,
+                            created.id
+                        ),
+                    },
+                };
+                await dataProvider.create('tasks', {
+                    data: childPayload,
+                    meta: { root },
+                });
+            }
+        }
+            notify('ra.notification.created', { type: 'info' });
+            redirect('list', 'functions');
+        },
+    }), [childDocs, root, dataProvider, redirect, notify]);
 
     const [schemas, setSchemas] = useState<any[]>();
 
@@ -99,6 +143,8 @@ export const FunctionCreate = () => {
                 transform={transform}
                 redirect="list"
                 record={defaultValues}
+                mutationOptions={mutationOptions}
+
             >
                 <>
                     <CreatePageTitle icon={<FunctionIcon fontSize="large" />} />

@@ -12,7 +12,7 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { HubDetailView } from './details/HubDetailView';
 import { HubDetailToolbar } from './details/HubDetailToolbar';
 import { HubListView } from './list/HubListView';
-import { loadDefinitionYaml, toRepositoryAssetUrl } from '../utils';
+import { loadDefinitionYaml, isChildDocument, toRepositoryAssetUrl } from '../utils';
 
 interface HubLayoutProps {
     showTypeFilter?: boolean; 
@@ -80,10 +80,14 @@ export const HubLayout = ({
             try {
                 const docs = await loadDefinitionYaml(template.metadata.repository);
                 if (docs.length > 0) {
+                    const childDocs = docs
+                        .slice(1)
+                        .filter((doc: any) => isChildDocument(doc.kind || ''));
+
                     hubTemplate = {
                         ...docs[0],
                         resourceName: template.resourceName,
-                        // TODO: gestire docs.slice(1) come figli post-create
+                        ...(childDocs.length > 0 ? { childDocs } : {}),
                     };
                 }
             } catch {
