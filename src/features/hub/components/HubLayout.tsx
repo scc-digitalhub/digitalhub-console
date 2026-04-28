@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useCreatePath, useListContext, useTranslate } from 'react-admin';
 import { Container } from '@mui/material';
 import { DataObject } from '@mui/icons-material';
@@ -48,7 +48,7 @@ export const HubLayout = ({
         return translate('pages.hub.subtitle');
     }, [resourceName, translate]);
 
-    const handleImport = async (template: any) => {
+    const handleImport = useCallback(async (template: any) => {
         const type = template.resourceName;
         const resource = template.resourceName;
 
@@ -97,9 +97,9 @@ export const HubLayout = ({
 
         const path = createPath({ resource, type: 'create' });
         navigate(path, { state: { hubTemplate } });
-    };
+    }, [createPath, navigate]);
 
-    const handleNotebookDownload = async () => {
+    const handleNotebookDownload = useCallback(async () => {
         const url = toRepositoryAssetUrl(
             selectedTemplate?.metadata?.repository,
             'notebook.ipynb'
@@ -118,7 +118,7 @@ export const HubLayout = ({
         } catch {
             window.open(url, '_blank', 'noopener,noreferrer');
         }
-    };
+    }, [selectedTemplate]);
 
     const getRedirectPath = (template: any) => {
         const resource = template.resourceName;

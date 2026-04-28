@@ -62,7 +62,7 @@ export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
                       />,
                   ]
                 : [],
-                [showTypeFilter, hubResources, translate]
+                [showTypeFilter, hubResources]
             );
 
     const labelFilters = useMemo(

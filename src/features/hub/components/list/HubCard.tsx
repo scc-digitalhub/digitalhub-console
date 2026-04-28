@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRecordContext, useListContext, useTranslate } from 'react-admin';
-import { CardContent, CardActionArea, Chip } from '@mui/material';
+import { useRecordContext, useListContext } from 'react-admin';
+import { CardContent, CardActionArea, Chip, Stack } from '@mui/material';
 import { StyledTemplate } from '../../../../common/components/layout/StyledTemplate';
 import { HubCardSummary } from './HubCardSummary';
 
@@ -47,13 +47,26 @@ export const HubCard = ({ showType }: HubCardProps) => {
             >
                 <CardContent sx={{ p: 2, width: '100%' }}>
                     {showType && record.resourceName && (
-                        <Chip
-                            label={record.resourceName}
-                            size="small"
-                            color={'primary'}
-                            variant="outlined"
-                            sx={{ mb: 1, fontSize: '0.7rem' }}
-                        />
+                        <Stack direction="row" spacing={1} mb={1}>
+                            <Chip
+                                label={record.resourceName}
+                                size="small"
+                                color={'primary'}
+                                variant="outlined"
+                                sx={{ mb: 1, fontSize: '0.7rem' }}
+                            />
+                            {record.kind &&
+                                record.kind != record.resourceName &&
+                                record.kind + 's' != record.resourceName && (
+                                    <Chip
+                                        label={record.kind}
+                                        size="small"
+                                        color={'secondary'}
+                                        variant="outlined"
+                                        sx={{ mb: 1, fontSize: '0.7rem' }}
+                                    />
+                                )}
+                        </Stack>
                     )}
                     <HubCardSummary template={record} />
                 </CardContent>

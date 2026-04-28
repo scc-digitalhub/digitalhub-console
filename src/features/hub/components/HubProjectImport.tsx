@@ -86,7 +86,7 @@ export const HubProjectImport = () => {
     }, [hubTemplate, catalogKeyToResource]);
 
     const [selection, setSelection] = useState<Record<string, boolean>>(
-        Object.fromEntries(allItems.map(item => [`${item.catalogKey}:${item.name}`, true]))
+        () => Object.fromEntries(allItems.map(item => [`${item.catalogKey}:${item.name}`, true]))
     );
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -94,8 +94,9 @@ export const HubProjectImport = () => {
     const [importing, setImporting] = useState(false);
     const [results, setResults] = useState<ImportResult[]>([]);
 
-    const selectedItems = allItems.filter(
-        item => selection[`${item.catalogKey}:${item.name}`]
+    const selectedItems = useMemo(
+        () => allItems.filter(item => selection[`${item.catalogKey}:${item.name}`]),
+        [allItems, selection]
     );
 
     const toggle = (key: string) => {
