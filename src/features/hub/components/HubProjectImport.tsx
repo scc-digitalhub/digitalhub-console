@@ -144,7 +144,7 @@ export const HubProjectImport = () => {
 
         const failed = finalResults.filter(r => !r.success);
         if (failed.length === 0) {
-            notify('pages.hub.import_success', { type: 'success' });
+            notify('pages.hub.import_success', { type: 'info' });
         } else {
             notify('pages.hub.import_partial', {
                 type: 'warning',
