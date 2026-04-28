@@ -78,7 +78,7 @@ export const ClientButton = (props: ClientButtonProps) => {
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
     const record = useRecordContext(props);
-    const urls = useRef<string[]>([]);
+    const [urls, setUrls] = useState<string[]>([]);
 
     useEffect(() => {
         const serviceUrls: string[] = [];
@@ -90,8 +90,8 @@ export const ClientButton = (props: ClientButtonProps) => {
                 serviceUrls.push(...record.status.service.urls);
             }
         }
-        urls.current = serviceUrls;
-    }, [record?.status?.service]);
+        setUrls(serviceUrls);
+    }, [record]);
 
     const handleDialogOpen = (e: SyntheticEvent) => {
         setOpen(true);
@@ -115,7 +115,7 @@ export const ClientButton = (props: ClientButtonProps) => {
     const isDisabled =
         disabled ||
         record.status?.state !== 'RUNNING' ||
-        (mode !== 'chat' && urls.current.length === 0);
+        (mode !== 'chat' && urls.length === 0);
 
     return (
         <Fragment>
@@ -183,7 +183,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                             showHealthChecks={showHealthChecks}
                             mode={mode}
                             recordId={record.id}
-                            urls={urls.current}
+                            urls={urls}
                         />
                     )}
                 </DialogContent>
@@ -290,7 +290,7 @@ const Client = (props: ClientProps) => {
             {mode === 'v2' && <InferenceV2Client urls={urls} />}
 
             {/* Using StandardHttpClient */}
-            {mode === 'http' && <StandardHttpClient urls={urls} />}
+            {mode === 'http' && <StandardHttpClient urls={urls} historyKey={`http.client.history.${recordId}`} />}
         </>
     );
 };
