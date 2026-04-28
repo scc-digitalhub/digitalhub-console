@@ -47,3 +47,11 @@ export type HttpClientResponse = {
     json?: any;
     error?: any;
 };
+
+export type HttpClientRequest = {
+    url: string;
+    method: string;
+    contentType: string;
+    headers?: Headers;
+    body: string;
+};

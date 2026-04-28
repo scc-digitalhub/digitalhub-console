@@ -9,6 +9,7 @@ import {
     ButtonProps,
     RaRecord,
     useTranslate,
+    Labeled,
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
@@ -33,6 +34,8 @@ import {
     styled,
     Typography,
     Stack,
+    Switch,
+    FormControlLabel,
 } from '@mui/material';
 import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { ReaChat } from '../../chat/components/ReaChat';
@@ -77,6 +80,8 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     const translate = useTranslate();
     const [open, setOpen] = useState(false);
+    const [fullScreen, setFullScreen] = useState(false);
+
     const record = useRecordContext(props);
     const [urls, setUrls] = useState<string[]>([]);
 
@@ -133,6 +138,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={fullWidth}
+                fullScreen={fullScreen}
                 maxWidth={maxWidth}
                 aria-labelledby="client-dialog-title"
                 className={CreateInDialogButtonClasses.dialog}
@@ -150,15 +156,30 @@ export const ClientButton = (props: ClientButtonProps) => {
                             {titleText} {record?.name ? `#${record.name}` : ''}
                         </DialogTitle>
 
-                        {record.status?.openai?.model && (
+                        {/* {record.status?.openai?.model && (
                             <Typography
                                 id="client-dialog-model"
                                 className={CreateInDialogButtonClasses.title}
                             >
                                 {record.status?.openai?.model}
                             </Typography>
-                        )}
+                        )} */}
                     </Stack>
+
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={fullScreen === true}
+                                onChange={() => {
+                                    setFullScreen(!fullScreen);
+                                }}
+                            />
+                        }
+                        label={translate('actions.fullscreen')}
+                        labelPlacement="start"
+                        disableTypography
+                        sx={{ fontSize: '80%' }}
+                    />
 
                     <IconButton
                         className={CreateInDialogButtonClasses.closeButton}
@@ -290,7 +311,12 @@ const Client = (props: ClientProps) => {
             {mode === 'v2' && <InferenceV2Client urls={urls} />}
 
             {/* Using StandardHttpClient */}
-            {mode === 'http' && <StandardHttpClient urls={urls} historyKey={`http.client.history.${recordId}`} />}
+            {mode === 'http' && (
+                <StandardHttpClient
+                    urls={urls}
+                    historyKey={`http.client.history.${recordId}`}
+                />
+            )}
         </>
     );
 };

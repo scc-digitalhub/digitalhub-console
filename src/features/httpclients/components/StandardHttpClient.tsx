@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { HttpClient, HttpClientProps } from './HttpClient';
+import { HttpClient, HttpClientProps } from '../HttpClient';
 
 /**
  * Standard HTTP Client for general purpose requests.

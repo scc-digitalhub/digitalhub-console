@@ -4,7 +4,7 @@
 
 import { useState, SyntheticEvent } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
-import { HttpClient } from './HttpClient';
+import { HttpClient } from '../HttpClient';
 import { useTranslate } from 'react-admin';
 
 interface InferenceV2ClientProps {
