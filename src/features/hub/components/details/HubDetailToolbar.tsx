@@ -78,7 +78,7 @@ export const HubDetailToolbar = ({
                 );
             }
 
-            notify('pages.hub.add_direct_success', { type: 'success' });
+            notify('pages.hub.add_direct_success', { type: 'info' });
             if (redirectPath) navigate(redirectPath);
         } catch (err: any) {
             notify('pages.hub.add_direct_error', {

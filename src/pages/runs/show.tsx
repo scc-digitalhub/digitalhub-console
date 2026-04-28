@@ -283,7 +283,7 @@ export const RunShowComponent = () => {
                     <LogsView id={record.id as string} resource={resource} />
                 )}
             </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.k8s.title'} >
+            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
                 <ComputeResources record={record} />
             </TabbedShowLayout.Tab>
             {record?.status?.service && (
@@ -378,8 +378,8 @@ export const RunShow = () => {
 
                     <Box sx={{ mb: 2, mt: 1, pl: 1 }}>
                         <MetricsField
-                                                size="small"
-                                                fontSize={'small'}
+                            size="small"
+                            fontSize={'small'}
                             gap={3}
                             labels
                             metrics={true}
