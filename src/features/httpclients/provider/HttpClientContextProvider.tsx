@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ReactElement, useMemo } from 'react';
-import { HttpClientContext } from './HttpClientContext';
+import { HttpClientContext } from '../HttpClientContext';
 import { HttpClientProvider } from './HttpClientProvider';
 import { useRootSelector } from '@dslab/ra-root-selector';
 

@@ -14,12 +14,11 @@ import {
     ListItemText,
     Divider,
     ListItemButton,
-    Chip,
     AccordionActions,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import { useTranslate } from 'react-admin';
-import { HttpClientRequest, HttpClientResponse } from '../HttpClientProvider';
+import { HttpClientRequest, HttpClientResponse } from '../provider/HttpClientProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import { StatusBadge } from '../HttpClient';
@@ -108,7 +107,6 @@ export const HistoryBrowser = ({
 
 const HistoryEntryActions = ({
     entry,
-    idx,
     onRemove,
 }: {
     entry: HistoryEntry;

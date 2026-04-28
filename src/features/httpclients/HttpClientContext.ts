@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createContext, useContext } from 'react';
-import { HttpClientProvider } from './HttpClientProvider';
+import { HttpClientProvider } from './provider/HttpClientProvider';
 
 interface HttpClientContextValue {
     provider: HttpClientProvider;
@@ -14,7 +14,7 @@ export const HttpClientContext = createContext<
 >(undefined);
 
 // hook to get context value
-export const useHttpClientContext = () => {
+const useHttpClientContext = () => {
     const httpClientContext = useContext(HttpClientContext);
     if (httpClientContext === undefined) {
         throw new Error(

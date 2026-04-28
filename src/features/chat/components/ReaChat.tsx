@@ -25,16 +25,7 @@ import { ErrorDisplay } from './ErrorDisplay';
 import { createChatTheme } from '../chatTheme';
 import '../chatTheme.css';
 import { useChatContext } from '../ChatContext';
-
-const API_KEY: string =
-    (globalThis as any).VITE_OPENAI_API_KEY ||
-    import.meta.env.VITE_OPENAI_API_KEY ||
-    '';
-
-const API_BASE_URL: string =
-    (globalThis as any).VITE_OPENAI_BASE_URL ||
-    import.meta.env.VITE_OPENAI_BASE_URL ||
-    '';
+import { useHttpClientProvider } from '../../httpclients/HttpClientContext';
 
 const THROTTLE_MS = 100;
 
@@ -42,7 +33,7 @@ const CriticalErrorFallback = ({ error, retry }: any) => (
     <ErrorDisplay error={error} onRetry={retry} />
 );
 
-interface ReaChatProps {
+export interface ReaChatProps {
     modelName: string;
     baseUrl?: string;
 }
@@ -59,19 +50,35 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
     const { id } = useParams();
     const currentRunId = id || 'general-session';
     const { sessions, updateSession, ensureSessionForRun } = useChatContext();
+    const httpClientProvider = useHttpClientProvider();
     const translate = useTranslate();
     const theme = useTheme();
 
     const [loading, setIsLoading] = useState<boolean>(false);
     const abortControllerRef = useRef<AbortController | null>(null);
     const openai = useMemo(() => {
-        if (!API_KEY) return null;
+        const customFetch = (
+            input: string | URL | Request,
+            init?: Parameters<typeof fetch>[1]
+        ) => {
+            let url: string;
+            if (typeof input === 'string') {
+                url = input;
+            } else if (input instanceof URL) {
+                url = input.toString();
+            } else {
+                url = input.url;
+            }
+            console.log("Custom fetch called with URL:", url);
+            return httpClientProvider.fetch(url, init as any);
+        };
         return new OpenAI({
-            apiKey: API_KEY,
-            baseURL: API_BASE_URL || baseUrl,
+            apiKey: '--- IGNORE ---',
+            baseURL: baseUrl,
             dangerouslyAllowBrowser: true,
+            fetch: customFetch,
         });
-    }, [baseUrl]);
+    }, [baseUrl, httpClientProvider]);
 
     useEffect(() => {
         ensureSessionForRun(currentRunId);

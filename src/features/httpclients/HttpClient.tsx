@@ -31,18 +31,19 @@ import {
     useTranslate,
 } from 'react-admin';
 import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-yaml';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/mode-markdown';
+
 import { useHttpClientProvider } from './HttpClientContext';
-import { HttpClientResponse } from './HttpClientProvider';
+import { HttpClientResponse } from './provider/HttpClientProvider';
 import { HistoryBrowser, HistoryEntry } from './components/History';
 import { JsonResponseViewer } from './components/JsonResponseViewer';
 import { RawResponseViewer } from './components/RawResponseViewer';
 import { HtmlResponseViewer } from './components/HtmlResponseViewer';
 
 export const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
-export const CONTENT_TYPES = [
-    { value: 'application/json', label: 'application/json' },
-    { value: 'text/plain', label: 'text/plain' },
-] as const;
+export const CONTENT_TYPES = ['application/json', 'text/plain'] as const;
 
 type Header = {
     key: string;
@@ -54,18 +55,19 @@ export interface HttpClientProps {
     allowedMethods?: (typeof METHODS)[number][];
     allowedContentTypes?: (typeof CONTENT_TYPES)[number][];
     showRequestBody?: boolean;
-    historyKey?: string; // optional key to persist history in localStorage
+    historyKey?: string | false; // optional key to persist history in localStorage
 }
 
 export const HttpClient = (props: HttpClientProps) => {
     const {
         urls: availableUrls,
         allowedMethods = METHODS,
-        allowedContentTypes: contentTypes = CONTENT_TYPES,
+        allowedContentTypes = CONTENT_TYPES,
         showRequestBody = true,
         historyKey,
     } = props;
     const methods: string[] = [...allowedMethods];
+    const contentTypes: string[] = [...allowedContentTypes];
 
     const provider = useHttpClientProvider();
     const record = useRecordContext();
@@ -77,7 +79,7 @@ export const HttpClient = (props: HttpClientProps) => {
     const [body, setBody] = useState<string>('');
     const [headers, setHeaders] = useState<Header[]>([]);
     const [contentType, setContentType] = useState<string>(
-        contentTypes?.[0]?.value || 'text/plain'
+        contentTypes?.[0] || 'text/plain'
     );
 
     const [response, setResponse] = useState<HttpClientResponse | undefined>(
@@ -87,11 +89,16 @@ export const HttpClient = (props: HttpClientProps) => {
     const instanceId = useId();
     const [localHistory, setLocalHistory] = useState<HistoryEntry[]>([]);
     const [storedHistory, setStoredHistory] = useStore<HistoryEntry[]>(
-        historyKey ?? instanceId,
+        historyKey || instanceId,
         []
     );
     const history = historyKey ? storedHistory : localHistory;
-    const setHistory = historyKey ? setStoredHistory : setLocalHistory;
+    const setHistory =
+        historyKey == false
+            ? () => []
+            : historyKey
+            ? setStoredHistory
+            : setLocalHistory;
 
     const handleHeaderChange = (
         index: number,
@@ -177,11 +184,11 @@ export const HttpClient = (props: HttpClientProps) => {
 
             setHeaders(headers);
             setBody(entry.request.body);
-            if (
-                contentTypes.some(ct => ct.value === entry.request.contentType)
-            ) {
-                setContentType(entry.request.contentType);
-            }
+            setContentType(
+                contentTypes.includes(entry.request.contentType)
+                    ? entry.request.contentType
+                    : contentTypes[0]
+            );
         }
 
         //restore response context
@@ -213,12 +220,14 @@ export const HttpClient = (props: HttpClientProps) => {
                     {translate('pages.http-client.request')}
                 </Typography>
 
-                <HistoryBrowser
-                    history={history}
-                    onLoad={loadHistory}
-                    onClear={clearHistory}
-                    onRemove={removeHistoryEntry}
-                />
+                {historyKey === false ? null : (
+                    <HistoryBrowser
+                        history={history}
+                        onLoad={loadHistory}
+                        onClear={clearHistory}
+                        onRemove={removeHistoryEntry}
+                    />
+                )}
 
                 <Box
                     style={{

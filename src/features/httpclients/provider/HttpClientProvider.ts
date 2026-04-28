@@ -2,7 +2,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { fetchUtils } from 'react-admin';
+
 export type HttpClientProvider = {
+    fetch: (url: string, options?: fetchUtils.Options) => Promise<Response>;
     get: (
         url: string,
         params: Params,

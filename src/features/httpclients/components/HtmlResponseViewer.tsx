@@ -11,7 +11,7 @@ import {
     styled,
 } from '@mui/material';
 import { Labeled, RecordContextProvider, useTranslate } from 'react-admin';
-import { HttpClientResponse } from '../HttpClientProvider';
+import { HttpClientResponse } from '../provider/HttpClientProvider';
 import { StatusBadge } from '../HttpClient';
 import { useRef, useState } from 'react';
 import DOMPurify from 'dompurify';

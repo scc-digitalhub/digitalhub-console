@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { fetchUtils, Options } from 'ra-core';
-import { HttpClientProvider } from '../../features/httpclients/HttpClientProvider';
+import { HttpClientProvider } from '../../features/httpclients/provider/HttpClientProvider';
 import { FetchFunction } from './types';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { createHeadersFromOptions } from 'ra-core/dist/cjs/dataProvider/fetch';
@@ -24,10 +24,23 @@ export const ExternalHttpProxyProvider = (
 ): HttpClientProvider => {
     const _fetch = async (url: string, options: Options = {}) => {
         const requestHeaders = createHeadersFromOptions(options);
-        const response = await fetch(url, {
+
+        return fetch(url, {
             ...options,
             headers: requestHeaders,
         });
+    };
+
+    const httpClient = async (url: string, options: Options = {}) => {
+        const reqHeaders = (options.headers || new Headers({})) as Headers;
+        if (authProvider) {
+            const authHeader = await authProvider.getAuthorization();
+            if (authHeader) {
+                reqHeaders.set('Authorization', authHeader);
+            }
+        }
+
+        const response = await _fetch(url, { ...options, headers: reqHeaders });
 
         const contentType = response.headers.get('Content-Type');
         const status = response.status;
@@ -48,19 +61,6 @@ export const ExternalHttpProxyProvider = (
         }
 
         return { status, headers, body, json };
-    };
-
-    const httpClient = async (url: string, options: Options = {}) => {
-        const headers = (options.headers || new Headers({})) as Headers;
-        if (authProvider) {
-            const authHeader = await authProvider.getAuthorization();
-            if (authHeader) {
-                headers.set('Authorization', authHeader);
-            }
-        }
-
-        options.headers = headers;
-        return _fetch(url, options);
     };
 
     const getRequestHeaders = (
@@ -87,6 +87,23 @@ export const ExternalHttpProxyProvider = (
     };
 
     return {
+        fetch: async (url, options: Options = {}) => {
+            const requestHeaders = (options.headers ||
+                new Headers({})) as Headers;
+            if (url.startsWith('http') || url.includes('://')) {
+                requestHeaders.set('X-Proxy-URL', url);
+            } else {
+                requestHeaders.set('X-Proxy-Host', url);
+            }
+            if (authProvider) {
+                const authHeader = await authProvider.getAuthorization();
+                if (authHeader) {
+                    requestHeaders.set('Authorization', authHeader);
+                }
+            }
+
+            return _fetch(proxyUrl, { ...options, headers: requestHeaders });
+        },
         get: (url, params, signal) => {
             const requestHeaders = getRequestHeaders(url, params.headers);
 
@@ -214,6 +231,11 @@ export const DefaultHttpProxyProvider = (
     };
 
     return {
+        fetch: () => {
+            throw new Error(
+                'Direct fetch is not supported in DefaultHttpProxyProvider'
+            );
+        },
         get: (url, params, signal) => {
             const proxyUrl = getProxyUrl(
                 params.meta?.root,

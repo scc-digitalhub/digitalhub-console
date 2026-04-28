@@ -13,7 +13,7 @@ import {
 import { ExpandMore } from '@mui/icons-material';
 import { Labeled, RecordContextProvider, useTranslate } from 'react-admin';
 import { JSONTree } from 'react-json-tree';
-import { HttpClientResponse } from '../HttpClientProvider';
+import { HttpClientResponse } from '../provider/HttpClientProvider';
 import { StatusBadge } from '../HttpClient';
 
 export const JsonResponseViewer = ({
