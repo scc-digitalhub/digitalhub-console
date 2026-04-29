@@ -61,7 +61,7 @@
             "title": "%{resource}"
         },
         "show": {
-            "subtitle": "%{resource} %{kind}",
+            "subtitle": "%{kind}",
             "title": "%{resource} #%{name}"
         }
     },
