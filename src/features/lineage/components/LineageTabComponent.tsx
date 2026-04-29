@@ -64,9 +64,6 @@ export const LineageTabComponent = () => {
                 width: '100%',
             }}
         >
-            <Typography variant="h6" gutterBottom>
-                {translate('pages.lineage.title')}
-            </Typography>
             <Typography variant="subtitle1" gutterBottom>
                 {translate('pages.lineage.description')}
             </Typography>

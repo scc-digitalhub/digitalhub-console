@@ -16,8 +16,10 @@ import {
     TextInput,
     TopToolbar,
     useCreatePath,
+    useGetResourceLabel,
     useRecordContext,
     useResourceContext,
+    useShowContext,
     useTranslate,
 } from 'react-admin';
 import { Box, Container, Divider, Stack } from '@mui/material';
@@ -26,7 +28,10 @@ import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { RunIcon } from './icon';
 import { FlatCard } from '../../common/components/layout/FlatCard';
-import { ShowPageTitle } from '../../common/components/layout/PageTitle';
+import {
+    PageTitle,
+    RecordPageTitleProps,
+} from '../../common/components/layout/PageTitle';
 import { StateChips, StateColors } from '../../common/components/StateChips';
 import { LogsView } from '../../features/logs/components/LogsView';
 import { StopButton } from './components/StopButton';
@@ -158,17 +163,15 @@ export const RunShowComponent = () => {
                 <Labeled>
                     <IdField source="key" />
                 </Labeled>
-                {record?.metadata && <MetadataField />}
-                <Divider />
 
-                <Stack direction={'row'}>
-                    <Labeled>
-                        <TextField
-                            source="spec.task"
-                            label="fields.spec.task.title"
-                        />
-                    </Labeled>
-                    {functionId && (
+                {functionId && (
+                    <Stack direction={'row'}>
+                        <Labeled>
+                            <TextField
+                                source="spec.function"
+                                label="fields.function.title"
+                            />
+                        </Labeled>
                         <IconButtonWithTooltip
                             label="ra.action.show"
                             color="primary"
@@ -185,8 +188,16 @@ export const RunShowComponent = () => {
                         >
                             <OpenInNewIcon fontSize="small" />
                         </IconButtonWithTooltip>
-                    )}
-                    {workflowId && (
+                    </Stack>
+                )}
+                {workflowId && (
+                    <Stack direction={'row'}>
+                        <Labeled>
+                            <TextField
+                                source="spec.workflow"
+                                label="fields.workflow.title"
+                            />
+                        </Labeled>
                         <IconButtonWithTooltip
                             label="ra.action.show"
                             color="primary"
@@ -203,8 +214,11 @@ export const RunShowComponent = () => {
                         >
                             <OpenInNewIcon fontSize="small" />
                         </IconButtonWithTooltip>
-                    )}
-                </Stack>
+                    </Stack>
+                )}
+
+                {record?.metadata && <MetadataField />}
+                <Divider />
 
                 <Labeled>
                     <StateChips
@@ -368,13 +382,48 @@ const ShowToolbar = () => {
         </TopToolbar>
     );
 };
+const RunShowTitle = (props: RecordPageTitleProps) => {
+    const { resource, record } = useShowContext();
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    const label = getResourceLabel(resource, 1);
+
+    const uri = record?.spec?.function
+        ? new URL(record.spec.function)
+        : record?.spec?.workflow
+        ? new URL(record.spec.workflow)
+        : null;
+
+    const parent = uri ? uri.pathname.split(':')[0].substring(1) : null;
+
+    const name = parent
+        ? `${parent}/${record?.name || ''}`
+        : record?.name || '';
+    const kind = record?.kind || '';
+
+    return (
+        <PageTitle
+            text={translate('pages.pageTitle.show.title', {
+                resource: label,
+                name,
+            })}
+            secondaryText={translate('pages.pageTitle.show.subtitle', {
+                resource: label,
+                kind,
+            })}
+            icon={<RunIcon fontSize={'large'} />}
+            {...props}
+        />
+    );
+};
 
 export const RunShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBaseLive>
                 <>
-                    <ShowPageTitle icon={<RunIcon fontSize={'large'} />} />
+                    <RunShowTitle />
 
                     <Box sx={{ mb: 2, mt: 1, pl: 1 }}>
                         <MetricsField
