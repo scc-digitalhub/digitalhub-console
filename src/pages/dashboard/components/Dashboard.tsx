@@ -22,6 +22,7 @@ import {
 import { useEffect, useState } from 'react';
 import {
     CreateButton,
+    Button,
     ListButton,
     LoadingIndicator,
     RecordContextProvider,
@@ -29,6 +30,7 @@ import {
     SortPayload,
     useDataProvider,
     useGetResourceLabel,
+    useCreatePath,
     useTranslate,
 } from 'react-admin';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
@@ -43,6 +45,8 @@ import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 import { DropDownButton } from '../../../common/components/buttons/DropdownButton';
 import { ResourceIcon } from './ResourceIcon';
 import ContentAdd from '@mui/icons-material/Add';
+import { Link } from 'react-router-dom';
+import ListIcon from '@mui/icons-material/List';
 
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
@@ -50,6 +54,7 @@ export const Dashboard = () => {
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const { isAdmin } = useProjectPermissions();
+    const createPath = useCreatePath();
 
     const [project, setProject] = useState<any>();
     const [metrics, setMetrics] = useState<any>();
@@ -219,6 +224,33 @@ export const Dashboard = () => {
                                             metrics={true}
                                         />
                                     </CardContent>
+                                    <CardActions
+                                        disableSpacing
+                                        sx={{
+                                            mt: 'auto',
+                                            justifyContent: 'left',
+                                        }}
+                                    >
+                                        <Button
+                                            component={Link}
+                                            to={
+                                                createPath({
+                                                    type: 'list',
+                                                    resource: 'runs',
+                                                }) +
+                                                '?filter=' +
+                                                encodeURIComponent(
+                                                    JSON.stringify({
+                                                        state: 'RUNNING',
+                                                    })
+                                                )
+                                            }
+                                            color="secondary"
+                                            label={'ra.action.show'}
+                                        >
+                                            <ListIcon />
+                                        </Button>
+                                    </CardActions>
                                 </Card>
                             </Grid>
                         )}
