@@ -15,7 +15,7 @@ import {
 } from 'react-admin';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import React, { useState } from 'react';
-import { useStopRun } from '../../../common/hooks/useStopRun';
+import { useStopRun } from '../hooks/useStopRun';
 
 export const BulkStopButton = () => {
     const { selectedIds, data } = useListContext();

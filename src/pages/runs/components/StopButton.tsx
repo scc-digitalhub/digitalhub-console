@@ -6,7 +6,7 @@ import { Button, ButtonProps, RaRecord, useRecordContext } from 'react-admin';
 
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import { ReactElement } from 'react';
-import { useStopRun } from '../../../common/hooks/useStopRun';
+import { useStopRun } from '../hooks/useStopRun';
 
 const defaultIcon = <StopCircleIcon />;
 
