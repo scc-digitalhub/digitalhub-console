@@ -102,7 +102,7 @@ export const DataItemForm = (props: { uploader?: Uploader }) => {
     //check if any extension is available
     const { data: schemas } = useGetSchemas('extensions');
     console.log('schemas', schemas);
-    
+
     //TODO fix stepperform handling for empty (null) children
     if (schemas && schemas.length > 0) {
         return (
@@ -112,7 +112,7 @@ export const DataItemForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.spec.title'}>
                     <CreateSpecWithUpload
@@ -134,7 +134,7 @@ export const DataItemForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.spec.title'}>
                     <CreateSpecWithUpload

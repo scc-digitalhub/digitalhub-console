@@ -109,7 +109,7 @@ export const ModelForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.spec.title">
                     <CreateSpecWithUpload
@@ -130,7 +130,7 @@ export const ModelForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.spec.title">
                     <CreateSpecWithUpload

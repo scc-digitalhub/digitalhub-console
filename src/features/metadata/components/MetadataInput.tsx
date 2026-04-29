@@ -37,15 +37,17 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 export const MetadataInput = (props: {
+    kinds?: string[];
     onVersionDirty?: (state: boolean) => void;
 }) => {
-    const { onVersionDirty } = props;
+    const { onVersionDirty, kinds } = props;
     const translate = useTranslate();
     const record = useRecordContext();
     const value = useWatch({ name: 'metadata' });
     const { data: schemas } = useGetSchemas('metadatas');
     const metadataKinds = schemas
         ? schemas
+              .filter(s => !kinds || kinds.includes(s.kind))
               .map(s => ({
                   id: s.kind,
                   name: s.kind,

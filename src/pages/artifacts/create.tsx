@@ -101,7 +101,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
 
     //check if any extension is available
     const { data: schemas } = useGetSchemas('extensions');
-    
+
     //TODO fix stepperform handling for empty (null) children
     if (schemas && schemas.length > 0) {
         return (
@@ -111,7 +111,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.spec.title'}>
                     <CreateSpecWithUpload
@@ -132,7 +132,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.spec.title'}>
                     <CreateSpecWithUpload

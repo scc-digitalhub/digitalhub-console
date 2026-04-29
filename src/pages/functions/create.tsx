@@ -38,7 +38,6 @@ import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { buildParentRef } from '../../features/hub/utils';
 
-
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
     const dataProvider = useDataProvider();
@@ -57,9 +56,8 @@ export const FunctionCreate = () => {
         startFromTemplate,
         reset,
     } = useCreateFlow();
-    
-    const translate = useTranslate();
 
+    const translate = useTranslate();
 
     const transform = useCallback(
         (data: any) => {
@@ -68,36 +66,41 @@ export const FunctionCreate = () => {
         },
         [root]
     );
-    const mutationOptions = useMemo(() => ({
-        onSuccess: async (created: any) => {
-            if (childDocs?.length) {
-
-            for (const childDoc of childDocs) {
-                const childPayload = {
-                    kind: childDoc.kind,
-                    project: root || '',
-                    metadata: { ...(childDoc.metadata || {}), project: root || '' },
-                    name: childDoc.name,
-                    spec: {
-                        ...(childDoc.spec || {}),
-                        function: buildParentRef(
-                            created.kind,
-                            root || '',
-                            created.name,
-                            created.id
-                        ),
-                    },
-                };
-                await dataProvider.create('tasks', {
-                    data: childPayload,
-                    meta: { root },
-                });
-            }
-        }
-            notify('ra.notification.created', { type: 'info' });
-            redirect('list', 'functions');
-        },
-    }), [childDocs, root, dataProvider, redirect, notify]);
+    const mutationOptions = useMemo(
+        () => ({
+            onSuccess: async (created: any) => {
+                if (childDocs?.length) {
+                    for (const childDoc of childDocs) {
+                        const childPayload = {
+                            kind: childDoc.kind,
+                            project: root || '',
+                            metadata: {
+                                ...(childDoc.metadata || {}),
+                                project: root || '',
+                            },
+                            name: childDoc.name,
+                            spec: {
+                                ...(childDoc.spec || {}),
+                                function: buildParentRef(
+                                    created.kind,
+                                    root || '',
+                                    created.name,
+                                    created.id
+                                ),
+                            },
+                        };
+                        await dataProvider.create('tasks', {
+                            data: childPayload,
+                            meta: { root },
+                        });
+                    }
+                }
+                notify('ra.notification.created', { type: 'info' });
+                redirect('list', 'functions');
+            },
+        }),
+        [childDocs, root, dataProvider, redirect, notify]
+    );
 
     const [schemas, setSchemas] = useState<any[]>();
 
@@ -144,7 +147,6 @@ export const FunctionCreate = () => {
                 redirect="list"
                 record={defaultValues}
                 mutationOptions={mutationOptions}
-
             >
                 <>
                     <CreatePageTitle icon={<FunctionIcon fontSize="large" />} />
@@ -153,7 +155,9 @@ export const FunctionCreate = () => {
                             <FunctionForm
                                 kinds={kinds}
                                 isFromTemplate={isFromTemplate}
-                                cancelUrl={isFromTemplate ? cancelUrl : undefined}
+                                cancelUrl={
+                                    isFromTemplate ? cancelUrl : undefined
+                                }
                                 onCancel={!isFromTemplate ? reset : undefined}
                             />
                         </FlatCard>
@@ -175,10 +179,7 @@ export const FunctionForm = (props: {
     const { data: extensionSchemas } = useGetSchemas('extensions');
 
     const toolbar = (
-        <StepperToolbar
-            cancelUrl={cancelUrl}
-            onCancel={onCancel}
-        />
+        <StepperToolbar cancelUrl={cancelUrl} onCancel={onCancel} />
     );
 
     //TODO fix stepperform handling for empty (null) children
@@ -187,10 +188,7 @@ export const FunctionForm = (props: {
             <StepperForm toolbar={toolbar}>
                 <StepperForm.Step label="fields.kind">
                     <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-                        <KindSelector
-                            kinds={kinds}
-                            readOnly={isFromTemplate}
-                        />
+                        <KindSelector kinds={kinds} readOnly={isFromTemplate} />
                     </Box>
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.base">
@@ -198,7 +196,7 @@ export const FunctionForm = (props: {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.spec.title">
                     <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
@@ -213,10 +211,7 @@ export const FunctionForm = (props: {
             <StepperForm toolbar={toolbar}>
                 <StepperForm.Step label="fields.kind">
                     <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-                        <KindSelector
-                            kinds={kinds}
-                            readOnly={isFromTemplate}
-                        />
+                        <KindSelector kinds={kinds} readOnly={isFromTemplate} />
                     </Box>
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.base">
@@ -224,7 +219,7 @@ export const FunctionForm = (props: {
                         source="name"
                         validate={[required(), isAlphaNumeric()]}
                     />
-                    <MetadataInput />
+                    <MetadataInput kinds={['metadata.base']} />
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.spec.title">
                     <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />

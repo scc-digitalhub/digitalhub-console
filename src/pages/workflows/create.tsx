@@ -90,7 +90,7 @@ export const WorkflowCreate = () => {
                                             isAlphaNumeric(),
                                         ]}
                                     />
-                                    <MetadataInput />
+                                    <MetadataInput kinds={['metadata.base']} />
                                 </StepperForm.Step>
                                 <StepperForm.Step label={'fields.spec.title'}>
                                     <KindSelector kinds={kinds} />

@@ -244,7 +244,7 @@ const BaseStep = ({ uploader }: { uploader: Uploader }) => {
                 source="name"
                 validate={[required(), isAlphaNumeric()]}
             />
-            <MetadataInput />
+            <MetadataInput kinds={['metadata.base']} />
         </>
     );
 };
