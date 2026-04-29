@@ -13,7 +13,6 @@ import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 export const TypeChips = (props: {
-    resource?: string;
     record?: RaRecord<Identifier>;
     source: string;
     label?: string;

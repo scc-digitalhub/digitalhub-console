@@ -20,13 +20,13 @@ import {
     useListController,
 } from 'react-admin';
 import { ConditionsList } from './conditions';
-import { StateChips } from '../../../../common/components/StateChips';
+import { StateChips } from '../../../common/components/StateChips';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccordionProps } from '@mui/material/Accordion';
 import { styled } from '@mui/material/styles';
 import { JSONTree } from 'react-json-tree';
-import { ChartView } from '../ChartView';
-import { formatDuration } from '../../../../common/utils/helpers';
+import { ChartView } from '../components/ChartView';
+import { formatDuration } from '../../../common/utils/helpers';
 import { EventsList } from './events';
 
 const AccordionStyle = styled((props: AccordionProps) => (

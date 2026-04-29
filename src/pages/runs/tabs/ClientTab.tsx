@@ -5,7 +5,7 @@
 import { Labeled, useTranslate } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Typography } from '@mui/material';
-import { StandardHttpClient } from '../../../../features/httpclients/components/StandardHttpClient';
+import { StandardHttpClient } from '../../../features/httpclients/components/StandardHttpClient';
 
 export const ClientTab = (props: { record: any }) => {
     const { record } = props;

@@ -10,7 +10,7 @@ import {
     TextField,
     useList,
 } from 'react-admin';
-import { TypeChips } from './TypeChips';
+import { TypeChips } from '../components/TypeChips';
 import { Box } from '@mui/material';
 
 export const ConditionsList = ({ record }: { record: any }) => {

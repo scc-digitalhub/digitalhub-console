@@ -170,7 +170,7 @@
         "requestBody": "Request Body",
         "jsonOrRaw": "JSON or raw text",
         "tabs": {
-            "inference": "Inference",
+            "inference": "Inference V2",
             "metadata": "Metadata"
         },
         "modelNotReady": "Model is not ready.",

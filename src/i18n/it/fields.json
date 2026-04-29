@@ -1066,6 +1066,15 @@
         "title": "Workflow"
     },
     "openinference": {
+        "title": "Open Inference v2",
+        "baseUrl": {
+            "title": "Base URL",
+            "description": "Base URL per il servizio di open inference"
+        },
+        "model": {
+            "title": "Modello",
+            "description": "Modello utilizzato per le richieste"
+        },          
         "inputs": {
             "description": "Definizione dei input tensor del protocollo Open Inference v2",
             "item": {

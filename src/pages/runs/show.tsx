@@ -41,12 +41,12 @@ import { IdField } from '../../common/components/fields/IdField';
 import { WorkflowView } from '../workflows/components/WorkflowView';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
 import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
-import { ServiceDetails } from './components/tabs/service';
-import { TransitionsList } from './components/tabs/transitions';
-import { Inputs, Outputs } from './components/tabs/inputOutputs';
+import { ServiceDetails } from './tabs/service';
+import { TransitionsList } from './tabs/transitions';
+import { Inputs, Outputs } from './tabs/inputOutputs';
 
 import { CloneButton } from './components/CloneButton';
-import ComputeResources from './components/tabs/computeResources';
+import ComputeResources from './tabs/computeResources';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
