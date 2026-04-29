@@ -8,29 +8,42 @@ import {
     DeleteWithConfirmButton,
     FunctionField,
     ListView,
+    SelectInput,
     ShowButton,
     TextField,
+    TextInput,
     useGetList,
+    useLocaleState,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
-import { StateChips } from '../../common/components/StateChips';
+import { StateChips, StateColors } from '../../common/components/StateChips';
 import { RunIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { BulkStopButton } from './components/BulkStopButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { formatDuration } from '../../common/utils/helpers';
+import {
+    formatDuration,
+    FUNCTION_OR_WORKFLOW,
+} from '../../common/utils/helpers';
 import { functionParser } from '../../common/utils/parsers';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
-import { useGetFilters } from '../../common/hooks/useGetFilters';
+import { useKinds } from '../../common/hooks/useKinds';
+import { FILTER_INPUT_PROPS } from '../../common/theme';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
+
+const allStateChoices = Object.keys(StateColors).map(s => ({
+    id: s,
+    name: 'states.' + s.toLowerCase(),
+}));
 
 const RowActions = () => {
     return (
@@ -44,7 +57,18 @@ const RowActions = () => {
 export const RunList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const getFilters = useGetFilters();
+    const kinds = useKinds();
+    const translate = useTranslate();
+    const [localeState] = useLocaleState();
+    const locale = localeState?.startsWith('it') ? 'it' : 'en';
+
+    const sortedStateChoices = useMemo(
+        () =>
+            [...allStateChoices].sort((a, b) =>
+                translate(a.name).localeCompare(translate(b.name), locale)
+            ),
+        [translate, locale]
+    );
 
     const functionSelectOption = useCallback(
         d => ({
@@ -93,8 +117,57 @@ export const RunList = () => {
                     <FlatCard>
                         <ListView
                             filters={
-                                functions && workflows
-                                    ? getFilters([...functions, ...workflows])
+                                kinds && functions && workflows
+                                    ? [
+                                          <TextInput
+                                              label="ra.action.search"
+                                              source="q"
+                                              alwaysOn
+                                              resettable
+                                              key="q"
+                                          />,
+                                          <SelectInput
+                                              key="kind"
+                                              label="fields.kind"
+                                              source="kind"
+                                              choices={kinds.map(s => ({
+                                                  id: s,
+                                                  name: s,
+                                              }))}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                          <SelectInput
+                                              key="state"
+                                              label="fields.status.state"
+                                              source="state"
+                                              choices={sortedStateChoices}
+                                              optionText={choice => (
+                                                  <StateChips
+                                                      record={choice}
+                                                      source="id"
+                                                      label="name"
+                                                      size="small"
+                                                  />
+                                              )}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                          <SelectInput
+                                              key={FUNCTION_OR_WORKFLOW}
+                                              label={`${translate(
+                                                  'resources.functions.name',
+                                                  { smart_count: 1 }
+                                              )}/${translate(
+                                                  'resources.workflows.name',
+                                                  { smart_count: 1 }
+                                              )}`}
+                                              source={FUNCTION_OR_WORKFLOW}
+                                              choices={[
+                                                  ...functions,
+                                                  ...workflows,
+                                              ]}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                      ]
                                     : undefined
                             }
                             actions={false}

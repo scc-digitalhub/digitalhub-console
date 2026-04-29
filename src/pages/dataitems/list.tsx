@@ -4,14 +4,19 @@
 
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
+import { useMemo } from 'react';
 import {
     Datagrid,
     DateField,
     EditButton,
     ListView,
+    SelectInput,
     ShowButton,
     TextField,
+    TextInput,
+    useLocaleState,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { FlatCard } from '../../common/components/layout/FlatCard';
@@ -24,7 +29,15 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 import { StateChips } from '../../common/components/StateChips';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
-import { useGetFilters } from '../../common/hooks/useGetFilters';
+import { useKinds } from '../../common/hooks/useKinds';
+import { FILTER_INPUT_PROPS } from '../../common/theme';
+
+const fileStateChoices = [
+    { id: 'CREATED', name: 'states.created' },
+    { id: 'ERROR', name: 'states.error' },
+    { id: 'READY', name: 'states.ready' },
+    { id: 'UPLOADING', name: 'states.uploading' },
+];
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -43,7 +56,18 @@ const RowActions = () => (
 export const DataItemList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const getFilters = useGetFilters();
+    const kinds = useKinds();
+    const translate = useTranslate();
+    const [localeState] = useLocaleState();
+    const locale = localeState?.startsWith('it') ? 'it' : 'en';
+
+    const sortedStateChoices = useMemo(
+        () =>
+            [...fileStateChoices].sort((a, b) =>
+                translate(a.name).localeCompare(translate(b.name), locale)
+            ),
+        [translate, locale]
+    );
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -60,7 +84,44 @@ export const DataItemList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={getFilters()}
+                            filters={
+                                kinds
+                                    ? [
+                                          <TextInput
+                                              label="fields.name.title"
+                                              source="q"
+                                              alwaysOn
+                                              resettable
+                                              key="q"
+                                          />,
+                                          <SelectInput
+                                              key="kind"
+                                              label="fields.kind"
+                                              source="kind"
+                                              choices={kinds.map(s => ({
+                                                  id: s,
+                                                  name: s,
+                                              }))}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                          <SelectInput
+                                              key="state"
+                                              label="fields.status.state"
+                                              source="state"
+                                              choices={sortedStateChoices}
+                                              optionText={choice => (
+                                                  <StateChips
+                                                      record={choice}
+                                                      source="id"
+                                                      label="name"
+                                                      size="small"
+                                                  />
+                                              )}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                      ]
+                                    : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

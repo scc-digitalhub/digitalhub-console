@@ -11,8 +11,10 @@ import {
     FunctionField,
     ListBase,
     ListView,
+    SelectInput,
     ShowButton,
     TextField,
+    TextInput,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -26,7 +28,8 @@ import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/del
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 import { RunStateBadge } from '../../common/components/RunStateBadge';
-import { useGetFilters } from '../../common/hooks/useGetFilters';
+import { useKinds } from '../../common/hooks/useKinds';
+import { FILTER_INPUT_PROPS } from '../../common/theme';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -45,7 +48,7 @@ const RowActions = () => (
 export const FunctionList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const getFilters = useGetFilters();
+    const kinds = useKinds();
     const translate = useTranslate();
 
     return (
@@ -60,7 +63,29 @@ export const FunctionList = () => {
                     <ListToolbar hub />
                     <FlatCard>
                         <ListView
-                            filters={getFilters()}
+                            filters={
+                                kinds
+                                    ? [
+                                          <TextInput
+                                              label="fields.name.title"
+                                              source="q"
+                                              alwaysOn
+                                              resettable
+                                              key="q"
+                                          />,
+                                          <SelectInput
+                                              key="kind"
+                                              label="fields.kind"
+                                              source="kind"
+                                              choices={kinds.map(s => ({
+                                                  id: s,
+                                                  name: s,
+                                              }))}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                      ]
+                                    : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

@@ -2,29 +2,40 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { useMemo } from 'react';
 import {
     Datagrid,
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
     ListView,
+    SelectInput,
     ShowButton,
     TextField,
+    TextInput,
     TopToolbar,
+    useLocaleState,
     useResourceContext,
+    useTranslate,
 } from 'react-admin';
 import { Box, Container } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
-import { StateChips } from '../../common/components/StateChips';
+import { StateChips, StateColors } from '../../common/components/StateChips';
 import { TriggerIcon } from './icon';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { functionParser, taskParser } from '../../common/utils/parsers';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
-import { useGetFilters } from '../../common/hooks/useGetFilters';
+import { useKinds } from '../../common/hooks/useKinds';
+import { FILTER_INPUT_PROPS } from '../../common/theme';
+
+const allStateChoices = Object.keys(StateColors).map(s => ({
+    id: s,
+    name: 'states.' + s.toLowerCase(),
+}));
 
 const RowActions = () => {
     return (
@@ -38,7 +49,18 @@ const RowActions = () => {
 export const TriggerList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const getFilters = useGetFilters();
+    const kinds = useKinds();
+    const translate = useTranslate();
+    const [localeState] = useLocaleState();
+    const locale = localeState?.startsWith('it') ? 'it' : 'en';
+
+    const sortedStateChoices = useMemo(
+        () =>
+            [...allStateChoices].sort((a, b) =>
+                translate(a.name).localeCompare(translate(b.name), locale)
+            ),
+        [translate, locale]
+    );
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -55,7 +77,44 @@ export const TriggerList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={getFilters()}
+                            filters={
+                                kinds
+                                    ? [
+                                          <TextInput
+                                              label="fields.name.title"
+                                              source="q"
+                                              alwaysOn
+                                              resettable
+                                              key="q"
+                                          />,
+                                          <SelectInput
+                                              key="kind"
+                                              label="fields.kind"
+                                              source="kind"
+                                              choices={kinds.map(s => ({
+                                                  id: s,
+                                                  name: s,
+                                              }))}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                          <SelectInput
+                                              key="state"
+                                              label="fields.status.state"
+                                              source="state"
+                                              choices={sortedStateChoices}
+                                              optionText={choice => (
+                                                  <StateChips
+                                                      record={choice}
+                                                      source="id"
+                                                      label="name"
+                                                      size="small"
+                                                  />
+                                              )}
+                                              {...FILTER_INPUT_PROPS}
+                                          />,
+                                      ]
+                                    : undefined
+                            }
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}
