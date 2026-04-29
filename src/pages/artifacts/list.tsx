@@ -29,7 +29,6 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 import { StateChips } from '../../common/components/StateChips';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
-import { useKinds } from '../../common/hooks/useKinds';
 import { FILTER_INPUT_PROPS } from '../../common/theme';
 
 const fileStateChoices = [
@@ -56,7 +55,6 @@ const RowActions = () => (
 export const ArtifactList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
-    const kinds = useKinds();
     const translate = useTranslate();
     const [localeState] = useLocaleState();
     const locale = localeState?.startsWith('it') ? 'it' : 'en';
@@ -84,44 +82,31 @@ export const ArtifactList = () => {
 
                     <FlatCard>
                         <ListView
-                            filters={
-                                kinds
-                                    ? [
-                                          <TextInput
-                                              label="fields.name.title"
-                                              source="q"
-                                              alwaysOn
-                                              resettable
-                                              key="q"
-                                          />,
-                                          <SelectInput
-                                              key="kind"
-                                              label="fields.kind"
-                                              source="kind"
-                                              choices={kinds.map(s => ({
-                                                  id: s,
-                                                  name: s,
-                                              }))}
-                                              {...FILTER_INPUT_PROPS}
-                                          />,
-                                          <SelectInput
-                                              key="state"
-                                              label="fields.status.state"
-                                              source="state"
-                                              choices={sortedStateChoices}
-                                              optionText={choice => (
-                                                  <StateChips
-                                                      record={choice}
-                                                      source="id"
-                                                      label="name"
-                                                      size="small"
-                                                  />
-                                              )}
-                                              {...FILTER_INPUT_PROPS}
-                                          />,
-                                      ]
-                                    : undefined
-                            }
+                            filters={[
+                                <TextInput
+                                    label="ra.action.search"
+                                    source="q"
+                                    alwaysOn
+                                    resettable
+                                    key="q"
+                                />,
+
+                                <SelectInput
+                                    key="state"
+                                    label="fields.status.state"
+                                    source="state"
+                                    choices={sortedStateChoices}
+                                    optionText={choice => (
+                                        <StateChips
+                                            record={choice}
+                                            source="id"
+                                            label="name"
+                                            size="small"
+                                        />
+                                    )}
+                                    {...FILTER_INPUT_PROPS}
+                                />,
+                            ]}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

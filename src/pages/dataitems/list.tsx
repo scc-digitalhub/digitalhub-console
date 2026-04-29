@@ -88,7 +88,7 @@ export const DataItemList = () => {
                                 kinds
                                     ? [
                                           <TextInput
-                                              label="fields.name.title"
+                                              label="ra.action.search"
                                               source="q"
                                               alwaysOn
                                               resettable
