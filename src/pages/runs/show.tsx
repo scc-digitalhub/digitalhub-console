@@ -55,7 +55,7 @@ import ComputeResources from './tabs/computeResources';
 import { getFunctionUiSpec } from '../functions/types';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
-import { ClientButton } from '../../features/httpclients/components/ClientButton';
+import { ClientButton } from '../../features/httpclients/ClientButton';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';

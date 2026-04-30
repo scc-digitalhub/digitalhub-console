@@ -16,7 +16,10 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
 import appDataProvider from './common/provider/dataProvider';
 import initFileProvider from './common/provider/fileProvider';
-import initHttpClientProvider from './common/provider/httpClientProvider';
+import {
+    DefaultHttpProxyProvider,
+    ExternalHttpProxyProvider,
+} from './common/provider/httpClientProvider';
 import initSearchProvider from './common/provider/searchProvider';
 import { themeProvider } from './common/provider/themeProvider';
 import { LoginPage as OidcLoginPage } from '@dslab/ra-auth-oidc';
@@ -48,6 +51,9 @@ const AUTH_URL: string =
 const WEBSOCKET_URL: string =
     (globalThis as any).REACT_APP_WEBSOCKET_URL ||
     (process.env.REACT_APP_WEBSOCKET_URL as string);
+const PROXY_URL: string =
+    (globalThis as any).REACT_APP_PROXY_URL ||
+    (process.env.REACT_APP_PROXY_URL as string);
 
 // oidc login
 const ISSUER_URI: string =
@@ -106,7 +112,10 @@ const httpClient = async (url: string, options: fetchUtils.Options = {}) => {
 
 const dataProvider = appDataProvider(API_URL, httpClient);
 const fileProvider = initFileProvider(API_URL, httpClient);
-const httpClientProvider = initHttpClientProvider(API_URL, httpClient);
+const httpClientProvider =
+    !PROXY_URL || PROXY_URL == 'core'
+        ? DefaultHttpProxyProvider(API_URL, httpClient)
+        : ExternalHttpProxyProvider(PROXY_URL, authProvider);
 const searchProvider = initSearchProvider(API_URL, httpClient);
 const MyLoginPage =
     authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
@@ -135,12 +144,12 @@ import { StompContextProvider } from './features/notifications/StompContextProvi
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
 import { StoreResetter } from './common/components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
-import { ServiceList } from './features/httpclients/components/list';
+import { ServiceList } from './pages/services/list';
 import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
 import { LayoutProjects } from './layout/LayoutProjects';
 import { MyLayout } from './layout/MyLayout';
-import { HttpClientContext } from './features/httpclients/HttpClientContext';
+import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 
@@ -182,8 +191,8 @@ const CoreApp = () => {
                                 websocketUrl={WEBSOCKET_URL}
                                 topics={['/user/notifications/runs']}
                             >
-                                <HttpClientContext.Provider
-                                    value={{ provider: httpClientProvider }}
+                                <HttpClientContextProvider
+                                    httpClientProvider={httpClientProvider}
                                 >
                                     <FileContextProvider
                                         fileProvider={fileProvider}
@@ -263,7 +272,7 @@ const CoreApp = () => {
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>
-                                </HttpClientContext.Provider>
+                                </HttpClientContextProvider>
                             </StompContextProvider>
                         </ResourceSchemaProvider>
                     </SearchContextProvider>

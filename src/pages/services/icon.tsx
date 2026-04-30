@@ -2,5 +2,4 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import LanguageIcon from '@mui/icons-material/Language';
-export const ServiceIcon = LanguageIcon;
+export { default as ServiceIcon } from '@mui/icons-material/Language';
