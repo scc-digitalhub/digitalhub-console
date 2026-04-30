@@ -213,6 +213,7 @@
         "empty": "No files available",
         "tab": "Files",
         "title": "Files",
+        "size": "Size",
         "item": {
             "description": "",
             "title": "File"
@@ -525,6 +526,10 @@
     "startTime": {
         "description": "",
         "title": "Start Time"
+    },
+    "endTime": {
+        "description": "",
+        "title": "End Time"
     },
     "phase": {
         "description": "",

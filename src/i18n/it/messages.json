@@ -79,5 +79,20 @@
         "unsupportedField": "Campo non supportato",
         "wrongChar": "Il nome deve contenere esclusivamente numeri, lettere minuscole e trattini",
         "wrongLength": "Il valore deve essere lungo tra %{min} e %{max} caratteri"
+    },
+    "dates": {
+        "y-m-d-ago": "%{years} anni, %{months} mesi, %{days} giorni fa",
+        "y-m-ago": "%{years} anni, %{months} mesi fa",
+        "m-d-ago": "%{months} mesi, %{days} giorni fa",
+        "d-h-ago": "%{days} giorni, %{hours} ore fa",
+        "h-m-ago": "%{hours} ore, %{minutes} minuti fa",
+        "m-s-ago": "%{minutes} minuti, %{seconds} secondi fa",
+        "just-now": "proprio adesso"
+    },
+    "navigation": {
+        "x-elements": "%{smart_count} %{resource}",
+        "table": "Tabella",
+        "details": "Dettagli",
+        "list": "Elenco"
     }
 }

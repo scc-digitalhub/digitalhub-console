@@ -3,21 +3,27 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    Datagrid,
+    ColumnsButton,
+    DataTable,
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
     ListView,
     SelectInput,
     ShowButton,
+    SimpleList,
     TextField,
     TextInput,
+    TopToolbar,
     useGetList,
+    useGetResourceLabel,
+    useListContext,
     useLocaleState,
     useResourceContext,
+    useStore,
     useTranslate,
 } from 'react-admin';
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Box, Container, Stack, Typography, useTheme } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { useCallback, useMemo } from 'react';
 import { FlatCard } from '../../common/components/layout/FlatCard';
@@ -29,6 +35,7 @@ import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/del
 import { BulkStopButton } from './components/BulkStopButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
+    formatDateDifference,
     formatDuration,
     FUNCTION_OR_WORKFLOW,
 } from '../../common/utils/helpers';
@@ -39,6 +46,19 @@ import { FILTER_INPUT_PROPS } from '../../common/theme';
 import { FunctionIcon } from '../functions/icon';
 import { WorkflowIcon } from '../workflows/icon';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
+import {
+    View,
+    ViewSelector,
+    TableViewIcon,
+    RowsViewIcon,
+} from '../../common/components/buttons/ViewsSelector';
+import { ChipsField } from '../../common/components/fields/ChipsField';
+import { endStates } from '../../common/components/RunStateBadge';
+import { SiKubernetes } from 'react-icons/si';
+import { BsGpuCard } from 'react-icons/bs';
+import { BsCpuFill } from 'react-icons/bs';
+import { GrStorage } from 'react-icons/gr';
+import SignpostIcon from '@mui/icons-material/Signpost';
 
 const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
@@ -54,6 +74,37 @@ const RowActions = () => {
     );
 };
 
+const ListToolbar = (props: {
+    storeKey?: string;
+    views: View[];
+    selectedView?: string;
+    setSelectedView?: (view: string) => void;
+}) => {
+    const {
+        storeKey,
+        views,
+        selectedView = 'dataTable',
+        setSelectedView,
+    } = props;
+    return (
+        <TopToolbar>
+            {selectedView === 'dataTable' && (
+                <ColumnsButton
+                    storeKey={`${storeKey}.dataTable`}
+                    color="secondary"
+                />
+            )}
+            {views && setSelectedView && (
+                <ViewSelector
+                    views={views}
+                    selectedView={selectedView}
+                    setSelectedView={setSelectedView}
+                />
+            )}
+        </TopToolbar>
+    );
+};
+
 export const RunList = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
@@ -61,6 +112,24 @@ export const RunList = () => {
     const translate = useTranslate();
     const [localeState] = useLocaleState();
     const locale = localeState?.startsWith('it') ? 'it' : 'en';
+    const storeKey = `${root}.${resource}.list`;
+    const [selectedView, setSelectedView] = useStore(
+        `${storeKey}.view`,
+        'dataTable'
+    );
+
+    const views = [
+        {
+            name: 'dataTable',
+            label: 'messages.navigation.table',
+            icon: <TableViewIcon />,
+        },
+        {
+            name: 'details',
+            label: 'messages.navigation.details',
+            icon: <RowsViewIcon />,
+        },
+    ];
 
     const sortedStateChoices = useMemo(
         () =>
@@ -113,7 +182,12 @@ export const RunList = () => {
             >
                 <>
                     <ListPageTitle icon={<RunIcon fontSize={'large'} />} />
-
+                    <ListToolbar
+                        storeKey={storeKey}
+                        views={views}
+                        selectedView={selectedView}
+                        setSelectedView={setSelectedView}
+                    />
                     <FlatCard>
                         <ListView
                             filters={
@@ -174,117 +248,337 @@ export const RunList = () => {
                             component={Box}
                             sx={{ pb: 2 }}
                         >
-                            <Datagrid
-                                rowClick="show"
-                                bulkActionButtons={
-                                    <>
-                                        <BulkStopButton />
-                                        <BulkDeleteAllVersionsButton />
-                                    </>
-                                }
-                            >
-                                <FunctionField
-                                    source="spec.function"
-                                    label="fields.name.title"
-                                    sortable={false}
-                                    render={record => (
-                                        <Stack gap={1}>
-                                            <TextField
-                                                source="name"
-                                                label="fields.name"
-                                                variant="body1"
-                                            />
-                                            {record?.spec?.function && (
-                                                <Stack direction="row" gap={1}>
-                                                    <FunctionIcon
-                                                        fontSize="small"
-                                                        color="info"
-                                                    />
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="info"
-                                                    >
-                                                        {
-                                                            functionParser(
-                                                                record.spec
-                                                                    .function
-                                                            ).name
-                                                        }
-                                                    </Typography>
-                                                </Stack>
-                                            )}
-                                            {record?.spec?.workflow && (
-                                                <Stack direction="row" gap={1}>
-                                                    <WorkflowIcon
-                                                        fontSize="small"
-                                                        color="info"
-                                                    />
-                                                    <Typography
-                                                        variant="body2"
-                                                        color="info"
-                                                    >
-                                                        {
-                                                            functionParser(
-                                                                record.spec
-                                                                    .workflow
-                                                            ).name
-                                                        }
-                                                    </Typography>
-                                                </Stack>
-                                            )}
-                                        </Stack>
-                                    )}
+                            {selectedView == 'dataTable' && (
+                                <DataTableView
+                                    storeKey={`${storeKey}.dataTable`}
                                 />
-                                <DateField
-                                    source="metadata.created"
-                                    label="fields.created.title"
-                                    showDate
-                                    showTime
-                                />
-                                <FunctionField
-                                    label="fields.duration.title"
-                                    sortable={false}
-                                    render={record =>
-                                        record.status?.state === 'RUNNING'
-                                            ? formatDuration(
-                                                  Date.now() -
-                                                      new Date(
-                                                          record.metadata.created
-                                                      ).getTime()
-                                              ).asString
-                                            : formatDuration(
-                                                  new Date(
-                                                      record.metadata.updated
-                                                  ).getTime() -
-                                                      new Date(
-                                                          record.metadata.created
-                                                      ).getTime()
-                                              ).asString
-                                    }
-                                />
-                                <TextField source="kind" label="fields.kind" />
-                                <StateChips
-                                    source="status.state"
-                                    label="fields.status.state"
-                                />
-                                <FunctionField
-                                    label="fields.metrics.title"
-                                    render={r =>
-                                        r.status.state === 'RUNNING' ? (
-                                            <MetricsField
-                                                size="small"
-                                                fontSize={'small'}
-                                            />
-                                        ) : null
-                                    }
-                                />
-
-                                <RowActions />
-                            </Datagrid>
+                            )}
+                            {selectedView == 'details' && (
+                                <DetailsView storeKey={`${storeKey}.details`} />
+                            )}
                         </ListView>
                     </FlatCard>
                 </>
             </ListBaseLive>
         </Container>
+    );
+};
+
+const DataTableView = (props: { storeKey?: string }) => {
+    const { storeKey } = props;
+    const translate = useTranslate();
+
+    return (
+        <DataTable
+            storeKey={storeKey}
+            rowClick="show"
+            bulkActionButtons={
+                <>
+                    <BulkStopButton />
+                    <BulkDeleteAllVersionsButton />
+                </>
+            }
+            hiddenColumns={[
+                'id',
+                'metadata.created_by',
+                'metadata.updated',
+                'metadata.labels',
+            ]}
+        >
+            <DataTable.Col source="name" label="fields.name.title" />
+            <DataTable.Col source="id" label="fields.id" />
+
+            <DataTable.Col
+                source="function"
+                disableSort
+                label="fields.function.title"
+            >
+                <FunctionField
+                    source="spec.function"
+                    label="fields.name.title"
+                    sortable={false}
+                    render={record => (
+                        <>
+                            {record?.spec?.function && (
+                                <Stack direction="row" gap={1}>
+                                    <FunctionIcon
+                                        fontSize="small"
+                                        color="info"
+                                    />
+                                    <Typography variant="body2" color="info">
+                                        {
+                                            functionParser(record.spec.function)
+                                                .name
+                                        }
+                                    </Typography>
+                                </Stack>
+                            )}
+                            {record?.spec?.workflow && (
+                                <Stack direction="row" gap={1}>
+                                    <WorkflowIcon
+                                        fontSize="small"
+                                        color="info"
+                                    />
+                                    <Typography variant="body2" color="info">
+                                        {
+                                            functionParser(record.spec.workflow)
+                                                .name
+                                        }
+                                    </Typography>
+                                </Stack>
+                            )}
+                        </>
+                    )}
+                />
+            </DataTable.Col>
+            <DataTable.Col source="kind" label="fields.kind" />
+            <DataTable.Col
+                source="metadata.created"
+                label="fields.created.title"
+            >
+                <DateField
+                    source="metadata.created"
+                    label="fields.created.title"
+                    showDate={true}
+                    showTime={true}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                source="metadata.updated"
+                label="fields.updated.title"
+            >
+                <DateField
+                    source="metadata.updated"
+                    label="fields.updated.title"
+                    showDate={true}
+                    showTime={true}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                disableSort
+                source="metadata.created_by"
+                label="fields.user.title"
+            />
+
+            <DataTable.Col
+                disableSort
+                source="duration"
+                label="fields.duration.title"
+            >
+                <FunctionField
+                    label="fields.duration.title"
+                    sortable={false}
+                    render={record =>
+                        record.status?.state === 'RUNNING'
+                            ? formatDuration(
+                                  Date.now() -
+                                      new Date(
+                                          record.metadata.created
+                                      ).getTime()
+                              ).asString
+                            : formatDuration(
+                                  new Date(record.metadata.updated).getTime() -
+                                      new Date(
+                                          record.metadata.created
+                                      ).getTime()
+                              ).asString
+                    }
+                />
+            </DataTable.Col>
+
+            <DataTable.Col
+                source="status.state"
+                disableSort
+                label="fields.status.state"
+            >
+                <StateChips source="status.state" label="fields.status.state" />
+            </DataTable.Col>
+            <DataTable.Col
+                source="metrics"
+                disableSort
+                label="fields.metrics.title"
+            >
+                <FunctionField
+                    label="fields.metrics.title"
+                    render={r =>
+                        r.status.state === 'RUNNING' ? (
+                            <MetricsField size="small" fontSize={'small'} />
+                        ) : null
+                    }
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                source="metadata.labels"
+                disableSort
+                label="fields.labels.title"
+            >
+                <ChipsField
+                    label="fields.labels.title"
+                    source="metadata.labels"
+                    sortable={false}
+                />
+            </DataTable.Col>
+
+            <DataTable.Col>
+                <RowActions />
+            </DataTable.Col>
+        </DataTable>
+    );
+};
+
+const DetailsView = (props: { storeKey?: string }) => {
+    const { storeKey } = props;
+    const translate = useTranslate();
+    const theme = useTheme();
+    const getResourceLabel = useGetResourceLabel();
+    const resource = useResourceContext();
+    const { total } = useListContext();
+    const now = new Date();
+    const label = resource
+        ? getResourceLabel(resource, total || 1)
+        : 'resources.' + resource + '.name';
+    const showHeader = (total && total >= 1) || false;
+
+    return (
+        <>
+            {showHeader && (
+                <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    sx={{ fontWeight: 'medium' }}
+                >
+                    {translate('messages.navigation.x-elements', {
+                        resource: label,
+                        smart_count: total,
+                    })}
+                </Typography>
+            )}
+
+            <SimpleList
+                primaryText={record => (
+                    <Stack direction="row" gap={1} alignItems="left">
+                        <Typography
+                            variant="body1"
+                            color="secondary"
+                            sx={{ fontWeight: 'medium' }}
+                        >
+                            {record?.spec?.function &&
+                                functionParser(record.spec.function).name}
+
+                            {record?.spec?.workflow &&
+                                functionParser(record.spec.workflow).name}
+                            {' / '}
+                            {record.name}
+                        </Typography>
+                        <StateChips
+                            source="status.state"
+                            label="fields.status.state"
+                            size="small"
+                        />
+                        {record?.status?.service && (
+                            <SignpostIcon color={'action'} fontSize="small" />
+                        )}
+                        {record?.status?.k8s && (
+                            <SiKubernetes
+                                color={theme.palette.secondary.main}
+                                fontSize={'1.25rem'}
+                            />
+                        )}
+                        {record?.status?.k8s &&
+                            (record.spec?.profile ||
+                            record.spec.resources?.gpu ? (
+                                <BsGpuCard
+                                    color={theme.palette.info.main}
+                                    fontSize={'1.25rem'}
+                                />
+                            ) : (
+                                <BsCpuFill
+                                    color={theme.palette.info.main}
+                                    fontSize={'1.25rem'}
+                                />
+                            ))}
+                        {record?.status?.k8s &&
+                            (record.spec?.volumes ||
+                                record.spec.resources?.disk) && (
+                                <GrStorage
+                                    color={theme.palette.info.main}
+                                    fontSize={'1.25rem'}
+                                />
+                            )}
+                    </Stack>
+                )}
+                secondaryText={record => (
+                    <Stack direction="column" gap={0.3}>
+                        <Stack direction="row" gap={0.3}>
+                            <TextField source="kind" />
+                            {'| '}
+                            {record?.status?.state &&
+                            endStates.includes(
+                                record.status.state.toUpperCase()
+                            )
+                                ? translate('fields.endTime.title') +
+                                  ' ' +
+                                  formatDateDifference(
+                                      new Date(record.metadata.updated),
+                                      now,
+                                      translate
+                                  )
+                                : translate('fields.startTime.title') +
+                                  ' ' +
+                                  formatDateDifference(
+                                      new Date(record.metadata.created),
+                                      now,
+                                      translate
+                                  )}
+                        </Stack>
+                        <Typography
+                            variant="body2"
+                            color="secondary"
+                            sx={{ fontWeight: 'medium' }}
+                        >
+                            {record.status?.state === 'RUNNING'
+                                ? formatDuration(
+                                      Date.now() -
+                                          new Date(
+                                              record.metadata.created
+                                          ).getTime()
+                                  ).asString
+                                : formatDuration(
+                                      new Date(
+                                          record.metadata.updated
+                                      ).getTime() -
+                                          new Date(
+                                              record.metadata.created
+                                          ).getTime()
+                                  ).asString}
+                        </Typography>
+
+                        <Box mt={1}>
+                            {record.status.state === 'RUNNING' ? (
+                                <MetricsField size="small" fontSize={'small'} />
+                            ) : (
+                                <> </>
+                            )}
+                        </Box>
+                    </Stack>
+                )}
+                tertiaryText={() => <ShowButton size="medium" label={''} />}
+                leftAvatar={record => {
+                    return (
+                        <FunctionIcon kind={record.kind} color={'secondary'} />
+                    );
+                }}
+                rowClick={'show'}
+                rowSx={() => ({
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    '.MuiAvatar-root': {
+                        background:
+                            theme.palette.mode === 'dark'
+                                ? theme.palette.grey[700]
+                                : theme.palette.grey[300],
+                    },
+                })}
+            />
+        </>
     );
 };

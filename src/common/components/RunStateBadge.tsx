@@ -95,3 +95,13 @@ export const RunStateBadge = (props: RunStateBadgeProps) => {
         </Tooltip>
     );
 };
+
+export const activeStates = [
+    'RUNNING',
+    'PENDING',
+    'UPLOADING',
+    'BUILT',
+    'CREATED',
+    'READY',
+];
+export const endStates = ['COMPLETED', 'ERROR', 'STOPPED', 'DELETED'];

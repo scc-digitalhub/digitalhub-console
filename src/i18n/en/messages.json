@@ -79,5 +79,20 @@
         "unsupportedField": "Unsupported field",
         "wrongChar": "The name must consist exclusively of numbers, lowercase letters, and hyphens",
         "wrongLength": "Value must be between %{min} and %{max} characters long"
+    },
+    "dates": {
+        "y-m-d-ago": "%{years} years, %{months} months, %{days} days ago",
+        "y-m-ago": "%{years} years, %{months} months ago",
+        "m-d-ago": "%{months} months, %{days} days ago",
+        "d-h-ago": "%{days} days, %{hours} hours ago",
+        "h-m-ago": "%{hours} hours, %{minutes} minutes ago",
+        "m-s-ago": "%{minutes} minutes, %{seconds} seconds ago",
+        "just-now": "just now"
+    },
+    "navigation": {
+        "x-elements": "%{smart_count} %{resource}",
+        "table": "Table",
+        "details": "Details",
+        "list": "List"
     }
 }

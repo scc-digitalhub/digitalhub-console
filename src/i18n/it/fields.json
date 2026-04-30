@@ -213,6 +213,7 @@
         "empty": "Nessuna informazione disponibile",
         "tab": "File",
         "title": "File",
+        "size": "Dimensione",
         "item": {
             "description": "",
             "title": "File"
@@ -526,6 +527,10 @@
         "description": "",
         "title": "Ora di Inizio"
     },
+    "endTime": {
+        "description": "",
+        "title": "Ora di Fine"
+    },    
     "phase": {
         "description": "",
         "title": "Fase"
