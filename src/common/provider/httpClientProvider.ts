@@ -63,17 +63,18 @@ export const ExternalHttpProxyProvider = (
         return { status, headers, body, json };
     };
 
-    const getRequestHeaders = (
-        url: string,
-        headers?: Headers,
-        contentType?: string
-    ) => {
+    const parseUrl = (url: string) => {
+        //parse url and get scheme, host and port to set as headers, to allow proxy to route request correctly
+        const normalized = url.includes('://') ? url : `http://${url}`;
+        const parsed = new URL(normalized);
+        const scheme = parsed.protocol.replace(':', '');
+        const host = parsed.host; // includes port if present
+        const path = parsed.pathname + parsed.search;
+
+        return { scheme, host, path };
+    };
+    const getRequestHeaders = (headers?: Headers, contentType?: string) => {
         const requestHeaders = new Headers();
-        if (url.startsWith('http')) {
-            requestHeaders.set('X-Proxy-URL', url);
-        } else {
-            requestHeaders.set('X-Proxy-Host', url);
-        }
 
         if (contentType) {
             requestHeaders.set('Content-Type', contentType);
@@ -88,13 +89,19 @@ export const ExternalHttpProxyProvider = (
 
     return {
         fetch: async (url, options: Options = {}) => {
+            const { scheme, host, path } = parseUrl(url);
+            console.log(
+                'Proxying request to',
+                url,
+                'via',
+                `${proxyUrl}${path}`,
+                'for',
+                host
+            );
             const requestHeaders = (options.headers ||
                 new Headers({})) as Headers;
-            if (url.startsWith('http') || url.includes('://')) {
-                requestHeaders.set('X-Proxy-URL', url);
-            } else {
-                requestHeaders.set('X-Proxy-Host', url);
-            }
+            requestHeaders.set('X-Proxy-Host', host);
+
             if (authProvider) {
                 const authHeader = await authProvider.getAuthorization();
                 if (authHeader) {
@@ -102,28 +109,35 @@ export const ExternalHttpProxyProvider = (
                 }
             }
 
-            return _fetch(proxyUrl, { ...options, headers: requestHeaders });
+            return _fetch(`${proxyUrl}${path}`, {
+                ...options,
+                headers: requestHeaders,
+            });
         },
         get: (url, params, signal) => {
-            const requestHeaders = getRequestHeaders(url, params.headers);
+            const { scheme, host, path } = parseUrl(url);
+            const requestHeaders = getRequestHeaders(params.headers);
+            requestHeaders.set('X-Proxy-Host', host);
 
-            return httpClient(`${proxyUrl}`, {
+            return httpClient(`${proxyUrl}${path}`, {
                 headers: requestHeaders,
                 signal,
             });
         },
         post: (url, params, signal) => {
+            const { scheme, host, path } = parseUrl(url);
+
             if (!params.contentType) {
                 params.contentType = 'text/plain';
             }
 
             const requestHeaders = getRequestHeaders(
-                url,
                 params.headers,
                 params.contentType
             );
+            requestHeaders.set('X-Proxy-Host', host);
 
-            return httpClient(`${proxyUrl}`, {
+            return httpClient(`${proxyUrl}${path}`, {
                 method: 'POST',
                 headers: requestHeaders,
                 body: params.body,
@@ -137,14 +151,15 @@ export const ExternalHttpProxyProvider = (
             if (!params.contentType) {
                 params.contentType = 'text/plain';
             }
+            const { scheme, host, path } = parseUrl(url);
 
             const requestHeaders = getRequestHeaders(
-                url,
                 params.headers,
                 params.contentType
             );
+            requestHeaders.set('X-Proxy-Host', host);
 
-            return httpClient(`${proxyUrl}`, {
+            return httpClient(`${proxyUrl}${path}`, {
                 method: 'PUT',
                 headers: requestHeaders,
                 body: params.body,
@@ -158,14 +173,15 @@ export const ExternalHttpProxyProvider = (
             if (!params.contentType) {
                 throw new Error('Content type is missing in PATCH request');
             }
+            const { scheme, host, path } = parseUrl(url);
 
             const requestHeaders = getRequestHeaders(
-                url,
                 params.headers,
                 params.contentType
             );
+            requestHeaders.set('X-Proxy-Host', host);
 
-            return httpClient(`${proxyUrl}`, {
+            return httpClient(`${proxyUrl}${path}`, {
                 method: 'PATCH',
                 headers: requestHeaders,
                 body: params.body,
@@ -173,9 +189,12 @@ export const ExternalHttpProxyProvider = (
             });
         },
         delete: (url, params, signal) => {
-            const requestHeaders = getRequestHeaders(url, params.headers);
+            const { scheme, host, path } = parseUrl(url);
 
-            return httpClient(`${proxyUrl}`, {
+            const requestHeaders = getRequestHeaders(params.headers);
+            requestHeaders.set('X-Proxy-Host', host);
+
+            return httpClient(`${proxyUrl}${path}`, {
                 method: 'DELETE',
                 headers: requestHeaders,
                 signal,
