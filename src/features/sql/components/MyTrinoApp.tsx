@@ -1,29 +1,34 @@
 import { useMemo } from 'react';
 import { QueryEditor } from 'trino-query-ui';
 import trinoStyles from 'trino-query-ui/dist/index.css?inline';
-import { Container } from '@mui/material';
+import { Box, Paper } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import StorageIcon from '@mui/icons-material/Storage';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
-import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { scopeCss } from '../utils';
+import { TRINO_DARK_VARS, TRINO_LIGHT_VARS, TRINO_LAYOUT } from '../theme';
 
-const EDITOR_SCOPE_CLASS = 'sql-editor-scope';
+const SCOPE = 'sql-editor-scope';
+
 const MyTrinoApp = () => {
-    const scopedStyles = useMemo(
-        () => scopeCss(trinoStyles, EDITOR_SCOPE_CLASS),
-        []
+    const { palette } = useTheme();
+    const isDark = palette.mode === 'dark';
+
+    const styles = useMemo(
+        () =>
+            scopeCss(trinoStyles, SCOPE) +
+            TRINO_LAYOUT(SCOPE) +
+            (isDark ? TRINO_DARK_VARS(SCOPE) : TRINO_LIGHT_VARS(SCOPE)),
+        [isDark]
     );
 
     return (
-        <Container
-            maxWidth={false}
-            disableGutters
+        <Box
             sx={{
-                pb: 2,
-                overflowX: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100vh',
+                height: 'calc(100vh - 48px)',
+                overflow: 'hidden',
             }}
         >
             <PageTitle
@@ -31,31 +36,33 @@ const MyTrinoApp = () => {
                 secondaryText="Query your data with Trino"
                 icon={<StorageIcon fontSize="large" />}
             />
-
-            <FlatCard
+            <Paper
+                variant="outlined"
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    p: 0,
-                    width: '100%',
+                    flex: 1,
+                    minHeight: 0,
                     overflow: 'hidden',
-                    height: 'calc(100vh - 120px)',
-                    minHeight: '400px',
+                    mx: 1,
+                    mb: 1,
+                    borderRadius: '5px',
+                    borderColor: 'divider',
                 }}
             >
-                <style>{scopedStyles}</style>
+                <style>{styles}</style>
                 <div
-                    className={EDITOR_SCOPE_CLASS}
+                    className={SCOPE}
                     style={{
-                        flex: 1,
+                        height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
+                        overflow: 'hidden',
+                        position: 'relative',
                     }}
                 >
-                    <QueryEditor theme="dark" />
+                    <QueryEditor theme={isDark ? 'dark' : 'light'} />
                 </div>
-            </FlatCard>
-        </Container>
+            </Paper>
+        </Box>
     );
 };
 
