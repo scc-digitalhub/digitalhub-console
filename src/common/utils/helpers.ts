@@ -154,8 +154,9 @@ export const formatTimeTick = (value: number) => {
 export function dateDifference(
     start: Date,
     end: Date
-): [number | null, number | null, number | null, number | null, number | null] {
+): [number | null, number | null, number | null, number | null, number | null, number | null] {
     const diffMs = Math.abs(end.getTime() - start.getTime());
+    const seconds = Math.floor(diffMs / 1000) % 60;
     const minutes = Math.floor(diffMs / (1000 * 60)) % 60;
     const hours = Math.floor(diffMs / (1000 * 60 * 60)) % 24;
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24)) % 30;
@@ -168,6 +169,7 @@ export function dateDifference(
         days > 0 ? days : null,
         hours > 0 ? hours : null,
         minutes > 0 ? minutes : null,
+        seconds > 0 ? seconds : null,
     ];
 }
 
@@ -176,7 +178,10 @@ export function formatDateDifference(
     end: Date,
     translate: (key: string, options?: any) => string
 ): string {
-    const [years, months, days, hours, minutes] = dateDifference(start, end);
+    const [years, months, days, hours, minutes, seconds] = dateDifference(
+        start,
+        end
+    );
 
     if (years) {
         return translate('messages.dates.y-m-ago', { years, months });
@@ -190,7 +195,7 @@ export function formatDateDifference(
             minutes: minutes || 0,
         });
     } else if (minutes) {
-        return translate('messages.dates.m-s-ago', { minutes });
+        return translate('messages.dates.m-s-ago', { minutes, seconds });
     } else {
         return translate('messages.dates.just_now');
     }
