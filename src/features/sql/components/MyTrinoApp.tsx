@@ -6,7 +6,12 @@ import { useTheme } from '@mui/material/styles';
 import StorageIcon from '@mui/icons-material/Storage';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { scopeCss } from '../utils';
-import { TRINO_DARK_VARS, TRINO_LIGHT_VARS, TRINO_LAYOUT } from '../theme';
+import {
+    TRINO_DARK_VARS,
+    TRINO_LIGHT_VARS,
+    TRINO_LAYOUT,
+    TRINO_COMPONENTS,
+} from '../theme';
 
 const SCOPE = 'sql-editor-scope';
 
@@ -18,6 +23,7 @@ const MyTrinoApp = () => {
         () =>
             scopeCss(trinoStyles, SCOPE) +
             TRINO_LAYOUT(SCOPE) +
+            TRINO_COMPONENTS(SCOPE) +
             (isDark ? TRINO_DARK_VARS(SCOPE) : TRINO_LIGHT_VARS(SCOPE)),
         [isDark]
     );

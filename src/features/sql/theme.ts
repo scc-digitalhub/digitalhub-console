@@ -8,18 +8,17 @@ const S = (c: string) => `.${c}`;
  *   bg.paper:   light=#FFF             dark=#2B3033
  *   borderRadius: 5px
  *
- * These overrides are concatenated AFTER the scoped trino CSS so they
- * win at equal specificity.  !important is used only where the bundled
- * CSS also uses it or where extra safety is needed.
+ * Architecture: TRINO_DARK_VARS / TRINO_LIGHT_VARS set only CSS custom
+ * properties. TRINO_COMPONENTS (shared) renders all component rules via
+ * var(), eliminating the ~500-line duplication that existed previously.
  */
 
 /* ═══════════════════════════════════════════════════════════════════
-   DARK MODE
+   DARK MODE — CSS custom properties only
    ═══════════════════════════════════════════════════════════════════ */
 export const TRINO_DARK_VARS = (sc: string) => `
-
-/* ── CSS custom properties ── */
 ${S(sc)} {
+  /* ── Trino built-in tokens (consumed by the bundled trino CSS) ── */
   --bg-color: #2B3033;
   --text-color: #dcdcdc;
   --separator-border: #4a5054;
@@ -51,406 +50,44 @@ ${S(sc)} {
   --vscode-scrollbarSlider-hoverBackground: rgba(255,255,255,.2);
   --vscode-scrollbarSlider-activeBackground: rgba(255,255,255,.3);
   --vscode-multiDiffEditor-border: transparent;
+  /* ── Component design tokens (consumed by TRINO_COMPONENTS) ── */
+  --surface: #363D40;
+  --surface-hover: #4a5054;
+  --surface-glass: rgba(54,61,64,.85);
+  --tab-bg: #363D40;
+  --input-bg: #363D40;
+  --collapse-bg: #363D40;
+  --title-color: #dcdcdc;
+  --schema-color: #6EA3CB;
+  --schema-hover-bg: rgba(110,163,203,.08);
+  --splits-text: #a78bdb;
+  --shadow: rgba(0,0,0,.4);
+  --error-bg: rgba(180,40,40,.15);
+  --error-border: #cc444488;
+  --error-text: #ff6b6b;
+  --danger-color: #ff6b6b;
+  --close-color: #6a7175;
+  --tab-hover-bg: rgba(255,255,255,.04);
+  --editor-margin-bg: #2B3033;
+  --current-line-bg: rgba(255,255,255,.05);
+  --subtle-border: rgba(255,255,255,.06);
+  --row-hover-bg: rgba(224,112,27,.06);
+  --item-hover-bg: rgba(224,112,27,.12);
+  --scrollbar-thumb: rgba(255,255,255,.15);
+  --scrollbar-thumb-hover: rgba(255,255,255,.25);
+  --selection-bg: rgba(224,112,27,.25);
   color: var(--text-color);
   background: var(--bg-color);
   font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
 }
-
-/* ── Global: override ALL hardcoded dark backgrounds from trino CSS ── */
-${S(sc)} .page,
-${S(sc)} .tab-content,
-${S(sc)} .tab-list,
-${S(sc)} .cards,
-${S(sc)} .card {
-  background-color: #2B3033;
-  color: #dcdcdc;
-}
-
-/* ── Card header ── */
-${S(sc)} .card-header {
-  background: #363D40; border-bottom: 1px solid #4a5054;
-  padding: 6px 12px;
-}
-${S(sc)} .card-header-grid { gap: 8px }
-${S(sc)} .query-title {
-  color: #dcdcdc; font-weight: 600; font-size: 14px;
-  background-color: transparent;
-}
-
-/* ── Run button (primary action) ── */
-${S(sc)} .query-run-button {
-  background: #E0701B!important; color: #fff!important;
-  border: none!important; border-radius: 5px!important;
-  padding: 6px 14px; font-weight: 600; font-size: 13px;
-  cursor: pointer; transition: background .15s, box-shadow .15s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.2);
-}
-${S(sc)} .query-run-button:hover {
-  background: #ec934f!important;
-  box-shadow: 0 2px 8px rgba(224,112,27,.35);
-}
-${S(sc)} .query-run-button svg { color: #fff!important; fill: #fff!important }
-
-/* ── Toolbar / action buttons ── */
-${S(sc)} .small-rounded-button {
-  background: transparent!important; color: #8a8f93!important;
-  border: 1px solid #4a5054!important; border-radius: 5px!important;
-  padding: 4px 8px; cursor: pointer; transition: all .15s;
-}
-${S(sc)} .small-rounded-button:hover {
-  background: #4a5054!important; color: #dcdcdc!important; border-color: #6a7175!important;
-}
-${S(sc)} .small-rounded-button svg { color: #8a8f93; transition: color .15s }
-${S(sc)} .small-rounded-button:hover svg { color: #dcdcdc }
-${S(sc)} .small-rounded-dark-grey-button {
-  background: #363D40!important; color: #8a8f93!important;
-  border: 1px solid #4a5054!important; border-radius: 5px!important;
-  cursor: pointer; transition: all .15s;
-}
-${S(
-    sc
-)} .small-rounded-dark-grey-button:hover { background: #4a5054!important; color: #dcdcdc!important }
-${S(sc)} .editor-button {
-  color: #8a8f93!important; background: transparent!important;
-  border: none; transition: color .15s;
-}
-${S(sc)} .editor-button:hover { color: #E0701B!important }
-${S(sc)} .editor-button[disabled] { opacity: .4 }
-${S(sc)} .toolbar-button {
-  color: #8a8f93; background: transparent; transition: color .15s;
-}
-${S(sc)} .toolbar-button:hover { color: #dcdcdc }
-${S(sc)} .result-action-button {
-  background: rgba(54,61,64,.85)!important; color: #dcdcdc!important; border-radius: 5px;
-  transition: all .15s; padding: 6px 12px;
-  border: 1px solid #4a5054; backdrop-filter: blur(4px);
-}
-${S(
-    sc
-)} .result-action-button:hover { background: #4a5054!important; color: #fff!important }
-${S(sc)} .query-control-button {
-  background: transparent!important; color: #8a8f93!important;
-  border: 1px solid #4a5054!important; border-radius: 5px!important;
-  cursor: pointer; transition: all .15s;
-}
-${S(
-    sc
-)} .query-control-button:hover { color: #E0701B!important; border-color: #E0701B!important }
-${S(sc)} .generate-query-button {
-  background: transparent; color: #6EA3CB;
-  border: 1px solid #4a5054; border-radius: 5px; transition: all .15s;
-}
-${S(
-    sc
-)} .generate-query-button:hover { border-color: #6EA3CB; background: rgba(110,163,203,.08) }
-${S(sc)} .action-bar { background: transparent }
-${S(sc)} .action-icon { color: #8a8f93 }
-${S(sc)} .action-icon:hover { color: #E0701B }
-
-/* ── Editor toolbar overlay ── */
-${S(sc)} .editor-toolbar {
-  background: transparent!important; border: none!important;
-}
-
-/* ── Tabs ── */
-${S(sc)} .tab-container {
-  background: #363D40!important; border-bottom: 1px solid #4a5054;
-  border-top: none;
-}
-${S(sc)} .tabs-container {
-  background: #363D40!important;
-}
-${S(sc)} .tab-item,
-${S(sc)} .tab-item-selected {
-  background: transparent!important; border: none!important;
-  padding: 8px 14px; font-size: 13px;
-  cursor: pointer; transition: all .15s; border-radius: 0;
-  border-bottom: 2px solid transparent!important;
-}
-${S(sc)} .tab-item { color: #8a8f93 }
-${S(
-    sc
-)} .tab-item:hover { color: #dcdcdc; background: rgba(255,255,255,.04)!important }
-${S(sc)} .tab-item-selected {
-  color: #dcdcdc; font-weight: 500;
-  border-bottom-color: #E0701B!important;
-}
-${S(
-    sc
-)} .tab-item-selected:hover { background: rgba(255,255,255,.04)!important }
-${S(sc)} .close-button { color: #6a7175; transition: color .15s }
-${S(sc)} .close-button:hover { color: #ff6b6b }
-${S(
-    sc
-)} .add-query-button { color: #6a7175; transition: color .15s; background: transparent!important }
-${S(sc)} .add-query-button:hover { color: #E0701B }
-${S(sc)} .add-query-button hr { display: none!important }
-${S(
-    sc
-)} .tab-list-button-and-menu { border-color: #4a5054; background: transparent!important }
-${S(
-    sc
-)} .tab-buttons { border-color: #4a5054; background: transparent!important }
-${S(sc)} .tab-button { color: #8a8f93; transition: color .15s }
-${S(sc)} .tab-button:hover { color: #dcdcdc }
-${S(
-    sc
-)} .tab-list { border-color: transparent; border-top: none; background: #2B3033 }
-
-/* ── Tabs overflow / ellipsis menu ── */
-${S(sc)} .ellipses-button {
-  background: transparent!important; color: #8a8f93!important;
-  border: 1px solid #4a5054!important; border-radius: 5px!important;
-  width: auto; height: auto; padding: 4px 8px;
-}
-${S(
-    sc
-)} .ellipses-button:hover { background: #4a5054!important; color: #dcdcdc!important }
-${S(sc)} .controltab {
-  background: transparent!important; color: #8a8f93!important;
-  border: 1px solid #4a5054!important; border-radius: 5px!important;
-  padding: 6px 12px; font-size: small; transition: all .15s;
-}
-${S(
-    sc
-)} .controltab:hover { background: #4a5054!important; color: #dcdcdc!important }
-${S(
-    sc
-)} .tabs-ellipses-menu { background: transparent!important; color: #8a8f93 }
-${S(
-    sc
-)} .tabs-ellipses-menu:hover { background: #4a5054!important; color: #dcdcdc }
-${S(sc)} .tabs-ellipses-menu-content {
-  background: #2B3033; border: 1px solid #4a5054; border-radius: 5px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
-}
-${S(sc)} .tabs-ellipses-menu-content input {
-  background: #363D40; border: 1px solid #4a5054; color: #dcdcdc; border-radius: 5px;
-}
-${S(sc)} .tabs-ellipses-menu-content .tab-item { border-radius: 4px }
-${S(sc)} .tabs-ellipses-menu-content .tab-item:hover { background: #3a4145 }
-
-/* ── Editor ── */
-${S(sc)} .editor,
-${S(sc)} .editorContainer,
-${S(sc)} .editorParent,
-${S(sc)} .overflow-guard,
-${S(sc)} .lines-content,
-${S(sc)} .monaco-editor,
-${S(sc)} .monaco-editor-background,
-${S(sc)} .inputarea,
-${S(sc)} .split-view-container,
-${S(sc)} .split-view-view,
-${S(sc)} .view-overlays {
-  background-color: #2B3033!important;
-}
-${S(sc)} .monaco-editor .margin,
-${S(sc)} .monaco-editor .margin-view-overlays,
-${S(sc)} .monaco-editor .glyph-margin {
-  background-color: #2B3033!important;
-}
-${S(sc)} .monaco-editor .line-numbers {
-  color: #6a7175!important;
-}
-${S(sc)} .monaco-editor .current-line-margin {
-  border-color: rgba(255,255,255,.06);
-}
-${S(sc)} .scroll-decoration { box-shadow: none!important }
-${S(sc)} .minimap { background: #2B3033!important }
-${S(sc)} .minimap canvas { opacity: .7 }
-${S(sc)} .monaco-scrollable-element { background: #2B3033!important }
-${S(
-    sc
-)} .monaco-editor .cursors-layer .cursor { background-color: #E0701B!important }
-
-/* ── Results ── */
-${S(sc)} .result-set { background: #2B3033 }
-${S(sc)} .result-table-container { background: #2B3033 }
-${S(
-    sc
-)} .result-table { border-collapse: collapse; width: 100%; font-size: 13px }
-${S(sc)} .result-table th {
-  background: #363D40; color: #dcdcdc; font-weight: 500;
-  padding: 8px 12px; text-align: left;
-  border-bottom: 2px solid #4a5054;
-  position: sticky; top: 0; z-index: 1;
-}
-${S(sc)} .result-table td {
-  padding: 6px 12px; border-bottom: 1px solid rgba(255,255,255,.06);
-  color: #dcdcdc;
-}
-${S(sc)} .result-table tr:hover td { background: rgba(224,112,27,.06) }
-${S(sc)} .result-cell-null { color: #6a7175; font-style: italic }
-${S(sc)} .clear-result-table { color: #8a8f93; transition: color .15s }
-${S(sc)} .clear-result-table:hover { color: #ff6b6b }
-
-/* ── Status bar ── */
-${S(sc)} .status-bar {
-  background: #363D40; color: #8a8f93; font-size: 12px;
-  padding: 4px 12px; border-top: 1px solid #4a5054;
-}
-${S(sc)} .status-text { color: #8a8f93 }
-${S(sc)} .status-stage-default { color: #8a8f93 }
-${S(sc)} .status-stage-bytes { color: #6EA3CB }
-${S(sc)} .status-stage-rows { color: #E0701B }
-${S(sc)} .status-stage-splits { color: #a78bdb }
-
-/* ── Progress bar ── */
-${S(sc)} .progress-bar {
-  background: #363D40; border: 1px solid #4a5054; border-radius: 5px;
-  overflow: hidden;
-}
-${S(
-    sc
-)} .progress-bar-fill { background: linear-gradient(90deg,#E0701B,#ec934f); transition: width .3s ease }
-${S(sc)} .progress-bar-grid { background: #363D40 }
-${S(sc)} .progress-percent { color: #dcdcdc; font-size: 12px }
-${S(sc)} .progress-bar-running-state { color: #E0701B }
-${S(sc)} .progress-bar-timer { color: #8a8f93 }
-
-/* ── Error box ── */
-${S(sc)} .error-box {
-  background: rgba(180,40,40,.15)!important; border: 1px solid #cc444488;
-  border-radius: 5px; margin: 8px; padding: 12px;
-}
-${S(
-    sc
-)} .error-box-header { color: #ff6b6b; font-weight: 600; margin-bottom: 4px }
-${S(sc)} .error-box-body { color: #dcdcdc }
-${S(sc)} .error-box-message { color: #dcdcdc; font-size: 13px }
-${S(sc)} .error-box-context { color: #8a8f93; font-size: 12px }
-${S(
-    sc
-)} .error-box-close { color: #8a8f93; cursor: pointer; transition: color .15s }
-${S(sc)} .error-box-close:hover { color: #ff6b6b }
-
-/* ── Context menu ── */
-${S(sc)} .context-menu {
-  background: #2B3033; border: 1px solid #4a5054; border-radius: 5px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.4); overflow: hidden;
-}
-${S(sc)} .menu-item {
-  padding: 8px 16px; color: #dcdcdc; cursor: pointer; transition: background .1s;
-}
-${S(sc)} .menu-item:hover { background: rgba(224,112,27,.12) }
-${S(sc)} .menu-divider { border-color: #4a5054; margin: 4px 0 }
-
-/* ── Filter / search ── */
-${S(sc)} .filter-input {
-  background: #363D40; border: 1px solid #4a5054; color: #dcdcdc;
-  border-radius: 5px; padding: 6px 10px; font-size: 13px;
-  transition: border-color .15s;
-}
-${S(sc)} .filter-input:focus { border-color: #E0701B; outline: none }
-${S(sc)} .filter-input::placeholder { color: #6a7175 }
-${S(sc)} .search-container input {
-  background: #363D40; border: 1px solid #4a5054; color: #dcdcdc;
-  border-radius: 5px;
-}
-${S(sc)} .clear-search { color: #8a8f93 }
-${S(sc)} .clear-search:hover { color: #dcdcdc }
-
-/* ── Catalog panel ── */
-${S(sc)} .catalog-content { background: #2B3033 }
-${S(sc)} .catalog-viewer { background: #2B3033 }
-${S(sc)} .catalog-wrapper { background: #2B3033 }
-${S(sc)} .catalog-container { background: #2B3033 }
-${S(sc)} .catalog-viewer-header {
-  background: #363D40; color: #dcdcdc; font-weight: 500;
-  padding: 8px 12px; border-bottom: 1px solid #4a5054;
-}
-${S(sc)} .catalog-name { color: #E0701B; font-weight: 500 }
-${S(sc)} .catalog-setting { color: #8a8f93; background: transparent }
-${S(sc)} .schema-name { color: #6EA3CB }
-${S(sc)} .schema-setting { color: #8a8f93; background: transparent }
-${S(sc)} .table-name { color: #dcdcdc }
-${S(
-    sc
-)} .column-name { color: #8a8f93; font-family: "Roboto Mono", monospace; font-size: 12px }
-${S(sc)} .columnType { color: #6a7175; font-size: 11px }
-${S(sc)} .qualifiedName { color: #8a8f93 }
-
-/* ── Catalog tree ── */
-${S(sc)} .viewer_catalog {
-  color: #dcdcdc; font-weight: 600;
-}
-${S(
-    sc
-)} .viewer_catalog:hover { background: rgba(224,112,27,.12); color: #E0701B }
-${S(sc)} .viewer_catalog_body {
-  margin-left: 10px; border-left: 1px solid #4a5054;
-}
-${S(sc)} .viewer_schema {
-  color: #8a8f93; border-left: 1px solid #4a5054;
-}
-${S(
-    sc
-)} .viewer_schema:hover { background: rgba(110,163,203,.1); color: #6EA3CB }
-${S(sc)} .viewer_table {
-  color: #8a8f93; border-left: 1px solid #4a5054;
-  transition: all .1s; cursor: pointer;
-}
-${S(
-    sc
-)} .viewer_table:hover { color: #E0701B; background: rgba(224,112,27,.06) }
-${S(sc)} .viewer_table_body { border-left: 1px solid #4a5054 }
-${S(sc)} .viewer_column { border-left: 1px solid #4a5054 }
-${S(sc)} .viewer-schema-body { background: transparent }
-
-/* ── Collapse (Catalogs) button ── */
-${S(sc)} .collapse-button {
-  background: #363D40!important; color: #E0701B!important;
-  border: 1px solid #4a5054; border-radius: 5px;
-  font-weight: 500; padding: 6px 16px; cursor: pointer;
-  transition: all .15s; font-size: 13px;
-}
-${S(
-    sc
-)} .collapse-button:hover { background: #4a5054!important; border-color: #E0701B }
-
-/* ── Loading ── */
-${S(sc)} .loading-message { color: #8a8f93 }
-${S(sc)} .spinner { border-color: #4a5054; border-top-color: #E0701B }
-
-/* ── Query status ── */
-${S(
-    sc
-)} .query-status-table { font-size: 13px; color: #dcdcdc; background: transparent }
-${S(
-    sc
-)} .query-status-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,.06) }
-
-/* ── Links ── */
-${S(sc)} a { color: #6EA3CB; text-decoration: none; transition: color .15s }
-${S(sc)} a:hover { color: #ec934f }
-${S(sc)} .link-to-query { color: #6EA3CB }
-${S(sc)} .copy-link { color: #8a8f93; transition: color .15s }
-${S(sc)} .copy-link:hover { color: #E0701B }
-${S(sc)} .breadcrumb-item { color: #8a8f93 }
-${S(sc)} .breadcrumb-item:hover { color: #E0701B }
-
-/* ── Borders ── */
-${S(sc)} .separator-border { background: #4a5054 }
-
-/* ── Scrollbars ── */
-${S(sc)} ::-webkit-scrollbar { width: 8px; height: 8px }
-${S(sc)} ::-webkit-scrollbar-track { background: transparent }
-${S(
-    sc
-)} ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px }
-${S(sc)} ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.25) }
-
-/* ── Selection ── */
-${S(sc)} *::selection { background: rgba(224,112,27,.25) }
 `;
 
 /* ═══════════════════════════════════════════════════════════════════
-   LIGHT MODE
+   LIGHT MODE — CSS custom properties only
    ═══════════════════════════════════════════════════════════════════ */
 export const TRINO_LIGHT_VARS = (sc: string) => `
-
-/* ── CSS custom properties ── */
 ${S(sc)} {
+  /* ── Trino built-in tokens ── */
   --bg-color: #ffffff;
   --text-color: #333;
   --separator-border: #e0e0e0;
@@ -482,389 +119,303 @@ ${S(sc)} {
   --vscode-scrollbarSlider-hoverBackground: rgba(0,0,0,.14);
   --vscode-scrollbarSlider-activeBackground: rgba(0,0,0,.2);
   --vscode-multiDiffEditor-border: transparent;
+  /* ── Component design tokens ── */
+  --surface: #f5f5f6;
+  --surface-hover: #f0f0f0;
+  --surface-glass: rgba(255,255,255,.9);
+  --tab-bg: #ffffff;
+  --input-bg: #ffffff;
+  --collapse-bg: #ffffff;
+  --title-color: #062D4B;
+  --schema-color: #062D4B;
+  --schema-hover-bg: rgba(6,45,75,.04);
+  --splits-text: #7c5db8;
+  --shadow: rgba(0,0,0,.1);
+  --error-bg: #fef2f2;
+  --error-border: #fca5a5;
+  --error-text: #dc2626;
+  --danger-color: #ff4444;
+  --close-color: #ccc;
+  --tab-hover-bg: rgba(0,0,0,.02);
+  --editor-margin-bg: #fafafa;
+  --current-line-bg: rgba(0,0,0,.04);
+  --subtle-border: #f0f0f0;
+  --row-hover-bg: rgba(224,112,27,.04);
+  --item-hover-bg: rgba(224,112,27,.08);
+  --scrollbar-thumb: rgba(0,0,0,.1);
+  --scrollbar-thumb-hover: rgba(0,0,0,.18);
+  --selection-bg: rgba(224,112,27,.15);
   color: var(--text-color);
   background: var(--bg-color);
   font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+`;
 
-/* ── Global: override ALL hardcoded dark backgrounds from trino CSS ── */
-${S(sc)} .page,
-${S(sc)} .tab-content,
-${S(sc)} .tab-list,
-${S(sc)} .cards,
-${S(sc)} .card {
-  background-color: #fff;
-  color: #333;
+/* ═══════════════════════════════════════════════════════════════════
+   COMPONENTS — shared rules for both themes, driven by var()
+   ═══════════════════════════════════════════════════════════════════ */
+export const TRINO_COMPONENTS = (sc: string) => `
+
+/* ── Global background reset ── */
+${S(sc)} .page, ${S(sc)} .tab-content, ${S(sc)} .tab-list, ${S(sc)} .cards, ${S(sc)} .card {
+  background-color: var(--bg-color); color: var(--text-color);
 }
 
 /* ── Card header ── */
 ${S(sc)} .card-header {
-  background: #f5f5f6; border-bottom: 1px solid #e0e0e0;
-  padding: 6px 12px;
+  background: var(--surface); border-bottom: 1px solid var(--border-color); padding: 6px 12px;
 }
 ${S(sc)} .card-header-grid { gap: 8px }
-${S(sc)} .query-title {
-  color: #062D4B; font-weight: 600; font-size: 14px;
-  background-color: transparent;
-}
+${S(sc)} .query-title { color: var(--title-color); font-weight: 600; font-size: 14px; background-color: transparent }
 
-/* ── Run button (primary action) ── */
+/* ── Run button ── */
 ${S(sc)} .query-run-button {
   background: #E0701B!important; color: #fff!important;
   border: none!important; border-radius: 5px!important;
   padding: 6px 14px; font-weight: 600; font-size: 13px;
   cursor: pointer; transition: background .15s, box-shadow .15s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  box-shadow: 0 1px 3px var(--shadow);
 }
-${S(sc)} .query-run-button:hover {
-  background: #9c3b15!important;
-  box-shadow: 0 2px 8px rgba(224,112,27,.25);
-}
+${S(sc)} .query-run-button:hover { background: var(--link-hover-color)!important; box-shadow: 0 2px 8px rgba(224,112,27,.3) }
 ${S(sc)} .query-run-button svg { color: #fff!important; fill: #fff!important }
 
 /* ── Toolbar / action buttons ── */
 ${S(sc)} .small-rounded-button {
-  background: transparent!important; color: #555!important;
-  border: 1px solid #d0d0d0!important; border-radius: 5px!important;
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
   padding: 4px 8px; cursor: pointer; transition: all .15s;
 }
-${S(sc)} .small-rounded-button:hover {
-  background: #f0f0f0!important; color: #333!important; border-color: #bbb!important;
-}
-${S(sc)} .small-rounded-button svg { color: #555; transition: color .15s }
-${S(sc)} .small-rounded-button:hover svg { color: #333 }
+${S(sc)} .small-rounded-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important; border-color: var(--medium-gray)!important }
+${S(sc)} .small-rounded-button svg { color: var(--muted-text-color); transition: color .15s }
+${S(sc)} .small-rounded-button:hover svg { color: var(--text-color) }
 ${S(sc)} .small-rounded-dark-grey-button {
-  background: #f5f5f6!important; color: #666!important;
-  border: 1px solid #d0d0d0!important; border-radius: 5px!important;
-  cursor: pointer; transition: all .15s;
+  background: var(--surface)!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important; cursor: pointer; transition: all .15s;
 }
-${S(
-    sc
-)} .small-rounded-dark-grey-button:hover { background: #eaeaea!important; color: #333!important }
-${S(sc)} .editor-button {
-  color: #777!important; background: transparent!important;
-  border: none; transition: color .15s;
-}
+${S(sc)} .small-rounded-dark-grey-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+${S(sc)} .editor-button { color: var(--muted-text-color)!important; background: transparent!important; border: none; transition: color .15s }
 ${S(sc)} .editor-button:hover { color: #E0701B!important }
 ${S(sc)} .editor-button[disabled] { opacity: .4 }
-${S(sc)} .toolbar-button {
-  color: #777; background: transparent; transition: color .15s;
-}
-${S(sc)} .toolbar-button:hover { color: #333 }
+${S(sc)} .toolbar-button { color: var(--muted-text-color); background: transparent; transition: color .15s }
+${S(sc)} .toolbar-button:hover { color: var(--text-color) }
 ${S(sc)} .result-action-button {
-  background: rgba(255,255,255,.9)!important; color: #555!important; border-radius: 5px;
-  transition: all .15s; padding: 6px 12px;
-  border: 1px solid #d0d0d0; backdrop-filter: blur(4px);
+  background: var(--surface-glass)!important; color: var(--text-color)!important;
+  border-radius: 5px; transition: all .15s; padding: 6px 12px;
+  border: 1px solid var(--border-color); backdrop-filter: blur(4px);
 }
-${S(
-    sc
-)} .result-action-button:hover { background: #f0f0f0!important; color: #333!important }
+${S(sc)} .result-action-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
 ${S(sc)} .query-control-button {
-  background: transparent!important; color: #555!important;
-  border: 1px solid #d0d0d0!important; border-radius: 5px!important;
-  cursor: pointer; transition: all .15s;
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important; cursor: pointer; transition: all .15s;
 }
-${S(
-    sc
-)} .query-control-button:hover { color: #E0701B!important; border-color: #E0701B!important }
+${S(sc)} .query-control-button:hover { color: #E0701B!important; border-color: #E0701B!important }
 ${S(sc)} .generate-query-button {
-  background: transparent; color: #062D4B;
-  border: 1px solid #d0d0d0; border-radius: 5px; transition: all .15s;
+  background: transparent; color: var(--schema-color);
+  border: 1px solid var(--border-color); border-radius: 5px; transition: all .15s;
 }
-${S(
-    sc
-)} .generate-query-button:hover { border-color: #062D4B; background: rgba(6,45,75,.04) }
+${S(sc)} .generate-query-button:hover { border-color: var(--schema-color); background: var(--schema-hover-bg) }
 ${S(sc)} .action-bar { background: transparent }
-${S(sc)} .action-icon { color: #999 }
+${S(sc)} .action-icon { color: var(--muted-text-color) }
 ${S(sc)} .action-icon:hover { color: #E0701B }
-
-/* ── Editor toolbar overlay ── */
-${S(sc)} .editor-toolbar {
-  background: transparent!important; border: none!important;
-}
+${S(sc)} .editor-toolbar { background: transparent!important; border: none!important }
 
 /* ── Tabs ── */
-${S(sc)} .tab-container {
-  background: #fff!important; border-bottom: 1px solid #e0e0e0;
-  border-top: none;
-}
-${S(sc)} .tabs-container {
-  background: #fff!important;
-}
-${S(sc)} .tab-item,
-${S(sc)} .tab-item-selected {
+${S(sc)} .tab-container { background: var(--tab-bg)!important; border-bottom: 1px solid var(--border-color); border-top: none }
+${S(sc)} .tabs-container { background: var(--tab-bg)!important }
+${S(sc)} .tab-item, ${S(sc)} .tab-item-selected {
   background: transparent!important; border: none!important;
   padding: 8px 14px; font-size: 13px;
-  cursor: pointer; transition: all .15s; border-radius: 0;
-  border-bottom: 2px solid transparent!important;
+  cursor: pointer; transition: all .15s; border-radius: 0; border-bottom: 2px solid transparent!important;
 }
-${S(sc)} .tab-item { color: #666 }
-${S(sc)} .tab-item:hover { color: #333; background: rgba(0,0,0,.02)!important }
-${S(sc)} .tab-item-selected {
-  color: #333; font-weight: 500;
-  border-bottom-color: #E0701B!important;
-}
-${S(sc)} .tab-item-selected:hover { background: rgba(0,0,0,.02)!important }
-${S(sc)} .close-button { color: #ccc; transition: color .15s }
-${S(sc)} .close-button:hover { color: #ff4444 }
-${S(
-    sc
-)} .add-query-button { color: #ccc; transition: color .15s; background: transparent!important }
+${S(sc)} .tab-item { color: var(--muted-text-color) }
+${S(sc)} .tab-item:hover { color: var(--text-color); background: var(--tab-hover-bg)!important }
+${S(sc)} .tab-item-selected { color: var(--text-color); font-weight: 500; border-bottom-color: #E0701B!important }
+${S(sc)} .tab-item-selected:hover { background: var(--tab-hover-bg)!important }
+${S(sc)} .close-button { color: var(--close-color); transition: color .15s }
+${S(sc)} .close-button:hover { color: var(--danger-color) }
+${S(sc)} .add-query-button { color: var(--close-color); transition: color .15s; background: transparent!important }
 ${S(sc)} .add-query-button:hover { color: #E0701B }
 ${S(sc)} .add-query-button hr { display: none!important }
-${S(
-    sc
-)} .tab-list-button-and-menu { border-color: #e0e0e0; background: transparent!important }
-${S(
-    sc
-)} .tab-buttons { border-color: #e0e0e0; background: transparent!important }
-${S(sc)} .tab-button { color: #999; transition: color .15s }
-${S(sc)} .tab-button:hover { color: #333 }
-${S(
-    sc
-)} .tab-list { border-color: transparent; border-top: none; background: #fff }
+${S(sc)} .tab-list-button-and-menu { border-color: var(--border-color); background: transparent!important }
+${S(sc)} .tab-buttons { border-color: var(--border-color); background: transparent!important }
+${S(sc)} .tab-button { color: var(--muted-text-color); transition: color .15s }
+${S(sc)} .tab-button:hover { color: var(--text-color) }
+${S(sc)} .tab-list { border-color: transparent; border-top: none; background: var(--bg-color) }
 
 /* ── Tabs overflow / ellipsis menu ── */
 ${S(sc)} .ellipses-button {
-  background: transparent!important; color: #777!important;
-  border: 1px solid #d0d0d0!important; border-radius: 5px!important;
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
   width: auto; height: auto; padding: 4px 8px;
 }
-${S(
-    sc
-)} .ellipses-button:hover { background: #f0f0f0!important; color: #333!important }
+${S(sc)} .ellipses-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
 ${S(sc)} .controltab {
-  background: transparent!important; color: #555!important;
-  border: 1px solid #d0d0d0!important; border-radius: 5px!important;
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
   padding: 6px 12px; font-size: small; transition: all .15s;
 }
-${S(
-    sc
-)} .controltab:hover { background: #f0f0f0!important; color: #333!important }
-${S(sc)} .tabs-ellipses-menu { background: transparent!important; color: #666 }
-${S(
-    sc
-)} .tabs-ellipses-menu:hover { background: #f0f0f0!important; color: #333 }
+${S(sc)} .controltab:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+${S(sc)} .tabs-ellipses-menu { background: transparent!important; color: var(--muted-text-color) }
+${S(sc)} .tabs-ellipses-menu:hover { background: var(--surface-hover)!important; color: var(--text-color) }
 ${S(sc)} .tabs-ellipses-menu-content {
-  background: #fff; border: 1px solid #e0e0e0; border-radius: 5px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 5px;
+  box-shadow: 0 8px 24px var(--shadow);
 }
 ${S(sc)} .tabs-ellipses-menu-content input {
-  background: #f5f5f6; border: 1px solid #e0e0e0; color: #333; border-radius: 5px;
+  background: var(--surface); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 5px;
 }
 ${S(sc)} .tabs-ellipses-menu-content .tab-item { border-radius: 4px }
-${S(sc)} .tabs-ellipses-menu-content .tab-item:hover { background: #f5f5f6 }
+${S(sc)} .tabs-ellipses-menu-content .tab-item:hover { background: var(--surface) }
 
-/* ── Editor ── */
-${S(sc)} .editor,
-${S(sc)} .editorContainer,
-${S(sc)} .editorParent,
-${S(sc)} .overflow-guard,
-${S(sc)} .lines-content,
-${S(sc)} .monaco-editor,
-${S(sc)} .monaco-editor-background,
-${S(sc)} .inputarea,
-${S(sc)} .split-view-container,
-${S(sc)} .split-view-view,
-${S(sc)} .view-overlays {
-  background-color: #fff!important;
+/* ── Monaco editor ── */
+${S(sc)} .editor, ${S(sc)} .editorContainer, ${S(sc)} .editorParent,
+${S(sc)} .overflow-guard, ${S(sc)} .lines-content, ${S(sc)} .monaco-editor,
+${S(sc)} .monaco-editor-background, ${S(sc)} .inputarea,
+${S(sc)} .split-view-container, ${S(sc)} .split-view-view, ${S(sc)} .view-overlays {
+  background-color: var(--bg-color)!important;
 }
-${S(sc)} .monaco-editor .margin,
-${S(sc)} .monaco-editor .margin-view-overlays,
-${S(sc)} .monaco-editor .glyph-margin {
-  background-color: #fafafa!important;
+${S(sc)} .monaco-editor .margin, ${S(sc)} .monaco-editor .margin-view-overlays, ${S(sc)} .monaco-editor .glyph-margin {
+  background-color: var(--editor-margin-bg)!important;
 }
-${S(sc)} .monaco-editor .line-numbers {
-  color: #bbb!important;
-}
-${S(sc)} .monaco-editor .current-line-margin {
-  border-color: rgba(0,0,0,.06);
-}
-${S(sc)} .scroll-decoration { box-shadow: none!important }
-${S(sc)} .minimap { background: #fff!important }
-${S(sc)} .minimap canvas { opacity: .6 }
-${S(sc)} .monaco-scrollable-element { background: #fff!important }
-${S(
-    sc
-)} .monaco-editor .cursors-layer .cursor { background-color: #E0701B!important }
+${S(sc)} .monaco-editor .line-numbers { color: var(--medium-gray)!important }
+${S(sc)} .monaco-editor .current-line-margin { border-color: var(--subtle-border) }
+${S(sc)} .minimap { background: var(--bg-color)!important }
+${S(sc)} .monaco-scrollable-element { background: var(--bg-color)!important }
+${S(sc)} .monaco-editor .cursors-layer .cursor { background-color: #E0701B!important }
+${S(sc)} .monaco-editor .current-line { background-color: var(--current-line-bg)!important; border: none!important }
+${S(sc)} .monaco-editor .wordHighlight,
+${S(sc)} .monaco-editor .wordHighlightStrong,
+${S(sc)} .monaco-editor .selectionHighlight { background-color: rgba(224,112,27,.15)!important; border: none!important }
+${S(sc)} .monaco-editor .bracket-match { background-color: var(--current-line-bg)!important; border: 1px solid var(--border-color)!important }
 
 /* ── Results ── */
-${S(sc)} .result-set { background: #fff }
-${S(sc)} .result-table-container { background: #fff }
-${S(
-    sc
-)} .result-table { border-collapse: collapse; width: 100%; font-size: 13px }
+${S(sc)} .result-set, ${S(sc)} .result-table-container { background: var(--bg-color) }
+${S(sc)} .result-table { border-collapse: collapse; width: 100%; font-size: 13px }
 ${S(sc)} .result-table th {
-  background: #f5f5f6; color: #333; font-weight: 600;
+  background: var(--surface); color: var(--text-color); font-weight: 500;
   padding: 8px 12px; text-align: left;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-color);
   position: sticky; top: 0; z-index: 1;
 }
-${S(sc)} .result-table td {
-  padding: 6px 12px; border-bottom: 1px solid #f0f0f0;
-  color: #333;
-}
-${S(sc)} .result-table tr:hover td { background: rgba(224,112,27,.04) }
-${S(sc)} .result-cell-null { color: #bbb; font-style: italic }
-${S(sc)} .clear-result-table { color: #999; transition: color .15s }
-${S(sc)} .clear-result-table:hover { color: #ff4444 }
+${S(sc)} .result-table td { padding: 6px 12px; border-bottom: 1px solid var(--subtle-border); color: var(--text-color) }
+${S(sc)} .result-table tr:hover td { background: var(--row-hover-bg) }
+${S(sc)} .result-cell-null { color: var(--medium-gray); font-style: italic }
+${S(sc)} .clear-result-table { color: var(--muted-text-color); transition: color .15s }
+${S(sc)} .clear-result-table:hover { color: var(--danger-color) }
 
 /* ── Status bar ── */
 ${S(sc)} .status-bar {
-  background: #f5f5f6; color: #666; font-size: 12px;
-  padding: 4px 12px; border-top: 1px solid #e0e0e0;
+  background: var(--surface); color: var(--muted-text-color); font-size: 12px;
+  padding: 4px 12px; border-top: 1px solid var(--border-color);
 }
-${S(sc)} .status-text { color: #666 }
-${S(sc)} .status-stage-default { color: #666 }
-${S(sc)} .status-stage-bytes { color: #062D4B }
+${S(sc)} .status-text, ${S(sc)} .status-stage-default { color: var(--muted-text-color) }
+${S(sc)} .status-stage-bytes { color: var(--schema-color) }
 ${S(sc)} .status-stage-rows { color: #E0701B }
-${S(sc)} .status-stage-splits { color: #7c5db8 }
+${S(sc)} .status-stage-splits { color: var(--splits-text) }
 
 /* ── Progress bar ── */
-${S(sc)} .progress-bar {
-  background: #f5f5f6; border: 1px solid #e0e0e0; border-radius: 5px;
-  overflow: hidden;
-}
-${S(
-    sc
-)} .progress-bar-fill { background: linear-gradient(90deg,#E0701B,#ec934f); transition: width .3s ease }
-${S(sc)} .progress-bar-grid { background: #f5f5f6 }
-${S(sc)} .progress-percent { color: #333; font-size: 12px }
+${S(sc)} .progress-bar { background: var(--surface); border: 1px solid var(--border-color); border-radius: 5px; overflow: hidden }
+${S(sc)} .progress-bar-fill { background: linear-gradient(90deg,#E0701B,#ec934f); transition: width .3s ease }
+${S(sc)} .progress-bar-grid { background: var(--surface) }
+${S(sc)} .progress-percent { color: var(--text-color); font-size: 12px }
 ${S(sc)} .progress-bar-running-state { color: #E0701B }
-${S(sc)} .progress-bar-timer { color: #666 }
+${S(sc)} .progress-bar-timer { color: var(--muted-text-color) }
 
 /* ── Error box ── */
 ${S(sc)} .error-box {
-  background: #fef2f2!important; border: 1px solid #fca5a5;
+  background: var(--error-bg)!important; border: 1px solid var(--error-border);
   border-radius: 5px; margin: 8px; padding: 12px;
 }
-${S(
-    sc
-)} .error-box-header { color: #dc2626; font-weight: 600; margin-bottom: 4px }
-${S(sc)} .error-box-body { color: #555 }
-${S(sc)} .error-box-message { color: #555; font-size: 13px }
-${S(sc)} .error-box-context { color: #999; font-size: 12px }
-${S(
-    sc
-)} .error-box-close { color: #999; cursor: pointer; transition: color .15s }
-${S(sc)} .error-box-close:hover { color: #dc2626 }
+${S(sc)} .error-box-header { color: var(--error-text); font-weight: 600; margin-bottom: 4px }
+${S(sc)} .error-box-body, ${S(sc)} .error-box-message { color: var(--text-color) }
+${S(sc)} .error-box-message { font-size: 13px }
+${S(sc)} .error-box-context { color: var(--muted-text-color); font-size: 12px }
+${S(sc)} .error-box-close { color: var(--muted-text-color); cursor: pointer; transition: color .15s }
+${S(sc)} .error-box-close:hover { color: var(--error-text) }
 
 /* ── Context menu ── */
 ${S(sc)} .context-menu {
-  background: #fff; border: 1px solid #e0e0e0; border-radius: 5px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.1); overflow: hidden;
+  background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 5px;
+  box-shadow: 0 8px 24px var(--shadow); overflow: hidden;
 }
-${S(sc)} .menu-item {
-  padding: 8px 16px; color: #333; cursor: pointer; transition: background .1s;
-}
-${S(sc)} .menu-item:hover { background: rgba(224,112,27,.06) }
-${S(sc)} .menu-divider { border-color: #f0f0f0; margin: 4px 0 }
+${S(sc)} .menu-item { padding: 8px 16px; color: var(--text-color); cursor: pointer; transition: background .1s }
+${S(sc)} .menu-item:hover { background: var(--item-hover-bg) }
+${S(sc)} .menu-divider { border-color: var(--subtle-border); margin: 4px 0 }
 
-/* ── Filter / search ── */
+/* ── Filter / search inputs ── */
 ${S(sc)} .filter-input {
-  background: #fff; border: 1px solid #e0e0e0; color: #333;
-  border-radius: 5px; padding: 6px 10px; font-size: 13px;
-  transition: border-color .15s;
+  background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);
+  border-radius: 5px; padding: 6px 10px; font-size: 13px; transition: border-color .15s;
 }
 ${S(sc)} .filter-input:focus { border-color: #E0701B; outline: none }
-${S(sc)} .filter-input::placeholder { color: #bbb }
-${S(sc)} .search-container input {
-  background: #fff; border: 1px solid #e0e0e0; color: #333;
-  border-radius: 5px;
-}
-${S(sc)} .clear-search { color: #999 }
-${S(sc)} .clear-search:hover { color: #333 }
+${S(sc)} .filter-input::placeholder { color: var(--medium-gray) }
+${S(sc)} .search-container input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 5px }
+${S(sc)} .clear-search { color: var(--muted-text-color) }
+${S(sc)} .clear-search:hover { color: var(--text-color) }
 
 /* ── Catalog panel ── */
-${S(sc)} .catalog-content { background: #fff }
-${S(sc)} .catalog-viewer { background: #fff }
-${S(sc)} .catalog-wrapper { background: #fff }
-${S(sc)} .catalog-container { background: #fff }
+${S(sc)} .catalog-content, ${S(sc)} .catalog-viewer, ${S(sc)} .catalog-wrapper, ${S(sc)} .catalog-container {
+  background: var(--bg-color);
+}
 ${S(sc)} .catalog-viewer-header {
-  background: #f5f5f6; color: #062D4B; font-weight: 500;
-  padding: 8px 12px; border-bottom: 1px solid #e0e0e0;
+  background: var(--surface); color: var(--title-color); font-weight: 500;
+  padding: 8px 12px; border-bottom: 1px solid var(--border-color);
 }
 ${S(sc)} .catalog-name { color: #E0701B; font-weight: 500 }
-${S(sc)} .catalog-setting { color: #999; background: transparent }
-${S(sc)} .schema-name { color: #062D4B }
-${S(sc)} .schema-setting { color: #999; background: transparent }
-${S(sc)} .table-name { color: #333 }
-${S(
-    sc
-)} .column-name { color: #666; font-family: "Roboto Mono", monospace; font-size: 12px }
-${S(sc)} .columnType { color: #999; font-size: 11px }
-${S(sc)} .qualifiedName { color: #999 }
+${S(sc)} .catalog-setting, ${S(sc)} .schema-setting { color: var(--muted-text-color); background: transparent }
+${S(sc)} .schema-name { color: var(--schema-color) }
+${S(sc)} .table-name { color: var(--text-color) }
+${S(sc)} .column-name { color: var(--muted-text-color); font-family: "Roboto Mono", monospace; font-size: 12px }
+${S(sc)} .columnType { color: var(--medium-gray); font-size: 11px }
+${S(sc)} .qualifiedName { color: var(--muted-text-color) }
 
 /* ── Catalog tree ── */
-${S(sc)} .viewer_catalog {
-  color: #333; font-weight: 600;
-}
-${S(
-    sc
-)} .viewer_catalog:hover { background: rgba(224,112,27,.08); color: #E0701B }
-${S(sc)} .viewer_catalog_body {
-  margin-left: 10px; border-left: 1px solid #e0e0e0;
-}
-${S(sc)} .viewer_schema {
-  color: #555; border-left: 1px solid #e0e0e0;
-}
-${S(sc)} .viewer_schema:hover { background: rgba(6,45,75,.06); color: #062D4B }
-${S(sc)} .viewer_table {
-  color: #666; border-left: 1px solid #e0e0e0;
-  transition: all .1s; cursor: pointer;
-}
-${S(
-    sc
-)} .viewer_table:hover { color: #E0701B; background: rgba(224,112,27,.04) }
-${S(sc)} .viewer_table_body { border-left: 1px solid #e0e0e0 }
-${S(sc)} .viewer_column { border-left: 1px solid #e0e0e0 }
+${S(sc)} .viewer_catalog { color: var(--text-color); font-weight: 600 }
+${S(sc)} .viewer_catalog:hover { background: var(--item-hover-bg); color: #E0701B }
+${S(sc)} .viewer_catalog_body { margin-left: 10px; border-left: 1px solid var(--border-color) }
+${S(sc)} .viewer_schema { color: var(--muted-text-color); border-left: 1px solid var(--border-color) }
+${S(sc)} .viewer_schema:hover { background: var(--schema-hover-bg); color: var(--schema-color) }
+${S(sc)} .viewer_table { color: var(--muted-text-color); border-left: 1px solid var(--border-color); transition: all .1s; cursor: pointer }
+${S(sc)} .viewer_table:hover { color: #E0701B; background: var(--row-hover-bg) }
+${S(sc)} .viewer_table_body, ${S(sc)} .viewer_column { border-left: 1px solid var(--border-color) }
 ${S(sc)} .viewer-schema-body { background: transparent }
 
-/* ── Collapse (Catalogs) button ── */
+/* ── Collapse button ── */
 ${S(sc)} .collapse-button {
-  background: #fff!important; color: #E0701B!important;
-  border: 1px solid #e0e0e0; border-radius: 5px;
-  font-weight: 500; padding: 6px 16px; cursor: pointer;
-  transition: all .15s; font-size: 13px;
+  background: var(--collapse-bg)!important; color: #E0701B!important;
+  border: 1px solid var(--border-color); border-radius: 5px;
+  font-weight: 500; padding: 6px 16px; cursor: pointer; transition: all .15s; font-size: 13px;
 }
-${S(
-    sc
-)} .collapse-button:hover { background: #f5f5f6!important; border-color: #E0701B }
+${S(sc)} .collapse-button:hover { background: var(--surface-hover)!important; border-color: #E0701B }
 
 /* ── Loading ── */
-${S(sc)} .loading-message { color: #666 }
-${S(sc)} .spinner { border-color: #e0e0e0; border-top-color: #E0701B }
+${S(sc)} .loading-message { color: var(--muted-text-color) }
+${S(sc)} .spinner { border-color: var(--border-color); border-top-color: #E0701B }
 
 /* ── Query status ── */
-${S(
-    sc
-)} .query-status-table { font-size: 13px; color: #333; background: transparent }
-${S(
-    sc
-)} .query-status-table td { padding: 4px 8px; border-bottom: 1px solid #f0f0f0 }
+${S(sc)} .query-status-table { font-size: 13px; color: var(--text-color); background: transparent }
+${S(sc)} .query-status-table td { padding: 4px 8px; border-bottom: 1px solid var(--subtle-border) }
 
 /* ── Links ── */
-${S(sc)} a { color: #E0701B; text-decoration: none; transition: color .15s }
-${S(sc)} a:hover { color: #9c3b15 }
-${S(sc)} .link-to-query { color: #E0701B }
-${S(sc)} .copy-link { color: #999; transition: color .15s }
+${S(sc)} a { color: var(--link-color); text-decoration: none; transition: color .15s }
+${S(sc)} a:hover { color: var(--link-hover-color) }
+${S(sc)} .link-to-query { color: var(--link-color) }
+${S(sc)} .copy-link { color: var(--muted-text-color); transition: color .15s }
 ${S(sc)} .copy-link:hover { color: #E0701B }
-${S(sc)} .breadcrumb-item { color: #666 }
+${S(sc)} .breadcrumb-item { color: var(--muted-text-color) }
 ${S(sc)} .breadcrumb-item:hover { color: #E0701B }
 
-/* ── Borders ── */
-${S(sc)} .separator-border { background: #e0e0e0 }
+/* ── Separator ── */
+${S(sc)} .separator-border { background: var(--border-color) }
 
 /* ── Scrollbars ── */
 ${S(sc)} ::-webkit-scrollbar { width: 8px; height: 8px }
 ${S(sc)} ::-webkit-scrollbar-track { background: transparent }
-${S(
-    sc
-)} ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 4px }
-${S(sc)} ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.18) }
+${S(sc)} ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px }
+${S(sc)} ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover) }
 
 /* ── Selection ── */
-${S(sc)} *::selection { background: rgba(224,112,27,.15) }
+${S(sc)} *::selection { background: var(--selection-bg) }
 `;
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -906,15 +457,11 @@ ${S(sc)} .card {
   flex:1; min-height:0; overflow:hidden;
   border-radius:5px;
 }
-${S(
-    sc
-)} .card-header     { flex-shrink:0; overflow:visible; height:auto!important; z-index:3 }
+${S(sc)} .card-header     { flex-shrink:0; overflow:visible; height:auto!important; z-index:3 }
 ${S(sc)} .tab-container   { flex-shrink:0; overflow:visible!important }
 
 /* ── Editor area ── */
-${S(
-    sc
-)} .monaco-split-view2 { flex:1; min-height:0; border-bottom:none!important }
+${S(sc)} .monaco-split-view2 { flex:1; min-height:0; border-bottom:none!important }
 ${S(sc)} .editor              { flex:1; min-height:0 }
 ${S(sc)} .editorParent { border-bottom:none!important }
 
@@ -923,7 +470,7 @@ ${S(sc)} .split-view-container { background:inherit!important }
 ${S(sc)} .split-view-view { background:inherit!important }
 ${S(sc)} .monaco-scrollable-element { background:inherit!important }
 
-/* ── Minimap: hide to save space, or match bg ── */
+/* ── Minimap: hide to save space ── */
 ${S(sc)} .minimap { opacity:0!important; pointer-events:none!important }
 
 /* ── Monaco scrollbar gutter ── */
@@ -994,6 +541,28 @@ ${S(sc)} .add-query-button {
 ${S(sc)} .monaco-editor .view-lines { background:transparent }
 ${S(sc)} .monaco-editor .view-line { background:transparent }
 ${S(sc)} .monaco-editor .decorations-layer { background:transparent }
+
+/* ── Monaco scroll-decoration: remove the black line shown when scrolling ── */
+${S(sc)} .scroll-decoration,
+${S(sc)} .monaco-editor .scroll-decoration,
+${S(sc)} .monaco-editor .overflow-guard > .scroll-decoration,
+${S(sc)} .monaco-scrollable-element > .scroll-decoration {
+  box-shadow: none!important;
+  background: transparent!important;
+  border: none!important;
+  pointer-events: none!important;
+}
+
+/* ── Monaco sash (resize handle between panes): transparent, not black ── */
+${S(sc)} .monaco-sash {
+  background: transparent!important;
+  border-color: transparent!important;
+}
+${S(sc)} .monaco-sash:hover,
+${S(sc)} .monaco-sash.active {
+  background: var(--border-color)!important;
+  transition: background .1s;
+}
 
 /* ── Tooltips ── */
 ${S(sc)} .editor-button[data-tooltip]:hover:after {
