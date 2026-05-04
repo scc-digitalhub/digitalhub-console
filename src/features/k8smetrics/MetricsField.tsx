@@ -23,7 +23,7 @@ export const MetricsField = (
         labels = false,
         size,
         fontSize,
-        gap = 1,
+        gap = 0,
         ...rest
     } = props;
     const resource = useResourceContext();
@@ -79,9 +79,12 @@ export const MetricsField = (
             direction={'row'}
             gap={gap}
             alignItems="center"
-
+            sx={{
+                display: 'inline-grid',
+                gridAutoFlow: 'column',
+                gridAutoColumns: '1fr',
+            }}
         >
-            {' '}
             {Object.entries(metrics.usage)
                 .filter(([key]) =>
                     Array.isArray(metricsKeys)

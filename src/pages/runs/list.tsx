@@ -12,7 +12,6 @@ import {
     SelectInput,
     ShowButton,
     SimpleList,
-    TextField,
     TextInput,
     TopToolbar,
     useGetList,
@@ -23,7 +22,14 @@ import {
     useStore,
     useTranslate,
 } from 'react-admin';
-import { Box, Container, Stack, Typography, useTheme } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Container,
+    Stack,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { useCallback, useMemo } from 'react';
 import { FlatCard } from '../../common/components/layout/FlatCard';
@@ -39,7 +45,7 @@ import {
     formatDuration,
     FUNCTION_OR_WORKFLOW,
 } from '../../common/utils/helpers';
-import { functionParser } from '../../common/utils/parsers';
+import { functionParser, taskParser } from '../../common/utils/parsers';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useKinds } from '../../common/hooks/useKinds';
 import { FILTER_INPUT_PROPS } from '../../common/theme';
@@ -266,7 +272,6 @@ export const RunList = () => {
 
 const DataTableView = (props: { storeKey?: string }) => {
     const { storeKey } = props;
-    const translate = useTranslate();
 
     return (
         <DataTable
@@ -433,7 +438,6 @@ const DetailsView = (props: { storeKey?: string }) => {
     const getResourceLabel = useGetResourceLabel();
     const resource = useResourceContext();
     const { total } = useListContext();
-    const now = new Date();
     const label = resource
         ? getResourceLabel(resource, total || 1)
         : 'resources.' + resource + '.name';
@@ -455,113 +459,8 @@ const DetailsView = (props: { storeKey?: string }) => {
             )}
 
             <SimpleList
-                primaryText={record => (
-                    <Stack direction="row" gap={1} alignItems="left">
-                        <Typography
-                            variant="body1"
-                            color="secondary"
-                            sx={{ fontWeight: 'medium' }}
-                        >
-                            {record?.spec?.function &&
-                                functionParser(record.spec.function).name}
-
-                            {record?.spec?.workflow &&
-                                functionParser(record.spec.workflow).name}
-                            {' / '}
-                            {record.name}
-                        </Typography>
-                        <StateChips
-                            source="status.state"
-                            label="fields.status.state"
-                            size="small"
-                        />
-                        {record?.status?.service && (
-                            <SignpostIcon color={'action'} fontSize="small" />
-                        )}
-                        {record?.status?.k8s && (
-                            <SiKubernetes
-                                color={theme.palette.secondary.main}
-                                fontSize={'1.25rem'}
-                            />
-                        )}
-                        {record?.status?.k8s &&
-                            (record.spec?.profile ||
-                            record.spec.resources?.gpu ? (
-                                <BsGpuCard
-                                    color={theme.palette.info.main}
-                                    fontSize={'1.25rem'}
-                                />
-                            ) : (
-                                <BsCpuFill
-                                    color={theme.palette.info.main}
-                                    fontSize={'1.25rem'}
-                                />
-                            ))}
-                        {record?.status?.k8s &&
-                            (record.spec?.volumes ||
-                                record.spec.resources?.disk) && (
-                                <GrStorage
-                                    color={theme.palette.info.main}
-                                    fontSize={'1.25rem'}
-                                />
-                            )}
-                    </Stack>
-                )}
-                secondaryText={record => (
-                    <Stack direction="column" gap={0.3}>
-                        <Stack direction="row" gap={0.3}>
-                            <TextField source="kind" />
-                            {'| '}
-                            {record?.status?.state &&
-                            endStates.includes(
-                                record.status.state.toUpperCase()
-                            )
-                                ? translate('fields.endTime.title') +
-                                  ' ' +
-                                  formatDateDifference(
-                                      new Date(record.metadata.updated),
-                                      now,
-                                      translate
-                                  )
-                                : translate('fields.startTime.title') +
-                                  ' ' +
-                                  formatDateDifference(
-                                      new Date(record.metadata.created),
-                                      now,
-                                      translate
-                                  )}
-                        </Stack>
-                        <Typography
-                            variant="body2"
-                            color="secondary"
-                            sx={{ fontWeight: 'medium' }}
-                        >
-                            {record.status?.state === 'RUNNING'
-                                ? formatDuration(
-                                      Date.now() -
-                                          new Date(
-                                              record.metadata.created
-                                          ).getTime()
-                                  ).asString
-                                : formatDuration(
-                                      new Date(
-                                          record.metadata.updated
-                                      ).getTime() -
-                                          new Date(
-                                              record.metadata.created
-                                          ).getTime()
-                                  ).asString}
-                        </Typography>
-
-                        <Box mt={1}>
-                            {record.status.state === 'RUNNING' ? (
-                                <MetricsField size="small" fontSize={'small'} />
-                            ) : (
-                                <> </>
-                            )}
-                        </Box>
-                    </Stack>
-                )}
+                primaryText={record => <DetailsHeader record={record} />}
+                secondaryText={record => <DetailsBox record={record} />}
                 tertiaryText={() => <ShowButton size="medium" label={''} />}
                 leftAvatar={record => {
                     return (
@@ -580,5 +479,148 @@ const DetailsView = (props: { storeKey?: string }) => {
                 })}
             />
         </>
+    );
+};
+
+const DetailsHeader = ({ record }: { record: any }) => {
+    const translate = useTranslate();
+
+    const theme = useTheme();
+
+    return (
+        <Stack direction="column" gap={0.3}>
+            <Typography variant="body1" color="textDisabled">
+                {record?.spec?.task && taskParser(record.spec.task).kind}
+                {' / '}
+                {record?.spec?.function &&
+                    functionParser(record.spec.function).name}
+                {record?.spec?.workflow &&
+                    functionParser(record.spec.workflow).name}
+            </Typography>
+            <Stack direction="row" gap={1} alignItems="left">
+                <Typography
+                    variant="body1"
+                    color="secondary"
+                    sx={{ fontWeight: 'medium', fontSize: '110%' }}
+                >
+                    {record.name}
+                </Typography>
+
+                {record?.status?.service && (
+                    <SignpostIcon
+                        color={'action'}
+                        fontSize="small"
+                        titleAccess={translate('fields.service.title')}
+                    />
+                )}
+                {record?.status?.k8s && (
+                    <SiKubernetes
+                        color={theme.palette.secondary.main}
+                        fontSize={'1.25rem'}
+                        title={translate('fields.k8s.resources.title')}
+                    />
+                )}
+                {record?.status?.k8s &&
+                    (record.spec?.profile || record.spec.resources?.gpu ? (
+                        <BsGpuCard
+                            color={theme.palette.info.main}
+                            fontSize={'1.25rem'}
+                            title={translate('fields.k8s.resources.gpu.title')}
+                        />
+                    ) : (
+                        <BsCpuFill
+                            color={theme.palette.info.main}
+                            fontSize={'1.25rem'}
+                            title={translate('fields.k8s.resources.cpu.title')}
+                        />
+                    ))}
+                {record?.status?.k8s &&
+                    (record.spec?.volumes || record.spec.resources?.disk) && (
+                        <GrStorage
+                            color={theme.palette.info.main}
+                            fontSize={'1.25rem'}
+                            title={translate('fields.k8s.resources.disk.title')}
+                        />
+                    )}
+            </Stack>
+        </Stack>
+    );
+};
+
+const DetailsBox = ({ record }: { record: any }) => {
+    const translate = useTranslate();
+    const now = new Date();
+
+    return (
+        <Stack direction="column" gap={0.3} mt={0.3}>
+            <Stack direction="row" gap={0.3}>
+                <Typography variant="body2" color="textDisabled" mb={0.7}>
+                    {record?.status?.state &&
+                    endStates.includes(record.status.state.toUpperCase())
+                        ? formatDateDifference(
+                              new Date(record.metadata.updated),
+                              now,
+                              translate
+                          )
+                        : formatDateDifference(
+                              new Date(record.metadata.created),
+                              now,
+                              translate
+                          )}
+                </Typography>
+                {' | '}
+                <Typography
+                    variant="body2"
+                    color="secondary"
+                    sx={{ fontWeight: 'medium' }}
+                >
+                    {record.status?.state === 'RUNNING'
+                        ? formatDuration(
+                              Date.now() -
+                                  new Date(record.metadata.created).getTime()
+                          ).asString
+                        : formatDuration(
+                              new Date(record.metadata.updated).getTime() -
+                                  new Date(record.metadata.created).getTime()
+                          ).asString}
+                </Typography>
+            </Stack>
+
+            <Box mt={0.3} mb={0.3}>
+                <StateChips
+                    source="status.state"
+                    label="fields.status.state"
+                    size="small"
+                    // variant="compact"
+                />
+            </Box>
+            {record.status?.message && (
+                <Alert
+                    icon={false}
+                    severity={
+                        record.status?.state === 'RUNNING'
+                            ? 'info'
+                            : record.status?.state === 'ERROR'
+                            ? 'error'
+                            : record.status?.state === 'COMPLETED'
+                            ? 'success'
+                            : 'warning'
+                    }
+                    // variant="outlined"
+                >
+                    {record.status?.message}
+                </Alert>
+            )}
+            {record.status.state === 'RUNNING' && (
+                <Box>
+                    <MetricsField
+                        sx={{ mt: 1 }}
+                        size="small"
+                        fontSize={'small'}
+                        metrics={true}
+                    />
+                </Box>
+            )}
+        </Stack>
     );
 };

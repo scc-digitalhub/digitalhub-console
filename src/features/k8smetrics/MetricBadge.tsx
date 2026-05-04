@@ -1,4 +1,4 @@
-import { Typography, SvgIconOwnProps } from '@mui/material';
+import { Typography, SvgIconOwnProps, Tooltip } from '@mui/material';
 import { Stack, StackProps, TypographyProps } from '@mui/system';
 import { isValidElement, ReactElement } from 'react';
 
@@ -74,18 +74,25 @@ export const MetricBadge = (props: MetricProps) => {
             </Typography>
         ) : null;
 
+    const tooltipTitle =
+        title && typeof title === 'string'
+            ? translate(title)
+            : translate(key || 'metric');
+
     return (
-        <Stack
-            direction={direction}
-            gap={gap}
-            sx={{ alignItems: 'center', textAlign: 'center', ...sx }}
-        >
-            {icon && isValidElement(icon) ? icon : null}
-            <Typography fontSize={fontSize} color={color}>
-                {value}
-            </Typography>
-            {titleElement}
-        </Stack>
+        <Tooltip title={tooltipTitle}>
+            <Stack
+                direction={direction}
+                gap={gap}
+                sx={{ alignItems: 'center', textAlign: 'center', ...sx }}
+            >
+                {icon && isValidElement(icon) ? icon : null}
+                <Typography fontSize={fontSize} color={color}>
+                    {value}
+                </Typography>
+                {titleElement}
+            </Stack>
+        </Tooltip>
     );
 };
 

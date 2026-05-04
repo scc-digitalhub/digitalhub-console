@@ -429,7 +429,7 @@ export const RunShow = () => {
                         <MetricsField
                             size="small"
                             fontSize={'small'}
-                            gap={3}
+                            // gap={3}
                             labels
                             metrics={true}
                         />
