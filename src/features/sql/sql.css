@@ -1,0 +1,369 @@
+/* ── Container Radice ── */
+.sql-editor-scope {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+/* ═══════════════════════════════════════════════════════════════════
+   COMPONENTS — shared rules for both themes, driven by var()
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Global background reset ── */
+.sql-editor-scope .page, .sql-editor-scope .tab-content, .sql-editor-scope .tab-list, .sql-editor-scope .cards, .sql-editor-scope .card {
+  background-color: var(--bg-color); color: var(--text-color);
+}
+
+/* ── Card header ── */
+.sql-editor-scope .card-header {
+  background: var(--surface); border-bottom: 1px solid var(--border-color); padding: 6px 12px;
+}
+.sql-editor-scope .card-header-grid { gap: 8px }
+.sql-editor-scope .query-title { color: var(--title-color); font-weight: 600; font-size: 14px; background-color: transparent }
+
+/* ── Run button ── */
+.sql-editor-scope .query-run-button {
+  background: #E0701B!important; color: #fff!important;
+  border: none!important; border-radius: 5px!important;
+  padding: 6px 14px; font-weight: 600; font-size: 13px;
+  cursor: pointer; transition: background .15s, box-shadow .15s;
+  box-shadow: 0 1px 3px var(--shadow);
+}
+.sql-editor-scope .query-run-button:hover { background: var(--link-hover-color)!important; box-shadow: 0 2px 8px rgba(224,112,27,.3) }
+.sql-editor-scope .query-run-button svg { color: #fff!important; fill: #fff!important }
+
+/* ── Toolbar / action buttons ── */
+.sql-editor-scope .small-rounded-button {
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
+  padding: 4px 8px; cursor: pointer; transition: all .15s;
+}
+.sql-editor-scope .small-rounded-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important; border-color: var(--medium-gray)!important }
+.sql-editor-scope .small-rounded-button svg { color: var(--muted-text-color); transition: color .15s }
+.sql-editor-scope .small-rounded-button:hover svg { color: var(--text-color) }
+.sql-editor-scope .small-rounded-dark-grey-button {
+  background: var(--surface)!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important; cursor: pointer; transition: all .15s;
+}
+.sql-editor-scope .small-rounded-dark-grey-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+.sql-editor-scope .editor-button { color: var(--muted-text-color)!important; background: transparent!important; border: none; transition: color .15s }
+.sql-editor-scope .editor-button:hover { color: #E0701B!important }
+.sql-editor-scope .editor-button[disabled] { opacity: .4 }
+.sql-editor-scope .toolbar-button { color: var(--muted-text-color); background: transparent; transition: color .15s }
+.sql-editor-scope .toolbar-button:hover { color: var(--text-color) }
+.sql-editor-scope .result-action-button {
+  background: var(--surface-glass)!important; color: var(--text-color)!important;
+  border-radius: 5px; transition: all .15s; padding: 6px 12px;
+  border: 1px solid var(--border-color); backdrop-filter: blur(4px);
+}
+.sql-editor-scope .result-action-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+.sql-editor-scope .query-control-button {
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important; cursor: pointer; transition: all .15s;
+}
+.sql-editor-scope .query-control-button:hover { color: #E0701B!important; border-color: #E0701B!important }
+.sql-editor-scope .generate-query-button {
+  background: transparent; color: var(--schema-color);
+  border: 1px solid var(--border-color); border-radius: 5px; transition: all .15s;
+}
+.sql-editor-scope .generate-query-button:hover { border-color: var(--schema-color); background: var(--schema-hover-bg) }
+.sql-editor-scope .action-bar { background: transparent }
+.sql-editor-scope .action-icon { color: var(--muted-text-color) }
+.sql-editor-scope .action-icon:hover { color: #E0701B }
+.sql-editor-scope .editor-toolbar { background: transparent!important; border: none!important }
+
+/* ── Tabs ── */
+.sql-editor-scope .tab-container { background: var(--tab-bg)!important; border-bottom: 1px solid var(--border-color); border-top: none }
+.sql-editor-scope .tabs-container { background: var(--tab-bg)!important }
+.sql-editor-scope .tab-item, .sql-editor-scope .tab-item-selected {
+  background: transparent!important; border: none!important;
+  padding: 8px 14px; font-size: 13px;
+  cursor: pointer; transition: all .15s; border-radius: 0; border-bottom: 2px solid transparent!important;
+}
+.sql-editor-scope .tab-item { color: var(--muted-text-color) }
+.sql-editor-scope .tab-item:hover { color: var(--text-color); background: var(--tab-hover-bg)!important }
+.sql-editor-scope .tab-item-selected { color: var(--text-color); font-weight: 500; border-bottom-color: #E0701B!important }
+.sql-editor-scope .tab-item-selected:hover { background: var(--tab-hover-bg)!important }
+.sql-editor-scope .close-button { color: var(--close-color); transition: color .15s }
+.sql-editor-scope .close-button:hover { color: var(--danger-color) }
+.sql-editor-scope .add-query-button { color: var(--close-color); transition: color .15s; background: transparent!important }
+.sql-editor-scope .add-query-button:hover { color: #E0701B }
+.sql-editor-scope .add-query-button hr { display: none!important }
+.sql-editor-scope .tab-list-button-and-menu { border-color: var(--border-color); background: transparent!important }
+.sql-editor-scope .tab-buttons { border-color: var(--border-color); background: transparent!important }
+.sql-editor-scope .tab-button { color: var(--muted-text-color); transition: color .15s }
+.sql-editor-scope .tab-button:hover { color: var(--text-color) }
+.sql-editor-scope .tab-list { border-color: transparent; border-top: none; background: var(--bg-color) }
+
+/* ── Tabs overflow / ellipsis menu ── */
+.sql-editor-scope .ellipses-button {
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
+  width: auto; height: auto; padding: 4px 8px;
+}
+.sql-editor-scope .ellipses-button:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+.sql-editor-scope .controltab {
+  background: transparent!important; color: var(--muted-text-color)!important;
+  border: 1px solid var(--border-color)!important; border-radius: 5px!important;
+  padding: 6px 12px; font-size: small; transition: all .15s;
+}
+.sql-editor-scope .controltab:hover { background: var(--surface-hover)!important; color: var(--text-color)!important }
+.sql-editor-scope .tabs-ellipses-menu { background: transparent!important; color: var(--muted-text-color) }
+.sql-editor-scope .tabs-ellipses-menu:hover { background: var(--surface-hover)!important; color: var(--text-color) }
+.sql-editor-scope .tabs-ellipses-menu-content {
+  background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 5px;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+.sql-editor-scope .tabs-ellipses-menu-content input {
+  background: var(--surface); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 5px;
+}
+.sql-editor-scope .tabs-ellipses-menu-content .tab-item { border-radius: 4px }
+.sql-editor-scope .tabs-ellipses-menu-content .tab-item:hover { background: var(--surface) }
+
+/* ── Monaco editor ── */
+.sql-editor-scope .editor, .sql-editor-scope .editorContainer, .sql-editor-scope .editorParent,
+.sql-editor-scope .overflow-guard, .sql-editor-scope .lines-content, .sql-editor-scope .monaco-editor,
+.sql-editor-scope .monaco-editor-background, .sql-editor-scope .inputarea,
+.sql-editor-scope .split-view-container, .sql-editor-scope .split-view-view, .sql-editor-scope .view-overlays {
+  background-color: var(--bg-color)!important;
+}
+.sql-editor-scope .monaco-editor .margin, .sql-editor-scope .monaco-editor .margin-view-overlays, .sql-editor-scope .monaco-editor .glyph-margin {
+  background-color: var(--editor-margin-bg)!important;
+}
+.sql-editor-scope .monaco-editor .line-numbers { color: var(--medium-gray)!important }
+.sql-editor-scope .monaco-editor .current-line-margin { border-color: var(--subtle-border) }
+.sql-editor-scope .minimap { background: var(--bg-color)!important }
+.sql-editor-scope .monaco-scrollable-element { background: var(--bg-color)!important }
+.sql-editor-scope .monaco-editor .cursors-layer .cursor { background-color: #E0701B!important }
+.sql-editor-scope .monaco-editor .current-line { background-color: var(--current-line-bg)!important; border: none!important }
+.sql-editor-scope .monaco-editor .wordHighlight,
+.sql-editor-scope .monaco-editor .wordHighlightStrong,
+.sql-editor-scope .monaco-editor .selectionHighlight { background-color: rgba(224,112,27,.15)!important; border: none!important }
+.sql-editor-scope .monaco-editor .bracket-match { background-color: var(--current-line-bg)!important; border: 1px solid var(--border-color)!important }
+
+/* ── Results ── */
+.sql-editor-scope .result-set, .sql-editor-scope .result-table-container { background: var(--bg-color) }
+.sql-editor-scope .result-table { border-collapse: collapse; width: 100%; font-size: 13px }
+.sql-editor-scope .result-table th {
+  background: var(--surface); color: var(--text-color); font-weight: 500;
+  padding: 8px 12px; text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  position: sticky; top: 0; z-index: 1;
+}
+.sql-editor-scope .result-table td { padding: 6px 12px; border-bottom: 1px solid var(--subtle-border); color: var(--text-color) }
+.sql-editor-scope .result-table tr:hover td { background: var(--row-hover-bg) }
+.sql-editor-scope .result-cell-null { color: var(--medium-gray); font-style: italic }
+.sql-editor-scope .clear-result-table { color: var(--muted-text-color); transition: color .15s }
+.sql-editor-scope .clear-result-table:hover { color: var(--danger-color) }
+
+/* ── Status bar ── */
+.sql-editor-scope .status-bar {
+  background: var(--surface); color: var(--muted-text-color); font-size: 12px;
+  padding: 4px 12px; border-top: 1px solid var(--border-color);
+}
+.sql-editor-scope .status-text, .sql-editor-scope .status-stage-default { color: var(--muted-text-color) }
+.sql-editor-scope .status-stage-bytes { color: var(--schema-color) }
+.sql-editor-scope .status-stage-rows { color: #E0701B }
+.sql-editor-scope .status-stage-splits { color: var(--splits-text) }
+
+/* ── Progress bar ── */
+.sql-editor-scope .progress-bar { background: var(--surface); border: 1px solid var(--border-color); border-radius: 5px; overflow: hidden }
+.sql-editor-scope .progress-bar-fill { background: linear-gradient(90deg,#E0701B,#ec934f); transition: width .3s ease }
+.sql-editor-scope .progress-bar-grid { background: var(--surface) }
+.sql-editor-scope .progress-percent { color: var(--text-color); font-size: 12px }
+.sql-editor-scope .progress-bar-running-state { color: #E0701B }
+.sql-editor-scope .progress-bar-timer { color: var(--muted-text-color) }
+
+/* ── Error box ── */
+.sql-editor-scope .error-box {
+  background: var(--error-bg)!important; border: 1px solid var(--error-border);
+  border-radius: 5px; margin: 8px; padding: 12px;
+}
+.sql-editor-scope .error-box-header { color: var(--error-text); font-weight: 600; margin-bottom: 4px }
+.sql-editor-scope .error-box-body, .sql-editor-scope .error-box-message { color: var(--text-color) }
+.sql-editor-scope .error-box-message { font-size: 13px }
+.sql-editor-scope .error-box-context { color: var(--muted-text-color); font-size: 12px }
+.sql-editor-scope .error-box-close { color: var(--muted-text-color); cursor: pointer; transition: color .15s }
+.sql-editor-scope .error-box-close:hover { color: var(--error-text) }
+
+/* ── Context menu ── */
+.sql-editor-scope .context-menu {
+  background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 5px;
+  box-shadow: 0 8px 24px var(--shadow); overflow: hidden;
+}
+.sql-editor-scope .menu-item { padding: 8px 16px; color: var(--text-color); cursor: pointer; transition: background .1s }
+.sql-editor-scope .menu-item:hover { background: var(--item-hover-bg) }
+.sql-editor-scope .menu-divider { border-color: var(--subtle-border); margin: 4px 0 }
+
+/* ── Filter / search inputs ── */
+.sql-editor-scope .filter-input {
+  background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color);
+  border-radius: 5px; padding: 6px 10px; font-size: 13px; transition: border-color .15s;
+}
+.sql-editor-scope .filter-input:focus { border-color: #E0701B; outline: none }
+.sql-editor-scope .filter-input::placeholder { color: var(--medium-gray) }
+.sql-editor-scope .search-container input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 5px }
+.sql-editor-scope .clear-search { color: var(--muted-text-color) }
+.sql-editor-scope .clear-search:hover { color: var(--text-color) }
+
+/* ── Catalog panel ── */
+.sql-editor-scope .catalog-content, .sql-editor-scope .catalog-viewer, .sql-editor-scope .catalog-wrapper, .sql-editor-scope .catalog-container {
+  background: var(--bg-color);
+}
+.sql-editor-scope .catalog-viewer-header {
+  background: var(--surface); color: var(--title-color); font-weight: 500;
+  padding: 8px 12px; border-bottom: 1px solid var(--border-color);
+}
+.sql-editor-scope .catalog-name { color: #E0701B; font-weight: 500 }
+.sql-editor-scope .catalog-setting, .sql-editor-scope .schema-setting { color: var(--muted-text-color); background: transparent }
+.sql-editor-scope .schema-name { color: var(--schema-color) }
+.sql-editor-scope .table-name { color: var(--text-color) }
+.sql-editor-scope .column-name { color: var(--muted-text-color); font-family: "Roboto Mono", monospace; font-size: 12px }
+.sql-editor-scope .columnType { color: var(--medium-gray); font-size: 11px }
+.sql-editor-scope .qualifiedName { color: var(--muted-text-color) }
+
+/* ── Catalog tree ── */
+.sql-editor-scope .viewer_catalog { color: var(--text-color); font-weight: 600 }
+.sql-editor-scope .viewer_catalog:hover { background: var(--item-hover-bg); color: #E0701B }
+.sql-editor-scope .viewer_catalog_body { margin-left: 10px; border-left: 1px solid var(--border-color) }
+.sql-editor-scope .viewer_schema { color: var(--muted-text-color); border-left: 1px solid var(--border-color) }
+.sql-editor-scope .viewer_schema:hover { background: var(--schema-hover-bg); color: var(--schema-color) }
+.sql-editor-scope .viewer_table { color: var(--muted-text-color); border-left: 1px solid var(--border-color); transition: all .1s; cursor: pointer }
+.sql-editor-scope .viewer_table:hover { color: #E0701B; background: var(--row-hover-bg) }
+.sql-editor-scope .viewer_table_body, .sql-editor-scope .viewer_column { border-left: 1px solid var(--border-color) }
+.sql-editor-scope .viewer-schema-body { background: transparent }
+
+/* ── Collapse button ── */
+.sql-editor-scope .collapse-button {
+  background: var(--collapse-bg)!important; color: #E0701B!important;
+  border: 1px solid var(--border-color); border-radius: 5px;
+  font-weight: 500; padding: 6px 16px; cursor: pointer; transition: all .15s; font-size: 13px;
+}
+.sql-editor-scope .collapse-button:hover { background: var(--surface-hover)!important; border-color: #E0701B }
+
+/* ── Loading ── */
+.sql-editor-scope .loading-message { color: var(--muted-text-color) }
+.sql-editor-scope .spinner { border-color: var(--border-color); border-top-color: #E0701B }
+
+/* ── Query status ── */
+.sql-editor-scope .query-status-table { font-size: 13px; color: var(--text-color); background: transparent }
+.sql-editor-scope .query-status-table td { padding: 4px 8px; border-bottom: 1px solid var(--subtle-border) }
+
+/* ── Links ── */
+.sql-editor-scope a { color: var(--link-color); text-decoration: none; transition: color .15s }
+.sql-editor-scope a:hover { color: var(--link-hover-color) }
+.sql-editor-scope .link-to-query { color: var(--link-color) }
+.sql-editor-scope .copy-link { color: var(--muted-text-color); transition: color .15s }
+.sql-editor-scope .copy-link:hover { color: #E0701B }
+.sql-editor-scope .breadcrumb-item { color: var(--muted-text-color) }
+.sql-editor-scope .breadcrumb-item:hover { color: #E0701B }
+
+/* ── Separator ── */
+.sql-editor-scope .separator-border { background: var(--border-color) }
+
+/* ── Scrollbars ── */
+.sql-editor-scope ::-webkit-scrollbar { width: 8px; height: 8px }
+.sql-editor-scope ::-webkit-scrollbar-track { background: transparent }
+.sql-editor-scope ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px }
+.sql-editor-scope ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover) }
+
+/* ── Selection ── */
+.sql-editor-scope *::selection { background: var(--selection-bg) }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAYOUT (shared by both themes)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Hide standalone branding bar ── */
+.sql-editor-scope .branding-header,
+.sql-editor-scope .branding-padder { display:none!important }
+
+/* ── Root layout: fill container ── */
+.sql-editor-scope .query-editor {
+  display:flex; flex-direction:column;
+  height:100%; width:100%; overflow:hidden;
+}
+
+/* ── Grid: catalog left, editor right ── */
+.sql-editor-scope .pagegrid {
+  display:grid!important;
+  width:100%!important; height:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  transition:grid-template-columns .2s ease!important;
+  grid-template-columns:0% 100%!important;
+}
+.sql-editor-scope .pagegrid.catalog-expanded {
+  grid-template-columns:20% 80%!important;
+}
+
+/* ── Cards layout ── */
+.sql-editor-scope .cards {
+  display:flex; flex-direction:column;
+  flex:1; min-height:0; overflow:hidden;
+}
+.sql-editor-scope .card {
+  display:flex; flex-direction:column;
+  flex:1; min-height:0; overflow:hidden;
+  border-radius:5px;
+}
+.sql-editor-scope .card-header     { flex-shrink:0; overflow:visible; height:auto!important; z-index:3 }
+.sql-editor-scope .tab-container   { flex-shrink:0; overflow:visible!important }
+
+/* ── Editor area ── */
+.sql-editor-scope .monaco-split-view2 { flex:1; min-height:0; border-bottom:none!important }
+.sql-editor-scope .editor              { flex:1; min-height:0 }
+.sql-editor-scope .editorParent { border-bottom:none!important }
+
+/* ── Monaco split panes (maximize/restore) ── */
+.sql-editor-scope .split-view-container { background:inherit!important }
+.sql-editor-scope .split-view-view { background:inherit!important }
+.sql-editor-scope .monaco-scrollable-element { background:inherit!important }
+
+/* ── Minimap: hide to save space ── */
+.sql-editor-scope .minimap { opacity:0!important; pointer-events:none!important }
+
+/* ── Monaco scrollbar gutter ── */
+.sql-editor-scope .decorationsOverviewRuler { display:none!important }
+
+/* ── Result area ── */
+.sql-editor-scope .result-set {
+  display:flex; flex-direction:column;
+  overflow:hidden; min-height:0;
+}
+.sql-editor-scope .result-table-container {
+  overflow:auto; flex:1; min-height:0;
+}
+.sql-editor-scope .status-bar { flex-shrink:0 }
+
+/* ── Catalog panel ── */
+.sql-editor-scope .catalog-container {
+  height:100%!important; overflow:hidden;
+  border-right:1px solid var(--border-color);
+}
+.sql-editor-scope .catalog-wrapper {
+  height:100%!important;
+  overflow-y:auto; overflow-x:hidden;
+}
+.sql-editor-scope .catalog-viewer {
+  overflow-y:auto; height:100%;
+}
+
+/* ── Collapse button ── */
+.sql-editor-scope .collapse-button {
+  position:absolute!important;
+  bottom:0!important; left:0!important;
+  z-index:1000;
+}
+
+/* ── Tabs overflow menu ── */
+.sql-editor-scope .tabs-ellipses-menu-content {
+  position:fixed!important; z-index:9999!important;
+  right:20px!important; top:auto!important;
+  max-height:60vh; overflow-y:auto;
+}
+.sql-editor-scope .tab-list-button-and-menu {
+  position:absolute; right:0; top:0; z-index:1000;
+}
