@@ -7,25 +7,31 @@ import {
     ChatInput,
     SessionMessages,
     SessionMessagePanel,
-    SessionMessagesHeader,
     SessionMessage,
     MessageQuestion,
     MessageResponse,
     MessageSources,
     MessageActions,
+    Conversation,
 } from 'reachat';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import OpenAI from 'openai';
 import { theme as reatheme, ThemeProvider } from 'reablocks';
-import { alpha, useTheme, CSSProperties } from '@mui/material';
+import {
+    alpha,
+    useTheme,
+    CSSProperties,
+    Typography,
+    IconButton,
+} from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useTranslate } from 'react-admin';
+import { Toolbar, useTranslate } from 'react-admin';
 import { ErrorDisplay } from './ErrorDisplay';
 import { createChatTheme } from '../chatTheme';
 import '../chatTheme.css';
-import { useChatContext } from '../ChatContext';
 import { useHttpClientProvider } from '../../httpclients/HttpClientContext';
+import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 const THROTTLE_MS = 100;
 
@@ -36,26 +42,31 @@ const CriticalErrorFallback = ({ error, retry }: any) => (
 export interface ReaChatProps {
     modelName: string;
     baseUrl?: string;
+    conversations: Conversation[];
+    setConversations: (conversations: Conversation[]) => void;
 }
 
-export const ReaChat = ({ modelName, baseUrl }: ReaChatProps) => (
+export const ReaChat = (props: ReaChatProps) => (
     <ThemeProvider theme={reatheme}>
         <ErrorBoundary FallbackComponent={CriticalErrorFallback}>
-            <OpenAIChat modelName={modelName} baseUrl={baseUrl} />
+            <OpenAIChat {...props} />
         </ErrorBoundary>
     </ThemeProvider>
 );
 
-const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
-    const { id } = useParams();
-    const currentRunId = id || 'general-session';
-    const { sessions, updateSession, ensureSessionForRun } = useChatContext();
+const OpenAIChat = (props: ReaChatProps) => {
+    const { modelName, baseUrl, conversations = [], setConversations } = props;
     const httpClientProvider = useHttpClientProvider();
     const translate = useTranslate();
     const theme = useTheme();
 
     const [loading, setIsLoading] = useState<boolean>(false);
     const abortControllerRef = useRef<AbortController | null>(null);
+    //keep conversations in ref to access the latest state in async callbacks without dependency
+    const conversationsRef = useRef(conversations);
+    conversationsRef.current = conversations;
+    const loadingRef = useRef(loading);
+    loadingRef.current = loading;
     const openai = useMemo(() => {
         const customFetch = (
             input: string | URL | Request,
@@ -69,7 +80,6 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             } else {
                 url = input.url;
             }
-            console.log("Custom fetch called with URL:", url);
             return httpClientProvider.fetch(url, init as any);
         };
         return new OpenAI({
@@ -80,9 +90,24 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
         });
     }, [baseUrl, httpClientProvider]);
 
-    useEffect(() => {
-        ensureSessionForRun(currentRunId);
-    }, [currentRunId, ensureSessionForRun]);
+    //single static session
+    const currentRunId = 'default';
+    const session = useMemo(
+        () => ({
+            id: currentRunId,
+            title: `Run ${currentRunId}`,
+            createdAt:
+                conversations != null && conversations.length > 0
+                    ? conversations.at(0)?.createdAt
+                    : new Date(),
+            updatedAt:
+                conversations != null && conversations.length > 0
+                    ? conversations.at(-1)?.updatedAt
+                    : new Date(),
+            conversations,
+        }),
+        [conversations]
+    );
 
     const handleStop = useCallback(() => {
         if (abortControllerRef.current) {
@@ -101,17 +126,16 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             if (!openai) return console.error('OpenAI not initialized');
             if (!message) return;
 
-            const currentSession = sessions.find(s => s.id === currentRunId);
-            if (!currentSession) return;
-
+            //loading
             setIsLoading(true);
             abortControllerRef.current = new AbortController();
 
             const baseConversations = isRegeneration
-                ? currentSession.conversations.slice(0, -1)
-                : currentSession.conversations;
+                ? conversationsRef.current.slice(0, -1)
+                : conversationsRef.current;
 
             const conversationId = Date.now().toString();
+            const createdAt = new Date();
 
             const updateSessionState = (
                 currentResponse: string,
@@ -122,15 +146,11 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
                     question: message,
                     response: currentResponse,
                     isError,
-                    createdAt: new Date(),
+                    createdAt,
                     updatedAt: new Date(),
                 };
 
-                updateSession({
-                    ...currentSession,
-                    updatedAt: new Date(),
-                    conversations: [...baseConversations, newConversation],
-                });
+                setConversations([...baseConversations, newConversation]);
             };
 
             updateSessionState('');
@@ -139,10 +159,23 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             let lastUpdateTime = 0;
 
             try {
+                const messages = [] as Array<ChatCompletionMessageParam>;
+                //restore history except last message if regeneration, which is replaced with the new one
+                baseConversations.forEach(conv => {
+                    messages.push({ role: 'user', content: conv.question });
+                    if (conv.response) {
+                        messages.push({
+                            role: 'assistant',
+                            content: conv.response,
+                        });
+                    }
+                });
+
+                messages.push({ role: 'user', content: message });
                 const stream = await openai.chat.completions.create(
                     {
                         model: modelName,
-                        messages: [{ role: 'user', content: message }],
+                        messages: messages,
                         stream: true,
                     },
                     { signal: abortControllerRef.current.signal }
@@ -171,7 +204,7 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
                 abortControllerRef.current = null;
             }
         },
-        [currentRunId, sessions, updateSession, modelName, openai]
+        [modelName, openai, setConversations]
     );
 
     const handleNewMessage = useCallback(
@@ -181,10 +214,14 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
 
     const handleRegenerate = useCallback(
         (question: string) => {
-            if (!loading && question) processMessage(question, true);
+            if (!loadingRef.current && question) processMessage(question, true);
         },
-        [loading, processMessage]
+        [processMessage]
     );
+
+    const handleDeleteSession = useCallback(() => {
+        setConversations([]);
+    }, [setConversations]);
 
     const isDarkMode = theme.palette.mode === 'dark';
     const dynamicChatTheme = useMemo(() => createChatTheme(), []);
@@ -205,17 +242,43 @@ const OpenAIChat = ({ modelName, baseUrl }: ReaChatProps) => {
             style={{ height: '100%', ...cssVariables }}
         >
             <Chat
-                sessions={sessions}
+                sessions={[session]}
                 activeSessionId={currentRunId}
                 isLoading={loading}
                 onSendMessage={handleNewMessage}
+                onStopMessage={handleStop}
+                onDeleteSession={handleDeleteSession}
                 theme={dynamicChatTheme}
                 viewType="chat"
-                onStopMessage={handleStop}
-                style={{ maxHeight: '60vh' }}
+                // style={{ maxHeight: '60vh' }}
             >
                 <SessionMessagePanel>
-                    <SessionMessagesHeader />
+                    {/* <SessionMessagesHeader /> */}
+                    <Toolbar
+                        sx={{
+                            background: 'transparent',
+                            justifyContent: 'flex-end',
+                            gap: 1,
+                            mb: 1,
+                        }}
+                    >
+                        <Typography variant="caption" color="text.secondary">
+                            {translate('ra.action.clear_array_input')}
+                        </Typography>
+                        <IconButton
+                            aria-label={translate(
+                                'ra.action.clear_array_input'
+                            )}
+                            title={translate('ra.action.clear_array_input')}
+                            onClick={() => handleDeleteSession()}
+                            disabled={
+                                !conversations || conversations.length === 0
+                            }
+                            size="small"
+                        >
+                            <ClearAllIcon fontSize="small" />
+                        </IconButton>
+                    </Toolbar>
                     <SessionMessages>
                         {(conversations: any[]) =>
                             conversations.map((conversation, index) => {

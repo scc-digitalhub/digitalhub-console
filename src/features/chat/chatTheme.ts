@@ -22,7 +22,7 @@ export const createChatTheme = (
 
         base: twMerge(
             defaultTheme.base,
-            'bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden'
+            'overflow-hidden'
         ),
 
         sessions: {
