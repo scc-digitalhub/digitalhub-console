@@ -305,38 +305,36 @@ export const RunShowComponent = () => {
                     <ServiceDetails record={record} />
                 </TabbedShowLayout.Tab>
             )}
-            {record?.status?.metrics &&
-                Object.keys(record.status.metrics).length > 0 && (
-                    <TabbedShowLayout.Tab label={'fields.metrics.title'}>
-                        <MetricsGrid
-                            record={record}
-                            filters={metricsComparisonFilters}
-                            datagridFields={metricsDatagridFields}
-                            postFetchFilter={v =>
-                                //TODO refactor properly
-                                {
-                                    if (!v.spec?.function) {
-                                        return false;
-                                    }
-
-                                    if (!v.kind || v.kind != record.kind) {
-                                        return false;
-                                    }
-
-                                    if (
-                                        functionParser(v.spec.function).name !=
-                                        functionParser(record.spec.function)
-                                            .name
-                                    ) {
-                                        return false;
-                                    }
-
-                                    return true;
+            {record?.status?.metrics && (
+                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                    <MetricsGrid
+                        record={record}
+                        filters={metricsComparisonFilters}
+                        datagridFields={metricsDatagridFields}
+                        postFetchFilter={v =>
+                            //TODO refactor properly
+                            {
+                                if (!v.spec?.function) {
+                                    return false;
                                 }
+
+                                if (!v.kind || v.kind != record.kind) {
+                                    return false;
+                                }
+
+                                if (
+                                    functionParser(v.spec.function).name !=
+                                    functionParser(record.spec.function).name
+                                ) {
+                                    return false;
+                                }
+
+                                return true;
                             }
-                        />
-                    </TabbedShowLayout.Tab>
-                )}
+                        }
+                    />
+                </TabbedShowLayout.Tab>
+            )}
             {record.extensions && record.extensions.length > 0 && (
                 <TabbedShowLayout.Tab
                     label={translate('fields.extensions.title')}
