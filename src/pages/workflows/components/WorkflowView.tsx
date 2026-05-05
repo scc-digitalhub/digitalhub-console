@@ -2,8 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useState } from 'react';
-import { Box } from '@mui/system';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
     Node,
@@ -31,11 +30,19 @@ import {
     useDataProvider,
     Link,
     useCreatePath,
-    Datagrid,
 } from 'react-admin';
-import { Grid, Divider } from '@mui/material';
+import { Grid, Divider, Box } from '@mui/material';
 
 import dagre from '@dagrejs/dagre';
+import { Relationship } from '../../../features/lineage';
+import {
+    functionParser,
+    keyParser,
+    taskParser,
+} from '../../../common/utils/parsers';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { uniq } from 'lodash';
+import { IdField } from '../../../common/components/fields/IdField';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -77,21 +84,54 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
 
     return { nodes, edges };
 };
+
 export const WorkflowView = (props: WorkflowViewProps) => {
     const record = useRecordContext(props);
-    const createPath = useCreatePath();
     const dataProvider = useDataProvider();
+    const { root } = useRootSelector();
 
     let interval: any = null;
 
     const [gnodes, setNodes] = useState<Node<any>[]>();
     const [gedges, setEdges] = useState<Edge<any>[]>();
 
+    const [steps, setSteps] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (record && dataProvider) {
+            dataProvider
+                .getLineage('runs', { id: record.id, meta: { root } })
+                .then((data: { lineage: Relationship[] }) => {
+                    if (data?.lineage) {
+                        const ids = data.lineage
+                            .filter(r => r.type === 'step_of')
+                            .map(r =>
+                                r.source ? keyParser(r.source).id : undefined
+                            )
+                            .filter(id => id !== undefined);
+
+                        const promises = uniq(ids).map(id =>
+                            dataProvider.getOne('runs', {
+                                id,
+                                meta: { root },
+                            })
+                        );
+                        Promise.all(promises).then(values => {
+                            setSteps(
+                                values.filter(v => !!v.data).map(v => v.data)
+                            );
+                        });
+                    }
+                })
+                .catch(() => {
+                    setSteps([]);
+                });
+        }
+    }, [dataProvider, record, root]);
+
     const buildGraph = run => {
         const graph =
-            run && run.status && run.status.nodes 
-                ? run.status.nodes
-                : [];
+            run && run.status && run.status.nodes ? run.status.nodes : [];
         // const graph = [
         //     {type:'DAG', id: 'root', display_name: 'root', children: ['1'], state: 'Error'},
         //     {type:'TASK', id: '1', display_name: '1', children: ['2', '3'], state: 'Succeeded'},
@@ -181,119 +221,121 @@ export const WorkflowView = (props: WorkflowViewProps) => {
                     </ReactFlow>
                 </Box>
             </Grid>
-            <>
-                {activeNode && (
-                    <Grid size="grow">
-                        <RecordContextProvider value={activeNode}>
-                            <Grid container spacing={2} sx={{ width: '100%' }}>
-                                <Grid size={5}>
-                                    <Labeled label="resources.workflows.fields.function">
-                                        <TextField source="function" />
-                                    </Labeled>
-                                </Grid>
-                                <Grid size={4}>
-                                    <Labeled label="resources.workflows.fields.action">
-                                        <TextField source="action" />
-                                    </Labeled>
-                                </Grid>
-                                <Grid size={3}>
-                                    <ChipField
-                                        record={activeNode}
-                                        source="state"
-                                        color={getColor(activeNode)}
-                                    />
-                                </Grid>
-                            </Grid>
-
-                            <Labeled label="resources.workflows.fields.run_id">
-                                <Link
-                                    to={createPath({
-                                        type: 'show',
-                                        resource: 'functions',
-                                        id: activeNode.function_id,
-                                    })}
-                                >
-                                    <TextField source="run_id" />
-                                </Link>
-                            </Labeled>
-
-                            <Grid container spacing={2} sx={{ width: '100%' }}>
-                                <Grid size="grow">
-                                    <Labeled label="resources.workflows.fields.start_time">
-                                        <DateField
-                                            source="start_time"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-                                </Grid>
-                                <Grid size="grow">
-                                    <Labeled label="resources.workflows.fields.end_time">
-                                        <DateField
-                                            source="end_time"
-                                            showDate
-                                            showTime
-                                        />
-                                    </Labeled>
-                                </Grid>
-                            </Grid>
-                            <>
-                                {activeNode.inputs &&
-                                    activeNode.inputs.length > 0 && (
-                                        <>
-                                            <br />
-                                            <Divider />
-                                            <Labeled label="resources.workflows.inputs">
-                                                <Datagrid
-                                                    header={
-                                                        <div
-                                                            style={{
-                                                                display: 'none',
-                                                            }}
-                                                        ></div>
-                                                    }
-                                                    data={activeNode.inputs}
-                                                    bulkActionButtons={false}
-                                                    rowClick={false}
-                                                >
-                                                    <TextField source="name" />
-                                                    <TextField source="value" />
-                                                </Datagrid>
-                                            </Labeled>
-                                        </>
-                                    )}
-                            </>
-                            <>
-                                {activeNode.outputs &&
-                                    activeNode.outputs.length > 0 && (
-                                        <>
-                                            <br />
-                                            <Divider />
-                                            <Labeled label="resources.workflows.outputs">
-                                                <Datagrid
-                                                    header={
-                                                        <div
-                                                            style={{
-                                                                display: 'none',
-                                                            }}
-                                                        ></div>
-                                                    }
-                                                    data={activeNode.outputs}
-                                                    bulkActionButtons={false}
-                                                    rowClick={false}
-                                                >
-                                                    <TextField source="name" />
-                                                    <TextField source="value" />
-                                                </Datagrid>
-                                            </Labeled>
-                                        </>
-                                    )}
-                            </>
-                        </RecordContextProvider>
-                    </Grid>
-                )}
-            </>
+            {activeNode && (
+                <Grid size="grow">
+                    <ActiveNodeInfo activeNode={activeNode} runs={steps} />
+                </Grid>
+            )}
         </Grid>
+    );
+};
+
+const ActiveNodeInfo = (props: { activeNode: any; runs: any[] }) => {
+    const { activeNode: nodeFromProps, runs } = props;
+    const createPath = useCreatePath();
+    const [activeNode, setActiveNode] = useState<any>(nodeFromProps);
+
+    useEffect(() => {
+        //parse node name to get function name
+        const functionName = nodeFromProps.display_name.substring(
+            'dag-op-'.length,
+            nodeFromProps.display_name.lastIndexOf('-')
+        );
+        const run = runs.find(r => {
+            return functionParser(r.spec?.function).name == functionName;
+        });
+
+        if (run) {
+            setActiveNode({
+                ...nodeFromProps,
+                function: functionName,
+                run_id: run.id,
+                action: taskParser(run.spec?.task).kind,
+            });
+        }
+    }, [nodeFromProps, runs]);
+
+    const InputsOutputs = ({ source }: { source: string }) => (
+        <>
+            <Divider sx={{ paddingTop: 2 }} />
+            <Labeled label={'resources.workflows.' + source}>
+                <Grid container spacing={2}>
+                    {activeNode[source].map((value, idx) => (
+                        <RecordContextProvider
+                            value={value}
+                            key={'activeNode_' + source + '_' + idx}
+                        >
+                            <Grid size={2}>
+                                <TextField source="name" />
+                            </Grid>
+                            <Grid size={10}>
+                                <IdField
+                                    noWrap
+                                    truncate={50}
+                                    source="value"
+                                    label={false}
+                                />
+                            </Grid>
+                        </RecordContextProvider>
+                    ))}
+                </Grid>
+            </Labeled>
+        </>
+    );
+
+    return (
+        <RecordContextProvider value={activeNode}>
+            <Grid container spacing={2} sx={{ width: '100%' }}>
+                <Grid size={5}>
+                    <Labeled label="resources.workflows.fields.function">
+                        <TextField source="function" />
+                    </Labeled>
+                </Grid>
+                <Grid size={4}>
+                    <Labeled label="resources.workflows.fields.action">
+                        <TextField source="action" />
+                    </Labeled>
+                </Grid>
+                <Grid size={3}>
+                    <ChipField
+                        record={activeNode}
+                        source="state"
+                        color={getColor(activeNode)}
+                    />
+                </Grid>
+            </Grid>
+
+            <Labeled label="resources.workflows.fields.run_id">
+                <Link
+                    to={createPath({
+                        type: 'show',
+                        resource: 'runs',
+                        id: activeNode.run_id,
+                    })}
+                >
+                    <TextField source="run_id" />
+                </Link>
+            </Labeled>
+
+            <Grid container spacing={2} sx={{ width: '100%' }}>
+                <Grid size="grow">
+                    <Labeled label="resources.workflows.fields.start_time">
+                        <DateField source="start_time" showDate showTime />
+                    </Labeled>
+                </Grid>
+                <Grid size="grow">
+                    <Labeled label="resources.workflows.fields.end_time">
+                        <DateField source="end_time" showDate showTime />
+                    </Labeled>
+                </Grid>
+            </Grid>
+            {activeNode.inputs && activeNode.inputs.length > 0 && (
+                <InputsOutputs source="inputs" />
+            )}
+            {activeNode.outputs && activeNode.outputs.length > 0 && (
+                <InputsOutputs source="outputs" />
+            )}
+        </RecordContextProvider>
     );
 };
 
