@@ -34,59 +34,59 @@ export const InferenceV2Client = ({
         live: false,
     });
 
-    const checkHealth = async (ctrl: AbortController) => {
-        try {
-            const readyRes = await provider.get(
-                baseUrl + '/v2/health/ready',
-                {},
-                ctrl.signal
-            );
-            if (ctrl.signal.aborted) return;
-
-            if (readyRes?.status !== 200 || !readyRes?.json?.ready) {
-                return setHealthStatus({
-                    ready: false,
-                    live: false,
-                    message:
-                        readyRes?.status !== 200
-                            ? readyRes?.json?.message?.toString()
-                            : translate('pages.http-client.modelNotReady'),
-                });
-            }
-
-            const liveRes = await provider.get(
-                baseUrl + '/v2/health/live',
-                {},
-                ctrl.signal
-            );
-            if (ctrl.signal.aborted) return;
-
-            if (liveRes?.status !== 200 || !liveRes?.json?.live) {
-                return setHealthStatus({
-                    ready: true,
-                    live: false,
-                    message:
-                        liveRes?.status !== 200
-                            ? liveRes?.json?.message?.toString()
-                            : translate('pages.http-client.modelNotLive'),
-                });
-            }
-
-            setHealthStatus({ ready: true, live: true });
-        } catch (error) {
-            if (!ctrl.signal.aborted) {
-                setHealthStatus({ ready: false, live: false });
-            }
-        }
-    };
-
     useEffect(() => {
         if (!baseUrl || !provider) return;
+
+        const checkHealth = async (ctrl: AbortController) => {
+            try {
+                const readyRes = await provider.get(
+                    baseUrl + '/v2/health/ready',
+                    {},
+                    ctrl.signal
+                );
+                if (ctrl.signal.aborted) return;
+
+                if (readyRes?.status !== 200) {
+                    return setHealthStatus({
+                        ready: false,
+                        live: false,
+                        message:
+                            readyRes?.status !== 200
+                                ? readyRes?.json?.message?.toString()
+                                : 'pages.http-client.modelNotReady',
+                    });
+                }
+
+                const liveRes = await provider.get(
+                    baseUrl + '/v2/health/live',
+                    {},
+                    ctrl.signal
+                );
+                if (ctrl.signal.aborted) return;
+
+                if (liveRes?.status !== 200) {
+                    return setHealthStatus({
+                        ready: true,
+                        live: false,
+                        message:
+                            liveRes?.status !== 200
+                                ? liveRes?.json?.message?.toString()
+                                : 'pages.http-client.modelNotLive',
+                    });
+                }
+
+                setHealthStatus({ ready: true, live: true });
+            } catch (error) {
+                if (!ctrl.signal.aborted) {
+                    setHealthStatus({ ready: false, live: false });
+                }
+            }
+        };
 
         const ctrl = new AbortController();
         checkHealth(ctrl);
         return () => ctrl.abort();
-    }, [baseUrl, provider, translate]);
+    }, [baseUrl, provider]);
 
     const handleTabChange = (event: SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
@@ -111,6 +111,7 @@ export const InferenceV2Client = ({
                         urls={[`${baseUrl}/v2/models/${model}/infer`]}
                         allowedMethods={['POST']}
                         allowedContentTypes={['application/json']}
+                        allowHeaders={false}
                         showRequestBody={true}
                         historyKey={historyKey}
                     />
@@ -121,6 +122,9 @@ export const InferenceV2Client = ({
                 <HttpClient
                     urls={[`${baseUrl}/v2/models/${model}`]}
                     allowedMethods={['GET']}
+                    allowHeaders={false}
+                    showRequestBody={false}
+                    historyKey={false}
                 />
             )}
         </>

@@ -364,9 +364,9 @@ const ShowToolbar = () => {
                   CHAT_FEATURES.includes(f)
               ) ? (
                 <ClientButton mode="chat" />
-            ) : (
+            ) : record?.status?.service ? (
                 <ClientButton mode="http" />
-            )}
+            ) : null}
             <FunctionField
                 render={record =>
                     record.status?.state == 'RUNNING' ? (

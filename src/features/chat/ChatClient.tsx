@@ -4,7 +4,10 @@ import { useId, useState } from 'react';
 import { useStore } from 'react-admin';
 import { Conversation } from 'reachat';
 
-export type ChatClientProps = ReaChatProps & {
+export type ChatClientProps = Omit<
+    ReaChatProps,
+    'conversations' | 'setConversations'
+> & {
     storageKey?: string | false;
 };
 

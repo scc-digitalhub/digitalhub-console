@@ -8,6 +8,7 @@
     "failed": "Fallito",
     "pending": "In attesa",
     "ready": "Pronto",
+    "live": "Attivo",
     "running": "In esecuzione",
     "stopped": "Interrotto",
     "stopping": "Interruzione in corso",

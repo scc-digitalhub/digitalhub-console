@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import {
     Typography,
     Button,
@@ -36,7 +36,10 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
 
 import { useHttpClientProvider } from './HttpClientContext';
-import { HttpClientResponse } from './provider/HttpClientProvider';
+import {
+    HttpClientRequest,
+    HttpClientResponse,
+} from './provider/HttpClientProvider';
 import { HistoryBrowser, HistoryEntry } from './components/History';
 import { JsonResponseViewer } from './components/JsonResponseViewer';
 import { RawResponseViewer } from './components/RawResponseViewer';
@@ -54,6 +57,7 @@ export interface HttpClientProps {
     urls: string[];
     allowedMethods?: (typeof METHODS)[number][];
     allowedContentTypes?: (typeof CONTENT_TYPES)[number][];
+    allowHeaders?: boolean;
     showRequestBody?: boolean;
     historyKey?: string | false; // optional key to persist history in localStorage
 }
@@ -64,6 +68,7 @@ export const HttpClient = (props: HttpClientProps) => {
         allowedMethods = METHODS,
         allowedContentTypes = CONTENT_TYPES,
         showRequestBody = true,
+        allowHeaders = true,
         historyKey,
     } = props;
     const methods: string[] = [...allowedMethods];
@@ -81,7 +86,7 @@ export const HttpClient = (props: HttpClientProps) => {
     const [contentType, setContentType] = useState<string>(
         contentTypes?.[0] || 'text/plain'
     );
-
+    const request = useRef<HttpClientRequest>();
     const [response, setResponse] = useState<HttpClientResponse | undefined>(
         undefined
     );
@@ -133,6 +138,14 @@ export const HttpClient = (props: HttpClientProps) => {
                 meta: {
                     recordId: record?.id as string,
                 },
+            };
+
+            request.current = {
+                url,
+                method,
+                contentType,
+                headers: reqHeaders,
+                body,
             };
             const res = await provider[method.toLowerCase()](url, params);
             setResponse(res);
@@ -291,77 +304,83 @@ export const HttpClient = (props: HttpClientProps) => {
                 </Box>
 
                 {/* Headers (Collapsible) */}
-                <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Typography>
-                            {translate('pages.http-client.headers')}
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        {headers.map((h, index) => (
-                            <Grid
-                                container
-                                spacing={1}
-                                key={index}
-                                sx={{ mb: 1 }}
-                            >
-                                <Grid size={5}>
-                                    <TextField
-                                        label={translate('fields.key.title')}
-                                        value={h.key}
-                                        onChange={e =>
-                                            handleHeaderChange(
-                                                index,
-                                                'key',
-                                                e.target.value
-                                            )
-                                        }
-                                        fullWidth
-                                        size="small"
-                                    />
-                                </Grid>
-                                <Grid size={5}>
-                                    <TextField
-                                        label={translate('fields.value.title')}
-                                        value={h.value}
-                                        onChange={e =>
-                                            handleHeaderChange(
-                                                index,
-                                                'value',
-                                                e.target.value
-                                            )
-                                        }
-                                        fullWidth
-                                        size="small"
-                                    />
-                                </Grid>
+                {allowHeaders && (
+                    <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMore />}>
+                            <Typography>
+                                {translate('pages.http-client.headers')}
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {headers.map((h, index) => (
                                 <Grid
-                                    size={2}
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    }}
+                                    container
+                                    spacing={1}
+                                    key={index}
+                                    sx={{ mb: 1 }}
                                 >
-                                    <IconButton
-                                        color="error"
-                                        onClick={() => removeHeader(index)}
-                                        disabled={headers.length === 1}
+                                    <Grid size={5}>
+                                        <TextField
+                                            label={translate(
+                                                'fields.key.title'
+                                            )}
+                                            value={h.key}
+                                            onChange={e =>
+                                                handleHeaderChange(
+                                                    index,
+                                                    'key',
+                                                    e.target.value
+                                                )
+                                            }
+                                            fullWidth
+                                            size="small"
+                                        />
+                                    </Grid>
+                                    <Grid size={5}>
+                                        <TextField
+                                            label={translate(
+                                                'fields.value.title'
+                                            )}
+                                            value={h.value}
+                                            onChange={e =>
+                                                handleHeaderChange(
+                                                    index,
+                                                    'value',
+                                                    e.target.value
+                                                )
+                                            }
+                                            fullWidth
+                                            size="small"
+                                        />
+                                    </Grid>
+                                    <Grid
+                                        size={2}
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
                                     >
-                                        <Delete />
-                                    </IconButton>
+                                        <IconButton
+                                            color="error"
+                                            onClick={() => removeHeader(index)}
+                                            disabled={headers.length === 1}
+                                        >
+                                            <Delete />
+                                        </IconButton>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        ))}
-                        <Button
-                            startIcon={<Add />}
-                            onClick={addHeader}
-                            size="small"
-                            variant="outlined"
-                        >
-                            {translate('ra.action.add')}
-                        </Button>
-                    </AccordionDetails>
-                </Accordion>
+                            ))}
+                            <Button
+                                startIcon={<Add />}
+                                onClick={addHeader}
+                                size="small"
+                                variant="outlined"
+                            >
+                                {translate('ra.action.add')}
+                            </Button>
+                        </AccordionDetails>
+                    </Accordion>
+                )}
 
                 {/* Request Body Section */}
                 {shouldShowRequestBody && (
@@ -428,7 +447,10 @@ export const HttpClient = (props: HttpClientProps) => {
             <Divider />
             {/* Response */}
             <Collapse in={!!response}>
-                <HttpResponseViewer response={response} />
+                <HttpResponseViewer
+                    request={request.current}
+                    response={response}
+                />
             </Collapse>
         </>
     );
@@ -436,8 +458,10 @@ export const HttpClient = (props: HttpClientProps) => {
 
 export const HttpResponseViewer = ({
     response,
+    request,
 }: {
     response: HttpClientResponse | undefined;
+    request?: HttpClientRequest;
 }) => {
     const translate = useTranslate();
 

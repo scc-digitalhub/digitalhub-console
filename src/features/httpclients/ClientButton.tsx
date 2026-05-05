@@ -218,7 +218,7 @@ const Client = (props: ClientProps) => {
                     case 'v2':
                         return (
                             <InferenceV2Client
-                                baseUrl={record.status?.openai?.baseUrl}
+                                baseUrl={record.status?.inference_v2?.baseUrl}
                                 model={record.status?.inference_v2?.model}
                                 historyKey={`http.client.history.${record.id}`}
                             />

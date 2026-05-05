@@ -8,7 +8,7 @@ import {
     RaRecord,
     Identifier,
 } from 'react-admin';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { IdField } from '../../../common/components/fields/IdField';
 
 export const InferenceV2Details = ({
@@ -29,6 +29,9 @@ export const InferenceV2Details = ({
                 </Labeled>
 
                 <Stack direction={'row'} spacing={10} alignItems="center">
+                    <Labeled label="fields.kubeai.apiVersion.title">
+                        <Typography variant="body2">Open Inference V2</Typography>
+                    </Labeled>
                     <Labeled>
                         <TextField
                             source="model"
