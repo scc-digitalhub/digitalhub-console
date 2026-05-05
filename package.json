@@ -65,6 +65,7 @@
         "@mui/x-data-grid": "^8.0.0",
         "@mui/x-tree-view": "^8.0.0",
         "@react-spring/web": "^10.0.1",
+        "@scc-digitalhub/trino-query-ui": "0.1.2",
         "@stomp/stompjs": "^7.0.0",
         "@tailwindcss/vite": "^4.1.17",
         "@uiw/react-markdown-preview": "^5.1.5",
@@ -90,7 +91,6 @@
         "react-router-dom": "^7.1.1",
         "react-syntax-highlighter": "^15.5.0",
         "tailwindcss": "4.1.17",
-        "trino-query-ui": "^0.1.1",
         "uppy": "^4.15.0"
     },
     "devDependencies": {
