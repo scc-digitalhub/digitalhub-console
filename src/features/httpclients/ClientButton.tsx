@@ -37,10 +37,11 @@ import {
 import { StandardHttpClient } from './StandardHttpClient';
 import { InferenceV2Client } from './InferenceV2Client';
 import { ChatClient } from '../chat/ChatClient';
+import { BrowserClient } from './BrowserClient';
 
 const defaultIcon = <SignpostIcon />;
 
-export type ClientButtonMode = 'http' | 'chat' | 'v2';
+export type ClientButtonMode = 'http' | 'chat' | 'v2' | 'browser';
 
 export interface ClientButtonProps<RecordType extends RaRecord = any>
     extends Omit<FieldProps<RecordType>, 'source'>,
@@ -231,6 +232,8 @@ const Client = (props: ClientProps) => {
                                 storageKey={`http.client.history.${record.id}`}
                             />
                         );
+                    case 'browser':
+                        return <BrowserClient urls={urls} />;
                     case 'http':
                     default:
                         return (

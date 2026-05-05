@@ -68,10 +68,12 @@ export const ExternalHttpProxyProvider = (
         const normalized = url.includes('://') ? url : `http://${url}`;
         const parsed = new URL(normalized);
         const scheme = parsed.protocol.replace(':', '');
+        const hostname = parsed.hostname;
+        const port = parsed.port; // empty string if not explicitly set
         const host = parsed.host; // includes port if present
         const path = parsed.pathname + parsed.search;
 
-        return { scheme, host, path };
+        return { scheme, hostname, port, host, path };
     };
     const getRequestHeaders = (headers?: Headers, contentType?: string) => {
         const requestHeaders = new Headers();
@@ -88,16 +90,25 @@ export const ExternalHttpProxyProvider = (
     };
 
     return {
+        authorize: () => {
+            console.warn(
+                'Authorization is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
+        embed: url => {
+            const { hostname, port, path } = parseUrl(url);
+            const { scheme, host: proxyHost } = parseUrl(proxyUrl);
+
+            return Promise.resolve(
+                `${scheme}://${hostname}${
+                    port ? `--${port}` : ''
+                }.${proxyHost}${path}`
+            );
+        },
         fetch: async (url, options: Options = {}) => {
             const { scheme, host, path } = parseUrl(url);
-            console.log(
-                'Proxying request to',
-                url,
-                'via',
-                `${proxyUrl}${path}`,
-                'for',
-                host
-            );
+
             const requestHeaders = (options.headers ||
                 new Headers({})) as Headers;
             requestHeaders.set('X-Proxy-Host', host);
@@ -250,6 +261,18 @@ export const DefaultHttpProxyProvider = (
     };
 
     return {
+        authorize: () => {
+            console.warn(
+                'Authorization is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
+        embed: url => {
+            console.warn(
+                'Embedding is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
         fetch: () => {
             throw new Error(
                 'Direct fetch is not supported in DefaultHttpProxyProvider'

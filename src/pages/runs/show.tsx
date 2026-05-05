@@ -365,6 +365,8 @@ const ShowToolbar = () => {
             ) : record?.status?.service ? (
                 <ClientButton mode="http" />
             ) : null}
+            {record?.kind?.startsWith('container') &&
+                record?.status?.service && <ClientButton mode="browser" />}
             <FunctionField
                 render={record =>
                     record.status?.state == 'RUNNING' ? (

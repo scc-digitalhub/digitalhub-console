@@ -5,6 +5,8 @@
 import { fetchUtils } from 'react-admin';
 
 export type HttpClientProvider = {
+    authorize(): Promise<boolean> | undefined;
+    embed(url: string): Promise<string> | undefined;
     fetch: (url: string, options?: fetchUtils.Options) => Promise<Response>;
     get: (
         url: string,
