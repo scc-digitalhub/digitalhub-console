@@ -22,7 +22,6 @@ import { DateIntervalInput } from '../features/search/components/DateIntervalInp
 import { MyUserMenu } from './MyUserMenu';
 import SearchBar from '../features/search/components/SearchBar';
 
-
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
     (process.env.REACT_APP_VERSION as string);
@@ -183,7 +182,10 @@ export const MyAppBar = () => {
     return (
         <AppBar color="primary" elevation={0} userMenu={<MyUserMenu />}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <Box sx={{ width: '210px' }}>
+                <Box
+                    sx={{ width: '210px' }}
+                    flex={enableSearch ? undefined : '1'}
+                >
                     <Typography
                         textOverflow="ellipsis"
                         whiteSpace="nowrap"
