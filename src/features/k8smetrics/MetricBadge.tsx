@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import { Typography, SvgIconOwnProps, Tooltip } from '@mui/material';
 import { Stack, StackProps, TypographyProps } from '@mui/system';
 import { isValidElement, ReactElement } from 'react';
