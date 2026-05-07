@@ -274,10 +274,12 @@ const DataTableView = (props: { storeKey?: string }) => {
                     render={record =>
                         record?.status?.files
                             ? prettyBytes(
-                                  record.status.files.reduce(
-                                      (acc, file) => acc + (file.size || 0),
-                                      0
-                                  )
+                                  record.status.files
+                                      .filter(f => f.size > 0)
+                                      .reduce(
+                                          (acc, file) => acc + (file.size || 0),
+                                          0
+                                      )
                               )
                             : ''
                     }
