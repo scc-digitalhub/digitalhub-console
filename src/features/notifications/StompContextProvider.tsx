@@ -19,7 +19,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { StompContext } from './StompContext';
 
 const filterOnStates = (message: any) => {
-    const ignore = ['DELETING', 'BUILT', 'STOP'];
+    const ignore = ['DELETING', 'BUILT', 'STOP', 'PENDING', 'CREATED'];
     if (
         message.record?.status?.state &&
         ignore.includes(message.record.status.state)
