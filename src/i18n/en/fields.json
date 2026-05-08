@@ -943,6 +943,7 @@
     },
     "service": {
         "title": "Service",
+        "aliases": "Aliases",
         "url": { "description": "", "title": "URL" },
         "urls": { "description": "", "title": "URLs" }
     },

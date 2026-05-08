@@ -942,6 +942,7 @@
     },
     "service": {
         "title": "Servizio",
+        "aliases": "Alias",
         "url": { "description": "", "title": "URL" },
         "urls": { "description": "", "title": "URLs" }
     },

@@ -9,6 +9,7 @@ import {
     RaRecord,
     Identifier,
     ArrayField,
+    WrapperField,
 } from 'react-admin';
 import { Stack, Box } from '@mui/material';
 import { ChipsField } from '../../../common/components/fields/ChipsField';
@@ -60,6 +61,22 @@ export const K8sServiceDetails = ({ record }: K8sServiceDetailsProps) => {
                         )}
                     </Stack>
                 </Stack>
+
+                {service.aliases && isArray(service.aliases) && (
+                    <Stack direction={'column'} spacing={4}>
+                        <Labeled label="fields.service.aliases">
+                            <WrapperField label="fields.service.aliases">
+                                {service.aliases.map((alias, index) => (
+                                    <TextField
+                                        key={index}
+                                        source="alias"
+                                        record={{ alias }}
+                                    />
+                                ))}
+                            </WrapperField>
+                        </Labeled>
+                    </Stack>
+                )}
 
                 <Stack spacing={4}>
                     {isString(service.ip) && (
