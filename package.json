@@ -58,6 +58,7 @@
         "@fontsource/open-sans": "^5.1.0",
         "@kotaicode/k8s-resources": "^0.1.4",
         "@melloware/react-logviewer": "^6.5.2",
+        "@microsoft/clarity": "^1.0.2",
         "@mui/icons-material": "^7.0.0",
         "@mui/material": "^7.0.0",
         "@mui/system": "^7.0.0",

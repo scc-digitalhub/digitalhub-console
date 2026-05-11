@@ -152,6 +152,7 @@ import { MyLayout } from './layout/MyLayout';
 import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
+import { ClarityInit } from './features/analytics/components/ClarityInit';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -317,6 +318,7 @@ const InitialWrapper = () => {
 export const App = () => {
     return (
         <BrowserRouter basename={CONTEXT_PATH}>
+             <ClarityInit />
             <CoreApp />
         </BrowserRouter>
     );
