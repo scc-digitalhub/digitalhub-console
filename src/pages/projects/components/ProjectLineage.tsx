@@ -122,7 +122,7 @@ const Lineage = () => {
                     });
 
                     //get runs lineage
-                    Promise.all(
+                    Promise.allSettled(
                         runs.map(r =>
                             dataProvider.getLineage('runs', {
                                 id: r.id,
@@ -130,24 +130,37 @@ const Lineage = () => {
                             })
                         )
                     ).then(results => {
-                        results.forEach(data => {
-                            if (data?.lineage && data.lineage.length !== 0) {
-                                data.lineage.forEach(l => {
-                                    if (
-                                        !rels.some(
-                                            r =>
-                                                r.dest == l.dest &&
-                                                r.type == l.type &&
-                                                r.source == l.source
-                                        )
-                                    ) {
-                                        rels.push(l);
-                                    }
-                                });
-                            }
-                        });
+                        //ignore rejected in case some runs are not found
+                        results
+                            .filter(r => r.status == 'fulfilled')
+                            .map(r => r.value)
+                            .forEach(data => {
+                                if (
+                                    data?.lineage &&
+                                    data.lineage.length !== 0
+                                ) {
+                                    data.lineage.forEach(l => {
+                                        if (
+                                            !rels.some(
+                                                r =>
+                                                    r.dest == l.dest &&
+                                                    r.type == l.type &&
+                                                    r.source == l.source
+                                            )
+                                        ) {
+                                            rels.push(l);
+                                        }
+                                    });
+                                }
+                            });
                         //finally set relationships
                         setRelationships([...rels]);
+                        //notify if some runs could not be retrieved
+                        if (results.some(r => r.status == 'rejected')) {
+                            notify('messages.lineage.missingRuns', {
+                                type: 'info',
+                            });
+                        }
                     });
                 })
                 .catch(error => {

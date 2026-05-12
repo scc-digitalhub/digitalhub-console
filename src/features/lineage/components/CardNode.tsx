@@ -14,6 +14,7 @@ import {
     CardActionArea,
     styled,
     Typography,
+    Box,
 } from '@mui/material';
 import {
     DateField,
@@ -63,9 +64,9 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
         resource == 'runs' ? (
             <CardContent>
                 <Stack>
-                    {createElement(definitions['runs'].icon, {
-                        sx: { alignSelf: 'center' },
-                    })}
+                    <Box sx={{ alignSelf: 'center' }}>
+                        {createElement(definitions['runs'].icon)}
+                    </Box>
                     <Typography
                         component={'span'}
                         variant="body2"

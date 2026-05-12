@@ -96,7 +96,7 @@ export const Flow = (props: {
 };
 
 const imageWidth = 1024;
-const imageHeight = 1500;
+const imageHeight = 8000;
 function downloadImage(dataUrl) {
     const a = document.createElement('a');
     a.setAttribute('download', 'reactflow.png');
