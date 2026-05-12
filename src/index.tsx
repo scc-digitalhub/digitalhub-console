@@ -9,7 +9,7 @@ import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/500.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
-
+import './features/analytics/clarity';
 // set title
 document.title =
     (globalThis as any).VITE_APP_NAME ||
