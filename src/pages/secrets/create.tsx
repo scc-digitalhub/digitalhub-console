@@ -38,9 +38,16 @@ export const SecretCreate = () => {
     //hardcoded: only 1 kind supported
     const kind = 'secret';
     const uiSchema = SecretUiSchema;
-    const schema = schemas ? schemas.find(s => s.kind == kind)?.schema : {};
+    const rawSchema = schemas ? schemas.find(s => s.kind === kind)?.schema : {};
+    const schema = rawSchema
+        ? {
+              ...rawSchema,
+              required:
+                  rawSchema.required?.filter((f: string) => f !== 'path') ?? [],
+          }
+        : {};
 
-    const record = { kind };
+    const record = { kind, spec: { provider: 'kubernetes' } };
 
     //TODO move to server or refactor
     const checkDuplicates = data => {
