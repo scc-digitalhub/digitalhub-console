@@ -76,6 +76,7 @@
         "env-cmd": "^10.1.0",
         "html-to-image": "1.11.11",
         "k8s-resource-parser": "^0.2.2",
+        "localforage": "^1.10.0",
         "mui-chips-input": "^7.0.0",
         "openai": "^6.9.1",
         "reachat": "2.0.2",

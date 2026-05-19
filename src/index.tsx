@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { preloadStore } from './common/provider/localForageStore';
 import { App } from './App';
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/500.css';
@@ -15,11 +16,12 @@ document.title =
     (globalThis as any).VITE_APP_NAME ||
     import.meta.env.VITE_APP_NAME ||
     'DigitalHub';
-
-const container = document.getElementById('root');
-const root = createRoot(container!);
-root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
-);
+preloadStore().then(() => {
+    const container = document.getElementById('root');
+    const root = createRoot(container!);
+    root.render(
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    );
+});

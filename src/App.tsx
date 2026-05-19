@@ -9,8 +9,8 @@ import {
     CustomRoutes,
     Resource,
     fetchUtils,
-    localStorageStore,
 } from 'react-admin';
+import { localForageStore } from './common/provider/localForageStore';
 import 'ace-builds/src-noconflict/ace';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { i18nProvider } from './common/provider/i18nProvider';
@@ -34,6 +34,8 @@ import {
 import { ProjectSelectorList } from './pages/projects/list';
 
 import { Dashboard } from './pages/dashboard/components/Dashboard';
+const store = localForageStore();
+
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -178,7 +180,7 @@ const CoreApp = () => {
                 lightTheme={theme.light}
                 darkTheme={theme.dark}
                 authProvider={authProvider}
-                store={localStorageStore('dh')}
+                store={store} 
             >
                 <StoreResetter>
                     <SearchContextProvider searchProvider={searchProvider}>
@@ -299,7 +301,7 @@ const InitialWrapper = () => {
                 authProvider={authProvider}
                 loginPage={MyLoginPage}
                 requireAuth={!!authProvider}
-                store={localStorageStore('dh')}
+                store={store} 
                 disableTelemetry
             >
                 <Resource {...projectDefinition} />
