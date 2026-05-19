@@ -89,10 +89,20 @@ export const FunctionCreate = () => {
                                 ),
                             },
                         };
-                        await dataProvider.create('tasks', {
-                            data: childPayload,
-                            meta: { root },
-                        });
+                        
+                        try {
+                            await dataProvider.create('tasks', {
+                                data: childPayload,
+                                meta: { root },
+                            });
+                        } catch (error: any) {
+                            notify(
+                                error?.message || 'ra.notification.http_error',
+                                { type: 'error' }
+                            );
+                            console.error('Failed to create task:', childPayload, error);
+                            return; 
+                        }
                     }
                 }
                 notify('ra.notification.created', { type: 'info' });
