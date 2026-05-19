@@ -17,7 +17,6 @@ import {
     RecordContextProvider,
     TextField,
     useTranslate,
-    useListController,
 } from 'react-admin';
 import { ConditionsList } from './conditions';
 import { StateChips } from '../../../common/components/StateChips';
@@ -66,46 +65,6 @@ export default function ComputeResources(props: { record: any }) {
         });
     }, [pod, pod?.containers]);
 
-    const { data: logsData } = useListController({
-        resource: 'logs',
-        sort: { field: 'created', order: 'DESC' },
-        filter: {},
-        perPage: 200,
-        disableSyncWithLocation: true,
-    });
-
-    const podNamesToMatch = useMemo(() => {
-        const s = new Set<string>();
-        if (pod?.name) s.add(pod.name);
-        if (pod?.metadata?.name) s.add(pod.metadata.name);
-        if (record?.metadata?.name) s.add(record.metadata.name);
-        if (pod?.metadata?.uid) s.add(pod.metadata.uid);
-        return Array.from(s);
-    }, [pod, record]);
-
-    const availableLogs = useMemo(() => {
-        if (!logsData) return [];
-        if (podNamesToMatch.length === 0) return logsData;
-        return logsData.filter((r: any) => {
-            const podField = r?.status?.pod || r?.metadata?.pod || r?.spec?.pod;
-            if (!podField) return false;
-            return podNamesToMatch.includes(podField);
-        });
-    }, [logsData, podNamesToMatch]);
-
-    useEffect(() => {
-        if (!availableLogs || availableLogs.length === 0) return;
-        const mostRecent = availableLogs[0];
-        const containerFromMostRecent = mostRecent?.status?.container || '';
-        if (
-            selectedContainerName &&
-            selectedContainerName === containerFromMostRecent
-        )
-            return;
-        if (containerFromMostRecent)
-            setSelectedContainerName(containerFromMostRecent);
-    }, [availableLogs]);
-
     const selectedContainer = useMemo(() => {
         if (!pod || !selectedContainerName) return {};
         return (
@@ -120,7 +79,11 @@ export default function ComputeResources(props: { record: any }) {
             {pod && (
                 <RecordContextProvider value={pod}>
                     {record?.id && pod.containers && (
-                        <ChartView id={record.id as string} resource="runs" />
+                        <ChartView
+                            id={record.id as string}
+                            resource="runs"
+                            onContainerSelect={setSelectedContainerName}
+                        />
                     )}
 
                     <Box
