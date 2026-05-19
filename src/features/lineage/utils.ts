@@ -31,7 +31,8 @@ export const getNodesAndEdges = (
     direction: RelationshipDirection,
     records: RaRecord[],
     labels: any,
-    expandable: boolean
+    expandable: boolean,
+    showIsolatedNodes: boolean
 ): { nodes: Node[]; edges: Edge[] } => {
     const keys: string[] = [];
 
@@ -45,6 +46,9 @@ export const getNodesAndEdges = (
 
     //extract node identifiers from relationships
     relationships.forEach(rel => {
+        //skip disconnected nodes if required
+        if (!showIsolatedNodes && !rel.source) return;
+
         //dest is *always* defined
         if (rel.dest && !keys.includes(rel.dest)) {
             keys.push(rel.dest);

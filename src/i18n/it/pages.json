@@ -93,6 +93,7 @@
             "run_of": "esecuzione di",
             "step_of": "step di"
         },
+        "showIsolated": "Mostra i nodi senza connessioni",
         "title": "Genealogia"
     },
     "stepperTitles": {

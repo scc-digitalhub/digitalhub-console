@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container } from '@mui/material';
+import { Box, Container, FormControlLabel, Switch } from '@mui/material';
 import {
     RaRecord,
     ResourceContextProvider,
@@ -27,6 +27,11 @@ import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 export const ProjectLineage = () => {
     const { root: projectId } = useRootSelector();
     const translate = useTranslate();
+    const [showIsolatedNodes, setShowIsolatedNodes] = useState<boolean>(false);
+
+    const handleSwitch = (e: any) => {
+        setShowIsolatedNodes(e.target.checked);
+    };
 
     return (
         <ResourceContextProvider value="projects">
@@ -42,8 +47,19 @@ export const ProjectLineage = () => {
                             )}
                             icon={<LineageIcon fontSize={'large'} />}
                         />
+                        <Box sx={{ textAlign: 'right' }}>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={showIsolatedNodes}
+                                        onChange={handleSwitch}
+                                    />
+                                }
+                                label={translate('pages.lineage.showIsolated')}
+                            />
+                        </Box>
                         <ShowView actions={false} component={FlatCard}>
-                            <Lineage />
+                            <Lineage showIsolatedNodes={showIsolatedNodes} />
                         </ShowView>
                     </>
                 </ShowBase>
@@ -52,7 +68,7 @@ export const ProjectLineage = () => {
     );
 };
 
-const Lineage = () => {
+const Lineage = ({ showIsolatedNodes }: { showIsolatedNodes: boolean }) => {
     const project = useRecordContext();
     const dataProvider = useDataProvider();
     const notify = useNotify();
@@ -185,6 +201,7 @@ const Lineage = () => {
                     record={project}
                     expandable={false}
                     addRecordNode={false}
+                    showIsolatedNodes={showIsolatedNodes}
                     viewportHeight="500px"
                     filterRelationships={r => r.type !== 'run_of'}
                 />
