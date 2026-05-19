@@ -26,6 +26,7 @@ export const RecordLineage = (props: {
     record: RaRecord;
     expandable?: boolean;
     addRecordNode?: boolean;
+    showIsolatedNodes?: boolean;
     viewportHeight?: string;
     viewportWidth?: string;
     filterRelationships?: (rel: any) => boolean;
@@ -35,6 +36,7 @@ export const RecordLineage = (props: {
         record,
         expandable = true,
         addRecordNode = true,
+        showIsolatedNodes = true,
         viewportHeight,
         viewportWidth,
         filterRelationships: filterFromProps,
@@ -150,7 +152,8 @@ export const RecordLineage = (props: {
         direction,
         addRecordNode ? [record] : [],
         labels,
-        expandable
+        expandable,
+        showIsolatedNodes
     );
 
     return (

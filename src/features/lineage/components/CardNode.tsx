@@ -13,8 +13,6 @@ import {
     Chip,
     CardActionArea,
     styled,
-    Typography,
-    Box,
 } from '@mui/material';
 import {
     DateField,
@@ -60,42 +58,15 @@ const CardNode = (props: { data: any; direction: RelationshipDirection }) => {
 
     const nodeClass = showInfo ? 'RegularNode InfoOpen' : 'RegularNode';
 
-    const nodeContent =
-        resource == 'runs' ? (
-            <CardContent>
-                <Stack>
-                    <Box sx={{ alignSelf: 'center' }}>
-                        {createElement(definitions['runs'].icon)}
-                    </Box>
-                    <Typography
-                        component={'span'}
-                        variant="body2"
-                        sx={{ textAlign: 'center' }}
-                    >
-                        {'#' + recordRepresentation(record)}
-                    </Typography>
-                    <Typography
-                        component={'span'}
-                        variant="body2"
-                        sx={theme => ({
-                            textAlign: 'center',
-                            color: alpha(theme.palette.common.black, 0.6),
-                            ...theme.applyStyles('dark', {
-                                color: alpha(theme.palette.common.white, 0.7),
-                            }),
-                        })}
-                    >
-                        {kind}
-                    </Typography>
-                </Stack>
-            </CardContent>
-        ) : (
-            <CardHeader
-                avatar={createElement(definitions[resource].icon)}
-                title={'#' + name}
-                subheader={kind}
-            />
-        );
+    const nodeContent = (
+        <CardHeader
+            avatar={createElement(definitions[resource].icon)}
+            title={
+                '#' + (resource == 'runs' ? recordRepresentation(record) : name)
+            }
+            subheader={kind}
+        />
+    );
 
     const clickableNode = (
         <CardActionArea onClick={handleNodeClick}>{nodeContent}</CardActionArea>
@@ -403,11 +374,10 @@ const SquareNode = styled(Node, {
 })(() => ({}));
 
 const RoundNode = styled(Node, {
-    name: 'SquareNode',
+    name: 'RoundNode',
     overridesResolver: (_props, styles) => styles.root,
 })(({ className }) => ({
     borderRadius: '100%',
-    aspectRatio: 1 / 1,
     ['& .MuiCardActionArea-root']: {
         width: '100%',
         height: '100%',

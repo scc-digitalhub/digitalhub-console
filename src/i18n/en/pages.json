@@ -93,6 +93,7 @@
             "run_of": "run of",
             "step_of": "step of"
         },
+        "showIsolated": "Display nodes with no connections",
         "title": "Lineage"
     },
     "stepperTitles": {
