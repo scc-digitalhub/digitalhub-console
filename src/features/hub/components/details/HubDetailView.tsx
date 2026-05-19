@@ -87,9 +87,18 @@ export const HubDetailView = ({ template }: HubDetailViewProps) => {
             ) : (
                 <Box
                     sx={{
+                        width: '100%',
+                        minWidth: 0,
                         '& .wmde-markdown': {
-                            '& pre, & code': {
+                            maxWidth: '100%',
+                            overflow: 'hidden',
+                            '& p, & pre, & code': {
                                 whiteSpace: 'pre-wrap !important',
+                                overflowWrap: 'anywhere !important',
+                                wordBreak: 'break-word !important',
+                            },
+                            '& pre': {
+                                overflowX: 'auto',
                             },
                             '& .copied': {
                                 visibility: 'visible !important',
