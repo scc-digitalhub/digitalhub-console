@@ -17,20 +17,15 @@ import {
     useNotify,
     useNotificationContext,
     useTranslate,
-    localStorageStore,
     useGetResourceLabel,
 } from 'react-admin';
 import { Alert } from '@mui/material';
 import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { StompContext, StompClientContext } from './StompContext';
-
-const MAX_MESSAGES = 300;
-const MAX_TIME_OFFSET = 180; // seconds
-const MAX_NOTIFICATION_QUEUE = 5;
-const STORE_DEBOUNCE_MS = 500;
-const BATCH_FLUSH_MS = 1000;
+import { StompContext } from './StompContext';
+import { localForageStore } from '../../common/provider/localForageStore'; 
+const store = localForageStore();
 
 const filterOnStates = (message: any) => {
     const ignore = ['DELETING', 'BUILT', 'STOP', 'PENDING', 'CREATED'];
@@ -57,8 +52,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     const notify = useNotify();
     const { notifications } = useNotificationContext();
     const createPath = useCreatePath();
-    const store = localStorageStore();
-    const translate = useTranslate();
+        const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
     const [messages, setMessages] = useState<any[]>([]);
