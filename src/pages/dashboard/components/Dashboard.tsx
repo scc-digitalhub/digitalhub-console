@@ -61,6 +61,7 @@ export const Dashboard = () => {
 
     const [completed, setCompleted] = useState<number>();
     const [running, setRunning] = useState<number>();
+    const [pending, setPending] = useState<number>();
     const [error, setError] = useState<number>();
 
     useEffect(() => {
@@ -71,7 +72,7 @@ export const Dashboard = () => {
                 }
             });
             const params = {
-                pagination: { page: 1, perPage: 5 },
+                pagination: { page: 1, perPage: 1 },
                 sort: { field: 'updated', order: 'DESC' } as SortPayload,
                 filter: {},
             };
@@ -88,6 +89,13 @@ export const Dashboard = () => {
                 .then(res => {
                     if (res.data) {
                         setRunning(res.total);
+                    }
+                });
+            dataProvider
+                .getList('runs', { ...params, filter: { state: 'PENDING' } })
+                .then(res => {
+                    if (res.data) {
+                        setPending(res.total);
                     }
                 });
             dataProvider
@@ -273,6 +281,7 @@ export const Dashboard = () => {
                                         runs={{
                                             completed: completed,
                                             running: running,
+                                            pending: pending,
                                             error: error,
                                         }}
                                     />

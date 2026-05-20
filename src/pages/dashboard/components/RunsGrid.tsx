@@ -9,11 +9,7 @@ import { CounterBadge } from '../../../common/components/CounterBadge';
 import { Link } from 'react-router-dom';
 
 export const RunsGrid = (props: {
-    runs: {
-        completed: number | undefined;
-        running: number | undefined;
-        error: number | undefined;
-    };
+    runs: Record<string, number | undefined>;
 }) => {
     const { runs } = props;
     const createPath = useCreatePath();
@@ -63,7 +59,7 @@ export const RunsGrid = (props: {
                                 }}
                                 pt={0.5}
                             >
-                                {translate(`pages.dashboard.states.${k}`)}
+                                {translate(`states.${k.toLowerCase()}`)}
                             </Typography>
                         </Button>
                     </Grid>
