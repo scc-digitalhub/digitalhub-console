@@ -14,12 +14,12 @@ import {
 import { Notification } from './Notification';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
-import { useStompContext } from '../StompContext';
+import { useStompContext, useStompClientContext } from '../StompContext';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 export const NotificationArea = () => {
+    const client = useStompClientContext();
     const {
-        client,
         messages,
         markAllAsRead,
         remove: removeMessage,

@@ -11,7 +11,7 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { useQueryClient } from '@tanstack/react-query';
-import { useStompContext } from '../StompContext';
+import { useStompClientContext } from '../StompContext';
 
 export const ListBaseLive = <RecordType extends RaRecord = any>({
     children,
@@ -19,7 +19,7 @@ export const ListBaseLive = <RecordType extends RaRecord = any>({
 }: { children: ReactNode } & ListControllerProps<RecordType>) => {
     const resource = useResourceContext(props);
     const queryClient = useQueryClient();
-    const { client } = useStompContext();
+    const client = useStompClientContext();
     const subscription = useRef<StompSubscription | null>(null);
 
     useEffect(() => {

@@ -5,8 +5,19 @@
 import { createContext, useContext } from 'react';
 import { Client as StompClient } from '@stomp/stompjs';
 
+// StompClientContext: only the STOMP client instance.
+// Stable — only changes on reconnect. Consumed by ListBaseLive, ShowBaseLive.
+export const StompClientContext = createContext<StompClient | undefined>(
+    undefined
+);
+
+export const useStompClientContext = () => {
+    return useContext(StompClientContext);
+};
+
+// StompContext: messages + actions. Re-renders on every message flush.
+// Only consumed by NotificationArea.
 interface StompContextValue {
-    client: StompClient;
     messages: any[];
     remove: (message: any) => void;
     removeAll: (message: any[]) => void;

@@ -11,7 +11,7 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { useQueryClient } from '@tanstack/react-query';
-import { useStompContext } from '../StompContext';
+import { useStompClientContext } from '../StompContext';
 import { useParams } from 'react-router-dom';
 
 export const ShowBaseLive = <RecordType extends RaRecord = any>({
@@ -21,7 +21,7 @@ export const ShowBaseLive = <RecordType extends RaRecord = any>({
     const { id: propsId } = props;
     const resource = useResourceContext(props);
     const queryClient = useQueryClient();
-    const { client } = useStompContext();
+    const client = useStompClientContext();
     const subscription = useRef<StompSubscription | null>(null);
     const { id: routeId } = useParams<'id'>();
     const id =

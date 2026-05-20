@@ -24,13 +24,13 @@ import { Alert } from '@mui/material';
 import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { StompContext } from './StompContext';
+import { StompContext, StompClientContext } from './StompContext';
 
 const MAX_MESSAGES = 300;
 const MAX_TIME_OFFSET = 180; // seconds
 const MAX_NOTIFICATION_QUEUE = 5;
 const STORE_DEBOUNCE_MS = 500;
-const BATCH_FLUSH_MS = 50;
+const BATCH_FLUSH_MS = 1000;
 
 const filterOnStates = (message: any) => {
     const ignore = ['DELETING', 'BUILT', 'STOP', 'PENDING', 'CREATED'];
@@ -62,6 +62,9 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     const getResourceLabel = useGetResourceLabel();
 
     const [messages, setMessages] = useState<any[]>([]);
+    const [stompClient, setStompClient] = useState<StompClient | undefined>(
+        undefined
+    );
     const stompClientRef = useRef<StompClient | null>(null);
     const incomingBufferRef = useRef<any[]>([]);
     const batchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -156,9 +159,11 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
 
     const flushIncoming = () => {
         batchTimerRef.current = null;
-        const batch = incomingBufferRef.current;
-        if (batch.length === 0) return;
+        const pending = incomingBufferRef.current;
+        if (pending.length === 0) return;
         incomingBufferRef.current = [];
+        // toReversed() so newest (last pushed) is at head, without mutating pending
+        const batch = pending.toReversed();
 
         // single state update for the whole batch
         setMessages(prev => {
@@ -189,11 +194,8 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             }
         }
 
-        // accumulate in buffer (newest first)
-        incomingBufferRef.current = [
-            { ...notification, isRead: false },
-            ...incomingBufferRef.current,
-        ];
+        // accumulate in buffer — push to tail (O(1)), reversed on flush
+        incomingBufferRef.current.push({ ...notification, isRead: false });
 
         // schedule a single flush if not already pending
         if (!batchTimerRef.current) {
@@ -295,9 +297,9 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
 
         //connect
         stompClientRef.current.activate();
+        setStompClient(stompClientRef.current);
 
         return {
-            client: stompClientRef.current,
             remove: removeMessage,
             removeAll: removeAllMessages,
             markAsRead: (msg: any) =>
@@ -317,9 +319,11 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     );
 
     return (
-        <StompContext.Provider value={contextValue}>
-            {children}
-        </StompContext.Provider>
+        <StompClientContext.Provider value={stompClient}>
+            <StompContext.Provider value={contextValue}>
+                {children}
+            </StompContext.Provider>
+        </StompClientContext.Provider>
     );
 };
 
