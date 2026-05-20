@@ -2,12 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import {
+    ReactElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { Client as StompClient } from '@stomp/stompjs';
 import {
     Link,
     useCreatePath,
     useNotify,
+    useNotificationContext,
     useTranslate,
     localStorageStore,
     useGetResourceLabel,
@@ -17,6 +25,12 @@ import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { StompContext } from './StompContext';
+
+const MAX_MESSAGES = 300;
+const MAX_TIME_OFFSET = 180; // seconds
+const MAX_NOTIFICATION_QUEUE = 5;
+const STORE_DEBOUNCE_MS = 500;
+const BATCH_FLUSH_MS = 50;
 
 const filterOnStates = (message: any) => {
     const ignore = ['DELETING', 'BUILT', 'STOP', 'PENDING', 'CREATED'];
@@ -36,11 +50,12 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         authProvider,
         websocketUrl,
         topics,
-        onMessage,
+        onMessage: onMessageProp,
         onReceive: onReceiveTransformer = filterOnStates,
     } = props;
     const { root } = useRootSelector();
     const notify = useNotify();
+    const { notifications } = useNotificationContext();
     const createPath = useCreatePath();
     const store = localStorageStore();
     const translate = useTranslate();
@@ -48,6 +63,11 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
 
     const [messages, setMessages] = useState<any[]>([]);
     const stompClientRef = useRef<StompClient | null>(null);
+    const incomingBufferRef = useRef<any[]>([]);
+    const batchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const storeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pendingStoreRef = useRef<any[] | null>(null);
+    const flushIncomingRef = useRef<() => void>(() => {});
 
     //keep storage in sync with root
     const storeKey = useRef<string>('');
@@ -57,16 +77,33 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             setMessages(store.getItem(storeKey.current) || []);
         }
     }, [root]);
-    const storeMessages = value => {
-        if (storeKey.current) {
-            store.setItem(storeKey.current, value);
-        }
-    };
+    const storeMessages = useCallback(
+        (value: any[]) => {
+            if (!storeKey.current) return;
+            pendingStoreRef.current = value;
+            if (storeTimerRef.current) clearTimeout(storeTimerRef.current);
+            storeTimerRef.current = setTimeout(() => {
+                if (pendingStoreRef.current !== null && storeKey.current) {
+                    store.setItem(storeKey.current, pendingStoreRef.current);
+                    pendingStoreRef.current = null;
+                }
+            }, STORE_DEBOUNCE_MS);
+        },
+        [store]
+    );
 
     const onStateChanged = (message: any) => {
+        const ts = message.timestamp
+            ? Date.now() - new Date(message.timestamp).getTime()
+            : 0;
+        if (ts > MAX_TIME_OFFSET * 1000) {
+            return;
+        }
+
         const resource = message.resource;
         const record = message.record;
 
+        const name = record.name || record.id;
         const state = record?.status?.state;
         const resourceName = translate(`resources.${resource}.forcedCaseName`, {
             smart_count: 0,
@@ -77,8 +114,9 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             return;
         }
 
-        const msg = translate('messages.notifications.stateMessage', {
+        const msg = translate('messages.notifications.popup', {
             state,
+            name,
             resource: resourceName,
         });
 
@@ -97,6 +135,10 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
                 </Link>
             );
 
+        if (notifications.length >= MAX_NOTIFICATION_QUEUE) {
+            return;
+        }
+
         notify(
             <Alert severity={StateColors[state.toUpperCase()]}>
                 {alertContent}
@@ -110,7 +152,28 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         );
     };
 
-    const onReceive = message => {
+    const onMessage = onMessageProp ?? onStateChanged;
+
+    const flushIncoming = () => {
+        batchTimerRef.current = null;
+        const batch = incomingBufferRef.current;
+        if (batch.length === 0) return;
+        incomingBufferRef.current = [];
+
+        // single state update for the whole batch
+        setMessages(prev => {
+            const value = [...batch, ...prev].slice(0, MAX_MESSAGES);
+            storeMessages(value);
+            return value;
+        });
+
+        // notify for every message in the batch
+        batch.forEach(notification => onMessage(notification));
+    };
+    // keep ref current so the scheduled timer always calls the latest closure
+    flushIncomingRef.current = flushIncoming;
+
+    const onReceive = (message: any) => {
         let notification = JSON.parse(message.body);
 
         if (notification?.record?.project !== root) {
@@ -126,72 +189,73 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             }
         }
 
-        //push as first element in stack
-        setMessages(prev => {
-            const value = [
-                {
-                    ...notification,
-                    isRead: false,
-                },
-                ...prev,
-            ];
-            //store
-            storeMessages(value);
-            return value;
-        });
+        // accumulate in buffer (newest first)
+        incomingBufferRef.current = [
+            { ...notification, isRead: false },
+            ...incomingBufferRef.current,
+        ];
 
-        //notify
-        if (onMessage) {
-            onMessage(notification);
-        } else {
-            //default alert
-            onStateChanged(notification);
+        // schedule a single flush if not already pending
+        if (!batchTimerRef.current) {
+            batchTimerRef.current = setTimeout(
+                () => flushIncomingRef.current(),
+                BATCH_FLUSH_MS
+            );
         }
     };
 
-    const removeMessage = message => {
-        if (message?.id) {
-            setMessages(prev => {
-                const value = prev.filter(m => message.id !== m.id);
-                //store
-                storeMessages(value);
-                return value;
-            });
-        }
-    };
-
-    const removeAllMessages = messages => {
-        if (messages) {
-            const ids = messages.map(m => m.id);
-            setMessages(prev => {
-                const value = prev.filter(m => !ids.includes(m.id));
-                //store
-                storeMessages(value);
-                return value;
-            });
-        }
-    };
-
-    const updateMessages = (fn: (msg) => any) => {
-        return (messages: any[]) => {
-            if (!messages) {
-                return;
+    const removeMessage = useCallback(
+        message => {
+            if (message?.id) {
+                setMessages(prev => {
+                    const value = prev.filter(m => message.id !== m.id);
+                    //store
+                    storeMessages(value);
+                    return value;
+                });
             }
+        },
+        [storeMessages]
+    );
 
-            const updated = messages.map(message => fn(message));
+    const removeAllMessages = useCallback(
+        messages => {
+            if (messages) {
+                const ids = messages.map(m => m.id);
+                setMessages(prev => {
+                    const value = prev.filter(m => !ids.includes(m.id));
+                    //store
+                    storeMessages(value);
+                    return value;
+                });
+            }
+        },
+        [storeMessages]
+    );
 
-            setMessages(prev => {
-                //replace all updated
-                const value = prev.map(
-                    m => updated.find(u => u.id == m.id) || m
-                );
+    const updateMessages = useCallback(
+        (fn: (msg) => any) => {
+            return (messages: any[]) => {
+                if (!messages) {
+                    return;
+                }
 
-                //store
-                storeMessages(value);
-                return value;
-            });
-        };
-    };
+                const updated = messages.map(message => fn(message));
+
+                setMessages(prev => {
+                    //replace all updated
+                    const value = prev.map(
+                        m => updated.find(u => u.id == m.id) || m
+                    );
+
+                    //store
+                    storeMessages(value);
+                    return value;
+                });
+            };
+        },
+        [storeMessages]
+    );
 
     const stompContext = useMemo(() => {
         if (!websocketUrl) {
@@ -247,10 +311,13 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
         };
     }, [authProvider]);
 
+    const contextValue = useMemo(
+        () => (stompContext ? { ...stompContext, messages } : undefined),
+        [stompContext, messages]
+    );
+
     return (
-        <StompContext.Provider
-            value={stompContext ? { ...stompContext, messages } : undefined}
-        >
+        <StompContext.Provider value={contextValue}>
             {children}
         </StompContext.Provider>
     );

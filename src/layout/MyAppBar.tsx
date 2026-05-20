@@ -17,7 +17,6 @@ import { useContext } from 'react';
 import { SearchEnabledContext } from '../App';
 import { UploadArea } from '../features/files/upload/components/UploadArea';
 import { NotificationArea } from '../features/notifications/components/NotificationArea';
-import { useStompContext } from '../features/notifications/StompContext';
 import { DateIntervalInput } from '../features/search/components/DateIntervalInput';
 import { MyUserMenu } from './MyUserMenu';
 import SearchBar from '../features/search/components/SearchBar';
@@ -177,7 +176,6 @@ const filters = [
 
 export const MyAppBar = () => {
     const enableSearch = useContext(SearchEnabledContext);
-    const { client } = useStompContext();
 
     return (
         <AppBar color="primary" elevation={0} userMenu={<MyUserMenu />}>
@@ -220,7 +218,7 @@ export const MyAppBar = () => {
                     }}
                 >
                     <UploadArea />
-                    {client && <NotificationArea />}
+                    <NotificationArea />
                     {docsVersion && (
                         <IconButtonWithTooltip
                             color="inherit"

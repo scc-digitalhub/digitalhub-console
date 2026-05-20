@@ -19,6 +19,7 @@ import ClearAllIcon from '@mui/icons-material/ClearAll';
 
 export const NotificationArea = () => {
     const {
+        client,
         messages,
         markAllAsRead,
         remove: removeMessage,
@@ -28,20 +29,19 @@ export const NotificationArea = () => {
     const createPath = useCreatePath();
     const navigate = useNavigate();
     const [read, setRead] = useState<any[]>([]);
-    const [data, setData] = useState<any[]>([]);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    useEffect(() => {
-        setData(messages);
-    }, [JSON.stringify(messages)]);
 
     useEffect(() => {
-        if (read && read.length > 0) {
+        if (read.length > 0) {
             //callback and clear
-            //TODO debounce rate 1s
             markAllAsRead(read);
             setRead([]);
         }
-    }, [JSON.stringify(read)]);
+    }, [read]);
+
+    if (!client) {
+        return null;
+    }
 
     const handleOpen = (event): void => {
         setAnchorEl(event.currentTarget);
@@ -77,13 +77,13 @@ export const NotificationArea = () => {
         setRead(prev => [...prev, message]);
     };
 
-    const unreadCount = data
-        ? data.reduce((count, el) => (el.isRead ? count : count + 1), 0)
+    const unreadCount = messages
+        ? messages.reduce((count, el) => (el.isRead ? count : count + 1), 0)
         : 0;
 
     const icon = (
         <Badge
-            badgeContent={data?.filter(m => m.isRead === false).length}
+            badgeContent={messages?.filter(m => m.isRead === false).length}
             color="error"
         >
             <NotificationsIcon />
@@ -121,13 +121,13 @@ export const NotificationArea = () => {
                     },
                 })}
             >
-                {data?.length > 0 ? (
+                {messages?.length > 0 ? (
                     <MenuItem sx={{ borderBottom: '2px' }}>
                         <CardHeader
                             sx={{ width: '100%', py: '5px' }}
                             action={
                                 <IconButtonWithTooltip
-                                    onClick={() => removeAllMessages(data)}
+                                    onClick={() => removeAllMessages(messages)}
                                     label="ra.action.clear_array_input"
                                 >
                                     <ClearAllIcon fontSize="small" />
@@ -168,8 +168,8 @@ export const NotificationArea = () => {
                     </MenuItem>
                 )}
 
-                {data?.length > 0 &&
-                    data.map((message, index) => (
+                {messages?.length > 0 &&
+                    messages.map((message, index) => (
                         <MenuItem key={'m-' + index}>
                             <ErrorBoundary FallbackComponent={Error}>
                                 <Notification

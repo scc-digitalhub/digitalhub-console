@@ -28,7 +28,9 @@
         "header": "Notifications",
         "subheader": "%{unread} unread messages",
         "subheader_no_results": "No notifications found",
+        "popup": "%{resource} %{name} status changed to %{state}",
         "stateMessage": "%{resource} status changed to %{state}"
+
     },
     "search": {
         "no_results": "Your search gave no results",

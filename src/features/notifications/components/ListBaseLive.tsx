@@ -27,21 +27,34 @@ export const ListBaseLive = <RecordType extends RaRecord = any>({
         if (client && client.connected && queryClient && resource) {
             console.log('subscribing to', topic);
             const callback = message => {
-                let notification = JSON.parse(message.body);
-                queryClient.invalidateQueries({
-                    predicate: query => {
-                        if (
-                            query.queryKey[0] === resource &&
-                            query.queryKey[1] === 'getList' &&
-                            query.queryKey[2]?.['meta']?.root ===
-                                notification.record?.project
-                        ) {
-                            // console.log('notification to', topic, notification);
-                            return true;
-                        }
-                        return false;
-                    },
-                });
+                const notification = JSON.parse(message.body);
+                const record = notification.record;
+                if (!record?.id) return;
+
+                const predicate = (query: any) =>
+                    query.queryKey[0] === resource &&
+                    query.queryKey[1] === 'getList' &&
+                    query.queryKey[2]?.['meta']?.root === record.project;
+
+                // Try to update the record in-place in every matching cached page.
+                // Only fall back to invalidation for pages that don't contain the record.
+                const matchingQueries = queryClient.getQueriesData<{
+                    data: RaRecord[];
+                    total: number;
+                }>({ predicate });
+
+                for (const [queryKey, cached] of matchingQueries) {
+                    if (!cached?.data) continue;
+                    const idx = cached.data.findIndex(r => r.id === record.id);
+                    if (idx !== -1) {
+                        const updatedData = [...cached.data];
+                        updatedData[idx] = record;
+                        queryClient.setQueryData(queryKey, {
+                            ...cached,
+                            data: updatedData,
+                        });
+                    }
+                }
             };
             subscription.current = client.subscribe(topic, callback);
         }

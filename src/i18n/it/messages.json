@@ -28,7 +28,8 @@
         "header": "Notifiche",
         "subheader": "%{unread} messaggi non letti",
         "subheader_no_results": "Nessuna notifica trovata",
-        "statusMessage": "Stato %{resource} passato a %{state}"
+        "popup": "Lo stato di %{resource} %{name} è cambiato in %{state}",
+        "stateMessage": "Stato %{resource} passato a %{state}"
     },
     "search": {
         "no_results": "La tua ricerca non ha prodotto risultati",

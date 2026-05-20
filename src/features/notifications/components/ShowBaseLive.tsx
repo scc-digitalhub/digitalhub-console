@@ -24,21 +24,31 @@ export const ShowBaseLive = <RecordType extends RaRecord = any>({
     const { client } = useStompContext();
     const subscription = useRef<StompSubscription | null>(null);
     const { id: routeId } = useParams<'id'>();
-    const id = propsId != null ? propsId : decodeURIComponent(routeId);
+    const id =
+        propsId != null
+            ? propsId
+            : routeId
+            ? decodeURIComponent(routeId)
+            : undefined;
 
     useEffect(() => {
         const topic = `/notifications/${resource}/${id}`;
         if (client && client.connected && queryClient && resource && id) {
             console.log('subscribing to', topic);
             const callback = message => {
-                let notification = JSON.parse(message.body);
-                //console.log('notification to', topic, notification);
-                const state = notification.record?.status?.state;
-                //check deletion state to avoid refetching a non-existent resource
-                if (state !== 'DELETING' && state !== 'DELETED') {
-                    queryClient.invalidateQueries({
-                        queryKey: [resource, 'getOne', { id: String(id) }],
-                    });
+                const notification = JSON.parse(message.body);
+                const record = notification.record;
+                const state = record?.status?.state;
+                // Ignore deletion states — the resource no longer exists.
+                if (state === 'DELETING' || state === 'DELETED') return;
+
+                const queryKey = [resource, 'getOne', { id: String(id) }];
+                if (record?.id) {
+                    // Full record available: update in-place, no network request.
+                    queryClient.setQueryData(queryKey, { data: record });
+                } else {
+                    // Partial/missing record: fall back to invalidation.
+                    queryClient.invalidateQueries({ queryKey });
                 }
             };
             subscription.current = client.subscribe(topic, callback);
