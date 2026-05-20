@@ -35,7 +35,14 @@ export const HubCardSummary = ({ template }: { template: any }) => {
     return (
         <RecordContextProvider value={template}>
             <Box sx={{ width: '100%', minWidth: 0 }}>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mb: 0.5 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 1,
+                        mb: 0.5,
+                    }}
+                >
                     <Typography
                         sx={{
                             color: 'primary.main',

@@ -44,7 +44,14 @@ export const HubDetailHeader = ({ template }: { template: any }) => {
             >
                 {displayName}
             </Typography>
-            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1, width: '100%' }}>
+            <Box
+                sx={{
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    p: 1,
+                    width: '100%',
+                }}
+            >
                 <SimpleShowLayout
                     record={template}
                     sx={{
@@ -63,8 +70,16 @@ export const HubDetailHeader = ({ template }: { template: any }) => {
                     }}
                 >
                     <FunctionField label="Name" render={() => displayName} />
-                    <TextField source="metadata.description" label="Description" emptyText="-" />
-                    <TextField source="metadata.version" label="Version" emptyText="-" />
+                    <TextField
+                        source="metadata.description"
+                        label="Description"
+                        emptyText="-"
+                    />
+                    <TextField
+                        source="metadata.version"
+                        label="Version"
+                        emptyText="-"
+                    />
                     {labels.length > 0 && (
                         <FunctionField
                             label="Labels"

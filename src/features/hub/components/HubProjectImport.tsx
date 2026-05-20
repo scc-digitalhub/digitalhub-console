@@ -36,17 +36,15 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import { HubIcon } from './HubIcon';
 import { useHubResources } from '../useHubResources';
-import {
-    createItemWithChildren,
-} from '../utils';
+import { createItemWithChildren } from '../utils';
 
 interface ImportItem {
     name: string;
     kind: string;
     displayName: string;
     resourceName: string;
-    catalogKey: string; 
-        data: any;
+    catalogKey: string;
+    data: any;
 }
 
 interface ImportResult {
@@ -72,21 +70,26 @@ export const HubProjectImport = () => {
     );
     const allItems: ImportItem[] = useMemo(() => {
         if (!hubTemplate?.spec) return [];
-        return Object.entries(hubTemplate.spec).flatMap(([catalogKey, items]) => {
-            const resourceName = catalogKeyToResource[catalogKey] ?? catalogKey;
-            return (items as any[]).map(item => ({
-                name: item.name,
-                kind: item.kind,
-                displayName: item.metadata?.name || item.name,
-                resourceName,  
-                catalogKey,
-                data: item,
-            }));
-        });
+        return Object.entries(hubTemplate.spec).flatMap(
+            ([catalogKey, items]) => {
+                const resourceName =
+                    catalogKeyToResource[catalogKey] ?? catalogKey;
+                return (items as any[]).map(item => ({
+                    name: item.name,
+                    kind: item.kind,
+                    displayName: item.metadata?.name || item.name,
+                    resourceName,
+                    catalogKey,
+                    data: item,
+                }));
+            }
+        );
     }, [hubTemplate, catalogKeyToResource]);
 
-    const [selection, setSelection] = useState<Record<string, boolean>>(
-        () => Object.fromEntries(allItems.map(item => [`${item.catalogKey}:${item.name}`, true]))
+    const [selection, setSelection] = useState<Record<string, boolean>>(() =>
+        Object.fromEntries(
+            allItems.map(item => [`${item.catalogKey}:${item.name}`, true])
+        )
     );
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -95,7 +98,10 @@ export const HubProjectImport = () => {
     const [results, setResults] = useState<ImportResult[]>([]);
 
     const selectedItems = useMemo(
-        () => allItems.filter(item => selection[`${item.catalogKey}:${item.name}`]),
+        () =>
+            allItems.filter(
+                item => selection[`${item.catalogKey}:${item.name}`]
+            ),
         [allItems, selection]
     );
 
@@ -137,7 +143,11 @@ export const HubProjectImport = () => {
         const finalResults: ImportResult[] = importResults.map(r =>
             r.status === 'fulfilled'
                 ? r.value
-                : { item: r.reason?.item, success: false, error: r.reason?.message }
+                : {
+                      item: r.reason?.item,
+                      success: false,
+                      error: r.reason?.message,
+                  }
         );
 
         setResults(finalResults);
@@ -149,17 +159,19 @@ export const HubProjectImport = () => {
         } else {
             notify('pages.hub.import_partial', {
                 type: 'warning',
-                messageArgs: { failed: failed.length, total: finalResults.length },
+                messageArgs: {
+                    failed: failed.length,
+                    total: finalResults.length,
+                },
             });
         }
     };
 
     const handleClose = () => {
         setProgressOpen(false);
-        
+
         navigate(`${basename}/hub`);
     };
-
 
     const groupedByType = useMemo(() => {
         const groups: Record<string, ImportItem[]> = {};
@@ -205,12 +217,25 @@ export const HubProjectImport = () => {
                                     size="small"
                                     color={'primary'}
                                 />
-                                <Typography variant="caption" color="text.secondary">
-                                    {items.filter(i => selection[`${i.catalogKey}:${i.name}`]).length}
+                                <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                >
+                                    {
+                                        items.filter(
+                                            i =>
+                                                selection[
+                                                    `${i.catalogKey}:${i.name}`
+                                                ]
+                                        ).length
+                                    }
                                     /{items.length} selected
                                 </Typography>
                             </Stack>
-                            <Button size="small" onClick={() => toggleAllOfType(type)}>
+                            <Button
+                                size="small"
+                                onClick={() => toggleAllOfType(type)}
+                            >
                                 {allSelected ? 'Deselect all' : 'Select all'}
                             </Button>
                         </Stack>
@@ -241,10 +266,16 @@ export const HubProjectImport = () => {
                                             }
                                             label={
                                                 <Stack>
-                                                    <Typography variant="body2" fontWeight="bold">
+                                                    <Typography
+                                                        variant="body2"
+                                                        fontWeight="bold"
+                                                    >
                                                         {item.displayName}
                                                     </Typography>
-                                                    <Typography variant="caption" color="text.secondary">
+                                                    <Typography
+                                                        variant="caption"
+                                                        color="text.secondary"
+                                                    >
                                                         {item.kind}
                                                     </Typography>
                                                 </Stack>
@@ -260,10 +291,14 @@ export const HubProjectImport = () => {
             })}
 
             {/* azioni */}
-            <Stack direction="row" justifyContent="space-between" sx={{ mt: 2 }}>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                sx={{ mt: 2 }}
+            >
                 <Button
                     variant="text"
-                    onClick={() => navigate(`${basename}/hub`)} 
+                    onClick={() => navigate(`${basename}/hub`)}
                 >
                     {translate('ra.action.cancel')}
                 </Button>
@@ -277,11 +312,18 @@ export const HubProjectImport = () => {
             </Stack>
 
             {/* modale conferma */}
-            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="sm" fullWidth>
+            <Dialog
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+                maxWidth="sm"
+                fullWidth
+            >
                 <DialogTitle>Confirm Import</DialogTitle>
                 <DialogContent>
                     <Typography variant="body2" sx={{ mb: 2 }}>
-                        You are about to import <strong>{selectedItems.length}</strong> resources into project <strong>{root}</strong>:
+                        You are about to import{' '}
+                        <strong>{selectedItems.length}</strong> resources into
+                        project <strong>{root}</strong>:
                     </Typography>
                     <List dense>
                         {selectedItems.map(item => (
@@ -311,7 +353,13 @@ export const HubProjectImport = () => {
                 </DialogTitle>
                 <DialogContent>
                     {importing ? (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                p: 4,
+                            }}
+                        >
                             <CircularProgress />
                         </Box>
                     ) : (

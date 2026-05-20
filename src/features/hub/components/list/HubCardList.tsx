@@ -7,8 +7,6 @@ import { Box } from '@mui/material';
 import { GridList } from '../../../../common/components/layout/GridList';
 import { HubCard } from './HubCard';
 
-
-
 interface HubCardListProps {
     showType?: boolean;
 }

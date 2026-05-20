@@ -46,24 +46,25 @@ export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
                           label="Resource Type"
                           choices={hubResources.map(r => ({
                               id: r.name,
-                              name: r.name
+                              name: r.name,
                           }))}
                           sx={{
-                            '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)': {
-                                transform: 'none',
-                                bottom: 0,
-                                left: 10,
-                                display: 'flex',
-                                alignItems: 'center',
-                            },
-                        }}
+                              '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)':
+                                  {
+                                      transform: 'none',
+                                      bottom: 0,
+                                      left: 10,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                  },
+                          }}
                           alwaysOn
                           helperText={false}
                       />,
                   ]
                 : [],
-                [showTypeFilter, hubResources]
-            );
+        [showTypeFilter, hubResources]
+    );
 
     const labelFilters = useMemo(
         () =>

@@ -4,16 +4,14 @@
 
 import { useState } from 'react';
 import {
+    Confirm,
     Button as RaButton,
     useTranslate,
+    TopToolbar,
     useDataProvider,
     useNotify,
 } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import {
-    TopToolbar,
-    Confirm,
-} from 'react-admin';
 import {
     Code as CodeIcon,
     Add as ContentAdd,
@@ -23,10 +21,7 @@ import {
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useNavigate } from 'react-router';
 import { useHubResources } from '../../useHubResources';
-import {
-    createItemWithChildren,
-    loadProjectItems,
-} from '../../utils';
+import { createItemWithChildren, loadProjectItems } from '../../utils';
 
 interface HubDetailToolbarProps {
     template: any;
@@ -47,7 +42,7 @@ export const HubDetailToolbar = ({
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const { root } = useRootSelector();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const hubResources = useHubResources();
@@ -61,12 +56,20 @@ export const HubDetailToolbar = ({
             if (template.resourceName === 'projects') {
                 // Scarica il YAML del progetto e usa i suoi item
                 const items = template.metadata?.repository
-                    ? await loadProjectItems(template.metadata.repository, catalogKeyToResource)
+                    ? await loadProjectItems(
+                          template.metadata.repository,
+                          catalogKeyToResource
+                      )
                     : [];
 
                 await Promise.all(
                     items.map(({ item, resourceName }) =>
-                        createItemWithChildren(item, resourceName, root || '', dataProvider)
+                        createItemWithChildren(
+                            item,
+                            resourceName,
+                            root || '',
+                            dataProvider
+                        )
                     )
                 );
             } else {
@@ -128,33 +131,32 @@ export const HubDetailToolbar = ({
 
                 {template?.metadata?.repository && (
                     <>
-                    <RaButton
-                        size="small"
-                        variant="text"
-                        color="primary"
-                        label="actions.download_notebook"
-                        onClick={onNotebookDownload}
-                    >
-                        <DownloadIcon fontSize="small" />
-                    </RaButton>
-                    <RaButton
-                    size="small"
-                    variant="text"
-                    color="primary"
-                    label="Repository"
-                    onClick={() =>
-                        window.open(
-                            template.metadata.repository,
-                            '_blank',
-                            'noopener,noreferrer'
-                        )
-                    }
-                >
-                    <CodeIcon fontSize="small" />
-                </RaButton>
-                </>
+                        <RaButton
+                            size="small"
+                            variant="text"
+                            color="primary"
+                            label="actions.download_notebook"
+                            onClick={onNotebookDownload}
+                        >
+                            <DownloadIcon fontSize="small" />
+                        </RaButton>
+                        <RaButton
+                            size="small"
+                            variant="text"
+                            color="primary"
+                            label="Repository"
+                            onClick={() =>
+                                window.open(
+                                    template.metadata.repository,
+                                    '_blank',
+                                    'noopener,noreferrer'
+                                )
+                            }
+                        >
+                            <CodeIcon fontSize="small" />
+                        </RaButton>
+                    </>
                 )}
-                
             </TopToolbar>
 
             <Confirm

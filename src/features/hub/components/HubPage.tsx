@@ -52,7 +52,7 @@ export const HubPage = ({ resourceName }: HubPageProps) => {
 
     //prepare the list of items to show based on the catalog and
     //the selected resource type, adding the resourceName as property to each item for easier filtering later
-    //if resourceName is not specified, show all items from all types  
+    //if resourceName is not specified, show all items from all types
     const fullItems = useMemo(() => {
         if (!catalogData?.catalog) return [];
 
@@ -69,9 +69,8 @@ export const HubPage = ({ resourceName }: HubPageProps) => {
         return hubResources.flatMap(res =>
             (catalogData.catalog[res.catalogKey] || []).map((item: any) => ({
                 ...item,
-                resourceName: res.name,       
-                catalogKey: res.catalogKey,   
-
+                resourceName: res.name,
+                catalogKey: res.catalogKey,
             }))
         );
     }, [catalogData, currentResource, hubResources]);
@@ -112,7 +111,7 @@ export const HubPage = ({ resourceName }: HubPageProps) => {
         });
     }, [fullItems, filterValues]);
 
-    //prepare the context value for the list, including the filtered items, 
+    //prepare the context value for the list, including the filtered items,
     // filter values and available filters extracted from the full list of items
     const listContext = useList({ data: filteredItems });
     const availableFilters = useMemo(
@@ -147,13 +146,13 @@ export const HubPage = ({ resourceName }: HubPageProps) => {
         selectedTemplate: activeTemplate,
         setSelectedTemplate,
     } as any;
-//showTypeFilter for showing filter by resource or not, generic hub page shows the filter, 
-// while specific pages for resource types hide it, since they are already filtered by type
-//resourceName for title, subtitle and description
+    //showTypeFilter for showing filter by resource or not, generic hub page shows the filter,
+    // while specific pages for resource types hide it, since they are already filtered by type
+    //resourceName for title, subtitle and description
     return (
         <ListContextProvider value={customContext}>
             <HubLayout
-                showTypeFilter={!resourceName}   
+                showTypeFilter={!resourceName}
                 resourceName={resourceName}
             />
         </ListContextProvider>
