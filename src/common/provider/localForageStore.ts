@@ -4,6 +4,7 @@ import { Store } from 'react-admin';
 const forageInstance = localforage.createInstance({
     name: 'platformadmin',
     storeName: 'dh',
+    //backup su localStorage se IndexedDB non è disponibile (es. Safari in modalità privata)
     driver: [localforage.INDEXEDDB, localforage.LOCALSTORAGE], 
 });
 
@@ -19,9 +20,13 @@ const notify = (key: string) => {
  * Va chiamato PRIMA di montare React.
  */
 export const preloadStore = async (): Promise<void> => {
-    await forageInstance.iterate((value, key) => {
-        memoryCache[key] = value;
-    });
+    try {
+        await forageInstance.iterate((value, key) => {
+            memoryCache[key] = value;
+        });
+    } catch (e) {
+        console.warn("Storage non disponibile , fallback su memoria RAM.", e);
+    }
 };
 
 export const localForageStore = (): Store => ({
