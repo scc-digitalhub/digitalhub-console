@@ -48,6 +48,12 @@ import ContentAdd from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import ListIcon from '@mui/icons-material/List';
 
+const cardStyle = {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+} as const;
+
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
@@ -56,77 +62,66 @@ export const Dashboard = () => {
     const { isAdmin } = useProjectPermissions();
     const createPath = useCreatePath();
 
-    const [project, setProject] = useState<any>();
-    const [metrics, setMetrics] = useState<any>();
-
-    const [completed, setCompleted] = useState<number>();
-    const [running, setRunning] = useState<number>();
-    const [pending, setPending] = useState<number>();
-    const [error, setError] = useState<number>();
+    const [project, setProject] = useState<any>(null);
+    const [metrics, setMetrics] = useState<any>(null);
+    const [runCounts, setRunCounts] = useState<Record<string, number | undefined>>({});
 
     useEffect(() => {
-        if (dataProvider && projectId) {
-            dataProvider.getOne('projects', { id: projectId }).then(res => {
-                if (res.data) {
-                    setProject(res.data);
+        if (!dataProvider || !projectId) return;
+
+        dataProvider.getOne('projects', { id: projectId }).then(res => {
+            if (res.data) {
+                setProject(res.data);
+            }
+        });
+
+        const params = {
+            pagination: { page: 1, perPage: 1 },
+            sort: { field: 'updated', order: 'DESC' } as SortPayload,
+            filter: {},
+        };
+
+        Promise.all([
+            dataProvider.getList('runs', {
+                ...params,
+                filter: { state: 'COMPLETED' },
+            }),
+            dataProvider.getList('runs', {
+                ...params,
+                filter: { state: 'RUNNING' },
+            }),
+            dataProvider.getList('runs', {
+                ...params,
+                filter: { state: 'PENDING' },
+            }),
+            dataProvider.getList('runs', {
+                ...params,
+                filter: { state: 'ERROR' },
+            }),
+        ]).then(([completedRes, runningRes, pendingRes, errorRes]) => {
+            setRunCounts({
+                completed: completedRes.total,
+                running: runningRes.total,
+                pending: pendingRes.total,
+                error: errorRes.total,
+            });
+        });
+
+        dataProvider
+            .invoke({
+                path: '/projects/' + projectId + '/metrics/k8s',
+                options: { method: 'GET' },
+            })
+            .then(res => {
+                if (res) {
+                    setMetrics(res);
                 }
             });
-            const params = {
-                pagination: { page: 1, perPage: 1 },
-                sort: { field: 'updated', order: 'DESC' } as SortPayload,
-                filter: {},
-            };
-
-            dataProvider
-                .getList('runs', { ...params, filter: { state: 'COMPLETED' } })
-                .then(res => {
-                    if (res.data) {
-                        setCompleted(res.total);
-                    }
-                });
-            dataProvider
-                .getList('runs', { ...params, filter: { state: 'RUNNING' } })
-                .then(res => {
-                    if (res.data) {
-                        setRunning(res.total);
-                    }
-                });
-            dataProvider
-                .getList('runs', { ...params, filter: { state: 'PENDING' } })
-                .then(res => {
-                    if (res.data) {
-                        setPending(res.total);
-                    }
-                });
-            dataProvider
-                .getList('runs', { ...params, filter: { state: 'ERROR' } })
-                .then(res => {
-                    if (res.data) {
-                        setError(res.total);
-                    }
-                });
-            dataProvider
-                .invoke({
-                    path: '/projects/' + projectId + '/metrics/k8s',
-                    options: { method: 'GET' },
-                })
-                .then(res => {
-                    if (res) {
-                        setMetrics(res);
-                    }
-                });
-        }
     }, [dataProvider, projectId]);
 
     if (!project) {
         return <LoadingIndicator />;
     }
-
-    const cardStyle = {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-    };
 
     return (
         <ResourceContextProvider value="projects">
@@ -277,14 +272,7 @@ export const Dashboard = () => {
                                     }}
                                 />
                                 <CardContent>
-                                    <RunsGrid
-                                        runs={{
-                                            completed: completed,
-                                            running: running,
-                                            pending: pending,
-                                            error: error,
-                                        }}
-                                    />
+                                    <RunsGrid runs={runCounts} />
                                 </CardContent>
                                 <CardActions
                                     disableSpacing
