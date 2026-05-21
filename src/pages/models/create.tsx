@@ -4,12 +4,13 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     CreateBase,
     CreateView,
     TextInput,
     required,
+    useDataProvider,
     useNotify,
     useRedirect,
     useResourceContext,
@@ -29,13 +30,18 @@ import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
+import { TemplatesSelector } from '../../common/components/TemplatesSelector';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
+    const dataProvider = useDataProvider();
     const id = useRef(randomId());
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
+    const [templates, setTemplates] = useState<any[] | undefined>();
+    const [template, setTemplate] = useState<any | undefined>();
+
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
         id: id.current,
     });
@@ -45,6 +51,20 @@ export const ModelCreate = () => {
         onBeforeUpload,
         onUploadComplete,
     });
+
+    useEffect(() => {
+        if (dataProvider) {
+            dataProvider
+                .getList('templates', {
+                    pagination: { page: 1, perPage: 100 },
+                    sort: { field: 'name', order: 'ASC' },
+                    filter: { type: resource?.slice(0, -1) },
+                })
+                .then(({ data }) => {
+                    setTemplates(data);
+                });
+        }
+    }, [resource, dataProvider]);
 
     const transform = data => {
         //strip path tl which is a transient field
@@ -72,20 +92,44 @@ export const ModelCreate = () => {
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };
+    const defaultValues = template
+        ? { id: id.current, ...template }
+        : { id: id.current, spec: { path: null } };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
+                resource="models"
                 transform={transform}
+                redirect="list"
+                record={defaultValues}
                 mutationOptions={{ onSuccess, onSettled }}
-                record={{ id: id.current, spec: { path: null } }}
             >
                 <>
                     <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <ModelForm uploader={uploader} />
+                            {templates &&
+                            templates.length > 0 &&
+                            template === undefined ? (
+                                <TemplatesSelector
+                                    templates={templates}
+                                    template={template}
+                                    onSelected={setTemplate}
+                                />
+                            ) : (
+                                <ModelForm
+                                    uploader={uploader}
+                                    onCancel={() => {
+                                        if (templates && templates.length) {
+                                            setTemplate(undefined);
+                                        } else {
+                                            redirect('list', resource);
+                                        }
+                                    }}
+                                />
+                            )}
                         </FlatCard>
                     </CreateView>
                 </>
@@ -94,8 +138,11 @@ export const ModelCreate = () => {
     );
 };
 
-export const ModelForm = (props: { uploader?: Uploader }) => {
-    const { uploader } = props;
+export const ModelForm = (props: {
+    uploader?: Uploader;
+    onCancel?: () => void;
+}) => {
+    const { uploader, onCancel } = props;
 
     //check if any extension is available
     const { data: schemas } = useGetSchemas('extensions');
@@ -103,7 +150,7 @@ export const ModelForm = (props: { uploader?: Uploader }) => {
     //TODO fix stepperform handling for empty (null) children
     if (schemas && schemas.length > 0) {
         return (
-            <StepperForm toolbar={<StepperToolbar />}>
+            <StepperForm toolbar={<StepperToolbar onCancel={onCancel} />}>
                 <StepperForm.Step label="fields.base">
                     <TextInput
                         source="name"

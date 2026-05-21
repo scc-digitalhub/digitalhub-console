@@ -17,14 +17,14 @@ import {
     LoadingIndicator,
     RecordContextProvider,
     ResourceContextProvider,
-    useGetList,
+    useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
 import { useFormContext } from 'react-hook-form';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChipsField } from './fields/ChipsField';
 import { StyledTemplate } from './layout/StyledTemplate';
 
@@ -47,24 +47,43 @@ const useSafeIsDirty = (): boolean => {
 export const TemplatesSelector = (props: {
     template: string | null;
     kinds?: any[] | undefined;
+    templates?: any[];
     onSelected?: (template: Template | null) => void;
 }) => {
-    const { template: selected, onSelected, kinds } = props;
+    const {
+        template: selected,
+        onSelected,
+        kinds,
+        templates: templateProps,
+    } = props;
     const resource = useResourceContext();
+    const dataProvider = useDataProvider();
     const translate = useTranslate();
     const record = useRecordContext(props);
     const formContext = useFormContext();
     const isDirty = useSafeIsDirty();
 
-    
     const [open, setOpen] = useState(false);
     const cur = useRef<Template | null>(null);
+    const [templates, setTemplates] = useState<any[] | null>();
 
-    const { data: templates, isLoading } = useGetList('templates', {
-        pagination: { page: 1, perPage: 100 },
-        sort: { field: 'name', order: 'ASC' },
-        filter: { type: resource?.slice(0, -1) },
-    });
+    useEffect(() => {
+        if (templateProps) {
+            setTemplates(templateProps);
+        } else {
+            dataProvider
+                .getList('templates', {
+                    pagination: { page: 1, perPage: 100 },
+                    sort: { field: 'name', order: 'ASC' },
+                    filter: { type: resource?.slice(0, -1) },
+                })
+                .then(({ data }) => setTemplates(data));
+        }
+    }, [dataProvider, resource, templateProps]);
+
+    if (templates === undefined) {
+        return <LoadingIndicator />;
+    }
 
     const doSelect = (template: Template | null) => {
         // Reset form solo se il form context esiste (fase 1 con CreateBase)
@@ -103,7 +122,7 @@ export const TemplatesSelector = (props: {
     };
 
     const handleSelection = (e, template) => {
-        if (template?.id === selected) {
+        if (selected && template?.id === selected) {
             // no-op
         } else if (isDirty && formContext) {
             // chiedi conferma solo se il form esiste ed è dirty
@@ -114,8 +133,6 @@ export const TemplatesSelector = (props: {
         }
         e.stopPropagation();
     };
-
-    if (isLoading) return <LoadingIndicator />;
 
     return (
         <ResourceContextProvider value={'templates'}>
@@ -153,7 +170,7 @@ export const TemplateScratch = (props: {
     selected: boolean;
     onSelected?: (event, template: Template | null) => void;
 }) => {
-    const { selected, onSelected } = props;  // ← rimuovi kinds dal destructuring
+    const { selected, onSelected } = props; // ← rimuovi kinds dal destructuring
     const translate = useTranslate();
 
     const handleClick = e => {
