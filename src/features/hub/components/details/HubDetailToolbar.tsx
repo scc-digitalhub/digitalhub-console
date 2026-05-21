@@ -16,12 +16,16 @@ import {
     Code as CodeIcon,
     Add as ContentAdd,
     ArrowBack as ArrowBackIcon,
-    Download as DownloadIcon,
 } from '@mui/icons-material';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useNavigate } from 'react-router';
 import { useHubResources } from '../../useHubResources';
-import { createItemWithChildren, loadProjectItems } from '../../utils';
+import {
+    createItemWithChildren,
+    loadProjectItems,
+    toRepositoryAssetUrl,
+} from '../../utils';
+import { NotebookPreviewButton } from './NotebookPreviewButton';
 
 interface HubDetailToolbarProps {
     template: any;
@@ -45,10 +49,12 @@ export const HubDetailToolbar = ({
     const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const hubResources = useHubResources();
     const catalogKeyToResource = Object.fromEntries(
         hubResources.map(r => [r.catalogKey, r.name])
     );
+
     const handleAddDirect = async () => {
         setConfirmOpen(false);
         setLoading(true);
@@ -93,6 +99,11 @@ export const HubDetailToolbar = ({
         }
     };
 
+    const notebookUrl = toRepositoryAssetUrl(
+        template?.metadata?.repository,
+        'notebook.ipynb'
+    );
+
     return (
         <>
             <TopToolbar>
@@ -131,15 +142,15 @@ export const HubDetailToolbar = ({
 
                 {template?.metadata?.repository && (
                     <>
-                        <RaButton
-                            size="small"
-                            variant="text"
-                            color="primary"
-                            label="actions.download_notebook"
-                            onClick={onNotebookDownload}
-                        >
-                            <DownloadIcon fontSize="small" />
-                        </RaButton>
+                        {notebookUrl && (
+                            <NotebookPreviewButton
+                                onDownload={onNotebookDownload}
+                                url={notebookUrl}
+                                title={
+                                    template?.metadata?.name || template?.name
+                                }
+                            />
+                        )}
                         <RaButton
                             size="small"
                             variant="text"
