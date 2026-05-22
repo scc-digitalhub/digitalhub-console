@@ -19,7 +19,7 @@ import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
@@ -32,16 +32,16 @@ import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const id = useRef(randomId());
+    const [id, setId] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
+        id,
     });
     const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
+        id,
+        recordId: id,
         onBeforeUpload,
         onUploadComplete,
     });
@@ -70,6 +70,7 @@ export const DataItemCreate = () => {
         }
 
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
+        setId(randomId());
         redirect('list', resource);
     };
 
@@ -78,7 +79,7 @@ export const DataItemCreate = () => {
             <CreateBase
                 transform={transform}
                 mutationOptions={{ onSuccess, onSettled }}
-                record={{ id: id.current, spec: { path: null } }}
+                record={{ id, spec: { path: null } }}
             >
                 <>
                     <CreatePageTitle

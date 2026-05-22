@@ -4,7 +4,7 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
-import { useRef } from 'react';
+import { useState } from 'react';
 import {
     CreateBase,
     CreateView,
@@ -32,16 +32,16 @@ import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
-    const id = useRef(randomId());
+    const [id, setId] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
+        id,
     });
     const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
+        id,
+        recordId: id,
         onBeforeUpload,
         onUploadComplete,
     });
@@ -70,6 +70,7 @@ export const ArtifactCreate = () => {
         }
 
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
+        setId(randomId());
         redirect('list', resource);
     };
 
@@ -78,7 +79,7 @@ export const ArtifactCreate = () => {
             <CreateBase
                 transform={transform}
                 mutationOptions={{ onSuccess, onSettled }}
-                record={{ id: id.current, spec: { path: null } }}
+                record={{ id, spec: { path: null } }}
             >
                 <>
                     <CreatePageTitle

@@ -4,7 +4,7 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     CreateBase,
     CreateView,
@@ -35,7 +35,7 @@ import { TemplatesSelector } from '../../common/components/TemplatesSelector';
 export const ModelCreate = () => {
     const { root } = useRootSelector();
     const dataProvider = useDataProvider();
-    const id = useRef(randomId());
+    const [id, setId] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
@@ -43,11 +43,11 @@ export const ModelCreate = () => {
     const [template, setTemplate] = useState<any | undefined>();
 
     const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
+        id,
     });
     const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
+        id,
+        recordId: id,
         onBeforeUpload,
         onUploadComplete,
     });
@@ -90,11 +90,12 @@ export const ModelCreate = () => {
         }
 
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
+        setId(randomId());
         redirect('list', resource);
     };
     const defaultValues = template
-        ? { id: id.current, ...template }
-        : { id: id.current, spec: { path: null } };
+        ? { id, ...template }
+        : { id, spec: { path: null } };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
