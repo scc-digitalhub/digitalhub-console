@@ -43,11 +43,15 @@ export const ShowBaseLive = <RecordType extends RaRecord = any>({
                 if (state === 'DELETING' || state === 'DELETED') return;
 
                 const queryKey = [resource, 'getOne', { id: String(id) }];
-                if (record?.id) {
-                    // Full record available: update in-place, no network request.
-                    queryClient.setQueryData(queryKey, { data: record });
+                // useGetOne stores the raw record directly (queryFn unwraps { data }).
+                const existing = queryClient.getQueryData<RaRecord>(queryKey);
+                if (record?.id && existing) {
+                    // update only status in place, this is for live updates
+                    queryClient.setQueryData(queryKey, {
+                        ...existing,
+                        status: record.status,
+                    });
                 } else {
-                    // Partial/missing record: fall back to invalidation.
                     queryClient.invalidateQueries({ queryKey });
                 }
             };
