@@ -23,9 +23,15 @@ import { Alert } from '@mui/material';
 import { StateColors } from '../../common/components/StateChips';
 import { AuthorizationAwareAuthProvider } from '@dslab/ra-auth-oidc';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { StompContext } from './StompContext';
-import { localForageStore } from '../../common/provider/localForageStore'; 
+import { StompContext, StompClientContext } from './StompContext';
+import { localForageStore } from '../../common/provider/localForageStore';
 const store = localForageStore();
+
+const MAX_MESSAGES = 300;
+const MAX_TIME_OFFSET = 180; // seconds
+const MAX_NOTIFICATION_QUEUE = 5;
+const STORE_DEBOUNCE_MS = 500;
+const BATCH_FLUSH_MS = 1000;
 
 const filterOnStates = (message: any) => {
     const ignore = ['DELETING', 'BUILT', 'STOP', 'PENDING', 'CREATED'];
@@ -52,7 +58,7 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
     const notify = useNotify();
     const { notifications } = useNotificationContext();
     const createPath = useCreatePath();
-        const translate = useTranslate();
+    const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
     const [messages, setMessages] = useState<any[]>([]);
@@ -74,20 +80,17 @@ export const StompContextProvider = (props: StompContextProviderParams) => {
             setMessages(store.getItem(storeKey.current) || []);
         }
     }, [root]);
-    const storeMessages = useCallback(
-        (value: any[]) => {
-            if (!storeKey.current) return;
-            pendingStoreRef.current = value;
-            if (storeTimerRef.current) clearTimeout(storeTimerRef.current);
-            storeTimerRef.current = setTimeout(() => {
-                if (pendingStoreRef.current !== null && storeKey.current) {
-                    store.setItem(storeKey.current, pendingStoreRef.current);
-                    pendingStoreRef.current = null;
-                }
-            }, STORE_DEBOUNCE_MS);
-        },
-        [store]
-    );
+    const storeMessages = useCallback((value: any[]) => {
+        if (!storeKey.current) return;
+        pendingStoreRef.current = value;
+        if (storeTimerRef.current) clearTimeout(storeTimerRef.current);
+        storeTimerRef.current = setTimeout(() => {
+            if (pendingStoreRef.current !== null && storeKey.current) {
+                store.setItem(storeKey.current, pendingStoreRef.current);
+                pendingStoreRef.current = null;
+            }
+        }, STORE_DEBOUNCE_MS);
+    }, []);
 
     const onStateChanged = (message: any) => {
         const ts = message.timestamp
