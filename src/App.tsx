@@ -9,6 +9,7 @@ import {
     CustomRoutes,
     Resource,
     fetchUtils,
+    localStorageStore,
 } from 'react-admin';
 import 'ace-builds/src-noconflict/ace';
 import { BrowserRouter, Route } from 'react-router-dom';
@@ -33,7 +34,6 @@ import {
 import { ProjectSelectorList } from './pages/projects/list';
 
 import { Dashboard } from './pages/dashboard/components/Dashboard';
-
 //config
 const CONTEXT_PATH: string =
     import.meta.env.BASE_URL ||
@@ -178,6 +178,7 @@ const CoreApp = () => {
                 lightTheme={theme.light}
                 darkTheme={theme.dark}
                 authProvider={authProvider}
+                store={localStorageStore('dh')}
             >
                 <StoreResetter>
                     <SearchContextProvider searchProvider={searchProvider}>
@@ -298,6 +299,7 @@ const InitialWrapper = () => {
                 authProvider={authProvider}
                 loginPage={MyLoginPage}
                 requireAuth={!!authProvider}
+                store={localStorageStore('dh')}
                 disableTelemetry
             >
                 <Resource {...projectDefinition} />
