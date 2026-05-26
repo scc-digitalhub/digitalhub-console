@@ -5,13 +5,11 @@
 import {
     Box,
     Chip,
-    Dialog,
     DialogContent,
     DialogTitle,
     Grid,
     IconButton,
     Stack,
-    styled,
     Typography,
     useTheme,
 } from '@mui/material';
@@ -41,9 +39,12 @@ import {
     mergeData,
     Series,
 } from '../utils';
-import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { EmptyMessage } from '../../../common/components/layout/EmptyMessage';
 import { Spinner } from '../../../common/components/layout/Spinner';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../common/components/StyledDialog';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;
@@ -262,26 +263,31 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                     </Button>
                 )}
             </Stack>
-            <ComparisonDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth
                 maxWidth="md"
                 aria-labelledby="metrics-grid-dialog"
-                className={CreateInDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
+                sx={{
+                    [`& .${StyledDialogClasses.header}`]: {
+                        padding: theme.spacing(2, 2, 0),
+                    },
+                }}
             >
-                <div className={CreateInDialogButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="metrics-grid-dialog-title"
-                        className={CreateInDialogButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {translate('messages.metrics.comparison_title', {
                             id: record?.id,
                         })}
                     </DialogTitle>
                     <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -298,7 +304,7 @@ export const MetricsGrid = (props: MetricsGridProps) => {
                         {...rest}
                     />
                 </DialogContent>
-            </ComparisonDialog>
+            </StyledDialog>
             <Box>
                 <Chip
                     label={formatLabel(record, resource)}
@@ -349,21 +355,3 @@ const sortRecordFirst = (arr: Series[], recordId: string): any[] => {
         });
     return [...sorted, ...rest];
 };
-
-const ComparisonDialog = styled(Dialog, {
-    name: 'RaCreateInDialogButton',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2, 0),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

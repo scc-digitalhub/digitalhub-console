@@ -24,11 +24,9 @@ import {
 } from 'react-admin';
 import {
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
     Grid,
     Typography,
 } from '@mui/material';
@@ -36,6 +34,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
 import { useDownload } from '../useDownload';
 import { IdField } from '../../../../common/components/fields/IdField';
+import {
+    ShareDialog,
+    StyledDialogClasses,
+} from '../../../../common/components/StyledDialog';
 
 const defaultIcon = <ShareIcon fontSize="small" />;
 
@@ -101,12 +103,12 @@ export const ShareButton = (props: ShareButtonProps) => {
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="share-dialog-title"
-                className={ShareDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
-                <div className={ShareDialogButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="share-dialog-title"
-                        className={ShareDialogButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {translate(
                             label && typeof label === 'string'
@@ -116,7 +118,7 @@ export const ShareButton = (props: ShareButtonProps) => {
                         {record && record.name}
                     </DialogTitle>
                     <IconButton
-                        className={ShareDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -126,7 +128,7 @@ export const ShareButton = (props: ShareButtonProps) => {
                     </IconButton>
                 </div>
 
-                <DialogContent className={ShareDialogButtonClasses.content}>
+                <DialogContent className={StyledDialogClasses.content}>
                     <Typography variant="body2" mb={1}>
                         {translate('pages.share.files')}
                     </Typography>
@@ -209,43 +211,6 @@ const ShareCreateForm = (props: { path?: string; record?: any }) => {
         </Create>
     );
 };
-
-const PREFIX = 'ShareDialogButton';
-
-export const ShareDialogButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    content: `${PREFIX}-content`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const ShareDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${ShareDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${ShareDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2, 0, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${ShareDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-    [`& .${ShareDialogButtonClasses.content}`]: {
-        [`& .MuiFormHelperText-root`]: {
-            display: 'none',
-        },
-        [`& .MuiTableHead-root`]: {
-            display: 'none',
-        },
-    },
-}));
 
 export type ShareButtonProps<RecordType extends RaRecord = any> =
     ButtonProps & {

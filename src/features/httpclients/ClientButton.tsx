@@ -24,11 +24,9 @@ import {
 
 import {
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
     Typography,
     Stack,
     Switch,
@@ -39,6 +37,10 @@ import { StandardHttpClient } from './StandardHttpClient';
 import { InferenceV2Client } from './InferenceV2Client';
 import { ChatClient } from '../chat/ChatClient';
 import { BrowserClient } from './BrowserClient';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../common/components/StyledDialog';
 
 const defaultIcon = <SignpostIcon />;
 
@@ -123,7 +125,7 @@ export const ClientButton = (props: ClientButtonProps) => {
             >
                 {icon}
             </Button>
-            <ClientDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
@@ -131,17 +133,17 @@ export const ClientButton = (props: ClientButtonProps) => {
                 fullScreen={fullScreen}
                 maxWidth={maxWidth}
                 aria-labelledby="client-dialog-title"
-                className={ClientButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
                 <div
-                    className={ClientButtonClasses.header}
+                    className={StyledDialogClasses.header}
                     role="fieldset"
                     aria-labelledby="client-dialog-title-main"
                 >
                     <Stack direction="column" spacing={0.5} sx={{ flex: 1 }}>
                         <DialogTitle
                             id="client-dialog-title-main"
-                            className={ClientButtonClasses.title}
+                            className={StyledDialogClasses.title}
                         >
                             {titleText} {record?.name ? `#${record.name}` : ''}
                         </DialogTitle>
@@ -163,7 +165,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                     />
 
                     <IconButton
-                        className={ClientButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -175,7 +177,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                 <DialogContent>
                     <Client mode={mode} record={record} />
                 </DialogContent>
-            </ClientDialog>
+            </StyledDialog>
         </Fragment>
     );
 };
@@ -254,31 +256,3 @@ const Client = (props: ClientProps) => {
         </>
     );
 };
-
-const PREFIX = 'ClientButton';
-
-const ClientButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const ClientDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${ClientButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${ClientButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${ClientButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

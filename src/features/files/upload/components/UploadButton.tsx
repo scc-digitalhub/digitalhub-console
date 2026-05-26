@@ -17,18 +17,19 @@ import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
 import {
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
     Stack,
-    styled,
 } from '@mui/material';
-import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import UploadIcon from '@mui/icons-material/Upload';
 import { Dashboard } from '@uppy/react';
 import { useGetUploader } from '../useGetUploader';
 import { UploadDashboard } from './UploadDashboard';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../../common/components/StyledDialog';
 
 const defaultIcon = <UploadIcon />;
 
@@ -91,20 +92,20 @@ export const UploadButton = (props: UploadButtonProps) => {
             >
                 {icon}
             </Button>
-            <UploadDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
-                className={CreateInDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
-                <div className={CreateInDialogButtonClasses.header}>
-                    <DialogTitle className={CreateInDialogButtonClasses.title}>
+                <div className={StyledDialogClasses.header}>
+                    <DialogTitle className={StyledDialogClasses.title}>
                         {translate('actions.upload')} {path}
                     </DialogTitle>
                     <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -150,28 +151,10 @@ export const UploadButton = (props: UploadButtonProps) => {
                         <LoadingIndicator />
                     )}
                 </DialogContent>
-            </UploadDialog>
+            </StyledDialog>
         </Fragment>
     );
 };
-
-const UploadDialog = styled(Dialog, {
-    name: 'RaCreateInDialogButton',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));
 
 export type UploadButtonProps = ButtonProps & {
     icon?: ReactElement;

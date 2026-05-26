@@ -15,16 +15,17 @@ import {
 } from 'react-admin';
 import {
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
 } from '@mui/material';
 import SegmentIcon from '@mui/icons-material/Segment';
 import CloseIcon from '@mui/icons-material/Close';
-import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { LogsView } from './LogsView';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../common/components/StyledDialog';
 
 const defaultIcon = <SegmentIcon />;
 
@@ -76,24 +77,24 @@ export const LogsButton = (props: LogsButtonProps) => {
             >
                 {icon}
             </Button>
-            <LogsDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="logs-dialog-title"
-                className={CreateInDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
-                <div className={CreateInDialogButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="logs-dialog-title"
-                        className={CreateInDialogButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {typeof label === 'string' ? translate(label) : label}
                     </DialogTitle>
                     <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -110,28 +111,10 @@ export const LogsButton = (props: LogsButtonProps) => {
                         <LogsView id={id} resource={resource} />
                     )}
                 </DialogContent>
-            </LogsDialog>
+            </StyledDialog>
         </Fragment>
     );
 };
-
-const LogsDialog = styled(Dialog, {
-    name: 'RaCreateInDialogButton',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));
 
 export type LogsButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
     /**

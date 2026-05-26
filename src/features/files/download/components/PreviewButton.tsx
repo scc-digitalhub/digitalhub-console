@@ -42,7 +42,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
     Box,
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
@@ -51,11 +50,14 @@ import {
     Stack,
     styled,
 } from '@mui/material';
-import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { getMimeTypeFromExtension, getTypeFromMimeType } from '../../utils';
 import { useDownload } from '../useDownload';
 import { DownloadParams, ResourceDownloadParams } from '../types';
 import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../../common/components/StyledDialog';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
@@ -162,19 +164,19 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                     {icon}
                 </Button>
             )}
-            <PreviewDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="logs-dialog-title"
-                className={CreateInDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
-                <div className={CreateInDialogButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="logs-dialog-title"
-                        className={CreateInDialogButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {fileName
                             ? fileName
@@ -183,7 +185,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                             : label}
                     </DialogTitle>
                     <IconButton
-                        className={CreateInDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -209,28 +211,10 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         <EmptyMessage message="error.preview_not_available" />
                     )}
                 </DialogContent>
-            </PreviewDialog>
+            </StyledDialog>
         </Fragment>
     );
 };
-
-const PreviewDialog = styled(Dialog, {
-    name: 'RaCreateInDialogButton',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));
 
 const PreviewView = (props: PreviewViewProps) => {
     const { path, resource, id, sub, fileType, contentType = 'text' } = props;

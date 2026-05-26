@@ -3,11 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
     useTheme,
 } from '@mui/material';
 import {
@@ -19,6 +17,10 @@ import { useCallback, useState } from 'react';
 import { Button, TopToolbar, useTranslate } from 'react-admin';
 import { JupyterNotebookViewer } from 'react-jupyter-notebook-viewer';
 import { MouseEvent } from 'react';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../../common/components/StyledDialog';
 
 export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
     const { onDownload, url, title } = props;
@@ -51,24 +53,24 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
             >
                 <PreviewIcon fontSize="small" />
             </Button>
-            <PreviewDialog
+            <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 fullWidth={true}
                 maxWidth="lg"
                 aria-labelledby="notebook-preview-dialog-title"
-                className={NotebookPreviewButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
-                <div className={NotebookPreviewButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="notebook-preview-dialog-title"
-                        className={NotebookPreviewButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {title ?? 'Notebook'}
                     </DialogTitle>
                     <IconButton
-                        className={NotebookPreviewButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                         aria-label={translate('ra.action.close')}
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
@@ -77,7 +79,7 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                         <CloseIcon fontSize="small" />
                     </IconButton>
                 </div>
-                <DialogContent>
+                <DialogContent className={StyledDialogClasses.content}>
                     <TopToolbar>
                         <Button
                             size="small"
@@ -98,7 +100,7 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                         }
                     />
                 </DialogContent>
-            </PreviewDialog>
+            </StyledDialog>
         </>
     );
 };
@@ -108,31 +110,3 @@ type NotebookPreviewButtonProps = {
     url: string;
     title?: string;
 };
-
-const PREFIX = 'NotebookPreviewButton';
-
-const NotebookPreviewButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const PreviewDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${NotebookPreviewButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${NotebookPreviewButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${NotebookPreviewButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

@@ -7,11 +7,9 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
 } from '@mui/material';
 import { useTranslate } from 'react-admin';
 import { SingleValue } from './charts/SingleValue';
@@ -21,6 +19,10 @@ import { ComparisonTable } from './charts/ComparisonTable';
 import React, { useCallback, useState } from 'react';
 import { LineChart } from './charts/LineChart';
 import { Metric } from '../utils';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../common/components/StyledDialog';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();
@@ -89,17 +91,17 @@ const FullScreenButton = (props: {
             <IconButton aria-label="fullscreen" onClick={handleDialogOpen}>
                 <OpenInFullIcon />
             </IconButton>
-            <FullScreenDialog
+            <StyledDialog
                 open={open}
                 fullScreen
                 onClose={handleDialogClose}
                 onClick={handleClick}
                 aria-labelledby="inspect-dialog-title"
             >
-                <div className={FullScreenDialogButtonClasses.header}>
+                <div className={StyledDialogClasses.header}>
                     <DialogTitle
                         id="inspect-dialog-title"
-                        className={FullScreenDialogButtonClasses.title}
+                        className={StyledDialogClasses.title}
                     >
                         {translate(label)}
                     </DialogTitle>
@@ -108,42 +110,14 @@ const FullScreenButton = (props: {
                         title={translate('ra.action.close')}
                         onClick={handleDialogClose}
                         size="small"
-                        className={FullScreenDialogButtonClasses.closeButton}
+                        className={StyledDialogClasses.closeButton}
                     >
                         <CloseIcon fontSize="small" />
                     </IconButton>
                 </div>
 
                 <DialogContent>{children}</DialogContent>
-            </FullScreenDialog>
+            </StyledDialog>
         </>
     );
 };
-
-const PREFIX = 'RaFullScreenDialogButton';
-
-export const FullScreenDialogButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const FullScreenDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${FullScreenDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${FullScreenDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${FullScreenDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

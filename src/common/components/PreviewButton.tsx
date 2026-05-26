@@ -19,17 +19,16 @@ import {
 } from 'react-admin';
 import {
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
     Switch,
 } from '@mui/material';
 import { DialogContext, useDialogContext } from '@dslab/ra-dialog-crud';
 
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
+import { StyledDialog, StyledDialogClasses } from './StyledDialog';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
@@ -77,12 +76,12 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         }),
         [handleDialogClose, handleDialogOpen]
     );
+
     return (
         <>
             <Button
                 label={label}
                 onClick={handleDialogOpen}
-                className={PreviewButtonClasses.button}
                 variant={variant}
                 color={color}
                 sx={{ maxWidth: 'fit-content' }}
@@ -90,14 +89,14 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                 {icon}
             </Button>
 
-            <PreviewDialog
+            <StyledDialog
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 fullScreen={fullScreen}
                 onClose={handleDialogClose}
                 aria-labelledby="preview-dialog-title"
                 open={open}
-                className={PreviewButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
                 scroll="body"
                 sx={sx}
             >
@@ -110,7 +109,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                         {children}
                     </PreviewContent>
                 </DialogContext.Provider>
-            </PreviewDialog>
+            </StyledDialog>
         </>
     );
 };
@@ -127,10 +126,10 @@ const PreviewContent = (props: {
     const defaultTitle = translate('fields.preview');
     return (
         <>
-            <div className={PreviewButtonClasses.header}>
+            <div className={StyledDialogClasses.header}>
                 <DialogTitle
                     id="preview-dialog-title"
-                    className={PreviewButtonClasses.title}
+                    className={StyledDialogClasses.title}
                 >
                     {!title
                         ? defaultTitle
@@ -147,7 +146,7 @@ const PreviewContent = (props: {
                     />
                 </Labeled>
                 <IconButton
-                    className={PreviewButtonClasses.closeButton}
+                    className={StyledDialogClasses.closeButton}
                     aria-label={translate('ra.action.close')}
                     title={translate('ra.action.close')}
                     onClick={handleClose}
@@ -178,31 +177,3 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
         maxWidth?: Breakpoint;
         closeOnClickOutside?: boolean;
     };
-
-const PREFIX = 'RaPreviewButton';
-
-export const PreviewButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const PreviewDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${PreviewButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${PreviewButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${PreviewButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));
