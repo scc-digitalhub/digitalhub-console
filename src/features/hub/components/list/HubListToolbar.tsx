@@ -10,7 +10,9 @@ interface HubListToolbarProps {
 }
 
 // Box che contiene la barra di ricerca e i filtri
-export const HubListToolbar = ({ showTypeFilter = false }: HubListToolbarProps) => (
+export const HubListToolbar = ({
+    showTypeFilter = false,
+}: HubListToolbarProps) => (
     <Box sx={{ width: '100%', mb: 2 }}>
         <HubFilterBar showTypeFilter={showTypeFilter} />
     </Box>

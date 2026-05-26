@@ -12,17 +12,21 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { HubDetailView } from './details/HubDetailView';
 import { HubDetailToolbar } from './details/HubDetailToolbar';
 import { HubListView } from './list/HubListView';
-import { loadDefinitionYaml, isChildDocument, toRepositoryAssetUrl } from '../utils';
+import {
+    loadDefinitionYaml,
+    isChildDocument,
+    toRepositoryAssetUrl,
+} from '../utils';
 
 interface HubLayoutProps {
-    showTypeFilter?: boolean; 
+    showTypeFilter?: boolean;
     resourceName?: string;
     icon?: React.ReactElement;
 }
 
 export const HubLayout = ({
     showTypeFilter = false,
-    resourceName,            
+    resourceName,
     icon = <DataObject fontSize="large" />,
 }: HubLayoutProps) => {
     const translate = useTranslate();
@@ -48,56 +52,71 @@ export const HubLayout = ({
         return translate('pages.hub.subtitle');
     }, [resourceName, translate]);
 
-    const handleImport = useCallback(async (template: any) => {
-        const type = template.resourceName;
-        const resource = template.resourceName;
+    const handleImport = useCallback(
+        async (template: any) => {
+            const type = template.resourceName;
+            const resource = template.resourceName;
 
-        if (type === 'projects') {
-            // Scarica il YAML del progetto e usa quello come hubTemplate
+            if (type === 'projects') {
+                // Scarica il YAML del progetto e usa quello come hubTemplate
+                let hubTemplate = template;
+                if (template.metadata?.repository) {
+                    try {
+                        const docs = await loadDefinitionYaml(
+                            template.metadata.repository
+                        );
+                        if (docs.length > 0) {
+                            // Sostituisce il template con i dati dello YAML
+                            hubTemplate = {
+                                ...docs[0],
+                                resourceName: template.resourceName,
+                            };
+                        }
+                    } catch {
+                        console.warn(
+                            'Could not fetch project definition.yaml, falling back to catalog data'
+                        );
+                    }
+                }
+                const path =
+                    createPath({ resource: 'projects', type: 'list' }) +
+                    '/projectimport';
+                navigate(path, { state: { hubTemplate } });
+                return;
+            }
+
+            // Risorse singole: scarica il YAML e usa il primo documento
             let hubTemplate = template;
             if (template.metadata?.repository) {
                 try {
-                    const docs = await loadDefinitionYaml(template.metadata.repository);
+                    const docs = await loadDefinitionYaml(
+                        template.metadata.repository
+                    );
                     if (docs.length > 0) {
-                        // Sostituisce il template con i dati dello YAML 
+                        const childDocs = docs
+                            .slice(1)
+                            .filter((doc: any) =>
+                                isChildDocument(doc.kind || '')
+                            );
+
                         hubTemplate = {
                             ...docs[0],
                             resourceName: template.resourceName,
+                            ...(childDocs.length > 0 ? { childDocs } : {}),
                         };
                     }
                 } catch {
-                    console.warn('Could not fetch project definition.yaml, falling back to catalog data');
+                    console.warn(
+                        'Could not fetch definition.yaml, falling back to catalog data'
+                    );
                 }
             }
-            const path = createPath({ resource: 'projects', type: 'list' }) + '/projectimport';
+
+            const path = createPath({ resource, type: 'create' });
             navigate(path, { state: { hubTemplate } });
-            return;
-        }
-
-        // Risorse singole: scarica il YAML e usa il primo documento
-        let hubTemplate = template;
-        if (template.metadata?.repository) {
-            try {
-                const docs = await loadDefinitionYaml(template.metadata.repository);
-                if (docs.length > 0) {
-                    const childDocs = docs
-                        .slice(1)
-                        .filter((doc: any) => isChildDocument(doc.kind || ''));
-
-                    hubTemplate = {
-                        ...docs[0],
-                        resourceName: template.resourceName,
-                        ...(childDocs.length > 0 ? { childDocs } : {}),
-                    };
-                }
-            } catch {
-                console.warn('Could not fetch definition.yaml, falling back to catalog data');
-            }
-        }
-
-        const path = createPath({ resource, type: 'create' });
-        navigate(path, { state: { hubTemplate } });
-    }, [createPath, navigate]);
+        },
+        [createPath, navigate]
+    );
 
     const handleNotebookDownload = useCallback(async () => {
         const url = toRepositoryAssetUrl(

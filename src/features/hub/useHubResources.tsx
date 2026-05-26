@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 export interface HubResourceDefinition {
     /** nome della risorsa in react-admin (es. 'functions') */
     name: string;
-    /** chiave nel catalogo JSON (es. 'functions', 'datasets') 
+    /** chiave nel catalogo JSON (es. 'functions', 'datasets')
      *  se non specificata, usa name */
     catalogKey: string;
 }

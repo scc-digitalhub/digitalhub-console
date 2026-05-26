@@ -4,21 +4,18 @@
 
 import { useState } from 'react';
 import {
+    Confirm,
     Button as RaButton,
     useTranslate,
+    TopToolbar,
     useDataProvider,
     useNotify,
 } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    TopToolbar,
-    Confirm,
-} from 'react-admin';
-import {
     Code as CodeIcon,
     Add as ContentAdd,
     ArrowBack as ArrowBackIcon,
-    Download as DownloadIcon,
 } from '@mui/icons-material';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { useNavigate } from 'react-router';
@@ -26,7 +23,9 @@ import { useHubResources } from '../../useHubResources';
 import {
     createItemWithChildren,
     loadProjectItems,
+    toRepositoryAssetUrl,
 } from '../../utils';
+import { NotebookPreviewButton } from './NotebookPreviewButton';
 
 interface HubDetailToolbarProps {
     template: any;
@@ -47,13 +46,15 @@ export const HubDetailToolbar = ({
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const { root } = useRootSelector();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const hubResources = useHubResources();
     const catalogKeyToResource = Object.fromEntries(
         hubResources.map(r => [r.catalogKey, r.name])
     );
+
     const handleAddDirect = async () => {
         setConfirmOpen(false);
         setLoading(true);
@@ -61,12 +62,20 @@ export const HubDetailToolbar = ({
             if (template.resourceName === 'projects') {
                 // Scarica il YAML del progetto e usa i suoi item
                 const items = template.metadata?.repository
-                    ? await loadProjectItems(template.metadata.repository, catalogKeyToResource)
+                    ? await loadProjectItems(
+                          template.metadata.repository,
+                          catalogKeyToResource
+                      )
                     : [];
 
                 await Promise.all(
                     items.map(({ item, resourceName }) =>
-                        createItemWithChildren(item, resourceName, root || '', dataProvider)
+                        createItemWithChildren(
+                            item,
+                            resourceName,
+                            root || '',
+                            dataProvider
+                        )
                     )
                 );
             } else {
@@ -89,6 +98,11 @@ export const HubDetailToolbar = ({
             setLoading(false);
         }
     };
+
+    const notebookUrl = toRepositoryAssetUrl(
+        template?.metadata?.repository,
+        'notebook.ipynb'
+    );
 
     return (
         <>
@@ -128,33 +142,32 @@ export const HubDetailToolbar = ({
 
                 {template?.metadata?.repository && (
                     <>
-                    <RaButton
-                        size="small"
-                        variant="text"
-                        color="primary"
-                        label="actions.download_notebook"
-                        onClick={onNotebookDownload}
-                    >
-                        <DownloadIcon fontSize="small" />
-                    </RaButton>
-                    <RaButton
-                    size="small"
-                    variant="text"
-                    color="primary"
-                    label="Repository"
-                    onClick={() =>
-                        window.open(
-                            template.metadata.repository,
-                            '_blank',
-                            'noopener,noreferrer'
-                        )
-                    }
-                >
-                    <CodeIcon fontSize="small" />
-                </RaButton>
-                </>
+                        {notebookUrl && (
+                            <NotebookPreviewButton
+                                onDownload={onNotebookDownload}
+                                url={notebookUrl}
+                                title={
+                                    template?.metadata?.name || template?.name
+                                }
+                            />
+                        )}
+                        <RaButton
+                            size="small"
+                            variant="text"
+                            color="primary"
+                            label="Repository"
+                            onClick={() =>
+                                window.open(
+                                    template.metadata.repository,
+                                    '_blank',
+                                    'noopener,noreferrer'
+                                )
+                            }
+                        >
+                            <CodeIcon fontSize="small" />
+                        </RaButton>
+                    </>
                 )}
-                
             </TopToolbar>
 
             <Confirm

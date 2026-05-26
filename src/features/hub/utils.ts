@@ -28,12 +28,15 @@ export const toRepositoryAssetUrl = (
  * Ritorna un array di documenti (multi-doc YAML separati da ---)
  * Il primo documento è sempre il padre, i successivi sono i figli (es. tasks per le function)
  */
-export const loadDefinitionYaml = async (repositoryUrl: string): Promise<any[]> => {
+export const loadDefinitionYaml = async (
+    repositoryUrl: string
+): Promise<any[]> => {
     const url = toRepositoryAssetUrl(repositoryUrl, 'definition.yaml');
     if (!url) return [];
 
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch definition.yaml: ${res.statusText}`);
+    if (!res.ok)
+        throw new Error(`Failed to fetch definition.yaml: ${res.statusText}`);
 
     const text = await res.text();
 
@@ -125,11 +128,20 @@ export const createItemWithChildren = async (
     });
 
     // Se non ci sono figli, esci subito
-    const childDocs = docs.slice(1).filter(doc => isChildDocument(doc.kind || ''));
+    const childDocs = docs
+        .slice(1)
+        .filter(doc => isChildDocument(doc.kind || ''));
     if (!childDocs.length) return created;
 
     // Delega la creazione dei figli alla funzione specifica per tipo di risorsa
-    await createChildren(childDocs, resourceName, sourceData, created, root, dataProvider);
+    await createChildren(
+        childDocs,
+        resourceName,
+        sourceData,
+        created,
+        root,
+        dataProvider
+    );
 
     return created;
 };
