@@ -40,7 +40,7 @@ import { isValidAgainstSchema } from '../../jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { useGetManySchemas } from '../../jsonSchema/schemaController';
-import { StyledDialog, StyledDialogClasses } from '../StyledDialog';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 const defaultIcon = <UploadIcon />;

@@ -43,7 +43,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ShareIcon from '@mui/icons-material/Share';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
-import { ShareDialog, StyledDialogClasses } from '../StyledDialog';
+import { ShareDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 const defaultIcon = <ShareIcon />;
 

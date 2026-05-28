@@ -25,7 +25,7 @@ import { LogsView } from './LogsView';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../common/components/StyledDialog';
+} from '../../../common/theme/StyledDialog';
 
 const defaultIcon = <SegmentIcon />;
 

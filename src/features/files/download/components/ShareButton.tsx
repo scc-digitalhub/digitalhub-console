@@ -37,7 +37,7 @@ import { IdField } from '../../../../common/components/fields/IdField';
 import {
     ShareDialog,
     StyledDialogClasses,
-} from '../../../../common/components/StyledDialog';
+} from '../../../../common/theme/StyledDialog';
 
 const defaultIcon = <ShareIcon fontSize="small" />;
 

@@ -28,7 +28,7 @@ import { DialogContext, useDialogContext } from '@dslab/ra-dialog-crud';
 
 import PreviewIcon from '@mui/icons-material/Preview';
 import CloseIcon from '@mui/icons-material/Close';
-import { StyledDialog, StyledDialogClasses } from './StyledDialog';
+import { StyledDialog, StyledDialogClasses } from '../theme/StyledDialog';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 

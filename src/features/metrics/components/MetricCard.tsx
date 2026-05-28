@@ -22,7 +22,7 @@ import { Metric } from '../utils';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../common/components/StyledDialog';
+} from '../../../common/theme/StyledDialog';
 
 const getChartByMetric = (metric: string, props: any) => {
     // const lowerCaseMetric = metric.toLowerCase();

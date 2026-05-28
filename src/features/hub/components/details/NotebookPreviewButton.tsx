@@ -20,7 +20,7 @@ import { MouseEvent } from 'react';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../../common/components/StyledDialog';
+} from '../../../../common/theme/StyledDialog';
 
 export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
     const { onDownload, url, title } = props;

@@ -29,7 +29,7 @@ import { UploadDashboard } from './UploadDashboard';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../../common/components/StyledDialog';
+} from '../../../../common/theme/StyledDialog';
 
 const defaultIcon = <UploadIcon />;
 

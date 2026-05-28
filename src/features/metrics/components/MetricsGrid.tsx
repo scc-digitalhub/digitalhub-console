@@ -44,7 +44,7 @@ import { Spinner } from '../../../common/components/layout/Spinner';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../common/components/StyledDialog';
+} from '../../../common/theme/StyledDialog';
 
 type MetricsGridProps = SelectorProps & {
     record: RaRecord<Identifier>;

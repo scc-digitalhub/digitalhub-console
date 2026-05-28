@@ -57,7 +57,7 @@ import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage'
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../../../common/components/StyledDialog';
+} from '../../../../common/theme/StyledDialog';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 

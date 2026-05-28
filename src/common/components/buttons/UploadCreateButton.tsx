@@ -35,7 +35,7 @@ import { CreateSpecWithUpload } from '../upload/CreateSpecWithUpload';
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { StyledDialog, StyledDialogClasses } from '../StyledDialog';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 export const UploadCreateButton = () => {
     const [open, setOpen] = useState(false);

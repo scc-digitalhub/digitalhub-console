@@ -40,7 +40,7 @@ import { BrowserClient } from './BrowserClient';
 import {
     StyledDialog,
     StyledDialogClasses,
-} from '../../common/components/StyledDialog';
+} from '../../common/theme/StyledDialog';
 
 const defaultIcon = <SignpostIcon />;
 
