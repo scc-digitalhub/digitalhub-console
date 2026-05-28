@@ -28,7 +28,6 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { TriggerIcon } from './icon';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { StateChips, StateColors } from '../../common/components/StateChips';
 import { DeactivateButton } from './components/DeactivateButton';
@@ -42,6 +41,7 @@ import { functionParser, taskParser } from '../../common/utils/parsers';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { useGetRunIds } from './hooks/useGetRunIds';
 import { useTriggerRunsController } from './hooks/useTriggerRunsController';
+import { SHOW_VIEW_PROPS } from '../../common/theme';
 
 export const TriggerShowComponent = () => {
     const record = useRecordContext();
@@ -283,13 +283,7 @@ export const TriggerShow = () => {
             <ShowBase>
                 <>
                     <ShowPageTitle icon={<TriggerIcon fontSize={'large'} />} />
-                    <ShowView
-                        actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                        }}
-                        component={FlatCard}
-                    >
+                    <ShowView actions={<ShowToolbar />} {...SHOW_VIEW_PROPS}>
                         <TriggerShowComponent />
                     </ShowView>
                 </>

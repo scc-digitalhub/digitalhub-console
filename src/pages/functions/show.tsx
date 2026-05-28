@@ -16,7 +16,6 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { getFunctionUiSpec } from './types';
@@ -32,6 +31,7 @@ import { FunctionTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helpers';
 import { exporter } from './exporter';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -267,20 +267,8 @@ export const FunctionShow = () => {
                     <ShowPageTitle icon={<FunctionIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar exporter={exporter} />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
-                        }}
-                        component={FlatCard}
                         aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
                     >
                         <ShowComponent />
                     </ShowView>

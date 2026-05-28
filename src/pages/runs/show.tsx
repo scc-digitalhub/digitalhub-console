@@ -27,7 +27,6 @@ import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { RunIcon } from './icon';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import {
     PageTitle,
     RecordPageTitleProps,
@@ -60,6 +59,7 @@ import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/Filt
 import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
+import { SHOW_VIEW_PROPS } from '../../common/theme';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -434,14 +434,7 @@ export const RunShow = () => {
                             metrics={true}
                         />
                     </Box>
-                    <ShowView
-                        actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            minWidth: '1000px',
-                        }}
-                        component={FlatCard}
-                    >
+                    <ShowView actions={<ShowToolbar />} {...SHOW_VIEW_PROPS}>
                         <RunShowComponent />
                     </ShowView>
                 </>

@@ -13,7 +13,6 @@ import {
     useTranslate,
 } from 'react-admin';
 import { arePropsEqual, countLines } from '../../common/utils/helpers';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
@@ -29,6 +28,8 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
 import { ShowComponent } from '../../common/components/ShowComponent';
 import { ExtensionsField } from '../../features/extensions/Field';
+import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
+import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 
 const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
     record: any;
@@ -112,20 +113,9 @@ export const ArtifactShow = () => {
                     <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
-                        }}
-                        component={FlatCard}
                         aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
+                        component={StyledFlatCard}
                     >
                         <ShowComponent InnerShow={ArtifactShowLayout} />
                     </ShowView>
