@@ -68,10 +68,15 @@ export const ExternalHttpProxyProvider = (
         const normalized = url.includes('://') ? url : `http://${url}`;
         const parsed = new URL(normalized);
         const scheme = parsed.protocol.replace(':', '');
+        const rawHostname = parsed.hostname;
+        const dotIndex = rawHostname.indexOf('.');
+        const hostname =
+            dotIndex !== -1 ? rawHostname.substring(0, dotIndex) : rawHostname;
+        const port = parsed.port; // empty string if not explicitly set
         const host = parsed.host; // includes port if present
         const path = parsed.pathname + parsed.search;
 
-        return { scheme, host, path };
+        return { scheme, hostname, port, host, path };
     };
     const getRequestHeaders = (headers?: Headers, contentType?: string) => {
         const requestHeaders = new Headers();
@@ -88,16 +93,93 @@ export const ExternalHttpProxyProvider = (
     };
 
     return {
+        authorize: async url => {
+            const { host } = parseUrl(url);
+
+            const requestHeaders = new Headers({}) as Headers;
+            requestHeaders.set('X-Proxy-Host', host);
+
+            if (authProvider) {
+                const authHeader = await authProvider.getAuthorization();
+                if (authHeader) {
+                    requestHeaders.set('Authorization', authHeader);
+                }
+            }
+
+            //call POST to proxy's authorize endpoint to set cookies if needed
+            // credentials:'include' is required for the browser to store the set-cookie header on cross-origin responses
+            // redirect:'manual' prevents the browser from following the 307 redirect to a different subdomain,
+            // which would trigger a CORS error on that target; the cookie is already set on the 307 response itself
+            return fetch(`${proxyUrl}/auth`, {
+                method: 'POST',
+                headers: requestHeaders,
+                credentials: 'include',
+                redirect: 'manual',
+            }).then(res => {
+                // treat 2xx and 3xx (manual redirect) as success
+                if (
+                    res.ok ||
+                    (res.status >= 300 && res.status < 400) ||
+                    res.type === 'opaqueredirect'
+                ) {
+                    return true;
+                } else {
+                    throw new Error(
+                        `Authorization failed with status ${res.status}`
+                    );
+                }
+            });
+        },
+        embed: url => {
+            const { hostname, port, path } = parseUrl(url);
+            const { scheme, host: proxyHost } = parseUrl(proxyUrl);
+
+            return Promise.resolve(
+                `${scheme}://${hostname}${
+                    port ? `--${port}` : ''
+                }.${proxyHost}${path}`
+            );
+        },
+        openNew: async url => {
+            const { host } = parseUrl(url);
+            const { hostname, port, path } = parseUrl(url);
+            const { scheme, host: proxyHost } = parseUrl(proxyUrl);
+            const redirect = `${scheme}://${hostname}${
+                port ? `--${port}` : ''
+            }.${proxyHost}${path}`;
+
+            let authHeader = '';
+            if (authProvider) {
+                authHeader = (await authProvider.getAuthorization()) || '';
+            }
+
+            // Use a hidden form POST targeting _blank so the browser performs a
+            // top-level navigation to proxyUrl/auth. This avoids cookie partitioning
+            // (dFPI/Total Cookie Protection) which affects cross-origin fetch().
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `${proxyUrl}/auth`;
+            form.target = '_blank';
+            form.style.display = 'none';
+
+            const addField = (name: string, value: string) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            };
+
+            addField('authorization', authHeader);
+            addField('x-proxy-url', url);
+
+            document.body.appendChild(form);
+            form.submit();
+            form.remove();
+        },
         fetch: async (url, options: Options = {}) => {
             const { scheme, host, path } = parseUrl(url);
-            console.log(
-                'Proxying request to',
-                url,
-                'via',
-                `${proxyUrl}${path}`,
-                'for',
-                host
-            );
+
             const requestHeaders = (options.headers ||
                 new Headers({})) as Headers;
             requestHeaders.set('X-Proxy-Host', host);
@@ -112,6 +194,7 @@ export const ExternalHttpProxyProvider = (
             return _fetch(`${proxyUrl}${path}`, {
                 ...options,
                 headers: requestHeaders,
+                credentials: 'include',
             });
         },
         get: (url, params, signal) => {
@@ -250,6 +333,24 @@ export const DefaultHttpProxyProvider = (
     };
 
     return {
+        authorize: () => {
+            console.warn(
+                'Authorization is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
+        embed: url => {
+            console.warn(
+                'Embedding is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
+        openNew: () => {
+            console.warn(
+                'openNew is not supported in DefaultHttpProxyProvider'
+            );
+            return undefined;
+        },
         fetch: () => {
             throw new Error(
                 'Direct fetch is not supported in DefaultHttpProxyProvider'

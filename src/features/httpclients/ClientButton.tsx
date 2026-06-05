@@ -12,6 +12,7 @@ import {
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
+import BrowserIcon from '@mui/icons-material/TravelExplore';
 import {
     Fragment,
     ReactElement,
@@ -37,10 +38,11 @@ import {
 import { StandardHttpClient } from './StandardHttpClient';
 import { InferenceV2Client } from './InferenceV2Client';
 import { ChatClient } from '../chat/ChatClient';
+import { BrowserClient } from './BrowserClient';
 
 const defaultIcon = <SignpostIcon />;
 
-export type ClientButtonMode = 'http' | 'chat' | 'v2';
+export type ClientButtonMode = 'http' | 'chat' | 'v2' | 'browser';
 
 export interface ClientButtonProps<RecordType extends RaRecord = any>
     extends Omit<FieldProps<RecordType>, 'source'>,
@@ -55,8 +57,8 @@ export interface ClientButtonProps<RecordType extends RaRecord = any>
 export const ClientButton = (props: ClientButtonProps) => {
     const {
         color = 'secondary',
-        label = 'pages.http-client.title',
-        icon = defaultIcon,
+        label: labelProps,
+        icon: iconProps,
         fullWidth = true,
         maxWidth = 'lg',
         mode = 'http',
@@ -99,7 +101,13 @@ export const ClientButton = (props: ClientButtonProps) => {
     if (!record) {
         return <></>;
     }
-
+    const icon =
+        iconProps || (mode === 'browser' ? <BrowserIcon /> : defaultIcon);
+    const label =
+        labelProps ||
+        (mode === 'browser'
+            ? 'pages.browser.title'
+            : 'pages.http-client.title');
     const titleText = label ? translate(label) : '';
     const isDisabled =
         disabled || record.status?.state !== 'RUNNING' || urls.length === 0;
@@ -231,6 +239,8 @@ const Client = (props: ClientProps) => {
                                 storageKey={`http.client.history.${record.id}`}
                             />
                         );
+                    case 'browser':
+                        return <BrowserClient urls={urls} />;
                     case 'http':
                     default:
                         return (
