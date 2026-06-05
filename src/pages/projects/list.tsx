@@ -19,6 +19,7 @@ import {
     useGetIdentity,
     TextInput,
     SelectInput,
+    useTranslate,
 } from 'react-admin';
 import {
     Box,
@@ -46,14 +47,15 @@ import purify from 'dompurify';
 import { useProjectPermissions } from '../../common/provider/authProvider';
 import { Empty } from '../../common/components/layout/Empty';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
+import { InstanceMetrics } from '../../features/k8smetrics/InstanceMetrics';
 
 export const ProjectSelectorList = props => {
-    const perPage = 12;
-
+    const translate = useTranslate();
     //check if auth is required to redirect to login
     useAuthenticated();
     const { data: identity } = useGetIdentity();
 
+    const perPage = 12;
     const username = identity?.id || null;
     const filters = username
         ? [
@@ -80,26 +82,37 @@ export const ProjectSelectorList = props => {
         : [];
 
     return (
-        <List
-            {...props}
-            actions={<Toolbar />}
-            component={Box}
-            sort={{ field: 'updated', order: 'DESC' }}
-            perPage={perPage}
-            storeKey={false}
-            pagination={<Pagination rowsPerPageOptions={[perPage]} />}
-            filters={filters}
-            filterDefaultValues={{ user: username }}
-            empty={
-                <Empty>
-                    <CreateProjectButton />
-                </Empty>
-            }
-        >
-            <GridList linkType={false}>
-                <ProjectsGridItem />
-            </GridList>
-        </List>
+        <Stack direction="column" spacing={1} alignItems="start">
+            <List
+                {...props}
+                actions={<Toolbar />}
+                component={Box}
+                sort={{ field: 'updated', order: 'DESC' }}
+                perPage={perPage}
+                storeKey={false}
+                pagination={<Pagination rowsPerPageOptions={[perPage]} />}
+                filters={filters}
+                filterDefaultValues={{ user: username }}
+                empty={
+                    <Empty>
+                        <CreateProjectButton />
+                    </Empty>
+                }
+            >
+                <GridList linkType={false}>
+                    <ProjectsGridItem />
+                </GridList>
+            </List>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%',
+                }}
+            >
+                <InstanceMetrics metrics={['cpu', 'memory', 'disk', 'pods']} />
+            </Box>
+        </Stack>
     );
 };
 
@@ -268,7 +281,9 @@ const ProjectsGridItem = (props: any) => {
                         )}
                     </Box>
                     {isAccessible && (
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Box
+                            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                        >
                             <MetricsField size="small" />
                         </Box>
                     )}
