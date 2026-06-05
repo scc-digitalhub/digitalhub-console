@@ -120,7 +120,7 @@
         "helperText": "Esplora e gestisci i file del progetto"
     },
     "hub": {
-        "menu":"Hub",
+        "menu": "Hub",
         "title": "Crea una nuova funzione da un modello",
         "subtitle": "Esplora le risorse disponibili",
         "title_functions": "Crea una nuova funzione da un modello",
@@ -141,12 +141,11 @@
         "no_results": "Nessun risultato",
         "no_results_hint": "Prova a modificare o rimuovere i filtri attivi",
         "clear_filters": "Rimuovi filtri",
-        "import_success":"Risorse importate con successo",
+        "import_success": "Risorse importate con successo",
         "add_direct_confirm_title": "Aggiungi risorsa direttamente",
         "add_direct_confirm_content": "Aggiungi \"%{name}\" direttamente al progetto senza configurazione?",
         "add_direct_success": "Risorsa aggiunta con successo",
         "add_direct_error": "Errore durante l'aggiunta della risorsa: %{error}"
-        
     },
     "services": {
         "title": "Servizi",
@@ -175,6 +174,10 @@
         },
         "modelNotReady": "Il modello non è pronto.",
         "modelNotLive": "Il modello è pronto ma non attivo."
+    },
+    "browser": {
+        "title": "Browser",
+        "helperText": "Browser integrato per i servizi che espongono un'interfaccia web. Solo gli URL dei servizi associati alle run possono essere utilizzati come destinazione."
     },
     "preview": {
         "trustContent": "Contenuto attendibile"

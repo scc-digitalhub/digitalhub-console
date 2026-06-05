@@ -12,6 +12,7 @@ import {
 } from 'react-admin';
 import SignpostIcon from '@mui/icons-material/Signpost';
 import CloseIcon from '@mui/icons-material/Close';
+import BrowserIcon from '@mui/icons-material/TravelExplore';
 import {
     Fragment,
     ReactElement,
@@ -56,8 +57,8 @@ export interface ClientButtonProps<RecordType extends RaRecord = any>
 export const ClientButton = (props: ClientButtonProps) => {
     const {
         color = 'secondary',
-        label = 'pages.http-client.title',
-        icon = defaultIcon,
+        label: labelProps,
+        icon: iconProps,
         fullWidth = true,
         maxWidth = 'lg',
         mode = 'http',
@@ -100,7 +101,13 @@ export const ClientButton = (props: ClientButtonProps) => {
     if (!record) {
         return <></>;
     }
-
+    const icon =
+        iconProps || (mode === 'browser' ? <BrowserIcon /> : defaultIcon);
+    const label =
+        labelProps ||
+        (mode === 'browser'
+            ? 'pages.browser.title'
+            : 'pages.http-client.title');
     const titleText = label ? translate(label) : '';
     const isDisabled =
         disabled || record.status?.state !== 'RUNNING' || urls.length === 0;
