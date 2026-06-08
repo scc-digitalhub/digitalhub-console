@@ -10,7 +10,7 @@ import { formatMetricsValue } from './utils';
 
 const defaultMetrics = ['cpu', 'memory', 'disk'];
 
-export const InstanceMetrics = (
+export const UserMetrics = (
     props: Omit<MetricProps, 'value' | 'name' | 'icon' | 'title'> & {
         record?: any;
     } & {
@@ -35,7 +35,7 @@ export const InstanceMetrics = (
 
     const fetchMetrics = useCallback(() => {
         if (dataProvider) {
-            const url = '/metrics/k8s';
+            const url = '/me/metrics/k8s';
             dataProvider
                 .invoke({
                     path: url,
@@ -95,14 +95,14 @@ export const InstanceMetrics = (
 
     return (
         <Stack
-            direction={'row'}
+            direction={'column'}
             gap={gap}
             alignItems="right"
-            sx={{
-                display: 'flex',
-                gridAutoFlow: 'column',
-                gridAutoColumns: '1fr',
-            }}
+            // sx={{
+            //     display: 'flex',
+            //     gridAutoFlow: 'column',
+            //     gridAutoColumns: '1fr',
+            // }}
         >
             {Object.entries(metrics.usage)
                 .filter(([key]) =>

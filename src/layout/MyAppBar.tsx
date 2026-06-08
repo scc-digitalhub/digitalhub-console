@@ -20,6 +20,7 @@ import { NotificationArea } from '../features/notifications/components/Notificat
 import { DateIntervalInput } from '../features/search/components/DateIntervalInput';
 import { MyUserMenu } from './MyUserMenu';
 import SearchBar from '../features/search/components/SearchBar';
+import { MetricsMenu } from '../features/k8smetrics/MetricsMenu';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -27,6 +28,10 @@ const APP_VERSION: string =
 const docsVersion = APP_VERSION
     ? APP_VERSION.replace(new RegExp(/\.[^/.]+$/), '')
     : undefined;
+const enableMetrics: string =
+    (globalThis as any).REACT_APP_ENABLE_METRICS ||
+    (process.env.REACT_APP_ENABLE_METRICS as string) ||
+    false;
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
@@ -219,6 +224,7 @@ export const MyAppBar = () => {
                 >
                     <UploadArea />
                     <NotificationArea />
+                    {enableMetrics === 'true' && <MetricsMenu />}
                     {docsVersion && (
                         <IconButtonWithTooltip
                             color="inherit"

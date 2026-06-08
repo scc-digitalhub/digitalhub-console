@@ -182,5 +182,11 @@
     },
     "preview": {
         "trustContent": "Trusted content"
+    },
+    "menu": {
+        "metrics": {
+            "header": "Usage metrics",
+            "subheader": "Resource metrics related to your runs"
+        }
     }
 }

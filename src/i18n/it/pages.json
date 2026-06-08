@@ -181,5 +181,11 @@
     },
     "preview": {
         "trustContent": "Contenuto attendibile"
+    },
+    "menu": {
+        "metrics": {
+            "header": "Metriche utilizzo",
+            "subheader": "Metriche relative alle tue run"
+        }
     }
 }

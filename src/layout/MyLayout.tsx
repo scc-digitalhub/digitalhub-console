@@ -2,15 +2,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Layout, useTranslate } from 'react-admin';
+import { Layout } from 'react-admin';
 import { MyAppBar } from './MyAppBar';
 import { MyMenu } from './MyMenu';
 import { MySidebar } from './MySidebar';
-import { AppBar, Box, Paper, Stack, Typography } from '@mui/material';
+import { AppBar, Box, Stack, Typography } from '@mui/material';
 import { InstanceMetrics } from '../features/k8smetrics/InstanceMetrics';
 
+const applicationName: string =
+    (globalThis as any).VITE_APP_NAME ||
+    (process.env.VITE_APP_NAME as string) ||
+    'DigitalHub';
+const enableMetrics: string =
+    (globalThis as any).REACT_APP_ENABLE_METRICS ||
+    (process.env.REACT_APP_ENABLE_METRICS as string) ||
+    false;
+
 export const MyLayout = (props: any) => {
-    const translate = useTranslate();
     return (
         <Stack direction="column" spacing={1} alignItems="start">
             <Layout
@@ -38,16 +46,26 @@ export const MyLayout = (props: any) => {
                         color: 'white',
                     }}
                 >
-                    {/* <Typography
+                    <Typography
                         variant="body1"
                         fontSize={'medium'}
                         color={'secondary'}
                     >
-                        {translate('fields.k8s.resources.description')}
-                    </Typography> */}
-                    <InstanceMetrics
-                        metrics={['cpu', 'memory', 'disk', 'pods']}
-                    />
+                        {applicationName}
+                    </Typography>
+
+                    <Typography
+                        variant="body1"
+                        fontSize={'medium'}
+                        color={'secondary'}
+                    >
+                        {' / '}
+                    </Typography>
+                    {enableMetrics === 'true' && (
+                        <InstanceMetrics
+                            metrics={['cpu', 'memory', 'disk', 'pods']}
+                        />
+                    )}
                 </Box>
             </AppBar>
         </Stack>
