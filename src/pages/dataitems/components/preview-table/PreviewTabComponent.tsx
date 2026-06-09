@@ -46,7 +46,6 @@ export const PreviewTabComponent = (props: { record: any }) => {
                     <DataGrid
                         columns={data?.columns || []}
                         rows={data?.rows || []}
-                        autoHeight
                         columnHeaderHeight={
                             isAtLeastOneColumnUnsupported ? 90 : 56
                         }

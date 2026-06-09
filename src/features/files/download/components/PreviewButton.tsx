@@ -89,6 +89,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         path: pathProp,
         fileType: fileTypeProp,
         contentType: contentTypeProps,
+        previewableTypes = ['html', 'image', 'source', 'text', 'csv'],
         ...rest
     } = props;
 
@@ -142,6 +143,10 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         contentType = languages[mimeType];
     }
 
+    const isPreviewable =
+        fileType &&
+        previewableTypes.includes(fileType);
+
     return (
         <Fragment>
             {iconButton ? (
@@ -150,6 +155,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                     color={color}
                     size={size}
                     onClick={handleDialogOpen}
+                    disabled={!isPreviewable}
                     {...rest}
                 >
                     {icon}
@@ -159,6 +165,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
                     label={label}
                     color={color}
                     onClick={handleDialogOpen}
+                    disabled={!isPreviewable}
                     {...rest}
                 >
                     {icon}
@@ -301,10 +308,12 @@ const PreviewView = (props: PreviewViewProps) => {
                     />
                 )}
                 {url && fileType === 'text' && (
-                    <LogViewer sx={{ height: '100%', minHeight: '520px' }}>
+                    <LogViewer sx={{ height: '100%' }}>
                         <LazyLog
                             ref={ref}
                             url={url}
+                            //must be specified, otherwise content is not displayed
+                            height={520}
                             caseInsensitive={true}
                             enableLineNumbers={true}
                             enableLinks={false}
@@ -412,6 +421,7 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
         fileName?: string;
         fullWidth?: boolean;
         maxWidth?: Breakpoint;
+        previewableTypes?: string[];
     };
 
 type PreviewViewProps = {

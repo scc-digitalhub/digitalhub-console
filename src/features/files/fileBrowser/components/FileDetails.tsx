@@ -55,8 +55,6 @@ export const FileDetails = (props: {
             getMimeTypeFromExtension(file.name.split('.').pop())
         );
 
-    const isPreviewable = fileType && ['image', 'text'].includes(fileType);
-
     return (
         <FlatCard>
             <CardContent>
@@ -92,7 +90,6 @@ export const FileDetails = (props: {
                             <PreviewButton
                                 size="small"
                                 iconButton
-                                disabled={!isPreviewable}
                             />
                             <ShareButton size="small" iconButton />
                             <DeleteButton

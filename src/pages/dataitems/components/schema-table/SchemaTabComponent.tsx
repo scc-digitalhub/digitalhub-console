@@ -38,7 +38,6 @@ export const SchemaTabComponent = (props: { record: any }) => {
                 <DataGrid
                     columns={data?.columns || []}
                     rows={data?.rows || []}
-                    autoHeight
                     hideFooter={
                         data?.rows && data.rows.length > 100 ? false : true
                     }
