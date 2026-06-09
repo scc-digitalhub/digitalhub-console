@@ -383,7 +383,6 @@ const CSVViewer = (props: CSVViewerProps) => {
                     rows={content.rows}
                     columns={content.columns}
                     pageSizeOptions={[MAX_ROWS]}
-                    autoHeight
                     disableRowSelectionOnClick
                 />
             ) : (

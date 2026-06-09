@@ -2,38 +2,21 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { getMimeTypeFromExtension, getTypeFromMimeType } from '../utils';
+
 export const MAX_TREE_DEPTH = 50;
 
-//TODO merge with file browser utils
-export const extractFileType = (data: any) => {
-    const ext = data.name.indexOf('.') > 0 ? data.name.split('.').pop() : '';
-    const ct = data.content_type || '';
-    if (ct === 'text/html' || ['html', 'htm'].indexOf(ext) !== -1) {
-        return 'html';
-    }
-    if (
-        ct.startsWith('image/') ||
-        ['png', 'jpg', 'jpeg', 'gif', 'bmp'].indexOf(ext) !== -1
-    ) {
-        return 'image';
-    }
-    if (ct === 'text/csv' || ['csv'].indexOf(ext) !== -1) {
-        return 'csv';
-    }
-    if (ct === 'text/plain' || ['txt'].indexOf(ext) !== -1) {
-        return 'text';
-    }
-    if (
-        ct === 'text/json' ||
-        ct === 'application/json' ||
-        ['json'].indexOf(ext) !== -1
-    ) {
-        return 'json';
-    }
-    if (['yml', 'yaml'].indexOf(ext) !== -1) {
-        return 'yaml';
-    }
-    return '';
+const extractFileType = (data: any): string => {
+    const fileType =
+        (data.content_type
+            ? getTypeFromMimeType(data.content_type)
+            : undefined) ||
+        (data.name.indexOf('.') > -1
+            ? getTypeFromMimeType(
+                  getMimeTypeFromExtension(data.name.split('.').pop())
+              )
+            : undefined);
+    return fileType || '';
 };
 
 /**
