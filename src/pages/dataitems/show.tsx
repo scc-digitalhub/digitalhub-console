@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Stack } from '@mui/material';
-import { ReactNode, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import {
     Labeled,
     ShowView,
@@ -17,7 +17,6 @@ import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { DataItemIcon } from './icon';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { IdField } from '../../common/components/fields/IdField';
 import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
@@ -31,6 +30,8 @@ import { PreviewTabComponent } from './components/preview-table/PreviewTabCompon
 import { SchemaTabComponent } from './components/schema-table/SchemaTabComponent';
 import { ShowComponent } from '../../common/components/ShowComponent';
 import { ExtensionsField } from '../../features/extensions/Field';
+import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
+import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 
 const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     record: any;
@@ -125,25 +126,6 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
 },
 arePropsEqual);
 
-/**
- * This component overrides ShowView's default main area container.
- *
- * The max-width and min-width CSS properties play a critical role in determining
- * the width of the data grids contained within the schema and preview tabs.
- */
-const StyledFlatCard = (props: { children: ReactNode }) => {
-    const { children } = props;
-
-    return (
-        <FlatCard
-            // Set the max width to 70vw and min width to 100%
-            sx={{ maxWidth: '70vw', minWidth: '100%' }}
-        >
-            {children}
-        </FlatCard>
-    );
-};
-
 export const DataItemShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -152,20 +134,9 @@ export const DataItemShow = () => {
                     <ShowPageTitle icon={<DataItemIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
-                        }}
-                        component={StyledFlatCard}
                         aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
+                        component={StyledFlatCard}
                     >
                         <ShowComponent InnerShow={DataItemShowLayout} />
                     </ShowView>

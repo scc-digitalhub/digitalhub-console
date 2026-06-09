@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { CreateInDialogButtonClasses } from '@dslab/ra-dialog-crud';
 import { StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../toolbars/StepperToolbar';
 import {
@@ -33,15 +32,10 @@ import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
 import { Uploader } from '../../../features/files/upload/types';
 import { CreateSpecWithUpload } from '../upload/CreateSpecWithUpload';
-import {
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    styled,
-} from '@mui/material';
+import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 export const UploadCreateButton = () => {
     const [open, setOpen] = useState(false);
@@ -64,26 +58,22 @@ export const UploadCreateButton = () => {
 
     return (
         <>
-            <Button
-                label="actions.upload"
-                onClick={handleDialogOpen}
-                className={CreateInDialogButtonClasses.button}
-            >
+            <Button label="actions.upload" onClick={handleDialogOpen}>
                 <NoteAddOutlinedIcon />
             </Button>
-            <CreateDialog
+            <StyledDialog
                 maxWidth={'lg'}
                 fullWidth
                 onClose={handleDialogClose}
                 aria-labelledby="create-dialog-title"
                 open={open}
-                className={CreateInDialogButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
             >
                 <UploadCreateForm
                     closeDialog={closeDialog}
                     handleClose={handleDialogClose}
                 />
-            </CreateDialog>
+            </StyledDialog>
         </>
     );
 };
@@ -172,10 +162,10 @@ const UploadCreateForm = (props: any) => {
                 spec: { path: uploader.path ?? null },
             }}
         >
-            <div className={CreateInDialogButtonClasses.header}>
+            <div className={StyledDialogClasses.header}>
                 <DialogTitle
                     id="create-dialog-title"
-                    className={CreateInDialogButtonClasses.title}
+                    className={StyledDialogClasses.title}
                 >
                     {translate('ra.page.create', {
                         name: getResourceLabel(resource, 1),
@@ -183,7 +173,7 @@ const UploadCreateForm = (props: any) => {
                 </DialogTitle>
 
                 <IconButton
-                    className={CreateInDialogButtonClasses.closeButton}
+                    className={StyledDialogClasses.closeButton}
                     aria-label={translate('ra.action.close')}
                     title={translate('ra.action.close')}
                     onClick={handleClose}
@@ -192,7 +182,10 @@ const UploadCreateForm = (props: any) => {
                     <CloseIcon fontSize="small" />
                 </IconButton>
             </div>
-            <DialogContent sx={{ p: 0 }}>
+            <DialogContent
+                sx={{ p: 0 }}
+                className={StyledDialogClasses.content}
+            >
                 <StepperForm
                     toolbar={<StepperToolbar disableNext={!uploader.path} />}
                 >
@@ -248,21 +241,3 @@ const BaseStep = ({ uploader }: { uploader: Uploader }) => {
         </>
     );
 };
-
-const CreateDialog = styled(Dialog, {
-    name: 'RaCreateInDialogButton',
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${CreateInDialogButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${CreateInDialogButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${CreateInDialogButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

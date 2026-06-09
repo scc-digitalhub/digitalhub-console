@@ -20,12 +20,12 @@ import { useEffect, useState } from 'react';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { SecretIcon } from './icon';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
 import { IdField } from '../../common/components/fields/IdField';
 import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
+import { SHOW_VIEW_PROPS } from '../../common/theme';
 
 const ShowComponent = () => {
     const translate = useTranslate();
@@ -152,10 +152,7 @@ export const SecretShow = () => {
                                 askForCascade={false}
                             />
                         }
-                        sx={{
-                            width: '100%',
-                        }}
-                        component={FlatCard}
+                        {...SHOW_VIEW_PROPS}
                     >
                         <ShowComponent />
                     </ShowView>

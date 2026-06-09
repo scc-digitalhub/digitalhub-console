@@ -16,7 +16,6 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { FlatCard } from '../../common/components/layout/FlatCard';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { toYaml } from '@dslab/ra-export-record-button';
@@ -33,6 +32,7 @@ import { WorkflowTaskShow } from './tasks';
 import { countLines } from '../../common/utils/helpers';
 import { getWorkflowUiSpec } from './types';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -248,20 +248,8 @@ export const WorkflowShow = () => {
                     <ShowPageTitle icon={<WorkflowIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
-                        }}
-                        component={FlatCard}
                         aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
                     >
                         <ShowComponent />
                     </ShowView>

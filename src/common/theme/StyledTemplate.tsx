@@ -5,7 +5,7 @@
 import { Card, styled, alpha } from '@mui/material';
 
 export const StyledTemplate = styled(Card, {
-    name: 'StyledCard',
+    name: 'StyledTemplate',
     overridesResolver: (_props, styles) => styles.root,
 })(({ theme, className }) => ({
     backgroundColor:

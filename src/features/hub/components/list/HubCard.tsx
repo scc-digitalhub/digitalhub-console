@@ -4,7 +4,7 @@
 
 import { useRecordContext, useListContext } from 'react-admin';
 import { CardContent, CardActionArea, Chip, Stack } from '@mui/material';
-import { StyledTemplate } from '../../../../common/components/layout/StyledTemplate';
+import { StyledTemplate } from '../../../../common/theme/StyledTemplate';
 import { HubCardSummary } from './HubCardSummary';
 
 interface HubCardProps {

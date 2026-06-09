@@ -24,11 +24,9 @@ import {
 import {
     Box,
     Breakpoint,
-    Dialog,
     DialogContent,
     DialogTitle,
     IconButton,
-    styled,
     Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -42,6 +40,7 @@ import { isValidAgainstSchema } from '../../jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { useGetManySchemas } from '../../jsonSchema/schemaController';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 const defaultIcon = <UploadIcon />;
@@ -88,19 +87,18 @@ export const ImportButton = (props: ImportButtonProps) => {
                 label={label}
                 color={color}
                 onClick={handleDialogOpen}
-                className={ImportButtonClasses.button}
                 variant={variant}
             >
                 {icon}
             </Button>
 
-            <ImportDialog
+            <StyledDialog
                 maxWidth={maxWidth}
                 fullWidth={fullWidth}
                 onClose={handleDialogClose}
                 aria-labelledby="import-dialog-title"
                 open={open}
-                className={ImportButtonClasses.dialog}
+                className={StyledDialogClasses.dialog}
                 scroll="paper"
                 sx={sx}
             >
@@ -162,7 +160,7 @@ export const ImportButton = (props: ImportButtonProps) => {
                         handleClose={handleDialogClose}
                     />
                 </CreateBase>
-            </ImportDialog>
+            </StyledDialog>
         </>
     );
 };
@@ -240,10 +238,10 @@ const CreateContent = (props: {
 
     return (
         <>
-            <div className={ImportButtonClasses.header}>
+            <div className={StyledDialogClasses.header}>
                 <DialogTitle
                     id="create-dialog-title"
-                    className={ImportButtonClasses.title}
+                    className={StyledDialogClasses.title}
                 >
                     {!title
                         ? defaultTitle
@@ -256,7 +254,7 @@ const CreateContent = (props: {
                 </DialogTitle>
 
                 <IconButton
-                    className={ImportButtonClasses.closeButton}
+                    className={StyledDialogClasses.closeButton}
                     aria-label={translate('ra.action.close')}
                     title={translate('ra.action.close')}
                     onClick={handleClose}
@@ -326,31 +324,3 @@ export type ImportButtonProps<
     variant?: 'text' | 'outlined' | 'contained';
     icon?: ReactElement;
 } & Pick<ButtonProps, 'color'>;
-
-const PREFIX = 'RaImportButton';
-
-export const ImportButtonClasses = {
-    button: `${PREFIX}-button`,
-    dialog: `${PREFIX}-dialog`,
-    header: `${PREFIX}-header`,
-    title: `${PREFIX}-title`,
-    closeButton: `${PREFIX}-close-button`,
-};
-
-const ImportDialog = styled(Dialog, {
-    name: PREFIX,
-    overridesResolver: (_props, styles) => styles.root,
-})(({ theme }) => ({
-    [`& .${ImportButtonClasses.title}`]: {
-        padding: theme.spacing(0),
-    },
-    [`& .${ImportButtonClasses.header}`]: {
-        padding: theme.spacing(2, 2),
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    [`& .${ImportButtonClasses.closeButton}`]: {
-        height: 'fit-content',
-    },
-}));

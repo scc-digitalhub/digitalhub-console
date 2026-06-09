@@ -5,12 +5,14 @@
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container } from '@mui/material';
 import {
+    CreateButton,
     Datagrid,
     EditButton,
     ListBase,
     ListView,
     ShowButton,
     TextField,
+    TopToolbar,
     useResourceContext,
 } from 'react-admin';
 
@@ -21,7 +23,6 @@ import { FlatCard } from '../../common/components/layout/FlatCard';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { ListToolbar } from '../../common/components/toolbars/ListToolbar';
 
 const RowActions = () => {
     return (
@@ -32,6 +33,12 @@ const RowActions = () => {
         </RowButtonGroup>
     );
 };
+
+const ListToolbar = () => (
+    <TopToolbar>
+        <CreateButton />
+    </TopToolbar>
+);
 
 export const SecretList = () => {
     const resource = useResourceContext();
@@ -45,7 +52,7 @@ export const SecretList = () => {
             >
                 <>
                     <ListPageTitle icon={<SecretIcon fontSize={'large'} />} />
-                    <ListToolbar canImport={false} />
+                    <ListToolbar />
                     <FlatCard sx={{ pt: '9px' }}>
                         <ListView
                             actions={false}

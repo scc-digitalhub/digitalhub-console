@@ -11,9 +11,6 @@ import {
     UseTreeItemParameters,
 } from '@mui/x-tree-view/useTreeItem';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
-import ArticleIcon from '@mui/icons-material/Article';
-import FolderRounded from '@mui/icons-material/FolderRounded';
-import ImageIcon from '@mui/icons-material/Image';
 import { animated, useSpring } from '@react-spring/web';
 import { alpha, styled } from '@mui/material/styles';
 import {
@@ -25,9 +22,7 @@ import {
 import Collapse from '@mui/material/Collapse';
 import { TransitionProps } from '@mui/material/transitions';
 import { Box, Typography } from '@mui/material';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import PublicIcon from '@mui/icons-material/Public';
-import TableChart from '@mui/icons-material/TableChart';
+import { getIconFromType } from '../../utils';
 
 export const Tree = (props: any) => {
     const { info = [], onItemClick } = props;
@@ -74,12 +69,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
     const item = publicAPI.getItem(itemId);
     const expandable = isExpandable(children);
-    let icon;
-    if (expandable) {
-        icon = FolderRounded;
-    } else {
-        icon = getIconFromFileType(item.fileType);
-    }
+    const icon = getIconFromType(expandable ? 'folder' : item.fileType);
 
     return (
         <TreeItemProvider id={id} itemId={itemId}>
@@ -112,23 +102,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 interface CustomTreeItemProps
     extends Omit<UseTreeItemParameters, 'rootRef'>,
         Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
-
-const getIconFromFileType = (fileType: string) => {
-    switch (fileType) {
-        case 'image':
-            return ImageIcon;
-        case 'pdf':
-            return PictureAsPdfIcon;
-        case 'folder':
-            return FolderRounded;
-        case 'html':
-            return PublicIcon;
-        case 'csv':
-            return TableChart;
-        default:
-            return ArticleIcon;
-    }
-};
 
 const StyledTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
     color:

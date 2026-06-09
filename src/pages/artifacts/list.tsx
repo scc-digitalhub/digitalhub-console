@@ -13,6 +13,7 @@ import {
     EditButton,
     FunctionField,
     ListView,
+    RecordContextProvider,
     SelectInput,
     ShowButton,
     SimpleList,
@@ -408,10 +409,9 @@ const DetailsView = (props: { storeKey?: string }) => {
                     if (record?.status?.files?.length > 0) {
                         const file = record.status.files[0];
                         return (
-                            <FileIcon
-                                fileName={file.name}
-                                fileType={file.content_type}
-                            />
+                            <RecordContextProvider value={file}>
+                                <FileIcon />
+                            </RecordContextProvider>
                         );
                     }
 

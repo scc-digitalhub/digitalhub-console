@@ -2,6 +2,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import DocumentFileIcon from '@mui/icons-material/Article';
+import AudioFileIcon from '@mui/icons-material/AudioFile';
+import TextFileIcon from '@mui/icons-material/Description';
+import FolderRounded from '@mui/icons-material/FolderRounded';
+import ArchiveFileIcon from '@mui/icons-material/FolderZip';
+import ImageIcon from '@mui/icons-material/Image';
+import GenericFileIcon from '@mui/icons-material/InsertDriveFile';
+import PublicIcon from '@mui/icons-material/Public';
+import CsvIcon from '@mui/icons-material/TableRows';
+
 export function getMimeTypeFromExtension(extension = '') {
     if (extension[0] === '.') {
         extension = extension.substr(1);
@@ -97,10 +107,20 @@ export function getTypeFromMimeType(mimeType = '') {
         return 'audio';
     }
     if ('text' == g[0]) {
+        if ('html' == g[1]) {
+            return 'html';
+        }
+        if ('csv' == g[1]) {
+            return 'csv';
+        }
         return 'text';
     }
 
-    if ('application/xml' == mimeType || 'application/x-yaml' == mimeType) {
+    if (
+        'application/xml' == mimeType ||
+        'application/x-yaml' == mimeType ||
+        'application/json' == mimeType
+    ) {
         return 'text';
     }
 
@@ -117,5 +137,30 @@ export function getTypeFromMimeType(mimeType = '') {
 
     if (g[1] && g[1].indexOf('zip') > -1) {
         return 'archive';
+    }
+}
+
+export function getIconFromType(fileType: string) {
+    switch (fileType) {
+        case 'folder':
+            return FolderRounded;
+        case 'image':
+            return ImageIcon;
+        case 'audio':
+            return AudioFileIcon;
+        case 'video':
+            return PublicIcon;
+        case 'text':
+            return TextFileIcon;
+        case 'document':
+            return DocumentFileIcon;
+        case 'archive':
+            return ArchiveFileIcon;
+        case 'html':
+            return PublicIcon;
+        case 'csv':
+            return CsvIcon;
+        default:
+            return GenericFileIcon;
     }
 }
