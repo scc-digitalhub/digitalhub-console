@@ -140,6 +140,7 @@ import secretDefinition from './pages/secrets';
 import projectDefinition from './pages/projects';
 import runDefinition from './pages/runs';
 import triggerDefinition from './pages/triggers';
+import containerImageDefinition from './pages/containerimages';
 import { StompContextProvider } from './features/notifications/StompContextProvider';
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
 import { StoreResetter } from './common/components/StoreResetter';
@@ -211,6 +212,9 @@ const CoreApp = () => {
                                             <Resource {...artifactDefinition} />
                                             <Resource name="tasks" />
                                             <Resource {...runDefinition} />
+                                            <Resource
+                                                {...containerImageDefinition}
+                                            />
                                             <Resource {...triggerDefinition} />
                                             <Resource {...projectDefinition} />
                                             <Resource {...secretDefinition} />

@@ -183,5 +183,9 @@
     "hub": {
         "empty": "No resource available",
         "empty_hint": "The catalog does not contain resources for this category"
+    },
+    "containerimages": {
+        "list": "List and search container images",
+        "name": "Container image |||| Container images"
     }
 }

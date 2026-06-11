@@ -385,7 +385,7 @@
             "title": "Parametri di Backend server"
         }
     },
-    "vllm" : {
+    "vllm": {
         "args": {
             "description": "",
             "title": "Argomenti del server VLLM"
@@ -499,13 +499,13 @@
                 "requests": {
                     "title": "Richieste"
                 }
-            },           
+            },
             "pods": {
                 "title": "Pods"
             },
             "containers": {
                 "title": "Containers"
-            },               
+            },
             "title": "Risorse"
         },
         "secrets": {
@@ -530,7 +530,7 @@
     "endTime": {
         "description": "",
         "title": "Ora di Fine"
-    },    
+    },
     "phase": {
         "description": "",
         "title": "Fase"
@@ -1080,7 +1080,7 @@
         "model": {
             "title": "Modello",
             "description": "Modello utilizzato per le richieste"
-        },          
+        },
         "inputs": {
             "description": "Definizione dei input tensor del protocollo Open Inference v2",
             "item": {
@@ -1118,7 +1118,7 @@
         "description": "Estensioni aggiuntive per la risorsa corrente",
         "title": "Estensioni"
     },
-     "gatewayextension": {
+    "gatewayextension": {
         "guardrails": {
             "description": "",
             "title": "Guardrail"
@@ -1131,5 +1131,28 @@
             "description": "",
             "title": "URL del servizio Guardrail"
         }
-    }        
+    },
+    "containers": {
+        "title": "Containers",
+        "digest": {
+            "description": "",
+            "title": "Digest"
+        },
+        "image": {
+            "description": "",
+            "title": "Immagine"
+        },
+        "layers": {
+            "description": "",
+            "title": "Layer"
+        },
+        "instructions": {
+            "description": "",
+            "title": "Istruzioni di Build",
+            "item": {
+                "description": "",
+                "title": "Istruzione"
+            }
+        }
+    }
 }

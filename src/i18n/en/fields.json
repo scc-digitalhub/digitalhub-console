@@ -385,7 +385,7 @@
             "title": "Backend server arguments"
         }
     },
-    "vllm" : {
+    "vllm": {
         "args": {
             "description": "",
             "title": "VLLM server arguments"
@@ -499,7 +499,7 @@
                 "requests": {
                     "title": "Requests"
                 }
-            },   
+            },
             "pods": {
                 "title": "Pods"
             },
@@ -1081,7 +1081,7 @@
         "model": {
             "title": "Model",
             "description": "Model used for the requests"
-        },        
+        },
         "inputs": {
             "description": "Open Inference v2 protocol input tensor definition",
             "item": {
@@ -1132,5 +1132,28 @@
             "description": "",
             "title": "Guardrail service URL"
         }
-    }   
+    },
+    "containers": {
+        "title": "Containers",
+        "digest": {
+            "description": "",
+            "title": "Digest"
+        },
+        "image": {
+            "description": "",
+            "title": "Image"
+        },
+        "layers": {
+            "description": "",
+            "title": "Layers"
+        },
+        "instructions": {
+            "description": "",
+            "title": "Build Instructions",
+            "item": {
+                "description": "",
+                "title": "Instruction"
+            }
+        }
+    }
 }
