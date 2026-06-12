@@ -193,7 +193,10 @@ const DataTableView = (props: { storeKey?: string }) => {
             >
                 <IdField source="spec.image" truncate={35} popover={true} />
             </DataTable.Col>
-            <DataTable.Col source="status.digest" label="fields.containers.digest.title">
+            <DataTable.Col
+                source="status.digest"
+                label="fields.containers.digest.title"
+            >
                 <IdField
                     source="status.digest"
                     truncate={10}
@@ -289,7 +292,7 @@ const DetailsView = (props: { storeKey?: string }) => {
                             color="secondary"
                             sx={{ fontWeight: 'medium' }}
                         >
-                            {record.name}
+                            {record?.spec?.image || record.name}
                         </Typography>
                         <ChipsField
                             size={'small'}
@@ -311,7 +314,17 @@ const DetailsView = (props: { storeKey?: string }) => {
                                     translate
                                 )}
                         </Stack>
-
+                        {record?.status?.size && (
+                            <Typography variant="body2" color="text.primary">
+                                <Stack direction="row" gap={1}>
+                                    <FunctionField
+                                        render={record =>
+                                            prettyBytes(record.status.size)
+                                        }
+                                    />
+                                </Stack>
+                            </Typography>
+                        )}
                         <Box mt={1}>
                             <StateChips
                                 source="status.state"

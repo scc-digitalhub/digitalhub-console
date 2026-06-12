@@ -25,14 +25,12 @@ import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { IdField } from '../../common/components/fields/IdField';
 import { FunctionIcon } from '../functions/icon';
-import { LogsButton } from '../../features/logs/components/LogsButton';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 
 const RowActions = () => {
     return (
         <RowButtonGroup>
             <ShowButton />
-            <LogsButton />
             <ClientButton />
         </RowButtonGroup>
     );

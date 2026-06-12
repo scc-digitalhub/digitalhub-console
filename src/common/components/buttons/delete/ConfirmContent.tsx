@@ -3,9 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+    Alert,
     Box,
     DialogContentText,
     FormControlLabel,
+    Stack,
     Switch,
     Typography,
 } from '@mui/material';
@@ -50,15 +52,15 @@ export const ConfirmContent = (
 
     return (
         <Box>
-            <DialogContentText>
+            <DialogContentText sx={{ mb: 1 }}>
                 {translate('ra.message.bulk_delete_content', {
                     name: 'item',
                     smart_count: records.length,
                 })}
             </DialogContentText>
             {additionalContent}
-            {askForCascade && (
-                <Box>
+            <Stack direction="column" spacing={1} sx={{ px: 1 }}>
+                {askForCascade && (
                     <FormControlLabel
                         control={
                             <Switch
@@ -69,10 +71,8 @@ export const ConfirmContent = (
                         }
                         label={translate('actions.cascade_delete')}
                     />
-                </Box>
-            )}
-            {askForDeleteAll && (
-                <Box>
+                )}
+                {askForDeleteAll && (
                     <FormControlLabel
                         control={
                             <Switch
@@ -83,23 +83,14 @@ export const ConfirmContent = (
                         }
                         label={translate('actions.delete_all_versions')}
                     />
-                </Box>
-            )}
+                )}
+            </Stack>
             {(deleteAll || cascade) && (
-                <Typography
-                    variant="body2"
-                    color="error"
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        ml: 2,
-                    }}
-                >
-                    <WarningAmberIcon fontSize="small" sx={{ mr: 0.5 }} />
+                <Alert severity="warning" sx={{ mt: 2 }}>
                     {records.some(r => r.status?.files !== undefined)
                         ? translate('messages.cascade_warning.no_undone_files')
                         : translate('messages.cascade_warning.no_undone')}
-                </Typography>
+                </Alert>
             )}
         </Box>
     );

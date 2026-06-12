@@ -19,5 +19,7 @@ export default {
     options: {
         type: 'model',
         getSpecUiSchema: getModelSpecUiSchema,
+        hasVersions: true,
+        hasFiles: true,
     },
 };

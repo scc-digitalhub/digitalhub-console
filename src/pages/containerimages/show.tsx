@@ -113,20 +113,20 @@ export const ContainerImageShow = () => {
                     />
                     <ShowView
                         actions={<ShowToolbar />}
-                        sx={{
-                            width: '100%',
-                            '& .RaShow-main': {
-                                display: 'grid',
-                                gridTemplateColumns: { lg: '1fr 350px' },
-                                gridTemplateRows: {
-                                    xs: 'repeat(1, 1fr)',
-                                    lg: '',
-                                },
-                                gap: 2,
-                            },
-                        }}
+                        // sx={{
+                        //     width: '100%',
+                        //     '& .RaShow-main': {
+                        //         display: 'grid',
+                        //         gridTemplateColumns: { lg: '1fr 350px' },
+                        //         gridTemplateRows: {
+                        //             xs: 'repeat(1, 1fr)',
+                        //             lg: '',
+                        //         },
+                        //         gap: 2,
+                        //     },
+                        // }}
                         component={FlatCard}
-                        aside={<VersionsListWrapper />}
+                        // aside={<VersionsListWrapper />}
                     >
                         <ContainerImageShowLayout />
                     </ShowView>
@@ -240,7 +240,7 @@ const ContainerStatusView = () => {
                             <DataTable.Col source="digest">
                                 <IdField
                                     source="digest"
-                                    truncate={48}
+                                    truncate={20}
                                     popover={true}
                                     copy={false}
                                 />

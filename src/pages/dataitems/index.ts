@@ -20,6 +20,8 @@ export default {
         type: 'dataitem',
         hub: false,
         catalogKey: 'dataitems',
+        hasVersions: true,
+        hasFiles: true,
         getSpecUiSchema: getDataItemSpecUiSchema,
     },
 };

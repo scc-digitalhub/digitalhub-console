@@ -18,6 +18,8 @@ export default {
     edit: ArtifactEdit,
     options: {
         type: 'artifact',
+        hasVersions: true,
+        hasFiles: true,
         getSpecUiSchema: getArtifactSpecUiSchema,
     },
 };

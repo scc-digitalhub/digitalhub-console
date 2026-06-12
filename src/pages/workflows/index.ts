@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { WorkflowCreate } from "./create";
-import { WorkflowEdit } from "./edit";
-import { WorkflowIcon } from "./icon";
-import { WorkflowList } from "./list";
-import { WorkflowShow } from "./show";
+import { WorkflowCreate } from './create';
+import { WorkflowEdit } from './edit';
+import { WorkflowIcon } from './icon';
+import { WorkflowList } from './list';
+import { WorkflowShow } from './show';
 
 export default {
     name: 'workflows',
@@ -17,5 +17,7 @@ export default {
     edit: WorkflowEdit,
     options: {
         type: 'workflow',
+        hasVersions: true,
+        hasFiles: false,
     },
 };

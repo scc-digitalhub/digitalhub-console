@@ -17,5 +17,7 @@ export default {
             : record.name,
     options: {
         type: 'containerimage',
+        hasVersions: false,
+        hasFiles: false,
     },
 };

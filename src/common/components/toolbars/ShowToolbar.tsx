@@ -11,6 +11,7 @@ import {
     useGetList,
     useRecordContext,
     useResourceContext,
+    useResourceDefinition,
 } from 'react-admin';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
@@ -23,21 +24,22 @@ import { DownloadButton } from '../../../features/files/download/components/Down
  * back, edit, download (if the record has a file), inspect, export, delete (with confirm).
  * @returns
  */
-export const ShowToolbar = (props: {
-    exporter?: Exporter;
-    askForDeleteAll?: boolean;
-    askForCascade?: boolean;
-}) => {
-    const { askForDeleteAll = true, askForCascade = true, exporter } = props;
+export const ShowToolbar = (props: { exporter?: Exporter }) => {
+    const { exporter } = props;
     const record = useRecordContext();
     const resource = useResourceContext();
+    const resourceDefinition = useResourceDefinition();
     const { root } = useRootSelector();
     const [checked, setChecked] = useState(false);
-    const { data } = useGetList(resource || '', {
-        pagination: { page: 1, perPage: 10 },
-        sort: { field: 'created', order: 'DESC' },
-        filter: { name: record?.name, versions: 'all' },
-    });
+    const { data } = useGetList(
+        resource || '',
+        {
+            pagination: { page: 1, perPage: 10 },
+            sort: { field: 'created', order: 'DESC' },
+            filter: { name: record?.name, versions: 'all' },
+        },
+        { enabled: !!resource && !!resourceDefinition?.options?.hasVersions }
+    );
 
     //redirect to list after delete if all versions have been deleted or there is no other version
     const toListAfterDelete = checked || (data && data.length < 2);
@@ -53,11 +55,23 @@ export const ShowToolbar = (props: {
         }
     }
 
+    const askForDeleteAll = resourceDefinition?.options?.hasVersions;
+    const askForCascade = resourceDefinition?.options?.hasFiles;
+
+    if (!resourceDefinition) {
+        return (
+            <TopToolbar>
+                <BackButton />
+            </TopToolbar>
+        );
+    }
+
     return (
         <TopToolbar>
-            <BackButton />
-            <EditButton style={{ marginLeft: 'auto' }} />
-            {record?.status?.files?.length === 1 && <DownloadButton />}
+            <BackButton style={{ marginRight: 'auto' }} />
+            {resourceDefinition.hasEdit && <EditButton />}
+            {resourceDefinition.options?.hasFiles &&
+                record?.status?.files?.length === 1 && <DownloadButton />}
             <InspectButton fullWidth />
             <ExportRecordButton
                 language="yaml"

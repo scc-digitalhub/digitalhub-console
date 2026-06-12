@@ -19,5 +19,7 @@ export default {
             : record.id,
     options: {
         type: 'run',
+        hasVersions: false,
+        hasFiles: false,
     },
 };
