@@ -10,18 +10,6 @@ import {
     FieldProps,
 } from 'react-admin';
 import { useEffect, useRef, useState } from 'react';
-import 'ace-builds/src-noconflict/mode-java';
-import 'ace-builds/src-noconflict/mode-javascript';
-import 'ace-builds/src-noconflict/mode-markdown';
-import 'ace-builds/src-noconflict/mode-drools';
-import 'ace-builds/src-noconflict/mode-html';
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/mode-sql';
-import 'ace-builds/src-noconflict/mode-typescript';
-import 'ace-builds/src-noconflict/mode-css';
-import 'ace-builds/src-noconflict/mode-yaml';
-import 'ace-builds/src-noconflict/mode-text';
 import { usePapaParse } from 'react-papaparse';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
@@ -56,7 +44,6 @@ export const CSVViewer = (props: CSVViewerProps) => {
             download: true,
             skipEmptyLines: true,
             downloadRequestHeaders: {
-                //TODO controllare cosa succede se la prima pagina è più piccola del chunk size
                 //add range header to request a chunk of bytes
                 Range: `bytes=${cursor.current}-${
                     cursor.current + CHUNK_SIZE + UTF8_MAX_CHAR_BYTES - 1
