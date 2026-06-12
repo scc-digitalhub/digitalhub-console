@@ -121,8 +121,8 @@
     },
     "hub": {
         "menu": "Hub",
-        "title": "Crea una nuova funzione da un modello",
-        "subtitle": "Esplora le risorse disponibili",
+        "title": "Hub dei modelli",
+        "subtitle": "Esplora i modelli disponibili e crea nuove risorse basate su di esse",
         "title_functions": "Crea una nuova funzione da un modello",
         "subtitle_functions": "Esplora le funzioni disponibili nell'hub",
         "title_projects": "Importa un progetto",
@@ -186,6 +186,22 @@
         "metrics": {
             "header": "Metriche utilizzo",
             "subheader": "Metriche relative alle tue run"
+        },
+        "project": {
+            "header": "Progetto",
+            "subheader": "Visualizza e aggiorna la configurazione del progetto e le impostazioni"
+        },
+        "catalog": {
+            "header": "Catalogo",
+            "subheader": "Esplora le entità registrate nel catalogo"
+        },
+        "repository": {
+            "header": "Repository",
+            "subheader": "Esplora file, modelli e dataset nel repository"
+        },
+        "operations": {
+            "header": "Operazioni",
+            "subheader": "Rivedi e gestisci i tuoi compiti ed esecuzioni"
         }
     }
 }

@@ -122,8 +122,8 @@
 
     "hub": {
         "menu": "Hub",
-        "title": "Create a new function from a template",
-        "subtitle": "Browse the available templates",
+        "title": "Templates hub",
+        "subtitle": "Browse the available templates and create new resources based on them",
         "title_functions": "Create a new function from a template",
         "subtitle_functions": "Browse the available functions in the hub",
         "title_projects": "Import a project",
@@ -187,6 +187,22 @@
         "metrics": {
             "header": "Usage metrics",
             "subheader": "Resource metrics related to your runs"
+        },
+        "catalog": {
+            "header": "Catalog",
+            "subheader": "Explore entities registered in the catalog"
+        },
+        "repository": {
+            "header": "Repository",
+            "subheader": "Explore files, models and datasets in the repository"
+        },
+        "operations": {
+            "header": "Operations",
+            "subheader": "Review and manage your jobs and runs"
+        },
+        "project": {
+            "header": "Project",
+            "subheader": "Review and update project configuration and settings"
         }
     }
 }
