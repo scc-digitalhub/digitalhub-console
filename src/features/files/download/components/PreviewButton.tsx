@@ -56,7 +56,7 @@ import {
     StyledDialog,
     StyledDialogClasses,
 } from '../../../../common/theme/StyledDialog';
-import { CSVViewer } from './CsvViewer';
+import { CSVViewer } from './CSVViewer';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
