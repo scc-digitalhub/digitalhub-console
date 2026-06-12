@@ -42,12 +42,13 @@ export const MyMenu = () => {
                     leftIcon={<BrowserIcon />}
                     to={`${basename}/files`}
                     primaryText={'fields.files.title'}
-                />{' '}
+                />
                 <MenuItemLink
                     leftIcon={<ServiceIcon />}
                     to={`${basename}/services`}
                     primaryText={'pages.services.title'}
                 />
+                <Menu.ResourceItem name="containerimages" />
                 <Divider />
                 <MenuItemLink
                     leftIcon={<SettingsIcon />}
