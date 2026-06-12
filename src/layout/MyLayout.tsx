@@ -18,6 +18,8 @@ const enableMetrics: string =
     (process.env.REACT_APP_ENABLE_METRICS as string) ||
     false;
 
+const enableFooter = false;
+
 export const MyLayout = (props: any) => {
     return (
         <Stack direction="column" spacing={1} alignItems="start">
@@ -28,46 +30,48 @@ export const MyLayout = (props: any) => {
                 sidebar={MySidebar}
                 pb={10}
             />
-            <AppBar
-                color="default"
-                position="static"
-                // sx={{borderTop: '1px solid #ccc'}}
-                // position="fixed"
-                // sx={{ top: 'auto', bottom: 0 }}
-                elevation={0}
-                sx={{ px: 1, py: 0.2, width: '100%' }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: 2,
-                        width: '100%',
-                        color: 'white',
-                    }}
+            {enableFooter && (
+                <AppBar
+                    color="default"
+                    position="static"
+                    // sx={{borderTop: '1px solid #ccc'}}
+                    // position="fixed"
+                    // sx={{ top: 'auto', bottom: 0 }}
+                    elevation={0}
+                    sx={{ px: 1, py: 0.2, width: '100%' }}
                 >
-                    <Typography
-                        variant="body1"
-                        fontSize={'medium'}
-                        color={'secondary'}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            gap: 2,
+                            width: '100%',
+                            color: 'white',
+                        }}
                     >
-                        {applicationName}
-                    </Typography>
+                        <Typography
+                            variant="body1"
+                            fontSize={'medium'}
+                            color={'secondary'}
+                        >
+                            {applicationName}
+                        </Typography>
 
-                    <Typography
-                        variant="body1"
-                        fontSize={'medium'}
-                        color={'secondary'}
-                    >
-                        {' / '}
-                    </Typography>
-                    {enableMetrics === 'true' && (
-                        <InstanceMetrics
-                            metrics={['cpu', 'memory', 'disk', 'pods']}
-                        />
-                    )}
-                </Box>
-            </AppBar>
+                        <Typography
+                            variant="body1"
+                            fontSize={'medium'}
+                            color={'secondary'}
+                        >
+                            {' / '}
+                        </Typography>
+                        {enableMetrics === 'true' && (
+                            <InstanceMetrics
+                                metrics={['cpu', 'memory', 'disk', 'pods']}
+                            />
+                        )}
+                    </Box>
+                </AppBar>
+            )}
         </Stack>
     );
 };
