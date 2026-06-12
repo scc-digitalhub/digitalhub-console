@@ -4,7 +4,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Error as RaError } from 'react-admin';
-import { Box, Divider, useTheme } from '@mui/material';
+import { Box, Chip, Divider, Stack, useTheme } from '@mui/material';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { Spinner } from '../../../../common/components/layout/Spinner';
 import { toRepositoryAssetUrl } from '../../utils';
@@ -73,6 +73,28 @@ export const HubDetailView = ({ template }: HubDetailViewProps) => {
                 overflowX: 'hidden',
             }}
         >
+            {template && (
+                <Stack direction="row" spacing={1} mb={0}>
+                    <Chip
+                        label={template.resourceName}
+                        size="small"
+                        color={'primary'}
+                        variant="outlined"
+                        sx={{ mb: 1, fontSize: '0.7rem' }}
+                    />
+                    {template.kind &&
+                        template.kind != template.resourceName &&
+                        template.kind + 's' != template.resourceName && (
+                            <Chip
+                                label={template.kind}
+                                size="small"
+                                color={'secondary'}
+                                variant="outlined"
+                                sx={{ mb: 1, fontSize: '0.7rem' }}
+                            />
+                        )}
+                </Stack>
+            )}
             <HubDetailHeader template={template} />
             <Divider />
             {loading ? (
