@@ -21,6 +21,7 @@ import React, {
     ReactElement,
     useCallback,
     useEffect,
+    useRef,
     useState,
 } from 'react';
 import AceEditor from 'react-ace';
@@ -143,9 +144,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         contentType = languages[mimeType];
     }
 
-    const isPreviewable =
-        fileType &&
-        previewableTypes.includes(fileType);
+    const isPreviewable = fileType && previewableTypes.includes(fileType);
 
     return (
         <Fragment>
@@ -331,42 +330,122 @@ const PreviewView = (props: PreviewViewProps) => {
     );
 };
 
+const CHUNK_SIZE = 1000;
+/**
+ * Sentinel bytes that could be lost between UTF-16 and UTF-8 char encoding.
+ * Set to the maximum number of bytes per character in UTF-8 (at least 1 will not be lost).
+ */
+const UTF8_MAX_CHAR_BYTES = 4;
+
 const CSVViewer = (props: CSVViewerProps) => {
-    const MAX_ROWS = 100;
     const { url } = props;
     const { readRemoteFile } = usePapaParse();
     const [content, setContent] = useState<any>(undefined);
     const notify = useNotify();
+    const translate = useTranslate();
+
+    const [page, setPage] = useState<number>(1);
+    const currentChunk = useRef<string>('');
+    const headers = useRef<string>('');
+    const remainder = useRef<string>('');
+    const separator = useRef<string>('');
+    const cursor = useRef<number>(0);
 
     useEffect(() => {
+        let chunk = currentChunk.current;
+
         readRemoteFile(url, {
+            header: true,
+            download: true,
+            skipEmptyLines: true,
+            downloadRequestHeaders: {
+                //TODO controllare cosa succede se la prima pagina è più piccola del chunk size
+                //add range header to request a chunk of bytes
+                Range: `bytes=${cursor.current}-${
+                    cursor.current + CHUNK_SIZE + UTF8_MAX_CHAR_BYTES - 1
+                }`,
+            },
+            beforeFirstChunk: newChunk => {
+                //keep current chunk before parsing
+                chunk = newChunk;
+                //after first page, prepend header line and remainder
+                if (page > 1) {
+                    return `${headers.current}${separator.current}${remainder.current}${newChunk}`;
+                }
+                return newChunk;
+            },
             complete: results => {
                 if (results.data && results.data.length > 0) {
-                    const cols = Object.keys(results.data[0] as any).map(c => ({
+                    //store separator, header line and last line (possibly incomplete due to chunking) for next pages
+                    separator.current = results.meta.linebreak;
+                    const lines = chunk.split(separator.current);
+                    if (!headers.current) {
+                        headers.current = lines[0];
+                    }
+                    remainder.current = lines[lines.length - 1];
+
+                    //remove remainder from result before display, unless it is the last page
+                    const data =
+                        new Blob([chunk]).size > CHUNK_SIZE
+                            ? results.data.slice(0, -1)
+                            : results.data;
+
+                    //format result for datagrid
+                    const cols = Object.keys(data[0] as any).map(c => ({
                         field: c,
                         flex: 1,
                     }));
                     const res = {
-                        rows: results.data.map((row: any, index: number) => ({
+                        rows: data.map((row: any, index: number) => ({
                             ...row,
-                            id: index,
+                            id: page + '_' + index,
                         })),
                         columns: cols,
                     };
-                    setContent(res);
+
+                    //append result to previous content if any
+                    setContent(prev => {
+                        if (prev && !prev.pages.includes(page)) {
+                            return {
+                                columns: res.columns,
+                                rows: [...prev.rows, ...res.rows],
+                                pages: [...prev.pages, page],
+                            };
+                        }
+                        res['pages'] = [page];
+                        return res;
+                    });
                 }
+
+                //store chunk for next page
+                currentChunk.current = chunk;
+                //increment cursor
+                cursor.current = page * CHUNK_SIZE + page * UTF8_MAX_CHAR_BYTES;
             },
             error: () => {
                 notify('ra.message.not_found', {
                     type: 'error',
                 });
             },
-            header: true,
-            download: true,
-            preview: MAX_ROWS,
-            skipEmptyLines: true,
         });
-    }, [notify, readRemoteFile, url]);
+    }, [notify, page, readRemoteFile, url]);
+
+    const CustomFooter = () => {
+        return (
+            <Box mt={1} textAlign="center">
+                <Button
+                    color="info"
+                    size="small"
+                    disabled={
+                        !(new Blob([currentChunk.current]).size > CHUNK_SIZE)
+                    }
+                    onClick={() => setPage(prev => prev + 1)}
+                >
+                    {translate('actions.load_more')}
+                </Button>
+            </Box>
+        );
+    };
 
     return (
         <Box
@@ -382,8 +461,13 @@ const CSVViewer = (props: CSVViewerProps) => {
                 <DataGrid
                     rows={content.rows}
                     columns={content.columns}
-                    pageSizeOptions={[MAX_ROWS]}
+                    autoHeight
                     disableRowSelectionOnClick
+                    paginationMode="server"
+                    rowCount={-1}
+                    slots={{
+                        footer: CustomFooter,
+                    }}
                 />
             ) : (
                 <EmptyMessage message="fields.info.empty" />
