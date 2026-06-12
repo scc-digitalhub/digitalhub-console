@@ -2,7 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useNotify, Button, useTranslate, RaRecord, FieldProps } from 'react-admin';
+import {
+    useNotify,
+    Button,
+    useTranslate,
+    RaRecord,
+    FieldProps,
+} from 'react-admin';
 import { useEffect, useRef, useState } from 'react';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-javascript';
