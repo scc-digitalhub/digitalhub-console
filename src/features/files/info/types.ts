@@ -13,9 +13,21 @@ export type FileInfo = {
 
 export type FileInfoParams = {
     path: string;
+    token?: string;
 };
 
 export type ResourceFileInfoParams = {
     resource: string;
     id: string;
 };
+export interface GetListResult {
+    data: FileInfo[];
+    total?: number;
+    pageInfo?: {
+        hasNextPage?: boolean;
+        hasPreviousPage?: boolean;
+        token?: string;
+        nextToken?: string;
+    };
+    meta?: any;
+}

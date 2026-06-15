@@ -8,7 +8,11 @@ import {
     DownloadParams,
     ResourceDownloadParams,
 } from './download/types';
-import { FileInfo, FileInfoParams, ResourceFileInfoParams } from './info/types';
+import {
+    GetListResult,
+    FileInfoParams,
+    ResourceFileInfoParams,
+} from './info/types';
 import {
     CompleteMultipartUploadParams,
     ResourceCompleteMultipartUploadParams,
@@ -34,10 +38,10 @@ export type FileProvider = {
     ) => Promise<DownloadInfo>;
 
     fileInfo: (
-        params: Pick<GetListParams, 'meta'>,
+        params: GetListParams,
         fileInfoParams?: FileInfoParams,
         resourceFileInfoParams?: ResourceFileInfoParams
-    ) => Promise<FileInfo[]>;
+    ) => Promise<GetListResult>;
 
     upload: (
         params: Pick<GetListParams, 'meta'>,

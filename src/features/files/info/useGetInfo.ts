@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from "@dslab/ra-root-selector";
-import { useFileContext } from "../FileContext";
-import { FileInfoParams, ResourceFileInfoParams, FileInfo } from "./types";
-import { useCallback } from "react";
+import { useRootSelector } from '@dslab/ra-root-selector';
+import { useFileContext } from '../FileContext';
+import { FileInfoParams, ResourceFileInfoParams, GetListResult } from './types';
+import { useCallback } from 'react';
 
 type GetFileInfoFunction = (
     params: FileInfoParams | ResourceFileInfoParams
-) => Promise<FileInfo[]>;
+) => Promise<GetListResult>;
 
 export const useGetFileInfo = (): GetFileInfoFunction => {
     const { provider } = useFileContext();

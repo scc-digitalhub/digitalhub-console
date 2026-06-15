@@ -36,7 +36,7 @@ export const FileDetails = (props: {
     useEffect(() => {
         if (file) {
             getFileInfo({ path: file.path }).then(json => {
-                if (json && json.length > 0) {
+                if (json && json.data?.length > 0) {
                     setInfo({ ...json[0], path: file.path });
                 }
             });

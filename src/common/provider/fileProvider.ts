@@ -101,7 +101,12 @@ const fileProvider = (
             }
 
             let query = '';
-            if (fileInfoParams) query = `?path=${fileInfoParams.path}`;
+            let queryParams = {};
+            if (fileInfoParams) {
+                queryParams = { ...fileInfoParams };
+            }
+
+            if (queryParams) query = `?` + stringify(queryParams);
 
             const url = `${apiUrl}${prefix}${resourcePath}/files/info${query}`;
 
@@ -113,7 +118,15 @@ const fileProvider = (
                     throw new Error('Resource not found');
                 }
                 const jsonBody = JSON.parse(body);
-                return jsonBody;
+                const pageInfo = {
+                    hasNextPage:
+                        jsonBody.pageable?.paged && jsonBody.last === false,
+                    hasPreviousPage:
+                        jsonBody.pageable?.paged && jsonBody.first === false,
+                    token: jsonBody.token,
+                    nextToken: jsonBody.nextToken,
+                };
+                return { ...jsonBody, data: jsonBody.content || [], pageInfo };
             });
         },
         upload: (params, uploadParams, resourceUploadParams) => {

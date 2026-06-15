@@ -82,8 +82,8 @@ export const FileInfoTree = (props: {
                     id: record.id as string,
                 })
                     .then(data => {
-                        if (data) {
-                            setData(data);
+                        if (data?.data) {
+                            setData(data.data);
                             isLoading.current = false;
                         } else {
                             notify('ra.message.not_found', {

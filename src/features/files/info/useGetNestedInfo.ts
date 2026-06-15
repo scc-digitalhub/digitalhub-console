@@ -4,13 +4,13 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useFileContext } from '../FileContext';
-import { FileInfoParams, FileInfo } from './types';
+import { FileInfoParams, GetListResult } from './types';
 import { useCallback } from 'react';
 import flattenDeep from 'lodash/flattenDeep';
 
 type GetNestedFileInfoFunction = (
     params: FileInfoParams
-) => Promise<FileInfo[]>;
+) => Promise<GetListResult>;
 
 /**
  * Hook for a function that recursively gets file info from the store.
@@ -26,8 +26,8 @@ export const useGetNestedFileInfo = (): GetNestedFileInfoFunction => {
             const func = async (path: string) => {
                 return provider
                     .fileInfo({ meta: { root } }, { path })
-                    .then(files => {
-                        const promises = files.map(file => {
+                    .then((files: GetListResult) => {
+                        const promises = files.data.map(file => {
                             const filePath = path + file.name;
                             file.path = filePath;
                             if (file.name.endsWith('/')) {

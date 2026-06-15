@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Button,
     Datagrid,
@@ -61,6 +61,7 @@ export const Browser = () => {
     const [path, setPath] = useState<string | null>(null);
     const [files, setFiles] = useState<any[] | null>(null);
     const [error, setError] = useState<any | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {
         if (getStores) {
@@ -76,21 +77,43 @@ export const Browser = () => {
         }
     }, [getStores]);
 
+    const fetchFiles = useCallback(
+        (nextToken?: string) => {
+            if (getFileInfo && path != null) {
+                getFileInfo({ path, token: nextToken ?? undefined })
+                    .then(json => {
+                        if (json) {
+                            const newFiles = json.data
+                                ? json.data.map(f => ({ ...f, id: f.path }))
+                                : [];
+                            setFiles(prev =>
+                                nextToken
+                                    ? [...(prev || []), ...newFiles]
+                                    : newFiles
+                            );
+                            setToken(
+                                json.pageInfo?.nextToken
+                                    ? json.pageInfo.nextToken
+                                    : null
+                            );
+                            setError(null);
+                        }
+                    })
+                    .catch(error => {
+                        console.log('e', error);
+                        setError(error);
+                        setToken(null);
+                    });
+            }
+        },
+        [getFileInfo, path]
+    );
+
     const reload = useCallback(() => {
-        if (getFileInfo && path != null) {
-            getFileInfo({ path })
-                .then(json => {
-                    if (json) {
-                        setFiles(json.map(f => ({ ...f, id: f.path })));
-                        setError(null);
-                    }
-                })
-                .catch(error => {
-                    console.log('e', error);
-                    setError(error);
-                });
+        if (fetchFiles) {
+            fetchFiles();
         }
-    }, [getFileInfo, path]);
+    }, [fetchFiles]);
 
     useEffect(() => {
         reload();
@@ -190,6 +213,8 @@ export const Browser = () => {
                             navigate={setPath}
                             reload={reload}
                             path={path}
+                            token={token}
+                            fetchPage={fetchFiles}
                         />
                     )}
                 </FlatCard>
@@ -198,13 +223,48 @@ export const Browser = () => {
     );
 };
 
+const InfiniteScrollTrigger = (props: {
+    token: string | null;
+    fetchPage: (token: string) => void;
+}) => {
+    const { token, fetchPage } = props;
+    const observerElem = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const element = observerElem.current;
+        if (!element) return;
+        const observer = new IntersectionObserver(
+            entries => {
+                const [target] = entries;
+                if (target.isIntersecting && token) {
+                    fetchPage(token);
+                }
+            },
+            { threshold: 0 }
+        );
+        observer.observe(element);
+        return () => observer.unobserve(element);
+    }, [token, fetchPage]);
+
+    return <div ref={observerElem} style={{ height: 1 }} />;
+};
+
 const FileList = (props: {
     path?: string | null;
     files?: any[] | null;
     navigate: (path) => void;
     reload: () => void;
+    token?: string | null;
+    fetchPage?: (token: string) => void;
 }) => {
-    const { path, files = [], navigate, reload } = props;
+    const {
+        path,
+        files = [],
+        navigate,
+        reload,
+        token = null,
+        fetchPage,
+    } = props;
     const listContext = useList({ data: files || [] });
     const [file, setFile] = useState<any | null>(null);
 
@@ -297,6 +357,9 @@ const FileList = (props: {
                     )}
                 </Grid>
             </ListContextProvider>
+            {token && fetchPage && (
+                <InfiniteScrollTrigger token={token} fetchPage={fetchPage} />
+            )}
         </ResourceContextProvider>
     );
 };
