@@ -11,20 +11,6 @@ export default defineConfig({
     },
     server: {
         host: true,
-        // [LOCAL TESTING] Uncomment the proxy block below to forward Trino API
-        // requests to a local Trino instance running on port 8080.
-        // proxy: {
-        //     '/v1': {
-        //         target: 'http://localhost:8080',
-        //         changeOrigin: true,
-        //         secure: false,
-        //         configure: (proxy) => {
-        //             proxy.on('proxyRes', (proxyRes) => {
-        //                 delete proxyRes.headers['www-authenticate'];
-        //             });
-        //         },
-        //     },
-        // },
     },
     base: './',
     build: {
@@ -32,6 +18,7 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ['@mui/material/Tooltip'],
-        exclude: ['js-big-decimal'],
+        exclude: ['js-big-decimal']
+
     },
 });
