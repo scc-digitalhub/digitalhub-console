@@ -13,66 +13,17 @@ import {
     useEffect,
 } from 'react';
 import { ResponsiveStyleValue } from '@mui/system';
-import {
-    styled,
-    type SxProps,
-    type Theme,
-    useThemeProps,
-} from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { Divider, Tabs } from '@mui/material';
 import { Outlet, Routes, Route } from 'react-router-dom';
 import {
-    type RaRecord,
     useRecordContext,
     OptionalRecordContextProvider,
     TabbedShowLayoutClasses,
     TabbedShowLayoutTabs as DefaultTabs,
     TabbedShowLayout as StandardTabbedShowLayout,
+    TabbedShowLayoutProps,
 } from 'react-admin';
-
-export interface TabbedShowLayoutProps {
-    children: ReactNode;
-    className?: string;
-    divider?: ReactNode;
-    record?: RaRecord;
-    rootPath?: string;
-    spacing?: ResponsiveStyleValue<number | string>;
-    sx?: SxProps<Theme>;
-    syncWithLocation?: boolean;
-    tabs?: ReactElement;
-    value?: any;
-}
-
-const PREFIX = 'RaTabbedShowLayout';
-
-const Root = styled('div', {
-    name: PREFIX,
-    overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-    flex: 1,
-    [`& .${TabbedShowLayoutClasses.content}`]: {
-        padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-    },
-}));
-
-const sanitizeRestProps = (props: any) => {
-    const {
-        record,
-        resource,
-        initialValues,
-        staticContext,
-        translate,
-        ...rest
-    } = props;
-
-    void record;
-    void resource;
-    void initialValues;
-    void staticContext;
-    void translate;
-
-    return rest;
-};
 
 export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
     const props = useThemeProps({
@@ -219,3 +170,34 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
 };
 
 CustomTabbedShowLayout.Tab = StandardTabbedShowLayout.Tab;
+
+const PREFIX = 'RaTabbedShowLayout';
+
+const Root = styled('div', {
+    name: PREFIX,
+    overridesResolver: (props, styles) => styles.root,
+})(({ theme }) => ({
+    flex: 1,
+    [`& .${TabbedShowLayoutClasses.content}`]: {
+        padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    },
+}));
+
+const sanitizeRestProps = (props: any) => {
+    const {
+        record,
+        resource,
+        initialValues,
+        staticContext,
+        translate,
+        ...rest
+    } = props;
+
+    void record;
+    void resource;
+    void initialValues;
+    void staticContext;
+    void translate;
+
+    return rest;
+};
