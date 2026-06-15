@@ -125,6 +125,10 @@ const theme = themeProvider();
 const enableSearch: boolean =
     (globalThis as any).REACT_APP_ENABLE_SOLR === 'true' ||
     (process.env.REACT_APP_ENABLE_SOLR as string) === 'true';
+const enableTrino: string =
+    (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
+    (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
+    false;
 
 import { ResourceSchemaProvider } from './common/provider/schemaProvider';
 import { ProjectConfig } from './pages/projects/config';
@@ -274,10 +278,12 @@ const CoreApp = () => {
                                                         element={<SearchList />}
                                                     />
                                                 )}
-                                                <Route
-                                                    path="/sql-editor"
-                                                    element={<MyTrinoApp />}
-                                                />
+                                                {enableTrino && (
+                                                    <Route
+                                                        path="/sql"
+                                                        element={<MyTrinoApp />}
+                                                    />
+                                                )}
                                             </CustomRoutes>
                                         </AdminUI>
                                     </FileContextProvider>

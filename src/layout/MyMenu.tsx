@@ -27,6 +27,11 @@ const enableHub: string =
     (process.env.REACT_APP_HUB_CATALOG_URL as string) ||
     false;
 
+const enableTrino: string =
+    (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
+    (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
+    false;
+
 export const MyMenu = () => {
     const basename = useBasename();
     const getResourceLabel = useGetResourceLabel();
@@ -82,11 +87,13 @@ export const MyMenu = () => {
                     to={`${basename}/files`}
                     primaryText={'fields.files.title'}
                 />
-                <MenuItemLink
-                    leftIcon={<StorageIcon />}
-                    to={`${basename}/sql-editor`}
-                    primaryText={'SQL Editor'}
-                />
+                {enableTrino && (
+                    <MenuItemLink
+                        leftIcon={<StorageIcon />}
+                        to={`${basename}/sql`}
+                        primaryText={'SQL Editor'}
+                    />
+                )}
 
                 <Divider />
                 <MenuHeader
