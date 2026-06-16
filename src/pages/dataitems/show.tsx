@@ -7,11 +7,11 @@ import { memo, useEffect, useState } from 'react';
 import {
     Labeled,
     ShowView,
-    TabbedShowLayout,
     TextField,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { arePropsEqual, countLines } from '../../common/utils/helpers';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
@@ -60,7 +60,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
     if (!record) return <></>;
 
     return (
-        <TabbedShowLayout
+        <CustomTabbedShowLayout
             syncWithLocation={false}
             record={record}
             sx={{
@@ -69,7 +69,7 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 },
             }}
         >
-            <TabbedShowLayout.Tab label="fields.summary">
+            <CustomTabbedShowLayout.Tab value="summary" label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
@@ -83,9 +83,9 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {spec && (
-                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -96,32 +96,33 @@ const DataItemShowLayout = memo(function DataItemShowLayout(props: {
                             maxLines={lineCount[1]}
                         />
                     </Box>
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {record.extensions && record.extensions.length > 0 && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="extensions"
                     label={translate('fields.extensions.title')}
                 >
                     <ExtensionsField source="extensions" />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="fields.files.tab">
+            <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
                 <FileInfoTree />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {kind && kind === 'table' && (
-                <TabbedShowLayout.Tab label="resources.dataitems.tab.schema">
+                <CustomTabbedShowLayout.Tab value="schema" label="resources.dataitems.tab.schema">
                     <SchemaTabComponent record={props.record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {kind && kind === 'table' && (
-                <TabbedShowLayout.Tab label="resources.dataitems.tab.preview">
+                <CustomTabbedShowLayout.Tab value="preview" label="resources.dataitems.tab.preview">
                     <PreviewTabComponent record={props.record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
                 <LineageTabComponent />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
+            </CustomTabbedShowLayout.Tab>
+        </CustomTabbedShowLayout>
     );
 },
 arePropsEqual);

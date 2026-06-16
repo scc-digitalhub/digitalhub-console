@@ -15,7 +15,6 @@ import {
     ResourceContextProvider,
     ShowBase,
     ShowView,
-    TabbedShowLayout,
     TextField,
     TopToolbar,
     useCreatePath,
@@ -23,6 +22,7 @@ import {
     useRecordContext,
     useTranslate,
 } from 'react-admin';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { Container, Divider, Stack, Typography } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
@@ -68,8 +68,8 @@ export const TriggerShowComponent = () => {
     if (!record) return <LoadingIndicator />;
 
     return (
-        <TabbedShowLayout record={record} syncWithLocation={false}>
-            <TabbedShowLayout.Tab label={translate('fields.summary')}>
+        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
+            <CustomTabbedShowLayout.Tab value="summary" label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" label="fields.kind" />
@@ -136,23 +136,24 @@ export const TriggerShowComponent = () => {
                     />
                 </Labeled>
                 {record?.status?.transitions && <EventsList record={record} />}
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
 
-            <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+            <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                 <AceEditorField
                     source="spec"
                     parse={toYaml}
                     mode="yaml"
                     minLines={20}
                 />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
 
-            <TabbedShowLayout.Tab
+            <CustomTabbedShowLayout.Tab
+                value="runs"
                 label={translate('resources.runs.name', { smart_count: 2 })}
             >
                 <GeneratedRunsList />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
+            </CustomTabbedShowLayout.Tab>
+        </CustomTabbedShowLayout>
     );
 };
 

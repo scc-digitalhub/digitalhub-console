@@ -8,12 +8,12 @@ import {
     DateField,
     Labeled,
     ShowView,
-    TabbedShowLayout,
     TextField,
     TextInput,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { arePropsEqual, countLines } from '../../common/utils/helpers';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
@@ -90,7 +90,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
     if (!record) return <></>;
 
     return (
-        <TabbedShowLayout
+        <CustomTabbedShowLayout
             syncWithLocation={false}
             record={record}
             sx={{
@@ -99,7 +99,7 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 },
             }}
         >
-            <TabbedShowLayout.Tab label="fields.summary">
+            <CustomTabbedShowLayout.Tab value="summary" label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
@@ -113,9 +113,9 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {spec && (
-                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -126,32 +126,33 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                             maxLines={lineCount[1]}
                         />
                     </Box>
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {record.extensions && record.extensions.length > 0 && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="extensions"
                     label={translate('fields.extensions.title')}
                 >
                     <ExtensionsField source="extensions" />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="fields.files.tab">
+            <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
                 <FileInfoTree />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {record?.status?.metrics && (
-                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                <CustomTabbedShowLayout.Tab value="metrics" label={'fields.metrics.title'}>
                     <MetricsGrid
                         record={record}
                         filter={{ name: record?.name, versions: 'all' }}
                         filters={metricsComparisonFilters}
                         datagridFields={metricsDatagridFields}
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
                 <LineageTabComponent />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
+            </CustomTabbedShowLayout.Tab>
+        </CustomTabbedShowLayout>
     );
 }, arePropsEqual);
 
