@@ -10,7 +10,6 @@ import {
     type ReactElement,
     type ReactNode,
     useState,
-    useEffect,
 } from 'react';
 import { ResponsiveStyleValue } from '@mui/system';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -65,19 +64,14 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
             : String(value ?? 0);
     });
 
-    const currentTabKeys = nonNullChildren
-        .map((t, i) => getTabValue(t, i))
-        .join('|');
-    useEffect(() => {
-        if (!syncWithLocation && nonNullChildren.length > 0) {
-            const currentTabStillExists = nonNullChildren.some(
-                (tab, index) => String(getTabValue(tab, index)) === tabValue
-            );
-            if (!currentTabStillExists) {
-                setTabValue(String(getTabValue(nonNullChildren[0], 0)));
-            }
+    if (!syncWithLocation && nonNullChildren.length > 0) {
+        const currentTabStillExists = nonNullChildren.some(
+            (tab, index) => String(getTabValue(tab, index)) === tabValue
+        );
+        if (!currentTabStillExists) {
+            setTabValue(String(getTabValue(nonNullChildren[0], 0)));
         }
-    }, [currentTabKeys, nonNullChildren, syncWithLocation, tabValue]);
+    }
 
     const handleTabChange = (event: ChangeEvent<{}>, newValue: any): void => {
         if (!syncWithLocation) {
