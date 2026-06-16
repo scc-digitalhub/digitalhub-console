@@ -9,13 +9,13 @@ import {
     LoadingIndicator,
     ShowBase,
     ShowView,
-    TabbedShowLayout,
     TextField,
     useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { toYaml } from '@dslab/ra-export-record-button';
@@ -174,8 +174,8 @@ const ShowComponent = () => {
     const lineCount = countLines(recordSpec);
 
     return (
-        <TabbedShowLayout record={record} syncWithLocation={false}>
-            <TabbedShowLayout.Tab label={translate('fields.summary')}>
+        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
+            <CustomTabbedShowLayout.Tab value="summary" label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
@@ -189,9 +189,9 @@ const ShowComponent = () => {
                 <IdField source="key" />
 
                 <MetadataField />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {schema && (
-                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -202,11 +202,12 @@ const ShowComponent = () => {
                             maxLines={lineCount[1]}
                         />
                     </Box>
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
 
             {sourceCode && schema?.schema && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="code"
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
@@ -218,11 +219,12 @@ const ShowComponent = () => {
                         schema={schema.schema}
                         uiSchema={getWorkflowUiSpec(record.kind)}
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
 
             {tasks?.map(task => (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value={task}
                     label={
                         <Stack direction="row" sx={{ alignItems: 'center' }}>
                             {translate(
@@ -234,9 +236,9 @@ const ShowComponent = () => {
                     path={task}
                 >
                     <WorkflowTaskShow kind={task} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             ))}
-        </TabbedShowLayout>
+        </CustomTabbedShowLayout>
     );
 };
 

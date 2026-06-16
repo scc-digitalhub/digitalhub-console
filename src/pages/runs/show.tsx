@@ -11,7 +11,6 @@ import {
     LoadingIndicator,
     SelectInput,
     ShowView,
-    TabbedShowLayout,
     TextField,
     TextInput,
     TopToolbar,
@@ -60,6 +59,7 @@ import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { SHOW_VIEW_PROPS } from '../../common/theme';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -150,8 +150,11 @@ export const RunShowComponent = () => {
     if (!record) return <LoadingIndicator />;
 
     return (
-        <TabbedShowLayout record={record} syncWithLocation={false}>
-            <TabbedShowLayout.Tab label={translate('fields.summary')}>
+        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
+            <CustomTabbedShowLayout.Tab
+                value="summary"
+                label={translate('fields.summary')}
+            >
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" label="fields.kind" />
@@ -229,13 +232,19 @@ export const RunShowComponent = () => {
                 {record?.status?.transitions && (
                     <TransitionsList record={record} />
                 )}
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {record?.spec?.workflow && schema && (
-                <TabbedShowLayout.Tab label={'fields.workflow.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="workflow"
+                    label={'fields.workflow.title'}
+                >
                     <WorkflowView record={record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+            <CustomTabbedShowLayout.Tab
+                value="spec"
+                label={translate('fields.spec.title')}
+            >
                 <AceEditorField
                     source="spec"
                     parse={toYaml}
@@ -243,11 +252,14 @@ export const RunShowComponent = () => {
                     minLines={lineCount[0]}
                     maxLines={lineCount[1]}
                 />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {record?.spec?.source &&
                 schema?.schema &&
                 !record?.status?.dockerfile && (
-                    <TabbedShowLayout.Tab label={'fields.code'}>
+                    <CustomTabbedShowLayout.Tab
+                        value="source-code"
+                        label={'fields.code'}
+                    >
                         <FilteredJsonSchemaField
                             sourceName="spec"
                             record={record}
@@ -255,12 +267,15 @@ export const RunShowComponent = () => {
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />
-                    </TabbedShowLayout.Tab>
+                    </CustomTabbedShowLayout.Tab>
                 )}
             {record?.spec?.fab_source &&
                 schema?.schema &&
                 !record?.status?.dockerfile && (
-                    <TabbedShowLayout.Tab label={'fields.code'}>
+                    <CustomTabbedShowLayout.Tab
+                        value="fab_source-code"
+                        label={'fields.code'}
+                    >
                         <FilteredJsonSchemaField
                             sourceName="spec"
                             record={record}
@@ -268,10 +283,10 @@ export const RunShowComponent = () => {
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />
-                    </TabbedShowLayout.Tab>
+                    </CustomTabbedShowLayout.Tab>
                 )}
             {record?.status?.dockerfile && (
-                <TabbedShowLayout.Tab label={'fields.code'}>
+                <CustomTabbedShowLayout.Tab value="code" label={'fields.code'}>
                     <AceEditorField
                         source="status.dockerfile"
                         mode="text"
@@ -280,33 +295,48 @@ export const RunShowComponent = () => {
                         minLines={10}
                         maxLines={50}
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {(record?.spec?.inputs || record?.spec?.parameters) && (
-                <TabbedShowLayout.Tab label={'fields.inputs.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="inputs"
+                    label={'fields.inputs.title'}
+                >
                     <Inputs record={record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {(record?.status?.outputs || record?.status?.results) && (
-                <TabbedShowLayout.Tab label={'fields.outputs.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="outputs"
+                    label={'fields.outputs.title'}
+                >
                     <Outputs record={record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label={translate('fields.logs')}>
+            <CustomTabbedShowLayout.Tab
+                value="logs"
+                label={translate('fields.logs')}
+            >
                 {record?.id && (
                     <LogsView id={record.id as string} resource={resource} />
                 )}
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label={'fields.k8s.title'}>
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab value="k8s" label={'fields.k8s.title'}>
                 <ComputeResources record={record} />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {record?.status?.service && (
-                <TabbedShowLayout.Tab label={'fields.service.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="service"
+                    label={'fields.service.title'}
+                >
                     <ServiceDetails record={record} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {record?.status?.metrics && (
-                <TabbedShowLayout.Tab label={'fields.metrics.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="metrics"
+                    label={'fields.metrics.title'}
+                >
                     <MetricsGrid
                         record={record}
                         filters={metricsComparisonFilters}
@@ -333,19 +363,23 @@ export const RunShowComponent = () => {
                             }
                         }
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {record.extensions && record.extensions.length > 0 && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="extensions"
                     label={translate('fields.extensions.title')}
                 >
                     <ExtensionsField source="extensions" />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab
+                value="lineage"
+                label="pages.lineage.title"
+            >
                 <LineageTabComponent />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
+            </CustomTabbedShowLayout.Tab>
+        </CustomTabbedShowLayout>
     );
 };
 

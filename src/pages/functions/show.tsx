@@ -9,13 +9,13 @@ import {
     LoadingIndicator,
     ShowBase,
     ShowView,
-    TabbedShowLayout,
     TextField,
     useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { getFunctionUiSpec } from './types';
@@ -181,8 +181,8 @@ const ShowComponent = () => {
     };
 
     return (
-        <TabbedShowLayout record={record} syncWithLocation={false}>
-            <TabbedShowLayout.Tab label={translate('fields.summary')}>
+        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
+            <CustomTabbedShowLayout.Tab value="summary" label={translate('fields.summary')}>
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" label="fields.kind" />
@@ -196,9 +196,9 @@ const ShowComponent = () => {
                 <IdField source="key" />
 
                 <MetadataField />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {schema && (
-                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -209,11 +209,12 @@ const ShowComponent = () => {
                             maxLines={lineCount[1]}
                         />
                     </Box>
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
 
             {sourceCode && schema?.schema && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="code"
                     label={'fields.code'}
                     key={record.id + ':source_code'}
                     path="code"
@@ -225,11 +226,12 @@ const ShowComponent = () => {
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
 
             {fabSourceCode && schema?.schema && (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value="fab_source-code"
                     label={'fields.code'}
                     key={record.id + ':fab_source_code'}
                     path="code"
@@ -243,19 +245,20 @@ const ShowComponent = () => {
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
 
             {tasks?.map(task => (
-                <TabbedShowLayout.Tab
+                <CustomTabbedShowLayout.Tab
+                    value={task}
                     label={'resources.tasks.kinds.' + getAction(task)}
                     key={task}
                     path={task}
                 >
                     <FunctionTaskShow kind={task} />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             ))}
-        </TabbedShowLayout>
+        </CustomTabbedShowLayout>
     );
 };
 

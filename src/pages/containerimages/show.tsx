@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack, Typography } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { Box, Container, Stack } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
     ArrayField,
     DataTable,
@@ -11,16 +11,15 @@ import {
     Labeled,
     RecordContext,
     ShowView,
-    TabbedShowLayout,
     TextField,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { arePropsEqual, countLines } from '../../common/utils/helpers';
+import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
+import { countLines } from '../../common/utils/helpers';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { ContainerImageIcon } from './icon';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
@@ -58,8 +57,8 @@ const ContainerImageShowLayout = props => {
     if (!record) return <></>;
 
     return (
-        <TabbedShowLayout syncWithLocation={false} record={record}>
-            <TabbedShowLayout.Tab label="fields.summary">
+        <CustomTabbedShowLayout syncWithLocation={false} record={record}>
+            <CustomTabbedShowLayout.Tab value="summary" label="fields.summary">
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
@@ -73,9 +72,9 @@ const ContainerImageShowLayout = props => {
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
                 <MetadataField />
-            </TabbedShowLayout.Tab>
+            </CustomTabbedShowLayout.Tab>
             {spec && (
-                <TabbedShowLayout.Tab label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -86,20 +85,20 @@ const ContainerImageShowLayout = props => {
                             maxLines={lineCount[1]}
                         />
                     </Box>
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
             {record?.status?.layers && (
-                <TabbedShowLayout.Tab label="fields.source.title">
+                <CustomTabbedShowLayout.Tab value="source" label="fields.source.title">
                     <SourceView />
-                </TabbedShowLayout.Tab>
+                </CustomTabbedShowLayout.Tab>
             )}
-            <TabbedShowLayout.Tab label="messages.navigation.details">
+            <CustomTabbedShowLayout.Tab value="details" label="messages.navigation.details">
                 <ContainerStatusView />
-            </TabbedShowLayout.Tab>
-            <TabbedShowLayout.Tab label="pages.lineage.title">
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
                 <LineageTabComponent />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
+            </CustomTabbedShowLayout.Tab>
+        </CustomTabbedShowLayout>
     );
 };
 
