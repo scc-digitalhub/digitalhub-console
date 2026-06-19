@@ -4,14 +4,16 @@
 
 import {
     useNotify,
-    Button,
-    useTranslate,
     RaRecord,
     FieldProps,
+    InfinitePaginationContext,
+    InfinitePagination,
+    ListContextProvider,
+    useList,
+    DataTable,
 } from 'react-admin';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePapaParse } from 'react-papaparse';
-import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 
@@ -27,7 +29,6 @@ export const CSVViewer = (props: CSVViewerProps) => {
     const { readRemoteFile } = usePapaParse();
     const [content, setContent] = useState<any>(undefined);
     const notify = useNotify();
-    const translate = useTranslate();
 
     const [page, setPage] = useState<number>(1);
     const currentChunk = useRef<string>('');
@@ -74,37 +75,28 @@ export const CSVViewer = (props: CSVViewerProps) => {
                             ? results.data.slice(0, -1)
                             : results.data;
 
-                    //format result for datagrid
-                    const cols = Object.keys(data[0] as any).map(c => ({
-                        field: c,
-                        flex: 1,
+                    //add row IDs
+                    const indexedData = data.map((row: any, index: number) => ({
+                        ...row,
+                        id: page + '_' + index,
                     }));
-                    const res = {
-                        rows: data.map((row: any, index: number) => ({
-                            ...row,
-                            id: page + '_' + index,
-                        })),
-                        columns: cols,
-                    };
 
                     //append result to previous content if any
                     setContent(prev => {
                         if (prev && !prev.pages.includes(page)) {
                             return {
-                                columns: res.columns,
-                                rows: [...prev.rows, ...res.rows],
+                                data: [...prev.data, ...indexedData],
                                 pages: [...prev.pages, page],
                             };
                         }
-                        res['pages'] = [page];
-                        return res;
+                        return { data: indexedData, pages: [page] };
                     });
                 }
 
                 //store chunk for next page
                 currentChunk.current = chunk;
                 //increment cursor
-                cursor.current = page * CHUNK_SIZE + page * UTF8_MAX_CHAR_BYTES;
+                cursor.current = page * (CHUNK_SIZE + UTF8_MAX_CHAR_BYTES);
             },
             error: () => {
                 notify('ra.message.not_found', {
@@ -114,49 +106,60 @@ export const CSVViewer = (props: CSVViewerProps) => {
         });
     }, [notify, page, readRemoteFile, url]);
 
-    const CustomFooter = () => {
-        return (
-            <Box mt={1} textAlign="center">
-                <Button
-                    color="info"
-                    size="small"
-                    disabled={
-                        !(new Blob([currentChunk.current]).size > CHUNK_SIZE)
-                    }
-                    onClick={() => setPage(prev => prev + 1)}
-                >
-                    {translate('actions.load_more')}
-                </Button>
-            </Box>
-        );
-    };
+    const scrollCallback = useCallback(() => setPage(prev => prev + 1), []);
 
     return (
-        <Box
-            sx={{
-                height: 400,
-                width: '100%',
-                '& .MuiDataGrid-columnHeaderTitle': {
-                    fontWeight: 'bold',
-                },
-            }}
-        >
-            {content ? (
-                <DataGrid
-                    rows={content.rows}
-                    columns={content.columns}
-                    autoHeight
-                    disableRowSelectionOnClick
-                    paginationMode="server"
-                    rowCount={-1}
-                    slots={{
-                        footer: CustomFooter,
-                    }}
+        <Box>
+            {content && content.data?.length > 0 ? (
+                <ScrollableList
+                    data={content.data}
+                    fetchNextPage={scrollCallback}
+                    hasNextPage={
+                        new Blob([currentChunk.current]).size > CHUNK_SIZE
+                    }
+                    isFetchingNextPage={
+                        content.pages[content.pages.length - 1] < page
+                    }
                 />
             ) : (
                 <EmptyMessage message="fields.info.empty" />
             )}
         </Box>
+    );
+};
+
+const ScrollableList = (props: {
+    data: any[];
+    fetchNextPage: () => void;
+    hasNextPage: boolean;
+    isFetchingNextPage: boolean;
+}) => {
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = props;
+    const listContext = useList({ data });
+
+    const infinitePaginationContext: any = useMemo(() => {
+        return {
+            fetchNextPage,
+            hasNextPage,
+            isFetchingNextPage,
+        };
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+    return (
+        <ListContextProvider value={listContext}>
+            <DataTable bulkActionButtons={false} rowClick={false}>
+                {Object.keys(data[0])
+                    .filter(key => key !== 'id')
+                    .map(key => (
+                        <DataTable.Col source={key} key={key} />
+                    ))}
+            </DataTable>
+            <InfinitePaginationContext.Provider
+                value={infinitePaginationContext}
+            >
+                <InfinitePagination />
+            </InfinitePaginationContext.Provider>
+        </ListContextProvider>
     );
 };
 
