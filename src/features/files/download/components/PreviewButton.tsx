@@ -37,8 +37,6 @@ import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-text';
 import { LazyLog } from '@melloware/react-logviewer';
-import { usePapaParse } from 'react-papaparse';
-import { DataGrid } from '@mui/x-data-grid';
 import {
     Box,
     Breakpoint,
@@ -58,6 +56,7 @@ import {
     StyledDialog,
     StyledDialogClasses,
 } from '../../../../common/theme/StyledDialog';
+import { CSVViewer } from './CsvViewer';
 
 const defaultIcon = <PreviewIcon fontSize="small" />;
 
@@ -143,9 +142,7 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         contentType = languages[mimeType];
     }
 
-    const isPreviewable =
-        fileType &&
-        previewableTypes.includes(fileType);
+    const isPreviewable = fileType && previewableTypes.includes(fileType);
 
     return (
         <Fragment>
@@ -331,67 +328,6 @@ const PreviewView = (props: PreviewViewProps) => {
     );
 };
 
-const CSVViewer = (props: CSVViewerProps) => {
-    const MAX_ROWS = 100;
-    const { url } = props;
-    const { readRemoteFile } = usePapaParse();
-    const [content, setContent] = useState<any>(undefined);
-    const notify = useNotify();
-
-    useEffect(() => {
-        readRemoteFile(url, {
-            complete: results => {
-                if (results.data && results.data.length > 0) {
-                    const cols = Object.keys(results.data[0] as any).map(c => ({
-                        field: c,
-                        flex: 1,
-                    }));
-                    const res = {
-                        rows: results.data.map((row: any, index: number) => ({
-                            ...row,
-                            id: index,
-                        })),
-                        columns: cols,
-                    };
-                    setContent(res);
-                }
-            },
-            error: () => {
-                notify('ra.message.not_found', {
-                    type: 'error',
-                });
-            },
-            header: true,
-            download: true,
-            preview: MAX_ROWS,
-            skipEmptyLines: true,
-        });
-    }, [notify, readRemoteFile, url]);
-
-    return (
-        <Box
-            sx={{
-                height: 400,
-                width: '100%',
-                '& .MuiDataGrid-columnHeaderTitle': {
-                    fontWeight: 'bold',
-                },
-            }}
-        >
-            {content ? (
-                <DataGrid
-                    rows={content.rows}
-                    columns={content.columns}
-                    pageSizeOptions={[MAX_ROWS]}
-                    disableRowSelectionOnClick
-                />
-            ) : (
-                <EmptyMessage message="fields.info.empty" />
-            )}
-        </Box>
-    );
-};
-
 const LogViewer = styled(Box, {
     name: 'LogViewer',
     overridesResolver: (_props, styles) => styles.root,
@@ -401,13 +337,6 @@ const LogViewer = styled(Box, {
         marginRight: 0,
     },
 }));
-
-export type CSVViewerProps<RecordType extends RaRecord = any> = Omit<
-    FieldProps<RecordType>,
-    'source'
-> & {
-    url: string;
-};
 
 export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
     FieldProps<RecordType>,
