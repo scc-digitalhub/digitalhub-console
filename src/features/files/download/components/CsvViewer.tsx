@@ -17,7 +17,7 @@ import { usePapaParse } from 'react-papaparse';
 import { Box } from '@mui/material';
 import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 
-const CHUNK_SIZE = 1000;
+const CHUNK_SIZE = 5000;
 /**
  * Sentinel bytes that could be lost between UTF-16 and UTF-8 char encoding.
  * Set to the maximum number of bytes per character in UTF-8 (at least 1 will not be lost).
