@@ -141,6 +141,7 @@ import projectDefinition from './pages/projects';
 import runDefinition from './pages/runs';
 import triggerDefinition from './pages/triggers';
 import containerImageDefinition from './pages/containerimages';
+import folderDefinition from './pages/folders';
 import { StompContextProvider } from './features/notifications/StompContextProvider';
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
 import { StoreResetter } from './common/components/StoreResetter';
@@ -153,6 +154,7 @@ import { MyLayout } from './layout/MyLayout';
 import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
+import { FolderBrowser } from './pages/folders/browser';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -224,6 +226,7 @@ const CoreApp = () => {
                                             <Resource name="labels" />
                                             <Resource name="templates" />
                                             <Resource name="extensions" />
+                                            <Resource {...folderDefinition} />
                                             <CustomRoutes>
                                                 <Route
                                                     path="/config"
@@ -240,6 +243,10 @@ const CoreApp = () => {
                                                 <Route
                                                     path="/files"
                                                     element={<Browser />}
+                                                />
+                                                 <Route
+                                                    path="/browser"
+                                                    element={<FolderBrowser />}
                                                 />
                                                 <Route
                                                     path="/services"

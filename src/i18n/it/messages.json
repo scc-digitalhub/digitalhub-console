@@ -95,6 +95,7 @@
         "x-elements": "%{smart_count} %{resource}",
         "table": "Tabella",
         "details": "Dettagli",
-        "list": "Elenco"
+        "list": "Elenco",
+        "grid": "Griglia"
     }
 }

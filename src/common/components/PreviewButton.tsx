@@ -19,6 +19,7 @@ import {
 } from 'react-admin';
 import {
     Breakpoint,
+    DialogActions,
     DialogContent,
     DialogTitle,
     IconButton,
@@ -45,6 +46,8 @@ export const PreviewButton = (props: PreviewButtonProps) => {
         variant,
         sx,
         closeOnClickOutside = true,
+        onOpen,
+        onClose,
     } = props;
 
     const [open, setOpen] = useState(false);
@@ -56,12 +59,14 @@ export const PreviewButton = (props: PreviewButtonProps) => {
 
     const handleDialogOpen: MouseEventHandler<HTMLButtonElement> = e => {
         setOpen(true);
+        if (onOpen) onOpen();
         e.stopPropagation();
     };
 
     const handleDialogClose: any = (e, reason) => {
         if (!reason || (closeOnClickOutside && reason == 'backdropClick')) {
             closeDialog();
+            if (onClose) onClose();
         }
         e.stopPropagation();
     };
@@ -114,13 +119,14 @@ export const PreviewButton = (props: PreviewButtonProps) => {
     );
 };
 
-const PreviewContent = (props: {
+export const PreviewContent = (props: {
     title: string | false | ReactElement;
     children: ReactNode;
+    actions?: ReactNode;
     fullScreen: boolean;
-    setFullScreen: (fullScreen: boolean) => void;
+    setFullScreen?: (fullScreen: boolean) => void;
 }) => {
-    const { title, children, fullScreen, setFullScreen } = props;
+    const { title, children, actions, fullScreen, setFullScreen } = props;
     const { handleClose } = useDialogContext();
     const translate = useTranslate();
     const defaultTitle = translate('fields.preview');
@@ -137,14 +143,16 @@ const PreviewContent = (props: {
                         ? translate(title, { _: title })
                         : title}
                 </DialogTitle>
-                <Labeled label="actions.fullscreen">
-                    <Switch
-                        checked={fullScreen === true}
-                        onChange={() => {
-                            setFullScreen(!fullScreen);
-                        }}
-                    />
-                </Labeled>
+                {setFullScreen && (
+                    <Labeled label="actions.fullscreen">
+                        <Switch
+                            checked={fullScreen === true}
+                            onChange={() => {
+                                setFullScreen(!fullScreen);
+                            }}
+                        />
+                    </Labeled>
+                )}
                 <IconButton
                     className={StyledDialogClasses.closeButton}
                     aria-label={translate('ra.action.close')}
@@ -157,6 +165,7 @@ const PreviewContent = (props: {
             </div>
 
             <DialogContent sx={{ p: 0 }}>{children}</DialogContent>
+            {actions && <DialogActions>{actions}</DialogActions>}
         </>
     );
 };
@@ -176,4 +185,6 @@ export type PreviewButtonProps<RecordType extends RaRecord = any> = Omit<
         fullScreen?: boolean;
         maxWidth?: Breakpoint;
         closeOnClickOutside?: boolean;
+        onOpen?: () => void;
+        onClose?: () => void;
     };

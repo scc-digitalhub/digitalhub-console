@@ -96,6 +96,7 @@
         "x-elements": "%{smart_count} %{resource}",
         "table": "Table",
         "details": "Details",
-        "list": "List"
+        "list": "List",
+        "grid": "Grid"
     }
 }

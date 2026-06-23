@@ -40,6 +40,12 @@ export const MyMenu = () => {
         >
             <Box flex={1}>
                 <Menu.DashboardItem />
+                <MenuItemLink
+                    leftIcon={<BrowserIcon />}
+                    to={`${basename}/browser`}
+                    primaryText={'fields.files.title'}
+                />
+                <Menu.ResourceItem name="folders" />
                 {enableHub && (
                     <MenuItemLink
                         leftIcon={<HubIcon />}

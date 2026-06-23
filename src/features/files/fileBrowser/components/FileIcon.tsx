@@ -9,8 +9,10 @@ import {
     getMimeTypeFromExtension,
     getTypeFromMimeType,
 } from '../../utils';
+import { Box, SvgIconPropsSizeOverrides } from '@mui/material';
+import { OverridableStringUnion } from '@mui/types';
 
-export const FileIcon = (props: {
+export type FileIconProps = {
     fileName?: string;
     /**
      * The file type (NOT MIME type), e.g. "csv"
@@ -26,8 +28,13 @@ export const FileIcon = (props: {
         | 'success'
         | 'info'
         | 'warning';
-    fontSize?: 'small' | 'medium' | 'large';
-}) => {
+    fontSize?: OverridableStringUnion<
+        'inherit' | 'x-large' | 'large' | 'medium' | 'small',
+        SvgIconPropsSizeOverrides
+    >;
+};
+
+export const FileIcon = (props: FileIconProps) => {
     const {
         fileName: fileNameProp,
         fileType: fileTypeProp,
@@ -36,10 +43,17 @@ export const FileIcon = (props: {
     } = props;
     const record = useRecordContext(props);
     const fileName = fileNameProp || record?.name || '';
-    const fontSize = fontSizeProp == 'large' ? 'large' : 'small';
+    const fontSize = fontSizeProp == 'x-large' ? 'inherit' : fontSizeProp;
+    const sx = {
+        fontSize: fontSizeProp === 'x-large' ? '4rem' : undefined,
+    };
 
     if (!fileName && !fileTypeProp) {
-        return <GenericFileIcon fontSize={fontSize} />;
+        return (
+            <Box sx={sx}>
+                <GenericFileIcon fontSize={fontSize} />
+            </Box>
+        );
     }
 
     const fileType =
@@ -56,7 +70,11 @@ export const FileIcon = (props: {
             : undefined);
 
     if (!fileType) {
-        return <GenericFileIcon fontSize={fontSize} />;
+        return (
+            <Box sx={sx}>
+                <GenericFileIcon fontSize={fontSize} />
+            </Box>
+        );
     }
 
     const Icon = getIconFromType(fileType ?? '');
@@ -87,5 +105,9 @@ export const FileIcon = (props: {
         }
     }
 
-    return <Icon fontSize={fontSize} color={color} />;
+    return (
+        <Box sx={sx}>
+            <Icon fontSize={fontSize} color={color} />
+        </Box>
+    );
 };
