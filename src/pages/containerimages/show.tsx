@@ -2,7 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Container,
+    Stack,
+    Typography,
+    useTheme,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     ArrayField,
@@ -12,6 +19,7 @@ import {
     RecordContext,
     ShowView,
     TextField,
+    useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -32,6 +40,8 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { prettyBytes } from '../../features/files/fileBrowser/utils';
 import { ChipsField } from '../../common/components/fields/ChipsField';
+import { useRootSelector } from '@dslab/ra-root-selector';
+import MarkdownPreview from '@uiw/react-markdown-preview';
 
 const ContainerImageShowLayout = props => {
     const record = useRecordContext(props);
@@ -74,7 +84,10 @@ const ContainerImageShowLayout = props => {
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {spec && (
-                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab
+                    value="spec"
+                    label={translate('fields.spec.title')}
+                >
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -87,15 +100,27 @@ const ContainerImageShowLayout = props => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
+            <CustomTabbedShowLayout.Tab value="info" label="fields.info.tab">
+                <ContainerImageInfoView />
+            </CustomTabbedShowLayout.Tab>
             {record?.status?.layers && (
-                <CustomTabbedShowLayout.Tab value="source" label="fields.source.title">
+                <CustomTabbedShowLayout.Tab
+                    value="source"
+                    label="fields.source.title"
+                >
                     <SourceView />
                 </CustomTabbedShowLayout.Tab>
             )}
-            <CustomTabbedShowLayout.Tab value="details" label="messages.navigation.details">
-                <ContainerStatusView />
+            <CustomTabbedShowLayout.Tab
+                value="details"
+                label="messages.navigation.details"
+            >
+                <ContainerImageStatusView />
             </CustomTabbedShowLayout.Tab>
-            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab
+                value="lineage"
+                label="pages.lineage.title"
+            >
                 <LineageTabComponent />
             </CustomTabbedShowLayout.Tab>
         </CustomTabbedShowLayout>
@@ -155,7 +180,7 @@ const SourceView = () => {
     );
 };
 
-const ContainerStatusView = () => {
+const ContainerImageStatusView = () => {
     const record = useRecordContext();
 
     if (!record || !record.status) return <></>;
@@ -256,6 +281,126 @@ const ContainerStatusView = () => {
                         </DataTable>
                     </ArrayField>
                 </Labeled>
+            )}
+        </Stack>
+    );
+};
+
+const ContainerImageInfoView = () => {
+    const { root } = useRootSelector();
+    const record = useRecordContext();
+    const dataProvider = useDataProvider();
+    const theme = useTheme();
+    const translate = useTranslate();
+
+    const [description, setDescription] = useState<any | null>(null);
+
+    useEffect(() => {
+        if (!record) return;
+
+        const fetchDescription = async () => {
+            try {
+                const response = await dataProvider.invoke({
+                    path: `/-/${root}/containerimages/${record.id}/description`,
+                    options: { method: 'GET' },
+                });
+                setDescription(response);
+            } catch (error) {
+                console.error(
+                    'Error fetching container image description:',
+                    error
+                );
+            }
+        };
+
+        fetchDescription();
+    }, [record, dataProvider]);
+
+    if (!record && !description) return <></>;
+
+    return (
+        <Stack direction={'column'} spacing={3}>
+            <Labeled label="fields.containers.image.title">
+                <IdField source="spec.image" />
+            </Labeled>
+
+            <Alert severity="info" variant="outlined">
+                <Typography variant="body2">
+                    {translate('pages.containerimages.quick-use')}
+                </Typography>
+                <Stack
+                    direction={'row'}
+                    spacing={1}
+                    alignItems={'flex-start'}
+                    sx={{
+                        mt: 1,
+                        p: 1,
+                        fontFamily: 'monospace',
+                        fontSize: '0.875rem',
+                        backgroundColor:
+                            theme.palette.mode === 'dark'
+                                ? 'rgba(255, 255, 255, 0.08)'
+                                : 'rgba(0, 0, 0, 0.04)',
+                    }}
+                >
+                    <span>$ </span>
+                    <IdField
+                        source="spec.image"
+                        popover={false}
+                        value={`docker pull ${record?.spec?.image}`}
+                        variant="monospaced"
+                    />
+                </Stack>
+            </Alert>
+
+            {description && (
+                <RecordContext.Provider value={description}>
+                    <TextField source="title" />
+                    {description?.description && (
+                        <Labeled label="fields.description.title">
+                            <TextField source="description" />
+                        </Labeled>
+                    )}
+
+                    {description?.fullDescription && (
+                        <Box
+                            sx={{
+                                width: '100%',
+                                minWidth: 0,
+                                '& .wmde-markdown': {
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
+                                    '& p, & pre, & code': {
+                                        whiteSpace: 'pre-wrap !important',
+                                        overflowWrap: 'anywhere !important',
+                                        wordBreak: 'break-word !important',
+                                    },
+                                    '& pre': {
+                                        overflowX: 'auto',
+                                    },
+                                    '& .copied': {
+                                        visibility: 'visible !important',
+                                    },
+                                },
+                            }}
+                        >
+                            <MarkdownPreview
+                                source={description.fullDescription}
+                                style={{
+                                    padding: 16,
+                                    borderRadius: 10,
+                                    backgroundColor:
+                                        theme.palette.mode === 'dark'
+                                            ? 'rgba(255, 255, 255, 0.08)'
+                                            : 'rgba(0, 0, 0, 0.04)',
+                                }}
+                                wrapperElement={{
+                                    'data-color-mode': theme.palette.mode,
+                                }}
+                            />
+                        </Box>
+                    )}
+                </RecordContext.Provider>
             )}
         </Stack>
     );

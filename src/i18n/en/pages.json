@@ -204,5 +204,12 @@
             "header": "Project",
             "subheader": "Review and update project configuration and settings"
         }
+    },
+    "containerimages": {
+        "quick-use": "Quick use from command line",
+        "credentials": {
+            "title": "Credentials",
+            "helperText": "Use the following credentials to access the container image from your local machine or any other environment."
+        }
     }
 }

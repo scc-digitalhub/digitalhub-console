@@ -203,5 +203,12 @@
             "header": "Operazioni",
             "subheader": "Rivedi e gestisci i tuoi compiti ed esecuzioni"
         }
+    },
+    "containerimages": {
+        "quick-use": "Uso rapido da linea di comando",
+        "credentials": {
+            "title": "Credenziali",
+            "helperText": "Usa le seguenti credenziali per accedere all'immagine del container dalla tua macchina locale o da qualsiasi altro ambiente."
+        }
     }
 }

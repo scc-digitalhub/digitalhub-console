@@ -25,6 +25,7 @@ export const IdField = <
         copy?: boolean;
         popover?: boolean;
         truncate?: number;
+        value?: any;
         format?: (value: any) => any;
         variant?: 'body' | 'monospaced';
     }
@@ -38,6 +39,7 @@ export const IdField = <
         format = v => v,
         label,
         variant = 'body',
+        value: valueProp,
         sx,
         ...rest
     } = props;
@@ -46,7 +48,7 @@ export const IdField = <
     const translate = useTranslate();
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
-    const value = get(record, source);
+    const value = valueProp || get(record, source);
     if (!value) return null;
 
     const displayValue = format(value) || '';
