@@ -21,7 +21,7 @@ import {
     Chip,
     ChipProps,
 } from '@mui/material';
-import { Add, Delete, ExpandMore } from '@mui/icons-material';
+import { Add, Delete, ExpandMore, OpenInNew } from '@mui/icons-material';
 import {
     RecordContextProvider,
     TabbedShowLayout,
@@ -226,6 +226,20 @@ export const HttpClient = (props: HttpClientProps) => {
     const shouldShowRequestBody =
         showRequestBody && ['POST', 'PUT', 'PATCH'].includes(method);
 
+    const openAsNew = async () => {
+        if (!url) return alert('Please provide a URL');
+
+        setLoading(true);
+        try {
+            // Submit a hidden form POST to the auth endpoint targeting _blank.
+            // This is a top-level browser navigation, so the cookie is set
+            // first-party and is not subject to cookie partitioning (dFPI).
+            await provider.openNew?.(url);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
             <Box mb={1}>
@@ -300,6 +314,14 @@ export const HttpClient = (props: HttpClientProps) => {
                         ) : (
                             translate('pages.http-client.send')
                         )}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={openAsNew}
+                        disabled={loading}
+                    >
+                        <OpenInNew />
                     </Button>
                 </Box>
 
