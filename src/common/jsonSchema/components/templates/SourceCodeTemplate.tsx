@@ -73,10 +73,10 @@ export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     return (
         <div style={{ display: 'flex', width: '100%' }}>
             <Grid container spacing={2}>
-                <Grid size={12} key={'sctw-lang'}>
+                <Grid size={12} key={'sctw-source'}>
                     {source.prop.content}
                 </Grid>
-                <Grid size={6} key={'sctw-handler'}>
+                <Grid size={12} key={'sctw-handler'}>
                     {handler.prop.content}
                 </Grid>
                 <Grid size={6} key={'sctw-language'}>
