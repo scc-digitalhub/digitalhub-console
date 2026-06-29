@@ -135,5 +135,5 @@ const Root = styled(Grid, {
     },
 }));
 
-const defaultComponent = <Grid size={3} />;
+const defaultComponent = <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} />;
 const createComponent = <CreateButton />;

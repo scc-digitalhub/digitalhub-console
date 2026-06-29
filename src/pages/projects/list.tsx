@@ -19,7 +19,6 @@ import {
     useGetIdentity,
     TextInput,
     SelectInput,
-    useTranslate,
 } from 'react-admin';
 import {
     Box,
@@ -29,8 +28,6 @@ import {
     Typography,
     Stack,
     CardActionArea,
-    Button,
-    Menu,
     Chip,
 } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -40,9 +37,6 @@ import { grey } from '@mui/material/colors';
 import { GridList } from '../../common/components/layout/GridList';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { ProjectCreateForm } from './create';
-import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
-import { InspectButton } from '@dslab/ra-inspect-button';
-import React from 'react';
 import purify from 'dompurify';
 import { useProjectPermissions } from '../../common/provider/authProvider';
 import { Empty } from '../../common/components/layout/Empty';
@@ -50,7 +44,6 @@ import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { InstanceMetrics } from '../../features/k8smetrics/InstanceMetrics';
 
 export const ProjectSelectorList = props => {
-    const translate = useTranslate();
     //check if auth is required to redirect to login
     useAuthenticated();
     const { data: identity } = useGetIdentity();
@@ -82,7 +75,7 @@ export const ProjectSelectorList = props => {
         : [];
 
     return (
-        <Stack direction="column" spacing={1} alignItems="start">
+        <Stack spacing={1}>
             <List
                 {...props}
                 actions={<Toolbar />}
@@ -142,7 +135,7 @@ export const CreateProjectButton = () => {
 
                     if (authProvider) {
                         //refresh permissions
-                        authProvider.refreshUser().then(user => {
+                        authProvider.refreshUser().then(() => {
                             refresh();
                         });
                     }
@@ -195,7 +188,11 @@ const ProjectsGridItem = (props: any) => {
             : metadataDescription;
 
     return (
-        <Card sx={cardStyle}>
+        <Card
+            sx={{
+                height: '320px',
+            }}
+        >
             <CardActionArea sx={{ height: '100%' }} onClick={handleClick}>
                 <CardHeader
                     title={project.name ? project.name : project.id}
@@ -218,7 +215,6 @@ const ProjectsGridItem = (props: any) => {
                             color: 'secondary.main',
                         },
                     }}
-                    // action={<RowActions />}
                 />
 
                 <CardContent sx={{ height: '100%' }}>
@@ -289,49 +285,6 @@ const ProjectsGridItem = (props: any) => {
                     )}
                 </CardContent>
             </CardActionArea>
-            {/* <CardActions disableSpacing sx={{ mt: 'auto' }}>
-                <RootSelectorButton label="ra.action.open" />
-                <DeleteWithDialogButton confirmTitle="Resource Deletion" />
-            </CardActions> */}
         </Card>
     );
-};
-
-//TODO definire meglio dropdown
-const RowActions = () => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    return (
-        <>
-            <Button
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                color="secondary"
-                sx={{ textAlign: 'right', justifyContent: 'end' }}
-            >
-                {'⋮'}
-            </Button>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <RowButtonGroup>
-                    <InspectButton label="" />
-                </RowButtonGroup>
-            </Menu>
-        </>
-    );
-};
-
-const cardStyle = {
-    height: '320px',
-    // width: '250px',
-    // display: 'flex',
-    // flexDirection: 'column',
-    // margin: 'auto',
 };
