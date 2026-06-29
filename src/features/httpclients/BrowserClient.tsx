@@ -12,7 +12,7 @@ import {
     Box,
     Autocomplete,
 } from '@mui/material';
-import { Labeled, useRecordContext, useTranslate } from 'react-admin';
+import { Labeled, useTranslate } from 'react-admin';
 import 'ace-builds/src-noconflict/mode-yaml';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/mode-markdown';
@@ -31,7 +31,6 @@ export const BrowserClient = (props: BrowserClientProps) => {
     const { urls: availableUrls } = props;
 
     const provider = useHttpClientProvider();
-    const record = useRecordContext();
     const translate = useTranslate();
 
     const [url, setUrl] = useState<string>(availableUrls[0] || '');
@@ -88,6 +87,7 @@ export const BrowserClient = (props: BrowserClientProps) => {
             setLoading(false);
         }
     };
+
     return (
         <>
             <Box mb={1}>
@@ -144,7 +144,6 @@ export const BrowserClient = (props: BrowserClientProps) => {
                         color="secondary"
                         onClick={openAsNew}
                         disabled={loading}
-                        // sx={{ minWidth: 100 }}
                     >
                         <OpenInNewIcon />
                     </Button>
