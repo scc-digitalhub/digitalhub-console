@@ -1,54 +1,17 @@
-import { QueryEditor } from 'trino-query-ui';
-import trinoCSS from 'trino-query-ui/dist/index.css?raw';
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { QueryEditor } from '@dslab/trino-query-ui';
 import { useTheme } from '@mui/material/styles';
 import useTrinoRequestHeaders from '../useTrinoRequestHeaders';
 import { Alert } from '@mui/material';
+import { StyledQueryEditorWrapper } from '../theme';
 
 const trinoEndpoint: string =
     (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
     (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
     false;
 
-const ShadowQueryEditor = ({
-    themeMode,
-    requestHeaders,
-    endpoint,
-}: {
-    themeMode: 'dark' | 'light';
-    requestHeaders: Record<string, string>;
-    endpoint: string;
-}) => {
-    const hostRef = useRef<HTMLDivElement>(null);
-    const [shadowRoot, setShadowRoot] = useState<ShadowRoot | null>(null);
+// Local testing
+// const trinoEndpoint = ' ';
 
-    useEffect(() => {
-        if (hostRef.current && !hostRef.current.shadowRoot) {
-            const shadow = hostRef.current.attachShadow({ mode: 'open' });
-            const style = document.createElement('style');
-            style.textContent = trinoCSS;
-            shadow.appendChild(style);
-            setShadowRoot(shadow);
-        }
-    }, []);
-
-    return (
-        <div ref={hostRef}>
-            {shadowRoot &&
-                createPortal(
-                    <QueryEditor
-                        key={themeMode}
-                        theme={themeMode}
-                        height={800}
-                        requestHeaders={requestHeaders}
-                        endpoint={endpoint}
-                    />,
-                    shadowRoot
-                )}
-        </div>
-    );
-};
 
 const MyTrinoApp = () => {
     const theme = useTheme();
@@ -62,11 +25,15 @@ const MyTrinoApp = () => {
     }
 
     return (
-        <ShadowQueryEditor
-            themeMode={themeMode}
-            requestHeaders={requestHeaders}
-            endpoint={trinoEndpoint}
-        />
+        <StyledQueryEditorWrapper>
+            <QueryEditor
+                key={themeMode}
+                theme={themeMode}
+                height={800}
+                requestHeaders={requestHeaders}
+                baseUrl={trinoEndpoint}
+            />
+        </StyledQueryEditorWrapper>
     );
 };
 

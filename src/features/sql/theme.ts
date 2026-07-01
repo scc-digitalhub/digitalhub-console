@@ -1,135 +1,75 @@
-import React from 'react';
+import { styled, alpha } from '@mui/material/styles';
 
-export const TRINO_DARK_VARS: React.CSSProperties = {
-  /* ── Trino built-in tokens ── */
-  '--bg-color': '#2B3033',
-  '--text-color': '#dcdcdc',
-  '--separator-border': '#4a5054',
-  '--text-link-decoration': 'none',
-  '--subtle-darker-accent-color': '#2B3033',
-  '--subtle-lighter-accent-color': '#2B3033',
-  '--lighter-accent-color': '#363D40',
-  '--dark-gray': '#3a4145',
-  '--medium-gray': '#6a7175',
-  '--light-gray': '#8a8f93',
-  '--very-dark-gray': '#242a2d',
-  '--dark-accent': '#363D40',
-  '--highlight-blue': '#E0701B',
-  '--brand-gradient': 'linear-gradient(135deg,#E0701B 0%,#9c3b15 100%)',
-  '--border-color': '#4a5054',
-  '--muted-text-color': '#8a8f93',
-  '--white': '#dcdcdc',
-  '--link-color': '#6EA3CB',
-  '--link-hover-color': '#ec934f',
-  '--success-color': 'rgba(46,160,67,.35)',
-  '--error-color-subtle': '#8a8f93',
-  '--bytes-color': '#1C364D',
-  '--rows-color': '#0C61A6',
-  '--splits-color': '#564682',
-  '--vscode-editor-background': '#2B3033',
-  '--vscode-editorWidget-background': '#2B3033',
-  '--vscode-scrollbar-shadow': 'transparent',
-  '--vscode-scrollbarSlider-background': 'rgba(255,255,255,.12)',
-  '--vscode-scrollbarSlider-hoverBackground': 'rgba(255,255,255,.2)',
-  '--vscode-scrollbarSlider-activeBackground': 'rgba(255,255,255,.3)',
-  '--vscode-multiDiffEditor-border': 'transparent',
+export const StyledQueryEditorWrapper = styled('div')(({ theme }) => {
+  const isDark = theme.palette.mode === 'dark';
+  return {
+    color: theme.palette.text.primary,
+    background: theme.palette.background.paper,
+    '& .trino-query-ui': {
+      borderRadius: theme.shape.borderRadius,
+    },
 
-  /* ── Component design tokens ── */
-  '--surface': '#363D40',
-  '--surface-hover': '#4a5054',
-  '--surface-glass': 'rgba(54,61,64,.85)',
-  '--tab-bg': '#363D40',
-  '--input-bg': '#363D40',
-  '--collapse-bg': '#363D40',
-  '--title-color': '#dcdcdc',
-  '--schema-color': '#6EA3CB',
-  '--schema-hover-bg': 'rgba(110,163,203,.08)',
-  '--splits-text': '#a78bdb',
-  '--shadow': 'rgba(0,0,0,.4)',
-  '--error-bg': 'rgba(180,40,40,.15)',
-  '--error-border': '#cc444488',
-  '--error-text': '#ff6b6b',
-  '--danger-color': '#ff6b6b',
-  '--close-color': '#6a7175',
-  '--tab-hover-bg': 'rgba(255,255,255,.04)',
-  '--editor-margin-bg': '#2B3033',
-  '--current-line-bg': 'rgba(255,255,255,.05)',
-  '--subtle-border': 'rgba(255,255,255,.06)',
-  '--row-hover-bg': 'rgba(224,112,27,.06)',
-  '--item-hover-bg': 'rgba(224,112,27,.12)',
-  '--scrollbar-thumb': 'rgba(255,255,255,.15)',
-  '--scrollbar-thumb-hover': 'rgba(255,255,255,.25)',
-  '--selection-bg': 'rgba(224,112,27,.25)',
+    // Catalog sidebar drawer
+    '& .MuiDrawer-paper': {
+      backgroundColor: theme.palette.background.paper,
+      borderRight: `1px solid ${theme.palette.divider}`,
+    },
 
-  /* Standard properties */
-  color: 'var(--text-color)',
-  background: 'var(--bg-color)',
-  fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
-} as React.CSSProperties;
+    // Tree view items in catalog
+    '& .MuiTreeItem-content': {
+      borderRadius: theme.shape.borderRadius,
+      '&:hover': {
+        backgroundColor: alpha(theme.palette.secondary.main, 0.05),
+      },
+    },
 
-export const TRINO_LIGHT_VARS: React.CSSProperties = {
-  /* ── Trino built-in tokens ── */
-  '--bg-color': '#ffffff',
-  '--text-color': '#333',
-  '--separator-border': '#e0e0e0',
-  '--text-link-decoration': 'none',
-  '--subtle-darker-accent-color': '#f5f5f6',
-  '--subtle-lighter-accent-color': '#fafafa',
-  '--lighter-accent-color': '#f5f5f6',
-  '--dark-gray': '#e0e0e0',
-  '--medium-gray': '#bbb',
-  '--light-gray': '#999',
-  '--very-dark-gray': '#f0f0f0',
-  '--dark-accent': '#f5f5f6',
-  '--highlight-blue': '#E0701B',
-  '--brand-gradient': 'linear-gradient(135deg,#E0701B 0%,#ec934f 100%)',
-  '--border-color': '#e0e0e0',
-  '--muted-text-color': '#666',
-  '--white': '#333',
-  '--link-color': '#E0701B',
-  '--link-hover-color': '#9c3b15',
-  '--success-color': 'rgba(46,160,67,.15)',
-  '--error-color-subtle': '#999',
-  '--bytes-color': '#e8d4c4',
-  '--rows-color': '#d4c4e8',
-  '--splits-color': '#c4d4e8',
-  '--vscode-editor-background': '#ffffff',
-  '--vscode-editorWidget-background': '#ffffff',
-  '--vscode-scrollbar-shadow': 'transparent',
-  '--vscode-scrollbarSlider-background': 'rgba(0,0,0,.08)',
-  '--vscode-scrollbarSlider-hoverBackground': 'rgba(0,0,0,.14)',
-  '--vscode-scrollbarSlider-activeBackground': 'rgba(0,0,0,.2)',
-  '--vscode-multiDiffEditor-border': 'transparent',
+    // Data grid results
+    '& .MuiDataGrid-root': {
+      fontFamily: '"Open Sans", sans-serif',
+      border: 'none',
+    },
+    '& .MuiDataGrid-columnHeaders': {
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
+      fontWeight: 600,
+    },
+    '& .MuiDataGrid-row:hover': {
+      backgroundColor: alpha(
+        theme.palette.primary.main,
+        isDark ? 0.06 : 0.04
+      ),
+    },
 
-  /* ── Component design tokens ── */
-  '--surface': '#f5f5f6',
-  '--surface-hover': '#f0f0f0',
-  '--surface-glass': 'rgba(255,255,255,.9)',
-  '--tab-bg': '#ffffff',
-  '--input-bg': '#ffffff',
-  '--collapse-bg': '#ffffff',
-  '--title-color': '#062D4B',
-  '--schema-color': '#062D4B',
-  '--schema-hover-bg': 'rgba(6,45,75,.04)',
-  '--splits-text': '#7c5db8',
-  '--shadow': 'rgba(0,0,0,.1)',
-  '--error-bg': '#fef2f2',
-  '--error-border': '#fca5a5',
-  '--error-text': '#dc2626',
-  '--danger-color': '#ff4444',
-  '--close-color': '#ccc',
-  '--tab-hover-bg': 'rgba(0,0,0,.02)',
-  '--editor-margin-bg': '#fafafa',
-  '--current-line-bg': 'rgba(0,0,0,.04)',
-  '--subtle-border': '#f0f0f0',
-  '--row-hover-bg': 'rgba(224,112,27,.04)',
-  '--item-hover-bg': 'rgba(224,112,27,.08)',
-  '--scrollbar-thumb': 'rgba(0,0,0,.1)',
-  '--scrollbar-thumb-hover': 'rgba(0,0,0,.18)',
-  '--selection-bg': 'rgba(224,112,27,.15)',
+    // Buttons 
+    '& .MuiButton-outlinedPrimary, & .MuiButton-outlined': {
+      color: theme.palette.primary.main,
+      borderColor: theme.palette.primary.main,
+      '&:hover': {
+        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+        borderColor: theme.palette.primary.dark,
+      },
+    },
 
-  /* Standard properties */
-  color: 'var(--text-color)',
-  background: 'var(--bg-color)',
-  fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
-} as React.CSSProperties;
+    // Tabs
+    '& .MuiTab-root.Mui-selected': {
+      color: theme.palette.primary.main,
+    },
+    '& .MuiTabs-indicator': {
+      backgroundColor: theme.palette.primary.main,
+    },
+
+    // Input fields
+    '& .MuiOutlinedInput-root': {
+      borderRadius: theme.shape.borderRadius,
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.primary.main,
+      },
+    },
+
+    // IconButtons
+    '& .MuiIconButton-root:hover': {
+      color: theme.palette.primary.main,
+      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+    },
+  };
+});
