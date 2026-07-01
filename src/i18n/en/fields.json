@@ -990,6 +990,10 @@
             "description": "Name of the initializing function (optional)",
             "title": "Init Function"
         },
+        "complete_function": {
+            "description": "Name of the finalizing function (optional)",
+            "title": "Complete Function"
+        },
         "lang": {
             "description": "Language used for source code",
             "title": "Source Language"
@@ -1154,6 +1158,18 @@
                 "description": "",
                 "title": "Instruction"
             }
+        }
+    },
+    "hydra": {
+        "description": "Hydra configuration",
+        "title": "Hydra",
+        "workers": {
+            "description": "Number of parallel workers to be used for the task execution",
+            "title": "Workers"
+        },
+        "job_ref": {
+            "description": "Reference to the main job",
+            "title": "Job Reference"
         }
     }
 }

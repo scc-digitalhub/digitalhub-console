@@ -458,8 +458,36 @@
         "description": "Servicegraph serve definition",
         "title": "Servicegraph serve"
     },
-        "envoygw": {
-            "description": "Envoy Gateway Extensions",
-            "title": "Envoy Gateway Extensions"
-        }
+    "envoygw": {
+        "description": "Envoy Gateway Extensions",
+        "title": "Envoy Gateway Extensions"
+    },
+    "hydra": {
+        "description": "Hydra runtime definition",
+        "title": "Hydra"
+    },
+    "hydra+build": {
+        "description": "Hydra build task definition",
+        "title": "Hydra build task"
+    },
+    "hydra+job": {
+        "description": "Hydra job definition",
+        "title": "Hydra job"
+    },
+    "hydra+subtask": {
+        "description": "Hydra subtask definition",
+        "title": "Hydra subtask"
+    },
+    "hydra+build:run": {
+        "description": "Hydra build task run definition",
+        "title": "Hydra build run"
+    },
+    "hydra+job:run": {
+        "description": "Hydra job run definition",
+        "title": "Hydra job run"
+    },
+    "hydra+subtask:run": {
+        "description": "Hydra subtask run definition",
+        "title": "Hydra subtask run"
+    }
 }

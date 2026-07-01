@@ -989,6 +989,10 @@
             "description": "Nome della funzione di inizializzazione (opzionale)",
             "title": "Funzione di Inizializzazione"
         },
+        "complete_function": {
+            "description": "Nome della funzione di completamento (opzionale)",
+            "title": "Funzione di Completamento"
+        },
         "lang": {
             "description": "Linguaggio usato per il codice sorgente",
             "title": "Linguaggio"
@@ -1153,6 +1157,18 @@
                 "description": "",
                 "title": "Istruzione"
             }
+        }
+    },
+    "hydra": {
+        "description": "Configurazione di Hydra",
+        "title": "Hydra",
+        "workers": {
+            "description": "Numero di worker paralleli da utilizzare per l'esecuzione del task",
+            "title": "Worker"
+        },
+        "job_ref": {
+            "description": "Riferimento al job principale",
+            "title": "Riferimento al Job"
         }
     }
 }

@@ -461,5 +461,33 @@
     "envoygw": {
         "description": "Estensioni di Envoy Gateway",
         "title": "Estensioni di Envoy Gateway"
+    },
+    "hydra": {
+        "description": "Definizione runtime Hydra",
+        "title": "Hydra"
+    },
+    "hydra+build": {
+        "description": "Definizione dell'operazione di build di Hydra",
+        "title": "Operazione di build di Hydra"
+    },
+    "hydra+job": {
+        "description": "Definizione dell'operazione di job di Hydra",
+        "title": "Operazione di job di Hydra"
+    },
+    "hydra+subtask": {
+        "description": "Definizione dell'operazione di subtask di Hydra",
+        "title": "Operazione di subtask di Hydra"
+    },
+    "hydra+build:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di build di Hydra",
+        "title": "Esecuzione dell'operazione di build di Hydra"
+    },
+    "hydra+job:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di job di Hydra",
+        "title": "Esecuzione dell'operazione di job di Hydra"
+    },
+    "hydra+subtask:run": {
+        "description": "Definizione dell'esecuzione dell'operazione di subtask di Hydra",
+        "title": "Esecuzione dell'operazione di subtask di Hydra"
     }
 }
