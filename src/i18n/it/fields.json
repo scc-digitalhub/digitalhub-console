@@ -1169,6 +1169,22 @@
         "job_ref": {
             "description": "Riferimento al job principale",
             "title": "Riferimento al Job"
+        },
+        "config": {
+            "description": "Configurazione di Hydra",
+            "title": "Configurazione",
+            "source": {
+                "description": "Riferimento alla sorgente della configurazione",
+                "title": "Riferimento alla sorgente della configurazione"
+            },
+            "path": {
+                "description": "Percorso al file di configurazione relativo al contenuto della sorgente",
+                "title": "Percorso della configurazione"
+            },
+            "base64": {
+                "description": "Contenuto del file di configurazione",
+                "title": "Contenuto della configurazione"
+            }
         }
     }
 }

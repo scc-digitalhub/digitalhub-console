@@ -1170,6 +1170,22 @@
         "job_ref": {
             "description": "Reference to the main job",
             "title": "Job Reference"
+        },
+        "config": {
+            "description": "Hydra configuration",
+            "title": "Configuration",
+            "source": {
+                "description": "Source reference of the configuration",
+                "title": "Config source reference"
+            },
+            "path": {
+                "description": "Path to the configuration file relative to the source content",
+                "title": "Config path"
+            },
+            "base64": {
+                "description": "Content of the configuration file",
+                "title": "Config content"
+            }
         }
     }
 }
