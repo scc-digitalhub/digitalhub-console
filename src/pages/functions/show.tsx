@@ -44,6 +44,7 @@ const ShowComponent = () => {
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const [fabSourceCode, setFabSourceCode] = useState<any>();
+    const [config, setConfig] = useState<any>();
     const [requirements, setRequirements] = useState<string[]>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
@@ -84,6 +85,9 @@ const ShowComponent = () => {
         }
         if (record?.spec?.fab_source) {
             setFabSourceCode(record.spec.fab_source);
+        }
+        if (record?.spec?.config) {
+            setConfig(record.spec.config);
         }
         if (record?.spec?.requirements) {
             setRequirements(record.spec.requirements);
@@ -221,8 +225,8 @@ const ShowComponent = () => {
                 >
                     <FilteredJsonSchemaField
                         sourceName="spec"
-                        record={{ spec: { source: sourceCode, requirements } }}
-                        fields={['source', 'requirements']}
+                        record={{ spec: { source: sourceCode, requirements, config } }}
+                        fields={['source', 'requirements', 'config']}
                         schema={schema.schema}
                         uiSchema={getFunctionUiSpec(record.kind)}
                     />

@@ -263,7 +263,7 @@ export const RunShowComponent = () => {
                         <FilteredJsonSchemaField
                             sourceName="spec"
                             record={record}
-                            fields={['source', 'requirements']}
+                            fields={['source', 'requirements', 'config']}
                             schema={schema.schema}
                             uiSchema={getFunctionUiSpec(record.kind)}
                         />
