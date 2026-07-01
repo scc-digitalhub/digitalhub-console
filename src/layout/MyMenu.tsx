@@ -11,6 +11,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
+import StorageIcon from '@mui/icons-material/Storage';
 import { Box, Divider, Popover, Stack, Typography } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
@@ -24,6 +25,11 @@ import { fontSize } from '@mui/system';
 const enableHub: string =
     (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
     (process.env.REACT_APP_HUB_CATALOG_URL as string) ||
+    false;
+
+const enableTrino: string =
+    (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
+    (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
     false;
 
 export const MyMenu = () => {
@@ -81,6 +87,13 @@ export const MyMenu = () => {
                     to={`${basename}/files`}
                     primaryText={'fields.files.title'}
                 />
+                {enableTrino && (
+                    <MenuItemLink
+                        leftIcon={<StorageIcon />}
+                        to={`${basename}/sql`}
+                        primaryText={'SQL Editor'}
+                    />
+                )}
 
                 <Divider />
                 <MenuHeader
