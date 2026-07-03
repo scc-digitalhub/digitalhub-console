@@ -319,7 +319,7 @@ export const HttpClient = (props: HttpClientProps) => {
                         variant="contained"
                         color="secondary"
                         onClick={openAsNew}
-                        disabled={loading}
+                        disabled={loading || !('GET' == method)}
                     >
                         <OpenInNew />
                     </Button>

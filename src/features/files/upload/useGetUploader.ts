@@ -295,7 +295,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                             numberOfParts(file) > 1
                         );
                     } else {
-                        file['s3'] = await doUpload(
+                        const res = await doUpload(
                             {
                                 resource: resource ?? '',
                                 id: recordId ?? '',
@@ -306,6 +306,15 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                             },
                             numberOfParts(file) > 1
                         );
+                        //handle zip files so that they can be automatically unzipped at download
+                        file['s3'] = {
+                            ...res,
+                            path:
+                                res.path.startsWith('s3://') &&
+                                res.path.endsWith('.zip')
+                                    ? 'zip+' + res.path
+                                    : res.path,
+                        };
                     }
 
                     const info = {
@@ -457,15 +466,6 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                           files[0].path.length - files[0].info.path.length
                       )
                 : null;
-
-        //handle zip
-        if (
-            p?.startsWith('s3://') &&
-            p.endsWith('.zip') &&
-            files?.length == 1
-        ) {
-            p = 'zip+' + p;
-        }
         return p;
     }, [files?.length]);
 
