@@ -1042,22 +1042,22 @@
     use-sync-external-store "^1.5.0"
 
 "@mui/x-data-grid@^8.14.0":
-  version "8.29.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-8.29.1.tgz#9b89cd6349f9dd25bbb346a9453bb4404fadc9d4"
-  integrity sha512-hK0BGwM7YNfHPCfWUy9NuTWHZVSUq/01NoMbJXtO6claiVdbO1mxbTJNTFa/pAgn3uud5oBPWXfMFFp60gmceA==
+  version "8.29.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-8.29.2.tgz#08df4f770fce803c0e5c2ee9deb50643d505201f"
+  integrity sha512-AnH3yQJZXUB+Dv2CtSx8J1XBU1y4GTbq3MCC+r0CCTtglB032K4UhbyeMXG6FLFqWDn1nKofcBNYVoNv5ELR4A==
   dependencies:
     "@babel/runtime" "^7.28.4"
     "@mui/utils" "^7.3.5"
-    "@mui/x-internals" "8.29.0"
-    "@mui/x-virtualizer" "0.4.0"
+    "@mui/x-internals" "8.29.2"
+    "@mui/x-virtualizer" "0.4.1"
     clsx "^2.1.1"
     prop-types "^15.8.1"
     use-sync-external-store "^1.6.0"
 
-"@mui/x-internals@8.29.0":
-  version "8.29.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-internals/-/x-internals-8.29.0.tgz#9aacf3671dec9b5382537777c3b5ca0eb60e7c6a"
-  integrity sha512-xlqq765k39g6vkVGIypOBlsdYGawIP0JdSh+qqrkUCIIN39AUZRNMA/nGH0nSkhVHMHcCSDWBM5/6+6BLfc7Mg==
+"@mui/x-internals@8.29.2":
+  version "8.29.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-internals/-/x-internals-8.29.2.tgz#3978dedac07f7790fb4247302a3cb1acbdeffa9f"
+  integrity sha512-TLILyHia5NHh3MGErFDh0bXZ4V6iS45hdStofsV5wklF6dpgZjduo65oJB0h81mI5mexNlhHANEVfw0KV6BxBg==
   dependencies:
     "@babel/runtime" "^7.28.4"
     "@mui/utils" "^7.3.5"
@@ -1089,27 +1089,27 @@
     use-sync-external-store "^1.5.0"
 
 "@mui/x-tree-view@^8.13.1":
-  version "8.29.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-tree-view/-/x-tree-view-8.29.0.tgz#55c66ede80b02c9df51b59c74731408b2dd00acb"
-  integrity sha512-y7QkvKEnQOEvM4yLRiOwWhTAsE86coanRJl++P/vBM6AjROZwjXSIAm3NXrQaUSocQOSLAqotIFivewh88xEUg==
+  version "8.29.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-tree-view/-/x-tree-view-8.29.2.tgz#a28b2942024ff081569b614dcc9c193a00e6fd33"
+  integrity sha512-HpgT5SDhP/YhOUWnXw+J+GlYaQUM1TwWM6nayDNM33GEVFMRQ29/dbNtVk7woZkF5Uw9fpgp53ZoYU1dByi9ig==
   dependencies:
     "@babel/runtime" "^7.28.4"
     "@base-ui/utils" "^0.2.3"
     "@mui/utils" "^7.3.5"
-    "@mui/x-internals" "8.29.0"
+    "@mui/x-internals" "8.29.2"
     "@types/react-transition-group" "^4.4.12"
     clsx "^2.1.1"
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
 
-"@mui/x-virtualizer@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-virtualizer/-/x-virtualizer-0.4.0.tgz#966d8612a43ff484e5893fa1e3af65727e266b39"
-  integrity sha512-SgEM6975FARxz6ZEwrrVWiXuwihje44pSKUV7ssv6cNQXHknarYsDq5tz/RS1KJe4f6foj5f/Y04ROuI3kHC0A==
+"@mui/x-virtualizer@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@mui/x-virtualizer/-/x-virtualizer-0.4.1.tgz#f5447bde03e0b4a1cc55528435eb0d6db8e56d8f"
+  integrity sha512-EM4lCW9MFRHxAgdqBG6nRQXlrhctlHqOjPm95usht15JBXtuWwtuVdA5q8ta+EwXE9zF0BcKyQsGs8R/vWzmFw==
   dependencies:
     "@babel/runtime" "^7.28.4"
     "@mui/utils" "^7.3.5"
-    "@mui/x-internals" "8.29.0"
+    "@mui/x-internals" "8.29.2"
 
 "@napi-rs/wasm-runtime@^1.0.7":
   version "1.0.7"
