@@ -117,8 +117,7 @@ export const LogsView = (props: LogsViewProps) => {
                                         key={'logs-list-select-' + r.id}
                                         value={r.id}
                                     >
-                                        {r.status?.container ||
-                                            r.metadata?.updated}
+                                        {r.id}
                                     </MenuItem>
                                 );
                             })
