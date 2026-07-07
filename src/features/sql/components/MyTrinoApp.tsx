@@ -5,8 +5,8 @@ import { Alert } from '@mui/material';
 import { StyledQueryEditorWrapper } from '../theme';
 
 const trinoEndpoint: string =
-    (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
-    (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
+    (globalThis as any).REACT_APP_TRINO_URL ||
+    (process.env.REACT_APP_TRINO_URL as string) ||
     false;
 
 // Local testing

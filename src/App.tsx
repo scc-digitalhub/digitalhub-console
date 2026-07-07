@@ -57,14 +57,14 @@ const PROXY_URL: string =
 
 // oidc login
 const ISSUER_URI: string =
-    (globalThis as any).REACT_APP_ISSUER_URI ||
-    (process.env.REACT_APP_ISSUER_URI as string);
+    (globalThis as any).REACT_APP_OAUTH2_ISSUER ||
+    (process.env.REACT_APP_OAUTH2_ISSUER as string);
 const CLIENT_ID: string =
-    (globalThis as any).REACT_APP_CLIENT_ID ||
-    (process.env.REACT_APP_CLIENT_ID as string);
+    (globalThis as any).REACT_APP_DHCORE_CLIENT_ID ||
+    (process.env.REACT_APP_DHCORE_CLIENT_ID as string);
 const SCOPE: string =
-    (globalThis as any).REACT_APP_SCOPE ||
-    (process.env.REACT_APP_SCOPE as string);
+    (globalThis as any).REACT_APP_OAUTH2_SCOPE ||
+    (process.env.REACT_APP_OAUTH2_SCOPE as string);
 
 //basic auth login
 const LOGIN_URL: string =
@@ -126,8 +126,8 @@ const enableSearch: boolean =
     (globalThis as any).REACT_APP_ENABLE_SOLR === 'true' ||
     (process.env.REACT_APP_ENABLE_SOLR as string) === 'true';
 const enableTrino: string =
-    (globalThis as any).REACT_APP_TRINO_ENDPOINT ||
-    (process.env.REACT_APP_TRINO_ENDPOINT as string) ||
+    (globalThis as any).REACT_APP_TRINO_URL ||
+    (process.env.REACT_APP_TRINO_URL as string) ||
     false;
 
 import { ResourceSchemaProvider } from './common/provider/schemaProvider';
