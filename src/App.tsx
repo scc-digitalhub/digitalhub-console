@@ -66,11 +66,6 @@ const SCOPE: string =
     (globalThis as any).REACT_APP_OAUTH2_SCOPE ||
     (process.env.REACT_APP_OAUTH2_SCOPE as string);
 
-//basic auth login
-const LOGIN_URL: string =
-    (globalThis as any).REACT_APP_LOGIN_URL ||
-    (process.env.REACT_APP_LOGIN_URL as string);
-
 const applicationUrl =
     `${APPLICATION_URL}${CONTEXT_PATH}` ||
     `${window.location.origin}${CONTEXT_PATH}`;
@@ -81,15 +76,15 @@ const authProvider =
               clientId: CLIENT_ID,
               issuer: ISSUER_URI,
               scope: SCOPE,
-              loginUrl: AUTH_URL + LOGIN_URL,
+              loginUrl: AUTH_URL,
               logoutTo: '/login',
               redirectUrl: applicationUrl.endsWith('/')
                   ? `${applicationUrl}auth-callback`
                   : `${applicationUrl}/auth-callback`,
           })
-        : LOGIN_URL
+        : AUTH_URL
         ? BasicAuthProvider({
-              loginUrl: AUTH_URL + LOGIN_URL,
+              loginUrl: AUTH_URL,
               logoutTo: '/login',
           })
         : undefined;
