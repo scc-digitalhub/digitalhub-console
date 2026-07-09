@@ -20,7 +20,7 @@ import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
 import { ReactElement, useRef, useState } from 'react';
-import { fontSize } from '@mui/system';
+import { TutorialsIcon } from '../features/tutorials/components/icon';
 
 const enableHub: string =
     (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
@@ -32,10 +32,14 @@ const enableTrino: string =
     (process.env.REACT_APP_TRINO_URL as string) ||
     false;
 
+const enableTutorials: string =
+    (globalThis as any).REACT_APP_TUTORIALS_URL ||
+    (process.env.REACT_APP_TUTORIALS_URL as string) ||
+    false;
+
 export const MyMenu = () => {
     const basename = useBasename();
     const getResourceLabel = useGetResourceLabel();
-    const translate = useTranslate();
 
     return (
         <Menu
@@ -51,6 +55,13 @@ export const MyMenu = () => {
                         leftIcon={<HubIcon />}
                         to={`${basename}/hub`}
                         primaryText={'pages.hub.menu'}
+                    />
+                )}
+                {enableTutorials && (
+                    <MenuItemLink
+                        leftIcon={<TutorialsIcon />}
+                        to={`${basename}/tutorials`}
+                        primaryText={'pages.tutorials.menu'}
                     />
                 )}
                 <Divider />

@@ -210,5 +210,10 @@
             "title": "Credenziali",
             "helperText": "Usa le seguenti credenziali per accedere all'immagine del container dalla tua macchina locale o da qualsiasi altro ambiente."
         }
+    },
+    "tutorials": {
+        "menu": "Tutorial",
+        "title": "Tutorial",
+        "subtitle": "Esplora i tutorial disponibili"
     }
 }

@@ -119,7 +119,6 @@
         "title": "Files explorer",
         "helperText": "Explore and manage project files"
     },
-
     "hub": {
         "menu": "Hub",
         "title": "Templates hub",
@@ -211,5 +210,10 @@
             "title": "Credentials",
             "helperText": "Use the following credentials to access the container image from your local machine or any other environment."
         }
+    },
+    "tutorials": {
+        "menu": "Tutorials",
+        "title": "Tutorials",
+        "subtitle": "Browse the available tutorials"
     }
 }
