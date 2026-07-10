@@ -54,6 +54,9 @@ const WEBSOCKET_URL: string =
 const PROXY_URL: string =
     (globalThis as any).REACT_APP_PROXY_URL ||
     (process.env.REACT_APP_PROXY_URL as string);
+const TUTORIALS_URL: string =
+    (globalThis as any).REACT_APP_TUTORIALS_URL ||
+    (process.env.REACT_APP_TUTORIALS_URL as string);
 
 // oidc login
 const ISSUER_URI: string =
@@ -153,6 +156,7 @@ import { HttpClientContextProvider } from './features/httpclients/provider/HttpC
 import { HubPage } from './features/hub/components/HubPage';
 import MyTrinoApp from './features/sql/components/MyTrinoApp';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
+import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -277,6 +281,18 @@ const CoreApp = () => {
                                                     <Route
                                                         path="/sql"
                                                         element={<MyTrinoApp />}
+                                                    />
+                                                )}
+                                                {TUTORIALS_URL && (
+                                                    <Route
+                                                        path="/tutorials"
+                                                        element={
+                                                            <TutorialsPage
+                                                                url={
+                                                                    TUTORIALS_URL
+                                                                }
+                                                            />
+                                                        }
                                                     />
                                                 )}
                                             </CustomRoutes>
