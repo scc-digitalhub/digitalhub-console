@@ -5,7 +5,13 @@
 import { Box, Container } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
-import { ListContextProvider, useList, useTranslate } from 'react-admin';
+import {
+    FilterForm,
+    ListContextProvider,
+    TextInput,
+    useList,
+    useTranslate,
+} from 'react-admin';
 import { TutorialsIcon } from './icon';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { Empty } from '../../../common/components/layout/Empty';
@@ -70,6 +76,19 @@ export const TutorialsPage = ({ url }: { url: string }) => {
 const TutorialsList = () => {
     const { data } = useTutorialsContext();
 
+    //case-insensitive search on every (string) field
+    const searchFilter = [
+        <TextInput
+            key="q"
+            source="q"
+            label={'ra.action.search'}
+            alwaysOn
+            resettable
+            fullWidth
+            helperText={false}
+        />,
+    ];
+
     return (
         <FlatCard
             sx={{
@@ -82,6 +101,14 @@ const TutorialsList = () => {
                 boxSizing: 'border-box',
             }}
         >
+            <Box
+                sx={{
+                    width: '100%',
+                    '& .RaFilterForm-filterFormInput': { width: '100%' },
+                }}
+            >
+                <FilterForm filters={searchFilter} />
+            </Box>
             {data && data.length > 0 ? (
                 <GridList
                     spacing={2}
