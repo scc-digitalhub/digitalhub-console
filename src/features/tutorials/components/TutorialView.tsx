@@ -14,20 +14,14 @@ import {
     useTheme,
 } from '@mui/material';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
-import {
-    Error as RaError,
-    Toolbar,
-    TopToolbar,
-    useTranslate,
-    Button as RaButton,
-} from 'react-admin';
+import { Error as RaError, Toolbar, useTranslate } from 'react-admin';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { useTutorialsContext } from '../TutorialsContext';
 import { Spinner } from '../../../common/components/layout/Spinner';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { TutorialToolbar } from './TutorialToolbar';
 
 export const TutorialView = () => {
     const { selectedTutorial } = useTutorialsContext();
@@ -81,61 +75,64 @@ export const TutorialView = () => {
     }, [activeStep, steps]);
 
     return (
-        <FlatCard sx={{ width: '100%', pb: 2 }}>
-            <CardContent>
-                <Stepper activeStep={activeStep}>
-                    {steps.map(step => (
-                        <Step key={step.name}>
-                            <StepLabel>{step.name}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-            </CardContent>
-            {loading ? (
-                <Spinner />
-            ) : error ? (
-                <RaError
-                    error={error}
-                    resetErrorBoundary={() => setError(null)}
-                />
-            ) : (
-                <MarkdownBox>
-                    <MarkdownPreview
-                        source={fileContent}
-                        style={{
-                            padding: 16,
-                            borderRadius: 10,
-                            backgroundColor:
-                                theme.palette.mode === 'dark'
-                                    ? 'rgba(255, 255, 255, 0.08)'
-                                    : 'rgba(0, 0, 0, 0.04)',
-                        }}
-                        wrapperElement={{
-                            'data-color-mode': theme.palette.mode,
-                        }}
+        <>
+            <TutorialToolbar />
+            <FlatCard sx={{ width: '100%', pb: 2 }}>
+                <CardContent>
+                    <Stepper activeStep={activeStep}>
+                        {steps.map(step => (
+                            <Step key={step.name}>
+                                <StepLabel>{step.name}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </CardContent>
+                {loading ? (
+                    <Spinner />
+                ) : error ? (
+                    <RaError
+                        error={error}
+                        resetErrorBoundary={() => setError(null)}
                     />
-                </MarkdownBox>
-            )}
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Box>
-                    <NavigationButton
-                        color="secondary"
-                        disabled={activeStep === 0}
-                        onClick={() => setActiveStep(prev => prev - 1)}
-                        label="ra.navigation.previous"
-                        icon={<NavigateBeforeIcon />}
-                    />
-                </Box>
-                <Box>
-                    <NavigationButton
-                        disabled={activeStep === steps.length - 1}
-                        onClick={() => setActiveStep(prev => prev + 1)}
-                        label="ra.navigation.next"
-                        icon={<NavigateNextIcon />}
-                    />
-                </Box>
-            </Toolbar>
-        </FlatCard>
+                ) : (
+                    <MarkdownBox>
+                        <MarkdownPreview
+                            source={fileContent}
+                            style={{
+                                padding: 16,
+                                borderRadius: 10,
+                                backgroundColor:
+                                    theme.palette.mode === 'dark'
+                                        ? 'rgba(255, 255, 255, 0.08)'
+                                        : 'rgba(0, 0, 0, 0.04)',
+                            }}
+                            wrapperElement={{
+                                'data-color-mode': theme.palette.mode,
+                            }}
+                        />
+                    </MarkdownBox>
+                )}
+                <Toolbar sx={{ justifyContent: 'space-between' }}>
+                    <Box>
+                        <NavigationButton
+                            color="secondary"
+                            disabled={activeStep === 0}
+                            onClick={() => setActiveStep(prev => prev - 1)}
+                            label="ra.navigation.previous"
+                            icon={<NavigateBeforeIcon />}
+                        />
+                    </Box>
+                    <Box>
+                        <NavigationButton
+                            disabled={activeStep === steps.length - 1}
+                            onClick={() => setActiveStep(prev => prev + 1)}
+                            label="ra.navigation.next"
+                            icon={<NavigateNextIcon />}
+                        />
+                    </Box>
+                </Toolbar>
+            </FlatCard>
+        </>
     );
 };
 
