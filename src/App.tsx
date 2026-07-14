@@ -52,8 +52,8 @@ const WEBSOCKET_URL: string =
     (globalThis as any).REACT_APP_WEBSOCKET_URL ||
     (process.env.REACT_APP_WEBSOCKET_URL as string);
 const PROXY_URL: string =
-    (globalThis as any).REACT_APP_PROXY_URL ||
-    (process.env.REACT_APP_PROXY_URL as string);
+    (globalThis as any).REACT_APP_DHCORE_PROXY ||
+    (process.env.REACT_APP_DHCORE_PROXY as string);
 
 // oidc login
 const ISSUER_URI: string =
