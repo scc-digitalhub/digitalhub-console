@@ -3,10 +3,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Typography } from '@mui/material';
-import { ReaChat, ReaChatProps } from './components/ReaChat';
-import { useId, useState } from 'react';
+import { lazy, Suspense, useId, useState } from 'react';
 import { useStore } from 'react-admin';
-import { Conversation } from 'reachat';
+import type { ReaChatProps } from './components/ReaChat';
+import type { Conversation } from 'reachat';
+
+// Lazy-load ReaChat so the full reachat chain (framer-motion,
+// react-syntax-highlighter, openai, reablocks, …) is only fetched
+// when the chat panel is actually opened.
+const ReaChat = lazy(() =>
+    import('./components/ReaChat').then(m => ({ default: m.ReaChat }))
+);
 
 export type ChatClientProps = Omit<
     ReaChatProps,
@@ -38,12 +45,14 @@ export const ChatClient = (props: ChatClientProps) => {
                     {modelName}
                 </Typography>
             )}
-            <ReaChat
-                modelName={modelName}
-                {...rest}
-                conversations={conversations}
-                setConversations={setConversations}
-            />
+            <Suspense fallback={null}>
+                <ReaChat
+                    modelName={modelName}
+                    {...rest}
+                    conversations={conversations}
+                    setConversations={setConversations}
+                />
+            </Suspense>
         </>
     );
 };
