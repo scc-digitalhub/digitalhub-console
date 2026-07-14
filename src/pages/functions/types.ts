@@ -5,6 +5,7 @@
 import { TextArrayWidget } from '../../common/jsonSchema/components/widgets/TextArrayWidget';
 import { FabSourceCodeTemplate } from '../../common/jsonSchema/components/templates/FabSourceCodeTemplate';
 import { ServicegraphSourceCodeTemplate } from '../../common/jsonSchema/components/templates/ServicegraphSourceCodeTemplate';
+import { ConfigTemplate } from '../../common/jsonSchema/components/templates/ConfigTemplate';
 
 import { SourceCodeTemplate } from '../../common/jsonSchema/components/templates/SourceCodeTemplate';
 import { SourceCodeEditorWidget } from '../../common/jsonSchema/components/widgets/SourceCodeEditorWidget';
@@ -50,6 +51,18 @@ export const getFunctionUiSpec = (kind?: string) => {
                 'ui:widget': 'hidden',
                 'ui:disabled': 'true',
             },
+        },
+        config: {
+            'ui:ObjectFieldTemplate': ConfigTemplate,
+            base64: {
+                'ui:widget': SourceCodeEditorWidget,
+                'ui:disabled': 'true',
+            },
+            code: {
+                'ui:widget': 'hidden',
+                'ui:disabled': 'true',
+            },
+
         },
         requirements: {
             'ui:widget': TextArrayWidget,
