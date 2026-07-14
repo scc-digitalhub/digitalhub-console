@@ -1,4 +1,4 @@
-// import { QueryEditor } from '@dslab/trino-query-ui';
+import { QueryEditor } from '@dslab/trino-query-ui';
 import { useTheme } from '@mui/material/styles';
 import useTrinoRequestHeaders from '../useTrinoRequestHeaders';
 import { Alert } from '@mui/material';
@@ -11,7 +11,6 @@ const trinoEndpoint: string =
 
 // Local testing
 // const trinoEndpoint = ' ';
-
 
 const MyTrinoApp = () => {
     const theme = useTheme();
@@ -26,13 +25,13 @@ const MyTrinoApp = () => {
 
     return (
         <StyledQueryEditorWrapper>
-            {/* <QueryEditor
+            <QueryEditor
                 key={themeMode}
                 theme={themeMode}
                 height={800}
                 requestHeaders={requestHeaders}
                 baseUrl={trinoEndpoint}
-            /> */}
+            />
         </StyledQueryEditorWrapper>
     );
 };

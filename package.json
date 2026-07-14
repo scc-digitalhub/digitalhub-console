@@ -53,12 +53,14 @@
         "@dslab/ra-language-italian": "^2.0.0",
         "@dslab/ra-root-selector": "^2.0.0",
         "@dslab/ra-stepper": "^2.0.0",
+        "@dslab/trino-query-ui": "^0.1.8",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@fontsource/open-sans": "^5.1.0",
         "@kotaicode/k8s-resources": "^0.1.4",
         "@melloware/react-logviewer": "^6.5.2",
         "@microsoft/clarity": "^1.0.2",
+        "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.0.0",
         "@mui/material": "^7.0.0",
         "@mui/system": "^7.0.0",
@@ -68,7 +70,6 @@
         "@react-spring/web": "^10.0.1",
         "@stomp/stompjs": "^7.0.0",
         "@tailwindcss/vite": "^4.1.17",
-        "@uiw/react-markdown-preview": "^5.1.5",
         "@uppy/react": "^4.2.3",
         "@wtfcode/byte-converter": "^2.0.8",
         "@xyflow/react": "^12.3.1",
@@ -77,17 +78,20 @@
         "html-to-image": "1.11.11",
         "k8s-resource-parser": "^0.2.2",
         "localforage": "^1.10.0",
+        "monaco-editor": "^0.55.1",
         "mui-chips-input": "^7.0.0",
         "openai": "^6.9.1",
         "reachat": "2.0.2",
         "react": "^18.2.0",
-        "react-ace": "^11.0.1",
+        "react-ace": "^10.0.0",
         "react-admin": "5.11.4",
         "react-dom": "^18.2.0",
         "react-icons": "^5.6.0",
         "react-is": "^18.2.0",
         "react-json-tree": "^0.19.0",
         "react-jupyter-notebook-viewer": "^1.1.13",
+        "react-markdown": "^8.0.7",
+        "remark-gfm": "^3.0.1",
         "react-papaparse": "^4.4.0",
         "react-router": "^7.1.1",
         "react-router-dom": "^7.1.1",
@@ -111,7 +115,7 @@
         "eslint-plugin-react-refresh": "^0.4.5",
         "prettier": "^2.8.8",
         "typescript": "^5.2.2",
-        "vite": "^5.1.4"
+        "vite": "^5.2.0"
     },
     "overrides": {
         "react-is": "^18.2.0"
@@ -124,6 +128,7 @@
         "@rjsf/core": "6.0.0-beta.11",
         "@rjsf/mui": "6.0.0-beta.11",
         "@rjsf/utils": "6.0.0-beta.11",
-        "@rjsf/validator-ajv8": "6.0.0-beta.11"
+        "@rjsf/validator-ajv8": "6.0.0-beta.11",
+        "date-fns": "3.6.0"
     }
 }

@@ -8,9 +8,7 @@ import { useAuthProvider } from 'react-admin';
 const useTrinoRequestHeaders = (): Record<string, string> => {
     const authProvider = useAuthProvider();
     const [authHeader, setAuthHeader] = useState<string | null>(null);
-
-    // [LOCAL TESTING]  Send X-Trino-User over plain HTTP.
-    // const [username, setUsername] = useState<string | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -28,15 +26,14 @@ const useTrinoRequestHeaders = (): Record<string, string> => {
                     if (!cancelled) setAuthHeader(null);
                 });
 
-            // [LOCAL TESTING] Fetch display name for X-Trino-User over plain HTTP.
-            // authProvider
-            //     .getIdentity?.()
-            //     ?.then((identity: any) => {
-            //         if (!cancelled && identity?.fullName) {
-            //             setUsername(identity.fullName);
-            //         }
-            //     })
-            //     ?.catch(() => {});
+            authProvider
+                .getIdentity?.()
+                ?.then((identity: any) => {
+                    if (!cancelled && identity?.fullName) {
+                        setUsername(identity.fullName);
+                    }
+                })
+                ?.catch(() => {});
         };
 
         fetchHeaders();
@@ -52,13 +49,12 @@ const useTrinoRequestHeaders = (): Record<string, string> => {
             headers['Authorization'] = authHeader;
         }
 
-        // [LOCAL TESTING] Uncomment when running Trino over plain HTTP.
         // Trino's JWT authenticator only activates over HTTPS; over HTTP the
         // insecure authenticator is used and requires X-Trino-User to identify
         // the caller.
-        // if (username) {
-        //     headers['X-Trino-User'] = username;
-        // }
+        if (username) {
+            headers['X-Trino-User'] = username;
+        }
 
         return headers;
     }, [authHeader]);
