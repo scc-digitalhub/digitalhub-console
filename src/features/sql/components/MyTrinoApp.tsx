@@ -1,8 +1,17 @@
-import { QueryEditor } from '@dslab/trino-query-ui';
+import { lazy, Suspense, ComponentType } from 'react';
 import { useTheme } from '@mui/material/styles';
 import useTrinoRequestHeaders from '../useTrinoRequestHeaders';
 import { Alert } from '@mui/material';
 import { StyledQueryEditorWrapper } from '../theme';
+
+// Lazy-load the Trino query editor — it pulls in monaco-editor + the full
+// ANTLR4 SQL parser (~12 MB raw) and should only be fetched when the SQL
+// page is actually visited.
+const QueryEditor = lazy(() =>
+    import('@dslab/trino-query-ui').then(m => ({
+        default: m.QueryEditor as ComponentType<any>,
+    }))
+);
 
 const trinoEndpoint: string =
     (globalThis as any).REACT_APP_TRINO_URL ||
@@ -25,13 +34,15 @@ const MyTrinoApp = () => {
 
     return (
         <StyledQueryEditorWrapper>
-            <QueryEditor
-                key={themeMode}
-                theme={themeMode}
-                height={800}
-                requestHeaders={requestHeaders}
-                baseUrl={trinoEndpoint}
-            />
+            <Suspense fallback={null}>
+                <QueryEditor
+                    key={themeMode}
+                    theme={themeMode}
+                    height={800}
+                    requestHeaders={requestHeaders}
+                    baseUrl={trinoEndpoint}
+                />
+            </Suspense>
         </StyledQueryEditorWrapper>
     );
 };
