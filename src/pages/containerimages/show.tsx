@@ -41,7 +41,8 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { prettyBytes } from '../../features/files/fileBrowser/utils';
 import { ChipsField } from '../../common/components/fields/ChipsField';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import MarkdownPreview from '@uiw/react-markdown-preview';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const ContainerImageShowLayout = props => {
     const record = useRecordContext(props);
@@ -384,8 +385,7 @@ const ContainerImageInfoView = () => {
                                 },
                             }}
                         >
-                            <MarkdownPreview
-                                source={description.fullDescription}
+                            <div
                                 style={{
                                     padding: 16,
                                     borderRadius: 10,
@@ -394,10 +394,11 @@ const ContainerImageInfoView = () => {
                                             ? 'rgba(255, 255, 255, 0.08)'
                                             : 'rgba(0, 0, 0, 0.04)',
                                 }}
-                                wrapperElement={{
-                                    'data-color-mode': theme.palette.mode,
-                                }}
-                            />
+                            >
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {description.fullDescription}
+                                </ReactMarkdown>
+                            </div>
                         </Box>
                     )}
                 </RecordContext.Provider>
