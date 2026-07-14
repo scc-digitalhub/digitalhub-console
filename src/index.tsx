@@ -6,10 +6,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { preloadStore } from './common/provider/localForageStore';
 import { App } from './App';
-import '@fontsource/open-sans/400.css';
-import '@fontsource/open-sans/500.css';
-import '@fontsource/open-sans/600.css';
-import '@fontsource/open-sans/700.css';
+import '@fontsource/open-sans/latin-400.css';
+import '@fontsource/open-sans/latin-500.css';
+import '@fontsource/open-sans/latin-600.css';
+import '@fontsource/open-sans/latin-700.css';
 import './features/analytics/clarity';
 // set title
 document.title =
