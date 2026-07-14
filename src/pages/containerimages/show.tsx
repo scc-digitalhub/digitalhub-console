@@ -41,8 +41,7 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { prettyBytes } from '../../features/files/fileBrowser/utils';
 import { ChipsField } from '../../common/components/fields/ChipsField';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { MarkdownBody } from '../../common/components/MarkdownBody';
 
 const ContainerImageShowLayout = props => {
     const record = useRecordContext(props);
@@ -364,28 +363,8 @@ const ContainerImageInfoView = () => {
                     )}
 
                     {description?.fullDescription && (
-                        <Box
-                            sx={{
-                                width: '100%',
-                                minWidth: 0,
-                                '& .wmde-markdown': {
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '& p, & pre, & code': {
-                                        whiteSpace: 'pre-wrap !important',
-                                        overflowWrap: 'anywhere !important',
-                                        wordBreak: 'break-word !important',
-                                    },
-                                    '& pre': {
-                                        overflowX: 'auto',
-                                    },
-                                    '& .copied': {
-                                        visibility: 'visible !important',
-                                    },
-                                },
-                            }}
-                        >
-                            <div
+                        <Box sx={{ width: '100%', minWidth: 0 }}>
+                            <MarkdownBody
                                 style={{
                                     padding: 16,
                                     borderRadius: 10,
@@ -395,10 +374,8 @@ const ContainerImageInfoView = () => {
                                             : 'rgba(0, 0, 0, 0.04)',
                                 }}
                             >
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {description.fullDescription}
-                                </ReactMarkdown>
-                            </div>
+                                {description.fullDescription}
+                            </MarkdownBody>
                         </Box>
                     )}
                 </RecordContext.Provider>

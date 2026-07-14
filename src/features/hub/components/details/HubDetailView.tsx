@@ -5,8 +5,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Error as RaError } from 'react-admin';
 import { Box, Chip, Divider, Stack, useTheme } from '@mui/material';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { MarkdownBody } from '../../../../common/components/MarkdownBody';
 import { Spinner } from '../../../../common/components/layout/Spinner';
 import { toRepositoryAssetUrl } from '../../utils';
 import { HubDetailHeader } from './HubDetailHeader';
@@ -129,7 +128,7 @@ export const HubDetailView = ({ template }: HubDetailViewProps) => {
                         },
                     }}
                 >
-                    <div
+                    <MarkdownBody
                         style={{
                             padding: 16,
                             borderRadius: 10,
@@ -139,10 +138,8 @@ export const HubDetailView = ({ template }: HubDetailViewProps) => {
                                     : 'rgba(0, 0, 0, 0.04)',
                         }}
                     >
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {readme}
-                        </ReactMarkdown>
-                    </div>
+                        {readme}
+                    </MarkdownBody>
                 </Box>
             )}
         </Box>
