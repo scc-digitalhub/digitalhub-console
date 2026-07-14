@@ -357,10 +357,10 @@
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/trino-query-ui@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@dslab/trino-query-ui/-/trino-query-ui-0.1.8.tgz#563085df3d9da02e192dd3c69acb636ef963d297"
-  integrity sha512-e+Ad35++13I2B0Fbb13cQJPfx4xHEkOtfPGfiHR6ASkMmIVFomDeVUGcqCdSw2SA9Ee5VrY4+ViWiLcKTDZZGg==
+"@dslab/trino-query-ui@^0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@dslab/trino-query-ui/-/trino-query-ui-0.1.10.tgz#854f4587412f3a1ccea9a6313c632a4936a33bdb"
+  integrity sha512-oK/dsDrilNx79ngeAUJGMiePMcHmGMjEUj5q1cychvsM21z0j++WV9Dg6Se0ifen4sUifFzkwIJUBow9V3YyQw==
   dependencies:
     antlr4-c3 "^3.4.4"
     antlr4ng "^3.0.16"
@@ -6402,7 +6402,7 @@ react-jupyter-notebook-viewer@^1.1.13:
     react-syntax-highlighter "^15.5.0"
     remark-gfm "^3.0.1"
 
-react-markdown@^8.0.3:
+react-markdown@^8.0.3, react-markdown@^8.0.7:
   version "8.0.7"
   resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-8.0.7.tgz#c8dbd1b9ba5f1c5e7e5f2a44de465a3caafdf89b"
   integrity sha512-bvWbzG4MtOU62XqBx3Xx+zB2raaFFsq4mYiAzfjXJMEz2sixgeAfraA3tvzULF02ZdOMUOKTBFFaZJDDrq+BJQ==
