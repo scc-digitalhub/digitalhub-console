@@ -13,10 +13,17 @@ import {
     Preview as PreviewIcon,
     Close as CloseIcon,
 } from '@mui/icons-material';
-import { useCallback, useState } from 'react';
+import { lazy, Suspense, useCallback, useState, MouseEvent } from 'react';
 import { Button, TopToolbar, useTranslate } from 'react-admin';
-import { JupyterNotebookViewer } from 'react-jupyter-notebook-viewer';
-import { MouseEvent } from 'react';
+
+
+// Lazy-load the notebook viewer (~1.8 MB) so it's only fetched when the
+// preview dialog is first opened, not on initial page load.
+const JupyterNotebookViewer = lazy(() =>
+    import('react-jupyter-notebook-viewer').then(m => ({
+        default: m.JupyterNotebookViewer,
+    }))
+);
 import {
     StyledDialog,
     StyledDialogClasses,
@@ -91,14 +98,16 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                             <DownloadIcon fontSize="small" />
                         </Button>
                     </TopToolbar>
-                    <JupyterNotebookViewer
-                        filePath={url}
-                        inputCodeDarkTheme={!(theme.palette.mode === 'dark')}
-                        outputDarkTheme={!(theme.palette.mode === 'dark')}
-                        inputMarkdownDarkTheme={
-                            !(theme.palette.mode === 'dark')
-                        }
-                    />
+                    <Suspense fallback={null}>
+                        <JupyterNotebookViewer
+                            filePath={url}
+                            inputCodeDarkTheme={!(theme.palette.mode === 'dark')}
+                            outputDarkTheme={!(theme.palette.mode === 'dark')}
+                            inputMarkdownDarkTheme={
+                                !(theme.palette.mode === 'dark')
+                            }
+                        />
+                    </Suspense>
                 </DialogContent>
             </StyledDialog>
         </>
