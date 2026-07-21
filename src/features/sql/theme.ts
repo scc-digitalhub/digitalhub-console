@@ -1,75 +1,114 @@
 import { styled, alpha } from '@mui/material/styles';
 
 export const StyledQueryEditorWrapper = styled('div')(({ theme }) => {
-  const isDark = theme.palette.mode === 'dark';
-  return {
-    color: theme.palette.text.primary,
-    background: theme.palette.background.paper,
-    '& .trino-query-ui': {
-      borderRadius: theme.shape.borderRadius,
-    },
+    const isDark = theme.palette.mode === 'dark';
+    return {
+        color: theme.palette.text.primary,
+        background: theme.palette.background.paper,
+        height: '100%',
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
 
-    // Catalog sidebar drawer
-    '& .MuiDrawer-paper': {
-      backgroundColor: theme.palette.background.paper,
-      borderRight: `1px solid ${theme.palette.divider}`,
-    },
+        '& .trino-query-ui': {
+            borderRadius: theme.shape.borderRadius,
+            height: '100%',
+            fontFamily: theme.typography.fontFamily,
+        },
 
-    // Tree view items in catalog
-    '& .MuiTreeItem-content': {
-      borderRadius: theme.shape.borderRadius,
-      '&:hover': {
-        backgroundColor: alpha(theme.palette.secondary.main, 0.05),
-      },
-    },
+        // Catalog sidebar drawer
+        '& .MuiDrawer-paper': {
+            backgroundColor: theme.palette.background.paper,
+            borderRight: `1px solid ${theme.palette.divider}`,
+        },
 
-    // Data grid results
-    '& .MuiDataGrid-root': {
-      fontFamily: '"Open Sans", sans-serif',
-      border: 'none',
-    },
-    '& .MuiDataGrid-columnHeaders': {
-      backgroundColor: theme.palette.background.default,
-      color: theme.palette.secondary.main,
-      fontWeight: 600,
-    },
-    '& .MuiDataGrid-row:hover': {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        isDark ? 0.06 : 0.04
-      ),
-    },
+        // Tree view items in catalog
+        '& .MuiTreeItem-content': {
+            borderRadius: theme.shape.borderRadius,
+            '&:hover': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    isDark ? 0.12 : 0.06
+                ),
+            },
+            '&.Mui-selected': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    isDark ? 0.2 : 0.1
+                ),
+            },
+        },
 
-    // Buttons 
-    '& .MuiButton-outlinedPrimary, & .MuiButton-outlined': {
-      color: theme.palette.primary.main,
-      borderColor: theme.palette.primary.main,
-      '&:hover': {
-        backgroundColor: alpha(theme.palette.primary.main, 0.08),
-        borderColor: theme.palette.primary.dark,
-      },
-    },
+        // Data grid results
+        '& .MuiDataGrid-root': {
+            fontFamily: theme.typography.fontFamily,
+            border: 'none',
+        },
+        '& .MuiDataGrid-columnHeaders': {
+            backgroundColor: alpha(
+                theme.palette.primary.main,
+                isDark ? 0.12 : 0.05
+            ),
+            color: theme.palette.text.primary,
+            fontWeight: 600,
+        },
+        '& .MuiDataGrid-row:hover': {
+            backgroundColor: alpha(
+                theme.palette.primary.main,
+                isDark ? 0.08 : 0.04
+            ),
+        },
 
-    // Tabs
-    '& .MuiTab-root.Mui-selected': {
-      color: theme.palette.primary.main,
-    },
-    '& .MuiTabs-indicator': {
-      backgroundColor: theme.palette.primary.main,
-    },
+        // Buttons
+        '& .MuiButton-containedPrimary': {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            borderRadius: theme.shape.borderRadius,
+            fontWeight: 600,
+            textTransform: 'none',
+            '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+            },
+        },
+        '& .MuiButton-outlinedPrimary, & .MuiButton-outlined': {
+            color: theme.palette.primary.main,
+            borderColor: theme.palette.primary.main,
+            borderRadius: theme.shape.borderRadius,
+            fontWeight: 600,
+            textTransform: 'none',
+            '&:hover': {
+                backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                borderColor: theme.palette.primary.dark,
+            },
+        },
 
-    // Input fields
-    '& .MuiOutlinedInput-root': {
-      borderRadius: theme.shape.borderRadius,
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.primary.main,
-      },
-    },
+        // Tabs
+        '& .MuiTab-root': {
+            textTransform: 'none',
+        },
+        '& .MuiTab-root.Mui-selected': {
+            color: theme.palette.primary.main,
+        },
+        '& .MuiTabs-indicator': {
+            backgroundColor: theme.palette.primary.main,
+        },
 
-    // IconButtons
-    '& .MuiIconButton-root:hover': {
-      color: theme.palette.primary.main,
-      backgroundColor: alpha(theme.palette.primary.main, 0.08),
-    },
-  };
+        // Input fields
+        '& .MuiOutlinedInput-root': {
+            borderRadius: theme.shape.borderRadius,
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: theme.palette.primary.main,
+            },
+        },
+
+        // IconButtons
+        '& .MuiIconButton-root:hover': {
+            color: theme.palette.primary.main,
+            backgroundColor: alpha(theme.palette.primary.main, 0.08),
+        },
+    };
 });
