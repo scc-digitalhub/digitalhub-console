@@ -13,17 +13,35 @@ import {
     Preview as PreviewIcon,
     Close as CloseIcon,
 } from '@mui/icons-material';
-import { lazy, Suspense, useCallback, useState, MouseEvent } from 'react';
-import { Button, TopToolbar, useTranslate } from 'react-admin';
+import {
+    lazy,
+    Suspense,
+    useCallback,
+    useState,
+    MouseEvent,
+    useEffect,
+} from 'react';
+import {
+    Button,
+    Error as RaError,
+    TopToolbar,
+    useTranslate,
+} from 'react-admin';
 
+import { python } from '@jupyter-kit/core/langs/python';
+import light from '@jupyter-kit/theme-default/default.css?inline';
+import dark from '@jupyter-kit/theme-dark/dark.css?inline';
+import lightSyntax from '@jupyter-kit/theme-default/syntax/one-light.css?inline';
+import darkSyntax from '@jupyter-kit/theme-default/syntax/one-dark.css?inline';
 
-// Lazy-load the notebook viewer (~1.8 MB) so it's only fetched when the
+// Lazy-load the notebook viewer so it's only fetched when the
 // preview dialog is first opened, not on initial page load.
-const JupyterNotebookViewer = lazy(() =>
-    import('react-jupyter-notebook-viewer').then(m => ({
-        default: m.JupyterNotebookViewer,
+const Notebook = lazy(() =>
+    import('@jupyter-kit/react').then(m => ({
+        default: m.Notebook,
     }))
 );
+
 import {
     StyledDialog,
     StyledDialogClasses,
@@ -34,6 +52,34 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
     const translate = useTranslate();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [notebookContent, setNotebookContent] = useState<any | null>(null);
+    const [error, setError] = useState<Error | null>(null);
+
+    useEffect(() => {
+        if (open && url) {
+            fetch(url)
+                .then(res =>
+                    res.ok
+                        ? res.json()
+                        : Promise.reject(
+                              new Error('Failed to load notebook content')
+                          )
+                )
+                .then(json => {
+                    setNotebookContent(json);
+                    setError(null);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setNotebookContent(null);
+                    setError(
+                        err instanceof Error
+                            ? err
+                            : new Error('Notebook fetch failed')
+                    );
+                });
+        }
+    }, [open, url]);
 
     const handleDialogOpen = (e: MouseEvent<HTMLButtonElement>) => {
         setOpen(true);
@@ -98,16 +144,28 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                             <DownloadIcon fontSize="small" />
                         </Button>
                     </TopToolbar>
-                    <Suspense fallback={null}>
-                        <JupyterNotebookViewer
-                            filePath={url}
-                            inputCodeDarkTheme={!(theme.palette.mode === 'dark')}
-                            outputDarkTheme={!(theme.palette.mode === 'dark')}
-                            inputMarkdownDarkTheme={
-                                !(theme.palette.mode === 'dark')
-                            }
+                    {notebookContent && (
+                        <Suspense fallback={null}>
+                            <style>
+                                {theme.palette.mode === 'dark' ? dark : light}
+                            </style>
+                            <style>
+                                {theme.palette.mode === 'dark'
+                                    ? darkSyntax
+                                    : lightSyntax}
+                            </style>
+                            <Notebook
+                                ipynb={notebookContent}
+                                languages={[python]}
+                            />
+                        </Suspense>
+                    )}
+                    {error && (
+                        <RaError
+                            error={error}
+                            resetErrorBoundary={() => setError(null)}
                         />
-                    </Suspense>
+                    )}
                 </DialogContent>
             </StyledDialog>
         </>
