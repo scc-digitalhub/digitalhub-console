@@ -47,6 +47,7 @@ import { ResourceIcon } from './ResourceIcon';
 import ContentAdd from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import ListIcon from '@mui/icons-material/List';
+import { useResourceMetrics } from '../../../features/k8smetrics/useResourceMetrics';
 
 const cardStyle = {
     height: '100%',
@@ -61,10 +62,15 @@ export const Dashboard = () => {
     const getResourceLabel = useGetResourceLabel();
     const { isAdmin } = useProjectPermissions();
     const createPath = useCreatePath();
-
+    const { metrics } = useResourceMetrics({
+        resource: 'projects',
+        record: { id: projectId || '' },
+        refreshInterval: 30000,
+    });
     const [project, setProject] = useState<any>(null);
-    const [metrics, setMetrics] = useState<any>(null);
-    const [runCounts, setRunCounts] = useState<Record<string, number | undefined>>({});
+    const [runCounts, setRunCounts] = useState<
+        Record<string, number | undefined>
+    >({});
 
     useEffect(() => {
         if (!dataProvider || !projectId) return;
@@ -106,17 +112,6 @@ export const Dashboard = () => {
                 error: errorRes.total,
             });
         });
-
-        dataProvider
-            .invoke({
-                path: '/projects/' + projectId + '/metrics/k8s',
-                options: { method: 'GET' },
-            })
-            .then(res => {
-                if (res) {
-                    setMetrics(res);
-                }
-            });
     }, [dataProvider, projectId]);
 
     if (!project) {
@@ -203,7 +198,7 @@ export const Dashboard = () => {
                         </DropDownButton>
                     </Stack>
                     <Grid container spacing={2}>
-                        {Object.keys(metrics?.usage || {}).length > 0 && (
+                        {metrics?.metrics?.length > 0 && (
                             <Grid size={12}>
                                 <Card sx={cardStyle}>
                                     <CardHeader

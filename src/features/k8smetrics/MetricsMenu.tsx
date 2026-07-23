@@ -3,15 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Menu, MenuItem, Box, CardHeader, ListItemText } from '@mui/material';
-import { useState, useEffect, useCallback, useRef, ReactElement } from 'react';
-import {
-    useTranslate,
-    IconButtonWithTooltip,
-    useDataProvider,
-} from 'react-admin';
+import { useState, ReactElement } from 'react';
+import { useTranslate, IconButtonWithTooltip } from 'react-admin';
 import { MetricBadge, MetricProps } from './MetricBadge';
 import MetricsIcon from '@mui/icons-material/QueryStats';
 import { formatMetricsValue } from './utils';
+import { useResourceMetrics } from './useResourceMetrics';
 
 const defaultMetrics = ['cpu', 'memory', 'disk'];
 const defaultIcon = <MetricsIcon fontSize="small" />;
@@ -37,73 +34,13 @@ export const MetricsMenu = (
     const translate = useTranslate();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const dataProvider = useDataProvider();
-    const [metrics, setMetrics] = useState<any>();
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const { metrics, refresh: fetchMetrics } = useResourceMetrics({
+        resource: 'users',
+        record: { id: 'me' },
+        refreshInterval: 30000,
+    });
 
-    const fetchMetrics = useCallback(() => {
-        if (dataProvider) {
-            const url = '/users/me/metrics/k8s';
-            dataProvider
-                .invoke({
-                    path: url,
-                    options: { method: 'GET' },
-                })
-                .then(res => {
-                    if (res?.usage && Object.keys(res.usage).length > 0) {
-                        //if default metrics is missing add them with null value
-                        const completeMetrics = {
-                            usage: Object.fromEntries(
-                                (Array.isArray(metricsKeys)
-                                    ? metricsKeys
-                                    : defaultMetrics
-                                ).map(key => [
-                                    key,
-                                    res.usage[key] !== undefined
-                                        ? res.usage[key]
-                                        : null,
-                                ])
-                            ),
-                        };
-                        setMetrics(completeMetrics);
-                    } else {
-                        //if no res, set empty metrics
-                        setMetrics({
-                            usage: Object.fromEntries(
-                                (Array.isArray(defaultMetrics)
-                                    ? defaultMetrics
-                                    : []
-                                ).map(key => [key, null])
-                            ),
-                        });
-                    }
-                });
-        }
-    }, [dataProvider]);
-
-    useEffect(() => {
-        fetchMetrics();
-    }, [fetchMetrics]);
-
-    useEffect(() => {
-        if (anchorEl) {
-            intervalRef.current = setInterval(() => {
-                fetchMetrics();
-            }, 5000);
-        } else {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        }
-
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, [fetchMetrics, anchorEl]);
-
-    if (!metrics || !metrics.usage || Object.keys(metrics.usage).length === 0) {
+    if (!metrics?.metrics || metrics.metrics?.length === 0) {
         return null;
     }
     const handleOpen = (event): void => {
@@ -157,9 +94,7 @@ export const MetricsMenu = (
                     <CardHeader
                         sx={{ width: '100%', py: '5px' }}
                         title={translate('pages.menu.metrics.header')}
-                        subheader={translate(
-                            'pages.menu.metrics.subheader'
-                        )}
+                        subheader={translate('pages.menu.metrics.subheader')}
                         slotProps={{
                             title: {
                                 variant: 'subtitle1',
@@ -171,20 +106,27 @@ export const MetricsMenu = (
                     />
                 </MenuItem>
 
-                {metrics?.usage &&
-                    Object.keys(metrics.usage).length > 0 &&
-                    Object.entries(metrics.usage)
-                        .filter(([key]) =>
+                {metrics?.metrics &&
+                    metrics.metrics?.length > 0 &&
+                    metrics.metrics
+                        .filter(e =>
                             Array.isArray(metricsKeys)
-                                ? metricsKeys.includes(key)
+                                ? metricsKeys.includes(e.name)
                                 : metricsKeys
                         )
-                        .map(([key, value]) => (
-                            <MenuItem key={'mtr-' + key}>
+                        .map(e => ({
+                            name: e.name,
+                            value: e.summary?.find(s => s.name == 'avg')?.value,
+                        }))
+                        .map(e => (
+                            <MenuItem key={'mtr-' + e.name}>
                                 <ListItemText sx={{ px: 1, py: 0.2 }}>
                                     <MetricBadge
-                                        name={key}
-                                        value={formatMetricsValue(key, value)}
+                                        name={e.name}
+                                        value={formatMetricsValue(
+                                            e.name,
+                                            e.value
+                                        )}
                                         size={size ? size : 'large'}
                                         fontSize={
                                             fontSize ? fontSize : 'medium'
@@ -192,7 +134,7 @@ export const MetricsMenu = (
                                         title={
                                             labels === false
                                                 ? false
-                                                : `fields.k8s.resources.${key}.title`
+                                                : `fields.k8s.resources.${e.name}.title`
                                         }
                                         direction="row"
                                         gap={1}

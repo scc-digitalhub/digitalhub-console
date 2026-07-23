@@ -11,6 +11,7 @@ import {
     Accordion,
 } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
+import MetricsChart from '../../../features/k8smetrics/MetricsChart';
 import {
     DateField,
     Labeled,
@@ -51,9 +52,9 @@ export default function ComputeResources(props: { record: any }) {
         pod.duration = durationFormatted;
     }
 
-    const [selectedContainerName, setSelectedContainerName] = useState<string>(
-        containers[0]?.name ?? ''
-    );
+    const [selectedContainerName, setSelectedContainerName] = useState<
+        string | null
+    >(containers[0]?.name ?? null);
 
     useEffect(() => {
         const first = (pod?.containers && pod.containers[0]?.name) ?? '';
@@ -67,25 +68,27 @@ export default function ComputeResources(props: { record: any }) {
 
     const selectedContainer = useMemo(() => {
         if (!pod || !selectedContainerName) return {};
+        const lc = pod.containers || [];
+
         return (
-            (pod.containers || []).find(
-                (c: any) => c.name === selectedContainerName
-            ) || {}
+            lc.find((c: any) => selectedContainerName === c.name) ||
+            lc.find((c: any) => selectedContainerName.includes(c.name)) ||
+            {}
         );
     }, [pod, selectedContainerName]);
 
     return (
         <Stack spacing={1}>
             {pod && (
+                <MetricsChart
+                    resource="runs"
+                    showDetails={false}
+                    showMetadata={false}
+                    onSelected={setSelectedContainerName}
+                />
+            )}
+            {pod && (
                 <RecordContextProvider value={pod}>
-                    {record?.id && pod.containers && (
-                        <ChartView
-                            id={record.id as string}
-                            resource="runs"
-                            onContainerSelect={setSelectedContainerName}
-                        />
-                    )}
-
                     <Box
                         sx={{
                             display: { xs: 'block', sm: 'grid' },

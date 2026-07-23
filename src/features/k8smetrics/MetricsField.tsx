@@ -2,15 +2,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { Stack, Box } from '@mui/system';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import {
-    useRecordContext,
-    useDataProvider,
-    useResourceContext,
-} from 'react-admin';
 import { MetricBadge, MetricProps } from './MetricBadge';
+import { useResourceMetrics } from './useResourceMetrics';
 import { formatMetricsValue } from './utils';
 export const MetricsField = (
     props: Omit<MetricProps, 'value' | 'name' | 'icon' | 'title'> & {
@@ -30,51 +24,9 @@ export const MetricsField = (
         gap = 0,
         ...rest
     } = props;
-    const resource = useResourceContext();
-    const record = useRecordContext(props);
-    const dataProvider = useDataProvider();
-    const { root: projectId } = useRootSelector();
-    const [metrics, setMetrics] = useState<any>();
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const { metrics } = useResourceMetrics(props);
 
-    const fetchMetrics = useCallback(() => {
-        console.log('Fetching metrics for', resource, record?.id);
-        if (dataProvider && record && resource) {
-            const url =
-                projectId && resource !== 'projects'
-                    ? `/-/${projectId}/${resource}/${record.id}/metrics/k8s`
-                    : `/${resource}/${record.id}/metrics/k8s`;
-
-            dataProvider
-                .invoke({
-                    path: url,
-                    options: { method: 'GET' },
-                })
-                .then(res => {
-                    if (res) {
-                        setMetrics(res);
-                    }
-                });
-        }
-    }, [dataProvider, projectId, record, resource]);
-
-    useEffect(() => {
-        fetchMetrics();
-    }, [fetchMetrics]);
-
-    useEffect(() => {
-        intervalRef.current = setInterval(() => {
-            fetchMetrics();
-        }, 30000);
-
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, [fetchMetrics]);
-
-    if (!metrics || !metrics.usage || Object.keys(metrics.usage).length === 0) {
+    if (!metrics || !metrics.metrics || metrics.metrics.length === 0) {
         return null;
     }
 
@@ -89,24 +41,28 @@ export const MetricsField = (
                 gridAutoColumns: '1fr',
             }}
         >
-            {Object.entries(metrics.usage)
-                .filter(([key]) =>
+            {metrics.metrics
+                .filter(e =>
                     Array.isArray(metricsKeys)
-                        ? metricsKeys.includes(key)
+                        ? metricsKeys.includes(e.name)
                         : metricsKeys
                 )
-                .map(([key, value]) => (
-                    <Box key={key} sx={{ textAlign: 'center' }}>
+                .map(e => ({
+                    name: e.name,
+                    value: e.summary?.find(s => s.name == 'avg')?.value,
+                }))
+                .map(e => (
+                    <Box key={e.name} sx={{ textAlign: 'center' }} data-value={e.value}>
                         <MetricBadge
-                            name={key}
-                            value={formatMetricsValue(key, value)}
+                            name={e.name}
+                            value={formatMetricsValue(e.name, e.value)}
                             icon={icon === false ? false : undefined}
                             size={size ? size : 'large'}
                             fontSize={fontSize ? fontSize : 'medium'}
                             title={
                                 labels === false
                                     ? false
-                                    : `fields.k8s.resources.${key}.title`
+                                    : `fields.k8s.resources.${e.name}.title`
                             }
                             {...rest}
                         />

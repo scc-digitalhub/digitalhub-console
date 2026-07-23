@@ -35,14 +35,14 @@ export const InstanceMetrics = (
 
     const fetchMetrics = useCallback(() => {
         if (dataProvider) {
-            const url = '/metrics/k8s';
+            const url = '/resource_metrics';
             dataProvider
                 .invoke({
                     path: url,
                     options: { method: 'GET' },
                 })
                 .then(res => {
-                    if (res?.usage && Object.keys(res.usage).length > 0) {
+                    if (res?.metrics?.length > 0) {
                         //if default metrics is missing add them with null value
                         const completeMetrics = {
                             usage: Object.fromEntries(
@@ -51,8 +51,8 @@ export const InstanceMetrics = (
                                     : defaultMetrics
                                 ).map(key => [
                                     key,
-                                    res.usage[key] !== undefined
-                                        ? res.usage[key]
+                                    res.metrics[key] !== undefined
+                                        ? res.metrics[key]
                                         : null,
                                 ])
                             ),
@@ -89,7 +89,7 @@ export const InstanceMetrics = (
         };
     }, [fetchMetrics]);
 
-    if (!metrics || !metrics.usage || Object.keys(metrics.usage).length === 0) {
+    if (!metrics || !metrics.metrics || metrics?.metrics.length === 0) {
         return null;
     }
 
@@ -104,24 +104,24 @@ export const InstanceMetrics = (
                 gridAutoColumns: '1fr',
             }}
         >
-            {Object.entries(metrics.usage)
-                .filter(([key]) =>
+            {metrics.metrics
+                .filter(([e]) =>
                     Array.isArray(metricsKeys)
-                        ? metricsKeys.includes(key)
+                        ? metricsKeys.includes(e.name)
                         : metricsKeys
                 )
-                .map(([key, value]) => (
-                    <Box key={key} sx={{ textAlign: 'center' }}>
+                .map(e => (
+                    <Box key={e.name} sx={{ textAlign: 'center' }}>
                         <MetricBadge
-                            name={key}
-                            value={formatMetricsValue(key, value)}
+                            name={e.name}
+                            value={formatMetricsValue(e.name, e.value)}
                             icon={icon === false ? false : undefined}
                             size={size ? size : 'large'}
                             fontSize={fontSize ? fontSize : 'medium'}
                             title={
                                 labels === false
                                     ? false
-                                    : `fields.k8s.resources.${key}.title`
+                                    : `fields.k8s.resources.${e.name}.title`
                             }
                             direction="row-reverse"
                             gap={1}
