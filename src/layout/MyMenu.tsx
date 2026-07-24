@@ -20,7 +20,6 @@ import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
 import { ReactElement, useRef, useState } from 'react';
-import { fontSize } from '@mui/system';
 
 const enableHub: string =
     (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
@@ -35,90 +34,86 @@ const enableTrino: string =
 export const MyMenu = () => {
     const basename = useBasename();
     const getResourceLabel = useGetResourceLabel();
-    const translate = useTranslate();
 
     return (
         <Menu
             sx={{
-                height: '100%',
-                pt: '18px',
+                pb: 0,
             }}
         >
-            <Box flex={1}>
-                <Menu.DashboardItem />
-                {enableHub && (
-                    <MenuItemLink
-                        leftIcon={<HubIcon />}
-                        to={`${basename}/hub`}
-                        primaryText={'pages.hub.menu'}
-                    />
-                )}
-                <Divider />
-                <MenuHeader
-                    primaryText="pages.menu.catalog.header"
-                    helperText="pages.menu.catalog.subheader"
-                />
-                <Menu.ResourceItem name="artifacts" />
-                <Menu.ResourceItem name="dataitems" />
-                <Menu.ResourceItem name="models" />
-                <Menu.ResourceItem name="functions" />
-                <Menu.ResourceItem name="workflows" />
-                <Divider />
-                <MenuHeader
-                    primaryText="pages.menu.operations.header"
-                    helperText="pages.menu.operations.subheader"
-                />
-                <Menu.ResourceItem name="runs" />
-                <Menu.ResourceItem name="triggers" />
+            <Menu.DashboardItem />
+            {enableHub && (
                 <MenuItemLink
-                    leftIcon={<ServiceIcon />}
-                    to={`${basename}/services`}
-                    primaryText={'pages.services.title'}
+                    leftIcon={<HubIcon />}
+                    to={`${basename}/hub`}
+                    primaryText={'pages.hub.menu'}
                 />
-                <Menu.ResourceItem name="containerimages" />
-                <Menu.ResourceItem name="secrets" />
-                <Divider />
-                <MenuHeader
-                    primaryText="pages.menu.repository.header"
-                    helperText="pages.menu.repository.subheader"
-                />
+            )}
+            <Divider />
+            <MenuHeader
+                primaryText="pages.menu.catalog.header"
+                helperText="pages.menu.catalog.subheader"
+            />
+            <Menu.ResourceItem name="artifacts" />
+            <Menu.ResourceItem name="dataitems" />
+            <Menu.ResourceItem name="models" />
+            <Menu.ResourceItem name="functions" />
+            <Menu.ResourceItem name="workflows" />
+            <Divider />
+            <MenuHeader
+                primaryText="pages.menu.operations.header"
+                helperText="pages.menu.operations.subheader"
+            />
+            <Menu.ResourceItem name="runs" />
+            <Menu.ResourceItem name="triggers" />
+            <MenuItemLink
+                leftIcon={<ServiceIcon />}
+                to={`${basename}/services`}
+                primaryText={'pages.services.title'}
+            />
+            <Menu.ResourceItem name="containerimages" />
+            <Menu.ResourceItem name="secrets" />
+            <Divider />
+            <MenuHeader
+                primaryText="pages.menu.repository.header"
+                helperText="pages.menu.repository.subheader"
+            />
+            <MenuItemLink
+                leftIcon={<BrowserIcon />}
+                to={`${basename}/files`}
+                primaryText={'fields.files.title'}
+            />
+            {enableTrino && (
                 <MenuItemLink
-                    leftIcon={<BrowserIcon />}
-                    to={`${basename}/files`}
-                    primaryText={'fields.files.title'}
+                    leftIcon={<StorageIcon />}
+                    to={`${basename}/sql`}
+                    primaryText={'SQL Editor'}
                 />
-                {enableTrino && (
-                    <MenuItemLink
-                        leftIcon={<StorageIcon />}
-                        to={`${basename}/sql`}
-                        primaryText={'SQL Editor'}
-                    />
-                )}
+            )}
 
-                <Divider />
-                <MenuHeader
-                    primaryText="pages.menu.project.header"
-                    helperText="pages.menu.project.subheader"
-                />
-                <MenuItemLink
-                    leftIcon={<SettingsIcon />}
-                    to={`${basename}/config`}
-                    primaryText={'pages.config.title'}
-                />
-                <MenuItemLink
-                    leftIcon={<LineageIcon />}
-                    to={`${basename}/lineage`}
-                    primaryText={'pages.lineage.title'}
-                />
+            <Divider />
+            <MenuHeader
+                primaryText="pages.menu.project.header"
+                helperText="pages.menu.project.subheader"
+            />
+            <MenuItemLink
+                leftIcon={<SettingsIcon />}
+                to={`${basename}/config`}
+                primaryText={'pages.config.title'}
+            />
+            <MenuItemLink
+                leftIcon={<LineageIcon />}
+                to={`${basename}/lineage`}
+                primaryText={'pages.lineage.title'}
+            />
 
-                <MenuItemLink
-                    leftIcon={<ProjectIcon />}
-                    to={'/projects'}
-                    primaryText={<>{getResourceLabel('projects', 2)}</>}
-                    selected={false}
-                    component={UploadSafeLink}
-                />
-            </Box>
+            <MenuItemLink
+                leftIcon={<ProjectIcon />}
+                to={'/projects'}
+                primaryText={<>{getResourceLabel('projects', 2)}</>}
+                selected={false}
+                component={UploadSafeLink}
+            />
         </Menu>
     );
 };
