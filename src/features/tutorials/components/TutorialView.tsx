@@ -18,10 +18,10 @@ import { Error as RaError, Toolbar, useTranslate } from 'react-admin';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { useTutorialsContext } from '../TutorialsContext';
 import { Spinner } from '../../../common/components/layout/Spinner';
-import MarkdownPreview from '@uiw/react-markdown-preview';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { TutorialToolbar } from './TutorialToolbar';
+import { MarkdownBody } from '../../../common/components/MarkdownBody';
 
 export const TutorialView = () => {
     const { selectedTutorial } = useTutorialsContext();
@@ -96,8 +96,7 @@ export const TutorialView = () => {
                     />
                 ) : (
                     <MarkdownBox>
-                        <MarkdownPreview
-                            source={fileContent}
+                        <MarkdownBody
                             style={{
                                 padding: 16,
                                 borderRadius: 10,
@@ -106,10 +105,9 @@ export const TutorialView = () => {
                                         ? 'rgba(255, 255, 255, 0.08)'
                                         : 'rgba(0, 0, 0, 0.04)',
                             }}
-                            wrapperElement={{
-                                'data-color-mode': theme.palette.mode,
-                            }}
-                        />
+                        >
+                            {fileContent}
+                        </MarkdownBody>
                     </MarkdownBox>
                 )}
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
