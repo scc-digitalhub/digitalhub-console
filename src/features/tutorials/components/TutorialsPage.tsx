@@ -12,6 +12,7 @@ import {
     useList,
     useTranslate,
 } from 'react-admin';
+import yaml from 'yaml';
 import { TutorialsIcon } from './icon';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { Empty } from '../../../common/components/layout/Empty';
@@ -26,14 +27,27 @@ import { TutorialView } from './TutorialView';
 
 export const TutorialsPage = ({ url }: { url: string }) => {
     const translate = useTranslate();
-    const [data, setData] = useState<any>(null);
+    // const [catalog, setCatalog] = useState<any>(null);
+    const [data, setData] = useState<any[] | undefined>(undefined);
     const [selectedTutorial, setSelectedTutorial] = useState<any | null>(null);
 
     useEffect(() => {
         if (!data) {
             fetch(url)
-                .then(res => res.json())
-                .then(data => setData(data))
+                .then(res =>
+                    res.ok
+                        ? res.text()
+                        : Promise.reject(
+                              new Error('Failed to download tutorials catalog')
+                          )
+                )
+                .then(data => {
+                    const catalog = yaml.parse(data);
+                    // setCatalog(catalog);
+                    if (catalog?.tutorials) {
+                        setData(catalog.tutorials);
+                    }
+                })
                 .catch(err => console.error('Failed to load data:', err));
         }
     }, [data, url]);

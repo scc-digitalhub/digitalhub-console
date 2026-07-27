@@ -48,7 +48,6 @@ export const TutorialView = () => {
         setLoading(true);
         setError(null);
 
-        //TODO use toRepositoryAssetUrl
         fetch(steps[activeStep].url, { signal: controller.signal })
             .then(res =>
                 res.ok ? res.text() : Promise.reject(new Error('Not Found'))
