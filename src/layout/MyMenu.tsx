@@ -80,28 +80,6 @@ export const MyMenu = () => {
             <Menu.ResourceItem name="runs" />
             <Menu.ResourceItem name="triggers" />
             <MenuItemLink
-                leftIcon={<HubIcon />}
-                to={`${basename}/hub`}
-                primaryText={'pages.hub.menu'}
-            />
-            <Divider />
-            <MenuHeader
-                primaryText="pages.menu.catalog.header"
-                helperText="pages.menu.catalog.subheader"
-            />
-            <Menu.ResourceItem name="artifacts" />
-            <Menu.ResourceItem name="dataitems" />
-            <Menu.ResourceItem name="models" />
-            <Menu.ResourceItem name="functions" />
-            <Menu.ResourceItem name="workflows" />
-            <Divider />
-            <MenuHeader
-                primaryText="pages.menu.operations.header"
-                helperText="pages.menu.operations.subheader"
-            />
-            <Menu.ResourceItem name="runs" />
-            <Menu.ResourceItem name="triggers" />
-            <MenuItemLink
                 leftIcon={<ServiceIcon />}
                 to={`${basename}/services`}
                 primaryText={'pages.services.title'}
@@ -185,6 +163,7 @@ const MenuHeader = (props: {
               onMouseLeave: handlePopoverClose,
           }
         : {};
+
     return (
         <Stack
             ref={anchorRef}
