@@ -8,7 +8,7 @@ import {
     ButtonProps,
     CardContent,
     Step,
-    StepLabel,
+    StepButton,
     Stepper,
     styled,
     useTheme,
@@ -31,7 +31,7 @@ export const TutorialView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const steps = useMemo(() => {
+    const steps: any[] = useMemo(() => {
         if (!selectedTutorial?.steps) return [];
         return selectedTutorial.steps;
     }, [selectedTutorial]);
@@ -50,7 +50,15 @@ export const TutorialView = () => {
 
         fetch(steps[activeStep].url, { signal: controller.signal })
             .then(res =>
-                res.ok ? res.text() : Promise.reject(new Error('Not Found'))
+                res.ok
+                    ? res.text()
+                    : Promise.reject(
+                          new Error(
+                              res.status === 404
+                                  ? 'File not found'
+                                  : 'Error retrieving file'
+                          )
+                      )
             )
             .then(text => {
                 if (!controller.signal.aborted) {
@@ -65,7 +73,7 @@ export const TutorialView = () => {
                     setError(
                         err instanceof Error
                             ? err
-                            : new Error('README fetch failed')
+                            : new Error('File fetch failed')
                     );
                 }
             });
@@ -78,10 +86,21 @@ export const TutorialView = () => {
             <TutorialToolbar />
             <FlatCard sx={{ width: '100%', pb: 2 }}>
                 <CardContent>
-                    <Stepper activeStep={activeStep}>
-                        {steps.map(step => (
-                            <Step key={step.name}>
-                                <StepLabel>{step.name}</StepLabel>
+                    <Stepper activeStep={activeStep} nonLinear>
+                        {steps.map((step, index) => (
+                            <Step key={step.name} completed={false}>
+                                <StepButton
+                                    aria-controls="stepper-content"
+                                    color="inherit"
+                                    onClick={() => setActiveStep(index)}
+                                    sx={{
+                                        '&.MuiStepButton-root': {
+                                            paddingY: '16px',
+                                        },
+                                    }}
+                                >
+                                    {step.name}
+                                </StepButton>
                             </Step>
                         ))}
                     </Stepper>
