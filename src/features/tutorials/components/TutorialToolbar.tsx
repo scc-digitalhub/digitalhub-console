@@ -7,6 +7,7 @@ import { TopToolbar, Button as RaButton } from 'react-admin';
 import { useTutorialsContext } from '../TutorialsContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CodeIcon from '@mui/icons-material/Code';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { NotebookPreviewButton } from '../../../common/components/buttons/NotebookPreviewButton';
 
 export const TutorialToolbar = () => {
@@ -66,6 +67,23 @@ export const TutorialToolbar = () => {
                     }
                 >
                     <CodeIcon fontSize="small" />
+                </RaButton>
+            )}
+            {selectedTutorial.docs && (
+                <RaButton
+                    size="small"
+                    variant="text"
+                    color="primary"
+                    label="Docs"
+                    onClick={() =>
+                        window.open(
+                            selectedTutorial.docs,
+                            '_blank',
+                            'noopener,noreferrer'
+                        )
+                    }
+                >
+                    <HelpCenterIcon fontSize="small" />
                 </RaButton>
             )}
         </TopToolbar>
