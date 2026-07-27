@@ -68,13 +68,11 @@ export const useResourceMetrics = (props?: UseResourceMetricsProps) => {
 };
 
 export const useListResourceMetrics = (props?: UseResourceMetricsProps) => {
-    console.log('useListResourceMetrics props', props);
     const { refreshInterval = 30000 } = props ?? {};
     const resource = useResourceContext(props);
     const dataProvider = useDataProvider();
     const record = useRecordContext(props);
     const recordId = record?.id;
-    console.log('record', record);
     const { root: projectId } = useRootSelector();
     const [metrics, setMetrics] = useState<any[] | undefined>(undefined);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -90,7 +88,7 @@ export const useListResourceMetrics = (props?: UseResourceMetricsProps) => {
                     path: url,
                     options: { method: 'GET' },
                 })
-                .then(res => {console.log('res', res);
+                .then(res => {
                     if (res) {
                         setMetrics(res);
                     }

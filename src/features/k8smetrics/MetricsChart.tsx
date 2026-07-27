@@ -109,7 +109,6 @@ const MetricsSeriesChart = ({ metrics }: { metrics: any[] }) => {
               };
           });
 
-    console.log('MetricsSeriesChart', { metrics, dataset, minTime, maxTime });
     return (
         <>
             <Stack direction="row-reverse">

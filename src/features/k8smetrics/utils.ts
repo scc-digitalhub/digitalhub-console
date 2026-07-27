@@ -14,7 +14,6 @@ export const formatMetricsValue = (name: string, value: any) => {
         raw = value.number;
         format = value.format;
     }
-    console.log('formatMetricsValue', name, value, raw, format);
 
     if (raw === undefined || raw === null || Number.isNaN(raw)) {
         return '-';

@@ -11,7 +11,10 @@ import MemoryIcon from '@mui/icons-material/StackedBarChart';
 import DiskIcon from '@mui/icons-material/Storage';
 import GroupIcon from '@mui/icons-material/GroupWork';
 import PodsIcon from '@mui/icons-material/ViewInAr';
-
+import { BsGpuCard } from 'react-icons/bs';
+import { BsMemory } from 'react-icons/bs';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useTranslate } from 'react-admin';
 
 export const icons = {
@@ -20,6 +23,10 @@ export const icons = {
     disk: DiskIcon,
     pods: PodsIcon,
     containers: GroupIcon,
+    gpu: BsGpuCard,
+    'gpu-memory': BsMemory,
+    'network-send': FileUploadIcon,
+    'network-receive': FileDownloadIcon,
 };
 
 const validSizes = ['inherit', 'small', 'medium', 'large'] as const;
