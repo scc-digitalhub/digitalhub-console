@@ -506,6 +506,12 @@
             "containers": {
                 "title": "Containers"
             },
+            "network-send" :{
+                "title": "Rete uscita"        
+            },
+            "network-receive" :{
+                "title": "Rete entrata"
+            },            
             "title": "Risorse"
         },
         "secrets": {

@@ -35,14 +35,14 @@ export const UserMetrics = (
 
     const fetchMetrics = useCallback(() => {
         if (dataProvider) {
-            const url = '/me/metrics/k8s';
+            const url = '/me/resource_metrics';
             dataProvider
                 .invoke({
                     path: url,
                     options: { method: 'GET' },
                 })
                 .then(res => {
-                    if (res?.usage && Object.keys(res.usage).length > 0) {
+                    if (res?.metrics?.length > 0) {
                         //if default metrics is missing add them with null value
                         const completeMetrics = {
                             usage: Object.fromEntries(
@@ -51,8 +51,8 @@ export const UserMetrics = (
                                     : defaultMetrics
                                 ).map(key => [
                                     key,
-                                    res.usage[key] !== undefined
-                                        ? res.usage[key]
+                                    res.metrics[key] !== undefined
+                                        ? res.metrics[key]
                                         : null,
                                 ])
                             ),
@@ -89,7 +89,7 @@ export const UserMetrics = (
         };
     }, [fetchMetrics]);
 
-    if (!metrics || !metrics.usage || Object.keys(metrics.usage).length === 0) {
+    if (!metrics || !metrics.metrics || metrics.metrics?.length === 0) {
         return null;
     }
 
@@ -104,7 +104,7 @@ export const UserMetrics = (
             //     gridAutoColumns: '1fr',
             // }}
         >
-            {Object.entries(metrics.usage)
+            {metrics.metrics
                 .filter(([key]) =>
                     Array.isArray(metricsKeys)
                         ? metricsKeys.includes(key)
