@@ -6,6 +6,7 @@ import { Box, Container } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { PageTitle } from '../../../common/components/layout/PageTitle';
 import {
+    Error as RaError,
     FilterForm,
     ListContextProvider,
     TextInput,
@@ -24,35 +25,49 @@ import {
     useTutorialsContext,
 } from '../TutorialsContext';
 import { TutorialView } from './TutorialView';
+import { Spinner } from '../../../common/components/layout/Spinner';
 
 export const TutorialsPage = ({ url }: { url: string }) => {
     const translate = useTranslate();
-    // const [catalog, setCatalog] = useState<any>(null);
     const [data, setData] = useState<any[] | undefined>(undefined);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
     const [selectedTutorial, setSelectedTutorial] = useState<any | null>(null);
 
     useEffect(() => {
         if (!data) {
+            setLoading(true);
+            setError(null);
             fetch(url)
                 .then(res =>
                     res.ok
                         ? res.text()
                         : Promise.reject(
-                              new Error('Failed to download tutorials catalog')
+                              new Error(
+                                  'Failed to download tutorials catalog, status code is: ' +
+                                      res.status
+                              )
                           )
                 )
                 .then(data => {
                     const catalog = yaml.parse(data);
-                    // setCatalog(catalog);
                     if (catalog?.tutorials) {
                         setData(catalog.tutorials);
                     }
+                    setLoading(false);
                 })
-                .catch(err => console.error('Failed to load data:', err));
+                .catch(err => {
+                    setError(
+                        err instanceof Error
+                            ? err
+                            : new Error('File fetch failed')
+                    );
+                    setLoading(false);
+                });
         }
     }, [data, url]);
 
-    const listContext = useList({ data });
+    const listContext = useList({ data, error, isLoading: loading });
 
     const tutorialsContext: TutorialsContextValue = useMemo(() => {
         const selectTutorial = (tutorial: any) => {
@@ -88,14 +103,14 @@ export const TutorialsPage = ({ url }: { url: string }) => {
 };
 
 const TutorialsList = () => {
-    const { data } = useTutorialsContext();
+    const { data, error, isLoading } = useTutorialsContext();
 
     //case-insensitive search on every (string) field
     const searchFilter = [
         <TextInput
             key="q"
             source="q"
-            label={'ra.action.search'}
+            label={'pages.hub.search.title'}
             alwaysOn
             resettable
             fullWidth
@@ -123,7 +138,9 @@ const TutorialsList = () => {
             >
                 <FilterForm filters={searchFilter} />
             </Box>
-            {data && data.length > 0 ? (
+            {isLoading ? (
+                <Spinner />
+            ) : data && data.length > 0 ? (
                 <GridList
                     spacing={2}
                     component={<Box sx={{ width: '100%' }} />}
@@ -131,6 +148,8 @@ const TutorialsList = () => {
                 >
                     <TutorialCard />
                 </GridList>
+            ) : error ? (
+                <RaError error={error} resetErrorBoundary={() => {}} />
             ) : (
                 <Empty resource="tutorials" hasCreate={false} />
             )}
