@@ -72,6 +72,9 @@ export const IdField = <
     const handlePopoverOpen = () => {
         if (!open) {
             setOpen(true);
+            setTimeout(() => {
+                setOpen(false);
+            }, 3000);
         }
     };
     const handlePopoverClose = () => {
