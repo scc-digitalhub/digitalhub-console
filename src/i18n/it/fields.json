@@ -482,6 +482,9 @@
                     "title": "Richieste"
                 }
             },
+            "gpu-memory": {
+                "title": "Memoria GPU"
+            },
             "memory": {
                 "title": "Memoria",
                 "limits": {

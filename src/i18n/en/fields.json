@@ -482,6 +482,9 @@
                     "title": "Requests"
                 }
             },
+            "gpu-memory": {
+                "title": "Gpu memory"
+            },
             "memory": {
                 "title": "Memory",
                 "limits": {
