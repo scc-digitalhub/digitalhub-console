@@ -131,6 +131,9 @@ const MenuHeader = (props: {
     const handlePopoverOpen = () => {
         if (!popoverOpen) {
             setPopoverOpen(true);
+            setTimeout(() => {
+                setPopoverOpen(false);
+            }, 3000);
         }
     };
     const handlePopoverClose = () => {
