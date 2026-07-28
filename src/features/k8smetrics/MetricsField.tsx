@@ -45,17 +45,28 @@ export const MetricsField = (
                 .filter(e =>
                     Array.isArray(metricsKeys)
                         ? metricsKeys.includes(e.name)
-                        : metricsKeys
+                        : true
                 )
                 .map(e => ({
                     name: e.name,
-                    value: e.summary?.find(s => s.name == 'avg')?.value,
+                    value:
+                        e.summary?.find(s => s.name == 'avg')?.value ??
+                        e.metrics?.[0]?.value ??
+                        undefined,
+                    unit: e.unit,
                 }))
                 .map(e => (
-                    <Box key={e.name} sx={{ textAlign: 'center' }} data-value={e.value}>
+                    <Box
+                        key={e.name}
+                        sx={{ textAlign: 'center' }}
+                        data-value={e.value}
+                    >
                         <MetricBadge
                             name={e.name}
-                            value={formatMetricsValue(e.name, e.value)}
+                            value={formatMetricsValue(e.name, {
+                                number: e.value,
+                                format: e.unit,
+                            })}
                             icon={icon === false ? false : undefined}
                             size={size ? size : 'large'}
                             fontSize={fontSize ? fontSize : 'medium'}
