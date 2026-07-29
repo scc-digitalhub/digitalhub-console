@@ -45,8 +45,8 @@ export const formatMetricsValue = (name: string, value: any) => {
     }
 
     if (format == 'seconds') {
-        //seconds == cores, we display as is
-        return `${raw}`;
+        //seconds == cores, we display with fixed 2 decimals
+        return `${raw.toFixed(2)}`;
     }
 
     if (format == 'bytes' || format == 'B') {
@@ -55,7 +55,7 @@ export const formatMetricsValue = (name: string, value: any) => {
         raw = MemoryResource.fromBytes(raw).valueOf();
         return prettyBytes(raw, 1);
     }
-    
+
     if (format == 'megabytes' || format == 'Mb' || format == 'MB') {
         //metrics for memory are in megabytes, but we want to display them in a human readable format
         raw = Math.floor(raw * 1024 * 1024);
@@ -69,5 +69,5 @@ export const formatMetricsValue = (name: string, value: any) => {
     }
 
     //fallback as is for unknown
-    return `${Math.floor(raw)}`;
+    return `${raw}`;
 };
