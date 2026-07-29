@@ -357,10 +357,10 @@
   dependencies:
     ra-core "^5.8.3"
 
-"@dslab/trino-query-ui@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@dslab/trino-query-ui/-/trino-query-ui-0.1.12.tgz#3b257964d71be217d898c677c38dec966c98d9c5"
-  integrity sha512-blBLUKbiVqMcvu6cHOnqEPb/BL6HGh99nfl86cRR5E0mscQN9CwLoC+ILG36eoN2qZpAVzZNUhKIuwZACk8tEA==
+"@dslab/trino-query-ui@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@dslab/trino-query-ui/-/trino-query-ui-0.1.13.tgz#9ccb47cd3291e0ee827b3eca72013dc378ab0044"
+  integrity sha512-4cy3KBbSMA6RQ+zUIpI6UdXTPTnGYRrba3YTfAC9loPFoKHDgywStRU72Or1sRrjsedsiG3QSVrA2ICiyIYu+A==
   dependencies:
     antlr4-c3 "^3.4.4"
     antlr4ng "^3.0.16"
