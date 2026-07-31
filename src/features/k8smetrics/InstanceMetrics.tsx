@@ -7,6 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDataProvider } from 'react-admin';
 import { MetricProps, MetricBadge } from './MetricBadge';
 import { formatMetricsValue } from './utils';
+import { useResourceMetrics } from './useResourceMetrics';
 
 const defaultMetrics = ['cpu', 'memory', 'disk'];
 
@@ -29,65 +30,70 @@ export const InstanceMetrics = (
         ...rest
     } = props;
 
-    const dataProvider = useDataProvider();
-    const [metrics, setMetrics] = useState<any>();
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    // const dataProvider = useDataProvider();
+    const { metrics } = useResourceMetrics({
+        resource: 'instance',
+        refreshInterval: 30000,
+    });
+    // const [metrics, setMetrics] = useState<any>();
+    // const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    const fetchMetrics = useCallback(() => {
-        if (dataProvider) {
-            const url = '/resource_metrics';
-            dataProvider
-                .invoke({
-                    path: url,
-                    options: { method: 'GET' },
-                })
-                .then(res => {
-                    if (res?.metrics?.length > 0) {
-                        //if default metrics is missing add them with null value
-                        const completeMetrics = {
-                            usage: Object.fromEntries(
-                                (Array.isArray(metricsKeys)
-                                    ? metricsKeys
-                                    : defaultMetrics
-                                ).map(key => [
-                                    key,
-                                    res.metrics[key] !== undefined
-                                        ? res.metrics[key]
-                                        : null,
-                                ])
-                            ),
-                        };
-                        setMetrics(completeMetrics);
-                    } else {
-                        //if no res, set empty metrics
-                        setMetrics({
-                            usage: Object.fromEntries(
-                                (Array.isArray(defaultMetrics)
-                                    ? defaultMetrics
-                                    : []
-                                ).map(key => [key, null])
-                            ),
-                        });
-                    }
-                });
-        }
-    }, [dataProvider]);
+    // const fetchMetrics = useCallback(() => {
+    //     if (dataProvider) {
+    //         const url = '/resource_metrics';
+    //         dataProvider
+    //             .invoke({
+    //                 path: url,
+    //                 options: { method: 'GET' },
+    //             })
+    //             .then(res => {
+    //                 console.log('InstanceMetrics fetchMetrics', { res, metricsKeys });
+    //                 if (res?.metrics?.length > 0) {
+    //                     //if default metrics is missing add them with null value
+    //                     const completeMetrics = {
+    //                         usage: Object.fromEntries(
+    //                             (Array.isArray(metricsKeys)
+    //                                 ? metricsKeys
+    //                                 : defaultMetrics
+    //                             ).map(key => [
+    //                                 key,
+    //                                 res.metrics[key] !== undefined
+    //                                     ? res.metrics[key]
+    //                                     : null,
+    //                             ])
+    //                         ),
+    //                     };
+    //                     setMetrics(completeMetrics);
+    //                 } else {
+    //                     //if no res, set empty metrics
+    //                     setMetrics({
+    //                         usage: Object.fromEntries(
+    //                             (Array.isArray(defaultMetrics)
+    //                                 ? defaultMetrics
+    //                                 : []
+    //                             ).map(key => [key, null])
+    //                         ),
+    //                     });
+    //                 }
+    //             });
+    //     }
+    // }, [dataProvider]);
 
-    useEffect(() => {
-        fetchMetrics();
-    }, [fetchMetrics]);
+    // useEffect(() => {
+    //     fetchMetrics();
+    // }, [fetchMetrics]);
 
-    useEffect(() => {
-        intervalRef.current = setInterval(() => {
-            fetchMetrics();
-        }, 30000);
+    // useEffect(() => {
+    //     intervalRef.current = setInterval(() => {
+    //         fetchMetrics();
+    //     }, 30000);
 
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
-        };
-    }, [fetchMetrics]);
+    //     return () => {
+    //         if (intervalRef.current) {
+    //             clearInterval(intervalRef.current);
+    //         }
+    //     };
+    // }, [fetchMetrics]);
 
     if (!metrics || !metrics.metrics || metrics?.metrics.length === 0) {
         return null;
@@ -105,16 +111,36 @@ export const InstanceMetrics = (
             }}
         >
             {metrics.metrics
-                .filter(([e]) =>
+                .filter(e =>
                     Array.isArray(metricsKeys)
                         ? metricsKeys.includes(e.name)
-                        : metricsKeys
+                        : true
                 )
+                .map(e => ({
+                    name: e.name,
+                    value:
+                        e.summary?.find(s => s.name == 'avg')?.value ??
+                        e.metrics?.[0]?.value ??
+                        undefined,
+                    unit: e.unit,
+                    quota: e.quota,
+                }))
                 .map(e => (
                     <Box key={e.name} sx={{ textAlign: 'center' }}>
                         <MetricBadge
                             name={e.name}
-                            value={formatMetricsValue(e.name, e.value)}
+                            value={
+                                formatMetricsValue(e.name, {
+                                    number: e.value,
+                                    format: e.unit,
+                                }) +
+                                (e.quota
+                                    ? ` / ${formatMetricsValue(e.name, {
+                                          number: e.quota,
+                                          format: e.unit,
+                                      })}`
+                                    : '')
+                            }
                             icon={icon === false ? false : undefined}
                             size={size ? size : 'large'}
                             fontSize={fontSize ? fontSize : 'medium'}

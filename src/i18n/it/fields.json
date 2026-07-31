@@ -472,6 +472,9 @@
                     "title": "Richieste (cpu)"
                 }
             },
+            "cpu-requested" :{
+                "title": "Cpu Richieste"
+            },
             "description": "Risorse K8s",
             "gpu": {
                 "title": "Gpu",
@@ -481,6 +484,9 @@
                 "requests": {
                     "title": "Richieste"
                 }
+            },
+            "gpu-count": {
+                "title": "Numero di GPU"
             },
             "gpu-memory": {
                 "title": "Memoria GPU"
@@ -494,6 +500,9 @@
                     "title": "Richieste"
                 }
             },
+            "memory-requested" :{
+                "title": "Memoria Richiesta"
+            },
             "disk": {
                 "title": "Spazio disco",
                 "limits": {
@@ -502,6 +511,12 @@
                 "requests": {
                     "title": "Richieste"
                 }
+            },
+            "volumes": {
+                "title": "Volumi"
+            },
+            "volumes-count": {
+                "title": "Numero di Volumi"
             },
             "pods": {
                 "title": "Pods"

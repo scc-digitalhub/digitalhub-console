@@ -19,11 +19,16 @@ import { useTranslate } from 'react-admin';
 
 export const icons = {
     cpu: CpuIcon,
+    'cpu-requested': CpuIcon,
     memory: MemoryIcon,
+    'memory-requested': MemoryIcon,
     disk: DiskIcon,
+    volumes: DiskIcon,
+    'volumes-count': DiskIcon,
     pods: PodsIcon,
     containers: GroupIcon,
     gpu: BsGpuCard,
+    'gpu-count': BsGpuCard,
     'gpu-memory': BsMemory,
     'network-send': FileUploadIcon,
     'network-receive': FileDownloadIcon,

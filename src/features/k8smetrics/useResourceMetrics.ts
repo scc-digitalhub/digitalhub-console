@@ -44,6 +44,19 @@ export const useResourceMetrics = (props?: UseResourceMetricsProps) => {
                         setMetrics(res);
                     }
                 });
+        } else if (dataProvider && resource === 'instance') {
+            const url = `/resource_metrics`;
+
+            dataProvider
+                .invoke({
+                    path: url,
+                    options: { method: 'GET' },
+                })
+                .then(res => {
+                    if (res) {
+                        setMetrics(res);
+                    }
+                });
         }
     }, [dataProvider, projectId, recordId, resource]);
 
