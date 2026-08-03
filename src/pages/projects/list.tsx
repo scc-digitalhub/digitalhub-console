@@ -47,6 +47,10 @@ const INSTANCE_METRICS: string =
     (globalThis as any).REACT_APP_INSTANCE_METRICS ||
     (process.env.REACT_APP_INSTANCE_METRICS as string) ||
     null;
+const PROJECT_METRICS: string =
+    (globalThis as any).REACT_APP_PROJECT_METRICS ||
+    (process.env.REACT_APP_PROJECT_METRICS as string) ||
+    null;
 
 export const ProjectSelectorList = props => {
     //check if auth is required to redirect to login
@@ -289,7 +293,14 @@ const ProjectsGridItem = (props: any) => {
                         <Box
                             sx={{ display: 'flex', justifyContent: 'flex-end' }}
                         >
-                            <MetricsField size="small" />
+                            <MetricsField
+                                size="small"
+                                metrics={
+                                    PROJECT_METRICS
+                                        ? PROJECT_METRICS.split(',')
+                                        : true
+                                }
+                            />
                         </Box>
                     )}
                 </CardContent>
