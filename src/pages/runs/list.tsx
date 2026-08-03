@@ -66,6 +66,11 @@ import { BsCpuFill } from 'react-icons/bs';
 import { GrStorage } from 'react-icons/gr';
 import SignpostIcon from '@mui/icons-material/Signpost';
 
+const RUN_METRICS: string =
+    (globalThis as any).REACT_APP_RUN_METRICS ||
+    (process.env.REACT_APP_RUN_METRICS as string) ||
+    null;
+
 const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
     name: 'states.' + s.toLowerCase(),
@@ -407,7 +412,13 @@ const DataTableView = (props: { storeKey?: string }) => {
                     label="fields.metrics.title"
                     render={r =>
                         r.status.state === 'RUNNING' ? (
-                            <MetricsField size="small" fontSize={'small'} />
+                            <MetricsField
+                                size="small"
+                                fontSize={'small'}
+                                metrics={
+                                    RUN_METRICS ? RUN_METRICS.split(',') : true
+                                }
+                            />
                         ) : null
                     }
                 />

@@ -17,6 +17,10 @@ const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
     (process.env.REACT_APP_ENABLE_METRICS as string) ||
     false;
+const INSTANCE_METRICS: string =
+    (globalThis as any).REACT_APP_INSTANCE_METRICS ||
+    (process.env.REACT_APP_INSTANCE_METRICS as string) ||
+    null;
 
 const enableFooter = false;
 
@@ -66,7 +70,11 @@ export const MyLayout = (props: any) => {
                         </Typography>
                         {enableMetrics === 'true' && (
                             <InstanceMetrics
-                                metrics={['cpu', 'memory', 'disk', 'pods']}
+                                metrics={
+                                    INSTANCE_METRICS
+                                        ? INSTANCE_METRICS.split(',')
+                                        : true
+                                }
                             />
                         )}
                     </Box>

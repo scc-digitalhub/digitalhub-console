@@ -43,6 +43,11 @@ import { Empty } from '../../common/components/layout/Empty';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { InstanceMetrics } from '../../features/k8smetrics/InstanceMetrics';
 
+const INSTANCE_METRICS: string =
+    (globalThis as any).REACT_APP_INSTANCE_METRICS ||
+    (process.env.REACT_APP_INSTANCE_METRICS as string) ||
+    null;
+
 export const ProjectSelectorList = props => {
     //check if auth is required to redirect to login
     useAuthenticated();
@@ -103,7 +108,11 @@ export const ProjectSelectorList = props => {
                     width: '100%',
                 }}
             >
-                <InstanceMetrics metrics={['cpu', 'memory', 'disk', 'pods']} />
+                <InstanceMetrics
+                    metrics={
+                        INSTANCE_METRICS ? INSTANCE_METRICS.split(',') : true
+                    }
+                />
             </Box>
         </Stack>
     );

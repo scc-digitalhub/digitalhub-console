@@ -32,6 +32,10 @@ const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
     (process.env.REACT_APP_ENABLE_METRICS as string) ||
     false;
+const USER_METRICS: string =
+    (globalThis as any).REACT_APP_USER_METRICS ||
+    (process.env.REACT_APP_USER_METRICS as string) ||
+    null;
 
 const convertToDateString = (date: Date) => {
     let day: string | number = date.getDate();
@@ -224,7 +228,13 @@ export const MyAppBar = () => {
                 >
                     <UploadArea />
                     <NotificationArea />
-                    {enableMetrics === 'true' && <MetricsMenu />}
+                    {enableMetrics === 'true' && (
+                        <MetricsMenu
+                            metrics={
+                                USER_METRICS ? USER_METRICS.split(',') : true
+                            }
+                        />
+                    )}
                     {docsVersion && (
                         <IconButtonWithTooltip
                             color="inherit"

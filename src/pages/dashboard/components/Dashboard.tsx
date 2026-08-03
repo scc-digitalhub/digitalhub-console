@@ -55,6 +55,11 @@ const cardStyle = {
     flexDirection: 'column',
 } as const;
 
+const PROJECT_METRICS: string =
+    (globalThis as any).REACT_APP_PROJECT_METRICS ||
+    (process.env.REACT_APP_PROJECT_METRICS as string) ||
+    null;
+
 export const Dashboard = () => {
     const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
@@ -219,7 +224,11 @@ export const Dashboard = () => {
                                             fontSize={'h7.fontSize'}
                                             gap={3}
                                             labels
-                                            metrics={true}
+                                            metrics={
+                                                PROJECT_METRICS
+                                                    ? PROJECT_METRICS.split(',')
+                                                    : true
+                                            }
                                         />
                                     </CardContent>
                                     <CardActions
