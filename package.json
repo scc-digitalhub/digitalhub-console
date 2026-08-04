@@ -61,6 +61,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@fontsource/open-sans": "^5.1.0",
+        "@jupyter-kit/executor-pyodide": "^3.0.0",
         "@jupyter-kit/react": "^3.0.0",
         "@jupyter-kit/theme-dark": "^3.0.0",
         "@jupyter-kit/theme-default": "^3.0.0",

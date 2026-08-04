@@ -28,7 +28,6 @@ import {
     TopToolbar,
     useTranslate,
 } from 'react-admin';
-import { python } from '@jupyter-kit/core/langs/python';
 import light from '@jupyter-kit/theme-default/default.css?inline';
 import dark from '@jupyter-kit/theme-dark/dark.css?inline';
 import lightSyntax from '@jupyter-kit/theme-default/syntax/one-light.css?inline';
@@ -41,6 +40,8 @@ const Notebook = lazy(() =>
         default: m.Notebook,
     }))
 );
+import { createPyodideExecutor } from '@jupyter-kit/executor-pyodide';
+import { createEditorPlugin } from '../../../editor-monaco';
 
 import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
@@ -158,7 +159,16 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                             </style>
                             <Notebook
                                 ipynb={notebookContent}
-                                languages={[python]}
+                                executor={createPyodideExecutor({
+                                    packages: ['digitalhub'],
+                                    onStatus: (s, d) =>
+                                        console.log('pyodide:', s, d),
+                                })}
+                                plugins={[
+                                    createEditorPlugin({
+                                        languages: { python: 'python' },
+                                    }),
+                                ]}
                             />
                         </Suspense>
                     )}
