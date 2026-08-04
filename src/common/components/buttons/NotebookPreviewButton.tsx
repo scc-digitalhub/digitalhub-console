@@ -41,7 +41,7 @@ const Notebook = lazy(() =>
     }))
 );
 import { createPyodideExecutor } from '@jupyter-kit/executor-pyodide';
-import { createEditorPlugin } from '../../../editor-monaco';
+import { createEditorPlugin } from '../../../features/editor-monaco';
 
 import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
