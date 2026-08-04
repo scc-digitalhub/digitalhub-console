@@ -1,0 +1,200 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {
+    Box,
+    Button,
+    ButtonProps,
+    CardContent,
+    Step,
+    StepButton,
+    Stepper,
+    styled,
+    useTheme,
+} from '@mui/material';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { Error as RaError, Toolbar, useTranslate } from 'react-admin';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
+import { useTutorialsContext } from '../TutorialsContext';
+import { Spinner } from '../../../common/components/layout/Spinner';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { TutorialToolbar } from './TutorialToolbar';
+import { MarkdownBody } from '../../../common/components/MarkdownBody';
+
+export const TutorialView = () => {
+    const { selectedTutorial } = useTutorialsContext();
+    const theme = useTheme();
+    const [activeStep, setActiveStep] = useState(0);
+    const [fileContent, setFileContent] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+
+    const steps: any[] = useMemo(() => {
+        if (!selectedTutorial?.steps) return [];
+        return selectedTutorial.steps;
+    }, [selectedTutorial]);
+
+    useEffect(() => {
+        if (steps.length === 0 || !steps[activeStep].url) {
+            setFileContent('');
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
+        const controller = new AbortController();
+        setLoading(true);
+        setError(null);
+
+        fetch(steps[activeStep].url, { signal: controller.signal })
+            .then(res =>
+                res.ok
+                    ? res.text()
+                    : Promise.reject(
+                          new Error(
+                              res.status === 404
+                                  ? 'File not found'
+                                  : 'Error retrieving file'
+                          )
+                      )
+            )
+            .then(text => {
+                if (!controller.signal.aborted) {
+                    setFileContent(text);
+                    setLoading(false);
+                }
+            })
+            .catch(err => {
+                if (err.name !== 'AbortError' && !controller.signal.aborted) {
+                    setFileContent('');
+                    setLoading(false);
+                    setError(
+                        err instanceof Error
+                            ? err
+                            : new Error('File fetch failed')
+                    );
+                }
+            });
+
+        return () => controller.abort();
+    }, [activeStep, steps]);
+
+    return (
+        <>
+            <TutorialToolbar />
+            <FlatCard sx={{ width: '100%', pb: 2 }}>
+                <CardContent>
+                    <Stepper activeStep={activeStep} nonLinear>
+                        {steps.map((step, index) => (
+                            <Step key={step.name} completed={false}>
+                                <StepButton
+                                    aria-controls="stepper-content"
+                                    color="inherit"
+                                    onClick={() => setActiveStep(index)}
+                                    sx={{
+                                        '&.MuiStepButton-root': {
+                                            paddingY: '16px',
+                                        },
+                                    }}
+                                >
+                                    {step.name}
+                                </StepButton>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </CardContent>
+                {loading ? (
+                    <Spinner />
+                ) : error ? (
+                    <RaError
+                        error={error}
+                        resetErrorBoundary={() => setError(null)}
+                    />
+                ) : (
+                    <MarkdownBox>
+                        <MarkdownBody
+                            style={{
+                                padding: 16,
+                                borderRadius: 10,
+                                backgroundColor:
+                                    theme.palette.mode === 'dark'
+                                        ? 'rgba(255, 255, 255, 0.08)'
+                                        : 'rgba(0, 0, 0, 0.04)',
+                            }}
+                        >
+                            {fileContent}
+                        </MarkdownBody>
+                    </MarkdownBox>
+                )}
+                <Toolbar sx={{ justifyContent: 'space-between' }}>
+                    <Box>
+                        <NavigationButton
+                            color="secondary"
+                            disabled={activeStep === 0}
+                            onClick={() => setActiveStep(prev => prev - 1)}
+                            label="ra.navigation.previous"
+                            icon={<NavigateBeforeIcon />}
+                        />
+                    </Box>
+                    <Box>
+                        <NavigationButton
+                            disabled={activeStep === steps.length - 1}
+                            onClick={() => setActiveStep(prev => prev + 1)}
+                            label="ra.navigation.next"
+                            icon={<NavigateNextIcon />}
+                        />
+                    </Box>
+                </Toolbar>
+            </FlatCard>
+        </>
+    );
+};
+
+const NavigationButton = (
+    props: ButtonProps & { label: string; icon: ReactElement }
+) => {
+    const { label, icon, ...rest } = props;
+    const translate = useTranslate();
+
+    return (
+        <Button
+            variant="text"
+            color="primary"
+            type="button"
+            sx={{
+                position: 'relative',
+                [`& .MuiSvgIcon-root, & .MuiIcon-root`]: {
+                    fontSize: 18,
+                },
+            }}
+            {...rest}
+        >
+            {translate(label)} {icon}
+        </Button>
+    );
+};
+
+const MarkdownBox = styled(Box, {
+    name: 'MarkdownBox',
+    overridesResolver: (props, styles) => styles.root,
+})(() => ({
+    width: '100%',
+    minWidth: 0,
+    '& .markdown-body': {
+        maxWidth: '100%',
+        overflow: 'hidden',
+        '& p, & pre, & code': {
+            whiteSpace: 'pre-wrap !important',
+            overflowWrap: 'anywhere !important',
+            wordBreak: 'break-word !important',
+        },
+        '& pre': {
+            overflowX: 'auto',
+        },
+        '& .copied': {
+            visibility: 'visible !important',
+        },
+    },
+}));

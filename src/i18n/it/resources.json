@@ -188,5 +188,8 @@
     "containerimages": {
         "list": "Elenco e ricerca di container images",
         "name": "Container image |||| Container images"
+    },
+    "tutorials": {
+        "empty": "Nessun tutorial disponibile"
     }
 }

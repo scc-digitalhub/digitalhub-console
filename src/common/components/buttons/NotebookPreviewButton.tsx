@@ -14,8 +14,7 @@ import {
     Close as CloseIcon,
 } from '@mui/icons-material';
 import { lazy, Suspense, useCallback, useState, MouseEvent } from 'react';
-import { Button, TopToolbar, useTranslate } from 'react-admin';
-
+import { Button, ButtonProps, TopToolbar, useTranslate } from 'react-admin';
 
 // Lazy-load the notebook viewer (~1.8 MB) so it's only fetched when the
 // preview dialog is first opened, not on initial page load.
@@ -24,19 +23,20 @@ const JupyterNotebookViewer = lazy(() =>
         default: m.JupyterNotebookViewer,
     }))
 );
-import {
-    StyledDialog,
-    StyledDialogClasses,
-} from '../../../../common/theme/StyledDialog';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
+/**
+ * Button for a preview dialog of a Jupyter notebook.
+ */
 export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
-    const { onDownload, url, title } = props;
+    const { onDownload, url, title, onClick, ...rest } = props;
     const translate = useTranslate();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
     const handleDialogOpen = (e: MouseEvent<HTMLButtonElement>) => {
         setOpen(true);
+        if (onClick) onClick(e);
         e.stopPropagation();
     };
 
@@ -57,6 +57,7 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                 color="primary"
                 label="actions.download_notebook"
                 onClick={handleDialogOpen}
+                {...rest}
             >
                 <PreviewIcon fontSize="small" />
             </Button>
@@ -101,7 +102,9 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                     <Suspense fallback={null}>
                         <JupyterNotebookViewer
                             filePath={url}
-                            inputCodeDarkTheme={!(theme.palette.mode === 'dark')}
+                            inputCodeDarkTheme={
+                                !(theme.palette.mode === 'dark')
+                            }
                             outputDarkTheme={!(theme.palette.mode === 'dark')}
                             inputMarkdownDarkTheme={
                                 !(theme.palette.mode === 'dark')
@@ -114,7 +117,7 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
     );
 };
 
-type NotebookPreviewButtonProps = {
+type NotebookPreviewButtonProps = ButtonProps & {
     onDownload: () => void;
     url: string;
     title?: string;

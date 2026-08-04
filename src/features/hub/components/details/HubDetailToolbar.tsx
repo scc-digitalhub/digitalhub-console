@@ -25,7 +25,7 @@ import {
     loadProjectItems,
     toRepositoryAssetUrl,
 } from '../../utils';
-import { NotebookPreviewButton } from './NotebookPreviewButton';
+import { NotebookPreviewButton } from '../../../../common/components/buttons/NotebookPreviewButton';
 
 interface HubDetailToolbarProps {
     template: any;
