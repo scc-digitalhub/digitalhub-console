@@ -111,7 +111,7 @@ export const HubDetailView = ({ template }: HubDetailViewProps) => {
                     sx={{
                         width: '100%',
                         minWidth: 0,
-                        '& .wmde-markdown': {
+                        '& .markdown-body': {
                             maxWidth: '100%',
                             overflow: 'hidden',
                             '& p, & pre, & code': {
