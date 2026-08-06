@@ -2,12 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    useTheme,
-} from '@mui/material';
+import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import {
     Download as DownloadIcon,
     Preview as PreviewIcon,
@@ -28,30 +23,26 @@ import {
     TopToolbar,
     useTranslate,
 } from 'react-admin';
-import light from '@jupyter-kit/theme-default/default.css?inline';
-import dark from '@jupyter-kit/theme-dark/dark.css?inline';
-import lightSyntax from '@jupyter-kit/theme-default/syntax/one-light.css?inline';
-import darkSyntax from '@jupyter-kit/theme-default/syntax/one-dark.css?inline';
+import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
 // Lazy-load the notebook viewer so it's only fetched when the
 // preview dialog is first opened, not on initial page load.
-const Notebook = lazy(() =>
-    import('@jupyter-kit/react').then(m => ({
-        default: m.Notebook,
-    }))
+const NotebookViewer = lazy(
+    () => import('../../../features/jupyter-notebooks/notebook-viewer')
 );
-import { createPyodideExecutor } from '@jupyter-kit/executor-pyodide';
-import { createEditorPlugin } from '../../../features/editor-monaco';
-
-import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
-
 /**
  * Button for a preview dialog of a Jupyter notebook.
  */
 export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
-    const { onDownload, url, title, onClick, ...rest } = props;
+    const {
+        onDownload,
+        url,
+        title,
+        readOnly = false,
+        onClick,
+        ...rest
+    } = props;
     const translate = useTranslate();
-    const theme = useTheme();
     const [open, setOpen] = useState(false);
     const [notebookContent, setNotebookContent] = useState<any | null>(null);
     const [error, setError] = useState<Error | null>(null);
@@ -149,26 +140,9 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                     </TopToolbar>
                     {notebookContent && (
                         <Suspense fallback={null}>
-                            <style>
-                                {theme.palette.mode === 'dark' ? dark : light}
-                            </style>
-                            <style>
-                                {theme.palette.mode === 'dark'
-                                    ? darkSyntax
-                                    : lightSyntax}
-                            </style>
-                            <Notebook
+                            <NotebookViewer
                                 ipynb={notebookContent}
-                                executor={createPyodideExecutor({
-                                    packages: ['digitalhub'],
-                                    onStatus: (s, d) =>
-                                        console.log('pyodide:', s, d),
-                                })}
-                                plugins={[
-                                    createEditorPlugin({
-                                        languages: { python: 'python' },
-                                    }),
-                                ]}
+                                readOnly={readOnly}
                             />
                         </Suspense>
                     )}
@@ -188,4 +162,5 @@ type NotebookPreviewButtonProps = ButtonProps & {
     onDownload: () => void;
     url: string;
     title?: string;
+    readOnly?: boolean;
 };
