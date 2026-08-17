@@ -64,16 +64,17 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
             : String(value ?? 0);
     });
 
-    if (!syncWithLocation && nonNullChildren.length > 0) {
-        const currentTabStillExists = nonNullChildren.some(
+    const currentTabExists =
+        syncWithLocation ||
+        nonNullChildren.some(
             (tab, index) => String(getTabValue(tab, index)) === tabValue
         );
-        if (!currentTabStillExists) {
-            setTabValue(String(getTabValue(nonNullChildren[0], 0)));
-        }
-    }
+    const effectiveTabValue =
+        currentTabExists && nonNullChildren.length > 0
+            ? tabValue
+            : String(getTabValue(nonNullChildren[0], 0));
 
-    const handleTabChange = (event: ChangeEvent<{}>, newValue: any): void => {
+    const handleTabChange = (_event: ChangeEvent<{}>, newValue: string): void => {
         if (!syncWithLocation) {
             setTabValue(newValue);
         }
@@ -90,7 +91,7 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
                 {
                     onChange: handleTabChange,
                     syncWithLocation,
-                    value: tabValue,
+                    value: effectiveTabValue,
                 },
                 nonNullChildren
             );
@@ -98,7 +99,7 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
 
         return (
             <Tabs
-                value={tabValue}
+                value={effectiveTabValue}
                 onChange={handleTabChange}
                 indicatorColor="primary"
                 textColor="primary"
@@ -106,7 +107,7 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
                 {nonNullChildren.map((tab, index) =>
                     cloneElement(tab, {
                         context: 'header',
-                        value: getTabValue(tab, index),
+                        value: String(getTabValue(tab, index)),
                         syncWithLocation: false,
                     })
                 )}
@@ -142,10 +143,10 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
                         <Divider />
                         <div className={TabbedShowLayoutClasses.content}>
                             {Children.map(nonNullChildren, (tab, index) => {
-                                const currentTabVal = getTabValue(tab, index);
+                                const currentTabVal = String(getTabValue(tab, index));
                                 if (
                                     !isValidElement(tab) ||
-                                    tabValue !== currentTabVal
+                                    effectiveTabValue !== currentTabVal
                                 ) {
                                     return null;
                                 }
