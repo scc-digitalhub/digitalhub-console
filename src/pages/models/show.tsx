@@ -10,11 +10,12 @@ import {
     ShowView,
     TextField,
     TextInput,
+    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { arePropsEqual, countLines } from '../../common/utils/helpers';
+import { countLines } from '../../common/utils/helpers';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
@@ -30,13 +31,12 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
 import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
-import { ShowComponent } from '../../common/components/ShowComponent';
 import { ExtensionsField } from '../../features/extensions/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 
-const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
-    const { record } = props;
+const ModelShowLayout = (props: { record?: any }) => {
+    const record = useRecordContext(props);
     const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const resource = useResourceContext();
@@ -115,7 +115,10 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {spec && (
-                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab
+                    value="spec"
+                    label={translate('fields.spec.title')}
+                >
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -140,7 +143,10 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                 <FileInfoTree />
             </CustomTabbedShowLayout.Tab>
             {record?.status?.metrics && (
-                <CustomTabbedShowLayout.Tab value="metrics" label={'fields.metrics.title'}>
+                <CustomTabbedShowLayout.Tab
+                    value="metrics"
+                    label={'fields.metrics.title'}
+                >
                     <MetricsGrid
                         record={record}
                         filter={{ name: record?.name, versions: 'all' }}
@@ -149,12 +155,15 @@ const ModelShowLayout = memo(function ModelShowLayout(props: { record: any }) {
                     />
                 </CustomTabbedShowLayout.Tab>
             )}
-            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab
+                value="lineage"
+                label="pages.lineage.title"
+            >
                 <LineageTabComponent />
             </CustomTabbedShowLayout.Tab>
         </CustomTabbedShowLayout>
     );
-}, arePropsEqual);
+};
 
 export const ModelShow = () => {
     return (
@@ -168,7 +177,7 @@ export const ModelShow = () => {
                         {...SHOW_VIEW_VERSION_PROPS}
                         component={StyledFlatCard}
                     >
-                        <ShowComponent InnerShow={ModelShowLayout} />
+                        <ModelShowLayout />
                     </ShowView>
                 </>
             </ShowBaseLive>

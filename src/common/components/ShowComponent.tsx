@@ -29,8 +29,9 @@ const filesDiffer = (
 
 /**
  * Wrap show component of resources with files to sync record files with the store
+ * DEPRECATED: this wrongly modifies the backend record to update the local view.
  */
-export const ShowComponent = (props: {
+const ShowComponent = (props: {
     InnerShow: ComponentType<{ record: RaRecord<Identifier> }>;
 }) => {
     const { InnerShow } = props;

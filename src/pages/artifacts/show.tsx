@@ -3,16 +3,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Stack } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Labeled,
     ShowView,
     TextField,
+    useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { arePropsEqual, countLines } from '../../common/utils/helpers';
+import { countLines } from '../../common/utils/helpers';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../common/components/VersionsList';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
@@ -26,15 +27,12 @@ import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLi
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
-import { ShowComponent } from '../../common/components/ShowComponent';
 import { ExtensionsField } from '../../features/extensions/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 
-const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
-    record: any;
-}) {
-    const { record } = props;
+const ArtifactShowLayout = (props: { record?: any }) => {
+    const record = useRecordContext(props);
     const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const resource = useResourceContext();
@@ -74,7 +72,10 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {spec && (
-                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab
+                    value="spec"
+                    label={translate('fields.spec.title')}
+                >
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -98,13 +99,15 @@ const ArtifactShowLayout = memo(function ArtifactShowLayout(props: {
             <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
                 <FileInfoTree />
             </CustomTabbedShowLayout.Tab>
-            <CustomTabbedShowLayout.Tab value="lineage" label="pages.lineage.title">
+            <CustomTabbedShowLayout.Tab
+                value="lineage"
+                label="pages.lineage.title"
+            >
                 <LineageTabComponent />
             </CustomTabbedShowLayout.Tab>
         </CustomTabbedShowLayout>
     );
-},
-arePropsEqual);
+};
 
 export const ArtifactShow = () => {
     return (
@@ -118,7 +121,7 @@ export const ArtifactShow = () => {
                         {...SHOW_VIEW_VERSION_PROPS}
                         component={StyledFlatCard}
                     >
-                        <ShowComponent InnerShow={ArtifactShowLayout} />
+                        <ArtifactShowLayout />
                     </ShowView>
                 </>
             </ShowBaseLive>
