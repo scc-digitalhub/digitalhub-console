@@ -80,8 +80,10 @@ const springDataProvider = (
 
             if (params.filter?.[FUNCTION_OR_WORKFLOW]) {
                 //either use function or workflow filter based on the prefix
-                const f = params.filter[FUNCTION_OR_WORKFLOW].split('_');
-                params.filter[f[0]] = f[1];
+                const [f, ...rest] =
+                    params.filter[FUNCTION_OR_WORKFLOW].split('_');
+                //rejoin by "_" in case the resource name contains this char
+                params.filter[f] = rest.join('_');
                 delete params.filter[FUNCTION_OR_WORKFLOW];
             }
 
