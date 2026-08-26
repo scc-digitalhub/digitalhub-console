@@ -43,6 +43,10 @@ import { Empty } from '../../common/components/layout/Empty';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { InstanceMetrics } from '../../features/k8smetrics/InstanceMetrics';
 
+const enableMetrics: string =
+    (globalThis as any).REACT_APP_ENABLE_METRICS ||
+    (process.env.REACT_APP_ENABLE_METRICS as string) ||
+    false;
 const INSTANCE_METRICS: string =
     (globalThis as any).REACT_APP_INSTANCE_METRICS ||
     (process.env.REACT_APP_INSTANCE_METRICS as string) ||
@@ -105,19 +109,23 @@ export const ProjectSelectorList = props => {
                     <ProjectsGridItem />
                 </GridList>
             </List>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    width: '100%',
-                }}
-            >
-                <InstanceMetrics
-                    metrics={
-                        INSTANCE_METRICS ? INSTANCE_METRICS.split(',') : true
-                    }
-                />
-            </Box>
+            {enableMetrics && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        width: '100%',
+                    }}
+                >
+                    <InstanceMetrics
+                        metrics={
+                            INSTANCE_METRICS
+                                ? INSTANCE_METRICS.split(',')
+                                : true
+                        }
+                    />
+                </Box>
+            )}
         </Stack>
     );
 };
@@ -289,7 +297,7 @@ const ProjectsGridItem = (props: any) => {
                             </>
                         )}
                     </Box>
-                    {isAccessible && (
+                    {isAccessible && enableMetrics && (
                         <Box
                             sx={{ display: 'flex', justifyContent: 'flex-end' }}
                         >

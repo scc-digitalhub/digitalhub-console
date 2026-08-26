@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
 //
 // SPDX-License-Identifier: Apache-2.0
-
+import { type ReactNode } from 'react';
 import { Stack, Box } from '@mui/system';
 import { MetricBadge, MetricProps } from './MetricBadge';
 import { useResourceMetrics } from './useResourceMetrics';
@@ -13,6 +13,7 @@ export const MetricsField = (
         icon?: false;
         labels?: boolean;
         metrics?: string[] | boolean;
+        empty?: ReactNode;
     }
 ) => {
     const {
@@ -22,12 +23,13 @@ export const MetricsField = (
         size,
         fontSize,
         gap = 0,
+        empty = null,
         ...rest
     } = props;
     const { metrics } = useResourceMetrics(props);
 
     if (!metrics || !metrics.metrics || metrics.metrics.length === 0) {
-        return null;
+        return empty;
     }
 
     return (

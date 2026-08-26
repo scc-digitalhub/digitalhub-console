@@ -17,6 +17,10 @@ const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
     (process.env.REACT_APP_ENABLE_METRICS as string) ||
     false;
+const showMetricsInLayout: string =
+    (globalThis as any).REACT_APP_SHOW_METRICS_IN_LAYOUT ||
+    (process.env.REACT_APP_SHOW_METRICS_IN_LAYOUT as string) ||
+    false;
 const INSTANCE_METRICS: string =
     (globalThis as any).REACT_APP_INSTANCE_METRICS ||
     (process.env.REACT_APP_INSTANCE_METRICS as string) ||
@@ -68,15 +72,16 @@ export const MyLayout = (props: any) => {
                         >
                             {' / '}
                         </Typography>
-                        {enableMetrics === 'true' && (
-                            <InstanceMetrics
-                                metrics={
-                                    INSTANCE_METRICS
-                                        ? INSTANCE_METRICS.split(',')
-                                        : true
-                                }
-                            />
-                        )}
+                        {enableMetrics === 'true' &&
+                            showMetricsInLayout === 'true' && (
+                                <InstanceMetrics
+                                    metrics={
+                                        INSTANCE_METRICS
+                                            ? INSTANCE_METRICS.split(',')
+                                            : true
+                                    }
+                                />
+                            )}
                     </Box>
                 </AppBar>
             )}
