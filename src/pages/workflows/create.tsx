@@ -26,6 +26,8 @@ import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
+import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();
@@ -33,6 +35,8 @@ export const WorkflowCreate = () => {
     const [kinds, setKinds] = useState<any[]>();
     const [schemas, setSchemas] = useState<any[]>();
 
+    const { data: extensionSchemas } = useGetExtensions('workflow');
+    
     const transform = data => ({
         ...data,
         project: root || '',
@@ -81,14 +85,41 @@ export const WorkflowCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
+                        {/* TODO fix stepperform handling for empty (null) children */}
+                        {extensionSchemas && extensionSchemas.length > 0 && (
                             <StepperForm toolbar={<StepperToolbar />}>
                                 <StepperForm.Step label={'fields.base'}>
                                     <TextInput
                                         source="name"
-                                        validate={[
-                                            required(),
-                                            isAlphaNumeric(),
-                                        ]}
+                                        validate={[ required(), isAlphaNumeric(), ]}
+                                    />
+                                    <MetadataInput kinds={['metadata.base']} />
+                                </StepperForm.Step>
+                                <StepperForm.Step label={'fields.spec.title'}>
+                                    <KindSelector kinds={kinds} />
+
+                                    <FormDataConsumer<{ kind: string }>>
+                                        {({ formData }) => (
+                                            <SpecInput
+                                                source="spec"
+                                                schema={getWorkflowSpec(
+                                                    formData.kind
+                                                )}
+                                                getUiSchema={getWorkflowUiSpec}
+                                            />
+                                        )}
+                                    </FormDataConsumer>
+                                </StepperForm.Step>
+                                <StepperForm.Step label="fields.extensions.title">
+                                    <ExtensionsForm source="extensions" resource="workflow" />
+                                </StepperForm.Step>
+                            </StepperForm>
+                        )} else {
+                            <StepperForm toolbar={<StepperToolbar />}>
+                                <StepperForm.Step label={'fields.base'}>
+                                    <TextInput
+                                        source="name"
+                                        validate={[ required(), isAlphaNumeric(), ]}
                                     />
                                     <MetadataInput kinds={['metadata.base']} />
                                 </StepperForm.Step>
@@ -108,6 +139,7 @@ export const WorkflowCreate = () => {
                                     </FormDataConsumer>
                                 </StepperForm.Step>
                             </StepperForm>
+                        }
                         </FlatCard>
                     </CreateView>
                 </>

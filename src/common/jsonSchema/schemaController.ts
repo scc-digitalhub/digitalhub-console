@@ -35,6 +35,35 @@ export const useGetSchemas = (
     };
 };
 
+export const useGetExtensions = (
+    resource?: string
+): { data?: any[]; isLoading?: boolean; error?: any } => {
+    const schemaProvider = useSchemaProvider();
+    const [extensions, setExtensions] = useState<any[]>();
+
+    const isLoading = useRef(true);
+    const error = useRef<any>(null);
+
+    useEffect(() => {
+        if (schemaProvider) {
+            isLoading.current = true;
+            schemaProvider
+                .list('extensions')
+                .then(res => {
+                    setExtensions((res || []).filter(s => (s.appliesTo || [resource]).includes(resource)) || []);
+                    isLoading.current = false;
+                })
+                .catch(e => (error.current = e));
+        }
+    }, [resource]);
+
+    return {
+        data: extensions,
+        isLoading: isLoading.current,
+        error: error.current,
+    };
+};
+
 export const useGetSchema = (
     resource: string,
     kind: string

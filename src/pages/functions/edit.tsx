@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import { Box, Container, Divider, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     EditBase,
@@ -24,6 +24,8 @@ import { getFunctionUiSpec } from './types';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
+import { ExtensionsForm } from '../../features/extensions/Form';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
 
 export const FunctionEdit = () => {
     const notify = useNotify();
@@ -34,6 +36,9 @@ export const FunctionEdit = () => {
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
+
+    //check if any extension is available
+    const { data: extensionSchemas } = useGetExtensions('function');
 
     useEffect(() => {
         if (schemaProvider) {
@@ -112,6 +117,14 @@ export const FunctionEdit = () => {
                                     onDirty={setIsSpecDirty}
                                     getUiSchema={getFunctionUiSpec}
                                 />
+
+                                {extensionSchemas && extensionSchemas.length > 0 && (
+                                    <>
+                                        <Divider />
+                                        <ExtensionsForm source="extensions" resource="function" />
+                                    </>
+                                )}
+                                
                             </SimpleForm>
                         </FlatCard>
                     </EditView>

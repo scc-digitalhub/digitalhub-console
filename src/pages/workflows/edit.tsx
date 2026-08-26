@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import { Box, Container, Divider, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     EditBase,
@@ -24,6 +24,8 @@ import { getWorkflowUiSpec } from './types';
 import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
+import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const WorkflowEdit = () => {
     const notify = useNotify();
@@ -34,6 +36,9 @@ export const WorkflowEdit = () => {
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
+
+    //check if any extension is available
+    const { data: extensionSchemas } = useGetExtensions('workflow');
 
     useEffect(() => {
         if (schemaProvider) {
@@ -112,6 +117,13 @@ export const WorkflowEdit = () => {
                                     onDirty={setIsSpecDirty}
                                     getUiSchema={getWorkflowUiSpec}
                                 />
+                                {extensionSchemas && extensionSchemas.length > 0 && (
+                                    <>
+                                        <Divider />
+                                        <ExtensionsForm source="extensions" resource="workflow" />
+                                    </>
+                                )}
+
                             </SimpleForm>
                         </FlatCard>
                     </EditView>

@@ -27,7 +27,7 @@ import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecW
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions, useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const ArtifactCreate = () => {
@@ -101,7 +101,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions('artifact');
 
     //TODO fix stepperform handling for empty (null) children
     if (schemas && schemas.length > 0) {
@@ -121,7 +121,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
                     />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.extensions.title'}>
-                    <ExtensionsForm source="extensions" />
+                    <ExtensionsForm source="extensions" resource="artifact" />
                 </StepperForm.Step>
             </StepperForm>
         );

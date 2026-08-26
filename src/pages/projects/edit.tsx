@@ -24,6 +24,9 @@ import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { MetadataSchema } from '../../common/jsonSchema/schemas';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
+import { ExtensionsForm } from '../../features/extensions/Form';
+import { Divider } from '@mui/material';
 
 export const ProjectEdit = () => {
     const notify = useNotify();
@@ -33,6 +36,9 @@ export const ProjectEdit = () => {
     const schemaProvider = useSchemaProvider();
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [schema, setSchema] = useState<any>();
+
+    //check if any extension is available
+    const { data: extensionSchemas } = useGetExtensions('project');
 
     useEffect(() => {
         if (schemaProvider) {
@@ -94,6 +100,13 @@ export const ProjectEdit = () => {
                                         getUiSchema={getUiSchema}
                                     />
                                 )}
+                                {extensionSchemas && extensionSchemas.length > 0 && (
+                                    <>
+                                        <Divider />
+                                        <ExtensionsForm source="extensions" resource="project" />
+                                    </>
+                                )}
+
                             </SimpleForm>
                         </FlatCard>
                     </EditView>

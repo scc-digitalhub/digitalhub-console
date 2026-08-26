@@ -28,7 +28,7 @@ import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecW
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions, useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { TemplatesSelector } from '../../common/components/TemplatesSelector';
 
@@ -146,7 +146,7 @@ export const ModelForm = (props: {
     const { uploader, onCancel } = props;
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions('model');
 
     //TODO fix stepperform handling for empty (null) children
     if (schemas && schemas.length > 0) {
@@ -166,7 +166,7 @@ export const ModelForm = (props: {
                     />
                 </StepperForm.Step>
                 <StepperForm.Step label={'fields.extensions.title'}>
-                    <ExtensionsForm source="extensions" />
+                    <ExtensionsForm source="extensions" resource="model" />
                 </StepperForm.Step>
             </StepperForm>
         );

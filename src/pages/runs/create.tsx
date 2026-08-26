@@ -20,7 +20,7 @@ import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { filterProps } from '../../common/jsonSchema/schemas';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions, useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
@@ -33,7 +33,7 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
     const runSchema = filterProps(runSchemaProps, taskSchema);
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions('run');
 
     return (
         <StepperForm
@@ -55,7 +55,7 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
             </StepperForm.Step>
             {schemas && schemas.length > 0 ? (
                 <StepperForm.Step label={'fields.extensions.title'} optional>
-                    <ExtensionsForm source="extensions" />
+                    <ExtensionsForm source="extensions" resource="run" />
                 </StepperForm.Step>
             ) : <> </>}
             <StepperForm.Step label={translate('fields.summary')} optional>

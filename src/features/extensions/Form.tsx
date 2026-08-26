@@ -14,7 +14,7 @@ import {
     useSourceContext,
     useTranslate,
 } from 'react-admin';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -28,7 +28,8 @@ export const ExtensionsForm = (props: {
     const { source = 'extensions' } = props;
 
     //check if any extension is available
-    const { data: schemas, isLoading } = useGetSchemas('extensions');
+    const { data: schemas, isLoading } = useGetExtensions(props.resource);
+
 
     if (isLoading || !schemas) {
         return <></>;

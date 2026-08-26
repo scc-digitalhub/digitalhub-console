@@ -21,7 +21,7 @@ import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 
 export const ModelEdit = () => {
@@ -43,7 +43,7 @@ export const ModelEdit = () => {
         useState<boolean>(false);
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions('model');
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -109,7 +109,7 @@ export const ModelEdit = () => {
                                 {schemas && schemas.length > 0 && (
                                     <>
                                         <Divider />
-                                        <ExtensionsForm source="extensions" />
+                                        <ExtensionsForm source="extensions" resource="model" />
                                     </>
                                 )}
                             </SimpleForm>

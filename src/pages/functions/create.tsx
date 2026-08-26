@@ -34,7 +34,7 @@ import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { isAlphaNumeric } from '../../common/utils/helpers';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { useGetExtensions, useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { buildParentRef } from '../../features/hub/utils';
 
@@ -186,7 +186,7 @@ export const FunctionForm = (props: {
 }) => {
     const { kinds, isFromTemplate, cancelUrl, onCancel } = props;
 
-    const { data: extensionSchemas } = useGetSchemas('extensions');
+    const { data: extensionSchemas } = useGetExtensions('function');
 
     const toolbar = (
         <StepperToolbar cancelUrl={cancelUrl} onCancel={onCancel} />
@@ -212,7 +212,7 @@ export const FunctionForm = (props: {
                     <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
                 </StepperForm.Step>
                 <StepperForm.Step label="fields.extensions.title">
-                    <ExtensionsForm source="extensions" />
+                    <ExtensionsForm source="extensions" resource="function" />
                 </StepperForm.Step>
             </StepperForm>
         );
