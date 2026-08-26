@@ -47,7 +47,6 @@ import { ResourceIcon } from './ResourceIcon';
 import ContentAdd from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom';
 import ListIcon from '@mui/icons-material/List';
-import { useResourceMetrics } from '../../../features/k8smetrics/useResourceMetrics';
 
 const cardStyle = {
     height: '100%',
@@ -55,6 +54,10 @@ const cardStyle = {
     flexDirection: 'column',
 } as const;
 
+const enableMetrics: string =
+    (globalThis as any).REACT_APP_ENABLE_METRICS ||
+    (process.env.REACT_APP_ENABLE_METRICS as string) ||
+    false;
 const PROJECT_METRICS: string =
     (globalThis as any).REACT_APP_PROJECT_METRICS ||
     (process.env.REACT_APP_PROJECT_METRICS as string) ||
@@ -67,11 +70,6 @@ export const Dashboard = () => {
     const getResourceLabel = useGetResourceLabel();
     const { isAdmin } = useProjectPermissions();
     const createPath = useCreatePath();
-    const { metrics } = useResourceMetrics({
-        resource: 'projects',
-        record: { id: projectId || '' },
-        refreshInterval: 30000,
-    });
     const [project, setProject] = useState<any>(null);
     const [runCounts, setRunCounts] = useState<
         Record<string, number | undefined>
@@ -203,7 +201,7 @@ export const Dashboard = () => {
                         </DropDownButton>
                     </Stack>
                     <Grid container spacing={2}>
-                        {metrics?.metrics?.length > 0 && (
+                        {enableMetrics && (
                             <Grid size={12}>
                                 <Card sx={cardStyle}>
                                     <CardHeader
@@ -228,6 +226,16 @@ export const Dashboard = () => {
                                                 PROJECT_METRICS
                                                     ? PROJECT_METRICS.split(',')
                                                     : true
+                                            }
+                                            empty={
+                                                <Typography
+                                                    variant="body2"
+                                                    color="textSecondary"
+                                                >
+                                                    {translate(
+                                                        'resources.runs.empty'
+                                                    )}
+                                                </Typography>
                                             }
                                         />
                                     </CardContent>

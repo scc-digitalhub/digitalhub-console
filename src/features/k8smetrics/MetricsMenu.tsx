@@ -2,7 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Menu, MenuItem, Box, CardHeader, ListItemText } from '@mui/material';
+import {
+    Menu,
+    MenuItem,
+    Box,
+    CardHeader,
+    ListItemText,
+    Typography,
+} from '@mui/material';
 import { useState, ReactElement } from 'react';
 import { useTranslate, IconButtonWithTooltip } from 'react-admin';
 import { MetricBadge, MetricProps } from './MetricBadge';
@@ -40,7 +47,7 @@ export const MetricsMenu = (
         refreshInterval: 30000,
     });
 
-    if (!metrics?.metrics || metrics.metrics?.length === 0) {
+    if (metricsKeys === false) {
         return null;
     }
     const handleOpen = (event): void => {
@@ -57,7 +64,7 @@ export const MetricsMenu = (
     };
 
     const isOpen = Boolean(anchorEl);
-
+    const resourceName = translate('fields.metrics.title');
     return (
         <Box className="DropDownMenu" component="span">
             <Box>
@@ -106,8 +113,7 @@ export const MetricsMenu = (
                     />
                 </MenuItem>
 
-                {metrics?.metrics &&
-                    metrics.metrics?.length > 0 &&
+                {metrics?.metrics && metrics.metrics?.length > 0 ? (
                     metrics.metrics
                         .filter(e =>
                             Array.isArray(metricsKeys)
@@ -142,7 +148,18 @@ export const MetricsMenu = (
                                     />
                                 </ListItemText>
                             </MenuItem>
-                        ))}
+                        ))
+                ) : (
+                    <MenuItem>
+                        <ListItemText sx={{ px: 2, py: 0.2 }}>
+                            <Typography variant="body2" color="textSecondary">
+                                {translate('ra.page.empty', {
+                                    name: resourceName,
+                                })}
+                            </Typography>
+                        </ListItemText>
+                    </MenuItem>
+                )}
             </Menu>
         </Box>
     );

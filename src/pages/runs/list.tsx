@@ -66,6 +66,10 @@ import { BsCpuFill } from 'react-icons/bs';
 import { GrStorage } from 'react-icons/gr';
 import SignpostIcon from '@mui/icons-material/Signpost';
 
+const enableMetrics: string =
+    (globalThis as any).REACT_APP_ENABLE_METRICS ||
+    (process.env.REACT_APP_ENABLE_METRICS as string) ||
+    false;
 const RUN_METRICS: string =
     (globalThis as any).REACT_APP_RUN_METRICS ||
     (process.env.REACT_APP_RUN_METRICS as string) ||
@@ -403,26 +407,30 @@ const DataTableView = (props: { storeKey?: string }) => {
             >
                 <StateChips source="status.state" label="fields.status.state" />
             </DataTable.Col>
-            <DataTable.Col
-                source="metrics"
-                disableSort
-                label="fields.metrics.title"
-            >
-                <FunctionField
+            {enableMetrics && (
+                <DataTable.Col
+                    source="metrics"
+                    disableSort
                     label="fields.metrics.title"
-                    render={r =>
-                        r.status.state === 'RUNNING' ? (
-                            <MetricsField
-                                size="small"
-                                fontSize={'small'}
-                                metrics={
-                                    RUN_METRICS ? RUN_METRICS.split(',') : true
-                                }
-                            />
-                        ) : null
-                    }
-                />
-            </DataTable.Col>
+                >
+                    <FunctionField
+                        label="fields.metrics.title"
+                        render={r =>
+                            r.status.state === 'RUNNING' ? (
+                                <MetricsField
+                                    size="small"
+                                    fontSize={'small'}
+                                    metrics={
+                                        RUN_METRICS
+                                            ? RUN_METRICS.split(',')
+                                            : true
+                                    }
+                                />
+                            ) : null
+                        }
+                    />
+                </DataTable.Col>
+            )}
             <DataTable.Col
                 source="metadata.labels"
                 disableSort
@@ -622,7 +630,7 @@ const DetailsBox = ({ record }: { record: any }) => {
                     {record.status?.message}
                 </Alert>
             )}
-            {record.status.state === 'RUNNING' && (
+            {record.status.state === 'RUNNING' && enableMetrics && (
                 <Box>
                     <MetricsField
                         sx={{ mt: 1 }}
