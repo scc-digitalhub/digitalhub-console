@@ -122,17 +122,33 @@ export const MetricsMenu = (
                         )
                         .map(e => ({
                             name: e.name,
-                            value: e.summary?.find(s => s.name == 'avg')?.value,
+                            value:
+                                e.summary?.find(s => s.name == 'avg')?.value ??
+                                e.metrics?.[0]?.value ??
+                                undefined,
+                            unit: e.unit,
+                            quota: e.quota,
                         }))
                         .map(e => (
                             <MenuItem key={'mtr-' + e.name}>
                                 <ListItemText sx={{ px: 1, py: 0.2 }}>
                                     <MetricBadge
                                         name={e.name}
-                                        value={formatMetricsValue(
-                                            e.name,
-                                            e.value
-                                        )}
+                                        value={
+                                            formatMetricsValue(e.name, {
+                                                number: e.value,
+                                                format: e.unit,
+                                            }) +
+                                            (e.quota
+                                                ? ` / ${formatMetricsValue(
+                                                      e.name,
+                                                      {
+                                                          number: e.quota,
+                                                          format: e.unit,
+                                                      }
+                                                  )}`
+                                                : '')
+                                        }
                                         size={size ? size : 'large'}
                                         fontSize={
                                             fontSize ? fontSize : 'medium'
