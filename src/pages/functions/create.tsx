@@ -2,7 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+    JSXElementConstructor,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import {
@@ -28,15 +35,15 @@ import { useCreateFlow } from '../../common/hooks/useCreateFlow';
 import { TemplatesSelector } from '../../common/components/TemplatesSelector';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { BackButton } from '@dslab/ra-back-button';
-import { StepperForm } from '@dslab/ra-stepper';
+import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { isAlphaNumeric } from '../../common/utils/helpers';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { buildParentRef } from '../../features/hub/utils';
+import { useGetExtensions } from '../../features/extensions/utils';
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
@@ -89,7 +96,7 @@ export const FunctionCreate = () => {
                                 ),
                             },
                         };
-                        
+
                         try {
                             await dataProvider.create('tasks', {
                                 data: childPayload,
@@ -100,8 +107,12 @@ export const FunctionCreate = () => {
                                 error?.message || 'ra.notification.http_error',
                                 { type: 'error' }
                             );
-                            console.error('Failed to create task:', childPayload, error);
-                            return; 
+                            console.error(
+                                'Failed to create task:',
+                                childPayload,
+                                error
+                            );
+                            return;
                         }
                     }
                 }
@@ -186,55 +197,46 @@ export const FunctionForm = (props: {
 }) => {
     const { kinds, isFromTemplate, cancelUrl, onCancel } = props;
 
-    const { data: extensionSchemas } = useGetSchemas('extensions');
-
-    const toolbar = (
-        <StepperToolbar cancelUrl={cancelUrl} onCancel={onCancel} />
-    );
+    const { data: schemas } = useGetExtensions();
 
     //TODO fix stepperform handling for empty (null) children
-    if (extensionSchemas && extensionSchemas.length > 0) {
-        return (
-            <StepperForm toolbar={toolbar}>
-                <StepperForm.Step label="fields.kind">
-                    <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-                        <KindSelector kinds={kinds} readOnly={isFromTemplate} />
-                    </Box>
-                </StepperForm.Step>
-                <StepperForm.Step label="fields.base">
-                    <TextInput
-                        source="name"
-                        validate={[required(), isAlphaNumeric()]}
-                    />
-                    <MetadataInput kinds={['metadata.base']} />
-                </StepperForm.Step>
-                <StepperForm.Step label="fields.spec.title">
-                    <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
-                </StepperForm.Step>
-                <StepperForm.Step label="fields.extensions.title">
-                    <ExtensionsForm source="extensions" />
-                </StepperForm.Step>
-            </StepperForm>
-        );
-    } else {
-        return (
-            <StepperForm toolbar={toolbar}>
-                <StepperForm.Step label="fields.kind">
-                    <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-                        <KindSelector kinds={kinds} readOnly={isFromTemplate} />
-                    </Box>
-                </StepperForm.Step>
-                <StepperForm.Step label="fields.base">
-                    <TextInput
-                        source="name"
-                        validate={[required(), isAlphaNumeric()]}
-                    />
-                    <MetadataInput kinds={['metadata.base']} />
-                </StepperForm.Step>
-                <StepperForm.Step label="fields.spec.title">
-                    <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
-                </StepperForm.Step>
-            </StepperForm>
+    //we build steps outside to avoid false/null children to stepperForm
+    const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
+        <StepperForm.Step key="kind" label="fields.kind">
+            <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
+                <KindSelector kinds={kinds} readOnly={isFromTemplate} />
+            </Box>
+        </StepperForm.Step>,
+        <StepperForm.Step key="base" label="fields.base">
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </StepperForm.Step>,
+        <StepperForm.Step key="spec" label="fields.spec.title">
+            <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
+        </StepperForm.Step>,
+    ];
+
+    if (schemas && schemas.length > 0) {
+        steps.push(
+            <StepperForm.Step
+                key="extensions"
+                label={'fields.extensions.title'}
+            >
+                <ExtensionsForm source="extensions" />
+            </StepperForm.Step>
         );
     }
+
+    return (
+        <StepperForm
+            toolbar={
+                <StepperToolbar cancelUrl={cancelUrl} onCancel={onCancel} />
+            }
+        >
+            {steps}
+        </StepperForm>
+    );
 };

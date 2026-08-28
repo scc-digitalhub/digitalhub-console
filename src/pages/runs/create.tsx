@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { StepperForm } from '@dslab/ra-stepper';
+import { Step, StepperForm } from '@dslab/ra-stepper';
 import {
     FormDataConsumer,
     required,
@@ -20,8 +20,9 @@ import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { filterProps } from '../../common/jsonSchema/schemas';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
+import { useGetExtensions } from '../../features/extensions/utils';
+import { JSXElementConstructor, ReactElement } from 'react';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -33,67 +34,86 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
     const runSchema = filterProps(runSchemaProps, taskSchema);
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions();
+
+    //TODO fix stepperform handling for empty (null) children
+    //we build steps outside to avoid false/null children to stepperForm
+    const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
+        <StepperForm.Step key="task" label={getResourceLabel('tasks', 1)}>
+            <JsonSchemaInput
+                source="spec"
+                schema={taskSchema}
+                uiSchema={getTaskUiSpec(taskSchema)}
+            />
+        </StepperForm.Step>,
+        <StepperForm.Step key="run" label={getResourceLabel('runs', 1)}>
+            <JsonSchemaInput
+                source="spec"
+                schema={runSchema}
+                uiSchema={getRunUiSpec(runSchema)}
+            />
+        </StepperForm.Step>,
+    ];
+
+    if (schemas && schemas.length > 0) {
+        steps.push(
+            <StepperForm.Step
+                key="extensions"
+                label={'fields.extensions.title'}
+            >
+                <ExtensionsForm source="extensions" />
+            </StepperForm.Step>
+        );
+    }
+
+    steps.push(
+        <StepperForm.Step
+            key="summary"
+            label={translate('fields.summary')}
+            optional
+        >
+            <FormDataConsumer>
+                {({ formData }) => {
+                    if (runSchemaProps) {
+                        //let users edit and then validate against schema
+                        return (
+                            <AceEditorInput
+                                mode="yaml"
+                                theme="github"
+                                source="spec"
+                                parse={toYaml}
+                                format={yaml.parse}
+                                validate={[
+                                    required(),
+                                    isValidAgainstSchema(
+                                        ajv,
+                                        runSchemaProps?.schema
+                                    ),
+                                ]}
+                            />
+                        );
+                    } else {
+                        //read-only view
+                        const r = { spec: btoa(toYaml(formData?.spec)) };
+                        return (
+                            <AceEditorField
+                                mode="yaml"
+                                source="spec"
+                                record={r}
+                                parse={atob}
+                            />
+                        );
+                    }
+                }}
+            </FormDataConsumer>
+        </StepperForm.Step>
+    );
 
     return (
         <StepperForm
             toolbar={<StepperToolbar saveProps={{ alwaysEnable: true }} />}
         >
-            <StepperForm.Step label={getResourceLabel('tasks', 1)}>
-                <JsonSchemaInput
-                    source="spec"
-                    schema={taskSchema}
-                    uiSchema={getTaskUiSpec(taskSchema)}
-                />
-            </StepperForm.Step>
-            <StepperForm.Step label={getResourceLabel('runs', 1)}>
-                <JsonSchemaInput
-                    source="spec"
-                    schema={runSchema}
-                    uiSchema={getRunUiSpec(runSchema)}
-                />
-            </StepperForm.Step>
-            {schemas && schemas.length > 0 ? (
-                <StepperForm.Step label={'fields.extensions.title'} optional>
-                    <ExtensionsForm source="extensions" />
-                </StepperForm.Step>
-            ) : <> </>}
-            <StepperForm.Step label={translate('fields.summary')} optional>
-                <FormDataConsumer>
-                    {({ formData }) => {
-                        if (runSchemaProps) {
-                            //let users edit and then validate against schema
-                            return (
-                                <AceEditorInput
-                                    mode="yaml"
-                                    theme="github"
-                                    source="spec"
-                                    parse={toYaml}
-                                    format={yaml.parse}
-                                    validate={[
-                                        required(),
-                                        isValidAgainstSchema(
-                                            ajv,
-                                            runSchemaProps?.schema
-                                        ),
-                                    ]}
-                                />
-                            );
-                        } else {
-                            //read-only view
-                            const r = { spec: btoa(toYaml(formData?.spec)) };
-                            return (
-                                <AceEditorField
-                                    mode="yaml"
-                                    source="spec"
-                                    record={r}
-                                    parse={atob}
-                                />
-                            );
-                        }
-                    }}
-                </FormDataConsumer>
-            </StepperForm.Step>
+            {steps}
         </StepperForm>
     );
 };

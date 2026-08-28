@@ -17,41 +17,13 @@ import {
     SortPayload,
     useResourceDefinitions,
 } from 'react-admin';
-
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
 //TODO fix backend API to properly define ENUM as TYPE(value)
-function mapType(resource: string) {
+export const mapType = (resource: string) => {
     //remove s + capitalize
     //ex functions => FUNCTION
     return resource.slice(0, -1);
-    // if (resource === 'functions') {
-    //     return 'FUNCTION';
-    // }
-    // if (resource === 'artifacts') {
-    //     return 'ARTIFACT';
-    // }
-    // if (resource === 'dataitems') {
-    //     return 'DATAITEM';
-    // }
-    // if (resource === 'models') {
-    //     return 'MODEL';
-    // }
-    // if (resource === 'tasks') {
-    //     return 'TASK';
-    // }
-    // if (resource === 'runs') {
-    //     return 'RUN';
-    // }
-    // if (resource === 'workflows') {
-    //     return 'WORKFLOW';
-    // }
-    // if (resource === 'metadata') {
-    //     return 'METADATA';
-    // }
-    // if (resource === 'metadata') {
-    //     return 'METADATA';
-    // }
-    // return null;
-}
+};
 
 const schemaProvider = (
     dataProvider: DataProvider,
@@ -107,9 +79,18 @@ interface SchemaProviderContextValue {
     provider: SchemaProvider | undefined;
     schemas: any | null;
     kinds: (resource: string) => Promise<string[] | null>;
-    list: (resource: string, runtime?: string) => Promise<any[] | null>;
+    list: (resource: string, runtime?: string) => Promise<any[]>;
     get: (resource: string, kind: string) => Promise<any>;
 }
+
+export type Schema = {
+    kind: string;
+    entity: string;
+    schema: RJSFSchema | object | string;
+    uiSchema?: UiSchema | object | string;
+    id?: string;
+    runtime?: string;
+};
 
 export const SchemaProviderContext = createContext<
     SchemaProviderContextValue | undefined
@@ -193,10 +174,10 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
         const list = async (
             resource: string,
             runtime?: string
-        ): Promise<any[] | null> => {
+        ): Promise<any[]> => {
             const k = '_' + (runtime ? resource + '.' + runtime : resource);
             if (!(resource in definitions)) {
-                return null;
+                return [];
             }
 
             if (!(k in _cache)) {
@@ -232,13 +213,13 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             return JSON.parse(JSON.stringify(hit));
         };
 
-        const kinds = async (resource: string): Promise<string[] | null> => {
+        const kinds = async (resource: string): Promise<string[]> => {
             if (!(resource in definitions)) {
-                return null;
+                return [];
             }
             const schemas = await list(resource);
             if (schemas == null) {
-                return null;
+                return [];
             }
 
             return [...schemas.map(s => s.kind)];

@@ -21,8 +21,7 @@ export const ExtensionsField = (props: {
     source?: string;
 }) => {
     const { source = 'extensions' } = props;
-    const record = useRecordContext();
-
+    const record = useRecordContext(props);
     //check if any extension is available
     const { data: schemas, isLoading } = useGetSchemas('extensions');
 
@@ -32,7 +31,11 @@ export const ExtensionsField = (props: {
     }
 
     return (
-        <ArrayField source={source} label="fields.extensions.title">
+        <ArrayField
+            record={record}
+            source={source}
+            label="fields.extensions.title"
+        >
             <SingleFieldList linkType={false}>
                 <ExtensionsFieldItem schemas={schemas} />
             </SingleFieldList>
@@ -42,7 +45,7 @@ export const ExtensionsField = (props: {
 
 export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
     const { schemas = [] } = props;
-    const record = useRecordContext();
+    const record = useRecordContext(props);
 
     if (!record || !schemas) {
         return <></>;
@@ -65,6 +68,9 @@ export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
         });
         return uischema;
     };
+
+    const schema = getSpecSchema(schemas, record.kind);
+    const uiSchema = buildUiSchema(schemas, record.kind);
 
     return (
         <Box
@@ -92,8 +98,8 @@ export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
 
             <JsonSchemaField
                 source="spec"
-                schema={getSpecSchema(schemas, record.kind)}
-                uiSchema={buildUiSchema(schemas, record.kind)}
+                schema={schema}
+                uiSchema={uiSchema}
                 label={false}
             />
         </Box>

@@ -11,6 +11,7 @@ import {
     SelectInput,
     SimpleFormIterator,
     TextInput,
+    useResourceContext,
     useSourceContext,
     useTranslate,
 } from 'react-admin';
@@ -19,16 +20,21 @@ import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { isValidKind } from '../../common/utils/helpers';
+import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
+import { useGetExtensions } from './utils';
 
 export const ExtensionsForm = (props: {
     resource?: string;
     record?: any;
     source?: string;
 }) => {
-    const { source = 'extensions' } = props;
+    const { source = 'extensions', resource: resourceProp } = props;
+    const resource = useResourceContext(props);
 
     //check if any extension is available
-    const { data: schemas, isLoading } = useGetSchemas('extensions');
+    const { data: schemas, isLoading } = useGetExtensions(
+        resourceProp || resource
+    );
 
     if (isLoading || !schemas) {
         return <></>;
@@ -95,11 +101,10 @@ export const ExtensionsFormItem = (props: { schemas: any[] }) => {
             <FormDataConsumer<{ kind: string }>>
                 {({ formData, scopedFormData }) =>
                     scopedFormData?.kind && (
-                        <SpecInput
+                        <ScopedFormData
                             source="spec"
-                            kind={scopedFormData.kind}
                             schema={getSpecSchema(scopedFormData.kind)}
-                            getUiSchema={getUiSchema}
+                            uiSchema={getUiSchema(scopedFormData.kind)}
                         />
                     )
                 }
@@ -108,6 +113,16 @@ export const ExtensionsFormItem = (props: { schemas: any[] }) => {
     );
 };
 
+const ScopedFormData = (props: {
+    source: string;
+    schema: any;
+    uiSchema?: any;
+}) => {
+    const { source, schema, uiSchema } = props;
+    return (
+        <JsonSchemaInput source={source} schema={schema} uiSchema={uiSchema} />
+    );
+};
 const KindSelector = (props: {
     kinds: any[] | undefined;
     source?: string;

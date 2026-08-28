@@ -27,15 +27,16 @@ import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLi
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
-import { ExtensionsField } from '../../features/extensions/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
+import { useExtensionsTabs } from '../../features/extensions/tabs';
 
 const ArtifactShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
     const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
     const resource = useResourceContext();
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
     const [spec, setSpec] = useState<any>();
     const recordSpec = record?.spec;
     const lineCount = countLines(recordSpec);
@@ -88,17 +89,10 @@ const ArtifactShowLayout = (props: { record?: any }) => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
-            {record.extensions && record.extensions.length > 0 && (
-                <CustomTabbedShowLayout.Tab
-                    value="extensions"
-                    label={translate('fields.extensions.title')}
-                >
-                    <ExtensionsField source="extensions" />
-                </CustomTabbedShowLayout.Tab>
-            )}
             <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
                 <FileInfoTree />
             </CustomTabbedShowLayout.Tab>
+            {extensionTabs}
             <CustomTabbedShowLayout.Tab
                 value="lineage"
                 label="pages.lineage.title"

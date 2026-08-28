@@ -34,10 +34,12 @@ import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { ExtensionsField } from '../../features/extensions/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
+import { useExtensionsTabs } from '../../features/extensions/tabs';
 
 const ModelShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
     const schemaProvider = useSchemaProvider();
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
     const translate = useTranslate();
     const resource = useResourceContext();
     const [spec, setSpec] = useState<any>();
@@ -131,17 +133,10 @@ const ModelShowLayout = (props: { record?: any }) => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
-            {record.extensions && record.extensions.length > 0 && (
-                <CustomTabbedShowLayout.Tab
-                    value="extensions"
-                    label={translate('fields.extensions.title')}
-                >
-                    <ExtensionsField source="extensions" />
-                </CustomTabbedShowLayout.Tab>
-            )}
             <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
                 <FileInfoTree />
             </CustomTabbedShowLayout.Tab>
+            {extensionTabs}
             {record?.status?.metrics && (
                 <CustomTabbedShowLayout.Tab
                     value="metrics"

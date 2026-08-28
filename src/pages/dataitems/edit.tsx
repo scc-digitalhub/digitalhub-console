@@ -21,8 +21,8 @@ import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
 import { EditFormContentWithUpload } from '../../common/components/upload/EditFormContentWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
+import { useGetExtensions } from '../../features/extensions/utils';
 
 export const DataItemEdit = () => {
     const resource = useResourceContext();
@@ -43,7 +43,7 @@ export const DataItemEdit = () => {
         useState<boolean>(false);
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
+    const { data: schemas } = useGetExtensions();
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};

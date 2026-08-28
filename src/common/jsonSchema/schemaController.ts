@@ -4,29 +4,31 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSchemaProvider } from '../provider/schemaProvider';
+import { useRecordContext, useResourceContext } from 'react-admin';
 
 export const useGetSchemas = (
-    resource: string,
+    resource?: string,
     runtime?: string
 ): { data?: any[]; isLoading?: boolean; error?: any } => {
     const schemaProvider = useSchemaProvider();
     const [schemas, setSchemas] = useState<any[]>();
+    const resourceName = useResourceContext({ resource: resource });
 
     const isLoading = useRef(true);
     const error = useRef<any>(null);
 
     useEffect(() => {
-        if (schemaProvider) {
+        if (schemaProvider && resourceName) {
             isLoading.current = true;
             schemaProvider
-                .list(resource, runtime)
+                .list(resourceName, runtime)
                 .then(res => {
                     setSchemas(res || []);
                     isLoading.current = false;
                 })
                 .catch(e => (error.current = e));
         }
-    }, [resource, runtime]);
+    }, [resourceName, runtime]);
 
     return {
         data: schemas,
@@ -41,22 +43,23 @@ export const useGetSchema = (
 ): { data?: any; isLoading?: boolean; error?: any } => {
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>();
+    const resourceName = useResourceContext({ resource: resource });
 
     const isLoading = useRef(true);
     const error = useRef<any>(null);
 
     useEffect(() => {
-        if (schemaProvider && kind) {
+        if (schemaProvider && resourceName && kind) {
             isLoading.current = true;
             schemaProvider
-                .get(resource, kind)
+                .get(resourceName, kind)
                 .then(res => {
                     setSchema(res || null);
                     isLoading.current = false;
                 })
                 .catch(e => (error.current = e));
         }
-    }, [resource, kind]);
+    }, [resourceName, kind]);
 
     return useMemo(
         () => ({
@@ -87,6 +90,7 @@ export const useGetManySchemas = (
                 kinds.map(k => schemaProvider.list(k.resource, k.runtime))
             )
                 .then(lists => {
+                    console.log('got lists', lists);
                     setSchemas(lists ? lists.flat() : []);
                     isLoading.current = false;
                 })

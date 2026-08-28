@@ -33,6 +33,7 @@ import { countLines } from '../../common/utils/helpers';
 import { getWorkflowUiSpec } from './types';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
+import { useExtensionsTabs } from '../../features/extensions/tabs';
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -40,6 +41,8 @@ const ShowComponent = () => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
+
     const [schema, setSchema] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
@@ -175,7 +178,10 @@ const ShowComponent = () => {
 
     return (
         <CustomTabbedShowLayout record={record} syncWithLocation={false}>
-            <CustomTabbedShowLayout.Tab value="summary" label={translate('fields.summary')}>
+            <CustomTabbedShowLayout.Tab
+                value="summary"
+                label={translate('fields.summary')}
+            >
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
                         <TextField source="kind" />
@@ -191,7 +197,10 @@ const ShowComponent = () => {
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {schema && (
-                <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
+                <CustomTabbedShowLayout.Tab
+                    value="spec"
+                    label={translate('fields.spec.title')}
+                >
                     <Box sx={{ width: '100%' }}>
                         <AceEditorField
                             width="100%"
@@ -238,6 +247,7 @@ const ShowComponent = () => {
                     <WorkflowTaskShow kind={task} />
                 </CustomTabbedShowLayout.Tab>
             ))}
+            {extensionTabs}
         </CustomTabbedShowLayout>
     );
 };

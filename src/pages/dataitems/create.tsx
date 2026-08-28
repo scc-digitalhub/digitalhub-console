@@ -19,16 +19,16 @@ import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { DataItemIcon } from './icon';
 import { getDataItemSpecUiSchema } from './types';
 import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { useState } from 'react';
-import { StepperForm } from '@dslab/ra-stepper';
+import { JSXElementConstructor, ReactElement, useState } from 'react';
+import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsForm } from '../../features/extensions/Form';
+import { useGetExtensions } from '../../features/extensions/utils';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
@@ -101,49 +101,36 @@ export const DataItemForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
 
     //check if any extension is available
-    const { data: schemas } = useGetSchemas('extensions');
-    console.log('schemas', schemas);
+    const { data: schemas } = useGetExtensions();
 
     //TODO fix stepperform handling for empty (null) children
-    if (schemas && schemas.length > 0) {
-        return (
-            <StepperForm toolbar={<StepperToolbar />}>
-                <StepperForm.Step label={'fields.base'}>
-                    <TextInput
-                        source="name"
-                        validate={[required(), isAlphaNumeric()]}
-                    />
-                    <MetadataInput kinds={['metadata.base']} />
-                </StepperForm.Step>
-                <StepperForm.Step label={'fields.spec.title'}>
-                    <CreateSpecWithUpload
-                        uploader={uploader}
-                        getSpecUiSchema={getDataItemSpecUiSchema}
-                    />
-                </StepperForm.Step>
+    //we build steps outside to avoid false/null children to stepperForm
+    const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
+        <StepperForm.Step key="base" label={'fields.base'}>
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </StepperForm.Step>,
+        <StepperForm.Step key="spec" label={'fields.spec.title'}>
+            <CreateSpecWithUpload
+                uploader={uploader}
+                getSpecUiSchema={getDataItemSpecUiSchema}
+            />
+        </StepperForm.Step>,
+    ];
 
-                <StepperForm.Step label={'fields.extensions.title'}>
-                    <ExtensionsForm source="extensions" />
-                </StepperForm.Step>
-            </StepperForm>
-        );
-    } else {
-        return (
-            <StepperForm toolbar={<StepperToolbar />}>
-                <StepperForm.Step label={'fields.base'}>
-                    <TextInput
-                        source="name"
-                        validate={[required(), isAlphaNumeric()]}
-                    />
-                    <MetadataInput kinds={['metadata.base']} />
-                </StepperForm.Step>
-                <StepperForm.Step label={'fields.spec.title'}>
-                    <CreateSpecWithUpload
-                        uploader={uploader}
-                        getSpecUiSchema={getDataItemSpecUiSchema}
-                    />
-                </StepperForm.Step>
-            </StepperForm>
+    if (schemas && schemas.length > 0) {
+        steps.push(
+            <StepperForm.Step
+                key="extensions"
+                label={'fields.extensions.title'}
+            >
+                <ExtensionsForm source="extensions" />
+            </StepperForm.Step>
         );
     }
+
+    return <StepperForm toolbar={<StepperToolbar />}>{steps}</StepperForm>;
 };

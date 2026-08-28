@@ -20,6 +20,8 @@ import WrapIfAdditionalTemplate from './templates/WrapIfAdditionalTemplate';
 import AceField from './fields/AceField';
 import { HtmlPreview } from './widgets/HtmlPreview';
 import { JsonPreview } from './widgets/JsonPreview';
+import { useLocale, useTranslate } from 'react-admin';
+import { UiSchema } from '@rjsf/utils';
 
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
@@ -51,23 +53,84 @@ const customFields = {
     AceField,
 };
 
+const applyTranslation = (
+    uiSchema: string | object | UiSchema,
+    locale: string,
+    translate: (key: string) => string
+): any => {
+    // Translate schema titles and descriptions when provided inline with @locale suffix
+    // NOTE: we apply translate on the return to enable key based translation
+    // it's a no-op when the key is not found and returns the key itself
+    if (uiSchema && typeof uiSchema === 'object') {
+        if (uiSchema['ui:title@' + locale]) {
+            uiSchema['ui:title'] = translate(uiSchema['ui:title@' + locale]);
+        }
+        if (uiSchema['ui:description@' + locale]) {
+            uiSchema['ui:description'] = translate(
+                uiSchema['ui:description@' + locale]
+            );
+        }
+    }
+
+    Object.keys(uiSchema).forEach(key => {
+        if (uiSchema[key] && typeof uiSchema[key] === 'object') {
+            if (uiSchema[key]?.['ui:title@' + locale]) {
+                uiSchema[key]['ui:title'] = translate(
+                    uiSchema[key]['ui:title@' + locale]
+                );
+            }
+            if (uiSchema[key]?.['ui:description@' + locale]) {
+                uiSchema[key]['ui:description'] = translate(
+                    uiSchema[key]['ui:description@' + locale]
+                );
+            }
+
+            Object.keys(uiSchema[key]).forEach(subKey => {
+                uiSchema[key][subKey] = applyTranslation(
+                    uiSchema[key][subKey],
+                    locale,
+                    translate
+                );
+            });
+        }
+    });
+
+    return uiSchema;
+};
+
 export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
+    const { schema, uiSchema, ...rest } = props;
+    const locale = useLocale();
+    const translate = useTranslate();
+
     return (
         <RaJsonSchemaField
-            {...props}
+            schema={schema}
+            uiSchema={
+                uiSchema
+                    ? applyTranslation(uiSchema, locale, translate)
+                    : undefined
+            }
             customWidgets={customWidgets}
             templates={{ ...customTemplates, ...props.templates }}
+            {...rest}
         />
     );
 };
 
 export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const { schema, uiSchema, ...rest } = props;
+    const locale = useLocale();
+    const translate = useTranslate();
 
     return (
         <RaJsonSchemaInput
             schema={schema}
-            uiSchema={uiSchema}
+            uiSchema={
+                uiSchema
+                    ? applyTranslation(uiSchema, locale, translate)
+                    : undefined
+            }
             customWidgets={customWidgets}
             templates={{ ...customTemplates, ...props.templates }}
             fields={{ ...customFields }}

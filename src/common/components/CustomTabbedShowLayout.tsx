@@ -43,7 +43,9 @@ export const CustomTabbedShowLayout = (inProps: TabbedShowLayoutProps) => {
 
     const record = useRecordContext(props);
 
-    const nonNullChildren = Children.toArray(children).filter(
+    const nonNullChildren = Children.toArray(children)
+        .flatMap(child => (Array.isArray(child) ? child : [child]))
+        .filter(
         child => child !== null && isValidElement(child)
     ) as ReactElement<{
         context?: string;

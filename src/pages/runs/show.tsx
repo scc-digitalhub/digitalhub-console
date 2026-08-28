@@ -55,17 +55,18 @@ import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
-import { ExtensionsField } from '../../features/extensions/Field';
 import { CHAT_FEATURES } from '../../features/chat/utils';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { SHOW_VIEW_PROPS } from '../../common/theme';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
+import { useExtensionsTabs } from '../../features/extensions/tabs';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
     const record = useRecordContext();
     const translate = useTranslate();
     const schemaProvider = useSchemaProvider();
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
     const createPath = useCreatePath();
     const navigate = useNavigate();
 
@@ -313,6 +314,7 @@ export const RunShowComponent = () => {
                     <Outputs record={record} />
                 </CustomTabbedShowLayout.Tab>
             )}
+            {extensionTabs}
             <CustomTabbedShowLayout.Tab
                 value="logs"
                 label={translate('fields.logs')}
@@ -363,14 +365,6 @@ export const RunShowComponent = () => {
                             }
                         }
                     />
-                </CustomTabbedShowLayout.Tab>
-            )}
-            {record.extensions && record.extensions.length > 0 && (
-                <CustomTabbedShowLayout.Tab
-                    value="extensions"
-                    label={translate('fields.extensions.title')}
-                >
-                    <ExtensionsField source="extensions" />
                 </CustomTabbedShowLayout.Tab>
             )}
             <CustomTabbedShowLayout.Tab
