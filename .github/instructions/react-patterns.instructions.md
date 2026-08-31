@@ -205,3 +205,112 @@ This pattern looks like reuse but is actually **forced coupling**. Each branch i
 - Branching on a prop that represents a *dimension of the same feature*, not a different feature altogether.
 
 The test: if removing one branch would leave a coherent, independently useful component — the branches represent different features and should be split.
+
+## Form building and field synchronization
+
+**The form is the coordinator. Fields are scoped to their source.**
+
+### The form owns all synchronization
+
+The form component (the one that renders the `<Form>` or stepper) is responsible for:
+- Deciding which fields exist and what values they receive
+- Watching fields and deriving cross-field values via `useWatch` or `useFieldObserver`
+- Passing derived values down to child components as explicit props
+- Triggering side effects when field values change
+- Global validation that spans more than one field
+
+No field component should reach outside its own `source` to read or modify another field.
+
+### Field components are scoped
+
+A field component must:
+- Only read and write the field identified by its own `source` prop
+- Never call `useWatch`, `useInput`, or `useFormContext` for a field other than its own `source`
+- Receive any value it needs from another field as an **explicit prop** passed by the form
+
+```tsx
+// Bad: SpecInput secretly watches 'kind' — a field it doesn't own
+const SpecInput = ({ source }) => {
+    const kind = useWatch({ name: 'kind' }); // ❌ watching another field
+};
+
+// Good: form derives kind, passes it as a prop
+const MyForm = () => {
+    const kind = useWatch({ name: 'kind' });
+    return <SpecInput source="spec" kind={kind} />;
+};
+```
+
+A field watching its **own** `source` (e.g. for dirty tracking or internal derived state) is acceptable — that is intrinsic, not hidden coupling.
+
+### useFieldObserver for explicit side effects
+
+When a field change needs to trigger a side effect (sync to external state, auto-fill another field, validation message, etc.), use a dedicated observer hook at the **form level**:
+
+```ts
+// Typed wrapper: watch a field, run a lambda when it changes
+useFieldObserver<T>(source: string, effect: (value: T) => void): void
+```
+
+Every inter-field dependency is visible at the form level. Reading form **metadata** (`useFormState().dirtyFields`) inside a coordinator component is acceptable — it reads aggregate state, not a field value owned by another component.
+
+### No hybrid components
+
+**Do not create components that mix form building with unrelated feature handling.**
+
+Names like `CreateWithUpload`, `EditWithExtensions`, `FormAndFileManager` signal two collapsed concerns:
+- Form structure (fields, steps, layout) belongs in the **page component** for that resource
+- Feature logic (upload sync, extension loading) belongs in dedicated hooks or coordinator components
+
+```tsx
+// Bad: one component owns both form shape and upload wiring
+<CreateSpecWithUpload uploader={uploader} getSpecUiSchema={...} />
+
+// Good: page owns the form shape, hooks/coordinators own the feature wiring
+const MyResourceForm = ({ uploader }) => {
+    useUploaderSync({ uploader });          // controller hook
+    const kind = useWatch({ name: 'kind' });
+    return (
+        <>
+            <KindChangeGuard />             // coordinator component (renders only Confirm dialog)
+            <KindSelector kinds={kinds} />
+            <SpecInput source="spec" kind={kind} ... />
+            {kind && uploader && <FileInput ... />}
+        </>
+    );
+};
+```
+
+Each resource gets its own form component. Shared logic lives in hooks or focused coordinator components, not in hybrid form-building components that encode resource-specific structure.
+
+### Acceptable cross-field access
+
+Not violations:
+- The form component itself reading multiple fields via `useWatch` to coordinate between them
+- A field watching its own `source` for dirty tracking or format conversion
+- A coordinator/guard component (renders no user-visible UI of its own) that reads form metadata and writes back to correct the form state
+
+### One owner per field
+
+**Each form field must have exactly one component that reads and writes it.** Two components registering the same `source`, or one component secretly updating a field owned by another, creates write conflicts and stale values that are silent and hard to diagnose.
+
+When a conceptual value needs to live in two different locations (e.g. a file path that belongs in `spec.path` for the backend but must be managed independently from the JSON schema form that owns `spec`), the **form acts as the boundary coordinator** — it bridges the split at initialization and at submit, not inside field components:
+
+- **Init**: provide the transient field via `defaultValues` function so it is initialized from the record without touching the owning field. Filter the key from the JSON schema using `filterProperties(schema, ['path'])` so the schema-driven component never renders or writes it.
+- **Submit**: merge the transient field back into its final location in `transform`. Always use the transient field as the authoritative source — the nested copy inside the schema-owned field may be stale if the user never touched that component.
+
+```tsx
+// Edit: derive transient 'path' from spec.path at init; SpecInput never sees 'path'
+<SimpleForm defaultValues={record => ({ path: record?.spec?.path ?? null })}>
+    <SpecInput source="spec" schema={filterProperties(rawSchema, ['path'])} ... />
+    <PathInput source="path" uploader={uploader} />
+</SimpleForm>
+
+// transform: merge path back; never read rest.spec.path — it may be stale
+const transform = data => {
+    const { path, ...rest } = data;
+    return { ...rest, spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) } };
+};
+```
+
+`spec.path` in the initial record is intentionally left in the form state untouched — it will disappear the first time SpecInput writes (because `path` is not in the filtered schema), and `transform` uses the top-level `path` regardless. No runtime synchronization between the two copies is needed.

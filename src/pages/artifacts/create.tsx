@@ -23,12 +23,18 @@ import { MetadataInput } from '../../features/metadata/components/MetadataInput'
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
-import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
+import { useUploaderNameSync } from '../../features/files/upload/useUploaderSync';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { useGetExtensions } from '../../features/extensions/utils';
+import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { KindSelector } from '../../common/components/KindSelector';
+import { KindChangeGuard } from '../../common/components/KindChangeGuard';
+import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
+import { PathInput } from '../../features/files/upload/components/PathInput';
+import { useWatch } from 'react-hook-form';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -47,12 +53,13 @@ export const ArtifactCreate = () => {
     });
 
     const transform = data => {
-        //strip path tl which is a transient field
+        //merge path into spec.path, then strip transient field
         const { path, ...rest } = data;
 
         return {
             ...rest,
             project: root,
+            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
     };
 
@@ -79,7 +86,7 @@ export const ArtifactCreate = () => {
             <CreateBase
                 transform={transform}
                 mutationOptions={{ onSuccess, onSettled }}
-                record={{ id, spec: { path: null } }}
+                record={{ id, spec: {} }}
             >
                 <>
                     <CreatePageTitle
@@ -99,29 +106,26 @@ export const ArtifactCreate = () => {
 
 export const ArtifactForm = (props: { uploader?: Uploader }) => {
     const { uploader } = props;
+    const resource = useResourceContext();
 
-    //check if any extension is available
-    const { data: schemas } = useGetExtensions();
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const { data: extensions } = useGetExtensions();
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
         <StepperForm.Step key="base" label={'fields.base'}>
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
-            />
-            <MetadataInput kinds={['metadata.base']} />
+            <ArtifactBaseStepContent uploader={uploader} />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label={'fields.spec.title'}>
-            <CreateSpecWithUpload
-                uploader={uploader}
-                getSpecUiSchema={getArtifactSpecUiSchema}
-            />
+            <ArtifactSpecStepContent uploader={uploader} kinds={kinds} />
         </StepperForm.Step>,
     ];
 
-    if (schemas && schemas.length > 0) {
+    if (extensions && extensions.length > 0) {
         steps.push(
             <StepperForm.Step
                 key="extensions"
@@ -133,4 +137,45 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
     }
 
     return <StepperForm toolbar={<StepperToolbar />}>{steps}</StepperForm>;
+};
+
+const ArtifactBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
+    useUploaderNameSync({ uploader });
+    return (
+        <>
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </>
+    );
+};
+
+const ArtifactSpecStepContent = ({
+    uploader,
+    kinds,
+}: {
+    uploader?: Uploader;
+    kinds: { id: string; name: string }[];
+}) => {
+    const kind = useWatch({ name: 'kind' });
+    return (
+        <>
+            <KindChangeGuard />
+            <KindSelector kinds={kinds} />
+            <SpecInput
+                source="spec"
+                kind={kind}
+                getUiSchema={getArtifactSpecUiSchema}
+            />
+            {kind && (
+                <PathInput
+                    source="path"
+                    uploader={uploader}
+                    validate={[required()]}
+                />
+            )}
+        </>
+    );
 };

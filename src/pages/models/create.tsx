@@ -29,13 +29,19 @@ import { MetadataInput } from '../../features/metadata/components/MetadataInput'
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
-import { CreateSpecWithUpload } from '../../common/components/upload/CreateSpecWithUpload';
 import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../features/files/upload/useGetUploader';
 import { Uploader } from '../../features/files/upload/types';
+import { useUploaderNameSync } from '../../features/files/upload/useUploaderSync';
 import { useGetExtensions } from '../../features/extensions/utils';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { TemplatesSelector } from '../../common/components/TemplatesSelector';
+import { useGetSchemas } from '../../common/jsonSchema/schemaController';
+import { KindSelector } from '../../common/components/KindSelector';
+import { KindChangeGuard } from '../../common/components/KindChangeGuard';
+import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
+import { PathInput } from '../../features/files/upload/components/PathInput';
+import { useWatch } from 'react-hook-form';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
@@ -72,12 +78,13 @@ export const ModelCreate = () => {
     }, [resource, dataProvider]);
 
     const transform = data => {
-        //strip path tl which is a transient field
+        //merge path into spec.path, then strip transient field
         const { path, ...rest } = data;
 
         return {
             ...rest,
             project: root,
+            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
     };
 
@@ -100,7 +107,7 @@ export const ModelCreate = () => {
     };
     const defaultValues = template
         ? { id, ...template }
-        : { id, spec: { path: null } };
+        : { id, spec: {} };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -149,29 +156,26 @@ export const ModelForm = (props: {
     onCancel?: () => void;
 }) => {
     const { uploader, onCancel } = props;
+    const resource = useResourceContext();
 
-    //check if any extension is available
-    const { data: schemas } = useGetExtensions();
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const { data: extensions } = useGetExtensions();
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
         <StepperForm.Step key="base" label={'fields.base'}>
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
-            />
-            <MetadataInput kinds={['metadata.base']} />
+            <ModelBaseStepContent uploader={uploader} />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label={'fields.spec.title'}>
-            <CreateSpecWithUpload
-                uploader={uploader}
-                getSpecUiSchema={getModelSpecUiSchema}
-            />
+            <ModelSpecStepContent uploader={uploader} kinds={kinds} />
         </StepperForm.Step>,
     ];
 
-    if (schemas && schemas.length > 0) {
+    if (extensions && extensions.length > 0) {
         steps.push(
             <StepperForm.Step
                 key="extensions"
@@ -182,5 +186,44 @@ export const ModelForm = (props: {
         );
     }
 
-    return <StepperForm toolbar={<StepperToolbar />}>{steps}</StepperForm>;
+    return (
+        <StepperForm toolbar={<StepperToolbar onCancel={onCancel} />}>
+            {steps}
+        </StepperForm>
+    );
+};
+
+const ModelBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
+    useUploaderNameSync({ uploader });
+    return (
+        <>
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </>
+    );
+};
+
+const ModelSpecStepContent = ({
+    uploader,
+    kinds,
+}: {
+    uploader?: Uploader;
+    kinds: { id: string; name: string }[];
+}) => {
+    const kind = useWatch({ name: 'kind' });
+    return (
+        <>
+            <KindChangeGuard />
+            <KindSelector kinds={kinds} />
+            <SpecInput
+                source="spec"
+                kind={kind}
+                getUiSchema={getModelSpecUiSchema}
+            />
+            {kind && <PathInput source="path" uploader={uploader} />}
+        </>
+    );
 };

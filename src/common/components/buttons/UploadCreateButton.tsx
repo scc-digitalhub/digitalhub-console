@@ -31,8 +31,12 @@ import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
 import { Uploader } from '../../../features/files/upload/types';
-import { CreateSpecWithUpload } from '../upload/CreateSpecWithUpload';
+import { KindSelector } from '../KindSelector';
+import { KindChangeGuard } from '../KindChangeGuard';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { useWatch } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
@@ -123,13 +127,14 @@ const UploadCreateForm = (props: any) => {
     if (!uploader || !resource) return <></>;
 
     const transform = data => {
-        //strip path tl which is a transient field
+        //merge path into spec.path, then strip transient field
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { path, ...rest } = data;
 
         return {
             ...rest,
             project: root,
+            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
     };
 
@@ -159,7 +164,7 @@ const UploadCreateForm = (props: any) => {
             mutationOptions={{ onSuccess, onSettled }}
             record={{
                 id: id.current,
-                spec: { path: uploader.path ?? null },
+                spec: {},
             }}
         >
             <div className={StyledDialogClasses.header}>
@@ -197,18 +202,44 @@ const UploadCreateForm = (props: any) => {
                     </StepperForm.Step>
                     {definition?.options?.getSpecUiSchema && (
                         <StepperForm.Step label={'fields.spec.title'}>
-                            <CreateSpecWithUpload
+                            <SpecStep
                                 uploader={uploader}
                                 getSpecUiSchema={
                                     definition.options.getSpecUiSchema
                                 }
-                                showFileInput={false}
                             />
                         </StepperForm.Step>
                     )}
                 </StepperForm>
             </DialogContent>
         </CreateBase>
+    );
+};
+
+const SpecStep = ({
+    uploader,
+    getSpecUiSchema,
+}: {
+    uploader: Uploader;
+    getSpecUiSchema: (kind: string | undefined) => any;
+}) => {
+    const resource = useResourceContext();
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
+    const kind = useWatch({ name: 'kind' });
+
+    const getUiSchema = (k: string | undefined) => {
+        return getSpecUiSchema(k) || {};
+    };
+
+    return (
+        <>
+            <KindChangeGuard />
+            <KindSelector kinds={kinds} />
+            <SpecInput source="spec" kind={kind} getUiSchema={getUiSchema} />
+        </>
     );
 };
 

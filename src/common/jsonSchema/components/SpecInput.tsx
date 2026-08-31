@@ -20,7 +20,6 @@ export const SpecInput = (
         kind?: string;
         label?: string;
         helperText?: string;
-        kindSource?: string;
     }
 ) => {
     const {
@@ -28,19 +27,15 @@ export const SpecInput = (
         onDirty,
         getUiSchema,
         schema: schemaProp,
-        kind: kindProp,
+        kind,
         label = 'fields.spec.title',
         helperText,
-        kindSource = 'kind',
     } = props;
     const resource = useResourceContext();
     const record = useRecordContext();
     const value = useWatch({ name: source });
-    const kindValue = useWatch({ name: kindSource });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>(schemaProp);
-    
-    const kind = kindProp || kindValue || (record ? get(record, kindSource) : null);
 
     useEffect(() => {
         if (!kind) {
@@ -66,6 +61,16 @@ export const SpecInput = (
     const jsonSchema = { ...schema, title: label };
     if (helperText !== undefined) {
         jsonSchema['description'] = helperText;
+    }
+    // Remove 'path' from schema — managed externally by PathInput
+    if (jsonSchema.properties) {
+        const { path: _p, ...propsWithoutPath } = jsonSchema.properties;
+        jsonSchema.properties = propsWithoutPath;
+        if (Array.isArray(jsonSchema.required)) {
+            jsonSchema.required = jsonSchema.required.filter(
+                (k: string) => k !== 'path'
+            );
+        }
     }
 
     return (
