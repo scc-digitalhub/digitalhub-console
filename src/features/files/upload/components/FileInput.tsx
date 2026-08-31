@@ -6,11 +6,11 @@ import { Dashboard } from '@uppy/react';
 import {
     CommonInputProps,
     Labeled,
-    useInput,
     useResourceContext,
     useTheme,
 } from 'react-admin';
 import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Uploader } from '../types';
 import {
     PREFIX,
@@ -23,10 +23,10 @@ export const FileInput = (props: FileInputProps) => {
     const resource = useResourceContext(props);
 
     //update path in source depending on upload
-    const { field } = useInput({ resource, source });
+    const { setValue } = useFormContext();
     useEffect(() => {
-        if (uploader && field && uploader.path) {
-            field.onChange(uploader.path);
+        if (uploader && uploader.path) {
+            setValue(source, uploader.path, { shouldValidate: true, shouldDirty: true });
         }
     }, [uploader?.path]);
 
