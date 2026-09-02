@@ -31,7 +31,7 @@ interface ComplianceEditorProps {
 export function createComplianceWidget(kind: EntityKind, Editor: ComponentType<ComplianceEditorProps>) {
   return function ComplianceWidget({ entityId, onSaved }: ComplianceWidgetProps) {
     const t = useTranslate();
-    const { entityService, complianceService } = useComplianceServices();
+    const { complianceService } = useComplianceServices();
     const [entity, setEntity] = useState<JsonRecord>({});
     const [spec, setSpec] = useState<JsonRecord>({});
     const [savedSpec, setSavedSpec] = useState<JsonRecord>({});
@@ -42,10 +42,9 @@ export function createComplianceWidget(kind: EntityKind, Editor: ComponentType<C
     useEffect(() => {
       let cancelled = false;
       setLoading(true);
-      Promise.all([entityService.getEntity(kind, entityId), complianceService.getComplianceSpec(kind, entityId)]).then(
-        ([fetchedEntity, fetchedSpec]) => {
+      complianceService.getComplianceSpec(kind, entityId).then(
+        (fetchedSpec) => {
           if (cancelled) return;
-          setEntity(fetchedEntity ?? {});
           setSpec(fetchedSpec ?? {});
           setSavedSpec(fetchedSpec ?? {});
           setEditing(false);

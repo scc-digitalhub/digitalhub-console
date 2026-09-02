@@ -42,11 +42,11 @@ export { default as EntityForm } from "./components/entity/EntityForm";
 
 // Services: types (implement these against your backend), context/provider, bundled mock.
 export type {
-  EntityService, ComplianceService, AgentService, AgentResult, ComplianceWidgetServices,
+  ComplianceService, AgentService, AgentResult, ComplianceWidgetServices,
 } from "./services/types";
 export { ComplianceServicesProvider, useComplianceServices } from "./services/context";
 export {
-  createMockServices, createMockEntityService, createMockComplianceService, createMockAgentService,
+  createMockServices, createMockComplianceService, createMockAgentService,
 } from "./services/mock";
 
 // i18n: bundled English/Italian resources for the host's React Admin i18n provider.
