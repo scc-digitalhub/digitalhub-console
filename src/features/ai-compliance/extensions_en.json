@@ -1,0 +1,1240 @@
+{
+    "fields": {
+        "actorRoles": {
+            "item": {
+                "title": "Actor Role",
+                "description": "An actor role"
+            }
+        },
+        "affectedGroups": {
+            "item": {
+                "title": "Affected Group",
+                "description": "An affected group"
+            }
+        },
+        "allowed": {
+            "item": {
+                "title": "Allowed Value",
+                "description": "An allowed categorical value"
+            }
+        },
+        "appliesTo": {
+            "item": {
+                "title": "Scope Item",
+                "description": "A scope item"
+            }
+        },
+        "attributes": {
+            "title": "Attributes",
+            "description": "Attributes associated with this element",
+            "item": {
+                "title": "Attribute",
+                "description": "An attribute"
+            }
+        },
+        "authority": {
+            "item": {
+                "title": "Authority Level",
+                "description": "An authority level"
+            }
+        },
+        "categories": {
+            "item": {
+                "title": "Category",
+                "description": "A category value"
+            }
+        },
+        "category": {
+            "title": "Category",
+            "description": "Category classification"
+        },
+        "components": {
+            "item": {
+                "title": "Component Metric",
+                "description": "A component metric"
+            }
+        },
+        "condition": {
+            "title": "Condition",
+            "description": "Condition that must be satisfied"
+        },
+        "conditions": {
+            "item": {
+                "title": "Condition",
+                "description": "A condition"
+            }
+        },
+        "dataCategories": {
+            "item": {
+                "title": "Data Category",
+                "description": "A personal data category"
+            }
+        },
+        "definingAttributes": {
+            "item": {
+                "title": "Attribute",
+                "description": "A defining attribute"
+            }
+        },
+        "description": {
+            "title": "Description",
+            "description": "Textual description of this element"
+        },
+        "destination": {
+            "title": "Destination",
+            "description": "Target path or location"
+        },
+        "escalationChannels": {
+            "item": {
+                "title": "Escalation Channel",
+                "description": "An escalation channel"
+            }
+        },
+        "evidence": {
+            "item": {
+                "title": "Evidence Item",
+                "description": "An evidence item"
+            }
+        },
+        "files": {
+            "title": "Files",
+            "description": "List of file references",
+            "item": {
+                "title": "File",
+                "description": "A file reference"
+            }
+        },
+        "findings": {
+            "item": {
+                "title": "Finding",
+                "description": "A compliance finding"
+            }
+        },
+        "foreseeableMisuse": {
+            "item": {
+                "title": "Misuse Scenario",
+                "description": "A foreseeable misuse scenario"
+            }
+        },
+        "from": {
+            "title": "From",
+            "description": "Start value or source"
+        },
+        "gatewayextension": {
+            "guardrails": {
+                "title": "Guardrails",
+                "description": "Gateway extension guardrails configuration"
+            }
+        },
+        "geography": {
+            "item": {
+                "title": "Geographic Area",
+                "description": "A geographic area or country code"
+            }
+        },
+        "governance": {
+            "title": "Governance",
+            "description": "Data governance information"
+        },
+        "guardrails": {
+            "item": {
+                "title": "Guardrail",
+                "description": "A guardrail rule"
+            }
+        },
+        "inScope": {
+            "item": {
+                "title": "In-Scope Item",
+                "description": "An item within scope"
+            }
+        },
+        "interventionPoints": {
+            "item": {
+                "title": "Intervention Point",
+                "description": "A human intervention point"
+            }
+        },
+        "legalReferences": {
+            "item": {
+                "title": "Legal Reference",
+                "description": "A legal reference"
+            }
+        },
+        "limitations": {
+            "item": {
+                "title": "Limitation",
+                "description": "A limitation"
+            }
+        },
+        "metric": {
+            "title": "Metric",
+            "description": "Measurement metric for this objective"
+        },
+        "metrics": {
+            "item": {
+                "title": "Metric",
+                "description": "A metric result"
+            }
+        },
+        "mitigations": {
+            "item": {
+                "title": "Mitigation Action",
+                "description": "A mitigation action"
+            }
+        },
+        "mode": {
+            "title": "Mode",
+            "description": "Operational mode"
+        },
+        "name": {
+            "title": "Name",
+            "description": "Display name"
+        },
+        "objectives": {
+            "title": "Objectives",
+            "description": "List of compliance objectives",
+            "item": {
+                "title": "Objective",
+                "description": "A compliance objective"
+            }
+        },
+        "outOfScope": {
+            "item": {
+                "title": "Out-of-Scope Item",
+                "description": "An item excluded from scope"
+            }
+        },
+        "overseerRoles": {
+            "item": {
+                "title": "Overseer Role",
+                "description": "An overseer role"
+            }
+        },
+        "phase": {
+            "title": "Phase",
+            "description": "Lifecycle phase"
+        },
+        "priority": {
+            "title": "Priority",
+            "description": "Priority level"
+        },
+        "protectedAttributes": {
+            "item": {
+                "title": "Protected Attribute",
+                "description": "An attribute requiring protection"
+            }
+        },
+        "proxyFor": {
+            "item": {
+                "title": "Proxied Attribute",
+                "description": "A proxied attribute"
+            }
+        },
+        "purposes": {
+            "item": {
+                "title": "Purpose",
+                "description": "A processing purpose"
+            }
+        },
+        "rationale": {
+            "title": "Rationale",
+            "description": "Justification or reasoning"
+        },
+        "regulations": {
+            "item": {
+                "title": "Regulation",
+                "description": "A regulatory reference"
+            }
+        },
+        "relatedRequirements": {
+            "item": {
+                "title": "Requirement ID",
+                "description": "A related requirement identifier"
+            }
+        },
+        "reports": {
+            "item": {
+                "title": "Report",
+                "description": "A referenced report"
+            }
+        },
+        "requirements": {
+            "title": "Requirements",
+            "description": "List of applicable requirements",
+            "item": {
+                "title": "Requirement",
+                "description": "A compliance requirement"
+            }
+        },
+        "results": {
+            "item": {
+                "title": "Result",
+                "description": "A result entry"
+            }
+        },
+        "sections": {
+            "item": {
+                "title": "Section",
+                "description": "A document section"
+            }
+        },
+        "severity": {
+            "title": "Severity",
+            "description": "Severity level"
+        },
+        "source": {
+            "title": "Source",
+            "description": "Source regulatory or documentation reference"
+        },
+        "sources": {
+            "item": {
+                "title": "Source",
+                "description": "A data source"
+            }
+        },
+        "specification": {
+            "item": {
+                "title": "Specification Entry",
+                "description": "A key-value specification entry"
+            }
+        },
+        "subsections": {
+            "item": {
+                "title": "Subsection",
+                "description": "A nested document subsection"
+            }
+        },
+        "to": {
+            "title": "To",
+            "description": "End value or target"
+        },
+        "type": {
+            "title": "Type",
+            "description": "Type classification"
+        },
+        "usePermissions": {
+            "item": {
+                "title": "Permission",
+                "description": "A use permission"
+            }
+        },
+        "vulnerableGroups": {
+            "item": {
+                "title": "Vulnerable Group",
+                "description": "A vulnerable group"
+            }
+        },
+        "compliance": {
+            "actor_ref": {
+                "id": {
+                    "title": "Actor ID",
+                    "description": "Unique identifier of the actor"
+                },
+                "kind": {
+                    "title": "Actor Kind",
+                    "description": "Type of actor (HUMAN, SERVICE, or AGENT)"
+                }
+            },
+            "compliance": {
+                "compliance_status": {
+                    "title": "Compliance Status",
+                    "description": "Current status of the compliance evaluation"
+                },
+                "documentation": {
+                    "title": "Documentation",
+                    "description": "Compliance documentation artifact"
+                },
+                "objectives": {
+                    "title": "Objectives",
+                    "description": "List of measurable compliance objectives"
+                }
+            },
+            "context": {
+                "actor_role": {
+                    "title": "Actor Role",
+                    "description": "Role of the actor within the AI system lifecycle"
+                },
+                "actor_role_value": {
+                    "title": "Actor Role Value",
+                    "description": "Custom actor role when OTHER is selected"
+                },
+                "affected_group": {
+                    "title": "Affected Groups",
+                    "description": "Groups affected by the AI system outputs"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "description": "Deployment environment of the system"
+                },
+                "foreseeable_misuse": {
+                    "title": "Foreseeable Misuse",
+                    "description": "Known or anticipated misuse scenarios"
+                },
+                "geography": {
+                    "title": "Geography",
+                    "description": "Geographic areas where the system is deployed"
+                },
+                "human_oversight": {
+                    "title": "Human Oversight",
+                    "description": "Profile of human oversight for this system"
+                },
+                "protected_attributes": {
+                    "title": "Protected Attributes",
+                    "description": "Attributes that require legal or ethical protection"
+                },
+                "regulations": {
+                    "title": "Regulations",
+                    "description": "Applicable regulatory frameworks and references"
+                },
+                "requirements": {
+                    "title": "Requirements",
+                    "description": "Compliance requirements derived from regulations"
+                },
+                "risk_classification": {
+                    "title": "Risk Classification",
+                    "description": "Risk level classification of the AI system"
+                },
+                "vulnerable_group": {
+                    "title": "Vulnerable Groups",
+                    "description": "Groups requiring additional protection"
+                }
+            },
+            "description": {
+                "title": "Description",
+                "description": "Textual description of this element"
+            },
+            "documentation": {
+                "section": {
+                    "title": "Section Title",
+                    "description": "Title or heading of the document section",
+                    "content": {
+                        "title": "Content",
+                        "description": "Section content text"
+                    },
+                    "format": {
+                        "title": "Format",
+                        "description": "Format of the section content"
+                    },
+                    "format_value": {
+                        "title": "Format Value",
+                        "description": "Custom format value when OTHER is selected"
+                    },
+                    "reports": {
+                        "title": "Reports",
+                        "description": "Referenced compliance reports"
+                    },
+                    "specification": {
+                        "title": "Specification",
+                        "description": "Technical specification entries"
+                    },
+                    "subsections": {
+                        "title": "Subsections",
+                        "description": "Nested document subsections"
+                    }
+                },
+                "sections": {
+                    "title": "Sections",
+                    "description": "List of documentation sections"
+                }
+            },
+            "domain": {
+                "title": "Domain",
+                "description": "Application domain"
+            },
+            "finding": {
+                "description": {
+                    "title": "Finding Description",
+                    "description": "Description of the compliance finding"
+                },
+                "objective": {
+                    "title": "Related Objective",
+                    "description": "Compliance objective this finding relates to"
+                },
+                "report": {
+                    "title": "Evidence Report",
+                    "description": "Report serving as evidence for this finding"
+                }
+            },
+            "id": {
+                "title": "ID",
+                "description": "Unique identifier"
+            },
+            "mitigation": {
+                "applied_at": {
+                    "title": "Applied At",
+                    "description": "Date and time when the mitigation was applied"
+                },
+                "due_at": {
+                    "title": "Due At",
+                    "description": "Deadline for applying the mitigation"
+                },
+                "evidence": {
+                    "title": "Evidence",
+                    "description": "Evidence items supporting the mitigation"
+                },
+                "owner": {
+                    "title": "Owner",
+                    "description": "Actor responsible for implementing the mitigation"
+                },
+                "rationale": {
+                    "title": "Rationale",
+                    "description": "Justification for the mitigation action"
+                },
+                "residual_status": {
+                    "title": "Residual Status",
+                    "description": "Status of residual risk after mitigation"
+                },
+                "status": {
+                    "title": "Mitigation Status",
+                    "description": "Current implementation status of the mitigation"
+                },
+                "verification_report": {
+                    "title": "Verification Report",
+                    "description": "Report verifying the effectiveness of the mitigation"
+                }
+            },
+            "name": {
+                "title": "Name",
+                "description": "Display name"
+            },
+            "namespace": {
+                "title": "Namespace",
+                "description": "Namespace identifier for this element"
+            },
+            "project": {
+                "ai_task": {
+                    "title": "AI Task",
+                    "description": "Primary AI task performed by the system"
+                },
+                "ai_task_value": {
+                    "title": "AI Task Value",
+                    "description": "Custom task description when OTHER is selected"
+                },
+                "audience": {
+                    "title": "Audience",
+                    "description": "Intended users or audience of the system"
+                },
+                "context": {
+                    "title": "Context",
+                    "description": "Compliance context for the project"
+                },
+                "deployment": {
+                    "title": "Deployment",
+                    "description": "Deployment environment of the AI system"
+                },
+                "domain": {
+                    "title": "Domain",
+                    "description": "Application domain descriptor"
+                },
+                "goal": {
+                    "title": "Goal",
+                    "description": "High-level goal of the AI system"
+                },
+                "purpose": {
+                    "title": "Purpose",
+                    "description": "Detailed purpose and intended use of the system"
+                },
+                "scope": {
+                    "title": "Scope",
+                    "description": "Definition of what is in and out of scope",
+                    "in_scope": {
+                        "title": "In Scope",
+                        "description": "Elements explicitly within scope"
+                    },
+                    "out_of_scope": {
+                        "title": "Out of Scope",
+                        "description": "Elements explicitly excluded from scope"
+                    }
+                }
+            },
+            "status": {
+                "assessed_at": {
+                    "title": "Assessed At",
+                    "description": "Date and time of the compliance assessment"
+                },
+                "assessor": {
+                    "title": "Assessor",
+                    "description": "Actor who performed the compliance assessment"
+                },
+                "findings": {
+                    "title": "Findings",
+                    "description": "List of compliance findings from the assessment"
+                },
+                "mitigations": {
+                    "title": "Mitigations",
+                    "description": "Mitigation actions planned or applied"
+                },
+                "status": {
+                    "title": "Status",
+                    "description": "Overall compliance status"
+                }
+            },
+            "subdomain": {
+                "title": "Subdomain",
+                "description": "Application subdomain"
+            },
+            "use_case": {
+                "title": "Use Case",
+                "description": "Specific use case or scenario"
+            },
+            "attribute_ref": {
+                "attribute_role": {
+                    "title": "Attribute Role",
+                    "description": "Role of this attribute in the model"
+                },
+                "attribute_role_value": {
+                    "title": "Attribute Role Value",
+                    "description": "Custom role when OTHER is selected"
+                },
+                "observability": {
+                    "title": "Observability",
+                    "description": "How the attribute value is observed or measured"
+                },
+                "proxy_for": {
+                    "title": "Proxy For",
+                    "description": "Attributes this attribute is a proxy for"
+                },
+                "semantic_type": {
+                    "title": "Semantic Type",
+                    "description": "Semantic meaning of this attribute"
+                },
+                "semantic_type_value": {
+                    "title": "Semantic Type Value",
+                    "description": "Custom semantic type when OTHER is selected"
+                },
+                "use_permissions": {
+                    "title": "Use Permissions",
+                    "description": "Permitted uses of this attribute"
+                }
+            },
+            "confidence_interval": {
+                "level": {
+                    "title": "Confidence Level",
+                    "description": "Statistical confidence level (e.g. 0.95)"
+                },
+                "lower": {
+                    "title": "Lower Bound",
+                    "description": "Lower bound of the confidence interval"
+                },
+                "upper": {
+                    "title": "Upper Bound",
+                    "description": "Upper bound of the confidence interval"
+                }
+            },
+            "consent_spec": {
+                "applies_to": {
+                    "title": "Applies To",
+                    "description": "Scope this consent applies to"
+                },
+                "consent_basis": {
+                    "title": "Consent Basis",
+                    "description": "Legal basis for processing consent"
+                },
+                "consent_basis_value": {
+                    "title": "Consent Basis Value",
+                    "description": "Custom consent basis when OTHER is selected"
+                },
+                "consent_required": {
+                    "title": "Consent Required",
+                    "description": "Whether consent is required for this operation"
+                },
+                "data_categories": {
+                    "title": "Data Categories",
+                    "description": "Categories of personal data covered by this consent"
+                },
+                "explicit": {
+                    "title": "Explicit",
+                    "description": "Whether consent was given explicitly"
+                },
+                "freely_given": {
+                    "title": "Freely Given",
+                    "description": "Whether consent was given without coercion"
+                },
+                "informed": {
+                    "title": "Informed",
+                    "description": "Whether the data subject was informed"
+                },
+                "purposes": {
+                    "title": "Purposes",
+                    "description": "Processing purposes covered by this consent"
+                },
+                "specific": {
+                    "title": "Specific",
+                    "description": "Whether consent is specific to defined purposes"
+                },
+                "unambiguous": {
+                    "title": "Unambiguous",
+                    "description": "Whether consent was given unambiguously"
+                }
+            },
+            "data_governance": {
+                "consent": {
+                    "title": "Consent",
+                    "description": "Consent specification for data processing"
+                },
+                "license": {
+                    "title": "License",
+                    "description": "License governing use of this data"
+                },
+                "retention": {
+                    "title": "Retention",
+                    "description": "Data retention policy"
+                },
+                "sensitivity": {
+                    "title": "Sensitivity",
+                    "description": "Sensitivity classification of the data"
+                }
+            },
+            "entity_ref": {
+                "key": {
+                    "title": "Key",
+                    "description": "Unique key reference to the entity"
+                }
+            },
+            "evaluation": {
+                "metrics": {
+                    "title": "Metrics",
+                    "description": "Metric results from this evaluation"
+                },
+                "summary": {
+                    "title": "Summary",
+                    "description": "Summary of the evaluation outcome"
+                }
+            },
+            "group_spec": {
+                "defining_attributes": {
+                    "title": "Defining Attributes",
+                    "description": "Attributes that characterise this group"
+                },
+                "group_kind": {
+                    "title": "Group Kind",
+                    "description": "Type or category of this group"
+                },
+                "group_kind_value": {
+                    "title": "Group Kind Value",
+                    "description": "Custom group kind when OTHER is selected"
+                },
+                "group_role": {
+                    "title": "Group Role",
+                    "description": "Role of this group in the system context"
+                },
+                "group_role_value": {
+                    "title": "Group Role Value",
+                    "description": "Custom group role when OTHER is selected"
+                },
+                "rationale": {
+                    "title": "Rationale",
+                    "description": "Justification for including this group"
+                },
+                "vulnerability": {
+                    "title": "Vulnerability",
+                    "description": "Type of vulnerability affecting this group"
+                },
+                "vulnerability_value": {
+                    "title": "Vulnerability Value",
+                    "description": "Custom vulnerability type when OTHER is selected"
+                }
+            },
+            "human_oversight_profile": {
+                "authority": {
+                    "title": "Authority",
+                    "description": "Authority levels granted to the human overseer"
+                },
+                "availability": {
+                    "title": "Availability",
+                    "description": "Availability schedule for human oversight"
+                },
+                "escalation_channels": {
+                    "title": "Escalation Channels",
+                    "description": "Channels available for escalating decisions"
+                },
+                "limitations": {
+                    "title": "Limitations",
+                    "description": "Known limitations of the oversight arrangement"
+                },
+                "overseer_groups": {
+                    "title": "Overseer Groups",
+                    "description": "Groups responsible for human oversight"
+                },
+                "overseer_roles": {
+                    "title": "Overseer Roles",
+                    "description": "Roles responsible for human oversight"
+                },
+                "oversight_mode": {
+                    "title": "Oversight Mode",
+                    "description": "Mode of human oversight applied"
+                },
+                "oversight_mode_value": {
+                    "title": "Oversight Mode Value",
+                    "description": "Custom oversight mode when OTHER is selected"
+                }
+            },
+            "lineage": {
+                "operation": {
+                    "title": "Operation",
+                    "description": "Operation that produced or transformed this data"
+                },
+                "sources": {
+                    "title": "Sources",
+                    "description": "Source datasets or artifacts for this data"
+                }
+            },
+            "log": {
+                "kind": {
+                    "title": "Log Kind",
+                    "description": "Category or type of log"
+                },
+                "window": {
+                    "title": "Time Window",
+                    "description": "Time window covered by this log"
+                }
+            },
+            "metric": {
+                "composition": {
+                    "title": "Composition",
+                    "description": "How this metric is composed from sub-metrics"
+                },
+                "kind": {
+                    "title": "Metric Kind",
+                    "description": "Whether the metric is primitive or composite"
+                },
+                "range": {
+                    "title": "Value Range",
+                    "description": "Acceptable value range for this metric"
+                },
+                "scale": {
+                    "title": "Scale",
+                    "description": "Measurement scale of this metric"
+                },
+                "unit": {
+                    "title": "Unit",
+                    "description": "Unit of measure for this metric"
+                }
+            },
+            "metric_composition": {
+                "aggregation": {
+                    "title": "Aggregation Function",
+                    "description": "Function used to aggregate component metrics"
+                },
+                "components": {
+                    "title": "Components",
+                    "description": "Sub-metrics composing this metric"
+                },
+                "custom_fn": {
+                    "title": "Custom Function",
+                    "description": "Custom aggregation function expression"
+                }
+            },
+            "metric_result": {
+                "computed_at": {
+                    "title": "Computed At",
+                    "description": "Timestamp when this result was computed"
+                },
+                "confidence": {
+                    "title": "Confidence",
+                    "description": "Confidence interval for this measurement"
+                },
+                "metric": {
+                    "title": "Metric",
+                    "description": "Metric definition this result is for"
+                },
+                "value": {
+                    "title": "Value",
+                    "description": "Measured numeric value"
+                }
+            },
+            "misuse_scenario": {
+                "actor_roles": {
+                    "title": "Actor Roles",
+                    "description": "Roles that could carry out this misuse"
+                },
+                "affected_groups": {
+                    "title": "Affected Groups",
+                    "description": "Groups harmed by this misuse scenario"
+                },
+                "impact": {
+                    "title": "Impact",
+                    "description": "Severity of impact if this scenario occurs"
+                },
+                "intentionality": {
+                    "title": "Intentionality",
+                    "description": "Whether the misuse is accidental or intentional"
+                },
+                "likelihood": {
+                    "title": "Likelihood",
+                    "description": "Probability that this misuse scenario occurs"
+                },
+                "misuse_kind": {
+                    "title": "Misuse Kind",
+                    "description": "Category of misuse"
+                },
+                "misuse_kind_value": {
+                    "title": "Misuse Kind Value",
+                    "description": "Custom misuse kind when OTHER is selected"
+                },
+                "rationale": {
+                    "title": "Rationale",
+                    "description": "Justification for identifying this misuse scenario"
+                }
+            },
+            "objective": {
+                "condition": {
+                    "title": "Condition",
+                    "description": "Condition that must be satisfied for this objective",
+                    "categorical": {
+                        "title": "Categorical Condition",
+                        "description": "Condition based on a set of allowed categorical values",
+                        "allowed": {
+                            "title": "Allowed Values",
+                            "description": "Allowed categorical values"
+                        }
+                    },
+                    "composite": {
+                        "title": "Composite Condition",
+                        "description": "Logical combination of multiple conditions",
+                        "conditions": {
+                            "title": "Conditions",
+                            "description": "Sub-conditions combined by the logical operator"
+                        },
+                        "operator": {
+                            "title": "Operator",
+                            "description": "Logical operator (AND / OR)"
+                        }
+                    },
+                    "range": {
+                        "title": "Range Condition",
+                        "description": "Condition based on a numeric value range",
+                        "inclusive": {
+                            "title": "Inclusive Bounds",
+                            "description": "Whether the range bounds are inclusive"
+                        },
+                        "lower": {
+                            "title": "Lower Bound",
+                            "description": "Lower boundary of the range"
+                        },
+                        "upper": {
+                            "title": "Upper Bound",
+                            "description": "Upper boundary of the range"
+                        }
+                    },
+                    "statistical": {
+                        "title": "Statistical Condition",
+                        "description": "Condition based on a statistical test",
+                        "hypothesis": {
+                            "title": "Hypothesis",
+                            "description": "Statistical hypothesis being tested"
+                        },
+                        "significance": {
+                            "title": "Significance Level",
+                            "description": "Required p-value threshold"
+                        },
+                        "test": {
+                            "title": "Statistical Test",
+                            "description": "Name of the statistical test applied"
+                        }
+                    },
+                    "threshold": {
+                        "title": "Threshold Condition",
+                        "description": "Condition based on a numeric threshold comparison",
+                        "operator": {
+                            "title": "Operator",
+                            "description": "Comparison operator (e.g. GEQ, LEQ, EQ)"
+                        },
+                        "value": {
+                            "title": "Value",
+                            "description": "Numeric threshold value"
+                        }
+                    }
+                },
+                "description": {
+                    "title": "Description",
+                    "description": "Description of the compliance objective"
+                },
+                "metric": {
+                    "title": "Metric",
+                    "description": "Metric used to measure this objective"
+                },
+                "name": {
+                    "title": "Name",
+                    "description": "Short name of the objective"
+                },
+                "priority": {
+                    "title": "Priority",
+                    "description": "Priority level (MANDATORY, RECOMMENDED, INFORMATIONAL)"
+                },
+                "requirements": {
+                    "title": "Requirements",
+                    "description": "Regulatory requirement IDs this objective addresses"
+                },
+                "severity": {
+                    "title": "Severity",
+                    "description": "Severity if this objective is not met"
+                }
+            },
+            "regulatory_ref": {
+                "article": {
+                    "title": "Article",
+                    "description": "Article or section of the regulation"
+                },
+                "framework": {
+                    "title": "Framework",
+                    "description": "Regulatory or standards framework name"
+                },
+                "uri": {
+                    "title": "URI",
+                    "description": "URI reference to the regulation"
+                },
+                "version": {
+                    "title": "Version",
+                    "description": "Version of the regulation"
+                }
+            },
+            "report": {
+                "content": {
+                    "title": "Content",
+                    "description": "Detailed content of the compliance report"
+                },
+                "evaluation": {
+                    "title": "Evaluation",
+                    "description": "Evaluation results included in this report"
+                },
+                "kind": {
+                    "title": "Report Kind",
+                    "description": "Type or category of the report"
+                },
+                "lineage": {
+                    "title": "Lineage",
+                    "description": "Data lineage information"
+                },
+                "log": {
+                    "title": "Log",
+                    "description": "Log reference associated with this report"
+                },
+                "objectives": {
+                    "title": "Objectives",
+                    "description": "Compliance objectives covered by this report"
+                },
+                "test": {
+                    "title": "Test",
+                    "description": "Test results included in this report"
+                }
+            },
+            "requirement": {
+                "applicability_status": {
+                    "title": "Applicability Status",
+                    "description": "Whether and how this requirement is applicable"
+                },
+                "kind": {
+                    "title": "Requirement Kind",
+                    "description": "Category of compliance requirement"
+                },
+                "related_requirements": {
+                    "title": "Related Requirements",
+                    "description": "IDs of related requirements"
+                },
+                "requirement_text": {
+                    "title": "Requirement Text",
+                    "description": "Full text of the requirement"
+                },
+                "source": {
+                    "title": "Source",
+                    "description": "Regulatory source of this requirement"
+                }
+            },
+            "retention_policy": {
+                "applies_to": {
+                    "title": "Applies To",
+                    "description": "Scope this retention policy applies to"
+                },
+                "approver": {
+                    "title": "Approver",
+                    "description": "Actor who approved this retention policy"
+                },
+                "justification": {
+                    "title": "Justification",
+                    "description": "Justification for the retention period"
+                },
+                "legal_references": {
+                    "title": "Legal References",
+                    "description": "Legal references supporting this policy"
+                },
+                "owner": {
+                    "title": "Owner",
+                    "description": "Actor responsible for this retention policy"
+                },
+                "purposes": {
+                    "title": "Purposes",
+                    "description": "Processing purposes covered by this policy"
+                },
+                "retention_basis": {
+                    "title": "Retention Basis",
+                    "description": "Legal basis for data retention"
+                },
+                "retention_basis_value": {
+                    "title": "Retention Basis Value",
+                    "description": "Custom retention basis when OTHER is selected"
+                },
+                "valid_from": {
+                    "title": "Valid From",
+                    "description": "Date from which this policy is effective"
+                },
+                "valid_until": {
+                    "title": "Valid Until",
+                    "description": "Expiration date of this retention policy"
+                }
+            },
+            "risk_classification": {
+                "approver": {
+                    "title": "Approver",
+                    "description": "Actor who approved this classification"
+                },
+                "assessed_at": {
+                    "title": "Assessed At",
+                    "description": "Date and time of the risk assessment"
+                },
+                "assessor": {
+                    "title": "Assessor",
+                    "description": "Actor who performed the risk assessment"
+                },
+                "classification_status": {
+                    "title": "Classification Status",
+                    "description": "Current status of the risk classification"
+                },
+                "rationale": {
+                    "title": "Rationale",
+                    "description": "Justification for the risk level assigned"
+                },
+                "review_cadence": {
+                    "title": "Review Cadence",
+                    "description": "Frequency of risk classification reviews"
+                },
+                "risk_level": {
+                    "title": "Risk Level",
+                    "description": "Risk level of the AI system"
+                },
+                "risk_level_value": {
+                    "title": "Risk Level Value",
+                    "description": "Custom risk level when OTHER is selected"
+                },
+                "valid_until": {
+                    "title": "Valid Until",
+                    "description": "Expiration date of this classification"
+                }
+            },
+            "test": {
+                "details": {
+                    "title": "Details",
+                    "description": "Detailed test information or configuration"
+                },
+                "expected": {
+                    "title": "Expected",
+                    "description": "Expected outcome or value"
+                },
+                "measured": {
+                    "title": "Measured",
+                    "description": "Actual measured or observed value"
+                },
+                "passed": {
+                    "title": "Passed",
+                    "description": "Whether the test passed"
+                },
+                "results": {
+                    "title": "Results",
+                    "description": "Detailed test results"
+                },
+                "summary": {
+                    "title": "Summary",
+                    "description": "Summary of the test outcome"
+                },
+                "verdict": {
+                    "title": "Verdict",
+                    "description": "Final verdict of the test"
+                }
+            },
+            "unit_of_measure": {
+                "name": {
+                    "title": "Unit Name",
+                    "description": "Full name of the unit of measure"
+                },
+                "symbol": {
+                    "title": "Symbol",
+                    "description": "Unit symbol (e.g. %, ms, kg)"
+                }
+            },
+            "value_range": {
+                "categories": {
+                    "title": "Categories",
+                    "description": "Allowed categorical values for the range"
+                },
+                "discrete": {
+                    "title": "Discrete",
+                    "description": "Whether range values are discrete (integers)"
+                },
+                "lower": {
+                    "title": "Lower Bound",
+                    "description": "Minimum acceptable value"
+                },
+                "upper": {
+                    "title": "Upper Bound",
+                    "description": "Maximum acceptable value"
+                }
+            }
+        }
+    },
+    "specs": {
+        "ai-compliance": {
+            "title": "AI Compliance",
+            "description": "AI system compliance specification"
+        },
+        "compliance-objective": {
+            "title": "Compliance Objective",
+            "description": "A measurable compliance objective"
+        },
+        "compliance-report": {
+            "title": "Compliance Report",
+            "description": "Assessment report for a compliance objective"
+        },
+        "data-compliance": {
+            "title": "Data Compliance",
+            "description": "Data compliance specification"
+        },
+        "envoygw": {
+            "title": "Envoy Gateway",
+            "description": "Envoy gateway extension configuration"
+        },
+        "model-compliance": {
+            "title": "Model Compliance",
+            "description": "AI model compliance specification"
+        },
+        "model-service-compliance": {
+            "title": "Model Service Compliance",
+            "description": "AI model service compliance specification"
+        },
+        "operation-compliance": {
+            "title": "Operation Compliance",
+            "description": "AI operation compliance specification"
+        },
+        "run-initializer": {
+            "title": "Run Initializer",
+            "description": "Run initialization files configuration"
+        }
+    },
+    "pages": {
+        "compliance": {
+            "title": "AI Compliance",
+            "editTitle": "Edit AI Compliance",
+            "description": "View and manage AI compliance information for this project",
+            "menu": "Compliance",
+            "empty": "No AI Compliance extension found for this project",
+            "tabs": {
+                "overview": "Overview",
+                "status": "Status",
+                "context": "Context",
+                "objectives": "Objectives",
+                "documentation": "Documentation"
+            },
+            "createTitle": "Add AI Compliance",
+            "create": "Add AI Compliance"
+        }
+    }
+}

@@ -6,7 +6,12 @@ import polyglotI18nProvider from 'ra-i18n-polyglot';
 import en from '../../i18n/english';
 import it from '../../i18n/italian';
 
-const translations = { en, it };
+import { complianceWidgetMessages } from '../../features/ai-compliance/compliance-widgets';
+
+const translations = { 
+    en: {...en, ...complianceWidgetMessages.en},
+    it: {...it, ...complianceWidgetMessages.it},
+};
 
 export const i18nProvider = polyglotI18nProvider(
     locale => {
