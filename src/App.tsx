@@ -145,6 +145,7 @@ import triggerDefinition from './pages/triggers';
 import containerImageDefinition from './pages/containerimages';
 import { StompContextProvider } from './features/notifications/StompContextProvider';
 import { ProjectLineage } from './pages/projects/components/ProjectLineage';
+import { AiCompliancePage } from './features/ai-compliance/AiCompliancePage';
 import { StoreResetter } from './common/components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
 import { ServiceList } from './pages/services/list';
@@ -236,6 +237,10 @@ const CoreApp = () => {
                                                 <Route
                                                     path="/lineage"
                                                     element={<ProjectLineage />}
+                                                />
+                                                <Route
+                                                    path="/compliance"
+                                                    element={<AiCompliancePage />}
                                                 />
                                                 <Route
                                                     path="/account"

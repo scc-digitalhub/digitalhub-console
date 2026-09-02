@@ -489,5 +489,17 @@
     "hydra+subtask:run": {
         "description": "Definizione dell'esecuzione dell'operazione di subtask di Hydra",
         "title": "Esecuzione dell'operazione di subtask di Hydra"
+    },
+    "ai-compliance": {
+        "description": "Definizione del modulo di conformità AI",
+        "title": "Conformità AI"
+    },
+    "data-compliance": {
+        "description": "Definizione del modulo di conformità dei dati",
+        "title": "Conformità dei dati AI"
+    },
+    "model-compliance": {
+        "description": "Definizione del modulo di conformità del modello",
+        "title": "Conformità del modello AI"
     }
 }

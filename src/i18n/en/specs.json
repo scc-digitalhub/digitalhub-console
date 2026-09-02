@@ -489,5 +489,17 @@
     "hydra+subtask:run": {
         "description": "Hydra subtask run definition",
         "title": "Hydra subtask run"
+    },
+    "ai-compliance": {
+        "description": "AI Compliance module definition",
+        "title": "AI Compliance"
+    },
+    "data-compliance": {
+        "description": "Data Compliance module definition",
+        "title": "Data AI Compliance"
+    },
+    "model-compliance": {
+        "description": "Model Compliance module definition",
+        "title": "Model AI Compliance"
     }
 }

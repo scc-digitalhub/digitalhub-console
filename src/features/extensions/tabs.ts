@@ -3,11 +3,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createElement, ReactElement } from 'react';
+import { AiComplianceDataPage } from '../ai-compliance/AiComplianceDataPage';
+import { AiComplianceModelPage } from '../ai-compliance/AiComplianceModelPage';
 import { useLocale, useRecordContext, useTranslate } from 'react-admin';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { ExtensionsField } from './Field';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import get from 'lodash/get';
+
+const EXTENSION_WIDGETS = {
+    'data-compliance': AiComplianceDataPage,
+    'model-compliance': AiComplianceModelPage,
+};
 
 export const useExtensionsTabs = (props: {
     resource?: string;
@@ -50,8 +57,9 @@ export const useExtensionsTabs = (props: {
             ...record,
             [source]: value.filter((e: any) => e.kind === k),
         };
-
-        const field = createElement(ExtensionsField, {
+        console.log('kind', k);
+        const widget = EXTENSION_WIDGETS[k] || ExtensionsField;
+        const field =  createElement(widget, {
             source,
             record: tabRecord,
         });

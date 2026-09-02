@@ -16,6 +16,7 @@ import { Box, Divider, Popover, Stack, Typography } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
+import { ComplianceIcon } from '../features/ai-compliance/icon';
 import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
@@ -118,6 +119,11 @@ export const MyMenu = () => {
                 leftIcon={<LineageIcon />}
                 to={`${basename}/lineage`}
                 primaryText={'pages.lineage.title'}
+            />
+            <MenuItemLink
+                leftIcon={<ComplianceIcon />}
+                to={`${basename}/compliance`}
+                primaryText={'compliance.pages.compliance.menu'}
             />
 
             <MenuItemLink
