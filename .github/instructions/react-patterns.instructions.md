@@ -252,6 +252,10 @@ When a field change needs to trigger a side effect (sync to external state, auto
 useFieldObserver<T>(source: string, effect: (value: T) => void): void
 ```
 
+This hook is for **coordination between components and form-level side effects**. It is not the place to decide whether a field is locally dirty or to compare a field value against its previous or initial baseline.
+
+Those comparisons belong to the component that owns the field value itself. The observer should only react to a change after it has happened and then trigger a parent-level action.
+
 Every inter-field dependency is visible at the form level. Reading form **metadata** (`useFormState().dirtyFields`) inside a coordinator component is acceptable — it reads aggregate state, not a field value owned by another component.
 
 ### Hidden fixed logic and hardcoded dependencies are forbidden
