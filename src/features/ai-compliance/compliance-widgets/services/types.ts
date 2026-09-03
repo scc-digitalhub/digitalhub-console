@@ -1,4 +1,4 @@
-import type { EntityKind, JsonRecord } from "../types";
+import type { ComplianceEntityKind, JsonRecord } from "../types";
 
 /**
  * Compliance specification persistence service. Mirrors a `/compliance-spec/{kind}/{id}`
@@ -6,9 +6,9 @@ import type { EntityKind, JsonRecord } from "../types";
  * services/mock/complianceService.ts).
  */
 export interface ComplianceService {
-  getComplianceSpec(kind: EntityKind, entityId: string): Promise<JsonRecord | null>;
-  saveComplianceSpec(kind: EntityKind, entityId: string, spec: JsonRecord): Promise<JsonRecord>;
-  deleteComplianceSpec(kind: EntityKind, entityId: string): Promise<void>;
+  getComplianceSpec(kind: ComplianceEntityKind, entityKind: string, entityId: string): Promise<JsonRecord | null>;
+  saveComplianceSpec(kind: ComplianceEntityKind, entityKind: string, entityId: string, spec: JsonRecord): Promise<JsonRecord>;
+  deleteComplianceSpec(kind: ComplianceEntityKind, entityKind: string, entityId: string): Promise<void>;
 }
 
 /** Result of an agent "generate"/"extend" call: a narrative rationale plus a JSON patch. */
@@ -24,8 +24,8 @@ export interface AgentResult {
  * services/mock/agentService.ts).
  */
 export interface AgentService {
-  generateComplianceSpec(kind: EntityKind, entity: JsonRecord): Promise<AgentResult>;
-  extendComplianceSpec(kind: EntityKind, entity: JsonRecord, currentSpec: JsonRecord): Promise<AgentResult>;
+  generateComplianceSpec(kind: ComplianceEntityKind, entity: JsonRecord): Promise<AgentResult>;
+  extendComplianceSpec(kind: ComplianceEntityKind, entity: JsonRecord, currentSpec: JsonRecord): Promise<AgentResult>;
 }
 
 /** Full set of services a compliance widget needs to operate. */
