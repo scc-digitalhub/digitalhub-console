@@ -1,6 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { ComplianceWidgetServices } from "./types";
-import { createMockServices } from "./mock";
 
 const ComplianceServicesContext = createContext<ComplianceWidgetServices | null>(null);
 
@@ -25,7 +24,7 @@ export interface ComplianceServicesProviderProps {
  */
 export function ComplianceServicesProvider({ services, children }: ComplianceServicesProviderProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const value = useMemo(() => services ?? createMockServices(), [services]);
+  const value = useMemo(() => services ?? null, [services]);
   return <ComplianceServicesContext.Provider value={value}>{children}</ComplianceServicesContext.Provider>;
 }
 

@@ -11,8 +11,8 @@
  *
  * function App() {
  *   return (
- *     // Omit `services` to use the bundled in-browser mock; pass your own EntityService/
- *     // ComplianceService/AgentService implementations to connect a real backend.
+ *     // Omit `services` to use the bundled in-browser mock; pass your own ComplianceService/
+ *     // AgentService implementations to connect a real backend.
  *     <ComplianceServicesProvider>
  *       <ProjectComplianceWidget entityId="11111111-1111-1111-1111-111111111111" />
  *     </ComplianceServicesProvider>
@@ -45,15 +45,11 @@ export type {
   ComplianceService, AgentService, AgentResult, ComplianceWidgetServices,
 } from "./services/types";
 export { ComplianceServicesProvider, useComplianceServices } from "./services/context";
-export {
-  createMockServices, createMockComplianceService, createMockAgentService,
-} from "./services/mock";
-
 // i18n: bundled English/Italian resources for the host's React Admin i18n provider.
 export { complianceWidgetMessages } from "./i18n/register";
 
 // Domain types and the schema-name lookup tables used by the editors/EntityForm.
-export type { EntityKind, JsonRecord, EntityRecord } from "./types";
+export type { ComplianceEntityKind, JsonRecord, EntityRecord } from "./types";
 export { ENTITY_SCHEMA_NAME, COMPLIANCE_SCHEMA_NAME } from "./types";
 
 // Schema engine (advanced use — e.g. building custom editors on top of the same schemas).

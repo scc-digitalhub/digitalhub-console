@@ -3,9 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+    LoadingIndicator,
+    useDataProvider,
+    useRecordContext,
     useTranslate,
 } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { createServices } from './services';
 
 
 import {
@@ -13,13 +17,34 @@ import {
 } from "./compliance-widgets";
 import { PageTitle } from '../../common/components/layout/PageTitle';
 import { ComplianceIcon } from './icon';
+import { useContext, useEffect, useState } from 'react';
  
 export const AiCompliancePage = () => {
+    const dataProvider = useDataProvider();
     const { root: projectId } = useRootSelector();
+    const [project, setProject] = useState<any>(null);
+    const [extension, setExtension] = useState<any>(null);
     const translate = useTranslate();
 
+    useEffect(() => {
+        if (!dataProvider || !projectId) return;
+
+        dataProvider.getOne('projects', { id: projectId }).then(res => {
+            if (res.data) {
+                setProject(res.data);
+                setExtension(res.data.extensions?.find(e => e.kind === 'ai-compliance'));
+            }
+        });
+
+    }, [dataProvider, projectId]);
+
+    if (!project) {
+        return <LoadingIndicator />;
+    }
+
+
     return (
-        <ComplianceServicesProvider>
+        <ComplianceServicesProvider services={createServices(dataProvider)}>
             <PageTitle
                 text={translate('compliance.pages.compliance.title')}
                 secondaryText={translate(
@@ -28,7 +53,7 @@ export const AiCompliancePage = () => {
                 icon={<ComplianceIcon fontSize="large" />}
             />
 
-            <ProjectComplianceWidget entityId="11111111-1111-1111-1111-111111111111" />
+            <ProjectComplianceWidget entity={project} resource="projects" extension={extension} />
         </ComplianceServicesProvider>
     );
 };

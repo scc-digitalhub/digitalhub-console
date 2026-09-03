@@ -5,8 +5,10 @@
 import {
     useRecordContext,
     useTranslate,
+    useDataProvider,
+    useResourceContext,
 } from 'react-admin';
-
+import { createServices } from './services';
 import {
     ComplianceServicesProvider,
     DatasetComplianceWidget
@@ -16,13 +18,15 @@ import { ComplianceIcon } from './icon';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
  
 export const AiComplianceModelPage = (props: {
-    resource?: string;
     record?: any;
     source?: string;
 }) => {
     const translate = useTranslate();
+    const dataProvider = useDataProvider();
     const { source = 'extensions' } = props;
     const record = useRecordContext(props);
+    const resource = useResourceContext(); 
+
     //check if any extension is available
     const { data: schemas, isLoading } = useGetSchemas('extensions');
 
@@ -32,7 +36,7 @@ export const AiComplianceModelPage = (props: {
     }
 
     return (
-        <ComplianceServicesProvider>
+        <ComplianceServicesProvider services={createServices(dataProvider)}>
             <PageTitle
                 text={translate('compliance.pages.modelcompliance.title')}
                 secondaryText={translate(
@@ -41,7 +45,7 @@ export const AiComplianceModelPage = (props: {
                 icon={<ComplianceIcon fontSize="large" />}
             />
 
-            <DatasetComplianceWidget entityId="11111111-1111-1111-1111-111111111111" />
+            <DatasetComplianceWidget entity={record} resource={resource as string} extension={field[0]}/>
         </ComplianceServicesProvider>
     );
 };

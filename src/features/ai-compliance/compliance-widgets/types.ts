@@ -1,5 +1,5 @@
 /** The three entity kinds the compliance widgets support, matching okb "appliesTo" targets. */
-export type EntityKind = "project" | "dataset" | "model";
+export type ComplianceEntityKind = "project" | "dataset" | "model";
 
 /** Generic JSON object — entity definitions and compliance specs are treated as loosely-typed
  * records edited through the schema-driven form, mirroring how a real backend exchanges plain
@@ -13,14 +13,14 @@ export interface EntityRecord {
 }
 
 /** Entity definition schema (see schema/entitySchemas.ts) backing each entity kind. */
-export const ENTITY_SCHEMA_NAME: Record<EntityKind, string> = {
+export const ENTITY_SCHEMA_NAME: Record<ComplianceEntityKind, string> = {
   project: "ProjectInput",
   dataset: "DatasetInput",
   model: "ModelInput",
 };
 
 /** Compliance specification schema (see schema/registry.ts) backing each entity kind. */
-export const COMPLIANCE_SCHEMA_NAME: Record<EntityKind, string> = {
+export const COMPLIANCE_SCHEMA_NAME: Record<ComplianceEntityKind, string> = {
   project: "ProjectComplianceSpec",
   dataset: "DataComplianceSpec",
   model: "ModelComplianceSpec",
