@@ -254,6 +254,35 @@ useFieldObserver<T>(source: string, effect: (value: T) => void): void
 
 Every inter-field dependency is visible at the form level. Reading form **metadata** (`useFormState().dirtyFields`) inside a coordinator component is acceptable — it reads aggregate state, not a field value owned by another component.
 
+### Hidden fixed logic and hardcoded dependencies are forbidden
+
+Do not hide resource-specific fixes inside a generic field or shared component.
+
+Examples of forbidden patterns:
+- A `SpecInput` component removing `path` from a schema it received, or mutating the schema object in-place because a certain resource needs it.
+- A generic guard reading a specific `spec` shape or a hardcoded `record.spec.path`/`kind` dependency to decide whether to warn.
+- A child component writing to a different field than its own `source` to satisfy a one-off UI bug.
+- “Just one more little fix” in a shared component to handle a specific resource, kind, or file-upload flow.
+
+If the fix depends on a resource-specific convention, it belongs to the parent form or a small coordinator/hook that owns the field boundary.
+
+```tsx
+// Bad: shared field mutates another field silently
+const SpecInput = ({ source, schema }) => {
+    const path = useWatch({ name: 'path' });
+    delete schema.properties.path; // ❌ hidden resource-specific fix
+};
+
+// Good: form owns the resource-specific boundary
+const MyForm = () => {
+    const path = useWatch({ name: 'path' });
+    const filteredSchema = filterProperties(schema, ['path']);
+    return <SpecInput source="spec" schema={filteredSchema} />;
+};
+```
+
+**Rule:** if a component needs to know about a field it does not own, that dependency must be explicit in props or in the parent form’s `useWatch`/`useFormContext`, not hidden inside the component.
+
 ### No hybrid components
 
 **Do not create components that mix form building with unrelated feature handling.**
