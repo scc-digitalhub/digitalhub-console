@@ -25,10 +25,8 @@ import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar'
 import { getRunUiSpec } from '../runs/types';
 import { KindSelector } from '../../common/components/KindSelector';
 import { Stack } from '@mui/material';
-import {
-    filterProperties,
-    filterProps,
-} from '../../common/jsonSchema/schemas';
+import { filterProperties } from "../../common/jsonSchema/utils";
+import { filterProps } from "../../common/jsonSchema/utils";
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 

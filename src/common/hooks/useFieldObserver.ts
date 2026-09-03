@@ -18,9 +18,18 @@ export function useFieldObserver<T>(
 ): void {
     const value = useWatch({ name: source });
     const effectRef = useRef(effect);
+    const previousValueRef = useRef<T | undefined>(undefined);
     effectRef.current = effect;
 
     useEffect(() => {
-        effectRef.current(value as T);
+        const previousValue = previousValueRef.current;
+        const hasChanged =
+            previousValue === undefined || !Object.is(previousValue, value as T);
+
+        previousValueRef.current = value as T;
+
+        if (hasChanged) {
+            effectRef.current(value as T);
+        }
     }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 }

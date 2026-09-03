@@ -44,6 +44,7 @@ import { MetadataInput } from '../../features/metadata/components/MetadataInput'
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { buildParentRef } from '../../features/hub/utils';
 import { useGetExtensions } from '../../features/extensions/utils';
+import { KindChangeGuard } from '../../common/components/KindSelector';
 
 export const FunctionCreate = () => {
     const { root } = useRootSelector();
@@ -196,6 +197,8 @@ export const FunctionForm = (props: {
     onCancel?: () => void;
 }) => {
     const { kinds, isFromTemplate, cancelUrl, onCancel } = props;
+    const [kind, setKind] = useState<string | undefined>();
+    const [isSpecDirty, setIsSpecDirty] = useState(false);
 
     const { data: schemas } = useGetExtensions();
 
@@ -203,19 +206,18 @@ export const FunctionForm = (props: {
     //we build steps outside to avoid false/null children to stepperForm
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
         <StepperForm.Step key="kind" label="fields.kind">
-            <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-                <KindSelector kinds={kinds} readOnly={isFromTemplate} />
-            </Box>
+            <FunctionKindStepContent
+                kinds={kinds}
+                isFromTemplate={isFromTemplate}
+                isSpecDirty={isSpecDirty}
+                onKindConfirm={setKind}
+            />
         </StepperForm.Step>,
         <StepperForm.Step key="base" label="fields.base">
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
-            />
-            <MetadataInput kinds={['metadata.base']} />
+            <FunctionBaseStepContent />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label="fields.spec.title">
-            <SpecInput source="spec" getUiSchema={getFunctionUiSpec} />
+            <FunctionSpecStepContent kind={kind} onSpecDirty={setIsSpecDirty} />
         </StepperForm.Step>,
     ];
 
@@ -238,5 +240,53 @@ export const FunctionForm = (props: {
         >
             {steps}
         </StepperForm>
+    );
+};
+
+const FunctionKindStepContent = ({
+    kinds,
+    isFromTemplate,
+    isSpecDirty,
+    onKindConfirm,
+}: {
+    kinds?: { id: string; name: string }[];
+    isFromTemplate?: boolean;
+    isSpecDirty: boolean;
+    onKindConfirm: (nextKind: string | undefined) => void;
+}) => {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
+            <KindChangeGuard isDirty={isSpecDirty} onConfirm={onKindConfirm} />
+            <KindSelector kinds={kinds} readOnly={isFromTemplate} />
+        </Box>
+    );
+};
+
+const FunctionBaseStepContent = () => {
+    return (
+        <>
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </>
+    );
+};
+
+const FunctionSpecStepContent = ({
+    kind,
+    onSpecDirty,
+}: {
+    kind?: string;
+    onSpecDirty: (dirty: boolean) => void;
+}) => {
+    return (
+        <SpecInput
+            source="spec"
+            kind={kind}
+            onDirty={onSpecDirty}
+            getUiSchema={getFunctionUiSpec}
+        />
     );
 };

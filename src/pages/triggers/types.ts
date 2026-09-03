@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { mergeUiTemplate } from '../../common/jsonSchema/schemas';
+import { mergeUiTemplate } from "../../common/jsonSchema/utils";
 
 export const getTriggerUiSpec = (schema: any | undefined, taskSchema: any) => {
     //filter and merge with template

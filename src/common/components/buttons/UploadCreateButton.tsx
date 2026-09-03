@@ -32,7 +32,7 @@ import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
 import { Uploader } from '../../../features/files/upload/types';
 import { KindSelector } from '../KindSelector';
-import { KindChangeGuard } from '../KindChangeGuard';
+import { KindChangeGuard } from '../KindSelector';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';

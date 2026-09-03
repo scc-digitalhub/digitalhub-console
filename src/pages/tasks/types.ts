@@ -5,7 +5,7 @@
 import { CoreResourceCpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceCpuWidget';
 import { CoreResourceGpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceGpuWidget';
 import { CoreResourceMemWidget } from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
-import { mergeUiTemplate } from '../../common/jsonSchema/schemas';
+import { mergeUiTemplate } from "../../common/jsonSchema/utils";
 
 
 export const getTaskUiSpec = (schema: any | undefined) => {

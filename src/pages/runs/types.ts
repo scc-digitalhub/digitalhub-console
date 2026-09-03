@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    mergeUiTemplate,
     Serializable,
 } from '../../common/jsonSchema/schemas';
+import { mergeUiTemplate } from "../../common/jsonSchema/utils";
 
 export const getRunUiSpec = (schema: any | undefined) => {
     //filter and merge with template

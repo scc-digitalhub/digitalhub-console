@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -30,6 +30,8 @@ import { MetadataInput } from '../../features/metadata/components/MetadataInput'
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { useGetExtensions } from '../../features/extensions/utils';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
+import { useSchemaProvider } from '../../common/provider/schemaProvider';
+import { filterProperties } from '../../common/jsonSchema/utils';
 
 export const ArtifactEdit = () => {
     const resource = useResourceContext();
@@ -125,20 +127,36 @@ export const ArtifactEdit = () => {
     );
 };
 
-type ArtifactEditContentProps = {
-    uploader: Uploader;
-    onSpecDirty: (dirty: boolean) => void;
-    onMetadataVersionDirty: (dirty: boolean) => void;
-};
-
 const ArtifactEditContent = ({
     uploader,
     onSpecDirty,
     onMetadataVersionDirty,
-}: ArtifactEditContentProps) => {
+}: {
+    uploader: Uploader;
+    onSpecDirty: (dirty: boolean) => void;
+    onMetadataVersionDirty: (dirty: boolean) => void;
+}) => {
     const { data: extensions } = useGetExtensions();
     const record = useRecordContext();
     const kind = useWatch({ name: 'kind' });
+    const [schema, setSchema] = useState<any>();
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+
+    useEffect(() => {
+        if (!kind || !resource || !schemaProvider) {
+            setSchema(undefined);
+            return;
+        }
+
+        schemaProvider
+            .get(resource, kind)
+            .then(schemaResult => {
+                const nextSchema = filterProperties(schemaResult?.schema, ['path']);
+                setSchema(nextSchema ?? undefined);
+            })
+            .catch(() => setSchema(undefined));
+    }, [kind, resource, schemaProvider]);
 
     return (
         <>
@@ -154,6 +172,7 @@ const ArtifactEditContent = ({
             <MetadataInput onVersionDirty={onMetadataVersionDirty} />
             <SpecInput
                 source="spec"
+                schema={schema}
                 kind={kind}
                 onDirty={onSpecDirty}
                 getUiSchema={k => getArtifactSpecUiSchema(k) || {}}

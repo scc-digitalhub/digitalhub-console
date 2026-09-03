@@ -4,11 +4,10 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
-import { JSXElementConstructor, ReactElement } from 'react';
+import { JSXElementConstructor, ReactElement, useState } from 'react';
 import {
     CreateBase,
     CreateView,
-    FormDataConsumer,
     LoadingIndicator,
     TextInput,
     required,
@@ -19,6 +18,7 @@ import { CreatePageTitle } from '../../common/components/layout/PageTitle';
 import { WorkflowIcon } from './icon';
 import { getWorkflowUiSpec } from './types';
 import { KindSelector } from '../../common/components/KindSelector';
+import { KindChangeGuard } from '../../common/components/KindSelector';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
@@ -66,6 +66,8 @@ export const WorkflowForm = (props: {
     kinds?: { id: string; name: string }[];
 }) => {
     const { kinds } = props;
+    const [kind, setKind] = useState<string | undefined>();
+    const [isSpecDirty, setIsSpecDirty] = useState(false);
 
     //check if any extension is available
     const { data: schemas } = useGetExtensions();
@@ -73,25 +75,21 @@ export const WorkflowForm = (props: {
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
-        <StepperForm.Step key="base" label={'fields.base'}>
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
+        <StepperForm.Step key="kind" label="fields.kind">
+            <WorkflowKindStepContent
+                kinds={kinds}
+                isSpecDirty={isSpecDirty}
+                onKindConfirm={setKind}
             />
-            <MetadataInput kinds={['metadata.base']} />
+        </StepperForm.Step>,
+        <StepperForm.Step key="base" label={'fields.base'}>
+            <WorkflowBaseStepContent />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label={'fields.spec.title'}>
-            <KindSelector kinds={kinds} />
-
-            <FormDataConsumer<{ kind: string }>>
-                {({ formData }) => (
-                    <SpecInput
-                        source="spec"
-                        kind={formData.kind}
-                        getUiSchema={getWorkflowUiSpec}
-                    />
-                )}
-            </FormDataConsumer>
+            <WorkflowSpecStepContent
+                kind={kind}
+                onSpecDirty={setIsSpecDirty}
+            />
         </StepperForm.Step>,
     ];
 
@@ -107,4 +105,53 @@ export const WorkflowForm = (props: {
     }
 
     return <StepperForm toolbar={<StepperToolbar />}>{steps}</StepperForm>;
+};
+
+const WorkflowKindStepContent = ({
+    kinds,
+    isSpecDirty,
+    onKindConfirm,
+}: {
+    kinds?: { id: string; name: string }[];
+    isSpecDirty: boolean;
+    onKindConfirm: (nextKind: string | undefined) => void;
+}) => {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
+            <KindChangeGuard
+                isDirty={isSpecDirty}
+                onConfirm={onKindConfirm}
+            />
+            <KindSelector kinds={kinds} />
+        </Box>
+    );
+};
+
+const WorkflowBaseStepContent = () => {
+    return (
+        <>
+            <TextInput
+                source="name"
+                validate={[required(), isAlphaNumeric()]}
+            />
+            <MetadataInput kinds={['metadata.base']} />
+        </>
+    );
+};
+
+const WorkflowSpecStepContent = ({
+    kind,
+    onSpecDirty,
+}: {
+    kind?: string;
+    onSpecDirty: (dirty: boolean) => void;
+}) => {
+    return (
+        <SpecInput
+            source="spec"
+            kind={kind}
+            onDirty={onSpecDirty}
+            getUiSchema={getWorkflowUiSpec}
+        />
+    );
 };

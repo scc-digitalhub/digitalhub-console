@@ -37,10 +37,11 @@ import { useGetExtensions } from '../../features/extensions/utils';
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { TemplatesSelector } from '../../common/components/TemplatesSelector';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
-import { KindSelector } from '../../common/components/KindSelector';
-import { KindChangeGuard } from '../../common/components/KindChangeGuard';
+import { KindChangeGuard, KindSelector } from '../../common/components/KindSelector';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { PathInput } from '../../features/files/upload/components/PathInput';
+import { useSchemaProvider } from '../../common/provider/schemaProvider';
+import { filterProperties } from '../../common/jsonSchema/utils';
 import { useWatch } from 'react-hook-form';
 
 export const ModelCreate = () => {
@@ -213,14 +214,40 @@ const ModelSpecStepContent = ({
     uploader?: Uploader;
     kinds: { id: string; name: string }[];
 }) => {
-    const kind = useWatch({ name: 'kind' });
+    const [kind, setKind] = useState<string | undefined>();
+    const [isSpecDirty, setIsSpecDirty] = useState(false);
+    const [specSchema, setSpecSchema] = useState<any>();
+    const path = useWatch({ name: 'path' });
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+
+    useEffect(() => {
+        if (!kind || !resource || !schemaProvider) {
+            setSpecSchema(undefined);
+            return;
+        }
+
+        schemaProvider
+            .get(resource, kind)
+            .then(schemaResult => {
+                const nextSchema = filterProperties(schemaResult?.schema, ['path']);
+                setSpecSchema(nextSchema ?? undefined);
+            })
+            .catch(() => setSpecSchema(undefined));
+    }, [kind, resource, schemaProvider]);
+
     return (
         <>
-            <KindChangeGuard />
+            <KindChangeGuard
+                isDirty={Boolean(isSpecDirty || !!path)}
+                onConfirm={setKind}
+            />
             <KindSelector kinds={kinds} />
             <SpecInput
                 source="spec"
+                schema={specSchema}
                 kind={kind}
+                onDirty={setIsSpecDirty}
                 getUiSchema={getModelSpecUiSchema}
             />
             {kind && <PathInput source="path" uploader={uploader} />}

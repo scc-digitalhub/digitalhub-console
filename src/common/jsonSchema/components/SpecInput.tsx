@@ -33,7 +33,7 @@ export const SpecInput = (
     } = props;
     const resource = useResourceContext();
     const record = useRecordContext();
-    const value = useWatch({ name: source });
+    const value = useWatch({ name: source, defaultValue: {} });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>(schemaProp);
 
@@ -62,17 +62,6 @@ export const SpecInput = (
     if (helperText !== undefined) {
         jsonSchema['description'] = helperText;
     }
-    // Remove 'path' from schema — managed externally by PathInput
-    if (jsonSchema.properties) {
-        const { path: _p, ...propsWithoutPath } = jsonSchema.properties;
-        jsonSchema.properties = propsWithoutPath;
-        if (Array.isArray(jsonSchema.required)) {
-            jsonSchema.required = jsonSchema.required.filter(
-                (k: string) => k !== 'path'
-            );
-        }
-    }
-
     return (
         <JsonSchemaInput
             source={source}

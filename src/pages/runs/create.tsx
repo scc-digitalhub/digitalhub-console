@@ -19,7 +19,7 @@ import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
-import { filterProps } from '../../common/jsonSchema/schemas';
+import { filterProps } from "../../common/jsonSchema/utils";
 import { ExtensionsForm } from '../../features/extensions/Form';
 import { useGetExtensions } from '../../features/extensions/utils';
 import { JSXElementConstructor, ReactElement } from 'react';
