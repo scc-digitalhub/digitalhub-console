@@ -7,11 +7,12 @@ import {
     useTranslate,
     useDataProvider,
     useResourceContext,
+    useAuthProvider,
 } from 'react-admin';
 import { createServices } from './services';
 import {
     ComplianceServicesProvider,
-    DatasetComplianceWidget
+    ModelComplianceWidget
 } from "./compliance-widgets";
 import { PageTitle } from '../../common/components/layout/PageTitle';
 import { ComplianceIcon } from './icon';
@@ -23,6 +24,7 @@ export const AiComplianceModelPage = (props: {
 }) => {
     const translate = useTranslate();
     const dataProvider = useDataProvider();
+    const authProvider = useAuthProvider();
     const { source = 'extensions' } = props;
     const record = useRecordContext(props);
     const resource = useResourceContext(); 
@@ -36,7 +38,7 @@ export const AiComplianceModelPage = (props: {
     }
 
     return (
-        <ComplianceServicesProvider services={createServices(dataProvider)}>
+        <ComplianceServicesProvider services={createServices(dataProvider, authProvider)}>
             <PageTitle
                 text={translate('compliance.pages.modelcompliance.title')}
                 secondaryText={translate(
@@ -45,7 +47,7 @@ export const AiComplianceModelPage = (props: {
                 icon={<ComplianceIcon fontSize="large" />}
             />
 
-            <DatasetComplianceWidget entity={record} resource={resource as string} extension={field[0]}/>
+            <ModelComplianceWidget entity={record} resource={resource as string} extension={field[0]}/>
         </ComplianceServicesProvider>
     );
 };

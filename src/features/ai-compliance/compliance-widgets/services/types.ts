@@ -24,8 +24,7 @@ export interface AgentResult {
  * services/mock/agentService.ts).
  */
 export interface AgentService {
-  generateComplianceSpec(kind: ComplianceEntityKind, entity: JsonRecord): Promise<AgentResult>;
-  extendComplianceSpec(kind: ComplianceEntityKind, entity: JsonRecord, currentSpec: JsonRecord): Promise<AgentResult>;
+  extendComplianceSpec(kind: ComplianceEntityKind, entity: JsonRecord, currentSpec: JsonRecord, project: JsonRecord | null, projectSpec: JsonRecord | null): Promise<AgentResult>;
 }
 
 /** Full set of services a compliance widget needs to operate. */

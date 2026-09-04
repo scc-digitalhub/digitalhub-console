@@ -5,6 +5,7 @@
 import {
     LoadingIndicator,
     useDataProvider,
+    useAuthProvider,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
@@ -21,6 +22,7 @@ import { useContext, useEffect, useState } from 'react';
  
 export const AiCompliancePage = () => {
     const dataProvider = useDataProvider();
+    const authProvider = useAuthProvider();
     const { root: projectId } = useRootSelector();
     const [project, setProject] = useState<any>(null);
     const [extension, setExtension] = useState<any>(null);
@@ -44,7 +46,7 @@ export const AiCompliancePage = () => {
 
 
     return (
-        <ComplianceServicesProvider services={createServices(dataProvider)}>
+        <ComplianceServicesProvider services={createServices(dataProvider, authProvider)}>
             <PageTitle
                 text={translate('compliance.pages.compliance.title')}
                 secondaryText={translate(
