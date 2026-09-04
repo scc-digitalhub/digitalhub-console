@@ -2,10 +2,10 @@ import type { ComplianceWidgetServices } from "../compliance-widgets/services/ty
 import { createComplianceService } from "./complianceService";
 import { createAgentService } from "./agentService";
 
-export function createServices(record: any): ComplianceWidgetServices {
+export function createServices(dataProvider: any, authProvider: any): ComplianceWidgetServices {
 
   return {
-    complianceService: createComplianceService(record),
-    agentService: createAgentService(),
+    complianceService: createComplianceService(dataProvider),
+    agentService: createAgentService(authProvider),
   };
 }

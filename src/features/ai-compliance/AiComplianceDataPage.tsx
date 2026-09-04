@@ -7,6 +7,7 @@ import {
     useTranslate,
     useDataProvider,
     useResourceContext,
+    useAuthProvider,
 } from 'react-admin';
 import { createServices } from './services';
 import {
@@ -23,6 +24,7 @@ export const AiComplianceDataPage = (props: {
 }) => {
     const translate = useTranslate();
     const dataProvider = useDataProvider(); 
+    const authProvider = useAuthProvider();
     const { source = 'extensions' } = props;
     const record = useRecordContext(props);
     const resource = useResourceContext(); 
@@ -35,7 +37,7 @@ export const AiComplianceDataPage = (props: {
     }
 
     return (
-        <ComplianceServicesProvider services={createServices(dataProvider)}>
+        <ComplianceServicesProvider services={createServices(dataProvider, authProvider)}>
             <PageTitle
                 text={translate('compliance.pages.datacompliance.title')}
                 secondaryText={translate(

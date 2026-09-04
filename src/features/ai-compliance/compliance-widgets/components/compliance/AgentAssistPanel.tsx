@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
   Stack, Typography,
 } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import { useTranslate } from "react-admin";
-import type { EntityKind, JsonRecord } from "../../types";
+import { useDataProvider, useTranslate } from "react-admin";
+import type { ComplianceEntityKind, JsonRecord } from "../../types";
 import { useComplianceServices } from "../../services/context";
 import type { AgentResult } from "../../services/types";
 import { mergeFillGaps } from "../../utils/merge";
+import { useRootSelector } from "@dslab/ra-root-selector";
 
 interface AgentAssistPanelProps {
-  kind: EntityKind;
+  kind: ComplianceEntityKind;
   entity: JsonRecord;
   currentSpec: JsonRecord;
   onApply: (nextSpec: JsonRecord) => void;
@@ -27,11 +28,29 @@ type Mode = "generate" | "extend" | null;
  */
 export default function AgentAssistPanel({ kind, entity, currentSpec, onApply }: AgentAssistPanelProps) {
   const t = useTranslate();
+  const dataProvider = useDataProvider();
   const { agentService } = useComplianceServices();
   const [mode, setMode] = useState<Mode>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AgentResult | null>(null);
   const [error, setError] = useState(false);
+
+  const { root: projectId } = useRootSelector();
+  const [project, setProject] = useState<JsonRecord | null>(null);
+  const [projectSpec, setProjectSpec] = useState<JsonRecord | null>(null);
+
+  useEffect(() => {
+      if (!dataProvider || !projectId) return;
+
+      dataProvider.getOne('projects', { id: projectId }).then(res => {
+          if (res.data) {
+              setProject(res.data);
+              const ext = res.data.extensions?.find(e => e.kind === 'ai-compliance');
+              setProjectSpec(ext?.spec ?? null);
+          }
+      });
+
+  }, [dataProvider, projectId]);
 
   const runAgent = async (nextMode: "generate" | "extend") => {
     setMode(nextMode);
@@ -39,10 +58,7 @@ export default function AgentAssistPanel({ kind, entity, currentSpec, onApply }:
     setError(false);
     setResult(null);
     try {
-      const res =
-        nextMode === "generate"
-          ? await agentService.generateComplianceSpec(kind, entity)
-          : await agentService.extendComplianceSpec(kind, entity, currentSpec ?? {});
+      const res =await agentService.extendComplianceSpec(kind, entity, currentSpec ?? {}, project, projectSpec);
       setResult(res);
     } catch {
       setError(true);
@@ -67,9 +83,9 @@ export default function AgentAssistPanel({ kind, entity, currentSpec, onApply }:
   return (
     <Box>
       <Stack direction="row" spacing={1}>
-        <Button variant="outlined" size="small" startIcon={<AutoAwesomeIcon />} onClick={() => runAgent("generate")}>
+        {/* <Button variant="outlined" size="small" startIcon={<AutoAwesomeIcon />} onClick={() => runAgent("generate")}>
           {t("compliance.agent.generate")}
-        </Button>
+        </Button> */}
         <Button variant="outlined" size="small" startIcon={<AutoAwesomeIcon />} onClick={() => runAgent("extend")}>
           {t("compliance.agent.extend")}
         </Button>
