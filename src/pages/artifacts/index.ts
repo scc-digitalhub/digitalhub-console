@@ -5,7 +5,7 @@
 import { ArtifactCreate } from './create';
 import { ArtifactEdit } from './edit';
 import { ArtifactIcon } from './icon';
-import { ArtifactList } from './list';
+import { ArtifactList } from './list/ArtifactList';
 import { ArtifactShow } from './show';
 import { getArtifactSpecUiSchema } from './types';
 

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { RunIcon } from './icon';
-import { RunList } from './list';
+import { RunList } from './list/RunList';
 import { RunShow } from './show';
 
 export default {

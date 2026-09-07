@@ -5,7 +5,7 @@
 import { ModelCreate } from './create';
 import { ModelEdit } from './edit';
 import { ModelIcon } from './icon';
-import { ModelList } from './list';
+import { ModelList } from './list/ModelList';
 import { ModelShow } from './show';
 import { getModelSpecUiSchema } from './types';
 
