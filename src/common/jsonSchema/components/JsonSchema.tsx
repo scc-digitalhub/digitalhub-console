@@ -4,10 +4,10 @@
 
 import {
     JsonSchemaField as RaJsonSchemaField,
+    JsonSchemaInput as RaJsonSchemaInput,
     JsonSchemaFieldProps,
     JSONSchemaFormatInputProps,
 } from '@dslab/ra-jsonschema-input';
-import { JsonSchemaInput as RaJsonSchemaInput } from '@dslab/ra-jsonschema-input';
 import { MuiChipsInputWidget } from './widgets/MuiChipsInputWidget';
 import { CoreResourceFieldTemplate } from './templates/CoreResourceFieldTemplate';
 import { KeyValueFieldTemplate } from './templates/KeyValueFieldTemplate';
@@ -22,6 +22,7 @@ import { HtmlPreview } from './widgets/HtmlPreview';
 import { JsonPreview } from './widgets/JsonPreview';
 import { useLocale, useTranslate } from 'react-admin';
 import { UiSchema } from '@rjsf/utils';
+import { useJsonSchemaContributions } from '../../../features/extensions/registry';
 
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
@@ -51,6 +52,25 @@ const customTemplates = {
 };
 const customFields = {
     AceField,
+};
+
+const mergeWithConflictCheck = (
+    base: Record<string, unknown>,
+    extension: Record<string, unknown>,
+    mapType: 'widget' | 'template' | 'field'
+) => {
+    for (const key of Object.keys(extension)) {
+        if (Object.hasOwn(base, key)) {
+            throw new Error(
+                `Console extension jsonSchema ${mapType} key already registered: ${key}`
+            );
+        }
+    }
+
+    return {
+        ...base,
+        ...extension,
+    };
 };
 
 const applyTranslation = (
@@ -102,6 +122,18 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
     const { schema, uiSchema, ...rest } = props;
     const locale = useLocale();
     const translate = useTranslate();
+    const { widgets, templates } = useJsonSchemaContributions();
+
+    const mergedWidgets = mergeWithConflictCheck(
+        customWidgets as Record<string, unknown>,
+        widgets,
+        'widget'
+    );
+    const mergedTemplates = mergeWithConflictCheck(
+        customTemplates as Record<string, unknown>,
+        templates,
+        'template'
+    );
 
     return (
         <RaJsonSchemaField
@@ -111,8 +143,8 @@ export const JsonSchemaField = (props: JsonSchemaFieldProps) => {
                     ? applyTranslation(uiSchema, locale, translate)
                     : undefined
             }
-            customWidgets={customWidgets}
-            templates={{ ...customTemplates, ...props.templates }}
+            customWidgets={mergedWidgets as any}
+            templates={{ ...(mergedTemplates as any), ...props.templates }}
             {...rest}
         />
     );
@@ -122,6 +154,23 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
     const { schema, uiSchema, ...rest } = props;
     const locale = useLocale();
     const translate = useTranslate();
+    const { widgets, templates, fields } = useJsonSchemaContributions();
+
+    const mergedWidgets = mergeWithConflictCheck(
+        customWidgets as Record<string, unknown>,
+        widgets,
+        'widget'
+    );
+    const mergedTemplates = mergeWithConflictCheck(
+        customTemplates as Record<string, unknown>,
+        templates,
+        'template'
+    );
+    const mergedFields = mergeWithConflictCheck(
+        customFields as Record<string, unknown>,
+        fields,
+        'field'
+    );
 
     return (
         <RaJsonSchemaInput
@@ -131,9 +180,9 @@ export const JsonSchemaInput = (props: JSONSchemaFormatInputProps) => {
                     ? applyTranslation(uiSchema, locale, translate)
                     : undefined
             }
-            customWidgets={customWidgets}
-            templates={{ ...customTemplates, ...props.templates }}
-            fields={{ ...customFields }}
+            customWidgets={mergedWidgets as any}
+            templates={{ ...(mergedTemplates as any), ...props.templates }}
+            fields={{ ...(mergedFields as any) }}
             {...rest}
         />
     );

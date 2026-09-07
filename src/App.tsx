@@ -132,6 +132,7 @@ import { ResourceSchemaProvider } from './common/provider/schemaProvider';
 import { ProjectConfig } from './pages/projects/config';
 import { SearchList } from './features/search/components/SearchList';
 import { SearchContextProvider } from './features/search/SearchContextProvider';
+import { ConsoleExtensionRegistryProvider } from './features/extensions/registry';
 import { createContext } from 'react';
 import artifactDefinition from './pages/artifacts';
 import dataitemDefinition from './pages/dataitems';
@@ -186,122 +187,140 @@ const CoreApp = () => {
                 store={localStorageStore('dh')}
             >
                 <StoreResetter>
-                    <SearchContextProvider searchProvider={searchProvider}>
-                        <ResourceSchemaProvider
-                            dataProvider={dataProvider}
-                            resource="schemas"
-                        >
-                            <StompContextProvider
-                                authProvider={authProvider}
-                                websocketUrl={WEBSOCKET_URL}
-                                topics={['/user/notifications/runs']}
+                    <ConsoleExtensionRegistryProvider>
+                        <SearchContextProvider searchProvider={searchProvider}>
+                            <ResourceSchemaProvider
+                                dataProvider={dataProvider}
+                                resource="schemas"
                             >
-                                <HttpClientContextProvider
-                                    httpClientProvider={httpClientProvider}
+                                <StompContextProvider
+                                    authProvider={authProvider}
+                                    websocketUrl={WEBSOCKET_URL}
+                                    topics={['/user/notifications/runs']}
                                 >
-                                    <FileContextProvider
-                                        fileProvider={fileProvider}
+                                    <HttpClientContextProvider
+                                        httpClientProvider={httpClientProvider}
                                     >
-                                        <AdminUI
-                                            dashboard={Dashboard}
-                                            layout={WrappedLayout}
-                                            loginPage={MyLoginPage}
-                                            requireAuth={!!authProvider}
-                                            disableTelemetry
+                                        <FileContextProvider
+                                            fileProvider={fileProvider}
                                         >
-                                            <Resource {...functionDefinition} />
-                                            <Resource {...workflowDefinition} />
-                                            <Resource {...dataitemDefinition} />
-                                            <Resource {...modelDefinition} />
-                                            <Resource {...artifactDefinition} />
-                                            <Resource name="tasks" />
-                                            <Resource {...runDefinition} />
-                                            <Resource
-                                                {...containerImageDefinition}
-                                            />
-                                            <Resource {...triggerDefinition} />
-                                            <Resource {...projectDefinition} />
-                                            <Resource {...secretDefinition} />
-                                            <Resource name="schemas" />
-                                            <Resource name="logs" />
-                                            <Resource name="metadatas" />
-                                            <Resource name="labels" />
-                                            <Resource name="templates" />
-                                            <Resource name="extensions" />
-                                            <CustomRoutes>
-                                                <Route
-                                                    path="/config"
-                                                    element={<ProjectConfig />}
+                                            <AdminUI
+                                                dashboard={Dashboard}
+                                                layout={WrappedLayout}
+                                                loginPage={MyLoginPage}
+                                                requireAuth={!!authProvider}
+                                                disableTelemetry
+                                            >
+                                                <Resource
+                                                    {...functionDefinition}
                                                 />
-                                                <Route
-                                                    path="/lineage"
-                                                    element={<ProjectLineage />}
+                                                <Resource
+                                                    {...workflowDefinition}
                                                 />
-                                                <Route
-                                                    path="/account"
-                                                    element={<MyAccount />}
+                                                <Resource
+                                                    {...dataitemDefinition}
                                                 />
-                                                <Route
-                                                    path="/files"
-                                                    element={<Browser />}
+                                                <Resource
+                                                    {...modelDefinition}
                                                 />
-                                                <Route
-                                                    path="/services"
-                                                    element={<ServiceList />}
+                                                <Resource
+                                                    {...artifactDefinition}
                                                 />
-                                                <Route
-                                                    path="/hub"
-                                                    element={<HubPage />}
-                                                />{' '}
-                                                <Route
-                                                    path="/projects/projectimport"
-                                                    element={
-                                                        <HubProjectImport />
-                                                    }
+                                                <Resource name="tasks" />
+                                                <Resource {...runDefinition} />
+                                                <Resource
+                                                    {...containerImageDefinition}
                                                 />
-                                                <Route
-                                                    path="/functions/hub"
-                                                    element={
-                                                        <HubPage resourceName="functions" />
-                                                    }
-                                                />{' '}
-                                                <Route
-                                                    path="/artifacts/hub"
-                                                    element={
-                                                        <HubPage resourceName="artifacts" />
-                                                    }
+                                                <Resource
+                                                    {...triggerDefinition}
                                                 />
-                                                {enableSearch && (
+                                                <Resource
+                                                    {...projectDefinition}
+                                                />
+                                                <Resource
+                                                    {...secretDefinition}
+                                                />
+                                                <Resource name="schemas" />
+                                                <Resource name="logs" />
+                                                <Resource name="metadatas" />
+                                                <Resource name="labels" />
+                                                <Resource name="templates" />
+                                                <Resource name="extensions" />
+                                                <CustomRoutes>
                                                     <Route
-                                                        path="/searchresults"
-                                                        element={<SearchList />}
+                                                        path="/config"
+                                                        element={<ProjectConfig />}
                                                     />
-                                                )}
-                                                {enableTrino && (
                                                     <Route
-                                                        path="/sql"
-                                                        element={<MyTrinoApp />}
+                                                        path="/lineage"
+                                                        element={<ProjectLineage />}
                                                     />
-                                                )}
-                                                {TUTORIALS_URL && (
                                                     <Route
-                                                        path="/tutorials"
+                                                        path="/account"
+                                                        element={<MyAccount />}
+                                                    />
+                                                    <Route
+                                                        path="/files"
+                                                        element={<Browser />}
+                                                    />
+                                                    <Route
+                                                        path="/services"
+                                                        element={<ServiceList />}
+                                                    />
+                                                    <Route
+                                                        path="/hub"
+                                                        element={<HubPage />}
+                                                    />{' '}
+                                                    <Route
+                                                        path="/projects/projectimport"
                                                         element={
-                                                            <TutorialsPage
-                                                                url={
-                                                                    TUTORIALS_URL
-                                                                }
-                                                            />
+                                                            <HubProjectImport />
                                                         }
                                                     />
-                                                )}
-                                            </CustomRoutes>
-                                        </AdminUI>
-                                    </FileContextProvider>
-                                </HttpClientContextProvider>
-                            </StompContextProvider>
-                        </ResourceSchemaProvider>
-                    </SearchContextProvider>
+                                                    <Route
+                                                        path="/functions/hub"
+                                                        element={
+                                                            <HubPage resourceName="functions" />
+                                                        }
+                                                    />{' '}
+                                                    <Route
+                                                        path="/artifacts/hub"
+                                                        element={
+                                                            <HubPage resourceName="artifacts" />
+                                                        }
+                                                    />
+                                                    {enableSearch && (
+                                                        <Route
+                                                            path="/searchresults"
+                                                            element={<SearchList />}
+                                                        />
+                                                    )}
+                                                    {enableTrino && (
+                                                        <Route
+                                                            path="/sql"
+                                                            element={<MyTrinoApp />}
+                                                        />
+                                                    )}
+                                                    {TUTORIALS_URL && (
+                                                        <Route
+                                                            path="/tutorials"
+                                                            element={
+                                                                <TutorialsPage
+                                                                    url={
+                                                                        TUTORIALS_URL
+                                                                    }
+                                                                />
+                                                            }
+                                                        />
+                                                    )}
+                                                </CustomRoutes>
+                                            </AdminUI>
+                                        </FileContextProvider>
+                                    </HttpClientContextProvider>
+                                </StompContextProvider>
+                            </ResourceSchemaProvider>
+                        </SearchContextProvider>
+                    </ConsoleExtensionRegistryProvider>
                 </StoreResetter>
             </AdminContext>
         </RootSelectorContextProvider>
