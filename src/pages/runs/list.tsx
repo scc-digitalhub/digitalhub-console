@@ -65,6 +65,7 @@ import { BsGpuCard } from 'react-icons/bs';
 import { BsCpuFill } from 'react-icons/bs';
 import { GrStorage } from 'react-icons/gr';
 import SignpostIcon from '@mui/icons-material/Signpost';
+import { ExtensionsToolbarButtons } from '../../features/extensions/ExtensionsButtons';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
@@ -103,6 +104,7 @@ const ListToolbar = (props: {
     } = props;
     return (
         <TopToolbar>
+            <ExtensionsToolbarButtons />
             {selectedView === 'dataTable' && (
                 <ColumnsButton
                     storeKey={`${storeKey}.dataTable`}

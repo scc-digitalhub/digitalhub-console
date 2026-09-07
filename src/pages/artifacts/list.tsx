@@ -51,6 +51,7 @@ import {
     ViewSelector,
 } from '../../common/components/buttons/ViewsSelector';
 import { formatDateDifference } from '../../common/utils/helpers';
+import { ExtensionsToolbarButtons } from '../../features/extensions/ExtensionsButtons';
 
 const fileStateChoices = [
     { id: 'CREATED', name: 'states.created' },
@@ -87,6 +88,7 @@ const ListToolbar = (props: {
     } = props;
     return (
         <TopToolbar>
+            <ExtensionsToolbarButtons />
             <UploadCreateButton />
             <CreateButton />
             <ImportButton />

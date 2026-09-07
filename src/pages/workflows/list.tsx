@@ -44,6 +44,7 @@ import {
     RowsViewIcon,
 } from '../../common/components/buttons/ViewsSelector';
 import { formatDateDifference } from '../../common/utils/helpers';
+import { ExtensionsToolbarButtons } from '../../features/extensions/ExtensionsButtons';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -73,6 +74,7 @@ const ListToolbar = (props: {
     } = props;
     return (
         <TopToolbar>
+            <ExtensionsToolbarButtons />
             <CreateButton />
             <ImportButton />
             {selectedView === 'dataTable' && (

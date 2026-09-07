@@ -49,6 +49,7 @@ import {
 import { IdField } from '../../common/components/fields/IdField';
 import { formatDateDifference } from '../../common/utils/helpers';
 import { prettyBytes } from '../../features/files/fileBrowser/utils';
+import { ExtensionsToolbarButtons } from '../../features/extensions/ExtensionsButtons';
 
 const fileStateChoices = [
     { id: 'CREATED', name: 'states.created' },
@@ -85,6 +86,7 @@ const ListToolbar = (props: {
     } = props;
     return (
         <TopToolbar>
+            <ExtensionsToolbarButtons />
             <UploadCreateButton />
             <CreateButton />
             <ImportButton />
