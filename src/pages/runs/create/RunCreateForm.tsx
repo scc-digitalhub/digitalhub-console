@@ -9,19 +9,19 @@ import {
     useGetResourceLabel,
     useTranslate,
 } from 'react-admin';
-import { getTaskUiSpec } from '../tasks/types';
-import { getRunUiSpec } from './types';
+import { getTaskUiSpec } from '../../tasks/types';
+import { getRunUiSpec } from '../types';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
-import { isValidAgainstSchema } from '../../common/jsonSchema/utils';
+import { isValidAgainstSchema } from '../../../common/jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar';
-import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
-import { filterProps } from "../../common/jsonSchema/utils";
-import { ExtensionsForm } from '../../features/extensions/Form';
-import { useGetExtensions } from '../../features/extensions/utils';
+import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
+import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
+import { filterProps } from '../../../common/jsonSchema/utils';
+import { ExtensionsForm } from '../../../features/extensions/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
 import { JSXElementConstructor, ReactElement } from 'react';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });

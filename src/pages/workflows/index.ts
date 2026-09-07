@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { WorkflowCreate } from './create';
+import { WorkflowCreate } from './create/WorkflowCreate';
 import { WorkflowEdit } from './edit';
 import { WorkflowIcon } from './icon';
 import { WorkflowList } from './list/WorkflowList';

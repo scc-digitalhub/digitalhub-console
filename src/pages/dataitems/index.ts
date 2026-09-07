@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { DataItemCreate } from './create';
+import { DataItemCreate } from './create/DataItemCreate';
 import { DataItemEdit } from './edit';
 import { DataItemIcon } from './icon';
 import { DataItemList } from './list/DataItemList';

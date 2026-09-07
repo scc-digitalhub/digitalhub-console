@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ModelCreate } from './create';
+import { ModelCreate } from './create/ModelCreate';
 import { ModelEdit } from './edit';
 import { ModelIcon } from './icon';
 import { ModelList } from './list/ModelList';
