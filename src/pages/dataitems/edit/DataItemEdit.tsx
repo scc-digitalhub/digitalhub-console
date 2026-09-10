@@ -15,23 +15,23 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { FlatCard } from '../../common/components/layout/FlatCard';
-import { FormLabel } from '../../common/components/layout/FormLabel';
-import { EditPageTitle } from '../../common/components/layout/PageTitle';
-import { DataItemIcon } from './icon';
-import { getDataItemSpecUiSchema } from './types';
-import { randomId } from '../../common/utils/helpers';
-import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
-import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../features/files/upload/useGetUploader';
-import { PathInput } from '../../features/files/upload/components/PathInput';
-import { Uploader } from '../../features/files/upload/types';
-import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../features/extensions/Form';
-import { useGetExtensions } from '../../features/extensions/utils';
-import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import { filterProperties } from '../../common/jsonSchema/utils';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
+import { FormLabel } from '../../../common/components/layout/FormLabel';
+import { EditPageTitle } from '../../../common/components/layout/PageTitle';
+import { DataItemIcon } from '../icon';
+import { getDataItemSpecUiSchema } from '../types';
+import { randomId } from '../../../common/utils/helpers';
+import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
+import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { PathInput } from '../../../features/files/upload/components/PathInput';
+import { Uploader } from '../../../features/files/upload/types';
+import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
+import { ExtensionsForm } from '../../../features/extensions/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import { filterProperties } from '../../../common/jsonSchema/utils';
+import { EditToolbar } from './EditToolbar';
 
 export const DataItemEdit = () => {
     const resource = useResourceContext();
@@ -106,11 +106,10 @@ export const DataItemEdit = () => {
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm
                                 toolbar={<EditToolbar />}
-                                defaultValues={record =>
-                                    ({
-                                        path: record?.spec?.path ?? null,
-                                    })
-                                }>
+                                defaultValues={record => ({
+                                    path: record?.spec?.path ?? null,
+                                })}
+                            >
                                 <DataItemEditContent
                                     uploader={uploader}
                                     onSpecDirty={setIsSpecDirty}
@@ -152,7 +151,9 @@ const DataItemEditContent = ({
         schemaProvider
             .get(resource, kind)
             .then(schemaResult => {
-                const nextSchema = filterProperties(schemaResult?.schema, ['path']);
+                const nextSchema = filterProperties(schemaResult?.schema, [
+                    'path',
+                ]);
                 setSchema(nextSchema ?? undefined);
             })
             .catch(() => setSchema(undefined));

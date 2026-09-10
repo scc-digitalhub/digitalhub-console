@@ -15,18 +15,18 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { FlatCard } from '../../common/components/layout/FlatCard';
-import { FormLabel } from '../../common/components/layout/FormLabel';
-import { EditPageTitle } from '../../common/components/layout/PageTitle';
-import { FunctionIcon } from './icon';
-import { getFunctionUiSpec } from './types';
-import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
-import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
-import { useGetExtensions } from '../../features/extensions/utils';
-import { ExtensionsForm } from '../../features/extensions/Form';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
+import { FormLabel } from '../../../common/components/layout/FormLabel';
+import { EditPageTitle } from '../../../common/components/layout/PageTitle';
+import { WorkflowIcon } from '../icon';
+import { getWorkflowUiSpec } from '../types';
+import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { ExtensionsForm } from '../../../features/extensions/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
+import { EditToolbar } from './EditToolbar';
 
-export const FunctionEdit = () => {
+export const WorkflowEdit = () => {
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
@@ -67,12 +67,12 @@ export const FunctionEdit = () => {
                 }}
             >
                 <>
-                    <EditPageTitle icon={<FunctionIcon fontSize={'large'} />} />
+                    <EditPageTitle icon={<WorkflowIcon fontSize={'large'} />} />
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm toolbar={<EditToolbar />}>
-                                <FunctionEditContent
+                                <WorkflowEditContent
                                     onSpecDirty={setIsSpecDirty}
                                     onMetadataVersionDirty={
                                         setIsMetadataVersionDirty
@@ -87,7 +87,7 @@ export const FunctionEdit = () => {
     );
 };
 
-const FunctionEditContent = ({
+const WorkflowEditContent = ({
     onSpecDirty,
     onMetadataVersionDirty,
 }: {
@@ -116,8 +116,9 @@ const FunctionEditContent = ({
                 source="spec"
                 kind={kind}
                 onDirty={onSpecDirty}
-                getUiSchema={k => getFunctionUiSpec(k) || {}}
+                getUiSchema={k => getWorkflowUiSpec(k) || {}}
             />
+
             {extensions && extensions.length > 0 && (
                 <>
                     <Divider />

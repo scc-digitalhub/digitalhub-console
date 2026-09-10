@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { FunctionCreate } from './create/FunctionCreate';
-import { FunctionEdit } from './edit';
+import { FunctionEdit } from './edit/FunctionEdit';
 import { FunctionIcon } from './icon';
 import { FunctionList } from './list/FunctionList';
 import { FunctionShow } from './show';

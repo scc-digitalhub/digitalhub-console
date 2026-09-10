@@ -15,25 +15,25 @@ import {
     useResourceContext,
 } from 'react-admin';
 import { useWatch } from 'react-hook-form';
-import { FlatCard } from '../../common/components/layout/FlatCard';
-import { FormLabel } from '../../common/components/layout/FormLabel';
-import { EditPageTitle } from '../../common/components/layout/PageTitle';
-import { ModelIcon } from './icon';
-import { getModelSpecUiSchema } from './types';
-import { randomId } from '../../common/utils/helpers';
-import { EditToolbar } from '../../common/components/toolbars/EditToolbar';
-import { useStateUpdateCallbacks } from '../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../features/files/upload/useGetUploader';
-import { PathInput } from '../../features/files/upload/components/PathInput';
-import { Uploader } from '../../features/files/upload/types';
-import { MetadataInput } from '../../features/metadata/components/MetadataInput';
-import { useGetExtensions } from '../../features/extensions/utils';
-import { ExtensionsForm } from '../../features/extensions/Form';
-import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import { filterProperties } from '../../common/jsonSchema/utils';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
+import { FormLabel } from '../../../common/components/layout/FormLabel';
+import { EditPageTitle } from '../../../common/components/layout/PageTitle';
+import { ArtifactIcon } from '../icon';
+import { getArtifactSpecUiSchema } from '../types';
+import { randomId } from '../../../common/utils/helpers';
+import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
+import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { PathInput } from '../../../features/files/upload/components/PathInput';
+import { Uploader } from '../../../features/files/upload/types';
+import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
+import { ExtensionsForm } from '../../../features/extensions/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import { filterProperties } from '../../../common/jsonSchema/utils';
+import { EditToolbar } from './EditToolbar';
 
-export const ModelEdit = () => {
+export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
@@ -100,18 +100,17 @@ export const ModelEdit = () => {
                 }}
             >
                 <>
-                    <EditPageTitle icon={<ModelIcon fontSize={'large'} />} />
+                    <EditPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
                             <SimpleForm
                                 toolbar={<EditToolbar />}
-                                defaultValues={record =>
-                                    ({
-                                        path: record?.spec?.path ?? null,
-                                    })
-                                }>
-                                <ModelEditContent
+                                defaultValues={record => ({
+                                    path: record?.spec?.path ?? null,
+                                })}
+                            >
+                                <ArtifactEditContent
                                     uploader={uploader}
                                     onSpecDirty={setIsSpecDirty}
                                     onMetadataVersionDirty={
@@ -127,7 +126,7 @@ export const ModelEdit = () => {
     );
 };
 
-const ModelEditContent = ({
+const ArtifactEditContent = ({
     uploader,
     onSpecDirty,
     onMetadataVersionDirty,
@@ -152,7 +151,9 @@ const ModelEditContent = ({
         schemaProvider
             .get(resource, kind)
             .then(schemaResult => {
-                const nextSchema = filterProperties(schemaResult?.schema, ['path']);
+                const nextSchema = filterProperties(schemaResult?.schema, [
+                    'path',
+                ]);
                 setSchema(nextSchema ?? undefined);
             })
             .catch(() => setSchema(undefined));
@@ -175,7 +176,7 @@ const ModelEditContent = ({
                 schema={schema}
                 kind={kind}
                 onDirty={onSpecDirty}
-                getUiSchema={k => getModelSpecUiSchema(k) || {}}
+                getUiSchema={k => getArtifactSpecUiSchema(k) || {}}
             />
             <PathInput source="path" uploader={uploader} />
             {extensions && extensions.length > 0 && (
