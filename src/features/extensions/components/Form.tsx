@@ -15,13 +15,11 @@ import {
     useSourceContext,
     useTranslate,
 } from 'react-admin';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
-import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { isValidKind } from '../../common/utils/helpers';
-import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
-import { useGetExtensions } from './utils';
+import { isValidKind } from '../../../common/utils/helpers';
+import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
+import { useGetExtensions } from '../utils';
 
 export const ExtensionsForm = (props: {
     resource?: string;
@@ -53,7 +51,7 @@ export const ExtensionsForm = (props: {
     );
 };
 
-export const ExtensionsFormItem = (props: { schemas: any[] }) => {
+const ExtensionsFormItem = (props: { schemas: any[] }) => {
     const { schemas = [] } = props;
     const sourceContext = useSourceContext();
     const { setValue, getValues } = useFormContext();
@@ -81,10 +79,7 @@ export const ExtensionsFormItem = (props: { schemas: any[] }) => {
     };
 
     const onKindChange = (kind: string | null) => {
-        console.log('kind changed to', kind);
-
         if (isDirty()) {
-            console.log('spec is dirty, reset');
             //reset spec
             setValue(sourceContext.getSource('spec'), {});
         }
@@ -123,6 +118,7 @@ const ScopedFormData = (props: {
         <JsonSchemaInput source={source} schema={schema} uiSchema={uiSchema} />
     );
 };
+
 const KindSelector = (props: {
     kinds: any[] | undefined;
     source?: string;

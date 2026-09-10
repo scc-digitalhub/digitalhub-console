@@ -4,22 +4,22 @@
 
 import { ReactElement } from 'react';
 import { useExtensions } from './extensions';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
+import { Section } from '../../common/components/layout/Section';
 
-export const useExtensionsTabs = (
+export const useExtensionsSections = (
     props: {
         resource?: string;
         record?: any;
         source?: string;
     } = {}
-): ReactElement<any, typeof CustomTabbedShowLayout.Tab>[] => {
+): ReactElement<any, typeof Section>[] => {
     const elements = useExtensions({
         resource: props.resource,
         record: props.record,
         source: props.source,
-        showIn: 'tab',
-        view: 'show',
-        component: CustomTabbedShowLayout.Tab,
+        showIn: 'section',
+        view: 'edit',
+        component: Section,
     });
 
     return elements;

@@ -12,7 +12,7 @@ import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { KindChangeGuard } from '../../../common/components/KindSelector';
 

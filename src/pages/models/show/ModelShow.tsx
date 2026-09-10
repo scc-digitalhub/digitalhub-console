@@ -30,7 +30,7 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { MetricsGrid } from '../../../features/metrics/components/MetricsGrid';
-import { ExtensionsField } from '../../../features/extensions/Field';
+import { ExtensionsField } from '../../../features/extensions/components/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';

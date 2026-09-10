@@ -18,6 +18,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { DownloadButton } from '../../../features/files/download/components/DownloadButton';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
+import { ExtensionsToolbarButtons } from '../../../features/extensions/ExtensionsButtons';
 
 /**
  * Top toolbar for show pages. Displays the following buttons:
@@ -69,6 +70,7 @@ export const ShowToolbar = (props: { exporter?: Exporter }) => {
     return (
         <TopToolbar>
             <BackButton style={{ marginRight: 'auto' }} />
+            <ExtensionsToolbarButtons />
             {resourceDefinition.hasEdit && <EditButton />}
             {resourceDefinition.options?.hasFiles &&
                 record?.status?.files?.length === 1 && <DownloadButton />}

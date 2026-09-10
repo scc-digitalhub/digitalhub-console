@@ -16,7 +16,7 @@ import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { Uploader } from '../../../features/files/upload/types';
 import { useUploaderNameSync } from '../../../features/files/upload/useUploaderSync';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import {

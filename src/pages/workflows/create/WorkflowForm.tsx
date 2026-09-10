@@ -13,7 +13,7 @@ import { Step, StepperForm } from '@dslab/ra-stepper';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 
 export const WorkflowForm = (props: {

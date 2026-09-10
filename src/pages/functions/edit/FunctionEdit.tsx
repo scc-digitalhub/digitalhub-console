@@ -23,7 +23,7 @@ import { getFunctionUiSpec } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useGetExtensions } from '../../../features/extensions/utils';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { EditToolbar } from './EditToolbar';
 
 export const FunctionEdit = () => {

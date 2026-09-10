@@ -10,10 +10,10 @@ import {
     TextField,
     useRecordContext,
 } from 'react-admin';
-import { useGetSchemas } from '../../common/jsonSchema/schemaController';
-import { getSpecSchema, getUiSchema } from './utils';
-import { IdField } from '../../common/components/fields/IdField';
-import { JsonSchemaField } from '../../common/jsonSchema/components/JsonSchema';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
+import { getSpecSchema, getUiSchema } from '../utils';
+import { IdField } from '../../../common/components/fields/IdField';
+import { JsonSchemaField } from '../../../common/jsonSchema/components/JsonSchema';
 
 export const ExtensionsField = (props: {
     resource?: string;
@@ -43,7 +43,7 @@ export const ExtensionsField = (props: {
     );
 };
 
-export const ExtensionsFieldItem = (props: { schemas: any[] }) => {
+const ExtensionsFieldItem = (props: { schemas: any[] }) => {
     const { schemas = [] } = props;
     const record = useRecordContext(props);
 

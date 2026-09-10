@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -26,12 +26,13 @@ import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { Uploader } from '../../../features/files/upload/types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
 import { EditToolbar } from './EditToolbar';
+import { useExtensionsSections } from '../../../features/extensions/sections';
 
 export const ArtifactEdit = () => {
     const resource = useResourceContext();
@@ -141,6 +142,7 @@ const ArtifactEditContent = ({
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
+    const contributions = useExtensionsSections();
 
     useEffect(() => {
         if (!kind || !resource || !schemaProvider) {
@@ -179,6 +181,16 @@ const ArtifactEditContent = ({
                 getUiSchema={k => getArtifactSpecUiSchema(k) || {}}
             />
             <PathInput source="path" uploader={uploader} />
+            {contributions &&
+                contributions.length > 0 &&
+                contributions.map((contribution, index) => (
+                    <Fragment
+                        key={contribution.key ?? `contribution-${index}`}
+                    >
+                        {contribution}
+                    </Fragment>
+                ))}
+
             {extensions && extensions.length > 0 && (
                 <>
                     <Divider />

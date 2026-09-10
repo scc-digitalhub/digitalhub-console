@@ -2,24 +2,27 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ReactElement } from 'react';
+import { ComponentPropsWithoutRef, ReactElement } from 'react';
 import { useExtensions } from './extensions';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
+import { StepperForm } from '@dslab/ra-stepper';
 
-export const useExtensionsTabs = (
+export const useExtensionsSteps = (
     props: {
         resource?: string;
         record?: any;
         source?: string;
     } = {}
-): ReactElement<any, typeof CustomTabbedShowLayout.Tab>[] => {
+): ReactElement<
+    ComponentPropsWithoutRef<typeof StepperForm.Step>,
+    typeof StepperForm.Step
+>[] => {
     const elements = useExtensions({
         resource: props.resource,
         record: props.record,
         source: props.source,
         showIn: 'tab',
-        view: 'show',
-        component: CustomTabbedShowLayout.Tab,
+        view: 'create',
+        component: StepperForm.Step,
     });
 
     return elements;

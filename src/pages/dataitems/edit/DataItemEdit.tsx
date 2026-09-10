@@ -26,7 +26,7 @@ import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { Uploader } from '../../../features/files/upload/types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';

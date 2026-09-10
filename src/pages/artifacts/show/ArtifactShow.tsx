@@ -28,8 +28,8 @@ import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
-import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { ShowToolbar } from './ShowToolbar';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
 
 export const ArtifactShow = () => {
     return (

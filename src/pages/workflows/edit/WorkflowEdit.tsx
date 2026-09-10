@@ -22,7 +22,7 @@ import { WorkflowIcon } from '../icon';
 import { getWorkflowUiSpec } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { EditToolbar } from './EditToolbar';
 

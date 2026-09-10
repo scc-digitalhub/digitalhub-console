@@ -17,7 +17,7 @@ import { StepperToolbar } from '../../../common/components/toolbars/StepperToolb
 import { Uploader } from '../../../features/files/upload/types';
 import { useUploaderNameSync } from '../../../features/files/upload/useUploaderSync';
 import { useGetExtensions } from '../../../features/extensions/utils';
-import { ExtensionsForm } from '../../../features/extensions/Form';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import {
     KindChangeGuard,
