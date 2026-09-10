@@ -23,6 +23,7 @@ import { filterProps } from '../../../common/jsonSchema/utils';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { JSXElementConstructor, ReactElement } from 'react';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -34,7 +35,8 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
     const runSchema = filterProps(runSchemaProps, taskSchema);
 
     //check if any extension is available
-    const { data: schemas } = useGetExtensions();
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
@@ -55,7 +57,11 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
         </StepperForm.Step>,
     ];
 
-    if (schemas && schemas.length > 0) {
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
+
+    if (extensions && extensions.length > 0) {
         steps.push(
             <StepperForm.Step
                 key="extensions"

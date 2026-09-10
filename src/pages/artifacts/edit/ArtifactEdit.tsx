@@ -136,12 +136,12 @@ const ArtifactEditContent = ({
     onSpecDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
-    const { data: extensions } = useGetExtensions();
     const record = useRecordContext();
     const kind = useWatch({ name: 'kind' });
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
+    const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSections();
 
     useEffect(() => {
@@ -181,12 +181,11 @@ const ArtifactEditContent = ({
                 getUiSchema={k => getArtifactSpecUiSchema(k) || {}}
             />
             <PathInput source="path" uploader={uploader} />
+
             {contributions &&
                 contributions.length > 0 &&
                 contributions.map((contribution, index) => (
-                    <Fragment
-                        key={contribution.key ?? `contribution-${index}`}
-                    >
+                    <Fragment key={contribution.key ?? `contribution-${index}`}>
                         {contribution}
                     </Fragment>
                 ))}

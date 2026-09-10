@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -32,6 +32,7 @@ import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
 import { EditToolbar } from './EditToolbar';
+import { useExtensionsSections } from '../../../features/extensions/sections';
 
 export const DataItemEdit = () => {
     const resource = useResourceContext();
@@ -135,12 +136,13 @@ const DataItemEditContent = ({
     onSpecDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
-    const { data: extensions } = useGetExtensions();
     const record = useRecordContext();
     const kind = useWatch({ name: 'kind' });
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSections();
 
     useEffect(() => {
         if (!kind || !resource || !schemaProvider) {
@@ -179,6 +181,15 @@ const DataItemEditContent = ({
                 getUiSchema={k => getDataItemSpecUiSchema(k) || {}}
             />
             <PathInput source="path" uploader={uploader} />
+
+            {contributions &&
+                contributions.length > 0 &&
+                contributions.map((contribution, index) => (
+                    <Fragment key={contribution.key ?? `contribution-${index}`}>
+                        {contribution}
+                    </Fragment>
+                ))}
+
             {extensions && extensions.length > 0 && (
                 <>
                     <Divider />

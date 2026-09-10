@@ -15,6 +15,7 @@ import { MetadataInput } from '../../../features/metadata/components/MetadataInp
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { KindChangeGuard } from '../../../common/components/KindSelector';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
 
 export const FunctionForm = (props: {
     kinds?: { id: string; name: string }[];
@@ -26,7 +27,8 @@ export const FunctionForm = (props: {
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
 
-    const { data: schemas } = useGetExtensions();
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
@@ -47,7 +49,11 @@ export const FunctionForm = (props: {
         </StepperForm.Step>,
     ];
 
-    if (schemas && schemas.length > 0) {
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
+
+    if (extensions && extensions.length > 0) {
         steps.push(
             <StepperForm.Step
                 key="extensions"

@@ -15,6 +15,7 @@ import { StepperToolbar } from '../../../common/components/toolbars/StepperToolb
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
 
 export const WorkflowForm = (props: {
     kinds?: { id: string; name: string }[];
@@ -24,7 +25,8 @@ export const WorkflowForm = (props: {
     const [isSpecDirty, setIsSpecDirty] = useState(false);
 
     //check if any extension is available
-    const { data: schemas } = useGetExtensions();
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
@@ -44,7 +46,11 @@ export const WorkflowForm = (props: {
         </StepperForm.Step>,
     ];
 
-    if (schemas && schemas.length > 0) {
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
+
+    if (extensions && extensions.length > 0) {
         steps.push(
             <StepperForm.Step
                 key="extensions"

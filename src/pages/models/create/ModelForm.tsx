@@ -28,6 +28,7 @@ import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
 import { useWatch } from 'react-hook-form';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
 
 export const ModelForm = (props: {
     uploader?: Uploader;
@@ -38,6 +39,8 @@ export const ModelForm = (props: {
 
     const { data: kindSchemas } = useGetSchemas(resource || '');
     const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
+
     const kinds = kindSchemas
         ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
         : [];
@@ -52,6 +55,10 @@ export const ModelForm = (props: {
             <ModelSpecStepContent uploader={uploader} kinds={kinds} />
         </StepperForm.Step>,
     ];
+
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
 
     if (extensions && extensions.length > 0) {
         steps.push(

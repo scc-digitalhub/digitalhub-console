@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -25,6 +25,7 @@ import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { EditToolbar } from './EditToolbar';
+import { useExtensionsSections } from '../../../features/extensions/sections';
 
 export const WorkflowEdit = () => {
     const notify = useNotify();
@@ -94,9 +95,10 @@ const WorkflowEditContent = ({
     onSpecDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
-    const { data: extensions } = useGetExtensions();
     const record = useRecordContext();
     const kind = useWatch({ name: 'kind' });
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSections();
 
     return (
         <>
@@ -118,6 +120,14 @@ const WorkflowEditContent = ({
                 onDirty={onSpecDirty}
                 getUiSchema={k => getWorkflowUiSpec(k) || {}}
             />
+
+            {contributions &&
+                contributions.length > 0 &&
+                contributions.map((contribution, index) => (
+                    <Fragment key={contribution.key ?? `contribution-${index}`}>
+                        {contribution}
+                    </Fragment>
+                ))}
 
             {extensions && extensions.length > 0 && (
                 <>
