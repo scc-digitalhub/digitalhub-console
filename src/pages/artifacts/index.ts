@@ -6,7 +6,7 @@ import { ArtifactCreate } from './create/ArtifactCreate';
 import { ArtifactEdit } from './edit/ArtifactEdit';
 import { ArtifactIcon } from './icon';
 import { ArtifactList } from './list/ArtifactList';
-import { ArtifactShow } from './show';
+import { ArtifactShow } from './show/ArtifactShow';
 import { getArtifactSpecUiSchema } from './types';
 
 export default {

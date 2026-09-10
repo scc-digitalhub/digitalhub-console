@@ -6,7 +6,7 @@ import { FunctionCreate } from './create/FunctionCreate';
 import { FunctionEdit } from './edit/FunctionEdit';
 import { FunctionIcon } from './icon';
 import { FunctionList } from './list/FunctionList';
-import { FunctionShow } from './show';
+import { FunctionShow } from './show/FunctionShow';
 
 export default {
     name: 'functions',

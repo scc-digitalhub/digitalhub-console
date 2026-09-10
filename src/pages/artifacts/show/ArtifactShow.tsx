@@ -12,24 +12,44 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { countLines } from '../../common/utils/helpers';
-import { ShowPageTitle } from '../../common/components/layout/PageTitle';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import { ArtifactIcon } from './icon';
-import { MetadataField } from '../../features/metadata/components/MetadataField';
-import { IdField } from '../../common/components/fields/IdField';
-import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
-import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
-import { StateChips } from '../../common/components/StateChips';
-import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
+import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
+import { countLines } from '../../../common/utils/helpers';
+import { ShowPageTitle } from '../../../common/components/layout/PageTitle';
+import { VersionsListWrapper } from '../../../common/components/VersionsList';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import { ArtifactIcon } from '../icon';
+import { MetadataField } from '../../../features/metadata/components/MetadataField';
+import { IdField } from '../../../common/components/fields/IdField';
+import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
+import { StateChips } from '../../../common/components/StateChips';
+import { ShowBaseLive } from '../../../features/notifications/components/ShowBaseLive';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
-import { FileInfoTree } from '../../features/files/fileInfoTree/components/FileInfoTree';
-import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
-import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
-import { useExtensionsTabs } from '../../features/extensions/tabs';
+import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
+import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
+import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
+import { ShowToolbar } from './ShowToolbar';
+
+export const ArtifactShow = () => {
+    return (
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <ShowBaseLive>
+                <>
+                    <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
+                    <ShowView
+                        actions={<ShowToolbar />}
+                        aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
+                        component={StyledFlatCard}
+                    >
+                        <ArtifactShowLayout />
+                    </ShowView>
+                </>
+            </ShowBaseLive>
+        </Container>
+    );
+};
 
 const ArtifactShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
@@ -100,25 +120,5 @@ const ArtifactShowLayout = (props: { record?: any }) => {
                 <LineageTabComponent />
             </CustomTabbedShowLayout.Tab>
         </CustomTabbedShowLayout>
-    );
-};
-
-export const ArtifactShow = () => {
-    return (
-        <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBaseLive>
-                <>
-                    <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
-                    <ShowView
-                        actions={<ShowToolbar />}
-                        aside={<VersionsListWrapper />}
-                        {...SHOW_VIEW_VERSION_PROPS}
-                        component={StyledFlatCard}
-                    >
-                        <ArtifactShowLayout />
-                    </ShowView>
-                </>
-            </ShowBaseLive>
-        </Container>
     );
 };

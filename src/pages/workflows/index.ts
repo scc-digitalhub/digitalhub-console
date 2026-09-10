@@ -6,7 +6,7 @@ import { WorkflowCreate } from './create/WorkflowCreate';
 import { WorkflowEdit } from './edit/WorkflowEdit';
 import { WorkflowIcon } from './icon';
 import { WorkflowList } from './list/WorkflowList';
-import { WorkflowShow } from './show';
+import { WorkflowShow } from './show/WorkflowShow';
 
 export default {
     name: 'workflows',

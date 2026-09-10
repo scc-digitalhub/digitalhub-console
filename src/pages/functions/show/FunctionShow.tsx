@@ -15,25 +15,43 @@ import {
     useResourceContext,
     useTranslate,
 } from 'react-admin';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
-import { ShowPageTitle } from '../../common/components/layout/PageTitle';
+import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
+import { VersionsListWrapper } from '../../../common/components/VersionsList';
+import { ShowPageTitle } from '../../../common/components/layout/PageTitle';
+import { getFunctionUiSpec } from '../types';
 import { toYaml } from '@dslab/ra-export-record-button';
-import { WorkflowIcon } from './icon';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-
-import deepEqual from 'deep-is';
-
-import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { AceEditorField } from '@dslab/ra-ace-editor';
-import { IdField } from '../../common/components/fields/IdField';
-import { ShowToolbar } from '../../common/components/toolbars/ShowToolbar';
-import { WorkflowTaskShow } from './tasks';
-import { countLines } from '../../common/utils/helpers';
-import { getWorkflowUiSpec } from './types';
-import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
-import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
-import { useExtensionsTabs } from '../../features/extensions/tabs';
+import { FunctionIcon } from '../icon';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import deepEqual from 'deep-is';
+import { MetadataField } from '../../../features/metadata/components/MetadataField';
+import { IdField } from '../../../common/components/fields/IdField';
+import { FunctionTaskShow } from '../tasks';
+import { countLines } from '../../../common/utils/helpers';
+import { exporter } from '../exporter';
+import { FilteredJsonSchemaField } from '../../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
+import { ShowToolbar } from './ShowToolbar';
+
+export const FunctionShow = () => {
+    return (
+        <Container maxWidth={false} sx={{ pb: 2 }}>
+            <ShowBase>
+                <>
+                    <ShowPageTitle icon={<FunctionIcon fontSize={'large'} />} />
+                    <ShowView
+                        actions={<ShowToolbar exporter={exporter} />}
+                        aside={<VersionsListWrapper />}
+                        {...SHOW_VIEW_VERSION_PROPS}
+                    >
+                        <ShowComponent />
+                    </ShowView>
+                </>
+            </ShowBase>
+        </Container>
+    );
+};
 
 const ShowComponent = () => {
     const resource = useResourceContext();
@@ -42,10 +60,12 @@ const ShowComponent = () => {
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
     const extensionTabs = useExtensionsTabs({ source: 'extensions' });
-
     const [schema, setSchema] = useState<any>();
     const [tasks, setTasks] = useState<string[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
+    const [fabSourceCode, setFabSourceCode] = useState<any>();
+    const [config, setConfig] = useState<any>();
+    const [requirements, setRequirements] = useState<string[]>();
     const initializing = useRef<boolean>(false);
     const cur = useRef<any>(null);
 
@@ -83,6 +103,15 @@ const ShowComponent = () => {
         if (record?.spec?.source) {
             setSourceCode(record.spec.source);
         }
+        if (record?.spec?.fab_source) {
+            setFabSourceCode(record.spec.fab_source);
+        }
+        if (record?.spec?.config) {
+            setConfig(record.spec.config);
+        }
+        if (record?.spec?.requirements) {
+            setRequirements(record.spec.requirements);
+        }
 
         if (record && resource) {
             cur.current = record;
@@ -109,7 +138,7 @@ const ShowComponent = () => {
                     pagination: { page: 1, perPage: 100 },
                     sort: { field: 'kind', order: 'ASC' },
                     filter: {
-                        workflow: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
                     },
                 }),
             ])
@@ -136,7 +165,7 @@ const ShowComponent = () => {
                                     project: record.project,
                                     kind: k,
                                     spec: {
-                                        workflow: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
                                     },
                                 },
                             });
@@ -165,6 +194,8 @@ const ShowComponent = () => {
     if (!record) {
         return <LoadingIndicator />;
     }
+    const recordSpec = record?.spec;
+    const lineCount = countLines(recordSpec);
 
     const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
@@ -172,9 +203,6 @@ const ShowComponent = () => {
         }
         return kind;
     };
-
-    const recordSpec = record?.spec;
-    const lineCount = countLines(recordSpec);
 
     return (
         <CustomTabbedShowLayout record={record} syncWithLocation={false}>
@@ -184,7 +212,7 @@ const ShowComponent = () => {
             >
                 <Stack direction={'row'} spacing={3}>
                     <Labeled>
-                        <TextField source="kind" />
+                        <TextField source="kind" label="fields.kind" />
                     </Labeled>
 
                     <Labeled>
@@ -223,10 +251,31 @@ const ShowComponent = () => {
                 >
                     <FilteredJsonSchemaField
                         sourceName="spec"
-                        record={{ spec: { source: sourceCode } }}
-                        fields={['source']}
+                        record={{
+                            spec: { source: sourceCode, requirements, config },
+                        }}
+                        fields={['source', 'requirements', 'config']}
                         schema={schema.schema}
-                        uiSchema={getWorkflowUiSpec(record.kind)}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
+                </CustomTabbedShowLayout.Tab>
+            )}
+
+            {fabSourceCode && schema?.schema && (
+                <CustomTabbedShowLayout.Tab
+                    value="fab_source-code"
+                    label={'fields.code'}
+                    key={record.id + ':fab_source_code'}
+                    path="code"
+                >
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{
+                            spec: { fab_source: fabSourceCode, requirements },
+                        }}
+                        fields={['fab_source', 'requirements']}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
                     />
                 </CustomTabbedShowLayout.Tab>
             )}
@@ -234,39 +283,14 @@ const ShowComponent = () => {
             {tasks?.map(task => (
                 <CustomTabbedShowLayout.Tab
                     value={task}
-                    label={
-                        <Stack direction="row" sx={{ alignItems: 'center' }}>
-                            {translate(
-                                'resources.tasks.kinds.' + getAction(task)
-                            )}
-                        </Stack>
-                    }
+                    label={'resources.tasks.kinds.' + getAction(task)}
                     key={task}
                     path={task}
                 >
-                    <WorkflowTaskShow kind={task} />
+                    <FunctionTaskShow kind={task} />
                 </CustomTabbedShowLayout.Tab>
             ))}
             {extensionTabs}
         </CustomTabbedShowLayout>
-    );
-};
-
-export const WorkflowShow = () => {
-    return (
-        <Container maxWidth={false} sx={{ pb: 2 }}>
-            <ShowBase>
-                <>
-                    <ShowPageTitle icon={<WorkflowIcon fontSize={'large'} />} />
-                    <ShowView
-                        actions={<ShowToolbar />}
-                        aside={<VersionsListWrapper />}
-                        {...SHOW_VIEW_VERSION_PROPS}
-                    >
-                        <ShowComponent />
-                    </ShowView>
-                </>
-            </ShowBase>
-        </Container>
     );
 };

@@ -6,7 +6,7 @@ import { DataItemCreate } from './create/DataItemCreate';
 import { DataItemEdit } from './edit/DataItemEdit';
 import { DataItemIcon } from './icon';
 import { DataItemList } from './list/DataItemList';
-import { DataItemShow } from './show';
+import { DataItemShow } from './show/DataItemShow';
 import { getDataItemSpecUiSchema } from './types';
 
 export default {
