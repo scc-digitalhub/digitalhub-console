@@ -25,5 +25,7 @@
     "upload_x_files": "Carica %{files} file |||| Carica %{files} file",
     "view": "Visualizza",
     "import": "Importa",
-    "download_notebook": "Notebook"
+    "download_notebook": "Notebook",
+    "autoRefresh": "Aggiornamento automatico"
+    
 }

@@ -59,3 +59,4 @@ export const ViewSelector = (props: {
 
 export { default as TableViewIcon } from '@mui/icons-material/TableChart';
 export { default as RowsViewIcon } from '@mui/icons-material/TableRows';
+export { default as GridViewIcon } from '@mui/icons-material/ViewModule';

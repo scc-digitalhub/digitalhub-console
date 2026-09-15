@@ -3,11 +3,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+    AccessDenied,
     ListView,
+    LoadingIndicator,
     SelectInput,
     TextInput,
     useGetList,
     useLocaleState,
+    usePermissions,
     useResourceContext,
     useStore,
     useTranslate,
@@ -36,6 +39,18 @@ const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
     name: 'states.' + s.toLowerCase(),
 }));
+
+export const AdminRunList = () => {
+    const { isPending, permissions } = usePermissions();
+
+    return isPending ? (
+        <LoadingIndicator />
+    ) : permissions?.find(r => r === 'ROLE_ADMIN') ? (
+        <RunList />
+    ) : (
+        <AccessDenied />
+    );
+};
 
 export const RunList = () => {
     const resource = useResourceContext();
@@ -92,7 +107,16 @@ export const RunList = () => {
         }),
         []
     );
-
+    const projectSelectOption = useCallback(
+        d => ({
+            ...d,
+            data: d.data?.map(record => ({
+                name: record.name,
+                id: record.name,
+            })),
+        }),
+        []
+    );
     const { data: functions } = useGetList(
         'functions',
         { pagination: { page: 1, perPage: 100 } },
@@ -103,6 +127,71 @@ export const RunList = () => {
         { pagination: { page: 1, perPage: 100 } },
         { select: workflowSelectOption }
     );
+    const { data: projects } = useGetList(
+        'projects',
+        { pagination: { page: 1, perPage: 100 } },
+        { select: projectSelectOption }
+    );
+    const filters =
+        kinds && functions && workflows
+            ? [
+                  <TextInput
+                      label="ra.action.search"
+                      source="q"
+                      alwaysOn
+                      resettable
+                      key="q"
+                  />,
+                  <SelectInput
+                      key="kind"
+                      label="fields.kind"
+                      source="kind"
+                      choices={kinds.map(s => ({
+                          id: s,
+                          name: s,
+                      }))}
+                      {...FILTER_INPUT_PROPS}
+                  />,
+                  <SelectInput
+                      key="state"
+                      label="fields.status.state"
+                      source="state"
+                      choices={sortedStateChoices}
+                      optionText={choice => (
+                          <StateChips
+                              record={choice}
+                              source="id"
+                              label="name"
+                              size="small"
+                          />
+                      )}
+                      {...FILTER_INPUT_PROPS}
+                  />,
+                  <SelectInput
+                      key={FUNCTION_OR_WORKFLOW}
+                      label={`${translate('resources.functions.name', {
+                          smart_count: 1,
+                      })}/${translate('resources.workflows.name', {
+                          smart_count: 1,
+                      })}`}
+                      source={FUNCTION_OR_WORKFLOW}
+                      choices={[...functions, ...workflows]}
+                      {...FILTER_INPUT_PROPS}
+                  />,
+              ]
+            : [];
+
+    if (!root) {
+        filters.push(
+            <SelectInput
+                key="project"
+                label="fields.project.title"
+                source="project"
+                choices={projects || []}
+                {...FILTER_INPUT_PROPS}
+            />
+        );
+    }
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -122,60 +211,7 @@ export const RunList = () => {
                     />
                     <FlatCard>
                         <ListView
-                            filters={
-                                kinds && functions && workflows
-                                    ? [
-                                          <TextInput
-                                              label="ra.action.search"
-                                              source="q"
-                                              alwaysOn
-                                              resettable
-                                              key="q"
-                                          />,
-                                          <SelectInput
-                                              key="kind"
-                                              label="fields.kind"
-                                              source="kind"
-                                              choices={kinds.map(s => ({
-                                                  id: s,
-                                                  name: s,
-                                              }))}
-                                              {...FILTER_INPUT_PROPS}
-                                          />,
-                                          <SelectInput
-                                              key="state"
-                                              label="fields.status.state"
-                                              source="state"
-                                              choices={sortedStateChoices}
-                                              optionText={choice => (
-                                                  <StateChips
-                                                      record={choice}
-                                                      source="id"
-                                                      label="name"
-                                                      size="small"
-                                                  />
-                                              )}
-                                              {...FILTER_INPUT_PROPS}
-                                          />,
-                                          <SelectInput
-                                              key={FUNCTION_OR_WORKFLOW}
-                                              label={`${translate(
-                                                  'resources.functions.name',
-                                                  { smart_count: 1 }
-                                              )}/${translate(
-                                                  'resources.workflows.name',
-                                                  { smart_count: 1 }
-                                              )}`}
-                                              source={FUNCTION_OR_WORKFLOW}
-                                              choices={[
-                                                  ...functions,
-                                                  ...workflows,
-                                              ]}
-                                              {...FILTER_INPUT_PROPS}
-                                          />,
-                                      ]
-                                    : undefined
-                            }
+                            filters={filters}
                             actions={false}
                             component={Box}
                             sx={{ pb: 2 }}

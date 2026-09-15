@@ -25,6 +25,6 @@
     "view": "View",
     "import": "Import",
     "download_notebook": "Notebook",
-    "import_one": "Import"
-
+    "import_one": "Import",
+    "autoRefresh": "Auto Refresh"
 }

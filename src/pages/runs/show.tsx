@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+    AccessDenied,
     DateField,
     DeleteWithConfirmButton,
     FunctionField,
@@ -16,6 +17,7 @@ import {
     TopToolbar,
     useCreatePath,
     useGetResourceLabel,
+    usePermissions,
     useRecordContext,
     useResourceContext,
     useShowContext,
@@ -60,6 +62,7 @@ import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { SHOW_VIEW_PROPS } from '../../common/theme';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { useExtensionsTabs } from '../../features/extensions/tabs';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -379,6 +382,7 @@ export const RunShowComponent = () => {
 
 const ShowToolbar = () => {
     const record = useRecordContext();
+    const { root } = useRootSelector();
 
     return (
         <TopToolbar>
@@ -404,7 +408,7 @@ const ShowToolbar = () => {
                     ) : null
                 }
             />
-            <CloneButton />
+            {root && <CloneButton />}
             <ExportRecordButton language="yaml" />
             <DeleteWithConfirmButton />
         </TopToolbar>
@@ -468,5 +472,17 @@ export const RunShow = () => {
                 </>
             </ShowBaseLive>
         </Container>
+    );
+};
+
+export const AdminRunShow = () => {
+    const { isPending, permissions } = usePermissions();
+
+    return isPending ? (
+        <LoadingIndicator />
+    ) : permissions?.find(r => r === 'ROLE_ADMIN') ? (
+        <RunShow />
+    ) : (
+        <AccessDenied />
     );
 };

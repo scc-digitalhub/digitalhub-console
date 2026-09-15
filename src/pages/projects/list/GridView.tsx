@@ -4,21 +4,11 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import {
-    List,
-    Pagination,
-    TopToolbar,
     useRecordContext,
     DateField,
     Labeled,
     TextField,
     useNotify,
-    useRefresh,
-    useAuthProvider,
-    useAuthenticated,
-    SortButton,
-    useGetIdentity,
-    TextInput,
-    SelectInput,
 } from 'react-admin';
 import {
     Box,
@@ -34,146 +24,26 @@ import FolderIcon from '@mui/icons-material/Folder';
 import LockIcon from '@mui/icons-material/Lock';
 
 import { grey } from '@mui/material/colors';
-import { GridList } from '../../common/components/layout/GridList';
-import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { ProjectCreateForm } from './create';
+import { GridList } from '../../../common/components/layout/GridList';
 import purify from 'dompurify';
-import { useProjectPermissions } from '../../common/provider/authProvider';
-import { Empty } from '../../common/components/layout/Empty';
-import { MetricsField } from '../../features/k8smetrics/MetricsField';
-import { InstanceMetrics } from '../../features/k8smetrics/InstanceMetrics';
+import { useProjectPermissions } from '../../../common/provider/authProvider';
+import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
     (process.env.REACT_APP_ENABLE_METRICS as string) ||
     false;
-const INSTANCE_METRICS: string =
-    (globalThis as any).REACT_APP_INSTANCE_METRICS ||
-    (process.env.REACT_APP_INSTANCE_METRICS as string) ||
-    null;
+
 const PROJECT_METRICS: string =
     (globalThis as any).REACT_APP_PROJECT_METRICS ||
     (process.env.REACT_APP_PROJECT_METRICS as string) ||
     null;
 
-export const ProjectSelectorList = props => {
-    //check if auth is required to redirect to login
-    useAuthenticated();
-    const { data: identity } = useGetIdentity();
-
-    const perPage = 12;
-    const username = identity?.id || null;
-    const filters = username
-        ? [
-              <TextInput
-                  label="fields.name.title"
-                  source="name"
-                  alwaysOn
-                  resettable
-                  key={1}
-              />,
-              <SelectInput
-                  alwaysOn
-                  key={2}
-                  label="fields.createdBy.title"
-                  source="user"
-                  choices={[
-                      { id: username, name: 'pages.search.createdBy.me' },
-                  ]}
-                  emptyText={'pages.search.createdBy.anyone'}
-                  emptyValue={''}
-                  sx={{ '& .RaSelectInput-input': { margin: '0px' } }}
-              />,
-          ]
-        : [];
-
+export const GridView = () => {
     return (
-        <Stack spacing={1}>
-            <List
-                {...props}
-                actions={<Toolbar />}
-                component={Box}
-                sort={{ field: 'updated', order: 'DESC' }}
-                perPage={perPage}
-                storeKey={false}
-                pagination={<Pagination rowsPerPageOptions={[perPage]} />}
-                filters={filters}
-                filterDefaultValues={{ user: username }}
-                empty={
-                    <Empty>
-                        <CreateProjectButton />
-                    </Empty>
-                }
-            >
-                <GridList linkType={false}>
-                    <ProjectsGridItem />
-                </GridList>
-            </List>
-            {enableMetrics && (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        width: '100%',
-                    }}
-                >
-                    <InstanceMetrics
-                        metrics={
-                            INSTANCE_METRICS
-                                ? INSTANCE_METRICS.split(',')
-                                : true
-                        }
-                    />
-                </Box>
-            )}
-        </Stack>
-    );
-};
-
-export const CreateProjectButton = () => {
-    const authProvider = useAuthProvider();
-    const notify = useNotify();
-    const refresh = useRefresh();
-
-    const transform = data => ({
-        ...data,
-        kind: `project`,
-    });
-
-    return (
-        <CreateInDialogButton
-            fullWidth
-            maxWidth={'md'}
-            transform={transform}
-            variant="contained"
-            closeOnClickOutside={false}
-            mutationOptions={{
-                onSuccess: () => {
-                    notify('ra.notification.created', {
-                        type: 'info',
-                        messageArgs: { smart_count: 1 },
-                    });
-
-                    if (authProvider) {
-                        //refresh permissions
-                        authProvider.refreshUser().then(() => {
-                            refresh();
-                        });
-                    }
-                },
-            }}
-        >
-            <ProjectCreateForm />
-        </CreateInDialogButton>
-    );
-};
-
-const Toolbar = () => {
-    return (
-        <TopToolbar>
-            <SortButton fields={['updated', 'name']} />
-            <CreateProjectButton />
-        </TopToolbar>
+        <GridList linkType={false}>
+            <ProjectsGridItem />
+        </GridList>
     );
 };
 

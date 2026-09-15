@@ -7,20 +7,18 @@ import {
     MenuItemLink,
     useBasename,
     useGetResourceLabel,
-    useSidebarState,
-    useTranslate,
 } from 'react-admin';
 import SettingsIcon from '@mui/icons-material/Settings';
 import StorageIcon from '@mui/icons-material/Storage';
-import { Box, Divider, Popover, Stack, Typography } from '@mui/material';
+import { Divider } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
 import { ProjectIcon } from '../pages/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
-import { ReactElement, useRef, useState } from 'react';
 import { TutorialsIcon } from '../features/tutorials/components/icon';
+import { MenuHeader } from '../common/components/layout/MenuHeader';
 
 const enableHub: string =
     (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
@@ -122,100 +120,11 @@ export const MyMenu = () => {
 
             <MenuItemLink
                 leftIcon={<ProjectIcon />}
-                to={'/projects'}
+                to={'/'}
                 primaryText={<>{getResourceLabel('projects', 2)}</>}
                 selected={false}
                 component={UploadSafeLink}
             />
         </Menu>
-    );
-};
-
-const MenuHeader = (props: {
-    primaryText: string;
-    helperText?: string;
-    icon?: ReactElement;
-}) => {
-    const translate = useTranslate();
-    const [open, setOpen] = useSidebarState();
-    const [popoverOpen, setPopoverOpen] = useState(false);
-    const anchorRef = useRef(null);
-
-    const handlePopoverOpen = () => {
-        if (!popoverOpen) {
-            setPopoverOpen(true);
-            setTimeout(() => {
-                setPopoverOpen(false);
-            }, 3000);
-        }
-    };
-    const handlePopoverClose = () => {
-        if (popoverOpen) {
-            setPopoverOpen(false);
-        }
-    };
-    const showPopover = !!props.helperText;
-    const popoverExtendedProps = showPopover
-        ? {
-              'aria-owns': popoverOpen ? 'mouse-over-popover' : '',
-              'aria-haspopup': true,
-              onMouseEnter: handlePopoverOpen,
-              onMouseLeave: handlePopoverClose,
-          }
-        : {};
-
-    return (
-        <Stack
-            ref={anchorRef}
-            direction={'row'}
-            columnGap={0}
-            alignItems={'flex-start'}
-        >
-            <Box sx={{ px: 2, pb: 1 }}>
-                {open && (
-                    <Typography
-                        variant="inherit"
-                        component="span"
-                        noWrap
-                        sx={{
-                            flexGrow: 1,
-                            textTransform: 'uppercase',
-                            fontSize: '90%',
-                            cursor: 'default',
-                        }}
-                        color="text.secondary"
-                        {...popoverExtendedProps}
-                    >
-                        {translate(props.primaryText)}
-                    </Typography>
-                )}
-            </Box>
-            <Popover
-                sx={{ pointerEvents: 'none' }}
-                open={popoverOpen}
-                anchorEl={anchorRef.current}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                onClose={handlePopoverClose}
-                disableRestoreFocus
-                slotProps={{
-                    paper: {
-                        variant: 'outlined',
-                        square: true,
-                        elevation: 0,
-                    },
-                }}
-            >
-                <Typography variant="body2" sx={{ p: 1 }}>
-                    {translate(props.helperText || '')}
-                </Typography>
-            </Popover>
-        </Stack>
     );
 };

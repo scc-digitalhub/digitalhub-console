@@ -215,5 +215,9 @@
         "menu": "Tutorials",
         "title": "Tutorials",
         "subtitle": "Browse the available tutorials"
+    },
+    "admin": {
+        "header": "Admin",
+        "subheader": "Administrative settings and controls"
     }
 }

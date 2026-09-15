@@ -10,11 +10,13 @@ import {
     regex,
     useAuthProvider,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 import { MetadataSchema } from '../../common/jsonSchema/schemas';
 import { FormLabel } from '../../common/components/layout/FormLabel';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { ProjectMetadataEditUiSchema } from './types';
+import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 
 const validateName = [
     required(),
@@ -80,6 +82,43 @@ export const ProjectCreateForm = () => {
                 uiSchema={ProjectMetadataEditUiSchema}
             />
         </SimpleForm>
+    );
+};
+export const CreateProjectButton = () => {
+    const authProvider = useAuthProvider();
+    const notify = useNotify();
+    const refresh = useRefresh();
+
+    const transform = data => ({
+        ...data,
+        kind: `project`,
+    });
+
+    return (
+        <CreateInDialogButton
+            fullWidth
+            maxWidth={'md'}
+            transform={transform}
+            variant="contained"
+            closeOnClickOutside={false}
+            mutationOptions={{
+                onSuccess: () => {
+                    notify('ra.notification.created', {
+                        type: 'info',
+                        messageArgs: { smart_count: 1 },
+                    });
+
+                    if (authProvider) {
+                        //refresh permissions
+                        authProvider.refreshUser().then(() => {
+                            refresh();
+                        });
+                    }
+                },
+            }}
+        >
+            <ProjectCreateForm />
+        </CreateInDialogButton>
     );
 };
 //minimo name e kind, opt desc

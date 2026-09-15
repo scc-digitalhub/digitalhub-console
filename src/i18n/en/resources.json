@@ -94,7 +94,8 @@
             "updated": "Updated date",
             "created": "Created date"
         },
-        "name": "Project |||| Projects"
+        "name": "Project |||| Projects",
+        "list": "List and search projects"
     },
     "refreshtokens": {
         "name": "Refresh Token |||| Refresh Tokens",

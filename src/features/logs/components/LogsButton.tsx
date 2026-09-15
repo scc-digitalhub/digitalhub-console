@@ -29,6 +29,8 @@ import {
 
 const defaultIcon = <SegmentIcon />;
 
+export const LogsIcon = SegmentIcon;
+
 export const LogsButton = (props: LogsButtonProps) => {
     const {
         id: idFromProps,

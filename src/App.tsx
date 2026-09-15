@@ -31,7 +31,7 @@ import {
     RootSelectorContextProvider,
     RootSelectorInitialWrapper,
 } from '@dslab/ra-root-selector';
-import { ProjectSelectorList } from './pages/projects/list';
+import { ProjectSelectorList } from './pages/projects/list/ProjectSelectorList';
 
 import { Dashboard } from './pages/dashboard/components/Dashboard';
 //config
@@ -151,13 +151,16 @@ import { MyAccount } from './features/account/components/MyAccount';
 import { ServiceList } from './pages/services/list';
 import { FileContextProvider } from './features/files/FileContextProvider';
 import { Browser } from './features/files/fileBrowser/components/Browser';
-import { LayoutProjects } from './layout/LayoutProjects';
+import { LayoutInitialApp } from './layout/InitialAppLayout';
 import { MyLayout } from './layout/MyLayout';
 import { HttpClientContextProvider } from './features/httpclients/provider/HttpClientContextProvider';
 import { HubPage } from './features/hub/components/HubPage';
 import MyTrinoApp from './features/sql/components/MyTrinoApp';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
+import { AdminRunList } from './pages/runs/list/RunList';
+import { AdminRunShow } from './pages/runs/show';
+import { LogsView } from './pages/logs/LogsView';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -235,7 +238,12 @@ const CoreApp = () => {
                                                     {...triggerDefinition}
                                                 />
                                                 <Resource
-                                                    {...projectDefinition}
+                                                    name={
+                                                        projectDefinition.name
+                                                    }
+                                                    edit={
+                                                        projectDefinition.edit
+                                                    }
                                                 />
                                                 <Resource
                                                     {...secretDefinition}
@@ -249,11 +257,15 @@ const CoreApp = () => {
                                                 <CustomRoutes>
                                                     <Route
                                                         path="/config"
-                                                        element={<ProjectConfig />}
+                                                        element={
+                                                            <ProjectConfig />
+                                                        }
                                                     />
                                                     <Route
                                                         path="/lineage"
-                                                        element={<ProjectLineage />}
+                                                        element={
+                                                            <ProjectLineage />
+                                                        }
                                                     />
                                                     <Route
                                                         path="/account"
@@ -265,7 +277,9 @@ const CoreApp = () => {
                                                     />
                                                     <Route
                                                         path="/services"
-                                                        element={<ServiceList />}
+                                                        element={
+                                                            <ServiceList />
+                                                        }
                                                     />
                                                     <Route
                                                         path="/hub"
@@ -292,13 +306,17 @@ const CoreApp = () => {
                                                     {enableSearch && (
                                                         <Route
                                                             path="/searchresults"
-                                                            element={<SearchList />}
+                                                            element={
+                                                                <SearchList />
+                                                            }
                                                         />
                                                     )}
                                                     {enableTrino && (
                                                         <Route
                                                             path="/sql"
-                                                            element={<MyTrinoApp />}
+                                                            element={
+                                                                <MyTrinoApp />
+                                                            }
                                                         />
                                                     )}
                                                     {TUTORIALS_URL && (
@@ -333,28 +351,50 @@ const InitialWrapper = () => {
             resource="projects"
             selector={<ProjectSelectorList />}
         >
-            <Admin
-                layout={LayoutProjects}
+            <AdminContext
                 i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 theme={theme.light}
                 defaultTheme="light"
                 lightTheme={theme.light}
                 darkTheme={theme.dark}
+                layout={LayoutInitialApp}
                 authProvider={authProvider}
-                loginPage={MyLoginPage}
-                requireAuth={!!authProvider}
                 store={localStorageStore('dh')}
-                disableTelemetry
+                dashboard={ProjectSelectorList}
             >
-                <Resource {...projectDefinition} />
-                <Resource name="tokens/refresh" />
-                <Resource name="tokens/personal" />
-                <Resource name="schemas" />
-                <CustomRoutes>
-                    <Route path="/account" element={<MyAccount />} />
-                </CustomRoutes>
-            </Admin>
+                <SearchContextProvider searchProvider={searchProvider}>
+                    <ResourceSchemaProvider
+                        dataProvider={dataProvider}
+                        resource="schemas"
+                    >
+                        <AdminUI
+                            dashboard={ProjectSelectorList}
+                            layout={LayoutInitialApp}
+                            loginPage={MyLoginPage}
+                            requireAuth={!!authProvider}
+                            disableTelemetry
+                        >
+                            <Resource {...projectDefinition} />
+                            <Resource name="tokens/refresh" />
+                            <Resource name="tokens/personal" />
+                            <Resource
+                                {...runDefinition}
+                                list={AdminRunList}
+                                show={AdminRunShow}
+                            />
+                            <Resource name="schemas" />
+                            <CustomRoutes>
+                                <Route
+                                    path="/account"
+                                    element={<MyAccount />}
+                                />
+                                <Route path="/logs" element={<LogsView />} />
+                            </CustomRoutes>
+                        </AdminUI>
+                    </ResourceSchemaProvider>
+                </SearchContextProvider>
+            </AdminContext>
         </RootSelectorInitialWrapper>
     );
 };

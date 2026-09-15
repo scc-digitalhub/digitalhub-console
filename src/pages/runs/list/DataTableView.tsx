@@ -9,7 +9,7 @@ import {
     FunctionField,
     ShowButton,
 } from 'react-admin';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Tooltip, Typography } from '@mui/material';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../../common/components/StateChips';
 import { BulkDeleteAllVersionsButton } from '../../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
@@ -20,6 +20,8 @@ import { FunctionIcon } from '../../functions/icon';
 import { WorkflowIcon } from '../../workflows/icon';
 import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 import { ChipsField } from '../../../common/components/fields/ChipsField';
+import InfoIcon from '@mui/icons-material/Info';
+import { useRootSelector } from '@dslab/ra-root-selector';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
@@ -41,6 +43,18 @@ const RowActions = () => {
 
 export const DataTableView = (props: { storeKey?: string }) => {
     const { storeKey } = props;
+    const { root } = useRootSelector();
+
+    const hiddenColumns = [
+        'id',
+        'metadata.updated',
+        'metadata.labels',
+        'spec.profile',
+    ];
+
+    if (root) {
+        hiddenColumns.push('metadata.created_by', 'project');
+    }
 
     return (
         <DataTable
@@ -52,16 +66,10 @@ export const DataTableView = (props: { storeKey?: string }) => {
                     <BulkDeleteAllVersionsButton />
                 </>
             }
-            hiddenColumns={[
-                'id',
-                'metadata.created_by',
-                'metadata.updated',
-                'metadata.labels',
-            ]}
+            hiddenColumns={hiddenColumns}
         >
             <DataTable.Col source="name" label="fields.name.title" />
             <DataTable.Col source="id" label="fields.id" />
-
             <DataTable.Col
                 source="function"
                 disableSort
@@ -106,6 +114,17 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 />
             </DataTable.Col>
             <DataTable.Col source="kind" label="fields.kind" />
+
+            <DataTable.Col
+                source="project"
+                disableSort
+                label="fields.metadata.project"
+            />
+            <DataTable.Col
+                disableSort
+                source="metadata.created_by"
+                label="fields.user.title"
+            />
             <DataTable.Col
                 source="metadata.created"
                 label="fields.created.title"
@@ -128,11 +147,6 @@ export const DataTableView = (props: { storeKey?: string }) => {
                     showTime={true}
                 />
             </DataTable.Col>
-            <DataTable.Col
-                disableSort
-                source="metadata.created_by"
-                label="fields.user.title"
-            />
 
             <DataTable.Col
                 disableSort
@@ -166,7 +180,27 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 label="fields.status.state"
             >
                 <StateChips source="status.state" label="fields.status.state" />
+                <FunctionField
+                    label="fields.status.state"
+                    sortable={false}
+                    render={record =>
+                        record.status?.message ? (
+                            <Tooltip title={record.status.message}>
+                                <InfoIcon
+                                    fontSize="small"
+                                    color={'disabled'}
+                                    sx={{ ml: 0.3 }}
+                                />
+                            </Tooltip>
+                        ) : null
+                    }
+                />
             </DataTable.Col>
+            <DataTable.Col
+                source="spec.profile"
+                disableSort
+                label="fields.profile.title"
+            />
             {enableMetrics && (
                 <DataTable.Col
                     source="metrics"
