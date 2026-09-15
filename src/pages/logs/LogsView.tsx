@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Button,
     DateField,
@@ -171,7 +171,7 @@ const formatLogItem = (item: any) => {
         `${colorize(timestamp, ANSI_FAINT)} ` +
         `${colorize(level, LEVEL_COLORS[item.level])} --- ` +
         `[${colorize(thread, ANSI_FAINT)}] ` +
-        `${colorize(logger, ANSI_FAINT)} : ${item.message}\n`
+        `${colorize(logger, ANSI_FAINT)} : ${item.message}`
     );
 };
 
@@ -183,7 +183,9 @@ const LogsDetail = (props: {
 }) => {
     const { data, refresh, autoRefresh, onToggleAutoRefresh } = props;
     const translate = useTranslate();
-    const ref = React.createRef<LazyLog>();
+    const ref = useRef<LazyLog>(null);
+    //last timestamp already appended to the viewer, to only append new entries
+    const lastTimestampRef = useRef<number | null>(null);
 
     const handleRefresh = useCallback(
         event => {
@@ -198,7 +200,7 @@ const LogsDetail = (props: {
         if (data && data.length > 0) {
             try {
                 data.forEach(item => {
-                    result += formatLogItem(item);
+                    result += formatLogItem(item) + '\n';
                 });
             } catch (e: any) {
                 /* empty */
@@ -206,6 +208,24 @@ const LogsDetail = (props: {
             }
         }
         return result;
+    }, [data]);
+
+    useEffect(() => {
+        if (!data || !ref.current) {
+            return;
+        }
+        const newItems =
+            lastTimestampRef.current == null
+                ? data
+                : data.filter(
+                      item => item.timestamp > lastTimestampRef.current!
+                  );
+        if (newItems.length > 0) {
+            ref.current.appendLines(newItems.map(formatLogItem));
+        }
+        if (data.length > 0) {
+            lastTimestampRef.current = data[data.length - 1].timestamp;
+        }
     }, [data]);
 
     return (
@@ -238,7 +258,7 @@ const LogsDetail = (props: {
                 <LazyLog
                     ref={ref}
                     height={520}
-                    text={text}
+                    external={true}
                     follow={true}
                     caseInsensitive={true}
                     enableLineNumbers={true}
