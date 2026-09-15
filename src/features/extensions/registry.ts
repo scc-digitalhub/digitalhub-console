@@ -60,8 +60,9 @@ export interface ConsoleExtensionRegistryProviderProps {
     preloadModuleIds?: string[];
 }
 
-export const ConsoleExtensionRegistryContext =
-    createContext<ConsoleExtensionRegistryContextValue | undefined>(undefined);
+export const ConsoleExtensionRegistryContext = createContext<
+    ConsoleExtensionRegistryContextValue | undefined
+>(undefined);
 
 export const ConsoleExtensionRegistryProvider = (
     props: ConsoleExtensionRegistryProviderProps
@@ -92,7 +93,7 @@ export const ConsoleExtensionRegistryProvider = (
                 return;
             }
 
-            await Promise.all(ids.map((id) => loadModule(id)));
+            await Promise.all(ids.map(id => loadModule(id)));
         },
         [loadModule]
     );
@@ -102,7 +103,11 @@ export const ConsoleExtensionRegistryProvider = (
     }, []);
 
     const getViewContributions = useCallback(
-        (resource: string, view: ConsoleViewName, showIn: ConsoleViewShowIn) => {
+        (
+            resource: string,
+            view: ConsoleViewName,
+            showIn: ConsoleViewShowIn
+        ) => {
             return consoleExtensionRegistry.getViewContributions(
                 resource,
                 view,
@@ -152,7 +157,7 @@ export const ConsoleExtensionRegistryProvider = (
                 }
                 setReady(true);
             })
-            .catch((e) => {
+            .catch(e => {
                 if (!active) {
                     return;
                 }
@@ -191,16 +196,26 @@ export const ConsoleExtensionRegistryProvider = (
     );
 };
 
+// Returned when the hook is used outside a ConsoleExtensionRegistryProvider.
+const noopConsoleExtensionRegistryValue: ConsoleExtensionRegistryContextValue =
+    {
+        ready: false,
+        loading: false,
+        error: null,
+        loadModule: async () => {},
+        loadModules: async () => {},
+        loadAllModules: async () => {},
+        getComponent: () => undefined,
+        getViewContributions: () => [],
+        getJsonSchemaWidgets: () => ({}),
+        getJsonSchemaTemplates: () => ({}),
+        getJsonSchemaFields: () => ({}),
+    };
+
 export const useConsoleExtensionRegistry = () => {
     const value = useContext(ConsoleExtensionRegistryContext);
 
-    if (value === undefined) {
-        throw new Error(
-            'useConsoleExtensionRegistry must be used inside a ConsoleExtensionRegistryProvider'
-        );
-    }
-
-    return value;
+    return value ?? noopConsoleExtensionRegistryValue;
 };
 
 export const useConsoleExtension = (id: string) => {
@@ -267,7 +282,7 @@ export const useViewContributions = (
         detectViewFromPathname(location.pathname);
 
     useEffect(() => {
-        loadAllModules().catch((error) => {
+        loadAllModules().catch(error => {
             console.error('Unable to load console extension modules', error);
         });
     }, [loadAllModules]);
@@ -278,7 +293,7 @@ export const useViewContributions = (
         }
 
         return getViewContributions(resource, view, options.showIn)
-            .map((contribution) => {
+            .map(contribution => {
                 const ExtensionComponent = getComponent(
                     contribution.componentKey
                 );
@@ -291,9 +306,7 @@ export const useViewContributions = (
                     key: contribution.id,
                 });
             })
-            .filter(
-                (element): element is ReactElement => element !== null
-            );
+            .filter((element): element is ReactElement => element !== null);
     }, [resource, view, options.showIn, getViewContributions, getComponent]);
 };
 
@@ -306,7 +319,7 @@ export const useJsonSchemaContributions = () => {
     } = useConsoleExtensionRegistry();
 
     useEffect(() => {
-        loadAllModules().catch((error) => {
+        loadAllModules().catch(error => {
             console.error('Unable to load console extension modules', error);
         });
     }, [loadAllModules]);
