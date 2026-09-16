@@ -49,8 +49,10 @@ export const ArtifactEdit = () => {
         onUploadComplete,
     });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [isPathDirty, setIsPathDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
+    const isNewVersion = isSpecDirty || isPathDirty;
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -75,14 +77,14 @@ export const ArtifactEdit = () => {
     const transform = data => {
         //merge path into spec.path, then strip transient field
         const { path, ...rest } = data;
-        const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
+        const resetMetadataVersion = isNewVersion && !isMetadataVersionDirty;
 
         //reset status if new version
         //reset metadata version if new version, unless manually filled
         return {
             ...rest,
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
-            status: isSpecDirty ? {} : rest.status,
+            status: isNewVersion ? {} : rest.status,
             metadata: resetMetadataVersion
                 ? { ...rest.metadata, version: undefined }
                 : rest.metadata,
@@ -95,7 +97,7 @@ export const ArtifactEdit = () => {
                 mutationMode="optimistic"
                 transform={transform}
                 mutationOptions={{
-                    meta: { update: !isSpecDirty, id: id.current },
+                    meta: { update: !isNewVersion, id: id.current },
                     onSuccess,
                     onSettled,
                 }}
@@ -114,6 +116,7 @@ export const ArtifactEdit = () => {
                                 <ArtifactEditContent
                                     uploader={uploader}
                                     onSpecDirty={setIsSpecDirty}
+                                    onPathDirty={setIsPathDirty}
                                     onMetadataVersionDirty={
                                         setIsMetadataVersionDirty
                                     }
@@ -130,19 +133,26 @@ export const ArtifactEdit = () => {
 const ArtifactEditContent = ({
     uploader,
     onSpecDirty,
+    onPathDirty,
     onMetadataVersionDirty,
 }: {
     uploader: Uploader;
     onSpecDirty: (dirty: boolean) => void;
+    onPathDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
     const kind = useWatch({ name: 'kind' });
+    const path = useWatch({ name: 'path' });
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
     const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSections();
+
+    useEffect(() => {
+        onPathDirty(path !== (record?.spec?.path ?? null));
+    }, [onPathDirty, path, record?.spec?.path]);
 
     useEffect(() => {
         if (!kind || !resource || !schemaProvider) {
