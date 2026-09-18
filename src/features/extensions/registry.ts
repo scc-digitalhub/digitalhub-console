@@ -35,6 +35,7 @@ interface ConsoleExtensionRegistryContextValue {
     ready: boolean;
     loading: boolean;
     error: unknown;
+    version: number;
     loadModule: (id: string) => Promise<void>;
     loadModules: (ids: string[]) => Promise<void>;
     loadAllModules: () => Promise<void>;
@@ -73,7 +74,7 @@ export const ConsoleExtensionRegistryProvider = (
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>(null);
     const [ready, setReady] = useState(preloadModuleIds.length === 0);
-    const [, forceRefresh] = useReducer((value: number) => value + 1, 0);
+    const [version, forceRefresh] = useReducer((value: number) => value + 1, 0);
 
     const loadModule = useCallback(async (id: string) => {
         if (loadedModulesRef.current.has(id)) {
@@ -179,6 +180,7 @@ export const ConsoleExtensionRegistryProvider = (
         ready,
         loading,
         error,
+        version,
         loadModule,
         loadModules,
         loadAllModules,
@@ -202,6 +204,7 @@ const noopConsoleExtensionRegistryValue: ConsoleExtensionRegistryContextValue =
         ready: false,
         loading: false,
         error: null,
+        version:0,
         loadModule: async () => {},
         loadModules: async () => {},
         loadAllModules: async () => {},
@@ -267,7 +270,7 @@ const detectViewFromPathname = (pathname: string) => {
 export const useViewContributions = (
     options: UseViewContributionsOptions
 ): ReactElement[] => {
-    const { loadAllModules, getComponent, getViewContributions } =
+    const { loadAllModules, getComponent, getViewContributions,version } =
         useConsoleExtensionRegistry();
     const resourceFromContext = useResourceContext({
         resource: options.resource,
@@ -307,7 +310,7 @@ export const useViewContributions = (
                 });
             })
             .filter((element): element is ReactElement => element !== null);
-    }, [resource, view, options.showIn, getViewContributions, getComponent]);
+    }, [resource, view, options.showIn, getViewContributions, getComponent,version]);
 };
 
 export const useJsonSchemaContributions = () => {
