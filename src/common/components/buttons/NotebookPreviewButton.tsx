@@ -2,37 +2,76 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    useTheme,
-} from '@mui/material';
+import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import {
     Download as DownloadIcon,
     Preview as PreviewIcon,
     Close as CloseIcon,
 } from '@mui/icons-material';
-import { lazy, Suspense, useCallback, useState, MouseEvent } from 'react';
-import { Button, ButtonProps, TopToolbar, useTranslate } from 'react-admin';
-
-// Lazy-load the notebook viewer (~1.8 MB) so it's only fetched when the
-// preview dialog is first opened, not on initial page load.
-const JupyterNotebookViewer = lazy(() =>
-    import('react-jupyter-notebook-viewer').then(m => ({
-        default: m.JupyterNotebookViewer,
-    }))
-);
+import {
+    lazy,
+    Suspense,
+    useCallback,
+    useState,
+    MouseEvent,
+    useEffect,
+} from 'react';
+import {
+    Button,
+    ButtonProps,
+    Error as RaError,
+    TopToolbar,
+    useTranslate,
+} from 'react-admin';
 import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
 
+// Lazy-load the notebook viewer so it's only fetched when the
+// preview dialog is first opened, not on initial page load.
+const NotebookViewer = lazy(
+    () => import('../../../features/jupyter-notebooks/notebook-viewer')
+);
 /**
  * Button for a preview dialog of a Jupyter notebook.
  */
 export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
-    const { onDownload, url, title, onClick, ...rest } = props;
+    const {
+        onDownload,
+        url,
+        title,
+        readOnly = false,
+        onClick,
+        ...rest
+    } = props;
     const translate = useTranslate();
-    const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [notebookContent, setNotebookContent] = useState<any | null>(null);
+    const [error, setError] = useState<Error | null>(null);
+
+    useEffect(() => {
+        if (open && url) {
+            fetch(url)
+                .then(res =>
+                    res.ok
+                        ? res.json()
+                        : Promise.reject(
+                              new Error('Failed to load notebook content')
+                          )
+                )
+                .then(json => {
+                    setNotebookContent(json);
+                    setError(null);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setNotebookContent(null);
+                    setError(
+                        err instanceof Error
+                            ? err
+                            : new Error('Notebook fetch failed')
+                    );
+                });
+        }
+    }, [open, url]);
 
     const handleDialogOpen = (e: MouseEvent<HTMLButtonElement>) => {
         setOpen(true);
@@ -99,18 +138,20 @@ export const NotebookPreviewButton = (props: NotebookPreviewButtonProps) => {
                             <DownloadIcon fontSize="small" />
                         </Button>
                     </TopToolbar>
-                    <Suspense fallback={null}>
-                        <JupyterNotebookViewer
-                            filePath={url}
-                            inputCodeDarkTheme={
-                                !(theme.palette.mode === 'dark')
-                            }
-                            outputDarkTheme={!(theme.palette.mode === 'dark')}
-                            inputMarkdownDarkTheme={
-                                !(theme.palette.mode === 'dark')
-                            }
+                    {notebookContent && (
+                        <Suspense fallback={null}>
+                            <NotebookViewer
+                                ipynb={notebookContent}
+                                readOnly={readOnly}
+                            />
+                        </Suspense>
+                    )}
+                    {error && (
+                        <RaError
+                            error={error}
+                            resetErrorBoundary={() => setError(null)}
                         />
-                    </Suspense>
+                    )}
                 </DialogContent>
             </StyledDialog>
         </>
@@ -121,4 +162,5 @@ type NotebookPreviewButtonProps = ButtonProps & {
     onDownload: () => void;
     url: string;
     title?: string;
+    readOnly?: boolean;
 };
