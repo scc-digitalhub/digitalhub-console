@@ -17,6 +17,7 @@ export interface ConsoleViewContributionDescriptor {
   showIn: ConsoleViewShowIn;
   component: string;
   order?: number;
+  label?: string; 
 }
 
 export type ConsoleViewDescriptor = Partial<
@@ -45,4 +46,5 @@ export interface ConsoleViewContribution {
   showIn: ConsoleViewShowIn;
   componentKey: string;
   order?: number;
+  label?: string; 
 }
