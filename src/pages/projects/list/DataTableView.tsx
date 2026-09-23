@@ -3,8 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
+    BulkDeleteButton,
     DataTable,
     DateField,
+    DeleteWithConfirmButton,
     FunctionField,
     useCreatePath,
     useGetList,
@@ -13,9 +15,7 @@ import {
     useRecordContext,
 } from 'react-admin';
 import { ChipsField } from '../../../common/components/fields/ChipsField';
-import { BulkDeleteAllVersionsButton } from '../../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { StateColors } from '../../../common/components/StateChips';
-import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { useProjectPermissions } from '../../../common/provider/authProvider';
 import { useRootSelector } from '@dslab/ra-root-selector';
@@ -36,13 +36,7 @@ const PROJECT_METRICS: string =
 
 const RowActions = () => (
     <RowButtonGroup>
-        <DeleteWithConfirmButtonByName
-            deleteAll
-            cascade
-            askForDeleteAll
-            askForCascade
-            disableDeleteAll
-        />
+        <DeleteWithConfirmButton mutationMode="pessimistic" />
     </RowButtonGroup>
 );
 
@@ -76,15 +70,7 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 handleClick(id);
                 return false;
             }}
-            bulkActionButtons={
-                <BulkDeleteAllVersionsButton
-                    deleteAll
-                    cascade
-                    askForDeleteAll
-                    askForCascade
-                    disableDeleteAll
-                />
-            }
+            bulkActionButtons={<BulkDeleteButton mutationMode="pessimistic" />}
             hiddenColumns={['metadata.created']}
         >
             <DataTable.Col source="name" label="fields.name.title" />
