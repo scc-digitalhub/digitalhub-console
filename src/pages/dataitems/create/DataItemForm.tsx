@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { TextInput, required, useResourceContext } from 'react-admin';
-import { isAlphaNumeric } from '../../../common/utils/helpers';
+import { isValidName } from '../../../common/utils/helpers';
 import { getDataItemSpecUiSchema } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import {
@@ -77,7 +77,7 @@ const DataItemBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
         <>
             <TextInput
                 source="name"
-                validate={[required(), isAlphaNumeric()]}
+                validate={[required(), isValidName()]}
             />
             <MetadataInput kinds={['metadata.base']} />
         </>

@@ -9,7 +9,7 @@ import {
     useState,
 } from 'react';
 import { TextInput, required, useResourceContext } from 'react-admin';
-import { isAlphaNumeric } from '../../../common/utils/helpers';
+import { isValidName } from '../../../common/utils/helpers';
 import { getModelSpecUiSchema } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { Step, StepperForm } from '@dslab/ra-stepper';
@@ -82,10 +82,7 @@ const ModelBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
     useUploaderNameSync({ uploader });
     return (
         <>
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
-            />
+            <TextInput source="name" validate={[required(), isValidName()]} />
             <MetadataInput kinds={['metadata.base']} />
         </>
     );
