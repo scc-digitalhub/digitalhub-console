@@ -55,7 +55,11 @@ export interface UseViewContributionsOptions {
     resource?: string;
     view?: ConsoleViewName;
 }
-
+export interface ViewContributionElement {
+    element: ReactElement;
+    label?: string;
+    id: string;
+}
 export interface ConsoleExtensionRegistryProviderProps {
     children: ReactNode;
     preloadModuleIds?: string[];
@@ -83,8 +87,6 @@ export const ConsoleExtensionRegistryProvider = (
 
         await consoleExtensionRegistry.loadModule(id);
         loadedModulesRef.current.add(id);
-
-        // Trigger a rerender so consumers can read newly registered extensions.
         forceRefresh();
     }, []);
 
@@ -269,8 +271,8 @@ const detectViewFromPathname = (pathname: string) => {
 
 export const useViewContributions = (
     options: UseViewContributionsOptions
-): ReactElement[] => {
-    const { loadAllModules, getComponent, getViewContributions,version } =
+): ViewContributionElement[] => {
+    const { loadAllModules, getComponent, getViewContributions, version } =
         useConsoleExtensionRegistry();
     const resourceFromContext = useResourceContext({
         resource: options.resource,
@@ -305,12 +307,19 @@ export const useViewContributions = (
                     return null;
                 }
 
-                return createElement(ExtensionComponent, {
-                    key: contribution.id,
-                });
+                const result: ViewContributionElement = {
+                    id: contribution.id,
+                    label: contribution.label,
+                    element: createElement(ExtensionComponent, {
+                        key: contribution.id,
+                    }),
+                };
+                return result;
             })
-            .filter((element): element is ReactElement => element !== null);
-    }, [resource, view, options.showIn, getViewContributions, getComponent,version]);
+            .filter(
+                (item): item is ViewContributionElement => item !== null
+            );
+    }, [resource, view, options.showIn, getViewContributions, getComponent, version]);
 };
 
 export const useJsonSchemaContributions = () => {

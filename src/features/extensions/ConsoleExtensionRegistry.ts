@@ -168,6 +168,7 @@ export class ConsoleExtensionRegistry {
             showIn: descriptor.showIn,
             componentKey: namespacedComponentKey,
             order: descriptor.order,
+            label: descriptor.label
           });
         });
       }
