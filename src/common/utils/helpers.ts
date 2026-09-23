@@ -10,6 +10,8 @@ import { toYaml } from '@dslab/ra-export-record-button';
 
 export const UUID_REGEX = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/;
 export const ALPHANUMERIC_REGEX = /^[a-zA-Z0-9._+-]+$/;
+export const NAME_REGEX =
+    /^(?!\.{1,2}$)(?!.*__)[\p{L}\p{N}._~!$'()+,;=@\-\s\p{Zs}]+$/u;
 
 export const FUNCTION_OR_WORKFLOW = 'functionOrWorkflow';
 
@@ -24,6 +26,10 @@ export const arePropsEqual = (oldProps: any, newProps: any) => {
 
 export const isAlphaNumeric = memoize(() =>
     regex(ALPHANUMERIC_REGEX, 'messages.validation.wrongChar')
+);
+
+export const isValidName = memoize(() =>
+    regex(NAME_REGEX, 'messages.validation.wrongChar')
 );
 
 export const isValidKind = (kinds: any[]) => (value, values?) => {
@@ -154,7 +160,14 @@ export const formatTimeTick = (value: number) => {
 export function dateDifference(
     start: Date,
     end: Date
-): [number | null, number | null, number | null, number | null, number | null, number | null] {
+): [
+    number | null,
+    number | null,
+    number | null,
+    number | null,
+    number | null,
+    number | null
+] {
     const diffMs = Math.abs(end.getTime() - start.getTime());
     const seconds = Math.floor(diffMs / 1000) % 60;
     const minutes = Math.floor(diffMs / (1000 * 60)) % 60;

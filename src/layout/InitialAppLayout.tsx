@@ -16,6 +16,7 @@ import { MyUserMenu } from './MyUserMenu';
 import RootResourceSelectorMenu from './RootSelectorMenu';
 import { MenuHeader } from '../common/components/layout/MenuHeader';
 import { LogsIcon } from '../features/logs/components/LogsButton';
+import { ProfilesIcon } from '../pages/profiles/icon';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -76,6 +77,13 @@ const InitialMenu = () => {
             )}
             {isAdmin && <Menu.ResourceItem name="projects" />}
             {isAdmin && <Menu.ResourceItem name="runs" />}
+            {isAdmin && (
+                <MenuItemLink
+                    leftIcon={<ProfilesIcon />}
+                    to={`/profiles`}
+                    primaryText={'pages.profiles.header'}
+                />
+            )}
             {isAdmin && (
                 <MenuItemLink
                     leftIcon={<LogsIcon />}

@@ -8,6 +8,7 @@ import {
     ViewSelector,
 } from '../../../common/components/buttons/ViewsSelector';
 import { ExtensionsToolbarButtons } from '../../../features/extensions/ExtensionsButtons';
+import { ProfilesButton } from '../../profiles/ProfilesButton';
 
 export const ListToolbar = (props: {
     storeKey?: string;
@@ -24,6 +25,7 @@ export const ListToolbar = (props: {
     return (
         <TopToolbar>
             <ExtensionsToolbarButtons />
+            <ProfilesButton />
             {selectedView === 'dataTable' && (
                 <ColumnsButton
                     storeKey={`${storeKey}.dataTable`}

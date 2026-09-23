@@ -219,5 +219,9 @@
     "admin": {
         "header": "Admin",
         "subheader": "Impostazioni e controlli amministrativi"
+    },
+    "profiles": {
+        "header": "Profili",
+        "subheader": "I profili consentono di astrarre dalla complessità della gestione delle risorse: ogni profilo corrisponde a una specifica pre-configurazione che definisce una combinazione di risorse. Ad esempio, il profilo può definire un tipo specifico di GPU, memoria e CPU da utilizzare. Specifica il nome del profilo nella configurazione di esecuzione della run per richiedere automaticamente le risorse corrispondenti."
     }
 }

@@ -219,5 +219,9 @@
     "admin": {
         "header": "Admin",
         "subheader": "Administrative settings and controls"
+    },
+    "profiles": {
+        "header": "Profiles",
+        "subheader": "Profiles allow for abstracting from the resource management complexity: every profile corresponds to a specific pre-configuration that defines a combination of resources. For example, the profile may define a specific type of GPU, memory, and CPUs to be used. Specify the profile name in the run execution configuration to automatically request the corresponding resources."
     }
 }

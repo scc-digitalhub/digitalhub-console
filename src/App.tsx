@@ -32,7 +32,7 @@ import {
     RootSelectorInitialWrapper,
 } from '@dslab/ra-root-selector';
 import { ProjectSelectorList } from './pages/projects/list/ProjectSelectorList';
-
+import { ProfilesPage } from './pages/profiles/ProfilesPage';
 import { Dashboard } from './pages/dashboard/components/Dashboard';
 //config
 const CONTEXT_PATH: string =
@@ -331,6 +331,12 @@ const CoreApp = () => {
                                                             }
                                                         />
                                                     )}
+                                                    <Route
+                                                        path="/profiles"
+                                                        element={
+                                                            <ProfilesPage />
+                                                        }
+                                                    />
                                                 </CustomRoutes>
                                             </AdminUI>
                                         </FileContextProvider>
@@ -390,6 +396,10 @@ const InitialWrapper = () => {
                                     element={<MyAccount />}
                                 />
                                 <Route path="/logs" element={<LogsView />} />
+                                <Route
+                                    path="/profiles"
+                                    element={<ProfilesPage />}
+                                />
                             </CustomRoutes>
                         </AdminUI>
                     </ResourceSchemaProvider>
