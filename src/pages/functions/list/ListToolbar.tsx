@@ -8,8 +8,7 @@ import {
     ViewSelector,
 } from '../../../common/components/buttons/ViewsSelector';
 import { ImportButton } from '../../../common/components/buttons/ImportButton';
-import { HubButton } from '../../../common/components/buttons/HubButton';
-import { ExtensionsToolbarButtons } from '../../../features/extensions/ExtensionsButtons';
+import { ExtensionsToolbarButtons } from '../../../features/extensions/components/ExtensionsButtons';
 
 export const ListToolbar = (props: {
     storeKey?: string;
@@ -26,7 +25,6 @@ export const ListToolbar = (props: {
     return (
         <TopToolbar>
             <ExtensionsToolbarButtons />
-            <HubButton />
             <CreateButton />
             <ImportButton />
             {selectedView === 'dataTable' && (

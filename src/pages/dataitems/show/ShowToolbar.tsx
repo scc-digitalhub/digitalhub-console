@@ -18,7 +18,7 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { DownloadButton } from '../../../features/files/download/components/DownloadButton';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
-import { ExtensionsToolbarButtons } from '../../../features/extensions/ExtensionsButtons';
+import { ExtensionsToolbarButtons } from '../../../features/extensions/components/ExtensionsButtons';
 
 /**
  * Top toolbar for show pages. Displays the following buttons:

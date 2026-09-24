@@ -7,7 +7,7 @@ import {
     View,
     ViewSelector,
 } from '../../../common/components/buttons/ViewsSelector';
-import { ExtensionsToolbarButtons } from '../../../features/extensions/ExtensionsButtons';
+import { ExtensionsToolbarButtons } from '../../../features/extensions/components/ExtensionsButtons';
 
 export const ListToolbar = (props: {
     storeKey?: string;
