@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    Admin,
     AdminContext,
     AdminUI,
     CustomRoutes,
@@ -161,6 +160,7 @@ import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 import { AdminRunList } from './pages/runs/list/RunList';
 import { AdminRunShow } from './pages/runs/show';
 import { LogsView } from './pages/logs/LogsView';
+import { useExtensionsMenuRoutes } from './features/extensions/registry';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -207,132 +207,7 @@ const CoreApp = () => {
                                         <FileContextProvider
                                             fileProvider={fileProvider}
                                         >
-                                            <AdminUI
-                                                dashboard={Dashboard}
-                                                layout={WrappedLayout}
-                                                loginPage={MyLoginPage}
-                                                requireAuth={!!authProvider}
-                                                disableTelemetry
-                                            >
-                                                <Resource
-                                                    {...functionDefinition}
-                                                />
-                                                <Resource
-                                                    {...workflowDefinition}
-                                                />
-                                                <Resource
-                                                    {...dataitemDefinition}
-                                                />
-                                                <Resource
-                                                    {...modelDefinition}
-                                                />
-                                                <Resource
-                                                    {...artifactDefinition}
-                                                />
-                                                <Resource name="tasks" />
-                                                <Resource {...runDefinition} />
-                                                <Resource
-                                                    {...containerImageDefinition}
-                                                />
-                                                <Resource
-                                                    {...triggerDefinition}
-                                                />
-                                                <Resource
-                                                    name={
-                                                        projectDefinition.name
-                                                    }
-                                                    edit={
-                                                        projectDefinition.edit
-                                                    }
-                                                />
-                                                <Resource
-                                                    {...secretDefinition}
-                                                />
-                                                <Resource name="schemas" />
-                                                <Resource name="logs" />
-                                                <Resource name="metadatas" />
-                                                <Resource name="labels" />
-                                                <Resource name="templates" />
-                                                <Resource name="extensions" />
-                                                <CustomRoutes>
-                                                    <Route
-                                                        path="/config"
-                                                        element={
-                                                            <ProjectConfig />
-                                                        }
-                                                    />
-                                                    <Route
-                                                        path="/lineage"
-                                                        element={
-                                                            <ProjectLineage />
-                                                        }
-                                                    />
-                                                    <Route
-                                                        path="/account"
-                                                        element={<MyAccount />}
-                                                    />
-                                                    <Route
-                                                        path="/files"
-                                                        element={<Browser />}
-                                                    />
-                                                    <Route
-                                                        path="/services"
-                                                        element={
-                                                            <ServiceList />
-                                                        }
-                                                    />
-                                                    <Route
-                                                        path="/hub"
-                                                        element={<HubPage />}
-                                                    />{' '}
-                                                    <Route
-                                                        path="/projects/projectimport"
-                                                        element={
-                                                            <HubProjectImport />
-                                                        }
-                                                    />
-                                                    <Route
-                                                        path="/functions/hub"
-                                                        element={
-                                                            <HubPage resourceName="functions" />
-                                                        }
-                                                    />{' '}
-                                                    <Route
-                                                        path="/artifacts/hub"
-                                                        element={
-                                                            <HubPage resourceName="artifacts" />
-                                                        }
-                                                    />
-                                                    {enableSearch && (
-                                                        <Route
-                                                            path="/searchresults"
-                                                            element={
-                                                                <SearchList />
-                                                            }
-                                                        />
-                                                    )}
-                                                    {enableTrino && (
-                                                        <Route
-                                                            path="/sql"
-                                                            element={
-                                                                <MyTrinoApp />
-                                                            }
-                                                        />
-                                                    )}
-                                                    {TUTORIALS_URL && (
-                                                        <Route
-                                                            path="/tutorials"
-                                                            element={
-                                                                <TutorialsPage
-                                                                    url={
-                                                                        TUTORIALS_URL
-                                                                    }
-                                                                />
-                                                            }
-                                                        />
-                                                    )}
-                                                </CustomRoutes>
-                                            </AdminUI>
+                                            <AdminUIWithExtensions />
                                         </FileContextProvider>
                                     </HttpClientContextProvider>
                                 </StompContextProvider>
@@ -344,7 +219,77 @@ const CoreApp = () => {
         </RootSelectorContextProvider>
     );
 };
+const AdminUIWithExtensions = () => {
+    //get the extension menu routes from the registry
+    //and add them to the custom routes of the admin ui
+    const extensionMenuContributions = useExtensionsMenuRoutes();
 
+    return (
+        <AdminUI
+            dashboard={Dashboard}
+            layout={WrappedLayout}
+            loginPage={MyLoginPage}
+            requireAuth={!!authProvider}
+            disableTelemetry
+        >
+            <Resource {...functionDefinition} />
+            <Resource {...workflowDefinition} />
+            <Resource {...dataitemDefinition} />
+            <Resource {...modelDefinition} />
+            <Resource {...artifactDefinition} />
+            <Resource name="tasks" />
+            <Resource {...runDefinition} />
+            <Resource {...containerImageDefinition} />
+            <Resource {...triggerDefinition} />
+            <Resource
+                name={projectDefinition.name}
+                edit={projectDefinition.edit}
+            />
+            <Resource {...secretDefinition} />
+            <Resource name="schemas" />
+            <Resource name="logs" />
+            <Resource name="metadatas" />
+            <Resource name="labels" />
+            <Resource name="templates" />
+            <Resource name="extensions" />
+            <CustomRoutes>
+                <Route path="/config" element={<ProjectConfig />} />
+                <Route path="/lineage" element={<ProjectLineage />} />
+                <Route path="/account" element={<MyAccount />} />
+                <Route path="/files" element={<Browser />} />
+                <Route path="/services" element={<ServiceList />} />
+                <Route path="/hub" element={<HubPage />} />
+                <Route
+                    path="/projects/projectimport"
+                    element={<HubProjectImport />}
+                />
+                <Route
+                    path="/functions/hub"
+                    element={<HubPage resourceName="functions" />}
+                />
+                <Route
+                    path="/artifacts/hub"
+                    element={<HubPage resourceName="artifacts" />}
+                />
+                {enableSearch && (
+                    <Route path="/searchresults" element={<SearchList />} />
+                )}
+                {enableTrino && (
+                    <Route path="/sql" element={<MyTrinoApp />} />
+                )}
+                {TUTORIALS_URL && (
+                    <Route
+                        path="/tutorials"
+                        element={<TutorialsPage url={TUTORIALS_URL} />}
+                    />
+                )}
+                {extensionMenuContributions.map(c => (
+                    <Route key={c.id} path={c.path} element={c.element} />
+                ))}
+            </CustomRoutes>
+        </AdminUI>
+    );
+};
 const InitialWrapper = () => {
     return (
         <RootSelectorInitialWrapper

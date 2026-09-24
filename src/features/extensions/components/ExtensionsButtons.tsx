@@ -1,4 +1,4 @@
-import { useViewContributions } from './registry';
+import { useViewContributions } from '../registry';
 
 export const ExtensionsToolbarButtons = (props: {
     resource?: string;
