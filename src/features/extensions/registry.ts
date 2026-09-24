@@ -45,6 +45,7 @@ interface ConsoleExtensionRegistryContextValue {
         view: ConsoleViewName,
         showIn: ConsoleViewShowIn
     ) => ConsoleViewContribution[];
+    getMenuContributions: () => ConsoleViewContribution[];
     getJsonSchemaWidgets: () => Record<string, ComponentType<any>>;
     getJsonSchemaTemplates: () => Record<string, ComponentType<any>>;
     getJsonSchemaFields: () => Record<string, ComponentType<any>>;
@@ -59,6 +60,8 @@ export interface ViewContributionElement {
     element: ReactElement;
     label?: string;
     id: string;
+    icon?: ReactElement;
+    path: string;
 }
 export interface ConsoleExtensionRegistryProviderProps {
     children: ReactNode;
@@ -119,6 +122,10 @@ export const ConsoleExtensionRegistryProvider = (
         },
         []
     );
+
+    const getMenuContributions = useCallback(() => {
+        return consoleExtensionRegistry.getMenuContributions();
+    }, []);
 
     const getJsonSchemaWidgets = useCallback(() => {
         return consoleExtensionRegistry.getJsonSchemaWidgets();
@@ -188,6 +195,7 @@ export const ConsoleExtensionRegistryProvider = (
         loadAllModules,
         getComponent,
         getViewContributions,
+        getMenuContributions,
         getJsonSchemaWidgets,
         getJsonSchemaTemplates,
         getJsonSchemaFields,
@@ -202,20 +210,21 @@ export const ConsoleExtensionRegistryProvider = (
 
 // Returned when the hook is used outside a ConsoleExtensionRegistryProvider.
 const noopConsoleExtensionRegistryValue: ConsoleExtensionRegistryContextValue =
-    {
-        ready: false,
-        loading: false,
-        error: null,
-        version:0,
-        loadModule: async () => {},
-        loadModules: async () => {},
-        loadAllModules: async () => {},
-        getComponent: () => undefined,
-        getViewContributions: () => [],
-        getJsonSchemaWidgets: () => ({}),
-        getJsonSchemaTemplates: () => ({}),
-        getJsonSchemaFields: () => ({}),
-    };
+{
+    ready: false,
+    loading: false,
+    error: null,
+    version: 0,
+    loadModule: async () => { },
+    loadModules: async () => { },
+    loadAllModules: async () => { },
+    getComponent: () => undefined,
+    getViewContributions: () => [],
+    getMenuContributions: () => [],
+    getJsonSchemaWidgets: () => ({}),
+    getJsonSchemaTemplates: () => ({}),
+    getJsonSchemaFields: () => ({}),
+};
 
 export const useConsoleExtensionRegistry = () => {
     const value = useContext(ConsoleExtensionRegistryContext);
@@ -269,6 +278,53 @@ const detectViewFromPathname = (pathname: string) => {
     return 'list' as const;
 };
 
+
+export const getExtensionRoutePath = (contributionId: string) =>
+    `/ext/${encodeURIComponent(contributionId)}`;
+
+
+const resolveContribution = (
+    contribution: ConsoleViewContribution,
+    getComponent: (key: string) => ComponentType<any> | undefined
+): ViewContributionElement | null => {
+    const ExtensionComponent = getComponent(contribution.componentKey);
+
+    if (!ExtensionComponent) {
+        return null;
+    }
+
+    const IconComponent = contribution.iconKey
+        ? getComponent(contribution.iconKey)
+        : undefined;
+
+    const iconElement = IconComponent
+        ? createElement(IconComponent, { key: contribution.id + '-icon' })
+        : undefined;
+
+    return {
+        id: contribution.id,
+        label: contribution.label,
+        path: getExtensionRoutePath(contribution.id),
+        element: createElement(ExtensionComponent, {
+            key: contribution.id,
+            ...(contribution.label && { label: contribution.label }),
+            ...(iconElement && { icon: iconElement }),
+        }),
+        icon: iconElement,
+    };
+};
+
+
+const resolveContributions = (
+    contributions: ConsoleViewContribution[],
+    getComponent: (key: string) => ComponentType<any> | undefined
+): ViewContributionElement[] => {
+    return contributions
+        .map(contribution => resolveContribution(contribution, getComponent))
+        .filter((item): item is ViewContributionElement => item !== null);
+};
+
+
 export const useViewContributions = (
     options: UseViewContributionsOptions
 ): ViewContributionElement[] => {
@@ -297,31 +353,26 @@ export const useViewContributions = (
             return [];
         }
 
-        return getViewContributions(resource, view, options.showIn)
-            .map(contribution => {
-                const ExtensionComponent = getComponent(
-                    contribution.componentKey
-                );
-
-                if (!ExtensionComponent) {
-                    return null;
-                }
-
-                const result: ViewContributionElement = {
-                    id: contribution.id,
-                    label: contribution.label,
-                    element: createElement(ExtensionComponent, {
-                        key: contribution.id,
-                    }),
-                };
-                return result;
-            })
-            .filter(
-                (item): item is ViewContributionElement => item !== null
-            );
+        return resolveContributions(
+            getViewContributions(resource, view, options.showIn),
+            getComponent
+        );
     }, [resource, view, options.showIn, getViewContributions, getComponent, version]);
 };
+export const useExtensionsMenuRoutes = (): ViewContributionElement[] => {
+    const { loadAllModules, getComponent, getMenuContributions, version } =
+        useConsoleExtensionRegistry();
 
+    useEffect(() => {
+        loadAllModules().catch(error => {
+            console.error('Unable to load console extension modules', error);
+        });
+    }, [loadAllModules]);
+
+    return useMemo(() => {
+        return resolveContributions(getMenuContributions(), getComponent);
+    }, [getMenuContributions, getComponent, version]);
+};
 export const useJsonSchemaContributions = () => {
     const {
         loadAllModules,

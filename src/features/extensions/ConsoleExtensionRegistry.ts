@@ -95,9 +95,16 @@ export class ConsoleExtensionRegistry {
       });
   }
 
+  getMenuContributions() {
+    return this.contributions.filter(
+      (contribution) => contribution.showIn === "menu",
+    );
+  }
+
   getJsonSchemaWidgets() {
     return Object.fromEntries(this.jsonSchemaWidgets.entries());
   }
+
 
   getJsonSchemaTemplates() {
     return Object.fromEntries(this.jsonSchemaTemplates.entries());
@@ -145,7 +152,15 @@ export class ConsoleExtensionRegistry {
               `Console extension component not found: ${namespacedComponentKey}`,
             );
           }
-
+          let namespacedIconKey: string | undefined;
+          if (descriptor.icon) {
+            namespacedIconKey = `${moduleId}.${descriptor.icon}`;
+            if (!this.components.has(namespacedIconKey)) {
+              throw new Error(
+                `Console extension icon component not found: ${namespacedIconKey}`,
+              );
+            }
+          }
           const contributionId =
             descriptor.id ||
             `${moduleId}.${resource}.${viewName}.${descriptor.showIn}.${index}`;
@@ -168,7 +183,9 @@ export class ConsoleExtensionRegistry {
             showIn: descriptor.showIn,
             componentKey: namespacedComponentKey,
             order: descriptor.order,
-            label: descriptor.label
+            label: descriptor.label,
+            iconKey: namespacedIconKey,
+
           });
         });
       }

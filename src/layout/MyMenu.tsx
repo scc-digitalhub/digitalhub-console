@@ -19,6 +19,7 @@ import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
 import { TutorialsIcon } from '../features/tutorials/components/icon';
 import { MenuHeader } from '../common/components/layout/MenuHeader';
+import { ExtensionsMenuItems } from '../features/extensions/components/ExtensionMenuButtons';
 
 const enableHub: string =
     (globalThis as any).REACT_APP_HUB_CATALOG_URL ||
@@ -65,6 +66,7 @@ export const MyMenu = () => {
                 primaryText="pages.menu.catalog.header"
                 helperText="pages.menu.catalog.subheader"
             />
+
             <Menu.ResourceItem name="artifacts" />
             <Menu.ResourceItem name="dataitems" />
             <Menu.ResourceItem name="models" />
@@ -107,6 +109,8 @@ export const MyMenu = () => {
                 primaryText="pages.menu.project.header"
                 helperText="pages.menu.project.subheader"
             />
+            <ExtensionsMenuItems resource="projects" view="show" />
+
             <MenuItemLink
                 leftIcon={<SettingsIcon />}
                 to={`${basename}/config`}
