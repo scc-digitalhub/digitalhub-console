@@ -62,6 +62,8 @@ export const ProjectEdit = () => {
         return uiSchema as any;
     };
 
+
+    
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <EditBase
@@ -91,7 +93,7 @@ export const ProjectEdit = () => {
                                         kind="project"
                                         schema={schema}
                                         onDirty={setIsSpecDirty}
-                                        getUiSchema={getUiSchema}
+                                        uiSchema={getUiSchema(schema)}
                                     />
                                 )}
                             </SimpleForm>

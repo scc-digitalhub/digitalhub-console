@@ -23,6 +23,9 @@ import { JsonPreview } from './widgets/JsonPreview';
 import { useLocale, useTranslate } from 'react-admin';
 import { UiSchema } from '@rjsf/utils';
 import { useJsonSchemaContributions } from '../../../features/extensions/registry';
+import SourceCodeTemplate from './templates/SourceCodeTemplate';
+import { SourceCodeEditorWidget } from './widgets/SourceCodeEditorWidget';
+import { ServicegraphSourceCodeTemplate } from './templates/ServicegraphSourceCodeTemplate';
 
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
@@ -41,6 +44,7 @@ const customWidgets = {
     ace: AceEditorWidget,
     'html-preview': HtmlPreview,
     'json-preview': JsonPreview,
+    SourceCodeEditorWidget,
 };
 const customTemplates = {
     CoreResourceFieldTemplate,
@@ -49,6 +53,8 @@ const customTemplates = {
     TitleFieldTemplate,
     MultiSchemaFieldTemplate,
     WrapIfAdditionalTemplate,
+    SourceCodeTemplate,
+    ServicegraphSourceCodeTemplate,
 };
 const customFields = {
     AceField,

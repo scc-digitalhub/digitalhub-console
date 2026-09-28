@@ -19,7 +19,6 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { FunctionIcon } from '../icon';
-import { getFunctionUiSpec } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useGetExtensions } from '../../../features/extensions/utils';
@@ -114,12 +113,7 @@ const FunctionEditContent = ({
 
             <MetadataInput onVersionDirty={onMetadataVersionDirty} />
 
-            <SpecInput
-                source="spec"
-                kind={kind}
-                onDirty={onSpecDirty}
-                getUiSchema={k => getFunctionUiSpec(k) || {}}
-            />
+            <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />
 
             {contributions &&
                 contributions.length > 0 &&

@@ -6,7 +6,6 @@ import { Box } from '@mui/material';
 import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { TextInput, required } from 'react-admin';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
-import { getWorkflowUiSpec } from '../types';
 import { KindSelector } from '../../../common/components/KindSelector';
 import { KindChangeGuard } from '../../../common/components/KindSelector';
 import { Step, StepperForm } from '@dslab/ra-stepper';
@@ -100,12 +99,5 @@ const WorkflowSpecStepContent = ({
     kind?: string;
     onSpecDirty: (dirty: boolean) => void;
 }) => {
-    return (
-        <SpecInput
-            source="spec"
-            kind={kind}
-            onDirty={onSpecDirty}
-            getUiSchema={getWorkflowUiSpec}
-        />
-    );
+    return <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />;
 };

@@ -7,7 +7,6 @@ import { ModelEdit } from './edit/ModelEdit';
 import { ModelIcon } from './icon';
 import { ModelList } from './list/ModelList';
 import { ModelShow } from './show/ModelShow';
-import { getModelSpecUiSchema } from './types';
 
 export default {
     name: 'models',
@@ -18,7 +17,6 @@ export default {
     edit: ModelEdit,
     options: {
         type: 'model',
-        getSpecUiSchema: getModelSpecUiSchema,
         hasVersions: true,
         hasFiles: true,
     },

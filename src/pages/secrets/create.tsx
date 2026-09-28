@@ -125,7 +125,7 @@ export const SecretCreate = () => {
                                     source="spec"
                                     kind={kind}
                                     schema={schema}
-                                    getUiSchema={() => uiSchema}
+                                    uiSchema={uiSchema}
                                     label=""
                                     helperText=""
                                 />

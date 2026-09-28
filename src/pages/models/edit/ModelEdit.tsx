@@ -19,7 +19,6 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
-import { getModelSpecUiSchema } from '../types';
 import { randomId } from '../../../common/utils/helpers';
 import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../../features/files/upload/useGetUploader';
@@ -165,7 +164,7 @@ const ModelEditContent = ({
                 const nextSchema = filterProperties(schemaResult?.schema, [
                     'path',
                 ]);
-                setSchema(nextSchema ?? undefined);
+                setSchema({ ...schemaResult, schema: nextSchema ?? undefined });
             })
             .catch(() => setSchema(undefined));
     }, [kind, resource, schemaProvider]);
@@ -182,13 +181,17 @@ const ModelEditContent = ({
                 </Labeled>
             </Stack>
             <MetadataInput onVersionDirty={onMetadataVersionDirty} />
-            <SpecInput
-                source="spec"
-                schema={schema}
-                kind={kind}
-                onDirty={onSpecDirty}
-                getUiSchema={k => getModelSpecUiSchema(k) || {}}
-            />
+
+            {schema && (
+                <SpecInput
+                    source="spec"
+                    schema={schema?.schema}
+                    uiSchema={schema?.uiSchema}
+                    kind={kind}
+                    onDirty={onSpecDirty}
+                />
+            )}
+
             <PathInput source="path" uploader={uploader} />
 
             {contributions &&

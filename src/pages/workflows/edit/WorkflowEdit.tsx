@@ -19,7 +19,6 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { WorkflowIcon } from '../icon';
-import { getWorkflowUiSpec } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
@@ -114,12 +113,7 @@ const WorkflowEditContent = ({
 
             <MetadataInput onVersionDirty={onMetadataVersionDirty} />
 
-            <SpecInput
-                source="spec"
-                kind={kind}
-                onDirty={onSpecDirty}
-                getUiSchema={k => getWorkflowUiSpec(k) || {}}
-            />
+            <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />
 
             {contributions &&
                 contributions.length > 0 &&

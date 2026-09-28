@@ -7,7 +7,6 @@ import { Box } from '@mui/material';
 import { TextInput, required } from 'react-admin';
 import { KindSelector } from '../../../common/components/KindSelector';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
-import { getFunctionUiSpec } from '../types';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
@@ -118,7 +117,6 @@ const FunctionSpecStepContent = ({
             source="spec"
             kind={kind}
             onDirty={onSpecDirty}
-            getUiSchema={getFunctionUiSpec}
         />
     );
 };

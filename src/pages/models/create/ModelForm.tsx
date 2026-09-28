@@ -10,7 +10,6 @@ import {
 } from 'react';
 import { TextInput, required, useResourceContext } from 'react-admin';
 import { isValidName } from '../../../common/utils/helpers';
-import { getModelSpecUiSchema } from '../types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
@@ -97,14 +96,14 @@ const ModelSpecStepContent = ({
 }) => {
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
-    const [specSchema, setSpecSchema] = useState<any>();
+    const [schema, setSchema] = useState<any>();
     const path = useWatch({ name: 'path' });
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
 
     useEffect(() => {
         if (!kind || !resource || !schemaProvider) {
-            setSpecSchema(undefined);
+            setSchema(undefined);
             return;
         }
 
@@ -114,9 +113,9 @@ const ModelSpecStepContent = ({
                 const nextSchema = filterProperties(schemaResult?.schema, [
                     'path',
                 ]);
-                setSpecSchema(nextSchema ?? undefined);
+                setSchema({ ...schemaResult, schema: nextSchema ?? undefined });
             })
-            .catch(() => setSpecSchema(undefined));
+            .catch(() => setSchema(undefined));
     }, [kind, resource, schemaProvider]);
 
     return (
@@ -126,13 +125,15 @@ const ModelSpecStepContent = ({
                 onConfirm={setKind}
             />
             <KindSelector kinds={kinds} />
-            <SpecInput
-                source="spec"
-                schema={specSchema}
-                kind={kind}
-                onDirty={setIsSpecDirty}
-                getUiSchema={getModelSpecUiSchema}
-            />
+            {schema && (
+                <SpecInput
+                    source="spec"
+                    schema={schema?.schema}
+                    uiSchema={schema?.uiSchema}
+                    kind={kind}
+                    onDirty={setIsSpecDirty}
+                />
+            )}
             {kind && <PathInput source="path" uploader={uploader} />}
         </>
     );

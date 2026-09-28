@@ -7,7 +7,6 @@ import { DataItemEdit } from './edit/DataItemEdit';
 import { DataItemIcon } from './icon';
 import { DataItemList } from './list/DataItemList';
 import { DataItemShow } from './show/DataItemShow';
-import { getDataItemSpecUiSchema } from './types';
 
 export default {
     name: 'dataitems',
@@ -22,6 +21,5 @@ export default {
         catalogKey: 'dataitems',
         hasVersions: true,
         hasFiles: true,
-        getSpecUiSchema: getDataItemSpecUiSchema,
     },
 };

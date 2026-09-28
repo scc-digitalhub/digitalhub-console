@@ -15,8 +15,8 @@ export const SpecInput = (
     props: InputProps & {
         source: string;
         onDirty?: (state: boolean) => void;
-        getUiSchema: (kind: string) => any;
         schema?: any;
+        uiSchema?: any;
         kind?: string;
         label?: string;
         helperText?: string;
@@ -25,8 +25,8 @@ export const SpecInput = (
     const {
         source,
         onDirty,
-        getUiSchema,
         schema: schemaProp,
+        uiSchema: uiSchemaProp,
         kind,
         label = 'fields.spec.title',
         helperText,
@@ -36,6 +36,7 @@ export const SpecInput = (
     const value = useWatch({ name: source, defaultValue: {} });
     const schemaProvider = useSchemaProvider();
     const [schema, setSchema] = useState<any>(schemaProp);
+    const [uiSchema, setUiSchema] = useState<any>(uiSchemaProp);
 
     useEffect(() => {
         if (!kind) {
@@ -43,10 +44,21 @@ export const SpecInput = (
         }
         if (schemaProp) {
             setSchema(schemaProp);
-        } else if (schemaProvider && resource) {
-            schemaProvider.get(resource, kind).then(s => setSchema(s?.schema));
         }
-    }, [kind, schemaProvider, schemaProp, resource]);
+        if (uiSchemaProp) {
+            setUiSchema(uiSchemaProp);
+        }
+        if (schemaProvider && resource && (!schema || !uiSchema)) {
+            schemaProvider.get(resource, kind).then(s => {
+                if (!schema) {
+                    setSchema(s?.schema);
+                }
+                if (!uiSchema) {
+                    setUiSchema(s?.uiSchema);
+                }
+            });
+        }
+    }, [kind, schemaProvider, schemaProp, uiSchemaProp, resource]);
 
     useEffect(() => {
         if (onDirty && record) {
@@ -66,7 +78,7 @@ export const SpecInput = (
         <JsonSchemaInput
             source={source}
             schema={jsonSchema}
-            uiSchema={getUiSchema(kind)}
+            uiSchema={uiSchema}
         />
     );
 };
