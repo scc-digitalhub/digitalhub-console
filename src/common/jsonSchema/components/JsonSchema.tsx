@@ -27,6 +27,11 @@ import SourceCodeTemplate from './templates/SourceCodeTemplate';
 import { SourceCodeEditorWidget } from './widgets/SourceCodeEditorWidget';
 import { ServicegraphSourceCodeTemplate } from './templates/ServicegraphSourceCodeTemplate';
 
+import { TextArrayWidget } from './widgets/TextArrayWidget';
+import { FabSourceCodeTemplate } from './templates/FabSourceCodeTemplate';
+import { ConfigTemplate } from './templates/ConfigTemplate';
+
+
 const customWidgets = {
     tagsChipInput: MuiChipsInputWidget,
     parameters: JsonParamsWidget,
@@ -45,6 +50,7 @@ const customWidgets = {
     'html-preview': HtmlPreview,
     'json-preview': JsonPreview,
     SourceCodeEditorWidget,
+    TextArrayWidget,
 };
 const customTemplates = {
     CoreResourceFieldTemplate,
@@ -55,6 +61,8 @@ const customTemplates = {
     WrapIfAdditionalTemplate,
     SourceCodeTemplate,
     ServicegraphSourceCodeTemplate,
+    ConfigTemplate,
+    FabSourceCodeTemplate,
 };
 const customFields = {
     AceField,
