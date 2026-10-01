@@ -22,7 +22,7 @@ type K8sServiceDetailsProps = {
 export const K8sServiceDetails = ({ record }: K8sServiceDetailsProps) => {
     const service = (record?.status?.service as any) || {};
     const ports = Array.isArray(service.ports) ? service.ports : [];
-    const urls = Array.isArray(service.urls) ? service.urls : [];
+    const urls = Array.isArray(service.urls) ? service.urls : ([] as any[]);
     const externalIps = Array.isArray(service.externalIps)
         ? service.externalIps
         : [];
@@ -111,7 +111,7 @@ export const K8sServiceDetails = ({ record }: K8sServiceDetailsProps) => {
                                         <Box key={index} sx={{ ml: 2 }}>
                                             <IdField
                                                 source="url"
-                                                record={{ url }}
+                                                record={{ url: url.url }}
                                             />
                                         </Box>
                                     ))}
@@ -142,10 +142,18 @@ export const K8sServiceDetails = ({ record }: K8sServiceDetailsProps) => {
                             {ports.map((port: any, idx: number) => (
                                 <Stack key={idx} spacing={6} direction={'row'}>
                                     <Labeled label="fields.protocol.title">
-                                        <TextField
-                                            record={port}
-                                            source="protocol"
-                                        />
+                                        <>
+                                            <TextField
+                                                record={port}
+                                                source="protocol"
+                                            />
+                                            {port.appProtocol && (
+                                                <TextField
+                                                    record={port}
+                                                    source="appProtocol"
+                                                />
+                                            )}
+                                        </>
                                     </Labeled>
                                     <Labeled label="fields.name.title">
                                         <TextField

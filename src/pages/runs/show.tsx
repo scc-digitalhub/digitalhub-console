@@ -57,7 +57,6 @@ import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
 import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
-import { CHAT_FEATURES } from '../../features/chat/utils';
 import { MetricsField } from '../../features/k8smetrics/MetricsField';
 import { SHOW_VIEW_PROPS } from '../../common/theme';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
@@ -388,17 +387,7 @@ const ShowToolbar = () => {
         <TopToolbar>
             <BackButton />
             <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
-            {record?.status?.inference_v2 ? (
-                <ClientButton mode="v2" />
-            ) : record?.status?.openai?.features?.every(f =>
-                  CHAT_FEATURES.includes(f)
-              ) ? (
-                <ClientButton mode="chat" />
-            ) : record?.status?.service ? (
-                <ClientButton mode="http" />
-            ) : null}
-            {record?.kind?.startsWith('container') &&
-                record?.status?.service && <ClientButton mode="browser" />}
+            {record?.status?.service && <ClientButton />}
             <FunctionField
                 render={record =>
                     record.status?.state == 'RUNNING' ? (

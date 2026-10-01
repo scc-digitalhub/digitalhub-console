@@ -41,10 +41,11 @@ import {
     StyledDialog,
     StyledDialogClasses,
 } from '../../common/theme/StyledDialog';
+import { CHAT_FEATURES } from '../chat/utils';
 
 const defaultIcon = <SignpostIcon />;
 
-export type ClientButtonMode = 'http' | 'chat' | 'v2' | 'browser';
+export type ClientButtonMode = 'http' | 'openai' | 'openinference_v2' | 'www';
 
 export interface ClientButtonProps<RecordType extends RaRecord = any>
     extends Omit<FieldProps<RecordType>, 'source'>,
@@ -54,6 +55,7 @@ export interface ClientButtonProps<RecordType extends RaRecord = any>
     maxWidth?: Breakpoint;
     mode?: ClientButtonMode;
     label?: string;
+    url?: string;
 }
 
 export const ClientButton = (props: ClientButtonProps) => {
@@ -63,7 +65,8 @@ export const ClientButton = (props: ClientButtonProps) => {
         icon: iconProps,
         fullWidth = true,
         maxWidth = 'lg',
-        mode = 'http',
+        mode: modeProps,
+        url: urlProps,
         disabled,
         ...rest
     } = props;
@@ -74,17 +77,26 @@ export const ClientButton = (props: ClientButtonProps) => {
 
     const record = useRecordContext(props);
     const urls = useMemo<string[]>(() => {
+        if (urlProps) {
+            return [urlProps];
+        }
+
         const serviceUrls: string[] = [];
         if (record?.status?.service) {
             if (record.status?.service?.url) {
                 serviceUrls.push(record.status.service.url);
             }
             if (record.status?.service?.urls) {
-                serviceUrls.push(...record.status.service.urls);
+                serviceUrls.push(...record.status.service.urls.map(u => u.url));
             }
         }
         return serviceUrls;
-    }, [record]);
+    }, [record, urlProps]);
+
+    //pick first url to derive app protocol by default
+    const appProtocol =
+        record?.status?.service?.urls?.[0]?.app_protocol || 'http';
+    const mode = modeProps || (urlProps ? 'http' : appProtocol);
 
     const handleDialogOpen = (e: SyntheticEvent) => {
         setOpen(true);
@@ -100,19 +112,20 @@ export const ClientButton = (props: ClientButtonProps) => {
         e.stopPropagation();
     }, []);
 
-    if (!record) {
+    if (!record && !urlProps) {
         return <></>;
     }
-    const icon =
-        iconProps || (mode === 'browser' ? <BrowserIcon /> : defaultIcon);
+    const icon = iconProps || (mode === 'www' ? <BrowserIcon /> : defaultIcon);
     const label =
         labelProps ||
-        (mode === 'browser'
-            ? 'pages.browser.title'
-            : 'pages.http-client.title');
+        (mode === 'www' ? 'pages.browser.title' : 'pages.http-client.title');
     const titleText = label ? translate(label) : '';
     const isDisabled =
-        disabled || record.status?.state !== 'RUNNING' || urls.length === 0;
+        disabled ||
+        ((record?.status?.state !== 'RUNNING' ||
+            !record?.status?.service?.url ||
+            record?.status?.service?.urls?.length === 0) &&
+            !urlProps);
 
     return (
         <Fragment>
@@ -175,7 +188,7 @@ export const ClientButton = (props: ClientButtonProps) => {
                     </IconButton>
                 </div>
                 <DialogContent>
-                    <Client mode={mode} record={record} />
+                    <Client mode={mode} record={record} urls={urls} />
                 </DialogContent>
             </StyledDialog>
         </Fragment>
@@ -189,31 +202,24 @@ type ClientProps = {
 };
 
 const Client = (props: ClientProps) => {
-    const { mode: modeProps, urls: urlsProps } = props;
+    const { mode: modeProps, urls = [] } = props;
     const record = useRecordContext(props);
     const translate = useTranslate();
 
-    const urls = useMemo<string[]>(() => {
-        const serviceUrls: string[] = [];
-        if (urlsProps && urlsProps.length > 0) {
-            serviceUrls.push(...urlsProps);
-        } else if (record?.status?.service) {
-            if (record.status?.service?.url) {
-                serviceUrls.push(record.status.service.url);
-            }
-            if (record.status?.service?.urls) {
-                serviceUrls.push(...record.status.service.urls);
+    const mode = useMemo(() => {
+        if (modeProps == 'openai') {
+            //check features for chat
+            if (
+                record?.status?.openai?.features?.find(f =>
+                    CHAT_FEATURES.includes(f)
+                )
+            ) {
+                return 'openai_chat';
             }
         }
-        return serviceUrls;
-    }, [record, urlsProps]);
 
-    const mode = useMemo<string>(() => {
-        if (modeProps) return modeProps;
-        if (record?.status?.openai) return 'chat';
-        if (record?.status?.inference_v2) return 'v2';
-        return 'http';
-    }, [record, modeProps]);
+        return modeProps;
+    }, [modeProps, record]);
 
     if (!record?.id) return null;
 
@@ -225,7 +231,7 @@ const Client = (props: ClientProps) => {
 
             {(() => {
                 switch (mode) {
-                    case 'v2':
+                    case 'openinference_v2':
                         return (
                             <InferenceV2Client
                                 baseUrl={record.status?.inference_v2?.baseUrl}
@@ -233,7 +239,7 @@ const Client = (props: ClientProps) => {
                                 historyKey={`http.client.history.${record.id}`}
                             />
                         );
-                    case 'chat':
+                    case 'openai_chat':
                         return (
                             <ChatClient
                                 modelName={record.status?.openai?.model}
@@ -241,7 +247,7 @@ const Client = (props: ClientProps) => {
                                 storageKey={`http.client.history.${record.id}`}
                             />
                         );
-                    case 'browser':
+                    case 'www':
                         return <BrowserClient urls={urls} />;
                     case 'http':
                     default:
