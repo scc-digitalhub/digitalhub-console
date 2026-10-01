@@ -40,8 +40,29 @@ export const useExtensions = <
 
     const value = get(record, source);
 
+    const Component = (props.component || Fragment) as T;
+    const result: ReactElement<P, T>[] = [];
+
+    //custom elements contributions (indipendenti dal record/schemas extensions)
+    if (elements && elements.length > 0) {
+        elements.forEach((contribution, index) => {
+            const label = contribution.label || contribution.id;
+            result.push(
+                createElement(
+                    Component,
+                    {
+                        key: 'custom-' + index,
+                        value: 'custom-' + index,
+                        label,
+                    } as any,
+                    contribution.element
+                ) as ReactElement<P, T>
+            );
+        });
+    }
+
     if (!value || isLoading || !schemas) {
-        return [];
+        return result;   // ritorna comunque i contributi custom già raccolti
     }
 
     const kinds = value.map((e: any) => e.kind);
@@ -53,27 +74,6 @@ export const useExtensions = <
         )
     );
 
-    const Component = (props.component || Fragment) as T;
-    const result: ReactElement<P, T>[] = [];
-
-    //custom elements contributions
-    if (elements && elements.length > 0) {
-        elements.forEach((element, index) => {
-            result.push(
-                createElement(
-                    Component,
-                    {
-                        key: 'custom-' + index,
-                        value: 'custom-' + index,
-                        label: element.key,
-                    } as any,
-                    element
-                ) as ReactElement<P, T>
-            );
-        });
-    }
-
-    //json schema based extensions
     //TODO input field
     // const Field = props.view == 'create'  || props.view == 'edit' ? ExtensionsInput: ExtensionsField;
     const Field = ExtensionsField;
