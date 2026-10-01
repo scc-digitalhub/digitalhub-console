@@ -109,8 +109,8 @@ export const TaskRunList = () => {
                                 closeOnClickOutside={false}
                             >
                                 <RunCreateForm
-                                    runSchema={runSchema.schema}
-                                    taskSchema={taskSchema.schema}
+                                    runSchema={runSchema}
+                                    taskSchema={taskSchema}
                                 />
                             </CreateInDialogButton>
                         </Empty>
@@ -125,8 +125,8 @@ export const TaskRunList = () => {
                             closeOnClickOutside={false}
                         >
                             <RunCreateForm
-                                runSchema={runSchema.schema}
-                                taskSchema={taskSchema.schema}
+                                runSchema={runSchema}
+                                taskSchema={taskSchema}
                             />
                         </CreateInDialogButton>
                     }

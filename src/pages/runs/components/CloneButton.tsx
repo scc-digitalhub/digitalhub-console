@@ -64,10 +64,7 @@ export const CloneButton = props => {
             closeOnClickOutside={false}
         >
             {runSchema?.schema && taskSchema?.schema ? (
-                <RunCreateForm
-                    runSchema={runSchema.schema}
-                    taskSchema={taskSchema.schema}
-                />
+                <RunCreateForm runSchema={runSchema} taskSchema={taskSchema} />
             ) : (
                 <Alert severity="error">
                     {translate('messages.invalidKind')}

@@ -5,8 +5,7 @@
 import { CoreResourceCpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceCpuWidget';
 import { CoreResourceGpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceGpuWidget';
 import { CoreResourceMemWidget } from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
-import { mergeUiTemplate } from "../../common/jsonSchema/utils";
-
+import { mergeUiTemplate } from '../../common/jsonSchema/utils';
 
 export const getTaskUiSpec = (schema: any | undefined) => {
     //filter and merge with template
@@ -30,7 +29,6 @@ export const getTaskUiSpec = (schema: any | undefined) => {
 export const k8sSpec = {
     'ui:order': [
         'profile',
-        'template',
         'service_name',
         'service_type',
         'service_ports',
@@ -85,7 +83,7 @@ export const k8sSpec = {
             'ui:options': {
                 'ui:title': 'fields.k8s.resources.disk.title',
             },
-        },        
+        },
     },
 
     envs: {

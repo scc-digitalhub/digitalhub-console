@@ -28,12 +28,14 @@ import { useExtensionsSteps } from '../../../features/extensions/steps';
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
 export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
-    const { runSchema: runSchemaProps, taskSchema } = props;
+    const { runSchema: runSchemaProps, taskSchema: taskSchemaProps } = props;
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
-    //filter task properties from run schema
-    const runSchema = filterProps(runSchemaProps, taskSchema);
 
+    //filter task properties from run schema
+    const taskSchema = taskSchemaProps?.schema || {};
+    const runSchema = filterProps(runSchemaProps?.schema || {}, taskSchema);
+    const runSchemaUi = runSchemaProps?.uiSchema || {};
     //check if any extension is available
     const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSteps();
@@ -52,7 +54,7 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
             <JsonSchemaInput
                 source="spec"
                 schema={runSchema}
-                uiSchema={getRunUiSpec(runSchema)}
+                uiSchema={getRunUiSpec(runSchema, runSchemaUi)}
             />
         </StepperForm.Step>,
     ];

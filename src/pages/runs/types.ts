@@ -2,34 +2,34 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    Serializable,
-} from '../../common/jsonSchema/schemas';
-import { mergeUiTemplate } from "../../common/jsonSchema/utils";
+import { Serializable } from '../../common/jsonSchema/schemas';
+import { mergeUiTemplate } from '../../common/jsonSchema/utils';
 
-export const getRunUiSpec = (schema: any | undefined) => {
+export const getRunUiSpec = (schema: any | undefined, uiSchema: any = {}) => {
     //filter and merge with template
     if (!schema || !('properties' in schema)) {
-        return {};
+        return uiSchema;
     }
 
-    const base = {
-        'ui:order': ['task', 'local_execution'],
-
-        task: {
-            'ui:readonly': true,
-        },
-        local_execution: {
-            'ui:widget': 'hidden',
-        },
-    };
-
-    return mergeUiTemplate(schema, base, template);
+    return mergeUiTemplate(schema, template, uiSchema);
 };
 
 const template = {
-    'ui:order': ['init_parameters', 'inputs', 'parameters', 'node_config'],
+    'ui:order': [
+        'task',
+        'local_execution',
+        'init_parameters',
+        'inputs',
+        'parameters',
+        'node_config',
+    ],
     inputs: {},
+    task: {
+        'ui:readonly': true,
+    },
+    local_execution: {
+        'ui:widget': 'hidden',
+    },
     parameters: Serializable,
     init_parameters: Serializable,
     node_config: Serializable,

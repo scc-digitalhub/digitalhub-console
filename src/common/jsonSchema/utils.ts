@@ -118,32 +118,74 @@ export const mergeUiTemplate = (schema: any, base: any, template: any) => {
         return {};
     }
 
-    //filter and merge with template
-    const keys = Object.keys(template).filter(k => !k.startsWith('ui:'));
-    const ui = Object.keys(schema.properties)
-        .filter(key => keys.includes(key))
-        .reduce((obj, key) => {
-            obj[key] = template[key];
-            return obj;
-        }, base);
+    const properties = Object.keys(schema.properties ?? {});
+    const propertyKeys = new Set(properties);
+    const ui = { ...base };
 
-    //build order if provided in base
-    if ('ui:order' in base) {
-        //add every other prop if missing
-        const ordering = Object.keys(schema.properties)
-            .filter(p => !keys.includes(p))
-            .filter(key => !base['ui:order'].includes(key))
-            .reduce((obj, key) => {
-                obj.push(key);
-                return obj;
-            }, base['ui:order']);
+    for (const key of Object.keys(template)) {
+        if (!(key in ui) && (propertyKeys.has(key) || key.startsWith('ui:'))) {
+            ui[key] = template[key];
+        }
+    }
 
-        ui['ui:order'] =
-            'ui:order' in template
-                ? ordering.concat(template['ui:order'])
-                : ordering;
+    if ('ui:order' in base || 'ui:order' in template) {
+        const order: string[] = Array.isArray(base['ui:order'])
+            ? [...base['ui:order']]
+            : [];
 
-        //TODO handle allOf/anyOf ordering
+        if (Array.isArray(template['ui:order'])) {
+            for (const property of template['ui:order']) {
+                if (propertyKeys.has(property) && !order.includes(property)) {
+                    order.push(property);
+                }
+            }
+        }
+
+        for (const property of properties) {
+            if (!order.includes(property)) order.push(property);
+        }
+
+        //mimic backend workaround
+        //build a fake object to expose details about template FROM profile as dependencies
+        //TODO: remove when frontend lib supports description on enumerables
+        //see https://github.com/rjsf-team/react-jsonschema-form/issues/4214
+
+        if (propertyKeys.has('profile')) {
+            const profileDependency = schema.dependencies?.profile;
+            const dependencyProperties: string[] = [];
+
+            for (const keyword of ['anyOf', 'oneOf']) {
+                const branches = profileDependency?.[keyword];
+                if (!Array.isArray(branches)) continue;
+
+                for (const branch of branches) {
+                    for (const property of Object.keys(
+                        branch.properties ?? {}
+                    )) {
+                        if (
+                            property !== 'profile' &&
+                            !propertyKeys.has(property) &&
+                            !dependencyProperties.includes(property)
+                        ) {
+                            dependencyProperties.push(property);
+                        }
+                    }
+                }
+            }
+
+            if (order.includes('profile')) {
+                for (const property of dependencyProperties) {
+                    const existingIndex = order.indexOf(property);
+                    if (existingIndex !== -1) {
+                        order.splice(existingIndex, 1);
+                    }
+                }
+                const profileIndex = order.indexOf('profile');
+                order.splice(profileIndex + 1, 0, ...dependencyProperties);
+            }
+        }
+
+        ui['ui:order'] = order;
     }
 
     return ui;
