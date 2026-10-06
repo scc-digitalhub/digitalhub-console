@@ -11,6 +11,7 @@ import {
     ShowView,
     TextField,
     useDataProvider,
+    useLocale,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -57,11 +58,12 @@ const ShowComponent = () => {
     const resource = useResourceContext();
     const record = useRecordContext();
     const translate = useTranslate();
+    const locale = useLocale();
     const dataProvider = useDataProvider();
     const schemaProvider = useSchemaProvider();
     const extensionTabs = useExtensionsTabs({ source: 'extensions' });
     const [schema, setSchema] = useState<any>();
-    const [tasks, setTasks] = useState<string[]>([]);
+    const [tasks, setTasks] = useState<any[]>([]);
     const [sourceCode, setSourceCode] = useState<any>();
     const [fabSourceCode, setFabSourceCode] = useState<any>();
     const [config, setConfig] = useState<any>();
@@ -122,16 +124,12 @@ const ShowComponent = () => {
 
             Promise.all([
                 schemaProvider.list('tasks', record.kind).then(schemas => {
-                    const v = schemas?.map(s => s.kind);
-                    if (!v) {
-                        return null;
+                    if (schemas) {
+                        schemas.sort((a, b) => {
+                            return a.kind.localeCompare(b.kind);
+                        });
                     }
-
-                    v.sort((a, b) => {
-                        return a.localeCompare(b);
-                    });
-
-                    return v;
+                    return schemas;
                 }),
 
                 dataProvider.getList('tasks', {
@@ -142,18 +140,18 @@ const ShowComponent = () => {
                     },
                 }),
             ])
-                .then(([kinds, list]) => {
-                    if (!kinds || !list || !list.data) {
+                .then(([schemas, list]) => {
+                    if (!schemas || !list || !list.data) {
                         return;
                     }
 
                     //check if some tasks are still missing
-                    const missing = kinds.filter(
-                        k => !list.data.find(t => t.kind == k)
+                    const missing = schemas.filter(
+                        k => !list.data.find(t => t.kind == k.kind)
                     );
                     if (missing.length == 0) {
                         //all tasks defined
-                        setTasks(kinds);
+                        setTasks(schemas);
                         return;
                     }
 
@@ -282,12 +280,16 @@ const ShowComponent = () => {
 
             {tasks?.map(task => (
                 <CustomTabbedShowLayout.Tab
-                    value={task}
-                    label={'resources.tasks.kinds.' + getAction(task)}
-                    key={task}
-                    path={task}
+                    value={task.kind}
+                    label={
+                        task.uiSchema?.['ui:title@' + locale] ||
+                        task.uiSchema?.['ui:title'] ||
+                        'resources.tasks.kinds.' + getAction(task.kind)
+                    }
+                    key={task.kind}
+                    path={task.kind}
                 >
-                    <FunctionTaskShow kind={task} />
+                    <FunctionTaskShow kind={task.kind} />
                 </CustomTabbedShowLayout.Tab>
             ))}
             {extensionTabs}
