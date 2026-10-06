@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 
 export type ConsoleViewName = "list" | "create" | "edit" | "show";
 
-export type ConsoleViewShowIn = "toolbar" | "tab" | "section";
+export type ConsoleViewShowIn = "toolbar" | "tab" | "section"| "menu";
 
 export type ConsoleExtensionComponents = Record<string, ComponentType<any>>;
 
@@ -17,6 +17,8 @@ export interface ConsoleViewContributionDescriptor {
   showIn: ConsoleViewShowIn;
   component: string;
   order?: number;
+  label?: string; 
+  icon?: string;
 }
 
 export type ConsoleViewDescriptor = Partial<
@@ -45,4 +47,7 @@ export interface ConsoleViewContribution {
   showIn: ConsoleViewShowIn;
   componentKey: string;
   order?: number;
+  label?: string; 
+  iconKey?: string;
+
 }
