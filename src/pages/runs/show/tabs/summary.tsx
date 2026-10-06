@@ -158,21 +158,23 @@ export const RunSummary = (props?: UseRecordContextParams) => {
             </Stack>
 
             {record.status?.message && (
-                <Alert
-                    // icon={false}
-                    severity={
-                        record.status?.state === 'RUNNING'
-                            ? 'info'
-                            : record.status?.state === 'ERROR'
-                            ? 'error'
-                            : record.status?.state === 'COMPLETED'
-                            ? 'success'
-                            : 'warning'
-                    }
-                    // variant="outlined"
-                >
-                    {record.status?.message}
-                </Alert>
+                <Labeled label="fields.events.message.title">
+                    <Alert
+                        // icon={false}
+                        severity={
+                            record.status?.state === 'RUNNING'
+                                ? 'info'
+                                : record.status?.state === 'ERROR'
+                                ? 'error'
+                                : record.status?.state === 'COMPLETED'
+                                ? 'success'
+                                : 'warning'
+                        }
+                        // variant="outlined"
+                    >
+                        {record.status?.message}
+                    </Alert>
+                </Labeled>
             )}
 
             {record?.status?.transitions && (
