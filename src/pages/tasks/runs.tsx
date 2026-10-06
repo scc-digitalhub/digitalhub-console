@@ -105,6 +105,7 @@ export const TaskRunList = () => {
                                 record={partial}
                                 fullWidth
                                 maxWidth={'lg'}
+                                variant="contained"
                                 transform={prepare}
                                 closeOnClickOutside={false}
                             >
