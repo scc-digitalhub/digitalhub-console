@@ -4,7 +4,7 @@
 
 import { RunIcon } from './icon';
 import { RunList } from './list/RunList';
-import { RunShow } from './show';
+import { RunShow } from './show/show';
 
 export default {
     name: 'runs',

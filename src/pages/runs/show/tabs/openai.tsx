@@ -10,8 +10,8 @@ import {
     useTranslate,
 } from 'react-admin';
 import { Chip, Stack } from '@mui/material';
-import { IdField } from '../../../common/components/fields/IdField';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
+import { IdField } from '../../../../common/components/fields/IdField';
+import { ChipsField } from '../../../../common/components/fields/ChipsField';
 
 type OpenAIDetailsProps = {
     record?: RaRecord<Identifier>;

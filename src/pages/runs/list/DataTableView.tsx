@@ -85,6 +85,10 @@ export const DataTableView = (props: { storeKey?: string }) => {
                                 <Stack direction="row" gap={1}>
                                     <FunctionIcon
                                         fontSize="small"
+                                        kind={
+                                            functionParser(record.spec.function)
+                                                .kind
+                                        }
                                         color="info"
                                     />
                                     <Typography variant="body2" color="info">

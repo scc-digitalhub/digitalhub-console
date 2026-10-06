@@ -5,63 +5,45 @@
 import {
     AccessDenied,
     DateField,
-    DeleteWithConfirmButton,
-    FunctionField,
-    IconButtonWithTooltip,
-    Labeled,
     LoadingIndicator,
     SelectInput,
     ShowView,
     TextField,
     TextInput,
-    TopToolbar,
     useCreatePath,
-    useGetResourceLabel,
     usePermissions,
     useRecordContext,
     useResourceContext,
-    useShowContext,
     useTranslate,
 } from 'react-admin';
-import { Box, Container, Divider, Stack } from '@mui/material';
-import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
-import { RunIcon } from './icon';
-import {
-    PageTitle,
-    RecordPageTitleProps,
-} from '../../common/components/layout/PageTitle';
-import { StateChips, StateColors } from '../../common/components/StateChips';
-import { LogsView } from '../../features/logs/components/LogsView';
-import { StopButton } from './components/StopButton';
+import { Box, Container } from '@mui/material';
+import { toYaml } from '@dslab/ra-export-record-button';
+import { StateColors } from '../../../common/components/StateChips';
+import { LogsView } from '../../../features/logs/components/LogsView';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { useEffect, useState } from 'react';
-import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { useNavigate } from 'react-router-dom';
-import { countLines } from '../../common/utils/helpers';
-import { functionParser } from '../../common/utils/parsers';
-import { IdField } from '../../common/components/fields/IdField';
-import { WorkflowView } from '../workflows/components/WorkflowView';
-import { LineageTabComponent } from '../../features/lineage/components/LineageTabComponent';
-import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLive';
+import { countLines } from '../../../common/utils/helpers';
+import { functionParser } from '../../../common/utils/parsers';
+import { WorkflowView } from '../../workflows/components/WorkflowView';
+import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
+import { ShowBaseLive } from '../../../features/notifications/components/ShowBaseLive';
 import { ServiceDetails } from './tabs/service';
-import { TransitionsList } from './tabs/transitions';
 import { Inputs, Outputs } from './tabs/inputOutputs';
 
-import { CloneButton } from './components/CloneButton';
 import ComputeResources from './tabs/computeResources';
-import { getFunctionUiSpec } from '../functions/types';
-import { MetricsGrid } from '../../features/metrics/components/MetricsGrid';
-import { MetadataField } from '../../features/metadata/components/MetadataField';
-import { ClientButton } from '../../features/httpclients/ClientButton';
-import { FilteredJsonSchemaField } from '../../common/jsonSchema/components/FilteredJsonSchemaField';
-import { MetricsField } from '../../features/k8smetrics/MetricsField';
-import { SHOW_VIEW_PROPS } from '../../common/theme';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { useExtensionsTabs } from '../../features/extensions/tabs';
-import { useRootSelector } from '@dslab/ra-root-selector';
+import { getFunctionUiSpec } from '../../functions/types';
+import { MetricsGrid } from '../../../features/metrics/components/MetricsGrid';
+import { FilteredJsonSchemaField } from '../../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { MetricsField } from '../../../features/k8smetrics/MetricsField';
+import { SHOW_VIEW_PROPS } from '../../../common/theme';
+import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
+import { RunSummary } from './tabs/summary';
+import { RunShowTitle } from './RunShowTitle';
+import { ShowToolbar } from './ShowToolbar';
+import { RunMetadata } from './tabs/metadata';
 
 export const RunShowComponent = () => {
     const resource = useResourceContext();
@@ -84,10 +66,14 @@ export const RunShowComponent = () => {
         ? uri.protocol.substring(0, uri.protocol.length - 1)
         : null;
 
-    const functionId =
-        record?.spec?.function && uri ? uri.pathname.split(':')[1] : null;
-    const workflowId =
-        record?.spec?.workflow && uri ? uri.pathname.split(':')[1] : null;
+    const functionKey = record?.spec?.function
+        ? functionParser(record?.spec?.function)
+        : null;
+    const workflowKey = record?.spec?.workflow
+        ? functionParser(record?.spec?.workflow)
+        : null;
+    const functionId = functionKey ? functionKey.id : null;
+    const workflowId = workflowKey ? workflowKey.id : null;
 
     useEffect(() => {
         if (kind) {
@@ -158,83 +144,13 @@ export const RunShowComponent = () => {
                 value="summary"
                 label={translate('fields.summary')}
             >
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" label="fields.kind" />
-                    </Labeled>
-                    <Labeled>
-                        <IdField source="id" />
-                    </Labeled>
-                </Stack>
-                <Labeled>
-                    <IdField source="key" />
-                </Labeled>
-
-                {functionId && (
-                    <Stack direction={'row'}>
-                        <Labeled>
-                            <TextField
-                                source="spec.function"
-                                label="fields.function.title"
-                            />
-                        </Labeled>
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'functions',
-                                    id: functionId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    </Stack>
-                )}
-                {workflowId && (
-                    <Stack direction={'row'}>
-                        <Labeled>
-                            <TextField
-                                source="spec.workflow"
-                                label="fields.workflow.title"
-                            />
-                        </Labeled>
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'workflows',
-                                    id: workflowId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    </Stack>
-                )}
-
-                {record?.metadata && <MetadataField />}
-                <Divider />
-
-                <Labeled>
-                    <StateChips
-                        source="status.state"
-                        label="fields.status.state"
-                    />
-                </Labeled>
-                {record?.status?.transitions && (
-                    <TransitionsList record={record} />
-                )}
+                <RunSummary record={record} />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value="metadata"
+                label={translate('metadata')}
+            >
+                <RunMetadata record={record} />
             </CustomTabbedShowLayout.Tab>
             {record?.spec?.workflow && schema && (
                 <CustomTabbedShowLayout.Tab
@@ -379,73 +295,12 @@ export const RunShowComponent = () => {
     );
 };
 
-const ShowToolbar = () => {
-    const record = useRecordContext();
-    const { root } = useRootSelector();
-
-    return (
-        <TopToolbar>
-            <BackButton />
-            <InspectButton style={{ marginLeft: 'auto' }} fullWidth />
-            {record?.status?.service && <ClientButton />}
-            <FunctionField
-                render={record =>
-                    record.status?.state == 'RUNNING' ? (
-                        <StopButton record={record} />
-                    ) : record.status?.state == 'STOPPED' ? (
-                        <StopButton disabled />
-                    ) : null
-                }
-            />
-            {root && <CloneButton />}
-            <ExportRecordButton language="yaml" />
-            <DeleteWithConfirmButton />
-        </TopToolbar>
-    );
-};
-const RunShowTitle = (props: RecordPageTitleProps) => {
-    const { resource, record } = useShowContext();
-    const translate = useTranslate();
-    const getResourceLabel = useGetResourceLabel();
-
-    const label = getResourceLabel(resource, 1);
-
-    const uri = record?.spec?.function
-        ? new URL(record.spec.function)
-        : record?.spec?.workflow
-        ? new URL(record.spec.workflow)
-        : null;
-
-    const parent = uri ? uri.pathname.split(':')[0].substring(1) : null;
-
-    const name = parent
-        ? `${parent}/${record?.name || ''}`
-        : record?.name || '';
-    const kind = record?.kind || '';
-
-    return (
-        <PageTitle
-            text={translate('pages.pageTitle.show.title', {
-                resource: label,
-                name,
-            })}
-            secondaryText={translate('pages.pageTitle.show.subtitle', {
-                resource: label,
-                kind,
-            })}
-            icon={<RunIcon fontSize={'large'} />}
-            {...props}
-        />
-    );
-};
-
 export const RunShow = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBaseLive>
                 <>
                     <RunShowTitle />
-
                     <Box sx={{ mb: 2, mt: 1, pl: 1 }}>
                         <MetricsField
                             size="small"

@@ -210,7 +210,7 @@ export function formatDateDifference(
     } else if (minutes) {
         return translate('messages.dates.m-s-ago', { minutes, seconds });
     } else {
-        return translate('messages.dates.just_now');
+        return translate('messages.dates.just-now');
     }
 }
 

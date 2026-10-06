@@ -158,7 +158,7 @@ import MyTrinoApp from './features/sql/components/MyTrinoApp';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 import { AdminRunList } from './pages/runs/list/RunList';
-import { AdminRunShow } from './pages/runs/show';
+import { AdminRunShow } from './pages/runs/show/show';
 import { LogsView } from './pages/logs/LogsView';
 import { useExtensionsMenuRoutes } from './features/extensions/registry';
 

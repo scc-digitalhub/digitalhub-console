@@ -14,7 +14,7 @@ import {
 } from 'react-admin';
 
 export const PageTitle = (props: PageTitleProps) => {
-    const { text, secondaryText, icon, sx } = props;
+    const { text, secondaryText, icon, badge, sx } = props;
     const sxProps = {
         p: 0,
         pl: 1,
@@ -33,7 +33,7 @@ export const PageTitle = (props: PageTitleProps) => {
                     variant="h4"
                     sx={{ pb: secondaryText ? 1 : 0, color: 'secondary.main' }}
                 >
-                    {text}
+                    {text} {badge && isValidElement(badge) ? badge : null}
                 </Typography>
                 {secondaryText && (
                     <Typography
@@ -65,6 +65,7 @@ export type PageTitleProps = {
     text: string;
     secondaryText?: string;
     icon?: ReactElement;
+    badge?: ReactElement;
     sx?: SxProps<Theme>;
 };
 

@@ -9,7 +9,7 @@ import {
     Identifier,
 } from 'react-admin';
 import { Stack, Typography } from '@mui/material';
-import { IdField } from '../../../common/components/fields/IdField';
+import { IdField } from '../../../../common/components/fields/IdField';
 
 export const InferenceV2Details = ({
     record,

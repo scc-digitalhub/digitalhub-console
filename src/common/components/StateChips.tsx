@@ -19,9 +19,16 @@ export const StateChips = (props: {
     label?: string;
     sortable?: boolean;
     size?: 'medium' | 'small';
-    variant?: 'filled' | 'compact';
+    fontSize?: 'medium' | 'small' | 'inherit';
+    variant?: 'filled' | 'compact' | 'outlined';
 }) => {
-    const { source, size = 'medium', variant = 'filled', ...rest } = props;
+    const {
+        source,
+        size = 'medium',
+        variant = 'filled',
+        fontSize: fontSizeProp = 'medium',
+        ...rest
+    } = props;
     const translate = useTranslate();
     const record = useRecordContext(rest);
     const value = get(record, source)?.toString().toUpperCase();
@@ -29,30 +36,55 @@ export const StateChips = (props: {
         return <></>;
     }
 
+    const fontSize =
+        fontSizeProp === 'inherit'
+            ? undefined
+            : fontSizeProp === 'medium'
+            ? '110%'
+            : fontSizeProp === 'small'
+            ? '100%'
+            : 'inherit';
+
     const r = {
         value: translate('states.' + value.toLowerCase()).toUpperCase(),
     };
 
-    return variant === 'compact' ? (
-        <Stack direction="row" gap={0.5}>
-            <RoundChip color={StateColors[value]} size={size} />
-            <Typography
-                variant="body2"
-                color={StateColors[value]}
-                fontWeight="medium"
-                fontSize={size == 'medium' ? '110%' : '100%'}
-            >
-                {value}
-            </Typography>
-        </Stack>
-    ) : (
-        <ChipField
-            record={r}
-            source="value"
-            color={StateColors[value]}
-            size={size}
-        />
-    );
+    switch (variant) {
+        case 'outlined':
+            return (
+                <Typography
+                    variant="body2"
+                    color={StateColors[value]}
+                    fontWeight="medium"
+                    fontSize={fontSize}
+                >
+                    {value}
+                </Typography>
+            );
+        case 'compact':
+            return (
+                <Stack direction="row" gap={0.5}>
+                    <RoundChip color={StateColors[value]} size={size} />
+                    <Typography
+                        variant="body2"
+                        color={StateColors[value]}
+                        fontWeight="medium"
+                        fontSize={fontSize}
+                    >
+                        {value}
+                    </Typography>
+                </Stack>
+            );
+        default:
+            return (
+                <ChipField
+                    record={r}
+                    source="value"
+                    color={StateColors[value]}
+                    size={size}
+                />
+            );
+    }
 };
 
 const RoundChip = styled(Chip, {
@@ -80,6 +112,5 @@ export enum StateColors {
     RUNNING = 'info',
     STOP = 'warning',
     STOPPED = 'warning',
-    SUCCEEDED = 'success',
     UPLOADING = 'info',
 }

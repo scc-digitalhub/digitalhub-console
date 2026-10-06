@@ -11,7 +11,7 @@ import {
     Accordion,
 } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import MetricsChart from '../../../features/k8smetrics/MetricsChart';
+import MetricsChart from '../../../../features/k8smetrics/MetricsChart';
 import {
     DateField,
     Labeled,
@@ -20,13 +20,12 @@ import {
     useTranslate,
 } from 'react-admin';
 import { ConditionsList } from './conditions';
-import { StateChips } from '../../../common/components/StateChips';
+import { StateChips } from '../../../../common/components/StateChips';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccordionProps } from '@mui/material/Accordion';
 import { styled } from '@mui/material/styles';
 import { JSONTree } from 'react-json-tree';
-import { ChartView } from '../components/ChartView';
-import { formatDuration } from '../../../common/utils/helpers';
+import { formatDuration } from '../../../../common/utils/helpers';
 import { EventsList } from './events';
 
 const AccordionStyle = styled((props: AccordionProps) => (
