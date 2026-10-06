@@ -34,6 +34,7 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
 
     //filter task properties from run schema
     const taskSchema = taskSchemaProps?.schema || {};
+    const taskSchemaUi = taskSchemaProps?.uiSchema || {};
     const runSchema = filterProps(runSchemaProps?.schema || {}, taskSchema);
     const runSchemaUi = runSchemaProps?.uiSchema || {};
     //check if any extension is available
@@ -47,7 +48,7 @@ export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
             <JsonSchemaInput
                 source="spec"
                 schema={taskSchema}
-                uiSchema={getTaskUiSpec(taskSchema)}
+                uiSchema={getTaskUiSpec(taskSchema, taskSchemaUi)}
             />
         </StepperForm.Step>,
         <StepperForm.Step key="run" label={getResourceLabel('runs', 1)}>

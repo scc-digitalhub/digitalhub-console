@@ -83,7 +83,7 @@ export const TaskEditComponent = () => {
                     source="spec"
                     schema={{ ...spec.schema, title: 'Spec' }}
                     label={false}
-                    uiSchema={getTaskUiSpec(spec.schema)}
+                    uiSchema={getTaskUiSpec(spec.schema, spec.uiSchema)}
                     customValidate={customValidate}
                 />
             )}

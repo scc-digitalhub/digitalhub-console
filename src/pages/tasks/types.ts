@@ -7,27 +7,18 @@ import { CoreResourceGpuWidget } from '../../common/jsonSchema/components/widget
 import { CoreResourceMemWidget } from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
 import { mergeUiTemplate } from '../../common/jsonSchema/utils';
 
-export const getTaskUiSpec = (schema: any | undefined) => {
+export const getTaskUiSpec = (schema: any | undefined, uiSchema: any = {}) => {
     //filter and merge with template
     if (!schema || !('properties' in schema)) {
         return {};
     }
 
-    const base = {
-        'ui:order': ['function'],
-        function: {
-            'ui:readonly': true,
-        },
-        workflow: {
-            'ui:readonly': true,
-        },
-    };
-
-    return mergeUiTemplate(schema, base, k8sSpec);
+    return mergeUiTemplate(schema, template, uiSchema);
 };
 
-export const k8sSpec = {
+export const template = {
     'ui:order': [
+        'function',
         'profile',
         'service_name',
         'service_type',
@@ -42,6 +33,12 @@ export const k8sSpec = {
         'tolerations',
         'affinity',
     ],
+    function: {
+        'ui:readonly': true,
+    },
+    workflow: {
+        'ui:readonly': true,
+    },
     profile: {},
     affinity: {
         'ui:widget': 'hidden',
