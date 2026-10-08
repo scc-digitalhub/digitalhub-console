@@ -155,13 +155,19 @@ const ShowComponent = () => {
                         return;
                     }
 
+                    //set tasks to the currently available ones
+                    const available = schemas.filter(k =>
+                        list.data.find(t => t.kind == k.kind)
+                    );
+                    setTasks(available);
+
                     //create missing tasks
                     Promise.all(
                         missing.map(async k => {
                             return await dataProvider.create('tasks', {
                                 data: {
                                     project: record.project,
-                                    kind: k,
+                                    kind: k.kind,
                                     spec: {
                                         function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
                                     },
@@ -173,11 +179,14 @@ const ShowComponent = () => {
                             const rts = records
                                 .filter(r => r.data)
                                 .map(r => r.data);
-                            const res = list.data.concat(rts);
-                            res.sort((a, b) => {
-                                return a.kind.localeCompare(b.kind);
-                            });
-                            setTasks(res.map(r => r.kind));
+
+                            //update the tasks with the newly created ones
+                            const available = schemas.filter(
+                                k =>
+                                    list.data.find(t => t.kind == k.kind) ||
+                                    rts.find(t => t.kind == k.kind)
+                            );
+                            setTasks(available);
                         })
                         .catch(e => {
                             throw e;
