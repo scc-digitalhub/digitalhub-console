@@ -27,7 +27,6 @@ import 'ace-builds/src-noconflict/theme-solarized_light';
 
 export const SourceCodeTemplate = (props: ObjectFieldTemplateProps) => {
     const { formData, properties, formContext } = props;
-    console.log('called source code template', formData, properties);
     //explode struct
     const source = {
         prop: properties.find(

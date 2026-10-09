@@ -465,25 +465,16 @@
         "resources": {
             "cpu": {
                 "title": "Cpu",
-                "limits": {
-                    "title": "Limits (cpu units)"
-                },
-                "requests": {
-                    "title": "Requests (cpu units)"
-                }
+                "description": "Number of cores",
+                "description-max-x": "Number of cores (Max %{val})"
             },
-            "cpu-requested" :{
+            "cpu-requested": {
                 "title": "Cpu Requested"
             },
             "description": "K8s resources",
             "gpu": {
                 "title": "Gpu",
-                "limits": {
-                    "title": "Limits"
-                },
-                "requests": {
-                    "title": "Requests"
-                }
+                "description": "Number of GPU units"
             },
             "gpu-count": {
                 "title": "Gpu count"
@@ -493,24 +484,14 @@
             },
             "memory": {
                 "title": "Memory",
-                "limits": {
-                    "title": "Limits"
-                },
-                "requests": {
-                    "title": "Requests"
-                }
+                "description": "Amount of RAM"
             },
-            "memory-requested" :{
+            "memory-requested": {
                 "title": "Memory Requested"
             },
             "disk": {
                 "title": "Disk space",
-                "limits": {
-                    "title": "Limits"
-                },
-                "requests": {
-                    "title": "Requests"
-                }
+                "description": "Size of scratch disk"
             },
             "volumes": {
                 "title": "Volumes"
@@ -524,11 +505,11 @@
             "containers": {
                 "title": "Containers"
             },
-            "network-send" :{
-                "title": "Network Send"        
+            "network-send": {
+                "title": "Network Send"
             },
-            "network-receive" :{
-                "title": "Network Receive"        
+            "network-receive": {
+                "title": "Network Receive"
             },
             "title": "Resources"
         },

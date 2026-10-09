@@ -78,10 +78,6 @@
         "title": "container.tag"
       }
     },
-    "cpu": {
-      "description": "",
-      "title": "cpu"
-    },
     "createdBy": {
       "description": "",
       "title": "createdBy"
@@ -175,10 +171,6 @@
         "title": "functions.item"
       },
       "title": "functions"
-    },
-    "gpu": {
-      "description": "",
-      "title": "gpu"
     },
     "huggingface": {
       "backend": {
@@ -444,10 +436,6 @@
         "title": "matchLabels.item"
       },
       "title": "matchLabels"
-    },
-    "mem": {
-      "description": "",
-      "title": "mem"
     },
     "metadata": {
       "description": "",

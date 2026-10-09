@@ -29,6 +29,7 @@ const user_specs =
 
 const translations = {
     ...italianMessages,
+    _blank: '',
     fields: { ...auto_fields, ...user_fields },
     specs: { ...auto_specs, ...user_specs },
     resources:

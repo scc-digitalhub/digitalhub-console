@@ -2,13 +2,25 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import {
+    FormHelperText,
+    Grid,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
+import Parser from 'k8s-resource-parser';
 import { useEffect, useState } from 'react';
 import { useTranslate } from 'react-admin';
 
-export const CoreResourceMemWidget = function (props: WidgetProps) {
-    const { id, value, readonly, onChange, options, schema } = props;
+const QuantityWidget = function (
+    props: WidgetProps & { resource: 'memory' | 'disk' }
+) {
+    const { resource, id, label, value, readonly, onChange, options, schema } =
+        props;
     const translate = useTranslate();
 
     const constValue = schema?.const as string | undefined;
@@ -19,90 +31,132 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
     const initialValue = isConst
         ? constValue
         : value || (schema?.default as string | undefined);
-    const [inputValue, setInputValue] = useState<number>(
-        initialValue ? parseInt(initialValue) : 0
+    const initialNumber = initialValue ? Number.parseFloat(initialValue) : 0;
+    const [inputValue, setInputValue] = useState<number | ''>(
+        initialNumber > 0 ? initialNumber : ''
     );
     const [inputUnit, setInputUnit] = useState<string>(
         initialValue
-            ? initialValue.replace(/[0-9]/g, '')
+            ? initialValue.match(/[a-zA-Z]+$/)?.[0] ?? ''
             : RequestTypes[1].value
     );
+    const displayedUnit = isConst
+        ? constValue.match(/[a-zA-Z]+$/)?.[0] ?? ''
+        : inputUnit;
+    const displayedValue = isConst
+        ? Parser.memoryParser(constValue) /
+          Parser.memoryParser('1' + displayedUnit)
+        : inputValue;
+    const maximum = schema?.['x-maximumQuantity'];
+    const maxBytes =
+        maximum === undefined
+            ? undefined
+            : Parser.memoryParser(String(maximum));
+    const max =
+        maxBytes === undefined
+            ? undefined
+            : maxBytes / Parser.memoryParser('1' + displayedUnit);
 
     // Const fields are not user-editable, so force the form data to match.
     useEffect(() => {
-        if (isConst && value !== constValue) {
-            setInputValue(parseInt(constValue));
-            setInputUnit(constValue.replace(/[0-9]/g, ''));
-            onChange(constValue);
+        if (isConst) {
+            const next =
+                Parser.memoryParser(constValue) > 0 ? constValue : undefined;
+            if (value !== next) onChange(next);
+        } else if (
+            !isConst &&
+            value != null &&
+            value !== '' &&
+            Parser.memoryParser(String(value)) <= 0
+        ) {
+            onChange(undefined);
         }
     }, [isConst, constValue, value, onChange]);
 
     const handleEnumChange = event => {
         const next: string = event.target.value;
-        setInputValue(parseInt(next));
-        setInputUnit(next.replace(/[0-9]/g, ''));
-        onChange(next);
+        const positive = next !== '' && Parser.memoryParser(next) > 0;
+        setInputValue(positive ? Number.parseFloat(next) : '');
+        if (positive) setInputUnit(next.match(/[a-zA-Z]+$/)?.[0] ?? '');
+        onChange(positive ? next : undefined);
     };
 
     const handleInputChange = event => {
-        setInputValue(event.target.value);
-        onChange(event.target.value + inputUnit);
+        let next = event.target.value;
+        if (next === '' || Number(next) <= 0) {
+            setInputValue('');
+            onChange(undefined);
+            return;
+        }
+        if (max !== undefined && Number(next) > max) next = max;
+        setInputValue(Number(next) > 0 ? Number(next) : '');
+        onChange(Number(next) > 0 ? next + inputUnit : undefined);
     };
     const handleUnitChange = event => {
-        setInputUnit(event.target.value);
-        onChange(inputValue + event.target.value);
+        const nextUnit = event.target.value;
+        const nextMax =
+            maxBytes === undefined
+                ? undefined
+                : maxBytes / Parser.memoryParser('1' + nextUnit);
+        const nextValue =
+            nextMax === undefined
+                ? Number(inputValue)
+                : Math.min(Number(inputValue), nextMax);
+        setInputValue(nextValue > 0 ? nextValue : '');
+        setInputUnit(nextUnit);
+        onChange(nextValue > 0 ? nextValue + nextUnit : undefined);
     };
 
     return (
-        <Grid container>
-            <Grid size={12}>
-                <Typography
-                    sx={{
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        color: 'grey',
-                        marginBottom: '10px',
-                    }}
-                    color={'secondary.main'}
-                >
-                    {translate(options['ui:title'])}
-                </Typography>
-            </Grid>
+        <Stack direction="column" spacing={1}>
+            <Typography
+                sx={{
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    color: 'grey',
+                    marginBottom: '10px',
+                }}
+                color={'secondary.main'}
+            >
+                {translate(label)}
+            </Typography>
             {enumValues && !isConst ? (
-                <Grid size={10}>
-                    <Select
-                        id={id}
-                        value={value ?? ''}
-                        onChange={handleEnumChange}
-                        disabled={locked}
-                    >
-                        {enumValues.map(v => (
-                            <MenuItem key={v} value={v}>
-                                {v}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </Grid>
+                <Select
+                    id={id}
+                    value={value ?? ''}
+                    onChange={handleEnumChange}
+                    disabled={locked}
+                >
+                    {enumValues.map(v => (
+                        <MenuItem key={v} value={v}>
+                            {v}
+                        </MenuItem>
+                    ))}
+                </Select>
             ) : (
-                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+                <Grid container spacing={1} sx={{ alignItems: 'center' }}>
                     <Grid size={4}>
                         <TextField
                             variant="outlined"
                             margin="none"
                             type="number"
-                            slotProps={{ htmlInput: { min: 0, step: 1 } }}
+                            slotProps={{
+                                htmlInput: { min: 0, max, step: 'any' },
+                            }}
                             disabled={locked}
                             id={id}
                             name={id}
-                            value={inputValue}
+                            value={
+                                Number(displayedValue) > 0 ? displayedValue : ''
+                            }
                             onChange={handleInputChange}
                         />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={7}>
                         <Select
                             labelId="type-select-label"
                             id="type-select"
-                            value={inputUnit}
+                            value={displayedUnit}
                             type="outlined"
                             onChange={handleUnitChange}
                             defaultValue={RequestTypes[1].value}
@@ -122,9 +176,37 @@ export const CoreResourceMemWidget = function (props: WidgetProps) {
                     </Grid>
                 </Grid>
             )}
-        </Grid>
+            <FormHelperText component="div">
+                {max
+                    ? translate(
+                          `fields.k8s.resources.${resource}.description-max-x`,
+                          {
+                              val: max,
+                          }
+                      )
+                    : translate(`fields.k8s.resources.${resource}.description`)}
+            </FormHelperText>
+        </Stack>
     );
 };
+
+export const CoreResourceQuantityWidget = function ({
+    resource,
+}: {
+    resource: 'memory' | 'disk';
+}) {
+    return function ConfiguredQuantityWidget(props: WidgetProps) {
+        return <QuantityWidget {...props} resource={resource} />;
+    };
+};
+
+export const CoreResourceMemWidget = CoreResourceQuantityWidget({
+    resource: 'memory',
+});
+
+export const CoreResourceDiskWidget = CoreResourceQuantityWidget({
+    resource: 'disk',
+});
 
 const RequestTypes = [
     {
@@ -152,36 +234,3 @@ const RequestTypes = [
         label: 'Gigabyte',
     },
 ];
-
-function getValueMem(value: string) {
-    if (!value) return 0;
-    const converter = {
-        Ki: 1,
-        Mi: 1024,
-        Gi: 1048576,
-        k: 1,
-        M: 1000,
-        G: 1000000,
-    };
-    const units = Object.keys(converter);
-    const numberPart = value.match(/\d+/);
-    const stringPart = value.replace(/[0-9]/g, '');
-    return (
-        (Number(numberPart) * converter[stringPart]) /
-        converter[units[units.length - 1]]
-    );
-}
-
-export function checkMemRequestError(formData: any) {
-    if (
-        formData?.k8s?.resources?.mem?.requests &&
-        formData?.k8s?.resources?.mem?.limits === undefined
-    )
-        return true;
-    if (
-        getValueMem(formData?.k8s?.resources?.mem?.requests) >
-        getValueMem(formData?.k8s?.resources?.mem?.limits)
-    )
-        return true;
-    return false;
-}

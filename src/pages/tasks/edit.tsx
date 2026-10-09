@@ -10,17 +10,12 @@ import {
     Toolbar,
     useRecordContext,
     useResourceContext,
-    useTranslate,
 } from 'react-admin';
 import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { getTaskUiSpec } from './types';
 import { Stack } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
-import { checkCpuRequestError } from '../../common/jsonSchema/components/widgets/CoreResourceCpuWidget';
-import { checkGpuRequestError } from '../../common/jsonSchema/components/widgets/CoreResourceGpuWidget';
-import { checkMemRequestError } from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
-
 
 export interface TaskProp {
     record?: any;
@@ -40,27 +35,13 @@ export const TaskEditComponent = () => {
     const schemaProvider = useSchemaProvider();
     const [spec, setSpec] = useState<any>();
     const kind = record?.kind || null;
-    const translate = useTranslate();
 
-    function customValidate(formData, errors, uiSchema) {
-        if (checkCpuRequestError(formData)) {
-            errors.k8s.resources.cpu.requests.addError(
-                translate('resources.tasks.errors.requestMinorLimits')
-            );
-        }
-        if (checkMemRequestError(formData)) {
-            errors.k8s.resources.mem.requests.addError(
-                translate('resources.tasks.errors.requestMinorLimits')
-            );
-        }
-        if (checkGpuRequestError(formData)) {
-            errors.k8s.resources.gpu.requests.addError('');
-        }
-        return errors;
-    }
     useEffect(() => {
         if (schemaProvider && record && resource) {
-            schemaProvider.get(resource, kind).then(s => setSpec(s));
+            schemaProvider
+                .get(resource, kind)
+                .then(s => setSpec(s))
+                .catch(err => console.error(err));
         }
     }, [record, schemaProvider, resource]);
 
@@ -84,7 +65,6 @@ export const TaskEditComponent = () => {
                     schema={{ ...spec.schema, title: 'Spec' }}
                     label={false}
                     uiSchema={getTaskUiSpec(spec.schema, spec.uiSchema)}
-                    customValidate={customValidate}
                 />
             )}
         </SimpleForm>

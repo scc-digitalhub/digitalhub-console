@@ -465,12 +465,7 @@
         "resources": {
             "cpu": {
                 "title": "Cpu",
-                "limits": {
-                    "title": "Limiti (cpu)"
-                },
-                "requests": {
-                    "title": "Richieste (cpu)"
-                }
+                "description": "Numero di core"
             },
             "cpu-requested" :{
                 "title": "Cpu Richieste"
@@ -478,12 +473,7 @@
             "description": "Risorse K8s",
             "gpu": {
                 "title": "Gpu",
-                "limits": {
-                    "title": "Limiti"
-                },
-                "requests": {
-                    "title": "Richieste"
-                }
+                "description": "Numero di unità GPU"
             },
             "gpu-count": {
                 "title": "Numero di GPU"
@@ -493,24 +483,14 @@
             },
             "memory": {
                 "title": "Memoria",
-                "limits": {
-                    "title": "Limiti"
-                },
-                "requests": {
-                    "title": "Richieste"
-                }
+                "description": "Quantità di RAM"
             },
             "memory-requested" :{
                 "title": "Memoria Richiesta"
             },
             "disk": {
                 "title": "Spazio disco",
-                "limits": {
-                    "title": "Limiti"
-                },
-                "requests": {
-                    "title": "Richieste"
-                }
+                "description": "Dimensione del disco temporaneo"
             },
             "volumes": {
                 "title": "Volumi"

@@ -4,7 +4,10 @@
 
 import { CoreResourceCpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceCpuWidget';
 import { CoreResourceGpuWidget } from '../../common/jsonSchema/components/widgets/CoreResourceGpuWidget';
-import { CoreResourceMemWidget } from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
+import {
+    CoreResourceDiskWidget,
+    CoreResourceMemWidget,
+} from '../../common/jsonSchema/components/widgets/CoreResourceMemWidget';
 import { mergeUiTemplate } from '../../common/jsonSchema/utils';
 
 export const getTaskUiSpec = (schema: any | undefined, uiSchema: any = {}) => {
@@ -55,31 +58,19 @@ export const template = {
         'ui:layout': [3, 3, 3, 3],
         cpu: {
             'ui:widget': CoreResourceCpuWidget,
-            'ui:title': 'fields.k8s.resources.cpu.title',
-            'ui:options': {
-                'ui:title': 'fields.k8s.resources.cpu.title',
-            },
+            'ui:description': '_blank'
         },
         mem: {
             'ui:widget': CoreResourceMemWidget,
-            'ui:title': 'fields.k8s.resources.memory.title',
-            'ui:options': {
-                'ui:title': 'fields.k8s.resources.memory.title',
-            },
+            'ui:description': '_blank'
         },
         gpu: {
-            'ui:title': 'fields.k8s.resources.gpu.title',
             'ui:widget': CoreResourceGpuWidget,
-            'ui:options': {
-                'ui:title': 'fields.k8s.resources.gpu.title',
-            },
+            'ui:description': '_blank'
         },
         disk: {
-            'ui:widget': CoreResourceMemWidget,
-            'ui:title': 'fields.k8s.resources.disk.title',
-            'ui:options': {
-                'ui:title': 'fields.k8s.resources.disk.title',
-            },
+            'ui:widget': CoreResourceDiskWidget,
+            'ui:description': '_blank'
         },
     },
 
