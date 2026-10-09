@@ -1,8 +1,9 @@
 import type { ComponentType } from "react";
+import { StringMap } from "react-admin";
 
 export type ConsoleViewName = "list" | "create" | "edit" | "show";
 
-export type ConsoleViewShowIn = "toolbar" | "tab" | "section"| "menu";
+export type ConsoleViewShowIn = "toolbar" | "tab" | "section" | "menu";
 
 export type ConsoleExtensionComponents = Record<string, ComponentType<any>>;
 
@@ -17,7 +18,7 @@ export interface ConsoleViewContributionDescriptor {
   showIn: ConsoleViewShowIn;
   component: string;
   order?: number;
-  label?: string; 
+  label?: string;
   icon?: string;
 }
 
@@ -25,13 +26,17 @@ export type ConsoleViewDescriptor = Partial<
   Record<ConsoleViewName, ConsoleViewContributionDescriptor[]>
 >;
 
-export type ConsoleResourceViewsDescriptor = Record<string, ConsoleViewDescriptor>;
+export type ConsoleResourceViewsDescriptor = Record<
+  string,
+  ConsoleViewDescriptor
+>;
 
 export interface ConsoleExtensionModule {
   id?: string;
   components: ConsoleExtensionComponents;
   views?: ConsoleResourceViewsDescriptor;
   jsonSchema?: ConsoleJsonSchemaDescriptor;
+  i18n?: Record<string, StringMap>;
 }
 
 export interface ConsoleExtensionModuleLoader {
@@ -47,7 +52,6 @@ export interface ConsoleViewContribution {
   showIn: ConsoleViewShowIn;
   componentKey: string;
   order?: number;
-  label?: string; 
+  label?: string;
   iconKey?: string;
-
 }

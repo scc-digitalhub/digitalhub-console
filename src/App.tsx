@@ -131,7 +131,10 @@ import { ResourceSchemaProvider } from './common/provider/schemaProvider';
 import { ProjectConfig } from './pages/projects/config';
 import { SearchList } from './features/search/components/SearchList';
 import { SearchContextProvider } from './features/search/SearchContextProvider';
-import { ConsoleExtensionRegistryProvider } from './features/extensions/registry';
+import {
+    ConsoleExtensionRegistryProvider,
+    useExtensionsMenuRoutes,
+} from './features/extensions/registry';
 import { createContext } from 'react';
 import artifactDefinition from './pages/artifacts';
 import dataitemDefinition from './pages/dataitems';
@@ -160,7 +163,6 @@ import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 import { AdminRunList } from './pages/runs/list/RunList';
 import { AdminRunShow } from './pages/runs/show/show';
 import { LogsView } from './pages/logs/LogsView';
-import { useExtensionsMenuRoutes } from './features/extensions/registry';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -274,16 +276,14 @@ const AdminUIWithExtensions = () => {
                 {enableSearch && (
                     <Route path="/searchresults" element={<SearchList />} />
                 )}
-                {enableTrino && (
-                    <Route path="/sql" element={<MyTrinoApp />} />
-                )}
+                {enableTrino && <Route path="/sql" element={<MyTrinoApp />} />}
                 {TUTORIALS_URL && (
                     <Route
                         path="/tutorials"
                         element={<TutorialsPage url={TUTORIALS_URL} />}
                     />
                 )}
-                 <Route path="/profiles" element={<ProfilesPage />} />
+                <Route path="/profiles" element={<ProfilesPage />} />
                 {extensionMenuContributions.map(c => (
                     <Route key={c.id} path={c.path} element={c.element} />
                 ))}
