@@ -44,6 +44,8 @@
         "i18n-missing-keys-specs-en": "cat ./src/i18n/en/specs.json | jq -r '. as $root | path(..) | . as $path | $root | getpath($path) as $value | select($value | scalars) | ([$path[]] | join(\".\"))' | sort -u | sed 's/^/specs./'"
     },
     "dependencies": {
+        "@assistant-ui/react": "^0.15.25",
+        "@assistant-ui/react-langgraph": "^0.14.33",
         "@dagrejs/dagre": "^1.0.0",
         "@dslab/ra-ace-editor": "^2.0.2",
         "@dslab/ra-auth-oidc": "^2.0.0",
@@ -62,6 +64,8 @@
         "@emotion/styled": "^11.14.0",
         "@fontsource/open-sans": "^5.1.0",
         "@kotaicode/k8s-resources": "^0.1.4",
+        "@langchain/core": "^1.2.16",
+        "@langchain/langgraph-sdk": "^1.12.1",
         "@melloware/react-logviewer": "^6.5.2",
         "@microsoft/clarity": "^1.0.2",
         "@monaco-editor/react": "^4.7.0",
