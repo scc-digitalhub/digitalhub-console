@@ -432,6 +432,39 @@ const springDataProvider = (
                 return json;
             });
         },
+        getExtensions: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/extensions`;
+            return httpClient(url).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return {
+                    extensions: json,
+                };
+            });
+        },
+        updateExtensions: (resource, params) => {
+            let prefix = '';
+            if (resource !== 'projects' && params.meta?.root) {
+                prefix = '/-/' + params.meta.root;
+            }
+            const url = `${apiUrl}${prefix}/${resource}/${params.id}/extensions`;
+            return httpClient(url, {
+                method: 'PUT',
+                body: JSON.stringify(params.data),
+            }).then(({ status, json }) => {
+                if (status !== 200) {
+                    throw new Error('Invalid response status ' + status);
+                }
+                return {
+                    extensions: json,
+                };
+            });
+        }
     };
 };
 
