@@ -26,7 +26,7 @@ export const ListToolbar = (props: {
     return (
         <TopToolbar>
             <ExtensionsToolbarButtons />
-            <UploadCreateButton />
+            {/* <UploadCreateButton /> */}
             <CreateButton />
             <ImportButton />
             {selectedView === 'dataTable' && (
