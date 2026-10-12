@@ -129,7 +129,7 @@ const DataItemShowLayout = (props: { record?: any }) => {
                     value="schema"
                     label="resources.dataitems.tab.schema"
                 >
-                    <SchemaTabComponent record={props.record} />
+                    <SchemaTabComponent record={record} />
                 </CustomTabbedShowLayout.Tab>
             )}
             {kind && kind === 'table' && (
@@ -137,7 +137,7 @@ const DataItemShowLayout = (props: { record?: any }) => {
                     value="preview"
                     label="resources.dataitems.tab.preview"
                 >
-                    <PreviewTabComponent record={props.record} />
+                    <PreviewTabComponent record={record} />
                 </CustomTabbedShowLayout.Tab>
             )}
             {extensionTabs}
