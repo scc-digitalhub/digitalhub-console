@@ -17,6 +17,7 @@ import RootResourceSelectorMenu from './RootSelectorMenu';
 import { MenuHeader } from '../common/components/layout/MenuHeader';
 import { LogsIcon } from '../features/logs/components/LogsButton';
 import { ProfilesIcon } from '../pages/profiles/icon';
+import { AssistantModal } from '../features/assistant/components/AssistantModal';
 
 const APP_VERSION: string =
     (globalThis as any).REACT_APP_VERSION ||
@@ -119,11 +120,14 @@ const InitialSidebar = props => {
 
 export const LayoutInitialApp = (props: any) => {
     return (
-        <Layout
-            {...props}
-            appBar={InitialAppBar}
-            menu={InitialMenu}
-            sidebar={InitialSidebar}
-        />
+        <>
+            <Layout
+                {...props}
+                appBar={InitialAppBar}
+                menu={InitialMenu}
+                sidebar={InitialSidebar}
+            />
+            <AssistantModal />
+        </>
     );
 };

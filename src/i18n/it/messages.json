@@ -6,6 +6,30 @@
         "no_undone": "Questa azione non può essere annullata",
         "no_undone_files": "Questa azione eliminerà i file dallo store e non può essere annullata"
     },
+    "assistant": {
+        "title": "Assistente DigitalHub",
+        "digitalhub_ai_assistant": "Assistente AI DigitalHub",
+        "empty_state_description": "Fai domande, genera funzioni, registra artefatti, avvia workflow o monitora log e metriche delle esecuzioni.",
+        "empty_state_project_description": "Sono pronto ad aiutarti a lavorare nel progetto \"%{project}\". Puoi creare funzioni, registrare dataitem ed eseguire job direttamente qui.",
+        "ask_placeholder": "Chiedi all'Assistente DigitalHub... (Shift+Invio per nuova riga)",
+        "clear_session": "Cancella Sessione",
+        "stop_generating": "Interrompi generazione",
+        "send_message": "Invia messaggio",
+        "close": "Chiudi",
+        "copied": "Copiato!",
+        "copy_response": "Copia risposta",
+        "tool": {
+            "status_executing": "In esecuzione...",
+            "status_success": "Successo",
+            "status_error": "Errore",
+            "parameters": "Parametri",
+            "no_parameters": "(nessun parametro)",
+            "result": "Risultato",
+            "error_output": "Output di errore",
+            "copy_result": "Copia risultato",
+            "copied": "Copiato!"
+        }
+    },
     "chat": {
         "generation_error": "Generazione fallita",
         "type_your_message": "Digita il tuo messaggio..."

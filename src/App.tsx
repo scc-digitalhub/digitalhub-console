@@ -163,6 +163,7 @@ import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 import { AdminRunList } from './pages/runs/list/RunList';
 import { AdminRunShow } from './pages/runs/show/show';
 import { LogsView } from './pages/logs/LogsView';
+import { AssistantProvider } from './features/assistant/AssistantContext';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -352,7 +353,9 @@ const InitialWrapper = () => {
 export const App = () => {
     return (
         <BrowserRouter basename={CONTEXT_PATH}>
-            <CoreApp />
+            <AssistantProvider>
+                <CoreApp />
+            </AssistantProvider>
         </BrowserRouter>
     );
 };

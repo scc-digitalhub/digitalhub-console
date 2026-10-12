@@ -6,6 +6,30 @@
         "no_undone": "This action cannot be undone",
         "no_undone_files": "This action will delete files from the store and cannot be undone"
     },
+    "assistant": {
+        "title": "DigitalHub Assistant",
+        "digitalhub_ai_assistant": "DigitalHub AI Assistant",
+        "empty_state_description": "Ask questions, generate functions, register artifacts, launch workflows, or track run logs and metrics",
+        "empty_state_project_description": "I'm ready to help you work inside project \"%{project}\". You can create functions, register dataitems, and execute runs directly here.",
+        "ask_placeholder": "Ask DigitalHub Assistant... (Shift+Enter for new line)",
+        "clear_session": "Clear Session",
+        "stop_generating": "Stop generating",
+        "send_message": "Send message",
+        "close": "Close",
+        "copied": "Copied!",
+        "copy_response": "Copy response",
+        "tool": {
+            "status_executing": "Executing...",
+            "status_success": "Success",
+            "status_error": "Error",
+            "parameters": "Parameters",
+            "no_parameters": "(no parameters)",
+            "result": "Result",
+            "error_output": "Error Output",
+            "copy_result": "Copy Result",
+            "copied": "Copied!"
+        }
+    },
     "chat": {
         "generation_error": "Generation failed",
         "type_your_message": "Type your message..."
@@ -30,7 +54,6 @@
         "subheader_no_results": "No notifications found",
         "popup": "%{resource} %{name} status changed to %{state}",
         "stateMessage": "%{resource} status changed to %{state}"
-
     },
     "search": {
         "no_results": "Your search gave no results",
