@@ -8,6 +8,7 @@ import { MyMenu } from './MyMenu';
 import { MySidebar } from './MySidebar';
 import { AppBar, Box, Stack, Typography } from '@mui/material';
 import { InstanceMetrics } from '../features/k8smetrics/InstanceMetrics';
+import { AssistantModal } from '../features/assistant/components/AssistantModal';
 
 const applicationName: string =
     (globalThis as any).VITE_APP_NAME ||
@@ -38,6 +39,7 @@ export const MyLayout = (props: any) => {
                 sidebar={MySidebar}
                 pb={10}
             />
+            <AssistantModal />
             {enableFooter && (
                 <AppBar
                     color="default"
