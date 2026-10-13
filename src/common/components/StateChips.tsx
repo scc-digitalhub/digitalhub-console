@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    ChipField,
     Identifier,
     RaRecord,
     useRecordContext,
@@ -12,7 +11,7 @@ import {
 import get from 'lodash/get';
 import { Chip, Stack, styled, Typography } from '@mui/material';
 import { isValidElement, ReactNode } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+import SlowMotionVideoIcon from '@mui/icons-material/SlowMotionVideo';
 import ErrorIcon from '@mui/icons-material/Error';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import StopIcon from '@mui/icons-material/Stop';
@@ -163,7 +162,7 @@ export enum StateColors {
 }
 
 export const StateIcons = {
-    RUNNING: CircularProgress,
+    RUNNING: SlowMotionVideoIcon,
     COMPLETED: DoneAllIcon,
     ERROR: ErrorIcon,
     STOPPED: StopIcon,
