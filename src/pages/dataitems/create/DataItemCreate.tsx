@@ -16,26 +16,18 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { DataItemIcon } from '../icon';
 import { useState } from 'react';
-import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { UploaderContext } from '../../../features/files/upload/UploaderContext';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { DataItemForm } from './DataItemForm';
 import { CreateToolbar } from './CreateToolbar';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const [id, setId] = useState(randomId);
+    const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id,
-    });
-    const uploader = useGetUploader({
-        id,
-        recordId: id,
-        onBeforeUpload,
-        onUploadComplete,
-    });
+    const uploader = useResourceUploader({ id });
 
     const transform = data => {
         //merge path into spec.path, then strip transient field
@@ -56,13 +48,8 @@ export const DataItemCreate = () => {
             return;
         }
 
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
+        uploader.start({ id: data.id, name: data.name });
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
-        setId(randomId());
         redirect('list', resource);
     };
 
@@ -73,17 +60,17 @@ export const DataItemCreate = () => {
                 mutationOptions={{ onSuccess, onSettled }}
                 record={{ id, spec: {} }}
             >
-                <>
+                <UploaderContext.Provider value={uploader}>
                     <CreatePageTitle
                         icon={<DataItemIcon fontSize={'large'} />}
                     />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <DataItemForm uploader={uploader} />
+                            <DataItemForm />
                         </FlatCard>
                     </CreateView>
-                </>
+                </UploaderContext.Provider>
             </CreateBase>
         </Container>
     );

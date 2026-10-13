@@ -23,7 +23,8 @@ export type UploadParams = {
 export type ResourceUploadParams = {
     resource: string;
     id: string;
-    filename: string;
+    //when missing the backend returns the base path for the entity
+    filename?: string;
     name?: string;
 };
 
@@ -58,7 +59,16 @@ export type ResourceCompleteMultipartUploadParams = {
 };
 
 /**
- * Wrapper around Uppy instance
+ * Uploader bound to a target entity id, shared via context
+ */
+export type UploaderContextValue = {
+    id: string;
+    uppy: Uppy<Meta, AwsBody>;
+    files: any[];
+};
+
+/**
+ * Legacy wrapper around Uppy instance (upload on file-added)
  */
 export type Uploader = {
     uppy: Uppy<Meta, AwsBody>;
@@ -67,6 +77,21 @@ export type Uploader = {
     path: string | null;
     setName: (name: string) => void;
 };
+
+export type UploadTarget = { id: string; name: string };
+
+export type ResourceUploader = UploaderContextValue & {
+    //upload pending files for the persisted entity
+    start: (target: UploadTarget) => void;
+};
+
+/**
+ * Current file selection: null when empty, `filename` only for a single file
+ */
+export type SelectedFiles = { filename?: string };
+export type FileSelection = SelectedFiles | null;
+
+export type PathResolver = (selection: SelectedFiles) => Promise<string>;
 
 export type Upload = {
     id: string;

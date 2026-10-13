@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -20,10 +20,10 @@ import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { ArtifactIcon } from '../icon';
 import { randomId } from '../../../common/utils/helpers';
-import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { UploaderContext, useUploader } from '../../../features/files/upload/UploaderContext';
+import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
-import { Uploader } from '../../../features/files/upload/types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
@@ -37,21 +37,15 @@ export const ArtifactEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
-    const id = useRef(randomId());
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
-    });
-    const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
-        onBeforeUpload,
-        onUploadComplete,
-    });
+    const [id] = useState(randomId);
+    const uploader = useResourceUploader({ id });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isPathDirty, setIsPathDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
-    const isNewVersion = isSpecDirty || isPathDirty;
+    //uploaded files always go into a new version
+    const isNewVersion =
+        isSpecDirty || isPathDirty || uploader.files.length > 0;
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -61,11 +55,7 @@ export const ArtifactEdit = () => {
             return;
         }
 
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
+        uploader.start({ id: data.id, name: data.name });
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
@@ -96,12 +86,12 @@ export const ArtifactEdit = () => {
                 mutationMode="optimistic"
                 transform={transform}
                 mutationOptions={{
-                    meta: { update: !isNewVersion, id: id.current },
+                    meta: { update: !isNewVersion, id },
                     onSuccess,
                     onSettled,
                 }}
             >
-                <>
+                <UploaderContext.Provider value={uploader}>
                     <EditPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
 
                     <EditView component={Box}>
@@ -113,7 +103,6 @@ export const ArtifactEdit = () => {
                                 })}
                             >
                                 <ArtifactEditContent
-                                    uploader={uploader}
                                     onSpecDirty={setIsSpecDirty}
                                     onPathDirty={setIsPathDirty}
                                     onMetadataVersionDirty={
@@ -123,24 +112,27 @@ export const ArtifactEdit = () => {
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
-                </>
+                </UploaderContext.Provider>
             </EditBase>
         </Container>
     );
 };
 
 const ArtifactEditContent = ({
-    uploader,
     onSpecDirty,
     onPathDirty,
     onMetadataVersionDirty,
 }: {
-    uploader: Uploader;
     onSpecDirty: (dirty: boolean) => void;
     onPathDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
+    const uploader = useUploader();
+    const pathResolver = useResolveUploadPath({
+        id: uploader?.id,
+        name: record?.name,
+    });
     const kind = useWatch({ name: 'kind' });
     const path = useWatch({ name: 'path' });
     const [schema, setSchema] = useState<any>();
@@ -193,7 +185,7 @@ const ArtifactEditContent = ({
                 />
             )}
 
-            <PathInput source="path" uploader={uploader} />
+            <PathInput source="path" pathResolver={pathResolver} />
 
             {contributions &&
                 contributions.length > 0 &&

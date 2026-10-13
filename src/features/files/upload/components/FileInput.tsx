@@ -3,34 +3,34 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Dashboard } from '@uppy/react';
-import {
-    CommonInputProps,
-    Labeled,
-    useResourceContext,
-    useTheme,
-} from 'react-admin';
+import { Labeled, useTheme } from 'react-admin';
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Uploader } from '../types';
-import {
-    PREFIX,
-    UploadDashboard,
-} from './UploadDashboard';
+import { useUploader } from '../UploaderContext';
+import { FileSelection } from '../types';
+import { toFileSelection } from '../utils';
+import { PREFIX, UploadDashboard } from './UploadDashboard';
 
+/**
+ * File picker for the uploader in context. Reports the selection, never paths.
+ */
 export const FileInput = (props: FileInputProps) => {
-    const { uploader, source } = props;
+    const { onChange } = props;
+    const uploader = useUploader();
     const [theme] = useTheme();
-    const resource = useResourceContext(props);
+    const uppy = uploader?.uppy;
 
-    //update path in source depending on upload
-    const { setValue } = useFormContext();
     useEffect(() => {
-        if (uploader && uploader.path) {
-            setValue(source, uploader.path, { shouldValidate: true, shouldDirty: true });
-        }
-    }, [uploader?.path]);
+        if (!uppy || !onChange) return;
 
-    if (!uploader) {
+        const handler = () => onChange(toFileSelection(uppy.getFiles()));
+        uppy.on('files-added', handler).on('file-removed', handler);
+        return () => {
+            uppy.off('files-added', handler);
+            uppy.off('file-removed', handler);
+        };
+    }, [uppy, onChange]);
+
+    if (!uppy) {
         return null;
     }
 
@@ -38,7 +38,7 @@ export const FileInput = (props: FileInputProps) => {
         <UploadDashboard className={PREFIX} direction={'column'}>
             <Labeled label="fields.files.title">
                 <Dashboard
-                    uppy={uploader.uppy}
+                    uppy={uppy}
                     theme={theme === 'dark' ? 'dark' : 'light'}
                     hideUploadButton
                     disableThumbnailGenerator
@@ -52,6 +52,6 @@ export const FileInput = (props: FileInputProps) => {
     );
 };
 
-export type FileInputProps = Omit<CommonInputProps, 'defaultValue'> & {
-    uploader: Uploader;
+export type FileInputProps = {
+    onChange?: (selection: FileSelection) => void;
 };

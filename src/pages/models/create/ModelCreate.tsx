@@ -18,30 +18,21 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
 import { CreateToolbar } from '../../../common/components/toolbars/CreateToolbar';
-import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { UploaderContext } from '../../../features/files/upload/UploaderContext';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
 import { ModelForm } from './ModelForm';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
     const dataProvider = useDataProvider();
-    const [id, setId] = useState(randomId);
+    const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
     const [templates, setTemplates] = useState<any[] | undefined>();
     const [template, setTemplate] = useState<any | undefined>();
-
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id,
-    });
-    const uploader = useGetUploader({
-        id,
-        recordId: id,
-        onBeforeUpload,
-        onUploadComplete,
-    });
+    const uploader = useResourceUploader({ id });
 
     useEffect(() => {
         if (dataProvider) {
@@ -76,13 +67,8 @@ export const ModelCreate = () => {
             return;
         }
 
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
+        uploader.start({ id: data.id, name: data.name });
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
-        setId(randomId());
         redirect('list', resource);
     };
     const defaultValues = template ? { id, ...template } : { id, spec: {} };
@@ -96,7 +82,7 @@ export const ModelCreate = () => {
                 record={defaultValues}
                 mutationOptions={{ onSuccess, onSettled }}
             >
-                <>
+                <UploaderContext.Provider value={uploader}>
                     <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
@@ -111,7 +97,6 @@ export const ModelCreate = () => {
                                 />
                             ) : (
                                 <ModelForm
-                                    uploader={uploader}
                                     onCancel={() => {
                                         if (templates && templates.length) {
                                             setTemplate(undefined);
@@ -123,7 +108,7 @@ export const ModelCreate = () => {
                             )}
                         </FlatCard>
                     </CreateView>
-                </>
+                </UploaderContext.Provider>
             </CreateBase>
         </Container>
     );

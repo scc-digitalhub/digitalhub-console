@@ -16,6 +16,22 @@ export function numberOfParts(file: UppyFile<Meta, Body>): number {
     }
 }
 
+export function relativePath(file: UppyFile<Meta, Body>): string {
+    return (file.meta?.relativePath as string | undefined) ?? file.name ?? '';
+}
+
+export function basename(path: string): string {
+    return path.replace(/^.*[\\/]/, '');
+}
+
+export function toFileSelection(
+    files: UppyFile<Meta, Body>[]
+): { filename?: string } | null {
+    if (files.length === 0) return null;
+    if (files.length === 1) return { filename: relativePath(files[0]) };
+    return {};
+}
+
 export function extractInfo(file: UppyFile<Meta, Body>): any {
     return {
         path: file.meta?.relativePath ?? file.name,

@@ -161,6 +161,9 @@ const fileProvider = (
                 if (status !== 200) {
                     throw new Error('Invalid response status ' + status);
                 }
+                if (!json?.path) {
+                    throw new Error('Invalid response, upload info is missing');
+                }
                 return json;
             });
         },

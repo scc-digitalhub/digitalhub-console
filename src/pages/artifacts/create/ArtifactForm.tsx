@@ -13,8 +13,6 @@ import { isValidName } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
-import { Uploader } from '../../../features/files/upload/types';
-import { useUploaderNameSync } from '../../../features/files/upload/useUploaderSync';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
@@ -26,11 +24,14 @@ import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { FileSelection } from '../../../features/files/upload/types';
+import { basename } from '../../../features/files/upload/utils';
+import { useUploader } from '../../../features/files/upload/UploaderContext';
+import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 import { useExtensionsSteps } from '../../../features/extensions/steps';
 
-export const ArtifactForm = (props: { uploader?: Uploader }) => {
-    const { uploader } = props;
+export const ArtifactForm = () => {
     const resource = useResourceContext();
 
     const { data: kindSchemas } = useGetSchemas(resource || '');
@@ -45,10 +46,10 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
     //we build steps outside to avoid false/null children to stepperForm
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
         <StepperForm.Step key="base" label={'fields.base'}>
-            <ArtifactBaseStepContent uploader={uploader} />
+            <ArtifactBaseStepContent />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label={'fields.spec.title'}>
-            <ArtifactSpecStepContent uploader={uploader} kinds={kinds} />
+            <ArtifactSpecStepContent kinds={kinds} />
         </StepperForm.Step>,
     ];
 
@@ -70,8 +71,7 @@ export const ArtifactForm = (props: { uploader?: Uploader }) => {
     return <StepperForm toolbar={<StepperToolbar />}>{steps}</StepperForm>;
 };
 
-const ArtifactBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
-    useUploaderNameSync({ uploader });
+const ArtifactBaseStepContent = () => {
     return (
         <>
             <TextInput source="name" validate={[required(), isValidName()]} />
@@ -81,18 +81,30 @@ const ArtifactBaseStepContent = ({ uploader }: { uploader?: Uploader }) => {
 };
 
 const ArtifactSpecStepContent = ({
-    uploader,
     kinds,
 }: {
-    uploader?: Uploader;
     kinds: { id: string; name: string }[];
 }) => {
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
     const [schema, setSchema] = useState<any>();
     const path = useWatch({ name: 'path' });
+    const name = useWatch({ name: 'name' });
+    const { setValue } = useFormContext();
+    const uploader = useUploader();
+    const pathResolver = useResolveUploadPath({ id: uploader?.id, name });
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
+
+    //a single file names the entity, unless already named
+    const handleFilesChange = (selection: FileSelection) => {
+        if (selection?.filename && !name) {
+            setValue('name', basename(selection.filename), {
+                shouldDirty: true,
+                shouldValidate: true,
+            });
+        }
+    };
 
     useEffect(() => {
         if (!kind || !resource || !schemaProvider) {
@@ -130,7 +142,8 @@ const ArtifactSpecStepContent = ({
             {kind && (
                 <PathInput
                     source="path"
-                    uploader={uploader}
+                    pathResolver={pathResolver}
+                    onChange={handleFilesChange}
                     validate={[required()]}
                 />
             )}
