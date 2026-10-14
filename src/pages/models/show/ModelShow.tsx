@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import { Alert, Box, Container, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     DateField,
@@ -30,7 +30,6 @@ import { AceEditorField } from '@dslab/ra-ace-editor';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { MetricsGrid } from '../../../features/metrics/components/MetricsGrid';
-import { ExtensionsField } from '../../../features/extensions/components/Field';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
@@ -134,6 +133,26 @@ const ModelShowLayout = (props: { record?: any }) => {
 
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
+                {record.status?.message && (
+                    <Labeled label="fields.events.message.title">
+                        <Alert
+                            sx={{ whiteSpace: 'pre-wrap' }}
+                            // icon={false}
+                            severity={
+                                record.status?.state === 'RUNNING'
+                                    ? 'info'
+                                    : record.status?.state === 'ERROR'
+                                    ? 'error'
+                                    : record.status?.state === 'COMPLETED'
+                                    ? 'success'
+                                    : 'warning'
+                            }
+                            // variant="outlined"
+                        >
+                            {record.status?.message}
+                        </Alert>
+                    </Labeled>
+                )}
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {spec && (
@@ -153,9 +172,14 @@ const ModelShowLayout = (props: { record?: any }) => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
-            <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
-                <FileInfoTree />
-            </CustomTabbedShowLayout.Tab>
+            {record?.status?.files && (
+                <CustomTabbedShowLayout.Tab
+                    value="files"
+                    label="fields.files.tab"
+                >
+                    <FileInfoTree />
+                </CustomTabbedShowLayout.Tab>
+            )}
             {extensionTabs}
             {record?.status?.metrics && (
                 <CustomTabbedShowLayout.Tab

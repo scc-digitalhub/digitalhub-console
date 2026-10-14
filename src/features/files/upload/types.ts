@@ -23,7 +23,8 @@ export type UploadParams = {
 export type ResourceUploadParams = {
     resource: string;
     id: string;
-    filename: string;
+    //when missing the backend returns the base path for the entity
+    filename?: string;
     name?: string;
 };
 
@@ -57,8 +58,34 @@ export type ResourceCompleteMultipartUploadParams = {
     partList: string[];
 };
 
+export type UploadSlot = {
+    id: string;
+    uppy: Uppy<Meta, AwsBody>;
+    resolutionContext?: PathResolutionContext;
+    target?: UploadTargetContext;
+};
+
+export type UploadTargetContext = {
+    id?: string;
+    name?: string;
+    resource?: string;
+};
+
+export type UploaderContextValue = {
+    id: string;
+    uppy: Uppy<Meta, AwsBody>;
+    files: any[];
+};
+
+export type UploadCoordinatorContextValue = {
+    id: string;
+    files: any[];
+    registerSlot: (slot: UploadSlot) => void;
+    unregisterSlotsForTarget: (target: UploadTargetContext) => void;
+};
+
 /**
- * Wrapper around Uppy instance
+ * Legacy wrapper around Uppy instance (upload on file-added)
  */
 export type Uploader = {
     uppy: Uppy<Meta, AwsBody>;
@@ -66,6 +93,38 @@ export type Uploader = {
     upload: (data?: any) => void;
     path: string | null;
     setName: (name: string) => void;
+};
+
+export type UploadTarget = { id: string; name: string; resource?: string };
+
+export type ResourceUploader = UploadCoordinatorContextValue & {
+    prepare: (data: any) => Promise<void>;
+    start: () => void;
+};
+
+export type SelectedFile = {
+    id: string;
+    filename: string;
+    relativePath: string;
+    size: number | null;
+    contentType: string;
+};
+
+/** Current selection for one path field; null means no files are selected. */
+export type FileSelection = { files: SelectedFile[] } | null;
+
+export type PathResolutionContext = {
+    resource: string;
+    id: string;
+    name: string;
+    filenamePrefix?: string;
+    basePathSuffix?: string;
+};
+
+export type PathResolver = {
+    context: PathResolutionContext;
+    target: UploadTargetContext;
+    resolve: (params: { filename?: string }) => Promise<string>;
 };
 
 export type Upload = {

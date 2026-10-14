@@ -21,7 +21,10 @@ import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { FunctionIcon } from '../icon';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
-import { useGetExtensions } from '../../../features/extensions/utils';
+import {
+    transformExtensionPaths,
+    useGetExtensions,
+} from '../../../features/extensions/utils';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { EditToolbar } from './EditToolbar';
 import { useExtensionsSections } from '../../../features/extensions/sections';
@@ -49,6 +52,7 @@ export const FunctionEdit = () => {
         //reset metadata version if new version, unless manually filled
         return {
             ...data,
+            ...transformExtensionPaths(data),
             metadata: resetMetadataVersion
                 ? { ...data.metadata, version: undefined }
                 : data.metadata,

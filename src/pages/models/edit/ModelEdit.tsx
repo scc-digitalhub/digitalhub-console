@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
     EditBase,
     EditView,
@@ -20,12 +20,17 @@ import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
 import { randomId } from '../../../common/utils/helpers';
-import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import {
+    UploadCoordinatorContext,
+} from '../../../features/files/upload/UploaderContext';
+import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
-import { Uploader } from '../../../features/files/upload/types';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { useGetExtensions } from '../../../features/extensions/utils';
+import {
+    transformExtensionPaths,
+    useGetExtensions,
+} from '../../../features/extensions/utils';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
@@ -37,35 +42,28 @@ export const ModelEdit = () => {
     const resource = useResourceContext();
     const notify = useNotify();
     const redirect = useRedirect();
-    const id = useRef(randomId());
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
-    });
-    const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
-        onBeforeUpload,
-        onUploadComplete,
-    });
+    const [id] = useState(randomId);
+    const uploader = useResourceUploader({ id });
     const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
     const [isPathDirty, setIsPathDirty] = useState<boolean>(false);
     const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
         useState<boolean>(false);
-    const isNewVersion = isSpecDirty || isPathDirty;
+    //uploaded files always go into a new version
+    const isNewVersion =
+        isSpecDirty ||
+        isPathDirty ||
+        uploader.files.some(file => file.resource === resource);
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
-    const onSettled = (data, error) => {
+    const onSettled = async (data, error) => {
         if (error) {
             //onError already handles notify
             return;
         }
 
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
+        await uploader.prepare(data);
+        uploader.start();
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
@@ -81,6 +79,7 @@ export const ModelEdit = () => {
         //reset metadata version if new version, unless manually filled
         return {
             ...rest,
+            ...transformExtensionPaths(rest),
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
             status: isNewVersion ? {} : rest.status,
             metadata: resetMetadataVersion
@@ -95,12 +94,12 @@ export const ModelEdit = () => {
                 mutationMode="optimistic"
                 transform={transform}
                 mutationOptions={{
-                    meta: { update: !isNewVersion, id: id.current },
+                    meta: { update: !isNewVersion, id },
                     onSuccess,
                     onSettled,
                 }}
             >
-                <>
+                <UploadCoordinatorContext.Provider value={uploader}>
                     <EditPageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <EditView component={Box}>
@@ -112,7 +111,6 @@ export const ModelEdit = () => {
                                 })}
                             >
                                 <ModelEditContent
-                                    uploader={uploader}
                                     onSpecDirty={setIsSpecDirty}
                                     onPathDirty={setIsPathDirty}
                                     onMetadataVersionDirty={
@@ -122,24 +120,26 @@ export const ModelEdit = () => {
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
-                </>
+                </UploadCoordinatorContext.Provider>
             </EditBase>
         </Container>
     );
 };
 
 const ModelEditContent = ({
-    uploader,
     onSpecDirty,
     onPathDirty,
     onMetadataVersionDirty,
 }: {
-    uploader: Uploader;
     onSpecDirty: (dirty: boolean) => void;
     onPathDirty: (dirty: boolean) => void;
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
+    const pathResolver = useResolveUploadPath({
+        id: record?.id == null ? undefined : String(record.id),
+        name: record?.name,
+    });
     const kind = useWatch({ name: 'kind' });
     const path = useWatch({ name: 'path' });
     const [schema, setSchema] = useState<any>();
@@ -192,7 +192,7 @@ const ModelEditContent = ({
                 />
             )}
 
-            <PathInput source="path" uploader={uploader} />
+            <PathInput source="path" pathResolver={pathResolver} />
 
             {contributions &&
                 contributions.length > 0 &&

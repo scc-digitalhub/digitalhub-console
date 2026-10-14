@@ -16,26 +16,19 @@ import { randomId } from '../../../common/utils/helpers';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ArtifactIcon } from '../icon';
-import { useStateUpdateCallbacks } from '../../../common/hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
+import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { CreateToolbar } from './CreateToolbar';
 import { ArtifactForm } from './ArtifactForm';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
-    const [id, setId] = useState(randomId);
+    const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id,
-    });
-    const uploader = useGetUploader({
-        id,
-        recordId: id,
-        onBeforeUpload,
-        onUploadComplete,
-    });
+    const uploader = useResourceUploader({ id });
 
     const transform = data => {
         //merge path into spec.path, then strip transient field
@@ -43,6 +36,7 @@ export const ArtifactCreate = () => {
 
         return {
             ...rest,
+            ...transformExtensionPaths(rest),
             project: root,
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
@@ -50,19 +44,15 @@ export const ArtifactCreate = () => {
 
     const onSuccess = () => {};
 
-    const onSettled = (data, error) => {
+    const onSettled = async (data, error) => {
         if (error) {
             //onError already handles notify
             return;
         }
 
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
+        await uploader.prepare(data);
+        uploader.start();
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
-        setId(randomId());
         redirect('list', resource);
     };
 
@@ -73,17 +63,17 @@ export const ArtifactCreate = () => {
                 mutationOptions={{ onSuccess, onSettled }}
                 record={{ id, spec: {} }}
             >
-                <>
+                <UploadCoordinatorContext.Provider value={uploader}>
                     <CreatePageTitle
                         icon={<ArtifactIcon fontSize={'large'} />}
                     />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <ArtifactForm uploader={uploader} />
+                            <ArtifactForm />
                         </FlatCard>
                     </CreateView>
-                </>
+                </UploadCoordinatorContext.Provider>
             </CreateBase>
         </Container>
     );

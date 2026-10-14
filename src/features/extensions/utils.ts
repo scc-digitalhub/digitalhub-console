@@ -7,7 +7,6 @@ import {
     mapType,
     useSchemaProvider,
 } from '../../common/provider/schemaProvider';
-import { randomId } from '../../common/utils/helpers';
 import { useResourceContext } from 'react-admin';
 
 export const getSpecSchema = (schemas: any[], kind: string | undefined) => {
@@ -16,6 +15,22 @@ export const getSpecSchema = (schemas: any[], kind: string | undefined) => {
 
 export const getUiSchema = (schemas: any[], kind: string | undefined) => {
     return schemas ? schemas.find(s => s.kind === kind)?.uiSchema : {};
+};
+
+export const transformExtensionPaths = (data: any) => {
+    if (!Array.isArray(data.extensions)) return {};
+
+    return {
+        extensions: data.extensions.map((extension: any) => {
+            const { path, ...rest } = extension;
+            const spec =
+                path != null ? { ...rest.spec, path } : rest.spec;
+            return {
+                ...rest,
+                ...(spec ? { spec } : {}),
+            };
+        }),
+    };
 };
 
 export const useGetExtensions = (

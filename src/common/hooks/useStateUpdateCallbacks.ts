@@ -3,18 +3,64 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useCallback } from 'react';
-import { UpdateResult, useDataProvider, useResourceContext } from 'react-admin';
+import {
+    DataProvider,
+    UpdateResult,
+    useDataProvider,
+    useResourceContext,
+} from 'react-admin';
 import { AwsBody } from '@uppy/aws-s3';
 import { UploadResult } from '@uppy/core';
 import { Meta } from '@uppy/utils/lib/UppyFile';
 import { extractInfo } from '../../features/files/upload/utils';
 
+type StateUpdateResult = Promise<UpdateResult<any> | undefined>;
+
 type StateUpdateCallbacks = {
-    onBeforeUpload: (record?: any) => Promise<UpdateResult<any> | undefined>;
-    onUploadComplete: (
-        result: UploadResult<Meta, AwsBody>
-    ) => Promise<UpdateResult<any> | undefined>;
+    onBeforeUpload: () => StateUpdateResult;
+    onUploadComplete: (result: UploadResult<Meta, AwsBody>) => StateUpdateResult;
+    onUploadError: (message?: string) => StateUpdateResult;
 };
+
+/**
+ * Set status.state (plus extra status fields) of an entity.
+ * Always fetches fresh and touches only status: other writers may have updated the record.
+ */
+export const updateUploadState = async (
+    dataProvider: DataProvider,
+    resource: string,
+    id: string,
+    state: string,
+    extra: Record<string, any> = {}
+): Promise<UpdateResult<any>> => {
+    const { data } = await dataProvider.getOne(resource, { id });
+    const dataWithoutExtensions = { ...data };
+    delete dataWithoutExtensions.extensions;
+    console.log('[uploader] status update', {
+        resource,
+        id,
+        state,
+        omittedExtensions: Object.hasOwn(data, 'extensions'),
+    });
+    return dataProvider.update(resource, {
+        id: data.id,
+        data: {
+            ...dataWithoutExtensions,
+            status: { ...data.status, state, ...extra },
+        },
+        previousData: data,
+    });
+};
+
+export const uploadResultStatus = (result: UploadResult<Meta, AwsBody>) => ({
+    state:
+        result.successful &&
+        result.successful.length > 0 &&
+        result.failed?.length === 0
+            ? 'READY'
+            : 'ERROR',
+    files: result.successful?.map(f => extractInfo(f)),
+});
 
 export const useStateUpdateCallbacks = (props: {
     id: string;
@@ -24,70 +70,35 @@ export const useStateUpdateCallbacks = (props: {
     const resource = useResourceContext(props);
     const dataProvider = useDataProvider();
 
-    const onBeforeUpload = useCallback(
-        async (record?: any) => {
-            if (dataProvider && resource) {
-                try {
-                    let data: any = {};
-                    if (record) {
-                        data = record;
-                    } else {
-                        //get record
-                        const res = await dataProvider.getOne(resource, { id });
-                        data = res?.data;
-                    }
-
-                    if (!data.status) data.status = {};
-                    data.status.state = 'UPLOADING';
-
-                    return dataProvider.update(resource, {
-                        id: data.id,
-                        data: data,
-                        previousData: null,
-                    });
-                } catch (error) {
-                    throw new Error('Error during state update: ' + error);
-                }
-            }
+    const updateState = useCallback(
+        async (state: string, extra: Record<string, any> = {}) => {
+            if (!dataProvider || !resource) return undefined;
+            return updateUploadState(dataProvider, resource, id, state, extra);
         },
         [dataProvider, id, resource]
     );
 
+    const onBeforeUpload = useCallback(
+        () => updateState('UPLOADING'),
+        [updateState]
+    );
+
     const onUploadComplete = useCallback(
-        async (result: UploadResult<Meta, AwsBody>) => {
-            if (dataProvider && resource) {
-                try {
-                    const res = await dataProvider.getOne(resource, { id });
-                    let data = res?.data;
-
-                    if (data) {
-                        const state =
-                            result.successful &&
-                            result.successful.length > 0 &&
-                            result.failed?.length === 0
-                                ? 'READY'
-                                : 'ERROR';
-                        data.status.state = state;
-                        data.status.files = result.successful?.map(f =>
-                            extractInfo(f)
-                        );
-
-                        return dataProvider.update(resource, {
-                            id: data.id,
-                            data: data,
-                            previousData: null,
-                        });
-                    }
-                } catch (error) {
-                    throw new Error('Error during state update: ' + error);
-                }
-            }
+        (result: UploadResult<Meta, AwsBody>) => {
+            const { state, files } = uploadResultStatus(result);
+            return updateState(state, { files });
         },
-        [dataProvider, id, resource]
+        [updateState]
+    );
+
+    const onUploadError = useCallback(
+        (message?: string) => updateState('ERROR', { message }),
+        [updateState]
     );
 
     return {
         onBeforeUpload,
         onUploadComplete,
+        onUploadError,
     };
 };

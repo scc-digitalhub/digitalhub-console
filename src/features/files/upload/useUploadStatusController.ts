@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Upload, UploadStatusController } from './types';
 
 /**
@@ -25,7 +25,7 @@ export const useUploadStatusController = (): UploadStatusController => {
         }
     }, [uploads]);
 
-    const updateUploads = (upload: Upload) => {
+    const updateUploads = useCallback((upload: Upload) => {
         setUploads(prev => {
             const oldIndex = prev.findIndex(p => p.id === upload.id);
             if (oldIndex < 0) {
@@ -36,9 +36,9 @@ export const useUploadStatusController = (): UploadStatusController => {
                 );
             }
         });
-    };
+    }, []);
 
-    const removeUploads = (toBeRemoved?: Upload) => {
+    const removeUploads = useCallback((toBeRemoved?: Upload) => {
         if (toBeRemoved) {
             setUploads(prev => {
                 return prev.filter(u => u.id !== toBeRemoved.id);
@@ -46,7 +46,10 @@ export const useUploadStatusController = (): UploadStatusController => {
         } else {
             setUploads([]);
         }
-    };
+    }, []);
 
-    return { uploads, updateUploads, removeUploads, uploading };
+    return useMemo(
+        () => ({ uploads, updateUploads, removeUploads, uploading }),
+        [uploads, updateUploads, removeUploads, uploading]
+    );
 };

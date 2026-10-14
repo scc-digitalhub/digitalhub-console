@@ -22,7 +22,10 @@ import { WorkflowIcon } from '../icon';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
-import { useGetExtensions } from '../../../features/extensions/utils';
+import {
+    transformExtensionPaths,
+    useGetExtensions,
+} from '../../../features/extensions/utils';
 import { EditToolbar } from './EditToolbar';
 import { useExtensionsSections } from '../../../features/extensions/sections';
 
@@ -49,6 +52,7 @@ export const WorkflowEdit = () => {
         //reset metadata version if new version, unless manually filled
         return {
             ...data,
+            ...transformExtensionPaths(data),
             metadata: resetMetadataVersion
                 ? { ...data.metadata, version: undefined }
                 : data.metadata,

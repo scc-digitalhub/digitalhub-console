@@ -30,13 +30,14 @@ import {
 import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
 import { useGetUploader } from '../../../features/files/upload/useGetUploader';
 import { FileInput } from '../../../features/files/upload/components/FileInput';
+import { UploaderContext } from '../../../features/files/upload/UploaderContext';
 import { Uploader } from '../../../features/files/upload/types';
 import { KindSelector } from '../KindSelector';
 import { KindChangeGuard } from '../KindSelector';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
@@ -191,29 +192,55 @@ const UploadCreateForm = (props: any) => {
                 sx={{ p: 0 }}
                 className={StyledDialogClasses.content}
             >
-                <StepperForm
-                    toolbar={<StepperToolbar disableNext={!uploader.path} />}
+                <UploaderContext.Provider
+                    value={{
+                        id: id.current,
+                        uppy: uploader.uppy,
+                        files: uploader.files,
+                    }}
                 >
-                    <StepperForm.Step label={'actions.upload'}>
-                        <FileInput uploader={uploader} source="path" />
-                    </StepperForm.Step>
-                    <StepperForm.Step label={'fields.base'}>
-                        <BaseStep uploader={uploader} />
-                    </StepperForm.Step>
-                    {definition?.options?.getSpecUiSchema && (
-                        <StepperForm.Step label={'fields.spec.title'}>
-                            <SpecStep
-                                uploader={uploader}
-                                getSpecUiSchema={
-                                    definition.options.getSpecUiSchema
-                                }
-                            />
+                    <StepperForm
+                        toolbar={
+                            <StepperToolbar disableNext={!uploader.path} />
+                        }
+                    >
+                        <StepperForm.Step label={'actions.upload'}>
+                            <UploadStep uploader={uploader} />
                         </StepperForm.Step>
-                    )}
-                </StepperForm>
+                        <StepperForm.Step label={'fields.base'}>
+                            <BaseStep uploader={uploader} />
+                        </StepperForm.Step>
+                        {definition?.options?.getSpecUiSchema && (
+                            <StepperForm.Step label={'fields.spec.title'}>
+                                <SpecStep
+                                    uploader={uploader}
+                                    getSpecUiSchema={
+                                        definition.options.getSpecUiSchema
+                                    }
+                                />
+                            </StepperForm.Step>
+                        )}
+                    </StepperForm>
+                </UploaderContext.Provider>
             </DialogContent>
         </CreateBase>
     );
+};
+
+const UploadStep = ({ uploader }: { uploader: Uploader }) => {
+    const { setValue } = useFormContext();
+
+    //legacy uploader resolves the path on file-added
+    useEffect(() => {
+        if (uploader.path) {
+            setValue('path', uploader.path, {
+                shouldValidate: true,
+                shouldDirty: true,
+            });
+        }
+    }, [uploader.path, setValue]);
+
+    return <FileInput />;
 };
 
 const SpecStep = ({
