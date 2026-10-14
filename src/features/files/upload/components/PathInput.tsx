@@ -12,7 +12,12 @@ import {
 } from 'react-admin';
 import { useFormContext } from 'react-hook-form';
 import { useUploadCoordinator } from '../UploaderContext';
-import { FileSelection, PathResolver, UploadSlot } from '../types';
+import {
+    FileSelection,
+    PathResolver,
+    UploadSlot,
+    UploadTargetContext,
+} from '../types';
 import { FileInput } from './FileInput';
 
 export type PathInputProps = Omit<
@@ -22,6 +27,7 @@ export type PathInputProps = Omit<
     defaultValue?: string | null;
     //computes the path for the selected files; without it the path is not set
     pathResolver?: PathResolver;
+    uploadTarget?: UploadTargetContext;
     onChange?: (selection: FileSelection) => void;
 };
 
@@ -40,6 +46,7 @@ export type PathInputProps = Omit<
 export const PathInput = ({
     source,
     pathResolver,
+    uploadTarget,
     onChange,
     defaultValue,
     ...rest
@@ -82,15 +89,15 @@ export const PathInput = ({
         registerSlot({
             id: slotId,
             uppy,
-            selection,
             resolutionContext,
-            target: resolverTarget ?? { resource },
+            target: uploadTarget ?? resolverTarget ?? { resource },
         });
     }, [
         registerSlot,
         slotId,
         selection,
         resolutionContext,
+        uploadTarget,
         resolverTarget,
         resource,
     ]);

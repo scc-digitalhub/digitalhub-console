@@ -2,11 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import {
     ArrayInput,
     Confirm,
     FormDataConsumer,
+    IconButtonWithTooltip,
     required,
     SelectInput,
     SimpleFormIterator,
@@ -14,10 +18,12 @@ import {
     ResourceContextProvider,
     useRecordContext,
     useResourceContext,
+    useSimpleFormIterator,
+    useSimpleFormIteratorItem,
     useSourceContext,
     useTranslate,
 } from 'react-admin';
-import { useState, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { isValidKind, randomId } from '../../../common/utils/helpers';
 import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
@@ -35,6 +41,9 @@ export const ExtensionsForm = (props: {
 }) => {
     const { source = 'extensions', resource: resourceProp } = props;
     const resource = useResourceContext(props);
+    const record = useRecordContext(props);
+    const coordinator = useUploadCoordinator();
+    const parentId = props.record?.id ?? record?.id ?? coordinator?.id;
 
     //check if any extension is available
     const { data: schemas, isLoading } = useGetExtensions(
@@ -51,15 +60,107 @@ export const ExtensionsForm = (props: {
             label="fields.extensions.title"
             helperText="fields.extensions.description"
         >
-            <SimpleFormIterator>
-                <ExtensionsFormItem schemas={schemas} />
+            <SimpleFormIterator
+                addButton={<ExtensionIteratorActions />}
+                disableClear
+                removeButton={<RemoveExtensionButton />}
+            >
+                <ExtensionsFormItem schemas={schemas} parentId={parentId} />
             </SimpleFormIterator>
         </ArrayInput>
     );
 };
 
-const ExtensionsFormItem = (props: { schemas: any[] }) => {
-    const { schemas = [] } = props;
+const ExtensionIteratorActions = () => {
+    const { add, remove, source, total } = useSimpleFormIterator();
+    const { getValues } = useFormContext();
+    const coordinator = useUploadCoordinator();
+    const translate = useTranslate();
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
+    const handleClear = () => {
+        const extensions = getValues(source) ?? [];
+        extensions.forEach((extension: { id?: string | number }) => {
+            if (extension.id != null) {
+                coordinator?.unregisterSlotsForTarget({
+                    id: String(extension.id),
+                    resource: 'extensions',
+                });
+            }
+        });
+        for (let index = total - 1; index >= 0; index--) {
+            remove(index);
+        }
+        setConfirmOpen(false);
+    };
+
+    return (
+        <Stack direction="row" spacing={1}>
+            <IconButtonWithTooltip
+                label="ra.action.add"
+                size="small"
+                onClick={() => add()}
+                color="primary"
+            >
+                <AddCircleOutlineIcon fontSize="small" />
+            </IconButtonWithTooltip>
+            {total > 0 && (
+                <>
+                    <IconButtonWithTooltip
+                        label="ra.action.clear_array_input"
+                        size="small"
+                        onClick={() => setConfirmOpen(true)}
+                        color="warning"
+                    >
+                        <HighlightOffIcon fontSize="small" />
+                    </IconButtonWithTooltip>
+                    <Confirm
+                        isOpen={confirmOpen}
+                        title={translate('ra.action.clear_array_input')}
+                        content={translate('ra.message.clear_array_input')}
+                        onConfirm={handleClear}
+                        onClose={() => setConfirmOpen(false)}
+                    />
+                </>
+            )}
+        </Stack>
+    );
+};
+
+const RemoveExtensionButton = () => {
+    const { index, remove } = useSimpleFormIteratorItem();
+    const { source } = useSimpleFormIterator();
+    const { getValues } = useFormContext();
+    const coordinator = useUploadCoordinator();
+
+    const handleRemove = () => {
+        const id = getValues(`${source}.${index}.id`);
+        if (id != null) {
+            coordinator?.unregisterSlotsForTarget({
+                id: String(id),
+                resource: 'extensions',
+            });
+        }
+        remove();
+    };
+
+    return (
+        <IconButtonWithTooltip
+            label="ra.action.remove"
+            size="small"
+            onClick={handleRemove}
+            color="warning"
+        >
+            <RemoveCircleOutlineIcon fontSize="small" />
+        </IconButtonWithTooltip>
+    );
+};
+
+const ExtensionsFormItem = (props: {
+    schemas: any[];
+    parentId?: string | number;
+}) => {
+    const { schemas = [], parentId } = props;
     const sourceContext = useSourceContext();
     const { setValue, getValues } = useFormContext();
 
@@ -70,19 +171,24 @@ const ExtensionsFormItem = (props: { schemas: any[] }) => {
     const isExisting = useRef(Boolean(id)).current;
     const name = useWatch({ name: sourceContext.getSource('name') });
     const parentName = useWatch({ name: 'name' });
-    const record = useRecordContext();
     const parentResource = useResourceContext();
     const coordinator = useUploadCoordinator();
-    const parentId = coordinator?.id ?? getValues('id') ?? record?.id;
-    const pathResolver = useResolveUploadPath({
-        id: parentId == null ? undefined : String(parentId),
-        name: parentName,
-        resource: parentResource,
-        uploadTarget: {
-            id: id ?? undefined,
+    const uploadTarget = useMemo(
+        () => ({
+            id: id == null ? undefined : String(id),
             name,
             resource: 'extensions',
-        },
+        }),
+        [id, name]
+    );
+    const pathResolver = useResolveUploadPath({
+        id:
+            parentId == null
+                ? coordinator?.id
+                : String(parentId),
+        name: parentName,
+        resource: parentResource,
+        uploadTarget,
         filenamePrefix: name ? `extensions/${name}` : undefined,
         basePathSuffix: name ? `extensions/${name}/` : undefined,
     });
@@ -153,6 +259,7 @@ const ExtensionsFormItem = (props: { schemas: any[] }) => {
                         sourceContext.getSource('spec.path')
                     )}
                     pathResolver={pathResolver}
+                    uploadTarget={uploadTarget}
                     onChange={onPathFilesChange}
                 />
             </Box>

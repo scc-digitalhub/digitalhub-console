@@ -61,7 +61,6 @@ export type ResourceCompleteMultipartUploadParams = {
 export type UploadSlot = {
     id: string;
     uppy: Uppy<Meta, AwsBody>;
-    selection: FileSelection;
     resolutionContext?: PathResolutionContext;
     target?: UploadTargetContext;
 };
@@ -82,6 +81,7 @@ export type UploadCoordinatorContextValue = {
     id: string;
     files: any[];
     registerSlot: (slot: UploadSlot) => void;
+    unregisterSlotsForTarget: (target: UploadTargetContext) => void;
 };
 
 /**
@@ -112,8 +112,6 @@ export type SelectedFile = {
 
 /** Current selection for one path field; null means no files are selected. */
 export type FileSelection = { files: SelectedFile[] } | null;
-
-export type SelectedFiles = Exclude<FileSelection, null>;
 
 export type PathResolutionContext = {
     resource: string;

@@ -22,7 +22,6 @@ import { DataItemIcon } from '../icon';
 import { randomId } from '../../../common/utils/helpers';
 import {
     UploadCoordinatorContext,
-    useUploadCoordinator,
 } from '../../../features/files/upload/UploaderContext';
 import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
@@ -51,7 +50,9 @@ export const DataItemEdit = () => {
         useState<boolean>(false);
     //uploaded files always go into a new version
     const isNewVersion =
-        isSpecDirty || isPathDirty || uploader.files.length > 0;
+        isSpecDirty ||
+        isPathDirty ||
+        uploader.files.some(file => file.resource === resource);
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
@@ -136,9 +137,8 @@ const DataItemEditContent = ({
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
-    const uploader = useUploadCoordinator();
     const pathResolver = useResolveUploadPath({
-        id: uploader?.id,
+        id: record?.id == null ? undefined : String(record.id),
         name: record?.name,
     });
     const kind = useWatch({ name: 'kind' });

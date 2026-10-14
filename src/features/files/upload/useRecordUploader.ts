@@ -24,6 +24,7 @@ import {
     UploadInfo,
     UploadSlot,
     UploadTarget,
+    UploadTargetContext,
     PathResolutionContext,
 } from './types';
 import { useUpload } from './useUpload';
@@ -167,7 +168,8 @@ const configureUppy = (
     latest: MutableRefObject<Latest>,
     session: Session,
     uploadInfos: Map<string, UploadInfo>,
-    setFiles: (update: (prev: any[]) => any[]) => void
+    setFiles: (update: (prev: any[]) => any[]) => void,
+    getResource: () => string
 ): Uppy<Meta, AwsBody> => {
     const requireInfo = (
         file: { id: string; name?: string },
@@ -270,7 +272,11 @@ const configureUppy = (
     uppy.on('file-added', file => {
         setFiles(prev => [
             ...prev.filter(f => f.id !== file.id),
-            { id: file.id, info: extractInfo(file) },
+            {
+                id: file.id,
+                info: extractInfo(file),
+                resource: getResource(),
+            },
         ]);
     })
         .on('file-removed', file => {
@@ -471,7 +477,9 @@ export const useResourceUploader = (props: { id: string }): ResourceUploader => 
                 latest,
                 registered.session,
                 registered.uploadInfos,
-                setFiles
+                setFiles,
+                () =>
+                    registered!.target?.resource ?? latest.current.resource
             );
         } else {
             Object.assign(registered, slot);
@@ -493,9 +501,45 @@ export const useResourceUploader = (props: { id: string }): ResourceUploader => 
             ...slot.uppy.getFiles().map(file => ({
                 id: file.id,
                 info: extractInfo(file),
+                resource: slot.target?.resource ?? latest.current.resource,
             })),
         ]);
     }, []);
+
+    const unregisterSlotsForTarget = useCallback(
+        (target: UploadTargetContext) => {
+            if (target.id == null) return;
+            const targetId = String(target.id);
+            let removed = false;
+
+            for (const [slotId, slot] of Array.from(
+                slots.current.entries()
+            )) {
+                if (
+                    slot.target?.resource !== target.resource ||
+                    String(slot.target?.id ?? '') !== targetId
+                ) {
+                    continue;
+                }
+                slots.current.delete(slotId);
+                removed = true;
+            }
+
+            if (!removed) return;
+
+            setFiles(() =>
+                Array.from(slots.current.values()).flatMap(slot =>
+                    slot.uppy.getFiles().map(file => ({
+                        id: file.id,
+                        info: extractInfo(file),
+                        resource:
+                            slot.target?.resource ?? latest.current.resource,
+                    }))
+                )
+            );
+        },
+        []
+    );
 
     const prepare = async (data: any) => {
         console.log('[uploader] preparing slots', {
@@ -620,5 +664,12 @@ export const useResourceUploader = (props: { id: string }): ResourceUploader => 
         backgroundUploadManager.start(jobs);
     };
 
-    return { id, files, registerSlot, prepare, start };
+    return {
+        id,
+        files,
+        registerSlot,
+        unregisterSlotsForTarget,
+        prepare,
+        start,
+    };
 };

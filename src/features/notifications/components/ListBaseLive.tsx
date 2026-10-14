@@ -47,6 +47,17 @@ export const ListBaseLive = <RecordType extends RaRecord = any>({
                     if (!cached?.data) continue;
                     const idx = cached.data.findIndex(r => r.id === record.id);
                     if (idx !== -1) {
+                        if (record.status?.state === 'DELETED') {
+                            queryClient.setQueryData(queryKey, {
+                                ...cached,
+                                data: cached.data.filter(
+                                    r => r.id !== record.id
+                                ),
+                                total: Math.max(0, cached.total - 1),
+                            });
+                            continue;
+                        }
+
                         const updatedData = [...cached.data];
                         updatedData[idx] = record;
                         queryClient.setQueryData(queryKey, {
