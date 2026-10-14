@@ -6,6 +6,7 @@ import { Box, Stack } from '@mui/material';
 import {
     ArrayField,
     Labeled,
+    ResourceContextProvider,
     SingleFieldList,
     TextField,
     useRecordContext,
@@ -14,6 +15,7 @@ import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { getSpecSchema, getUiSchema } from '../utils';
 import { IdField } from '../../../common/components/fields/IdField';
 import { JsonSchemaField } from '../../../common/jsonSchema/components/JsonSchema';
+import { FileInfoTree } from '../../files/fileInfoTree/components/FileInfoTree';
 
 export const ExtensionsField = (props: {
     resource?: string;
@@ -31,15 +33,17 @@ export const ExtensionsField = (props: {
     }
 
     return (
-        <ArrayField
-            record={record}
-            source={source}
-            label="fields.extensions.title"
-        >
-            <SingleFieldList linkType={false}>
-                <ExtensionsFieldItem schemas={schemas} />
-            </SingleFieldList>
-        </ArrayField>
+        <ResourceContextProvider value="extensions">
+            <ArrayField
+                record={record}
+                source={source}
+                label="fields.extensions.title"
+            >
+                <SingleFieldList linkType={false}>
+                    <ExtensionsFieldItem schemas={schemas} />
+                </SingleFieldList>
+            </ArrayField>
+        </ResourceContextProvider>
     );
 };
 
@@ -102,6 +106,9 @@ const ExtensionsFieldItem = (props: { schemas: any[] }) => {
                 uiSchema={uiSchema}
                 label={false}
             />
+            {record?.status?.files && (
+                <FileInfoTree />
+            )}
         </Box>
     );
 };

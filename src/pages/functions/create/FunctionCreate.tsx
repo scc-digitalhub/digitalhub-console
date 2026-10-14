@@ -20,6 +20,7 @@ import {
 } from '../../../common/components/layout/PageTitle';
 import { FunctionIcon } from '../icon';
 import { useCreateFlow } from '../../../common/hooks/useCreateFlow';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { BackButton } from '@dslab/ra-back-button';
@@ -52,7 +53,11 @@ export const FunctionCreate = () => {
     const transform = useCallback(
         (data: any) => {
             const { id, ...rest } = data;
-            return { ...rest, project: root || '' };
+            return {
+                ...rest,
+                ...transformExtensionPaths(rest),
+                project: root || '',
+            };
         },
         [root]
     );

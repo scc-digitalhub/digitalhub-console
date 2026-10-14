@@ -20,13 +20,19 @@ import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { ArtifactIcon } from '../icon';
 import { randomId } from '../../../common/utils/helpers';
-import { UploaderContext, useUploader } from '../../../features/files/upload/UploaderContext';
+import {
+    UploadCoordinatorContext,
+    useUploadCoordinator,
+} from '../../../features/files/upload/UploaderContext';
 import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
-import { useGetExtensions } from '../../../features/extensions/utils';
+import {
+    transformExtensionPaths,
+    useGetExtensions,
+} from '../../../features/extensions/utils';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
@@ -49,13 +55,14 @@ export const ArtifactEdit = () => {
 
     //overwrite onSuccess and use onSettled to handle optimistic rendering
     const onSuccess = () => {};
-    const onSettled = (data, error) => {
+    const onSettled = async (data, error) => {
         if (error) {
             //onError already handles notify
             return;
         }
 
-        uploader.start({ id: data.id, name: data.name });
+        await uploader.prepare(data);
+        uploader.start();
         notify('ra.notification.updated', {
             type: 'info',
             messageArgs: { smart_count: 1 },
@@ -72,6 +79,7 @@ export const ArtifactEdit = () => {
         //reset metadata version if new version, unless manually filled
         return {
             ...rest,
+            ...transformExtensionPaths(rest),
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
             status: isNewVersion ? {} : rest.status,
             metadata: resetMetadataVersion
@@ -91,7 +99,7 @@ export const ArtifactEdit = () => {
                     onSettled,
                 }}
             >
-                <UploaderContext.Provider value={uploader}>
+                <UploadCoordinatorContext.Provider value={uploader}>
                     <EditPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
 
                     <EditView component={Box}>
@@ -112,7 +120,7 @@ export const ArtifactEdit = () => {
                             </SimpleForm>
                         </FlatCard>
                     </EditView>
-                </UploaderContext.Provider>
+                </UploadCoordinatorContext.Provider>
             </EditBase>
         </Container>
     );
@@ -128,7 +136,7 @@ const ArtifactEditContent = ({
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
-    const uploader = useUploader();
+    const uploader = useUploadCoordinator();
     const pathResolver = useResolveUploadPath({
         id: uploader?.id,
         name: record?.name,

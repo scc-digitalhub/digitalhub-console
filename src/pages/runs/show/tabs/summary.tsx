@@ -160,6 +160,7 @@ export const RunSummary = (props?: UseRecordContextParams) => {
             {record.status?.message && (
                 <Labeled label="fields.events.message.title">
                     <Alert
+                        sx={{ whiteSpace: 'pre-wrap' }}
                         // icon={false}
                         severity={
                             record.status?.state === 'RUNNING'

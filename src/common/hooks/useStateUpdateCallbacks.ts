@@ -34,9 +34,20 @@ export const updateUploadState = async (
     extra: Record<string, any> = {}
 ): Promise<UpdateResult<any>> => {
     const { data } = await dataProvider.getOne(resource, { id });
+    const dataWithoutExtensions = { ...data };
+    delete dataWithoutExtensions.extensions;
+    console.log('[uploader] status update', {
+        resource,
+        id,
+        state,
+        omittedExtensions: Object.hasOwn(data, 'extensions'),
+    });
     return dataProvider.update(resource, {
         id: data.id,
-        data: { ...data, status: { ...data.status, state, ...extra } },
+        data: {
+            ...dataWithoutExtensions,
+            status: { ...data.status, state, ...extra },
+        },
         previousData: data,
     });
 };

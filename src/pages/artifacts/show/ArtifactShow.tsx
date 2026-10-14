@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import { Alert, Box, Container, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
     Labeled,
@@ -90,6 +90,26 @@ const ArtifactShowLayout = (props: { record?: any }) => {
 
                 <IdField source="key" />
                 <StateChips source="status.state" label="fields.status.state" />
+                {record.status?.message && (
+                    <Labeled label="fields.events.message.title">
+                        <Alert
+                            sx={{ whiteSpace: 'pre-wrap' }}
+                            // icon={false}
+                            severity={
+                                record.status?.state === 'RUNNING'
+                                    ? 'info'
+                                    : record.status?.state === 'ERROR'
+                                    ? 'error'
+                                    : record.status?.state === 'COMPLETED'
+                                    ? 'success'
+                                    : 'warning'
+                            }
+                            // variant="outlined"
+                        >
+                            {record.status?.message}
+                        </Alert>
+                    </Labeled>
+                )}
                 <MetadataField />
             </CustomTabbedShowLayout.Tab>
             {spec && (
@@ -109,9 +129,14 @@ const ArtifactShowLayout = (props: { record?: any }) => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
-            <CustomTabbedShowLayout.Tab value="files" label="fields.files.tab">
-                <FileInfoTree />
-            </CustomTabbedShowLayout.Tab>
+            {record?.status?.files && (
+                <CustomTabbedShowLayout.Tab
+                    value="files"
+                    label="fields.files.tab"
+                >
+                    <FileInfoTree />
+                </CustomTabbedShowLayout.Tab>
+            )}
             {extensionTabs}
             <CustomTabbedShowLayout.Tab
                 value="lineage"

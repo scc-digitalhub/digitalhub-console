@@ -2,17 +2,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { CommonInputProps, TextInput, useNotify } from 'react-admin';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import {
+    CommonInputProps,
+    TextInput,
+    useNotify,
+    useResourceContext,
+    useSourceContext,
+} from 'react-admin';
 import { useFormContext } from 'react-hook-form';
-import { useUploader } from '../UploaderContext';
-import { FileSelection, PathResolver } from '../types';
+import { useUploadCoordinator } from '../UploaderContext';
+import { FileSelection, PathResolver, UploadSlot } from '../types';
 import { FileInput } from './FileInput';
 
 export type PathInputProps = Omit<
     CommonInputProps,
     'defaultValue' | 'onChange'
 > & {
+    defaultValue?: string | null;
     //computes the path for the selected files; without it the path is not set
     pathResolver?: PathResolver;
     onChange?: (selection: FileSelection) => void;
@@ -34,36 +41,68 @@ export const PathInput = ({
     source,
     pathResolver,
     onChange,
+    defaultValue,
     ...rest
 }: PathInputProps) => {
-    const uploader = useUploader();
+    const coordinator = useUploadCoordinator();
+    const registerSlot = coordinator?.registerSlot;
     const notify = useNotify();
+    const resource = useResourceContext();
+    const resolutionContext = pathResolver?.context;
+    const resolverTarget = pathResolver?.target;
+    const sourceContext = useSourceContext();
+    const scopedSource = sourceContext.getSource(source);
+    const slotId = useId();
     const { setValue, resetField } = useFormContext();
     const [selection, setSelection] = useState<FileSelection>(null);
+    const uppyRef = useRef<UploadSlot['uppy']>();
     const hasFiles = selection != null;
-    const filename = selection?.filename;
+    const filename =
+        selection?.files.length === 1
+            ? selection.files[0].relativePath
+            : undefined;
 
     //callers need not memoize the callback
     const onChangeRef = useRef(onChange);
     onChangeRef.current = onChange;
 
     const handleFilesChange = useCallback(
-        (next: FileSelection) => {
+        (next: FileSelection, uppy: UploadSlot['uppy']) => {
+            uppyRef.current = uppy;
             setSelection(next);
-            if (!next) resetField(source);
+            if (!next) resetField(scopedSource);
             onChangeRef.current?.(next);
         },
-        [resetField, source]
+        [resetField, scopedSource]
     );
+
+    useEffect(() => {
+        const uppy = uppyRef.current;
+        if (!registerSlot || !uppy) return;
+        registerSlot({
+            id: slotId,
+            uppy,
+            selection,
+            resolutionContext,
+            target: resolverTarget ?? { resource },
+        });
+    }, [
+        registerSlot,
+        slotId,
+        selection,
+        resolutionContext,
+        resolverTarget,
+        resource,
+    ]);
 
     useEffect(() => {
         if (!hasFiles || !pathResolver) return;
 
         let active = true;
-        pathResolver({ filename })
+        pathResolver.resolve({ filename })
             .then(path => {
                 if (active) {
-                    setValue(source, path, {
+                    setValue(scopedSource, path, {
                         shouldDirty: true,
                         shouldValidate: true,
                     });
@@ -81,17 +120,18 @@ export const PathInput = ({
         return () => {
             active = false;
         };
-    }, [hasFiles, filename, pathResolver, source, setValue, notify]);
+    }, [hasFiles, filename, pathResolver, scopedSource, setValue, notify]);
 
     return (
         <>
             <TextInput
                 source={source}
+                defaultValue={defaultValue}
                 readOnly={hasFiles}
                 fullWidth
                 {...rest}
             />
-            {uploader && <FileInput onChange={handleFilesChange} />}
+            {coordinator && <FileInput onChange={handleFilesChange} />}
         </>
     );
 };

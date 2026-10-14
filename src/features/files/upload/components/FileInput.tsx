@@ -3,9 +3,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Dashboard } from '@uppy/react';
-import { Labeled, useTheme } from 'react-admin';
-import { useEffect } from 'react';
-import { useUploader } from '../UploaderContext';
+import {
+    Labeled,
+    useNotify,
+    useTheme,
+    useTranslate,
+} from 'react-admin';
+import { useEffect, useId, useState } from 'react';
+import { AwsBody } from '@uppy/aws-s3';
+import { Meta } from '@uppy/utils/lib/UppyFile';
+import { Uppy } from 'uppy';
+import { useUploadCoordinator } from '../UploaderContext';
 import { FileSelection } from '../types';
 import { toFileSelection } from '../utils';
 import { PREFIX, UploadDashboard } from './UploadDashboard';
@@ -15,14 +23,50 @@ import { PREFIX, UploadDashboard } from './UploadDashboard';
  */
 export const FileInput = (props: FileInputProps) => {
     const { onChange } = props;
-    const uploader = useUploader();
+    const uploader = useUploadCoordinator();
     const [theme] = useTheme();
-    const uppy = uploader?.uppy;
+    const notify = useNotify();
+    const translate = useTranslate();
+    const reactId = useId();
+    const [uppy] = useState(
+        () =>
+            new Uppy<Meta, AwsBody>({
+                id: `file-input-${reactId}`,
+                onBeforeFileAdded: (currentFile, files) => {
+                    if (currentFile.isRemote) {
+                        notify(
+                            translate(
+                                'messages.upload.remote_files_unsupported'
+                            ),
+                            { type: 'error' }
+                        );
+                        return false;
+                    }
+
+                    const existing = Object.values(files);
+                    if (
+                        existing.some(
+                            file => file.type === 'application/zip'
+                        ) ||
+                        (existing.length > 0 &&
+                            currentFile.type === 'application/zip')
+                    ) {
+                        notify(
+                            translate(
+                                'messages.upload.single_zip_file_supported'
+                            ),
+                            { type: 'error' }
+                        );
+                        return false;
+                    }
+
+                    return true;
+                },
+            })
+    );
 
     useEffect(() => {
-        if (!uppy || !onChange) return;
-
-        const handler = () => onChange(toFileSelection(uppy.getFiles()));
+        const handler = () => onChange?.(toFileSelection(uppy.getFiles()), uppy);
         uppy.on('files-added', handler).on('file-removed', handler);
         return () => {
             uppy.off('files-added', handler);
@@ -30,9 +74,7 @@ export const FileInput = (props: FileInputProps) => {
         };
     }, [uppy, onChange]);
 
-    if (!uppy) {
-        return null;
-    }
+    if (!uploader) return null;
 
     return (
         <UploadDashboard className={PREFIX} direction={'column'}>
@@ -53,5 +95,8 @@ export const FileInput = (props: FileInputProps) => {
 };
 
 export type FileInputProps = {
-    onChange?: (selection: FileSelection) => void;
+    onChange?: (
+        selection: FileSelection,
+        uppy: Uppy<Meta, AwsBody>
+    ) => void;
 };

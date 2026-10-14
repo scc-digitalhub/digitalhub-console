@@ -9,6 +9,7 @@ import { useRecordContext, useTranslate } from 'react-admin';
 import { taskParser } from '../../../common/utils/parsers';
 import { Alert } from '@mui/material';
 import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 export const CloneButton = props => {
     const translate = useTranslate();
@@ -37,6 +38,7 @@ export const CloneButton = props => {
     const prepare = (r: any) => {
         return {
             ...r,
+            ...transformExtensionPaths(r),
             spec: {
                 task: taskKey,
                 function: taskFunction,

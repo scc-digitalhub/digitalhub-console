@@ -58,13 +58,30 @@ export type ResourceCompleteMultipartUploadParams = {
     partList: string[];
 };
 
-/**
- * Uploader bound to a target entity id, shared via context
- */
+export type UploadSlot = {
+    id: string;
+    uppy: Uppy<Meta, AwsBody>;
+    selection: FileSelection;
+    resolutionContext?: PathResolutionContext;
+    target?: UploadTargetContext;
+};
+
+export type UploadTargetContext = {
+    id?: string;
+    name?: string;
+    resource?: string;
+};
+
 export type UploaderContextValue = {
     id: string;
     uppy: Uppy<Meta, AwsBody>;
     files: any[];
+};
+
+export type UploadCoordinatorContextValue = {
+    id: string;
+    files: any[];
+    registerSlot: (slot: UploadSlot) => void;
 };
 
 /**
@@ -78,20 +95,39 @@ export type Uploader = {
     setName: (name: string) => void;
 };
 
-export type UploadTarget = { id: string; name: string };
+export type UploadTarget = { id: string; name: string; resource?: string };
 
-export type ResourceUploader = UploaderContextValue & {
-    //upload pending files for the persisted entity
-    start: (target: UploadTarget) => void;
+export type ResourceUploader = UploadCoordinatorContextValue & {
+    prepare: (data: any) => Promise<void>;
+    start: () => void;
 };
 
-/**
- * Current file selection: null when empty, `filename` only for a single file
- */
-export type SelectedFiles = { filename?: string };
-export type FileSelection = SelectedFiles | null;
+export type SelectedFile = {
+    id: string;
+    filename: string;
+    relativePath: string;
+    size: number | null;
+    contentType: string;
+};
 
-export type PathResolver = (selection: SelectedFiles) => Promise<string>;
+/** Current selection for one path field; null means no files are selected. */
+export type FileSelection = { files: SelectedFile[] } | null;
+
+export type SelectedFiles = Exclude<FileSelection, null>;
+
+export type PathResolutionContext = {
+    resource: string;
+    id: string;
+    name: string;
+    filenamePrefix?: string;
+    basePathSuffix?: string;
+};
+
+export type PathResolver = {
+    context: PathResolutionContext;
+    target: UploadTargetContext;
+    resolve: (params: { filename?: string }) => Promise<string>;
+};
 
 export type Upload = {
     id: string;

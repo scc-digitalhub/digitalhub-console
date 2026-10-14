@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Body, Meta, UppyFile } from '@uppy/utils/lib/UppyFile';
+import { FileSelection } from './types';
 
 export const MiB = 0x10_00_00;
 
@@ -26,10 +27,17 @@ export function basename(path: string): string {
 
 export function toFileSelection(
     files: UppyFile<Meta, Body>[]
-): { filename?: string } | null {
+): FileSelection {
     if (files.length === 0) return null;
-    if (files.length === 1) return { filename: relativePath(files[0]) };
-    return {};
+    return {
+        files: files.map(file => ({
+            id: file.id,
+            filename: file.name ?? '',
+            relativePath: relativePath(file),
+            size: file.size,
+            contentType: file.type ?? '',
+        })),
+    };
 }
 
 export function extractInfo(file: UppyFile<Meta, Body>): any {

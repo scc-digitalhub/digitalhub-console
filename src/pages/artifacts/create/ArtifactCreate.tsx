@@ -16,10 +16,11 @@ import { randomId } from '../../../common/utils/helpers';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ArtifactIcon } from '../icon';
-import { UploaderContext } from '../../../features/files/upload/UploaderContext';
+import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { CreateToolbar } from './CreateToolbar';
 import { ArtifactForm } from './ArtifactForm';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 export const ArtifactCreate = () => {
     const { root } = useRootSelector();
@@ -35,6 +36,7 @@ export const ArtifactCreate = () => {
 
         return {
             ...rest,
+            ...transformExtensionPaths(rest),
             project: root,
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
@@ -42,13 +44,14 @@ export const ArtifactCreate = () => {
 
     const onSuccess = () => {};
 
-    const onSettled = (data, error) => {
+    const onSettled = async (data, error) => {
         if (error) {
             //onError already handles notify
             return;
         }
 
-        uploader.start({ id: data.id, name: data.name });
+        await uploader.prepare(data);
+        uploader.start();
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };
@@ -60,7 +63,7 @@ export const ArtifactCreate = () => {
                 mutationOptions={{ onSuccess, onSettled }}
                 record={{ id, spec: {} }}
             >
-                <UploaderContext.Provider value={uploader}>
+                <UploadCoordinatorContext.Provider value={uploader}>
                     <CreatePageTitle
                         icon={<ArtifactIcon fontSize={'large'} />}
                     />
@@ -70,7 +73,7 @@ export const ArtifactCreate = () => {
                             <ArtifactForm />
                         </FlatCard>
                     </CreateView>
-                </UploaderContext.Provider>
+                </UploadCoordinatorContext.Provider>
             </CreateBase>
         </Container>
     );

@@ -18,10 +18,11 @@ import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
 import { CreateToolbar } from '../../../common/components/toolbars/CreateToolbar';
-import { UploaderContext } from '../../../features/files/upload/UploaderContext';
+import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
 import { ModelForm } from './ModelForm';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
@@ -54,6 +55,7 @@ export const ModelCreate = () => {
 
         return {
             ...rest,
+            ...transformExtensionPaths(rest),
             project: root,
             spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
         };
@@ -61,13 +63,14 @@ export const ModelCreate = () => {
 
     const onSuccess = () => {};
 
-    const onSettled = (data, error) => {
+    const onSettled = async (data, error) => {
         if (error) {
             //onError already handles notify
             return;
         }
 
-        uploader.start({ id: data.id, name: data.name });
+        await uploader.prepare(data);
+        uploader.start();
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };
@@ -82,7 +85,7 @@ export const ModelCreate = () => {
                 record={defaultValues}
                 mutationOptions={{ onSuccess, onSettled }}
             >
-                <UploaderContext.Provider value={uploader}>
+                <UploadCoordinatorContext.Provider value={uploader}>
                     <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
@@ -108,7 +111,7 @@ export const ModelCreate = () => {
                             )}
                         </FlatCard>
                     </CreateView>
-                </UploaderContext.Provider>
+                </UploadCoordinatorContext.Provider>
             </CreateBase>
         </Container>
     );

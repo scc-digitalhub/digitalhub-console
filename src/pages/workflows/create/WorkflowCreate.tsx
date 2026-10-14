@@ -11,6 +11,7 @@ import { WorkflowIcon } from '../icon';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { WorkflowForm } from './WorkflowForm';
 import { CreateToolbar } from './CreateToolbar';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 export const WorkflowCreate = () => {
     const { root } = useRootSelector();
@@ -20,6 +21,7 @@ export const WorkflowCreate = () => {
 
     const transform = data => ({
         ...data,
+        ...transformExtensionPaths(data),
         project: root || '',
     });
 

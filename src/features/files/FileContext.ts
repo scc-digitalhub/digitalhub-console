@@ -10,6 +10,9 @@ import { UploadStatusController } from "./upload/types";
 interface FileContextValue {
     provider: FileProvider;
     uploadStatusController: UploadStatusController;
+    backgroundUploadManager: {
+        start: (jobs: Array<() => Promise<void>>) => void;
+    };
 }
 
 // context

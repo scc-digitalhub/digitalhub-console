@@ -27,7 +27,7 @@ import { filterProperties } from '../../../common/jsonSchema/utils';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { FileSelection } from '../../../features/files/upload/types';
 import { basename } from '../../../features/files/upload/utils';
-import { useUploader } from '../../../features/files/upload/UploaderContext';
+import { useUploadCoordinator } from '../../../features/files/upload/UploaderContext';
 import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 import { useExtensionsSteps } from '../../../features/extensions/steps';
 
@@ -96,15 +96,15 @@ const ModelSpecStepContent = ({
     const path = useWatch({ name: 'path' });
     const name = useWatch({ name: 'name' });
     const { setValue } = useFormContext();
-    const uploader = useUploader();
+    const uploader = useUploadCoordinator();
     const pathResolver = useResolveUploadPath({ id: uploader?.id, name });
     const schemaProvider = useSchemaProvider();
     const resource = useResourceContext();
 
     //a single file names the entity, unless already named
     const handleFilesChange = (selection: FileSelection) => {
-        if (selection?.filename && !name) {
-            setValue('name', basename(selection.filename), {
+        if (selection?.files.length === 1 && !name) {
+            setValue('name', basename(selection.files[0].filename), {
                 shouldDirty: true,
                 shouldValidate: true,
             });

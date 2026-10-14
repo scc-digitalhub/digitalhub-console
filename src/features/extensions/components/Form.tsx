@@ -11,14 +11,21 @@ import {
     SelectInput,
     SimpleFormIterator,
     TextInput,
+    ResourceContextProvider,
+    useRecordContext,
     useResourceContext,
     useSourceContext,
     useTranslate,
 } from 'react-admin';
 import { useState, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { isValidKind } from '../../../common/utils/helpers';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { isValidKind, randomId } from '../../../common/utils/helpers';
 import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
+import { filterProperties } from '../../../common/jsonSchema/utils';
+import { PathInput } from '../../files/upload/components/PathInput';
+import { useResolveUploadPath } from '../../files/upload/useResolveUploadPath';
+import { FileSelection } from '../../files/upload/types';
+import { useUploadCoordinator } from '../../files/upload/UploaderContext';
 import { useGetExtensions } from '../utils';
 
 export const ExtensionsForm = (props: {
@@ -56,7 +63,29 @@ const ExtensionsFormItem = (props: { schemas: any[] }) => {
     const sourceContext = useSourceContext();
     const { setValue, getValues } = useFormContext();
 
-    const id = getValues(sourceContext.getSource('id')) || null;
+    const id =
+        useWatch({ name: sourceContext.getSource('id') }) ??
+        getValues(sourceContext.getSource('id')) ??
+        null;
+    const isExisting = useRef(Boolean(id)).current;
+    const name = useWatch({ name: sourceContext.getSource('name') });
+    const parentName = useWatch({ name: 'name' });
+    const record = useRecordContext();
+    const parentResource = useResourceContext();
+    const coordinator = useUploadCoordinator();
+    const parentId = coordinator?.id ?? getValues('id') ?? record?.id;
+    const pathResolver = useResolveUploadPath({
+        id: parentId == null ? undefined : String(parentId),
+        name: parentName,
+        resource: parentResource,
+        uploadTarget: {
+            id: id ?? undefined,
+            name,
+            resource: 'extensions',
+        },
+        filenamePrefix: name ? `extensions/${name}` : undefined,
+        basePathSuffix: name ? `extensions/${name}/` : undefined,
+    });
 
     const kinds = schemas
         ?.map(s => ({
@@ -66,7 +95,8 @@ const ExtensionsFormItem = (props: { schemas: any[] }) => {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const getSpecSchema = (kind: string | undefined) => {
-        return schemas ? schemas.find(s => s.kind === kind)?.schema : {};
+        const schema = schemas?.find(s => s.kind === kind)?.schema;
+        return filterProperties(schema, ['path']);
     };
 
     const getUiSchema = (kind: string | undefined) => {
@@ -78,33 +108,55 @@ const ExtensionsFormItem = (props: { schemas: any[] }) => {
         return specValue && Object.keys(specValue).length > 0;
     };
 
-    const onKindChange = (kind: string | null) => {
+    const onKindChange = () => {
         if (isDirty()) {
             //reset spec
             setValue(sourceContext.getSource('spec'), {});
         }
     };
+    const onPathFilesChange = (selection: FileSelection) => {
+        if (selection && !id) {
+            setValue(sourceContext.getSource('id'), randomId(), {
+                shouldDirty: true,
+            });
+        }
+    };
+
     return (
-        <Box sx={{ padding: 2, marginBottom: 2 }}>
-            <KindSelector
-                kinds={kinds}
-                onChange={onKindChange}
-                isDirty={isDirty}
-                readOnly={!!id}
-            />
-            <TextInput source="name" readOnly={!!id} />
-            <FormDataConsumer<{ kind: string }>>
-                {({ formData, scopedFormData }) =>
-                    scopedFormData?.kind && (
-                        <ScopedFormData
-                            source="spec"
-                            schema={getSpecSchema(scopedFormData.kind)}
-                            uiSchema={getUiSchema(scopedFormData.kind)}
-                        />
-                    )
-                }
-            </FormDataConsumer>
-        </Box>
+        <ResourceContextProvider value="extensions">
+            <Box sx={{ padding: 2, marginBottom: 2 }}>
+                <KindSelector
+                    kinds={kinds}
+                    onChange={onKindChange}
+                    isDirty={isDirty}
+                    readOnly={isExisting}
+                />
+                <TextInput
+                    source="name"
+                    readOnly={isExisting}
+                    validate={[required()]}
+                />
+                <FormDataConsumer<{ kind: string }>>
+                    {({ scopedFormData }) =>
+                        scopedFormData?.kind && (
+                            <ScopedFormData
+                                source="spec"
+                                schema={getSpecSchema(scopedFormData.kind)}
+                                uiSchema={getUiSchema(scopedFormData.kind)}
+                            />
+                        )
+                    }
+                </FormDataConsumer>
+                <PathInput
+                    source="path"
+                    defaultValue={getValues(
+                        sourceContext.getSource('spec.path')
+                    )}
+                    pathResolver={pathResolver}
+                    onChange={onPathFilesChange}
+                />
+            </Box>
+        </ResourceContextProvider>
     );
 };
 
