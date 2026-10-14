@@ -3,13 +3,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { ColumnsButton, CreateButton, TopToolbar } from 'react-admin';
+import { ArtifactUpload } from '../create/ArtifactUpload';
 import { ImportButton } from '../../../common/components/buttons/ImportButton';
-import { UploadCreateButton } from '../../../common/components/buttons/UploadCreateButton';
 import {
     View,
     ViewSelector,
 } from '../../../common/components/buttons/ViewsSelector';
 import { ExtensionsToolbarButtons } from '../../../features/extensions/components/ExtensionsButtons';
+import { UploadCreateButton } from '../../../common/components/buttons/UploadCreateButton';
 
 export const ListToolbar = (props: {
     storeKey?: string;
@@ -26,7 +27,14 @@ export const ListToolbar = (props: {
     return (
         <TopToolbar>
             <ExtensionsToolbarButtons />
-            {/* <UploadCreateButton /> */}
+            <UploadCreateButton>
+                {({ closeDialog, handleClose }) => (
+                    <ArtifactUpload
+                        closeDialog={closeDialog}
+                        handleClose={handleClose}
+                    />
+                )}
+            </UploadCreateButton>
             <CreateButton />
             <ImportButton />
             {selectedView === 'dataTable' && (

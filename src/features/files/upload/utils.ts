@@ -25,6 +25,39 @@ export function basename(path: string): string {
     return path.replace(/^.*[\\/]/, '');
 }
 
+export function nameFromFileSelection(
+    selection: FileSelection
+): string | undefined {
+    if (!selection?.files.length) return undefined;
+
+    const firstFile = selection.files[0];
+    const parentPaths = selection.files.map(file =>
+        (file.relativePath || file.filename)
+            .replace(/\\/g, '/')
+            .split('/')
+            .filter(segment => segment && segment !== '.')
+            .slice(0, -1)
+    );
+    const firstParentPath = parentPaths[0];
+    let commonLength = firstParentPath.length;
+
+    for (const parentPath of parentPaths.slice(1)) {
+        commonLength = Math.min(commonLength, parentPath.length);
+        let index = 0;
+        while (
+            index < commonLength &&
+            firstParentPath[index] === parentPath[index]
+        ) {
+            index++;
+        }
+        commonLength = index;
+    }
+
+    return commonLength > 0
+        ? firstParentPath[commonLength - 1]
+        : basename(firstFile.filename);
+}
+
 export function toFileSelection(
     files: UppyFile<Meta, Body>[]
 ): FileSelection {

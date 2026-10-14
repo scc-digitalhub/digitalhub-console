@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { JSXElementConstructor, ReactElement, useState } from 'react';
+
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import {
@@ -15,12 +17,18 @@ import { randomId } from '../../../common/utils/helpers';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { DataItemIcon } from '../icon';
-import { useState } from 'react';
 import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
-import { DataItemForm } from './DataItemForm';
-import { transformExtensionPaths } from '../../../features/extensions/utils';
 import { CreateToolbar } from './CreateToolbar';
+
+import { Step, StepperForm } from '@dslab/ra-stepper';
+import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
+import { DataItemSpecStep, BaseStep, UploadStep } from './steps';
+import { transformDataItemData } from './utils';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
@@ -29,18 +37,6 @@ export const DataItemCreate = () => {
     const redirect = useRedirect();
     const resource = useResourceContext();
     const uploader = useResourceUploader({ id });
-
-    const transform = data => {
-        //merge path into spec.path, then strip transient field
-        const { path, ...rest } = data;
-
-        return {
-            ...rest,
-            ...transformExtensionPaths(rest),
-            project: root,
-            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
-        };
-    };
 
     const onSuccess = () => {};
 
@@ -59,7 +55,7 @@ export const DataItemCreate = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
-                transform={transform}
+                transform={data => transformDataItemData(data, root)}
                 mutationOptions={{ onSuccess, onSettled }}
                 record={{ id, spec: {} }}
             >
@@ -70,11 +66,57 @@ export const DataItemCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <DataItemForm />
+                            <DataItemCreateForm />
                         </FlatCard>
                     </CreateView>
                 </UploadCoordinatorContext.Provider>
             </CreateBase>
         </Container>
+    );
+};
+
+export const DataItemCreateForm = (props: { onCancel?: () => void }) => {
+    const { onCancel } = props;
+    const resource = useResourceContext();
+
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
+
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
+
+    //TODO fix stepperform handling for empty (null) children
+    //we build steps outside to avoid false/null children to stepperForm
+    const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
+        <StepperForm.Step key="base" label={'fields.base'}>
+            <BaseStep />
+        </StepperForm.Step>,
+        <StepperForm.Step key="spec" label={'fields.spec.title'}>
+            <DataItemSpecStep kinds={kinds} />
+            <UploadStep />
+        </StepperForm.Step>,
+    ];
+
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
+
+    if (extensions && extensions.length > 0) {
+        steps.push(
+            <StepperForm.Step
+                key="extensions"
+                label={'fields.extensions.title'}
+            >
+                <ExtensionsForm source="extensions" />
+            </StepperForm.Step>
+        );
+    }
+
+    return (
+        <StepperForm toolbar={<StepperToolbar onCancel={onCancel} />}>
+            {steps}
+        </StepperForm>
     );
 };

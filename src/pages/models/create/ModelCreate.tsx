@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { JSXElementConstructor, ReactElement, useState } from 'react';
+
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
-import { useEffect, useState } from 'react';
 import {
     CreateBase,
     CreateView,
-    useDataProvider,
     useNotify,
     useRedirect,
     useResourceContext,
@@ -17,49 +17,26 @@ import { randomId } from '../../../common/utils/helpers';
 import { FlatCard } from '../../../common/components/layout/FlatCard';
 import { CreatePageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
-import { CreateToolbar } from '../../../common/components/toolbars/CreateToolbar';
 import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
-import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
-import { ModelForm } from './ModelForm';
-import { transformExtensionPaths } from '../../../features/extensions/utils';
+import { CreateToolbar } from './CreateToolbar';
+
+import { Step, StepperForm } from '@dslab/ra-stepper';
+import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
+import { useGetExtensions } from '../../../features/extensions/utils';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
+import { useExtensionsSteps } from '../../../features/extensions/steps';
+import { ModelSpecStep, BaseStep, UploadStep } from './steps';
+import { transformModelData } from './utils';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
-    const dataProvider = useDataProvider();
     const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
-    const [templates, setTemplates] = useState<any[] | undefined>();
-    const [template, setTemplate] = useState<any | undefined>();
     const uploader = useResourceUploader({ id });
-
-    useEffect(() => {
-        if (dataProvider) {
-            dataProvider
-                .getList('templates', {
-                    pagination: { page: 1, perPage: 100 },
-                    sort: { field: 'name', order: 'ASC' },
-                    filter: { type: resource?.slice(0, -1) },
-                })
-                .then(({ data }) => {
-                    setTemplates(data);
-                });
-        }
-    }, [resource, dataProvider]);
-
-    const transform = data => {
-        //merge path into spec.path, then strip transient field
-        const { path, ...rest } = data;
-
-        return {
-            ...rest,
-            ...transformExtensionPaths(rest),
-            project: root,
-            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
-        };
-    };
 
     const onSuccess = () => {};
 
@@ -74,45 +51,72 @@ export const ModelCreate = () => {
         notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
         redirect('list', resource);
     };
-    const defaultValues = template ? { id, ...template } : { id, spec: {} };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
-                resource="models"
-                transform={transform}
-                redirect="list"
-                record={defaultValues}
+                transform={data => transformModelData(data, root)}
                 mutationOptions={{ onSuccess, onSettled }}
+                record={{ id, spec: {} }}
             >
                 <UploadCoordinatorContext.Provider value={uploader}>
-                    <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
+                    <CreatePageTitle
+                        icon={<ModelIcon fontSize={'large'} />}
+                    />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            {templates &&
-                            templates.length > 0 &&
-                            template === undefined ? (
-                                <TemplatesSelector
-                                    templates={templates}
-                                    template={template}
-                                    onSelected={setTemplate}
-                                />
-                            ) : (
-                                <ModelForm
-                                    onCancel={() => {
-                                        if (templates && templates.length) {
-                                            setTemplate(undefined);
-                                        } else {
-                                            redirect('list', resource);
-                                        }
-                                    }}
-                                />
-                            )}
+                            <ModelCreateForm />
                         </FlatCard>
                     </CreateView>
                 </UploadCoordinatorContext.Provider>
             </CreateBase>
         </Container>
+    );
+};
+
+export const ModelCreateForm = (props: { onCancel?: () => void }) => {
+    const { onCancel } = props;
+    const resource = useResourceContext();
+
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSteps();
+
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
+
+    //TODO fix stepperform handling for empty (null) children
+    //we build steps outside to avoid false/null children to stepperForm
+    const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [
+        <StepperForm.Step key="base" label={'fields.base'}>
+            <BaseStep />
+        </StepperForm.Step>,
+        <StepperForm.Step key="spec" label={'fields.spec.title'}>
+            <ModelSpecStep kinds={kinds} />
+            <UploadStep />
+        </StepperForm.Step>,
+    ];
+
+    if (contributions && contributions.length > 0) {
+        steps.push(...contributions);
+    }
+
+    if (extensions && extensions.length > 0) {
+        steps.push(
+            <StepperForm.Step
+                key="extensions"
+                label={'fields.extensions.title'}
+            >
+                <ExtensionsForm source="extensions" />
+            </StepperForm.Step>
+        );
+    }
+
+    return (
+        <StepperForm toolbar={<StepperToolbar onCancel={onCancel} />}>
+            {steps}
+        </StepperForm>
     );
 };

@@ -5,6 +5,7 @@
 import { ColumnsButton, CreateButton, TopToolbar } from 'react-admin';
 import { ImportButton } from '../../../common/components/buttons/ImportButton';
 import { UploadCreateButton } from '../../../common/components/buttons/UploadCreateButton';
+import { ModelUpload } from '../create/ModelUpload';
 import {
     View,
     ViewSelector,
@@ -26,7 +27,14 @@ export const ListToolbar = (props: {
     return (
         <TopToolbar>
             <ExtensionsToolbarButtons />
-            {/* <UploadCreateButton /> */}
+            <UploadCreateButton>
+                {({ closeDialog, handleClose }) => (
+                    <ModelUpload
+                        closeDialog={closeDialog}
+                        handleClose={handleClose}
+                    />
+                )}
+            </UploadCreateButton>
             <CreateButton />
             <ImportButton />
             {selectedView === 'dataTable' && (

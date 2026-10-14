@@ -49,6 +49,7 @@ export const PathInput = ({
     uploadTarget,
     onChange,
     defaultValue,
+    readOnly,
     ...rest
 }: PathInputProps) => {
     const coordinator = useUploadCoordinator();
@@ -106,7 +107,8 @@ export const PathInput = ({
         if (!hasFiles || !pathResolver) return;
 
         let active = true;
-        pathResolver.resolve({ filename })
+        pathResolver
+            .resolve({ filename })
             .then(path => {
                 if (active) {
                     setValue(scopedSource, path, {
@@ -134,7 +136,7 @@ export const PathInput = ({
             <TextInput
                 source={source}
                 defaultValue={defaultValue}
-                readOnly={hasFiles}
+                readOnly={hasFiles || readOnly}
                 fullWidth
                 {...rest}
             />

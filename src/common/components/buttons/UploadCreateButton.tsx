@@ -2,63 +2,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { StepperForm } from '@dslab/ra-stepper';
-import { StepperToolbar } from '../toolbars/StepperToolbar';
-import {
-    Button,
-    CreateBase,
-    required,
-    TextInput,
-    useGetResourceLabel,
-    useInput,
-    useNotify,
-    useRedirect,
-    useResourceContext,
-    useResourceDefinition,
-    useTranslate,
-} from 'react-admin';
-import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { isAlphaNumeric, randomId } from '../../utils/helpers';
-import { useRootSelector } from '@dslab/ra-root-selector';
-import {
-    MouseEventHandler,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
-import { useStateUpdateCallbacks } from '../../hooks/useStateUpdateCallbacks';
-import { useGetUploader } from '../../../features/files/upload/useGetUploader';
-import { FileInput } from '../../../features/files/upload/components/FileInput';
-import { UploaderContext } from '../../../features/files/upload/UploaderContext';
-import { Uploader } from '../../../features/files/upload/types';
-import { KindSelector } from '../KindSelector';
-import { KindChangeGuard } from '../KindSelector';
-import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
-import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
-import { DialogContent, DialogTitle, IconButton } from '@mui/material';
-import { useFormContext, useWatch } from 'react-hook-form';
-import CloseIcon from '@mui/icons-material/Close';
+import { MouseEventHandler, ReactNode, useState } from 'react';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { StyledDialog, StyledDialogClasses } from '../../theme/StyledDialog';
+import { Button } from 'react-admin';
+import {
+    StyledDialog,
+    StyledDialogClasses,
+} from '../../../common/theme/StyledDialog';
 
-export const UploadCreateButton = () => {
+export const UploadCreateButton = (props: {
+    children: (dialogProps: DialogProps) => ReactNode;
+}) => {
     const [open, setOpen] = useState(false);
-
-    const closeDialog = () => {
-        setOpen(false);
-    };
-
-    const handleDialogOpen: MouseEventHandler<HTMLButtonElement> = e => {
+    const closeDialog = () => setOpen(false);
+    const handleDialogOpen: MouseEventHandler<HTMLButtonElement> = event => {
         setOpen(true);
-        e.stopPropagation();
+        event.stopPropagation();
     };
-
-    const handleDialogClose: any = (e, reason) => {
-        if (!reason || reason != 'backdropClick') {
-            closeDialog();
-        }
-        e.stopPropagation();
+    const handleDialogClose: any = (event, reason) => {
+        if (!reason || reason !== 'backdropClick') closeDialog();
+        event.stopPropagation();
     };
 
     return (
@@ -67,235 +30,23 @@ export const UploadCreateButton = () => {
                 <NoteAddOutlinedIcon />
             </Button>
             <StyledDialog
-                maxWidth={'lg'}
+                maxWidth="lg"
                 fullWidth
                 onClose={handleDialogClose}
                 aria-labelledby="create-dialog-title"
                 open={open}
                 className={StyledDialogClasses.dialog}
             >
-                <UploadCreateForm
-                    closeDialog={closeDialog}
-                    handleClose={handleDialogClose}
-                />
+                {props.children({
+                    closeDialog,
+                    handleClose: handleDialogClose,
+                })}
             </StyledDialog>
         </>
     );
 };
 
-const UploadCreateForm = (props: any) => {
-    const { closeDialog, handleClose } = props;
-    const { root } = useRootSelector();
-    const id = useRef(randomId());
-    const translate = useTranslate();
-    const notify = useNotify();
-    const redirect = useRedirect();
-    const getResourceLabel = useGetResourceLabel();
-    const resource = useResourceContext();
-    const definition = useResourceDefinition({ resource });
-    const { onBeforeUpload, onUploadComplete } = useStateUpdateCallbacks({
-        id: id.current,
-    });
-    const onBeforeFileAdded = useCallback(
-        (file, files) => {
-            //if there is more than one folder or more than one file outside folder, return false
-            if (Object.keys(files).length > 0) {
-                const relativePaths = Object.values(files).map((f: any) => {
-                    return f.meta?.relativePath ?? f.name;
-                });
-                const currentPath =
-                    file.meta?.relativePath?.split('/')[0] ?? file.name;
-                if (relativePaths.some(p => !p.startsWith(currentPath))) {
-                    notify(translate('messages.upload.single_file_allowed'), {
-                        type: 'error',
-                    });
-                    return false;
-                }
-            }
-
-            return true;
-        },
-        [notify, translate]
-    );
-    const uploader = useGetUploader({
-        id: id.current,
-        recordId: id.current,
-        onBeforeUpload,
-        onUploadComplete,
-        onBeforeFileAdded,
-    });
-
-    if (!uploader || !resource) return <></>;
-
-    const transform = data => {
-        //merge path into spec.path, then strip transient field
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { path, ...rest } = data;
-
-        return {
-            ...rest,
-            project: root,
-            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
-        };
-    };
-
-    const onSuccess = () => {};
-
-    const onSettled = (data, error) => {
-        closeDialog();
-        if (error) {
-            //onError already handles notify
-            return;
-        }
-
-        //post save we start uploading
-        if (uploader.files.length > 0) {
-            uploader.upload(data);
-        }
-
-        notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
-        redirect('list', resource);
-    };
-
-    return (
-        <CreateBase
-            resource={resource}
-            redirect={false}
-            transform={transform}
-            mutationOptions={{ onSuccess, onSettled }}
-            record={{
-                id: id.current,
-                spec: {},
-            }}
-        >
-            <div className={StyledDialogClasses.header}>
-                <DialogTitle
-                    id="create-dialog-title"
-                    className={StyledDialogClasses.title}
-                >
-                    {translate('ra.page.create', {
-                        name: getResourceLabel(resource, 1),
-                    })}
-                </DialogTitle>
-
-                <IconButton
-                    className={StyledDialogClasses.closeButton}
-                    aria-label={translate('ra.action.close')}
-                    title={translate('ra.action.close')}
-                    onClick={handleClose}
-                    size="small"
-                >
-                    <CloseIcon fontSize="small" />
-                </IconButton>
-            </div>
-            <DialogContent
-                sx={{ p: 0 }}
-                className={StyledDialogClasses.content}
-            >
-                <UploaderContext.Provider
-                    value={{
-                        id: id.current,
-                        uppy: uploader.uppy,
-                        files: uploader.files,
-                    }}
-                >
-                    <StepperForm
-                        toolbar={
-                            <StepperToolbar disableNext={!uploader.path} />
-                        }
-                    >
-                        <StepperForm.Step label={'actions.upload'}>
-                            <UploadStep uploader={uploader} />
-                        </StepperForm.Step>
-                        <StepperForm.Step label={'fields.base'}>
-                            <BaseStep uploader={uploader} />
-                        </StepperForm.Step>
-                        {definition?.options?.getSpecUiSchema && (
-                            <StepperForm.Step label={'fields.spec.title'}>
-                                <SpecStep
-                                    uploader={uploader}
-                                    getSpecUiSchema={
-                                        definition.options.getSpecUiSchema
-                                    }
-                                />
-                            </StepperForm.Step>
-                        )}
-                    </StepperForm>
-                </UploaderContext.Provider>
-            </DialogContent>
-        </CreateBase>
-    );
-};
-
-const UploadStep = ({ uploader }: { uploader: Uploader }) => {
-    const { setValue } = useFormContext();
-
-    //legacy uploader resolves the path on file-added
-    useEffect(() => {
-        if (uploader.path) {
-            setValue('path', uploader.path, {
-                shouldValidate: true,
-                shouldDirty: true,
-            });
-        }
-    }, [uploader.path, setValue]);
-
-    return <FileInput />;
-};
-
-const SpecStep = ({
-    uploader,
-    getSpecUiSchema,
-}: {
-    uploader: Uploader;
-    getSpecUiSchema: (kind: string | undefined) => any;
-}) => {
-    const resource = useResourceContext();
-    const { data: kindSchemas } = useGetSchemas(resource || '');
-    const kinds = kindSchemas
-        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
-        : [];
-    const kind = useWatch({ name: 'kind' });
-
-    const getUiSchema = (k: string | undefined) => {
-        return getSpecUiSchema(k) || {};
-    };
-
-    return (
-        <>
-            <KindChangeGuard />
-            <KindSelector kinds={kinds} />
-            <SpecInput source="spec" kind={kind} getUiSchema={getUiSchema} />
-        </>
-    );
-};
-
-const BaseStep = ({ uploader }: { uploader: Uploader }) => {
-    const resource = useResourceContext();
-    const { field: nameField } = useInput({ resource, source: 'name' });
-
-    //update name in record
-    useEffect(() => {
-        if (uploader.files.length > 0 && !nameField.value) {
-            const fileName = uploader.files[0].info.path.split('/')[0];
-            nameField.onChange(fileName);
-        }
-    }, [nameField, uploader.files]);
-
-    //update name in controller
-    useEffect(() => {
-        if (nameField.value) {
-            uploader.setName(nameField.value);
-        }
-    }, [uploader, nameField?.value]);
-
-    return (
-        <>
-            <TextInput
-                source="name"
-                validate={[required(), isAlphaNumeric()]}
-            />
-            <MetadataInput kinds={['metadata.base']} />
-        </>
-    );
+export type DialogProps = {
+    closeDialog: () => void;
+    handleClose: (event: any, reason?: string) => void;
 };
