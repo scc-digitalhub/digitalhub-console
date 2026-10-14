@@ -2,13 +2,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { JSXElementConstructor, ReactElement, useState } from 'react';
-
+import {
+    JSXElementConstructor,
+    ReactElement,
+    useEffect,
+    useState,
+} from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { Box, Container } from '@mui/material';
 import {
     CreateBase,
     CreateView,
+    useDataProvider,
     useNotify,
     useRedirect,
     useResourceContext,
@@ -29,14 +34,35 @@ import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { useExtensionsSteps } from '../../../features/extensions/steps';
 import { ModelSpecStep, BaseStep, UploadStep } from './steps';
 import { transformModelData } from './utils';
+import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
 
 export const ModelCreate = () => {
     const { root } = useRootSelector();
+    const dataProvider = useDataProvider();
     const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
     const uploader = useResourceUploader({ id });
+    const [templates, setTemplates] = useState<any[] | undefined>();
+    const [template, setTemplate] = useState<any | undefined>();
+
+    useEffect(() => {
+        if (dataProvider) {
+            dataProvider
+                .getList('templates', {
+                    pagination: { page: 1, perPage: 100 },
+                    sort: { field: 'name', order: 'ASC' },
+                    filter: { type: resource?.slice(0, -1) },
+                })
+                .then(({ data }) => {
+                    setTemplates(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching templates:', error);
+                });
+        }
+    }, [resource, dataProvider]);
 
     const onSuccess = () => {};
 
@@ -52,21 +78,42 @@ export const ModelCreate = () => {
         redirect('list', resource);
     };
 
+    const defaultValues = template
+        ? { id, ...template, path: template?.spec?.path }
+        : { id, spec: {} };
+
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
                 transform={data => transformModelData(data, root)}
                 mutationOptions={{ onSuccess, onSettled }}
-                record={{ id, spec: {} }}
+                record={defaultValues}
+                redirect={'list'}
             >
                 <UploadCoordinatorContext.Provider value={uploader}>
-                    <CreatePageTitle
-                        icon={<ModelIcon fontSize={'large'} />}
-                    />
+                    <CreatePageTitle icon={<ModelIcon fontSize={'large'} />} />
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            <ModelCreateForm />
+                            {templates &&
+                            templates.length > 0 &&
+                            template === undefined ? (
+                                <TemplatesSelector
+                                    templates={templates}
+                                    template={template}
+                                    onSelected={setTemplate}
+                                />
+                            ) : (
+                                <ModelCreateForm
+                                    onCancel={() => {
+                                        if (templates?.length) {
+                                            setTemplate(undefined);
+                                        } else {
+                                            redirect('list', resource);
+                                        }
+                                    }}
+                                />
+                            )}
                         </FlatCard>
                     </CreateView>
                 </UploadCoordinatorContext.Provider>
