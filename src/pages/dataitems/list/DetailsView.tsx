@@ -14,7 +14,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { DataItemIcon } from '../icon';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { StateChips } from '../../../common/components/StateChips';
 import { formatDateDifference } from '../../../common/utils/helpers';
 import { prettyBytes } from '../../../features/files/fileBrowser/utils';
@@ -57,7 +57,7 @@ export const DetailsView = (props: { storeKey?: string }) => {
                         >
                             {record.name}
                         </Typography>
-                        <ChipsField
+                        <LabelsField
                             size={'small'}
                             source="metadata.labels"
                             sortable={false}

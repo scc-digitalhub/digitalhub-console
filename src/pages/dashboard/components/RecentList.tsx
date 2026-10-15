@@ -8,12 +8,14 @@ import {
     ListItemButton,
     ListItemText,
     List as MuiList,
+    Stack,
     Typography,
     useTheme,
 } from '@mui/material';
 import { useCreatePath } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { convertToDate } from '../helper';
+import { ResourceIcon } from './ResourceIcon';
 
 export const RecentList = (props: {
     resource: string;
@@ -51,9 +53,18 @@ export const RecentList = (props: {
                         <ListItemText
                             disableTypography
                             primary={
-                                <Typography variant="body1" color={'primary'}>
-                                    {record.metadata.name || record.name}
-                                </Typography>
+                                <Stack direction="row" gap={1}>
+                                    <ResourceIcon
+                                        resource={resource}
+                                        kind={record.kind}
+                                    />
+                                    <Typography
+                                        variant="body1"
+                                        color={'primary'}
+                                    >
+                                        {record.metadata.name || record.name}
+                                    </Typography>
+                                </Stack>
                             }
                             secondary={
                                 <Box

@@ -14,7 +14,6 @@ import {
     useNotify,
     useRecordContext,
 } from 'react-admin';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { StateColors } from '../../../common/components/StateChips';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { useProjectPermissions } from '../../../common/provider/authProvider';
@@ -23,6 +22,7 @@ import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 import { useNavigate } from 'react-router-dom';
 import { Chip, Tooltip } from '@mui/material';
 import { Stack } from '@mui/system';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
@@ -115,7 +115,7 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 disableSort
                 label="fields.labels.title"
             >
-                <ChipsField
+                <LabelsField
                     label="fields.labels.title"
                     source="metadata.labels"
                     sortable={false}

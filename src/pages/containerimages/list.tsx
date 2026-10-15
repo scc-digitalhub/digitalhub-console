@@ -27,7 +27,6 @@ import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { ContainerImageIcon } from './icon';
-import { ChipsField } from '../../common/components/fields/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { StateChips } from '../../common/components/StateChips';
@@ -42,6 +41,7 @@ import {
     ViewSelector,
 } from '../../common/components/buttons/ViewsSelector';
 import { formatDateDifference } from '../../common/utils/helpers';
+import { LabelsField } from '../../common/components/fields/LabelsField';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -183,7 +183,11 @@ const DataTableView = (props: { storeKey?: string }) => {
                 'status.state',
             ]}
         >
-            <DataTable.Col source="name" label="fields.name.title" />
+            <DataTable.Col
+                source="name"
+                label="fields.name.title"
+                sx={{ fontWeight: '600' }}
+            />
             <DataTable.Col source="id" label="fields.id" />
             <DataTable.Col source="kind" label="fields.kind" />
 
@@ -240,7 +244,7 @@ const DataTableView = (props: { storeKey?: string }) => {
                 disableSort
                 label="fields.labels.title"
             >
-                <ChipsField
+                <LabelsField
                     label="fields.labels.title"
                     source="metadata.labels"
                     sortable={false}
@@ -294,7 +298,7 @@ const DetailsView = (props: { storeKey?: string }) => {
                         >
                             {record?.spec?.image || record.name}
                         </Typography>
-                        <ChipsField
+                        <LabelsField
                             size={'small'}
                             source="metadata.labels"
                             sortable={false}

@@ -15,7 +15,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { ArtifactIcon } from '../icon';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { StateChips } from '../../../common/components/StateChips';
 import { prettyBytes } from '../../../features/files/fileBrowser/utils';
 import { Stack } from '@mui/system';
@@ -59,7 +59,7 @@ export const DetailsView = (props: { storeKey?: string }) => {
                         >
                             {record.name}
                         </Typography>
-                        <ChipsField
+                        <LabelsField
                             size={'small'}
                             source="metadata.labels"
                             sortable={false}

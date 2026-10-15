@@ -27,6 +27,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import humanFormat from 'human-format';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
+import { LabelsField } from '../../../../common/components/fields/LabelsField';
 
 const parameterScale = humanFormat.Scale.create(['', 'K', 'M', 'B', 'T'], 1000);
 
@@ -203,16 +204,7 @@ export const HuggingfaceModel = ({
                 </Stack>
                 {tags.length > 0 && (
                     <Labeled label="fields.huggingface.tags.title">
-                        <Stack
-                            direction="row"
-                            useFlexGap
-                            flexWrap="wrap"
-                            gap={1}
-                        >
-                            {tags.map((tag: string) => (
-                                <Chip key={tag} label={tag} size="small" />
-                            ))}
-                        </Stack>
+                        <LabelsField source="model.tags" sortable={false} />
                     </Labeled>
                 )}
                 {tokenizerConfig?.chat_template && (

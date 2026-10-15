@@ -7,6 +7,7 @@ import { WidgetProps } from '@rjsf/utils';
 import { MuiChipsInput } from 'mui-chips-input';
 import { useState, FocusEvent } from 'react';
 import { useTranslate } from 'react-admin';
+import { getLabelIcon } from '../../../components/Labels';
 
 export const MuiChipsInputWidget = function (props: WidgetProps) {
     const {
@@ -53,9 +54,36 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
                 {label}
             </InputLabel>
 
-            <Stack direction={'row'} id={id} paddingTop={3} flexWrap="wrap">
+            <Stack
+                direction={'row'}
+                id={id}
+                paddingTop={2}
+                sx={{ flexWrap: 'wrap', gap: '3px' }}
+            >
                 {list.map(item => {
-                    return <Chip label={item} key={item} sx={{ mr: 1 }} />;
+                    const separatorIndex = item.indexOf(':');
+                    const chipLabel =
+                        separatorIndex > 0 ? (
+                            <>
+                                <strong>
+                                    {item.slice(0, separatorIndex).trim()}
+                                </strong>{' '}
+                                {item.slice(separatorIndex + 1).trim()}
+                            </>
+                        ) : (
+                            item
+                        );
+
+                    const icon = getLabelIcon(item);
+
+                    return (
+                        <Chip
+                            label={chipLabel}
+                            icon={icon}
+                            key={item}
+                            sx={{ mr: 1 }}
+                        />
+                    );
                 })}
             </Stack>
         </FormControl>

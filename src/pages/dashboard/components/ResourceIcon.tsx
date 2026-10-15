@@ -6,12 +6,15 @@ import { ReactNode, createElement } from 'react';
 import { useResourceDefinition } from 'react-admin';
 import DefaultIcon from '@mui/icons-material/ViewList';
 
-export const ResourceIcon = (props: { resource: string }): ReactNode => {
-    const { resource } = props;
+export const ResourceIcon = (props: {
+    resource: string;
+    kind?: string;
+}): ReactNode => {
+    const { resource, kind } = props;
     const definition = useResourceDefinition({ resource });
 
     if (definition?.icon) {
-        return createElement(definition.icon);
+        return createElement(definition.icon, { kind });
     }
 
     return <DefaultIcon />;

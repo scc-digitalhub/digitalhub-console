@@ -19,7 +19,7 @@ import { functionParser } from '../../../common/utils/parsers';
 import { FunctionIcon } from '../../functions/icon';
 import { WorkflowIcon } from '../../workflows/icon';
 import { MetricsField } from '../../../features/k8smetrics/MetricsField';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 import InfoIcon from '@mui/icons-material/Info';
 import { useRootSelector } from '@dslab/ra-root-selector';
 
@@ -68,19 +68,13 @@ export const DataTableView = (props: { storeKey?: string }) => {
             }
             hiddenColumns={hiddenColumns}
         >
-            <DataTable.Col source="name" label="fields.name.title" />
-            <DataTable.Col source="id" label="fields.id" />
-            <DataTable.Col
-                source="function"
-                disableSort
-                label="fields.function.title"
-            >
+            <DataTable.Col source="name" label="fields.name.title" disableSort>
                 <FunctionField
                     source="spec.function"
                     label="fields.name.title"
                     sortable={false}
                     render={record => (
-                        <>
+                        <Stack direction="row" gap={1}>
                             {record?.spec?.function && (
                                 <Stack direction="row" gap={1}>
                                     <FunctionIcon
@@ -91,11 +85,16 @@ export const DataTableView = (props: { storeKey?: string }) => {
                                         }
                                         color="info"
                                     />
-                                    <Typography variant="body2" color="info">
+                                    <Typography
+                                        variant="body2"
+                                        color="info"
+                                        sx={{ fontWeight: '600' }}
+                                    >
                                         {
                                             functionParser(record.spec.function)
                                                 .name
                                         }
+                                        {' / '}
                                     </Typography>
                                 </Stack>
                             )}
@@ -105,18 +104,26 @@ export const DataTableView = (props: { storeKey?: string }) => {
                                         fontSize="small"
                                         color="info"
                                     />
-                                    <Typography variant="body2" color="info">
+                                    <Typography
+                                        variant="body2"
+                                        color="info"
+                                        sx={{ fontWeight: '600' }}
+                                    >
                                         {
                                             functionParser(record.spec.workflow)
                                                 .name
                                         }
+                                        {' / '}
                                     </Typography>
                                 </Stack>
                             )}
-                        </>
+                            {record.name || record.id}
+                        </Stack>
                     )}
                 />
             </DataTable.Col>
+            <DataTable.Col source="id" label="fields.id" />
+
             <DataTable.Col source="kind" label="fields.kind" />
 
             <DataTable.Col
@@ -234,7 +241,7 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 disableSort
                 label="fields.labels.title"
             >
-                <ChipsField
+                <LabelsField
                     label="fields.labels.title"
                     source="metadata.labels"
                     sortable={false}

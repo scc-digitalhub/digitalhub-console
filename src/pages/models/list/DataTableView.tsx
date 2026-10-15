@@ -11,11 +11,13 @@ import {
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
 import { BulkDeleteAllVersionsButton } from '../../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { StateChips } from '../../../common/components/StateChips';
 import { IdField } from '../../../common/components/fields/IdField';
 import { prettyBytes } from '../../../features/files/fileBrowser/utils';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { ModelIcon } from '../icon';
+import { Stack } from '@mui/material';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -48,16 +50,28 @@ export const DataTableView = (props: { storeKey?: string }) => {
             }
             hiddenColumns={[
                 'id',
-                'kind',
                 'created_by',
                 'spec.path',
                 'metadata.created_by',
                 'metadata.updated',
             ]}
         >
-            <DataTable.Col source="name" label="fields.name.title" />
+            <DataTable.Col
+                source="name"
+                label="fields.name.title"
+                sx={{ fontWeight: '600' }}
+            />
             <DataTable.Col source="id" label="fields.id" />
-            <DataTable.Col source="kind" label="fields.kind" />
+            <DataTable.Col source="kind" label="fields.kind">
+                <FunctionField
+                    render={record => (
+                        <Stack direction="row" gap={0.9}>
+                            <ModelIcon kind={record.kind} color="secondary" />
+                            {record.kind}
+                        </Stack>
+                    )}
+                />
+            </DataTable.Col>
             <DataTable.Col
                 source="metadata.updated"
                 label="fields.updated.title"
@@ -116,7 +130,7 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 disableSort
                 label="fields.labels.title"
             >
-                <ChipsField
+                <LabelsField
                     label="fields.labels.title"
                     source="metadata.labels"
                     sortable={false}

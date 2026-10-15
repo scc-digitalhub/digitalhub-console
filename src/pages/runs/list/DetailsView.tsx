@@ -91,11 +91,6 @@ const DetailsHeader = ({ record }: { record: any }) => {
         <Stack direction="column" gap={0.3}>
             <Typography variant="body1" color="textDisabled">
                 {record?.spec?.task && taskParser(record.spec.task).kind}
-                {' / '}
-                {record?.spec?.function &&
-                    functionParser(record.spec.function).name}
-                {record?.spec?.workflow &&
-                    functionParser(record.spec.workflow).name}
             </Typography>
             <Stack direction="row" gap={1} alignItems="left">
                 <Typography
@@ -103,6 +98,10 @@ const DetailsHeader = ({ record }: { record: any }) => {
                     color="secondary"
                     sx={{ fontWeight: 'medium', fontSize: '110%' }}
                 >
+                    {record?.spec?.function &&
+                        functionParser(record.spec.function).name + ' / '}
+                    {record?.spec?.workflow &&
+                        functionParser(record.spec.workflow).name + ' / '}
                     {record.name}
                 </Typography>
 

@@ -27,6 +27,7 @@ import { useFormContext } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import { ChipsField } from './fields/ChipsField';
 import { StyledTemplate } from '../theme/StyledTemplate';
+import { LabelsField } from './fields/LabelsField';
 
 export type Template = {
     id: string;
@@ -225,7 +226,7 @@ const TemplateCard = (props: {
                     />
                     {template.metadata?.labels && (
                         <Box py={0} px={1}>
-                            <ChipsField
+                            <LabelsField
                                 label="fields.labels.title"
                                 source="metadata.labels"
                                 sortable={false}

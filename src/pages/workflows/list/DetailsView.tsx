@@ -13,7 +13,7 @@ import {
     useTranslate,
 } from 'react-admin';
 import { WorkflowIcon } from '../icon';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { RunStateBadge } from '../../../common/components/RunStateBadge';
 import { formatDateDifference } from '../../../common/utils/helpers';
 
@@ -55,7 +55,7 @@ export const DetailsView = (props: { storeKey?: string }) => {
                         >
                             {record.name}
                         </Typography>
-                        <ChipsField
+                        <LabelsField
                             size={'small'}
                             source="metadata.labels"
                             sortable={false}

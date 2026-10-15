@@ -78,7 +78,7 @@ export const ModelIcon = (props: {
 
     return (
         <IconContext.Provider value={iconContext}>
-            {kind === 'huggingface' && <SiHuggingface />}
+            {kind === 'huggingface' && <SiHuggingface color="#f6c400" />}
             {kind === 'mlflow' && <SiMlflow />}
         </IconContext.Provider>
     );
