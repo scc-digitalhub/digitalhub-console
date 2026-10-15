@@ -316,6 +316,7 @@
         "title": "Funzione"
     },
     "huggingface": {
+        "title": "HuggingFace",
         "backend": {
             "description": "",
             "title": "Tipo di HuggingFace backend"
@@ -347,6 +348,53 @@
         "modelid": {
             "description": "",
             "title": "ID modello HuggingFace"
+        },
+        "author": {
+            "title": "Autore"
+        },
+        "basemodel": {
+            "title": "Modelli di base"
+        },
+        "fetchedat": {
+            "title": "Metadati recuperati"
+        },
+        "library": {
+            "title": "Libreria"
+        },
+        "license": {
+            "title": "Licenza"
+        },
+        "metadata": {
+            "title": "Metadati del modello"
+        },
+        "modelcard": {
+            "title": "Scheda del modello"
+        },
+        "chat_template": {
+            "title": "Chat Template"
+        },
+        "architectures": {
+            "title": "Architetture"
+        },
+        "pipeline": {
+            "title": "Pipeline"
+        },
+        "repository": {
+            "title": "Repository"
+        },
+        "revision": {
+            "title": "Revisione"
+        },
+        "tags": {
+            "title": "Tag"
+        },
+        "safetensors": {
+            "modelsize": {
+                "title": "Dimensione del modello"
+            },
+            "tensortype": {
+                "title": "Tipo di tensore"
+            }
         },
         "modelrevision": {
             "description": "",

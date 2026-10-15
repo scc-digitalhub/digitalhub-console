@@ -85,7 +85,9 @@ export const DataItemCreate = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
-                transform={data => transformDataItemData(data, root)}
+                transform={data =>
+                    transformDataItemData(data, root, uploader.files.length > 0)
+                }
                 mutationOptions={{ onSuccess, onSettled }}
                 record={defaultValues}
                 redirect={'list'}

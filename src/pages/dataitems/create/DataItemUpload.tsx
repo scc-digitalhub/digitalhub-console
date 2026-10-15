@@ -50,7 +50,9 @@ export const DataItemUpload = ({ closeDialog, handleClose }: any) => {
         <CreateBase
             resource={resource}
             redirect={false}
-            transform={data => transformDataItemData(data, root)}
+            transform={data =>
+                transformDataItemData(data, root, uploader.files.length > 0)
+            }
             mutationOptions={{ onSettled }}
             record={{ id, spec: {} }}
         >

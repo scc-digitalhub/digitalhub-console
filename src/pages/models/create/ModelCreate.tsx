@@ -79,13 +79,15 @@ export const ModelCreate = () => {
     };
 
     const defaultValues = template
-        ? { id, ...template, path: template?.spec?.path }
+        ? { ...template, id, path: template?.spec?.path }
         : { id, spec: {} };
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
-                transform={data => transformModelData(data, root)}
+                transform={data =>
+                    transformModelData(data, root, uploader.files.length > 0)
+                }
                 mutationOptions={{ onSuccess, onSettled }}
                 record={defaultValues}
                 redirect={'list'}

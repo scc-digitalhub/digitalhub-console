@@ -50,7 +50,9 @@ export const ArtifactUpload = ({ closeDialog, handleClose }: any) => {
         <CreateBase
             resource={resource}
             redirect={false}
-            transform={data => transformArtifactData(data, root)}
+            transform={data =>
+                transformArtifactData(data, root, uploader.files.length > 0)
+            }
             mutationOptions={{ onSettled }}
             record={{ id, spec: {} }}
         >

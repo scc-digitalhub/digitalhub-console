@@ -3,11 +3,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Body, Meta, UppyFile } from '@uppy/utils/lib/UppyFile';
+import { regex } from 'react-admin';
 import { FileSelection } from './types';
 
 export const MiB = 0x10_00_00;
 
 export const sizeThreshold = 100;
+
+export const createPathValidator = (schema: { pattern?: string }) =>
+    schema.pattern
+        ? regex(new RegExp(schema.pattern), () => ({
+              message: 'ra.validation.regex',
+              args: { pattern: schema.pattern },
+          }))
+        : undefined;
 
 export function numberOfParts(file: UppyFile<Meta, Body>): number {
     if (file.size === null) return -1;
@@ -58,9 +67,7 @@ export function nameFromFileSelection(
         : basename(firstFile.filename);
 }
 
-export function toFileSelection(
-    files: UppyFile<Meta, Body>[]
-): FileSelection {
+export function toFileSelection(files: UppyFile<Meta, Body>[]): FileSelection {
     if (files.length === 0) return null;
     return {
         files: files.map(file => ({

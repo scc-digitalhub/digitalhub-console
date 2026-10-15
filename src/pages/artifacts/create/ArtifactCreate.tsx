@@ -55,7 +55,9 @@ export const ArtifactCreate = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <CreateBase
-                transform={data => transformArtifactData(data, root)}
+                transform={data =>
+                    transformArtifactData(data, root, uploader.files.length > 0)
+                }
                 mutationOptions={{ onSuccess, onSettled }}
                 record={{ id, spec: {} }}
             >

@@ -34,6 +34,9 @@ import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { ShowToolbar } from './ShowToolbar';
+import { ConfigJson } from './tabs/config';
+import { HuggingfaceModel } from './tabs/huggingface';
+import { HuggingfaceModelCard } from './tabs/modelcard';
 
 export const ModelShow = () => {
     return (
@@ -172,6 +175,31 @@ const ModelShowLayout = (props: { record?: any }) => {
                     </Box>
                 </CustomTabbedShowLayout.Tab>
             )}
+            {record?.kind == 'huggingface' && (
+                <CustomTabbedShowLayout.Tab
+                    value="modelcard"
+                    label="fields.huggingface.modelcard.title"
+                >
+                    <HuggingfaceModelCard />
+                </CustomTabbedShowLayout.Tab>
+            )}
+            {record?.status?.huggingface && (
+                <CustomTabbedShowLayout.Tab
+                    value="huggingface"
+                    label="fields.huggingface.title"
+                >
+                    <HuggingfaceModel record={record} />
+                </CustomTabbedShowLayout.Tab>
+            )}
+            {record?.status?.huggingface?.config && (
+                <CustomTabbedShowLayout.Tab
+                    value="config"
+                    label="fields.config.title"
+                >
+                    <ConfigJson record={record} />
+                </CustomTabbedShowLayout.Tab>
+            )}
+
             {record?.status?.files && (
                 <CustomTabbedShowLayout.Tab
                     value="files"

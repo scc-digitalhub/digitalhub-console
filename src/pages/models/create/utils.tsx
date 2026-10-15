@@ -4,7 +4,11 @@
 
 import { transformExtensionPaths } from '../../../features/extensions/utils';
 
-export const transformModelData = (data: any, root: string | undefined) => {
+export const transformModelData = (
+    data: any,
+    root: string | undefined,
+    hasUploads: boolean
+) => {
     const { path, ...rest } = data;
 
     return {
@@ -12,5 +16,8 @@ export const transformModelData = (data: any, root: string | undefined) => {
         ...transformExtensionPaths(rest),
         project: root,
         spec: { ...rest.spec, ...(path != null ? { path } : {}) },
+        ...(!hasUploads
+            ? { status: { ...rest.status, state: 'READY' } }
+            : {}),
     };
 };

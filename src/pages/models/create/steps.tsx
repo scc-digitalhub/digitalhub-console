@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TextInput, required, useResourceContext } from 'react-admin';
 import { isValidName } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
@@ -16,7 +16,10 @@ import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { filterProperties } from '../../../common/jsonSchema/utils';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { FileSelection } from '../../../features/files/upload/types';
-import { nameFromFileSelection } from '../../../features/files/upload/utils';
+import {
+    createPathValidator,
+    nameFromFileSelection,
+} from '../../../features/files/upload/utils';
 import { useUploadCoordinator } from '../../../features/files/upload/UploaderContext';
 import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 
@@ -85,9 +88,49 @@ export const ModelSpecStep = ({
 
 export const UploadStep = ({ readOnly }: { readOnly?: boolean }) => {
     const name = useWatch({ name: 'name' });
+    const kind = useWatch({ name: 'kind' });
     const { setValue } = useFormContext();
     const uploader = useUploadCoordinator();
     const pathResolver = useResolveUploadPath({ id: uploader?.id, name });
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+    const [schema, setSchema] = useState<
+        { kind: string; schema: any } | undefined
+    >();
+
+    useEffect(() => {
+        if (!kind || !resource || !schemaProvider || readOnly) {
+            setSchema(undefined);
+            return;
+        }
+
+        let active = true;
+        schemaProvider
+            .get(resource, kind)
+            .then(schemaResult => {
+                if (active) {
+                    setSchema({
+                        kind: kind,
+                        schema: schemaResult?.schema?.properties?.path,
+                    });
+                }
+            })
+            .catch(() => {
+                if (active) setSchema(undefined);
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [kind, resource, schemaProvider, readOnly]);
+
+    const pathValidator = useMemo(
+        () =>
+            !readOnly && schema?.schema
+                ? createPathValidator(schema?.schema)
+                : undefined,
+        [schema, readOnly]
+    );
 
     const handleFilesChange = (selection: FileSelection) => {
         const selectedName = nameFromFileSelection(selection);
@@ -99,12 +142,14 @@ export const UploadStep = ({ readOnly }: { readOnly?: boolean }) => {
         }
     };
 
+    if (!schema?.schema && !readOnly) return null;
+
     return (
         <PathInput
             source="path"
             pathResolver={pathResolver}
             onChange={handleFilesChange}
-            validate={[required()]}
+            validate={[required(), ...(pathValidator ? [pathValidator] : [])]}
             readOnly={readOnly === true ? true : undefined}
         />
     );

@@ -50,7 +50,9 @@ export const ModelUpload = ({ closeDialog, handleClose }: any) => {
         <CreateBase
             resource={resource}
             redirect={false}
-            transform={data => transformModelData(data, root)}
+            transform={data =>
+                transformModelData(data, root, uploader.files.length > 0)
+            }
             mutationOptions={{ onSettled }}
             record={{ id, spec: {} }}
         >

@@ -53,7 +53,7 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
                 {label}
             </InputLabel>
 
-            <Stack direction={'row'} id={id} paddingTop={3}>
+            <Stack direction={'row'} id={id} paddingTop={3} flexWrap="wrap">
                 {list.map(item => {
                     return <Chip label={item} key={item} sx={{ mr: 1 }} />;
                 })}
