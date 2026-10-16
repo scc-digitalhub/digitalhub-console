@@ -5,13 +5,13 @@
 import { Box, Typography, alpha } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
-import { useLocaleState, useTranslate } from 'react-admin';
+import { useLocaleState, useRecordContext, useTranslate } from 'react-admin';
 import { usePreviewDataGridController } from './usePreviewDataGridController';
 import { Spinner } from '../../../../common/components/layout/Spinner';
 import { EmptyMessage } from '../../../../common/components/layout/EmptyMessage';
 
-export const PreviewTabComponent = (props: { record: any }) => {
-    const { record } = props;
+export const PreviewTabComponent = (props: { record?: any }) => {
+    const record = useRecordContext(props);
     const translate = useTranslate();
     const [locale] = useLocaleState();
     const localeText =

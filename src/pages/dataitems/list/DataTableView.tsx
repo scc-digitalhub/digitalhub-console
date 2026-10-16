@@ -8,6 +8,7 @@ import {
     EditButton,
     FunctionField,
     ShowButton,
+    TextField,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
@@ -18,6 +19,7 @@ import { prettyBytes } from '../../../features/files/fileBrowser/utils';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { DataItemIcon } from '../icon';
 import { Stack } from '@mui/material';
+import { VersionsCount } from '../../../common/components/VersionsList';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -56,11 +58,12 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 'metadata.updated',
             ]}
         >
-            <DataTable.Col
-                source="name"
-                label="fields.name.title"
-                sx={{ fontWeight: '600' }}
-            />
+            <DataTable.Col source="name" label="fields.name.title">
+                <Stack direction="column" gap={1}>
+                    <TextField source="name" sx={{ fontWeight: '600' }} />
+                    <VersionsCount />
+                </Stack>
+            </DataTable.Col>
             <DataTable.Col source="id" label="fields.id" />
             <DataTable.Col source="kind" label="fields.kind">
                 <FunctionField

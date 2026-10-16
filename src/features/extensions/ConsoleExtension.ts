@@ -1,57 +1,65 @@
-import type { ComponentType } from "react";
-import { StringMap } from "react-admin";
+import type { ComponentType } from 'react';
+import { StringMap } from 'react-admin';
 
-export type ConsoleViewName = "list" | "create" | "edit" | "show";
+export type ConsoleViewName = 'list' | 'create' | 'edit' | 'show';
 
-export type ConsoleViewShowIn = "toolbar" | "tab" | "section" | "menu";
+export type ConsoleViewShowIn = 'toolbar' | 'tab' | 'section' | 'menu';
 
 export type ConsoleExtensionComponents = Record<string, ComponentType<any>>;
 
+//TODO adopt for extensions
+export type ConsoleTabContribution = {
+    key?: string;
+    label?: string;
+    Element: ComponentType;
+    isVisible?: (record?: any) => boolean;
+};
+
 export interface ConsoleJsonSchemaDescriptor {
-  widgets?: Record<string, string>;
-  templates?: Record<string, string>;
-  fields?: Record<string, string>;
+    widgets?: Record<string, string>;
+    templates?: Record<string, string>;
+    fields?: Record<string, string>;
 }
 
 export interface ConsoleViewContributionDescriptor {
-  id?: string;
-  showIn: ConsoleViewShowIn;
-  component: string;
-  order?: number;
-  label?: string;
-  icon?: string;
+    id?: string;
+    showIn: ConsoleViewShowIn;
+    component: string;
+    order?: number;
+    label?: string;
+    icon?: string;
 }
 
 export type ConsoleViewDescriptor = Partial<
-  Record<ConsoleViewName, ConsoleViewContributionDescriptor[]>
+    Record<ConsoleViewName, ConsoleViewContributionDescriptor[]>
 >;
 
 export type ConsoleResourceViewsDescriptor = Record<
-  string,
-  ConsoleViewDescriptor
+    string,
+    ConsoleViewDescriptor
 >;
 
 export interface ConsoleExtensionModule {
-  id?: string;
-  components: ConsoleExtensionComponents;
-  views?: ConsoleResourceViewsDescriptor;
-  jsonSchema?: ConsoleJsonSchemaDescriptor;
-  i18n?: Record<string, StringMap>;
+    id?: string;
+    components: ConsoleExtensionComponents;
+    views?: ConsoleResourceViewsDescriptor;
+    jsonSchema?: ConsoleJsonSchemaDescriptor;
+    i18n?: Record<string, StringMap>;
 }
 
 export interface ConsoleExtensionModuleLoader {
-  id: string;
-  load: () => Promise<ConsoleExtensionModule>;
+    id: string;
+    load: () => Promise<ConsoleExtensionModule>;
 }
 
 export interface ConsoleViewContribution {
-  id: string;
-  moduleId: string;
-  resource: string;
-  view: ConsoleViewName;
-  showIn: ConsoleViewShowIn;
-  componentKey: string;
-  order?: number;
-  label?: string;
-  iconKey?: string;
+    id: string;
+    moduleId: string;
+    resource: string;
+    view: ConsoleViewName;
+    showIn: ConsoleViewShowIn;
+    componentKey: string;
+    order?: number;
+    label?: string;
+    iconKey?: string;
 }

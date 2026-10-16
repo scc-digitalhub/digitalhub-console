@@ -18,12 +18,13 @@ import {
     ShowButton,
     SimpleList,
     SimpleListProps,
+    useDataProvider,
     useRecordContext,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FlatCard } from './layout/FlatCard';
 
 export type VersionListProps = VersionsListWrapperProps & {
@@ -145,5 +146,49 @@ export const VersionsListWrapper = (props: VersionsListWrapperProps) => {
                 />
             </CardContent>
         </FlatCard>
+    );
+};
+
+export const VersionsCount = () => {
+    const record = useRecordContext();
+    const resource = useResourceContext();
+    const dataProvider = useDataProvider();
+    const theme = useTheme();
+    const translate = useTranslate();
+
+    const [count, setCount] = useState<number | undefined>(undefined);
+
+    useEffect(() => {
+        if (resource && record) {
+            dataProvider
+                .getList(resource, {
+                    filter: { name: record?.name, versions: 'all' },
+                    pagination: { page: 1, perPage: 1 },
+                    sort: { field: 'created', order: 'DESC' },
+                })
+                .then(({ total }) => setCount(total))
+                .catch(() => setCount(undefined));
+        }
+    }, [record, resource, dataProvider]);
+
+    if (!record) {
+        return <></>;
+    }
+
+    return (
+        <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ color: theme.palette.text.secondary }}
+        >
+            {count &&
+                translate('messages.navigation.x-elements', {
+                    resource:
+                        count > 1
+                            ? translate('resources.common.version.title')
+                            : translate('resources.common.version.version'),
+                    smart_count: count,
+                }).toLocaleLowerCase()}
+        </Typography>
     );
 };

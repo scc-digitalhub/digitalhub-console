@@ -3,12 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import {
     Labeled,
-    RaRecord,
-    Identifier,
     IconButtonWithTooltip,
     RecordContextProvider,
     TextField,
     useTranslate,
+    useRecordContext,
 } from 'react-admin';
 import {
     Box,
@@ -20,7 +19,6 @@ import {
     Accordion,
 } from '@mui/material';
 import { JSONTree } from 'react-json-tree';
-import { MarkdownBody } from '../../../../common/components/MarkdownBody';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { IdField } from '../../../../common/components/fields/IdField';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -28,15 +26,35 @@ import humanFormat from 'human-format';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import { LabelsField } from '../../../../common/components/fields/LabelsField';
+import { JsonTab } from '../../../../common/components/tabs/json';
 
-const parameterScale = humanFormat.Scale.create(['', 'K', 'M', 'B', 'T'], 1000);
+export const parameterScale = humanFormat.Scale.create(
+    ['', 'K', 'M', 'B', 'T'],
+    1000
+);
 
-export const HuggingfaceModel = ({
-    record,
-}: {
-    record?: RaRecord<Identifier>;
-}) => {
+export const HuggingfaceConfigJson = props => {
+    const record = useRecordContext(props);
+    const huggingface = record?.status?.huggingface || {};
+    const config = huggingface?.config || {};
+
+    return (
+        <Stack spacing={2}>
+            <RecordContextProvider value={huggingface || {}}>
+                <Labeled label="fields.huggingface.modelid.title">
+                    <TextField source="model_id" />
+                </Labeled>
+                <Labeled label="fields.config.title">
+                    <JsonTab record={config} />
+                </Labeled>
+            </RecordContextProvider>
+        </Stack>
+    );
+};
+
+export const HuggingfaceModel = props => {
     const translate = useTranslate();
+    const record = useRecordContext(props);
 
     const huggingface = record?.status?.huggingface || {};
     const model = huggingface?.model || {};

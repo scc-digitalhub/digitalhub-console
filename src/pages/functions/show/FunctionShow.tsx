@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Stack } from '@mui/material';
+import { Container, Divider, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import {
     Labeled,
@@ -20,20 +20,20 @@ import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedS
 import { VersionsListWrapper } from '../../../common/components/VersionsList';
 import { ShowPageTitle } from '../../../common/components/layout/PageTitle';
 import { getFunctionUiSpec } from '../types';
-import { toYaml } from '@dslab/ra-export-record-button';
-import { AceEditorField } from '@dslab/ra-ace-editor';
 import { FunctionIcon } from '../icon';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import deepEqual from 'deep-is';
-import { MetadataField } from '../../../features/metadata/components/MetadataField';
 import { IdField } from '../../../common/components/fields/IdField';
 import { FunctionTaskShow } from '../tasks';
-import { countLines } from '../../../common/utils/helpers';
 import { exporter } from '../exporter';
 import { FilteredJsonSchemaField } from '../../../common/jsonSchema/components/FilteredJsonSchemaField';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { ShowToolbar } from './ShowToolbar';
+import { cards } from './cards';
+import { MetadataTab } from '../../../common/components/tabs/metadata';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { SpecTab } from '../../../common/components/tabs/spec';
 
 export const FunctionShow = () => {
     return (
@@ -201,8 +201,7 @@ const ShowComponent = () => {
     if (!record) {
         return <LoadingIndicator />;
     }
-    const recordSpec = record?.spec;
-    const lineCount = countLines(recordSpec);
+    const Card = record?.kind && cards[record.kind] ? cards[record.kind] : null;
 
     const getAction = (kind: string) => {
         if (kind.indexOf('+') > 0) {
@@ -217,37 +216,51 @@ const ShowComponent = () => {
                 value="summary"
                 label={translate('fields.summary')}
             >
-                <Stack direction={'row'} spacing={3}>
+                <Stack direction={'column'} gap={1}>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="kind" />
+                        </Labeled>
+
+                        <Labeled>
+                            <IdField source="id" />
+                        </Labeled>
+                    </Stack>
                     <Labeled>
-                        <TextField source="kind" label="fields.kind" />
+                        <IdField source="key" />
                     </Labeled>
 
-                    <Labeled>
-                        <IdField source="id" />
-                    </Labeled>
+                    {record?.metadata?.description && (
+                        <Labeled>
+                            <TextField
+                                label="fields.metadata.description"
+                                source="metadata.description"
+                            />
+                        </Labeled>
+                    )}
+
+                    {record?.metadata?.labels && (
+                        <Labeled>
+                            <LabelsField
+                                label="fields.labels.title"
+                                source="metadata.labels"
+                                sortable={false}
+                            />
+                        </Labeled>
+                    )}
                 </Stack>
-
-                <IdField source="key" />
-
-                <MetadataField />
+                <Divider />
+                {Card && <Card />}
             </CustomTabbedShowLayout.Tab>
-            {schema && (
-                <CustomTabbedShowLayout.Tab
-                    value="spec"
-                    label={translate('fields.spec.title')}
-                >
-                    <Box sx={{ width: '100%' }}>
-                        <AceEditorField
-                            width="100%"
-                            source="spec"
-                            parse={toYaml}
-                            mode="yaml"
-                            minLines={lineCount[0]}
-                            maxLines={lineCount[1]}
-                        />
-                    </Box>
-                </CustomTabbedShowLayout.Tab>
-            )}
+            <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
+                <MetadataTab />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value="spec"
+                label={translate('fields.spec.title')}
+            >
+                <SpecTab />
+            </CustomTabbedShowLayout.Tab>
 
             {sourceCode && schema?.schema && (
                 <CustomTabbedShowLayout.Tab

@@ -1,22 +1,11 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
 //
 // SPDX-License-Identifier: Apache-2.0
-import {
-    Labeled,
-    RaRecord,
-    Identifier,
-    RecordContextProvider,
-    RecordContext,
-    TextField,
-    useDataProvider,
-    useRecordContext,
-    useTranslate,
-} from 'react-admin';
-import { Alert, Box, Stack, Typography, useTheme } from '@mui/material';
+import { useDataProvider, useRecordContext } from 'react-admin';
+import { Box, Stack, useTheme } from '@mui/material';
 import { MarkdownBody } from '../../../../common/components/MarkdownBody';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useState, useEffect } from 'react';
-import { IdField } from '../../../../common/components/fields/IdField';
 
 const stripMarkdownFrontMatter = (content: string) =>
     content
@@ -28,7 +17,6 @@ export const HuggingfaceModelCard = () => {
     const record = useRecordContext();
     const dataProvider = useDataProvider();
     const theme = useTheme();
-    const translate = useTranslate();
 
     const [description, setDescription] = useState<any | null>(null);
 
@@ -53,7 +41,7 @@ export const HuggingfaceModelCard = () => {
         };
 
         fetchDescription();
-    }, [record, dataProvider]);
+    }, [record, dataProvider, root]);
 
     if (!record && !description) return <></>;
     return (

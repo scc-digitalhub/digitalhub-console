@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import { IconContext } from 'react-icons';
 import { SiHuggingface, SiMlflow } from 'react-icons/si';
 import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
+import { useRecordContext } from 'react-admin';
 
 const icons = {
     huggingface: SiHuggingface,
@@ -37,8 +38,11 @@ export const ModelIcon = (props: {
     color?: MuiIconColor;
     fontSize?: MuiIconFontSize;
 }) => {
-    const { kind, color, fontSize } = props;
+    const { kind: kindProps, color, fontSize } = props;
+    const record = useRecordContext();
     const theme = useTheme();
+
+    const kind = kindProps || record?.kind;
 
     const resolvedColor = useMemo(() => {
         switch (color) {

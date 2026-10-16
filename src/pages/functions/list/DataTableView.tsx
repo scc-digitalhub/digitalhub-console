@@ -9,6 +9,7 @@ import {
     EditButton,
     FunctionField,
     ShowButton,
+    TextField,
     useTranslate,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
@@ -17,6 +18,7 @@ import { BulkDeleteAllVersionsButton } from '../../../common/components/buttons/
 import { RunStateBadge } from '../../../common/components/RunStateBadge';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { FunctionIcon } from '../icon';
+import { VersionsCount } from '../../../common/components/VersionsList';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -56,11 +58,12 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 'metadata.updated',
             ]}
         >
-            <DataTable.Col
-                source="name"
-                label="fields.name.title"
-                sx={{ fontWeight: '600' }}
-            />
+            <DataTable.Col source="name" label="fields.name.title">
+                <Stack direction="column" gap={1}>
+                    <TextField source="name" sx={{ fontWeight: '600' }} />
+                    <VersionsCount />
+                </Stack>
+            </DataTable.Col>
             <DataTable.Col source="id" label="fields.id" />
             <DataTable.Col source="kind" label="fields.kind">
                 <FunctionField

@@ -2,34 +2,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Alert, Box, Container, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Container, Divider, Stack } from '@mui/material';
 import {
     Labeled,
     ShowView,
     TextField,
     useRecordContext,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
-import { countLines } from '../../../common/utils/helpers';
 import { ShowPageTitle } from '../../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../../common/components/VersionsList';
-import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { ArtifactIcon } from '../icon';
-import { MetadataField } from '../../../features/metadata/components/MetadataField';
 import { IdField } from '../../../common/components/fields/IdField';
 import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
-import { StateChips } from '../../../common/components/StateChips';
 import { ShowBaseLive } from '../../../features/notifications/components/ShowBaseLive';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
 import { ShowToolbar } from './ShowToolbar';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
+import { MetadataTab } from '../../../common/components/tabs/metadata';
+import { SpecTab } from '../../../common/components/tabs/spec';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
 
 export const ArtifactShow = () => {
     return (
@@ -53,90 +48,50 @@ export const ArtifactShow = () => {
 
 const ArtifactShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
-    const schemaProvider = useSchemaProvider();
     const translate = useTranslate();
-    const resource = useResourceContext();
     const extensionTabs = useExtensionsTabs({ source: 'extensions' });
-    const [spec, setSpec] = useState<any>();
-    const recordSpec = record?.spec;
-    const lineCount = countLines(recordSpec);
-
-    useEffect(() => {
-        if (!schemaProvider) {
-            return;
-        }
-
-        if (record && resource) {
-            schemaProvider.get(resource, record.kind).then(s => {
-                setSpec(s);
-            });
-        }
-    }, [record, schemaProvider, resource]);
 
     if (!record) return <></>;
 
     return (
         <CustomTabbedShowLayout syncWithLocation={false} record={record}>
             <CustomTabbedShowLayout.Tab value="summary" label="fields.summary">
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" />
-                    </Labeled>
+                <Stack direction={'column'} gap={1}>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="kind" />
+                        </Labeled>
 
+                        <Labeled>
+                            <IdField source="id" />
+                        </Labeled>
+                    </Stack>
                     <Labeled>
-                        <IdField source="id" />
+                        <IdField source="key" />
                     </Labeled>
+                    {record?.metadata?.labels && (
+                        <Labeled>
+                            <LabelsField
+                                label="fields.labels.title"
+                                source="metadata.labels"
+                                sortable={false}
+                            />
+                        </Labeled>
+                    )}
                 </Stack>
-
-                <IdField source="key" />
-                <StateChips source="status.state" label="fields.status.state" />
-                {record.status?.message && (
-                    <Labeled label="fields.events.message.title">
-                        <Alert
-                            sx={{ whiteSpace: 'pre-wrap' }}
-                            // icon={false}
-                            severity={
-                                record.status?.state === 'RUNNING'
-                                    ? 'info'
-                                    : record.status?.state === 'ERROR'
-                                    ? 'error'
-                                    : record.status?.state === 'COMPLETED'
-                                    ? 'success'
-                                    : 'warning'
-                            }
-                            // variant="outlined"
-                        >
-                            {record.status?.message}
-                        </Alert>
-                    </Labeled>
-                )}
-                <MetadataField />
+                <Divider />
+                {record?.status?.files && <FileInfoTree />}
             </CustomTabbedShowLayout.Tab>
-            {spec && (
-                <CustomTabbedShowLayout.Tab
-                    value="spec"
-                    label={translate('fields.spec.title')}
-                >
-                    <Box sx={{ width: '100%' }}>
-                        <AceEditorField
-                            width="100%"
-                            source="spec"
-                            parse={toYaml}
-                            mode="yaml"
-                            minLines={lineCount[0]}
-                            maxLines={lineCount[1]}
-                        />
-                    </Box>
-                </CustomTabbedShowLayout.Tab>
-            )}
-            {record?.status?.files && (
-                <CustomTabbedShowLayout.Tab
-                    value="files"
-                    label="fields.files.tab"
-                >
-                    <FileInfoTree />
-                </CustomTabbedShowLayout.Tab>
-            )}
+            <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
+                <MetadataTab />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value="spec"
+                label={translate('fields.spec.title')}
+            >
+                <SpecTab />
+            </CustomTabbedShowLayout.Tab>
+
             {extensionTabs}
             <CustomTabbedShowLayout.Tab
                 value="lineage"

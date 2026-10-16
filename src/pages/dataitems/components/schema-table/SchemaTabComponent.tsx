@@ -3,14 +3,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Typography, alpha } from '@mui/material';
+import { useRecordContext } from 'react-admin';
 import { DataGrid } from '@mui/x-data-grid';
 import { enUS, itIT } from '@mui/x-data-grid/locales';
 import { useLocaleState, useTranslate } from 'react-admin';
 import { useSchemaDataGridController } from './useSchemaDataGridController';
 import { Spinner } from '../../../../common/components/layout/Spinner';
 
-export const SchemaTabComponent = (props: { record: any }) => {
-    const { record } = props;
+export const SchemaTabComponent = (props: { record?: any }) => {
+    const record = useRecordContext(props);
     const translate = useTranslate();
     const [locale] = useLocaleState();
     const localeText =

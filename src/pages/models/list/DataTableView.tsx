@@ -8,6 +8,7 @@ import {
     EditButton,
     FunctionField,
     ShowButton,
+    TextField,
 } from 'react-admin';
 import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
@@ -17,7 +18,10 @@ import { IdField } from '../../../common/components/fields/IdField';
 import { prettyBytes } from '../../../features/files/fileBrowser/utils';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { ModelIcon } from '../icon';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+import { VersionsCount } from '../../../common/components/VersionsList';
+import humanFormat from 'human-format';
+import { parameterScale } from '../show/tabs/huggingface';
 
 const RowActions = () => (
     <RowButtonGroup>
@@ -52,15 +56,17 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 'id',
                 'created_by',
                 'spec.path',
+                'status.files',
                 'metadata.created_by',
                 'metadata.updated',
             ]}
         >
-            <DataTable.Col
-                source="name"
-                label="fields.name.title"
-                sx={{ fontWeight: '600' }}
-            />
+            <DataTable.Col source="name" label="fields.name.title">
+                <Stack direction="column" gap={1}>
+                    <TextField source="name" sx={{ fontWeight: '600' }} />
+                    <VersionsCount />
+                </Stack>
+            </DataTable.Col>
             <DataTable.Col source="id" label="fields.id" />
             <DataTable.Col source="kind" label="fields.kind">
                 <FunctionField
@@ -106,23 +112,42 @@ export const DataTableView = (props: { storeKey?: string }) => {
                 />
             </DataTable.Col>
             <DataTable.Col
-                source="status.filesize"
+                source="status.size"
                 disableSort
                 label="fields.files.size"
             >
                 <FunctionField
-                    render={record =>
-                        record?.status?.files
-                            ? prettyBytes(
-                                  record.status.files
-                                      .filter(f => f.size > 0)
-                                      .reduce(
-                                          (acc, file) => acc + (file.size || 0),
-                                          0
-                                      )
-                              )
-                            : ''
-                    }
+                    render={record => {
+                        if (record?.status?.files) {
+                            return prettyBytes(
+                                record.status.files
+                                    .filter(f => f.size > 0)
+                                    .reduce(
+                                        (acc, file) => acc + (file.size || 0),
+                                        0
+                                    )
+                            );
+                        }
+
+                        if (
+                            record?.status?.huggingface?.model?.safetensors
+                                ?.total
+                        ) {
+                            return (
+                                <>
+                                    {humanFormat(
+                                        record.status.huggingface.model
+                                            .safetensors.total,
+                                        {
+                                            scale: parameterScale,
+                                            maxDecimals: 1,
+                                            separator: '',
+                                        }
+                                    )}
+                                </>
+                            );
+                        }
+                    }}
                 />
             </DataTable.Col>
             <DataTable.Col

@@ -8,7 +8,7 @@ import {
     useShowContext,
     useTranslate,
 } from 'react-admin';
-import { Tooltip } from '@mui/material';
+import { Stack, Tooltip, Typography } from '@mui/material';
 import { RunIcon } from '../icon';
 import {
     PageTitle,
@@ -17,6 +17,9 @@ import {
 import { StateChips } from '../../../common/components/StateChips';
 
 import InfoIcon from '@mui/icons-material/Info';
+import { functionParser } from '../../../common/utils/parsers';
+import { FunctionIcon } from '../../functions/icon';
+import { WorkflowIcon } from '../../workflows/icon';
 
 export const RunShowTitle = (props: RecordPageTitleProps) => {
     const { resource, record } = useShowContext();
@@ -25,18 +28,44 @@ export const RunShowTitle = (props: RecordPageTitleProps) => {
 
     const label = getResourceLabel(resource, 1);
 
-    const uri = record?.spec?.function
-        ? new URL(record.spec.function)
-        : record?.spec?.workflow
-        ? new URL(record.spec.workflow)
+    const functionKey = record?.spec?.function
+        ? functionParser(record?.spec?.function)
+        : null;
+    const workflowKey = record?.spec?.workflow
+        ? functionParser(record?.spec?.workflow)
         : null;
 
-    const parent = uri ? uri.pathname.split(':')[0].substring(1) : null;
+    const parent = functionKey?.name || workflowKey?.name;
 
     const name = parent
         ? `${parent}/${record?.name || ''}`
         : record?.name || '';
     const kind = record?.kind || '';
+
+    const secondaryIcon = functionKey?.kind ? (
+        <FunctionIcon fontSize="small" kind={functionKey.kind} />
+    ) : workflowKey?.kind ? (
+        <WorkflowIcon fontSize="small" />
+    ) : (
+        false
+    );
+
+    const secondaryText = secondaryIcon ? (
+        <Stack direction="row" spacing={1} alignItems="center">
+            {secondaryIcon}
+            <Typography variant="subtitle1">
+                {translate('pages.pageTitle.show.subtitle', {
+                    resource: label,
+                    kind,
+                })}
+            </Typography>
+        </Stack>
+    ) : (
+        translate('pages.pageTitle.show.subtitle', {
+            resource: label,
+            kind,
+        })
+    );
 
     return (
         <PageTitle
@@ -44,10 +73,7 @@ export const RunShowTitle = (props: RecordPageTitleProps) => {
                 resource: label,
                 name,
             })}
-            secondaryText={translate('pages.pageTitle.show.subtitle', {
-                resource: label,
-                kind,
-            })}
+            secondaryText={secondaryText}
             icon={<RunIcon fontSize={'large'} />}
             badge={
                 record?.status?.state && (

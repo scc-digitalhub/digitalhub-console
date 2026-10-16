@@ -20,9 +20,7 @@ import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { EditPageTitle } from '../../../common/components/layout/PageTitle';
 import { ModelIcon } from '../icon';
 import { randomId } from '../../../common/utils/helpers';
-import {
-    UploadCoordinatorContext,
-} from '../../../features/files/upload/UploaderContext';
+import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
 import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
 import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
@@ -100,7 +98,7 @@ export const ModelEdit = () => {
                 }}
             >
                 <UploadCoordinatorContext.Provider value={uploader}>
-                    <EditPageTitle icon={<ModelIcon fontSize={'large'} />} />
+                    <EditPageTitle />
 
                     <EditView component={Box}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>

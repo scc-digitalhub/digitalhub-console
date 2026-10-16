@@ -2,41 +2,32 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Alert, Box, Container, Stack } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Container, Divider, Stack } from '@mui/material';
 import {
-    DateField,
     Labeled,
     ShowView,
     TextField,
-    TextInput,
     useRecordContext,
-    useResourceContext,
     useTranslate,
 } from 'react-admin';
 import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
-import { countLines } from '../../../common/utils/helpers';
 import { ShowPageTitle } from '../../../common/components/layout/PageTitle';
 import { VersionsListWrapper } from '../../../common/components/VersionsList';
-import { useSchemaProvider } from '../../../common/provider/schemaProvider';
 import { ModelIcon } from '../icon';
-import { MetadataField } from '../../../features/metadata/components/MetadataField';
 import { IdField } from '../../../common/components/fields/IdField';
 import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
-import { ChipsField } from '../../../common/components/fields/ChipsField';
-import { StateChips } from '../../../common/components/StateChips';
 import { ShowBaseLive } from '../../../features/notifications/components/ShowBaseLive';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import { toYaml } from '@dslab/ra-export-record-button';
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
-import { MetricsGrid } from '../../../features/metrics/components/MetricsGrid';
 import { SHOW_VIEW_VERSION_PROPS } from '../../../common/theme';
 import { StyledFlatCard } from '../../../common/theme/StyledFlatCard';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { ShowToolbar } from './ShowToolbar';
-import { ConfigJson } from './tabs/config';
-import { HuggingfaceModel } from './tabs/huggingface';
-import { HuggingfaceModelCard } from './tabs/modelcard';
+import { cards } from './cards';
+import { tabs } from './tabs';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { MetadataTab } from '../../../common/components/tabs/metadata';
+import { MetricsTab } from './tabs/metrics';
+import { SpecTab } from '../../../common/components/tabs/spec';
 
 export const ModelShow = () => {
     return (
@@ -60,58 +51,14 @@ export const ModelShow = () => {
 
 const ModelShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
-    const schemaProvider = useSchemaProvider();
     const extensionTabs = useExtensionsTabs({ source: 'extensions' });
     const translate = useTranslate();
-    const resource = useResourceContext();
-    const [spec, setSpec] = useState<any>();
-    const recordSpec = record?.spec;
-    const lineCount = countLines(recordSpec);
-
-    useEffect(() => {
-        if (!schemaProvider) {
-            return;
-        }
-
-        if (record && resource) {
-            schemaProvider.get(resource, record.kind).then(s => {
-                setSpec(s);
-            });
-        }
-    }, [record, schemaProvider, resource]);
-
-    const metricsComparisonFilters = [
-        <TextInput
-            label="fields.name.title"
-            source="q"
-            alwaysOn
-            resettable
-            key={1}
-        />,
-    ];
-
-    const metricsDatagridFields = [
-        <TextField
-            source="id"
-            label="fields.id"
-            sortable={false}
-            key={'df1'}
-        />,
-        <DateField
-            source="metadata.created"
-            showTime
-            label="fields.metadata.created"
-            key={'df2'}
-        />,
-        <ChipsField
-            label="fields.labels.title"
-            source="metadata.labels"
-            sortable={false}
-            key={'df3'}
-        />,
-    ];
 
     if (!record) return <></>;
+
+    const kind = record?.kind;
+    const Card = kind && cards[kind] ? cards[kind] : null;
+    const kindTabs = kind ? tabs[kind] : null;
 
     return (
         <CustomTabbedShowLayout
@@ -124,102 +71,64 @@ const ModelShowLayout = (props: { record?: any }) => {
             }}
         >
             <CustomTabbedShowLayout.Tab value="summary" label="fields.summary">
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" />
-                    </Labeled>
+                <Stack direction={'column'} gap={1}>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="kind" />
+                        </Labeled>
 
+                        <Labeled>
+                            <IdField source="id" />
+                        </Labeled>
+                    </Stack>
                     <Labeled>
-                        <IdField source="id" />
+                        <IdField source="key" />
                     </Labeled>
+                    {record?.metadata?.labels && (
+                        <Labeled>
+                            <LabelsField
+                                label="fields.labels.title"
+                                source="metadata.labels"
+                                sortable={false}
+                            />
+                        </Labeled>
+                    )}
                 </Stack>
-
-                <IdField source="key" />
-                <StateChips source="status.state" label="fields.status.state" />
-                {record.status?.message && (
-                    <Labeled label="fields.events.message.title">
-                        <Alert
-                            sx={{ whiteSpace: 'pre-wrap' }}
-                            // icon={false}
-                            severity={
-                                record.status?.state === 'RUNNING'
-                                    ? 'info'
-                                    : record.status?.state === 'ERROR'
-                                    ? 'error'
-                                    : record.status?.state === 'COMPLETED'
-                                    ? 'success'
-                                    : 'warning'
-                            }
-                            // variant="outlined"
-                        >
-                            {record.status?.message}
-                        </Alert>
-                    </Labeled>
-                )}
-                <MetadataField />
+                <Divider />
+                {Card && <Card />}
+                {record?.status?.files && <FileInfoTree />}
             </CustomTabbedShowLayout.Tab>
-            {spec && (
-                <CustomTabbedShowLayout.Tab
-                    value="spec"
-                    label={translate('fields.spec.title')}
-                >
-                    <Box sx={{ width: '100%' }}>
-                        <AceEditorField
-                            width="100%"
-                            source="spec"
-                            parse={toYaml}
-                            mode="yaml"
-                            minLines={lineCount[0]}
-                            maxLines={lineCount[1]}
-                        />
-                    </Box>
-                </CustomTabbedShowLayout.Tab>
-            )}
-            {record?.kind == 'huggingface' && (
-                <CustomTabbedShowLayout.Tab
-                    value="modelcard"
-                    label="fields.huggingface.modelcard.title"
-                >
-                    <HuggingfaceModelCard />
-                </CustomTabbedShowLayout.Tab>
-            )}
-            {record?.status?.huggingface && (
-                <CustomTabbedShowLayout.Tab
-                    value="huggingface"
-                    label="fields.huggingface.title"
-                >
-                    <HuggingfaceModel record={record} />
-                </CustomTabbedShowLayout.Tab>
-            )}
-            {record?.status?.huggingface?.config && (
-                <CustomTabbedShowLayout.Tab
-                    value="config"
-                    label="fields.config.title"
-                >
-                    <ConfigJson record={record} />
-                </CustomTabbedShowLayout.Tab>
-            )}
+            <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
+                <MetadataTab />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value="spec"
+                label={translate('fields.spec.title')}
+            >
+                <SpecTab />
+            </CustomTabbedShowLayout.Tab>
+            {kind &&
+                kindTabs
+                    ?.filter(Tab =>
+                        Tab.isVisible ? Tab.isVisible(record) : true
+                    )
+                    .map(Tab => (
+                        <CustomTabbedShowLayout.Tab
+                            key={Tab.key || kind}
+                            value={Tab.key || kind}
+                            label={Tab.label || kind}
+                        >
+                            <Tab.Element />
+                        </CustomTabbedShowLayout.Tab>
+                    ))}
 
-            {record?.status?.files && (
-                <CustomTabbedShowLayout.Tab
-                    value="files"
-                    label="fields.files.tab"
-                >
-                    <FileInfoTree />
-                </CustomTabbedShowLayout.Tab>
-            )}
             {extensionTabs}
             {record?.status?.metrics && (
                 <CustomTabbedShowLayout.Tab
                     value="metrics"
                     label={'fields.metrics.title'}
                 >
-                    <MetricsGrid
-                        record={record}
-                        filter={{ name: record?.name, versions: 'all' }}
-                        filters={metricsComparisonFilters}
-                        datagridFields={metricsDatagridFields}
-                    />
+                    <MetricsTab />
                 </CustomTabbedShowLayout.Tab>
             )}
             <CustomTabbedShowLayout.Tab

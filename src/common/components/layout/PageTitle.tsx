@@ -2,16 +2,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Typography, Box, SxProps, Theme } from '@mui/material';
+import { Typography, Box, SxProps, Theme, Stack } from '@mui/material';
 import { isValidElement, ReactElement } from 'react';
 import {
     useCreateContext,
     useEditContext,
     useGetResourceLabel,
     useListContext,
+    useResourceDefinition,
     useShowContext,
     useTranslate,
 } from 'react-admin';
+import { StateBadge } from '../StateBadge';
+import React from 'react';
 
 export const PageTitle = (props: PageTitleProps) => {
     const { text, secondaryText, icon, badge, sx } = props;
@@ -35,7 +38,9 @@ export const PageTitle = (props: PageTitleProps) => {
                 >
                     {text} {badge && isValidElement(badge) ? badge : null}
                 </Typography>
-                {secondaryText && (
+                {secondaryText && isValidElement(secondaryText) ? (
+                    secondaryText
+                ) : (
                     <Typography
                         variant="h6"
                         sx={{
@@ -63,10 +68,12 @@ export const PageTitle = (props: PageTitleProps) => {
 
 export type PageTitleProps = {
     text: string;
-    secondaryText?: string;
-    icon?: ReactElement;
-    badge?: ReactElement;
+    secondaryText?: string | ReactElement;
+    icon?: ReactElement | false;
+    badge?: ReactElement | false;
     sx?: SxProps<Theme>;
+    resource?: string;
+    record?: any;
 };
 
 export type ListPageTitleProps = Omit<PageTitleProps, 'text'>;
@@ -88,7 +95,11 @@ export type RecordPageTitleProps = Omit<
 >;
 
 export const ShowPageTitle = (props: RecordPageTitleProps) => {
+    const { icon: iconProps, badge: badgeProps, ...rest } = props;
+    const resourceDefinition = useResourceDefinition(props);
+
     const { resource, record } = useShowContext();
+
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
@@ -96,17 +107,67 @@ export const ShowPageTitle = (props: RecordPageTitleProps) => {
     const name = record?.name || '';
     const kind = record?.kind || '';
 
+    const defaultBadge = record?.status?.state ? (
+        <StateBadge record={record} />
+    ) : (
+        false
+    );
+
+    const defaultIcon = resourceDefinition?.icon
+        ? React.createElement(resourceDefinition.icon, {
+              fontSize: 'large',
+              kind: 'default',
+          })
+        : false;
+
+    const secondaryIcon =
+        resourceDefinition?.icon && record?.kind
+            ? React.createElement(resourceDefinition.icon, {
+                  fontSize: 'small',
+                  kind: record?.kind,
+              })
+            : false;
+
+    const icon =
+        iconProps === false
+            ? false
+            : isValidElement(iconProps)
+            ? iconProps
+            : defaultIcon;
+    const badge =
+        badgeProps === false
+            ? false
+            : isValidElement(badgeProps)
+            ? badgeProps
+            : defaultBadge;
+
+    const secondaryText = secondaryIcon ? (
+        <Stack direction="row" spacing={1} alignItems="center">
+            {secondaryIcon}
+            <Typography variant="subtitle1">
+                {translate('pages.pageTitle.show.subtitle', {
+                    resource: label,
+                    kind,
+                })}
+            </Typography>
+        </Stack>
+    ) : (
+        translate('pages.pageTitle.show.subtitle', {
+            resource: label,
+            kind,
+        })
+    );
+
     return (
         <PageTitle
             text={translate('pages.pageTitle.show.title', {
                 resource: label,
                 name,
             })}
-            secondaryText={translate('pages.pageTitle.show.subtitle', {
-                resource: label,
-                kind,
-            })}
-            {...props}
+            secondaryText={secondaryText}
+            icon={icon}
+            badge={badge}
+            {...rest}
         />
     );
 };
@@ -132,6 +193,9 @@ export const CreatePageTitle = (props: RecordPageTitleProps) => {
 };
 
 export const EditPageTitle = (props: RecordPageTitleProps) => {
+    const { icon: iconProps, badge: badgeProps, ...rest } = props;
+    const resourceDefinition = useResourceDefinition(props);
+
     const { resource, record } = useEditContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
@@ -139,6 +203,32 @@ export const EditPageTitle = (props: RecordPageTitleProps) => {
     const label = getResourceLabel(resource, 1).toLowerCase();
     const name = record?.name || '';
     const kind = record?.kind || '';
+
+    const defaultBadge = record?.status?.state ? (
+        <StateBadge record={record} />
+    ) : (
+        false
+    );
+
+    const defaultIcon = resourceDefinition?.icon
+        ? React.createElement(resourceDefinition.icon, {
+              fontSize: 'large',
+              kind: 'default',
+          })
+        : false;
+
+    const icon =
+        iconProps === false
+            ? false
+            : isValidElement(iconProps)
+            ? iconProps
+            : defaultIcon;
+    const badge =
+        badgeProps === false
+            ? false
+            : isValidElement(badgeProps)
+            ? badgeProps
+            : defaultBadge;
 
     return (
         <PageTitle
@@ -150,7 +240,9 @@ export const EditPageTitle = (props: RecordPageTitleProps) => {
                 resource: label,
                 kind,
             })}
-            {...props}
+            icon={icon}
+            badge={badge}
+            {...rest}
         />
     );
 };
