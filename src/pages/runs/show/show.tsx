@@ -53,24 +53,27 @@ export const RunShowComponent = () => {
         ? functionParser(record?.spec?.workflow)
         : null;
 
+    const functionKind = functionKey?.kind;
+    const workflowKind = workflowKey?.kind;
+
     useEffect(() => {
-        if (functionKey?.kind) {
+        if (functionKind) {
             schemaProvider
-                .get('functions', functionKey.kind)
+                .get('functions', functionKind)
                 .then(res => {
                     setSchema(res || null);
                 })
                 .catch(() => setSchema(undefined));
         }
-        if (workflowKey?.kind) {
+        if (workflowKind) {
             schemaProvider
-                .get('workflows', workflowKey.kind)
+                .get('workflows', workflowKind)
                 .then(res => {
                     setSchema(res || null);
                 })
                 .catch(() => setSchema(undefined));
         }
-    }, [functionKey, workflowKey, schemaProvider]);
+    }, [functionKind, workflowKind, schemaProvider]);
 
     if (!record) return <LoadingIndicator />;
 

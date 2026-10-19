@@ -107,6 +107,7 @@ const ref = useRef<LazyLog>(null);
 ## useEffect
 
 - Every value read inside an effect that can change over time must be in the dependency array.
+- Avoid render-created objects and functions in dependency arrays when possible. Their identity changes on each render and can repeatedly retrigger the effect, especially when the effect updates state. Depend on the specific primitive values the effect needs, and construct temporary objects or helper functions inside the effect. Do not omit a genuinely changing dependency or add `useMemo`/`useCallback` solely to silence the dependency warning; restructure the effect first.
 - If the effect exists only to sync derived state, eliminate it and compute inline (see "Avoid derived state" above).
 - Avoid chained effects (effect A sets state, which triggers effect B). Collapse the logic into a single derived value or a single effect.
 
