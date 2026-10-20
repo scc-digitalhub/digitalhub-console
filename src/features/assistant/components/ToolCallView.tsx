@@ -6,26 +6,26 @@ import React, { useState } from 'react';
 import { useTranslate } from 'react-admin';
 import {
     Box,
-    Paper,
     Typography,
-    Chip,
-    IconButton,
     Collapse,
     Tooltip,
+    IconButton,
     CircularProgress,
     useTheme,
     alpha,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import TerminalIcon from '@mui/icons-material/Terminal';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
-import BuildCircleIcon from '@mui/icons-material/BuildCircle';
+import CheckIcon from '@mui/icons-material/Check';
 
 export interface ToolCallViewProps {
     name: string;
@@ -34,6 +34,10 @@ export interface ToolCallViewProps {
     status?: 'running' | 'complete' | 'success' | 'error' | 'requires-action';
     error?: string;
 }
+
+export const ToolGroupContext = React.createContext<{ inGroup: boolean }>({
+    inGroup: false,
+});
 
 export const ToolCallView: React.FC<ToolCallViewProps> = ({
     name,
@@ -45,52 +49,58 @@ export const ToolCallView: React.FC<ToolCallViewProps> = ({
     const theme = useTheme();
     const translate = useTranslate();
     const [expanded, setExpanded] = useState<boolean>(false);
-    const [copied, setCopied] = useState<boolean>(false);
+    const [copiedParam, setCopiedParam] = useState<boolean>(false);
+    const [copiedResult, setCopiedResult] = useState<boolean>(false);
 
     const isRunning = status === 'running';
     const isError = status === 'error' || Boolean(error);
-    const isSuccess = !isRunning && !isError;
 
     const getToolIcon = (toolName: string) => {
         const lower = toolName.toLowerCase();
-        if (lower.includes('knowledge') || lower.includes('search')) {
-            return (
-                <MenuBookIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.info.main }}
-                />
-            );
+        const sx = { fontSize: 16 };
+        if (
+            lower.includes('knowledge') ||
+            lower.includes('doc') ||
+            lower.includes('search')
+        ) {
+            return <MenuBookOutlinedIcon sx={sx} />;
         }
-        if (lower.includes('secret')) {
-            return (
-                <VpnKeyIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.warning.main }}
-                />
-            );
+        if (lower.includes('workflow') || lower.includes('pipeline')) {
+            return <AccountTreeOutlinedIcon sx={sx} />;
         }
-        if (lower.includes('sdk') || lower.includes('dh')) {
-            return (
-                <TerminalIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.success.main }}
-                />
-            );
+        if (
+            lower.includes('table') ||
+            lower.includes('sql') ||
+            lower.includes('data')
+        ) {
+            return <TableChartOutlinedIcon sx={sx} />;
         }
-        if (lower.includes('dynamic') || lower.includes('tool')) {
-            return (
-                <SettingsSuggestIcon
-                    fontSize="small"
-                    sx={{ color: theme.palette.secondary.main }}
-                />
-            );
+        if (
+            lower.includes('file') ||
+            lower.includes('artifact') ||
+            lower.includes('store')
+        ) {
+            return <FolderOutlinedIcon sx={sx} />;
         }
-        return (
-            <BuildCircleIcon
-                fontSize="small"
-                sx={{ color: theme.palette.text.secondary }}
-            />
-        );
+        if (lower.includes('secret') || lower.includes('key')) {
+            return <VpnKeyOutlinedIcon sx={sx} />;
+        }
+        if (
+            lower.includes('python') ||
+            lower.includes('code') ||
+            lower.includes('func')
+        ) {
+            return <CodeOutlinedIcon sx={sx} />;
+        }
+        if (
+            lower.includes('terminal') ||
+            lower.includes('job') ||
+            lower.includes('run') ||
+            lower.includes('dh')
+        ) {
+            return <TerminalOutlinedIcon sx={sx} />;
+        }
+        return <BuildOutlinedIcon sx={sx} />;
     };
 
     const formatPayload = (data: any): string => {
@@ -106,9 +116,13 @@ export const ToolCallView: React.FC<ToolCallViewProps> = ({
         return JSON.stringify(data, null, 2);
     };
 
-    const handleCopy = (e: React.MouseEvent) => {
+    const handleCopy = (
+        e: React.MouseEvent,
+        data: any,
+        setCopied: (v: boolean) => void
+    ) => {
         e.stopPropagation();
-        const textToCopy = formatPayload(result || args);
+        const textToCopy = formatPayload(data);
         if (textToCopy) {
             navigator.clipboard.writeText(textToCopy);
             setCopied(true);
@@ -117,165 +131,96 @@ export const ToolCallView: React.FC<ToolCallViewProps> = ({
     };
 
     return (
-        <Paper
-            elevation={0}
-            sx={{
-                my: 1,
-                border: '1px solid',
-                borderColor: isError
-                    ? 'error.light'
-                    : isRunning
-                    ? 'info.light'
-                    : 'divider',
-                borderRadius: 2,
-                overflow: 'hidden',
-                backgroundColor:
-                    theme.palette.mode === 'dark'
-                        ? alpha(theme.palette.common.white, 0.03)
-                        : alpha(theme.palette.grey[500], 0.05),
-                transition: theme.transitions.create(
-                    ['background-color', 'border-color'],
-                    {
-                        duration: theme.transitions.duration.shorter,
-                    }
-                ),
-            }}
-        >
-            {/* Header bar */}
+        <Box sx={{ my: 0.25 }}>
+            {/* Tool Item Row: [icon] tool_name > */}
             <Box
-                onClick={() => setExpanded(!expanded)}
+                onClick={() => setExpanded(prev => !prev)}
                 sx={{
-                    px: 1.5,
-                    py: 1,
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    gap: 0.75,
+                    py: 0.35,
+                    px: 0.5,
+                    borderRadius: 1,
                     cursor: 'pointer',
                     userSelect: 'none',
+                    transition: 'background-color 0.15s ease-in-out',
                     '&:hover': {
                         backgroundColor:
                             theme.palette.mode === 'dark'
-                                ? alpha(theme.palette.common.white, 0.06)
+                                ? alpha(theme.palette.common.white, 0.04)
                                 : alpha(theme.palette.common.black, 0.04),
                     },
                 }}
             >
+                {/* Left icon */}
                 <Box
                     sx={{
+                        color: isError ? 'error.main' : 'text.secondary',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 1,
-                        minWidth: 0,
+                        flexShrink: 0,
                     }}
                 >
-                    {getToolIcon(name)}
-                    <Typography
-                        variant="body2"
-                        fontWeight={600}
-                        sx={{
-                            fontFamily: 'monospace',
-                            color: 'text.primary',
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
-                        {name}
-                    </Typography>
+                    {isRunning ? (
+                        <CircularProgress size={13} color="inherit" />
+                    ) : (
+                        getToolIcon(name)
+                    )}
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {isRunning && (
-                        <Chip
-                            size="small"
-                            icon={
-                                <CircularProgress size={12} color="inherit" />
-                            }
-                            label={translate(
-                                'messages.assistant.tool.status_executing',
-                                {
-                                    _: 'Executing...',
-                                }
-                            )}
-                            color="info"
-                            variant="outlined"
-                            sx={{ height: 22, fontSize: '0.75rem' }}
-                        />
-                    )}
-                    {isSuccess && (
-                        <Chip
-                            size="small"
-                            icon={
-                                <CheckCircleOutlineIcon sx={{ fontSize: 14 }} />
-                            }
-                            label={translate(
-                                'messages.assistant.tool.status_success',
-                                {
-                                    _: 'Success',
-                                }
-                            )}
-                            color="success"
-                            variant="outlined"
-                            sx={{ height: 22, fontSize: '0.75rem' }}
-                        />
-                    )}
-                    {isError && (
-                        <Chip
-                            size="small"
-                            icon={<ErrorOutlineIcon sx={{ fontSize: 14 }} />}
-                            label={translate(
-                                'messages.assistant.tool.status_error',
-                                {
-                                    _: 'Error',
-                                }
-                            )}
-                            color="error"
-                            variant="outlined"
-                            sx={{ height: 22, fontSize: '0.75rem' }}
-                        />
-                    )}
+                {/* Monospace Tool Name */}
+                <Typography
+                    component="span"
+                    sx={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.8125rem',
+                        color: isError ? 'error.main' : 'text.primary',
+                        fontWeight: 500,
+                        flexShrink: 0,
+                    }}
+                >
+                    {name}
+                </Typography>
 
-                    <IconButton
-                        size="small"
-                        onClick={e => {
-                            e.stopPropagation();
-                            setExpanded(!expanded);
-                        }}
-                    >
-                        {expanded ? (
-                            <ExpandLessIcon fontSize="small" />
-                        ) : (
-                            <ExpandMoreIcon fontSize="small" />
-                        )}
-                    </IconButton>
+                {/* Right chevron */}
+                <Box
+                    sx={{
+                        color: 'text.secondary',
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexShrink: 0,
+                    }}
+                >
+                    {expanded ? (
+                        <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
+                    ) : (
+                        <KeyboardArrowRightIcon sx={{ fontSize: 16 }} />
+                    )}
                 </Box>
             </Box>
 
-            {/* Expandable details */}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <Box
                     sx={{
-                        px: 1.5,
+                        pl: 3,
+                        pt: 1,
                         pb: 1.5,
-                        pt: 0.5,
-                        borderTop: '1px solid',
-                        borderColor: 'divider',
-                        backgroundColor:
-                            theme.palette.mode === 'dark'
-                                ? alpha(theme.palette.background.paper, 0.6)
-                                : theme.palette.background.paper,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1.5,
                     }}
                 >
-                    {/* Arguments Section */}
                     {args !== undefined && (
-                        <Box sx={{ mt: 1 }}>
+                        <Box>
                             <Typography
                                 variant="caption"
-                                fontWeight={700}
-                                color="text.secondary"
                                 sx={{
-                                    textTransform: 'uppercase',
-                                    letterSpacing: 0.5,
+                                    color: 'text.secondary',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                    display: 'block',
+                                    mb: 0.5,
                                 }}
                             >
                                 {translate(
@@ -286,126 +231,223 @@ export const ToolCallView: React.FC<ToolCallViewProps> = ({
                                 )}
                             </Typography>
                             <Box
-                                component="pre"
                                 sx={{
-                                    m: 0,
-                                    mt: 0.5,
-                                    p: 1,
-                                    borderRadius: 1,
+                                    position: 'relative',
+                                    borderRadius: 2,
                                     backgroundColor:
                                         theme.palette.mode === 'dark'
                                             ? alpha(
                                                   theme.palette.common.white,
-                                                  0.05
+                                                  0.04
                                               )
                                             : alpha(
                                                   theme.palette.grey[500],
                                                   0.08
                                               ),
-                                    fontSize: '0.75rem',
-                                    fontFamily: 'monospace',
-                                    overflowX: 'auto',
-                                    maxHeight: 200,
-                                    whiteSpace: 'pre-wrap',
-                                    wordBreak: 'break-all',
+                                    overflow: 'hidden',
+                                    '&:hover .copy-btn': {
+                                        opacity: 1,
+                                    },
                                 }}
                             >
-                                {formatPayload(args) ||
-                                    translate(
-                                        'messages.assistant.tool.no_parameters',
-                                        {
-                                            _: '(no parameters)',
+                                <Tooltip
+                                    title={
+                                        copiedParam
+                                            ? translate(
+                                                  'messages.assistant.tool.copied',
+                                                  { _: 'Copied!' }
+                                              )
+                                            : translate(
+                                                  'messages.assistant.tool.copy_parameters',
+                                                  { _: 'Copy' }
+                                              )
+                                    }
+                                >
+                                    <IconButton
+                                        className="copy-btn"
+                                        size="small"
+                                        onClick={e =>
+                                            handleCopy(e, args, setCopiedParam)
                                         }
-                                    )}
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 6,
+                                            right: 6,
+                                            opacity: 0,
+                                            transition: 'opacity 0.2s',
+                                            p: 0.5,
+                                            color: 'text.secondary',
+                                            backgroundColor: alpha(
+                                                theme.palette.background.paper,
+                                                0.7
+                                            ),
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.background
+                                                        .paper,
+                                            },
+                                        }}
+                                    >
+                                        {copiedParam ? (
+                                            <CheckIcon
+                                                sx={{
+                                                    fontSize: 14,
+                                                    color: 'success.main',
+                                                }}
+                                            />
+                                        ) : (
+                                            <ContentCopyIcon
+                                                sx={{ fontSize: 14 }}
+                                            />
+                                        )}
+                                    </IconButton>
+                                </Tooltip>
+                                <Box
+                                    component="pre"
+                                    sx={{
+                                        m: 0,
+                                        p: 1.5,
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.78rem',
+                                        lineHeight: 1.5,
+                                        overflowX: 'auto',
+                                        maxHeight: 240,
+                                        whiteSpace: 'pre-wrap',
+                                        wordBreak: 'break-all',
+                                        color: 'text.primary',
+                                    }}
+                                >
+                                    {formatPayload(args) || '(no parameters)'}
+                                </Box>
                             </Box>
                         </Box>
                     )}
 
-                    {/* Result / Output Section */}
+                    {/* Result Block */}
                     {(result !== undefined || error) && (
-                        <Box sx={{ mt: 1.5 }}>
-                            <Box
+                        <Box>
+                            <Typography
+                                variant="caption"
                                 sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
+                                    color: isError
+                                        ? 'error.main'
+                                        : 'text.secondary',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                    display: 'block',
+                                    mb: 0.5,
                                 }}
                             >
-                                <Typography
-                                    variant="caption"
-                                    fontWeight={700}
-                                    color={isError ? 'error' : 'text.secondary'}
-                                    sx={{
-                                        textTransform: 'uppercase',
-                                        letterSpacing: 0.5,
-                                    }}
-                                >
-                                    {isError
-                                        ? translate(
-                                              'messages.assistant.tool.error_output',
-                                              { _: 'Error Output' }
+                                {isError
+                                    ? translate(
+                                          'messages.assistant.tool.error_output',
+                                          { _: 'Error' }
+                                      )
+                                    : translate(
+                                          'messages.assistant.tool.result',
+                                          {
+                                              _: 'Result',
+                                          }
+                                      )}
+                            </Typography>
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    borderRadius: 2,
+                                    backgroundColor: isError
+                                        ? alpha(theme.palette.error.main, 0.08)
+                                        : theme.palette.mode === 'dark'
+                                        ? alpha(
+                                              theme.palette.common.white,
+                                              0.04
                                           )
-                                        : translate(
-                                              'messages.assistant.tool.result',
-                                              {
-                                                  _: 'Result',
-                                              }
-                                          )}
-                                </Typography>
+                                        : alpha(theme.palette.grey[500], 0.08),
+                                    overflow: 'hidden',
+                                    '&:hover .copy-btn': {
+                                        opacity: 1,
+                                    },
+                                }}
+                            >
                                 <Tooltip
                                     title={
-                                        copied
+                                        copiedResult
                                             ? translate(
                                                   'messages.assistant.tool.copied',
                                                   { _: 'Copied!' }
                                               )
                                             : translate(
                                                   'messages.assistant.tool.copy_result',
-                                                  { _: 'Copy Result' }
+                                                  { _: 'Copy' }
                                               )
                                     }
                                 >
                                     <IconButton
+                                        className="copy-btn"
                                         size="small"
-                                        onClick={handleCopy}
-                                        sx={{ p: 0.5 }}
+                                        onClick={e =>
+                                            handleCopy(
+                                                e,
+                                                error || result,
+                                                setCopiedResult
+                                            )
+                                        }
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 6,
+                                            right: 6,
+                                            opacity: 0,
+                                            transition: 'opacity 0.2s',
+                                            p: 0.5,
+                                            color: 'text.secondary',
+                                            backgroundColor: alpha(
+                                                theme.palette.background.paper,
+                                                0.7
+                                            ),
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    theme.palette.background
+                                                        .paper,
+                                            },
+                                        }}
                                     >
-                                        <ContentCopyIcon fontSize="inherit" />
+                                        {copiedResult ? (
+                                            <CheckIcon
+                                                sx={{
+                                                    fontSize: 14,
+                                                    color: 'success.main',
+                                                }}
+                                            />
+                                        ) : (
+                                            <ContentCopyIcon
+                                                sx={{ fontSize: 14 }}
+                                            />
+                                        )}
                                     </IconButton>
                                 </Tooltip>
-                            </Box>
-                            <Box
-                                component="pre"
-                                sx={{
-                                    m: 0,
-                                    mt: 0.5,
-                                    p: 1,
-                                    borderRadius: 1,
-                                    backgroundColor: isError
-                                        ? alpha(theme.palette.error.main, 0.1)
-                                        : theme.palette.mode === 'dark'
-                                        ? alpha(
-                                              theme.palette.common.white,
-                                              0.05
-                                          )
-                                        : alpha(theme.palette.grey[500], 0.08),
-                                    color: isError
-                                        ? theme.palette.error.main
-                                        : theme.palette.text.primary,
-                                    fontSize: '0.75rem',
-                                    fontFamily: 'monospace',
-                                    overflowX: 'auto',
-                                    maxHeight: 260,
-                                    whiteSpace: 'pre-wrap',
-                                    wordBreak: 'break-all',
-                                }}
-                            >
-                                {error || formatPayload(result)}
+                                <Box
+                                    component="pre"
+                                    sx={{
+                                        m: 0,
+                                        p: 1.5,
+                                        fontFamily: 'monospace',
+                                        fontSize: '0.78rem',
+                                        lineHeight: 1.5,
+                                        overflowX: 'auto',
+                                        maxHeight: 280,
+                                        whiteSpace: 'pre-wrap',
+                                        wordBreak: 'break-all',
+                                        color: isError
+                                            ? theme.palette.error.main
+                                            : 'text.primary',
+                                    }}
+                                >
+                                    {error || formatPayload(result)}
+                                </Box>
                             </Box>
                         </Box>
                     )}
                 </Box>
             </Collapse>
-        </Paper>
+        </Box>
     );
 };

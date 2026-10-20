@@ -34,6 +34,7 @@ import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ToolCallView } from './ToolCallView';
+import { ToolGroupView } from './ToolGroupView';
 import { useTranslate } from 'react-admin';
 import { useNavigate } from 'react-router-dom';
 import { useAssistant } from '../AssistantContext';
@@ -326,6 +327,7 @@ const MessageView: FC = () => {
                                     tools: {
                                         Fallback: ToolCallRenderer,
                                     },
+                                    ToolGroup: ToolGroupView,
                                 }}
                             />
                         </Paper>
