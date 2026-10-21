@@ -123,11 +123,10 @@ export const ToolCallView: React.FC<ToolCallViewProps> = ({
     ) => {
         e.stopPropagation();
         const textToCopy = formatPayload(data);
-        if (textToCopy) {
-            navigator.clipboard.writeText(textToCopy);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
+        if (!textToCopy) return;
+        navigator.clipboard.writeText(textToCopy);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     return (

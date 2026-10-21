@@ -2,10 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
     ThreadPrimitive,
     MessagePrimitive,
+    ActionBarPrimitive,
     ComposerPrimitive,
     AuiIf,
     useAuiState,
@@ -24,6 +25,7 @@ import SendIcon from '@mui/icons-material/Send';
 import StopIcon from '@mui/icons-material/Stop';
 import PersonIcon from '@mui/icons-material/Person';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import FolderIcon from '@mui/icons-material/Folder';
 import TableChartIcon from '@mui/icons-material/TableChart';
@@ -230,7 +232,7 @@ const UserMessageText: FC = () => {
 const MessageView: FC = () => {
     const theme = useTheme();
     const translate = useTranslate();
-    const [copied, setCopied] = useState(false);
+    const isCopied = useAuiState(s => s.message.isCopied);
 
     return (
         <MessagePrimitive.Root
@@ -343,7 +345,7 @@ const MessageView: FC = () => {
                         >
                             <Tooltip
                                 title={
-                                    copied
+                                    isCopied
                                         ? translate(
                                               'messages.assistant.copied',
                                               {
@@ -358,22 +360,28 @@ const MessageView: FC = () => {
                                           )
                                 }
                             >
-                                <IconButton
-                                    size="small"
-                                    onClick={() => {
-                                        setCopied(true);
-                                        setTimeout(
-                                            () => setCopied(false),
-                                            2000
-                                        );
-                                    }}
-                                    sx={{
-                                        opacity: 0.7,
-                                        '&:hover': { opacity: 1 },
-                                    }}
-                                >
-                                    <ContentCopyIcon sx={{ fontSize: 14 }} />
-                                </IconButton>
+                                <ActionBarPrimitive.Copy asChild>
+                                    <IconButton
+                                        size="small"
+                                        sx={{
+                                            opacity: 0.7,
+                                            '&:hover': { opacity: 1 },
+                                        }}
+                                    >
+                                        {isCopied ? (
+                                            <CheckIcon
+                                                sx={{
+                                                    fontSize: 14,
+                                                    color: 'success.main',
+                                                }}
+                                            />
+                                        ) : (
+                                            <ContentCopyIcon
+                                                sx={{ fontSize: 14 }}
+                                            />
+                                        )}
+                                    </IconButton>
+                                </ActionBarPrimitive.Copy>
                             </Tooltip>
                         </Box>
                     </Box>
