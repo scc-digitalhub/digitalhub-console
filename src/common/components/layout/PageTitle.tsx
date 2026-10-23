@@ -9,6 +9,7 @@ import {
     useEditContext,
     useGetResourceLabel,
     useListContext,
+    useResourceContext,
     useResourceDefinition,
     useShowContext,
     useTranslate,
@@ -173,11 +174,11 @@ export const ShowPageTitle = (props: RecordPageTitleProps) => {
 };
 
 export const CreatePageTitle = (props: RecordPageTitleProps) => {
-    const { resource } = useCreateContext();
+    const resource = useResourceContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-    const label = getResourceLabel(resource, 1).toLowerCase();
+    const label = resource ? getResourceLabel(resource, 1).toLowerCase() : '';
 
     return (
         <PageTitle

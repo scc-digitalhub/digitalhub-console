@@ -91,10 +91,11 @@ const Lineage = ({ showIsolatedNodes }: { showIsolatedNodes: boolean }) => {
             //get lineage of each resource and collect responses
             let promises: Promise<{ lineage: Relationship[] }>[] =
                 nodesToBe.map(n =>
-                    dataProvider.getLineage(n.resource, {
-                        id: n.record.id,
-                        meta: { root: project.id },
-                    })
+                    dataProvider
+                        .invoke({
+                            path: `/-/${project.id}/${n.resource}/${n.record.id}/relationships`,
+                        })
+                        .then(data => ({ lineage: data }))
                 );
 
             //wait for results and set relationships
@@ -140,10 +141,11 @@ const Lineage = ({ showIsolatedNodes }: { showIsolatedNodes: boolean }) => {
                     //get runs lineage
                     Promise.allSettled(
                         runs.map(r =>
-                            dataProvider.getLineage('runs', {
-                                id: r.id,
-                                meta: { root: project.id },
-                            })
+                            dataProvider
+                                .invoke({
+                                    path: `/-/${project.id}/runs/${r.id}/relationships`,
+                                })
+                                .then(data => ({ lineage: data }))
                         )
                     ).then(results => {
                         //ignore rejected in case some runs are not found

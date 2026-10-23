@@ -4,14 +4,10 @@
 
 import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { Step, StepperForm } from '@dslab/ra-stepper';
-import { useRootSelector } from '@dslab/ra-root-selector';
 import { DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {
-    CreateBase,
     useGetResourceLabel,
-    useNotify,
-    useRedirect,
     useResourceContext,
     useTranslate,
 } from 'react-admin';
@@ -22,40 +18,21 @@ import { useExtensionsSteps } from '../../../features/extensions/steps';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { randomId } from '../../../common/utils/helpers';
-import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
-import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
 import { StyledDialogClasses } from '../../../common/theme/StyledDialog';
-import { transformModelData } from './utils';
+import { ModelCreate } from './create';
 
 export const ModelUpload = ({ closeDialog, handleClose }: any) => {
-    const { root } = useRootSelector();
     const resource = useResourceContext();
-    const [id] = useState(randomId);
-    const uploader = useResourceUploader({ id });
     const translate = useTranslate();
-    const notify = useNotify();
-    const redirect = useRedirect();
     const getResourceLabel = useGetResourceLabel();
+    const [id] = useState(randomId);
 
-    const onSettled = async (data, error) => {
-        if (error) return;
-        await uploader.prepare(data);
-        uploader.start();
+    const onSettled = () => {
         closeDialog();
-        notify('ra.notification.created', { messageArgs: { smart_count: 1 } });
-        redirect('list', resource);
     };
 
     return (
-        <CreateBase
-            resource={resource}
-            redirect={false}
-            transform={data =>
-                transformModelData(data, root, uploader.files.length > 0)
-            }
-            mutationOptions={{ onSettled }}
-            record={{ id, spec: {} }}
-        >
+        <>
             <div className={StyledDialogClasses.header}>
                 <DialogTitle
                     id="create-dialog-title"
@@ -79,11 +56,15 @@ export const ModelUpload = ({ closeDialog, handleClose }: any) => {
                 sx={{ p: 0 }}
                 className={StyledDialogClasses.content}
             >
-                <UploadCoordinatorContext.Provider value={uploader}>
+                <ModelCreate
+                    id={id}
+                    redirect="list"
+                    mutationOptions={{ onSettled }}
+                >
                     <ModelUploadForm />
-                </UploadCoordinatorContext.Provider>
+                </ModelCreate>
             </DialogContent>
-        </CreateBase>
+        </>
     );
 };
 

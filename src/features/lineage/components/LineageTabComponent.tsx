@@ -41,11 +41,12 @@ export const LineageTabComponent = () => {
 
     useEffect(() => {
         if (dataProvider && record) {
+            const path = `/-/${record.project}/${resource}/${record.id}/relationships`;
             dataProvider
-                .getLineage(resource, { id: record.id, meta: { root } })
+                .invoke({ path })
                 .then(data => {
-                    if (data?.lineage) {
-                        setRelationships([...data.lineage]);
+                    if (data) {
+                        setRelationships([...data]);
                     }
                 })
                 .catch(error => {

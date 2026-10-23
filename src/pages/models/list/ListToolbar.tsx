@@ -5,7 +5,7 @@
 import { ColumnsButton, CreateButton, TopToolbar } from 'react-admin';
 import { ImportButton } from '../../../common/components/buttons/ImportButton';
 import { UploadCreateButton } from '../../../common/components/buttons/UploadCreateButton';
-import { ModelUpload } from '../create/ModelUpload';
+import { ModelUpload } from '../create/UploadView';
 import {
     View,
     ViewSelector,

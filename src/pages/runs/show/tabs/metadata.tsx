@@ -45,6 +45,11 @@ export const RunMetadata = (props?: UseRecordContextParams) => {
                     <IdField source="id" />
                 </Labeled>
             </Stack>
+
+            <Labeled>
+                <IdField source="project" />
+            </Labeled>
+
             <Labeled>
                 <IdField source="key" />
             </Labeled>

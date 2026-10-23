@@ -5,12 +5,14 @@
 import yamlExporter from '@dslab/ra-export-yaml';
 import { Box, Container, Typography, useTheme } from '@mui/material';
 import {
+    AccessDenied,
     ColumnsButton,
     DataTable,
     DateField,
     EditButton,
     FunctionField,
     ListView,
+    LoadingIndicator,
     ShowButton,
     SimpleList,
     TextField,
@@ -18,6 +20,7 @@ import {
     TopToolbar,
     useGetResourceLabel,
     useListContext,
+    usePermissions,
     useResourceContext,
     useStore,
     useTranslate,
@@ -83,6 +86,18 @@ const ListToolbar = (props: {
                 />
             )}
         </TopToolbar>
+    );
+};
+
+export const AdminContainerImageList = () => {
+    const { isPending, permissions } = usePermissions();
+
+    return isPending ? (
+        <LoadingIndicator />
+    ) : permissions?.find(r => r === 'ROLE_ADMIN') ? (
+        <ContainerImageList />
+    ) : (
+        <AccessDenied />
     );
 };
 
@@ -176,6 +191,7 @@ const DataTableView = (props: { storeKey?: string }) => {
             hiddenColumns={[
                 'id',
                 'kind',
+                'project',
                 'status.digest',
                 'created_by',
                 'metadata.created_by',
@@ -190,6 +206,7 @@ const DataTableView = (props: { storeKey?: string }) => {
             />
             <DataTable.Col source="id" label="fields.id" />
             <DataTable.Col source="kind" label="fields.kind" />
+            <DataTable.Col source="project" label="fields.project.title" />
 
             <DataTable.Col
                 source="spec.image"

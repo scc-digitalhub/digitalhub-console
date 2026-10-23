@@ -279,6 +279,10 @@ const springDataProvider = (
             if (params.meta?.deleteAll === true && params.meta?.name) {
                 url = `${apiUrl}${prefix}/${resource}?name=${params.meta.name}${
                     params.meta?.cascade ? '&cascade=true' : ''
+                }${
+                    params.meta?.project
+                        ? '&project=' + params.meta.project
+                        : ''
                 }`;
             }
 
@@ -363,21 +367,21 @@ const springDataProvider = (
                 };
             });
         },
-        getLineage: (resource, params) => {
-            let prefix = '';
-            if (resource !== 'projects' && params.meta?.root) {
-                prefix = '/-/' + params.meta.root;
-            }
-            const url = `${apiUrl}${prefix}/${resource}/${params.id}/relationships`;
-            return httpClient(url).then(({ status, json }) => {
-                if (status !== 200) {
-                    throw new Error('Invalid response status ' + status);
-                }
-                return {
-                    lineage: json,
-                };
-            });
-        },
+        // getLineage: (resource, params) => {
+        //     let prefix = '';
+        //     if (resource !== 'projects' && params.meta?.root) {
+        //         prefix = '/-/' + params.meta.root;
+        //     }
+        //     const url = `${apiUrl}${prefix}/${resource}/${params.id}/relationships`;
+        //     return httpClient(url).then(({ status, json }) => {
+        //         if (status !== 200) {
+        //             throw new Error('Invalid response status ' + status);
+        //         }
+        //         return {
+        //             lineage: json,
+        //         };
+        //     });
+        // },
         getMetrics: (resource, params) => {
             let prefix = '';
             if (resource !== 'projects' && params.meta?.root) {
@@ -464,7 +468,7 @@ const springDataProvider = (
                     extensions: json,
                 };
             });
-        }
+        },
     };
 };
 

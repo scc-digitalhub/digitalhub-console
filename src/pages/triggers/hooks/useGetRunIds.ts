@@ -4,10 +4,7 @@
 
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useEffect, useState } from 'react';
-import {
-    useDataProvider,
-    useRecordContext,
-} from 'react-admin';
+import { useDataProvider, useRecordContext } from 'react-admin';
 import { Relationship } from '../../../features/lineage';
 import { keyParser } from '../../../common/utils/parsers';
 import { RunIdsResult } from './types';
@@ -25,11 +22,13 @@ export const useGetRunIds = (): RunIdsResult => {
     useEffect(() => {
         if (dataProvider && record) {
             dataProvider
-                .getLineage('triggers', { id: record.id, meta: { root } })
-                .then((data: { lineage: Relationship[] }) => {
-                    if (data?.lineage) {
+                .invoke({
+                    path: `/-/${record.project}/trigger/${record.id}/relationships`,
+                })
+                .then((data: Relationship[]) => {
+                    if (data) {
                         let rels: string[] = [];
-                        data.lineage.forEach(rel => {
+                        data.forEach(rel => {
                             const id = rel.source
                                 ? keyParser(rel.source).id
                                 : undefined;

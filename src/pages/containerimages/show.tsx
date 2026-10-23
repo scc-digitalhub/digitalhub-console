@@ -12,14 +12,17 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
+    AccessDenied,
     ArrayField,
     DataTable,
     FunctionField,
     Labeled,
+    LoadingIndicator,
     RecordContext,
     ShowView,
     TextField,
     useDataProvider,
+    usePermissions,
     useRecordContext,
     useResourceContext,
     useTranslate,
@@ -381,5 +384,17 @@ const ContainerImageInfoView = () => {
                 </RecordContext.Provider>
             )}
         </Stack>
+    );
+};
+
+export const AdminContainerImageShow = () => {
+    const { isPending, permissions } = usePermissions();
+
+    return isPending ? (
+        <LoadingIndicator />
+    ) : permissions?.find(r => r === 'ROLE_ADMIN') ? (
+        <ContainerImageShow />
+    ) : (
+        <AccessDenied />
     );
 };

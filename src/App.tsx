@@ -114,6 +114,7 @@ const httpClientProvider =
         ? DefaultHttpProxyProvider(API_URL, httpClient)
         : ExternalHttpProxyProvider(PROXY_URL, authProvider);
 const searchProvider = initSearchProvider(API_URL, httpClient);
+
 const MyLoginPage =
     authProvider && ISSUER_URI && CLIENT_ID ? <OidcLoginPage /> : undefined;
 
@@ -163,6 +164,9 @@ import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
 import { AdminRunList } from './pages/runs/list/RunList';
 import { AdminRunShow } from './pages/runs/show/show';
 import { LogsView } from './pages/logs/LogsView';
+import { ResourceTemplateProvider } from './common/provider/templateProvider';
+import { AdminContainerImageShow } from './pages/containerimages/show';
+import { AdminContainerImageList } from './pages/containerimages/list';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -198,21 +202,27 @@ const CoreApp = () => {
                                 dataProvider={dataProvider}
                                 resource="schemas"
                             >
-                                <StompContextProvider
-                                    authProvider={authProvider}
-                                    websocketUrl={WEBSOCKET_URL}
-                                    topics={['/user/notifications/runs']}
+                                <ResourceTemplateProvider
+                                    dataProvider={dataProvider}
                                 >
-                                    <HttpClientContextProvider
-                                        httpClientProvider={httpClientProvider}
+                                    <StompContextProvider
+                                        authProvider={authProvider}
+                                        websocketUrl={WEBSOCKET_URL}
+                                        topics={['/user/notifications/runs']}
                                     >
-                                        <FileContextProvider
-                                            fileProvider={fileProvider}
+                                        <HttpClientContextProvider
+                                            httpClientProvider={
+                                                httpClientProvider
+                                            }
                                         >
-                                            <AdminUIWithExtensions />
-                                        </FileContextProvider>
-                                    </HttpClientContextProvider>
-                                </StompContextProvider>
+                                            <FileContextProvider
+                                                fileProvider={fileProvider}
+                                            >
+                                                <AdminUIWithExtensions />
+                                            </FileContextProvider>
+                                        </HttpClientContextProvider>
+                                    </StompContextProvider>
+                                </ResourceTemplateProvider>
                             </ResourceSchemaProvider>
                         </SearchContextProvider>
                     </ConsoleExtensionRegistryProvider>
@@ -314,34 +324,48 @@ const InitialWrapper = () => {
                         dataProvider={dataProvider}
                         resource="schemas"
                     >
-                        <AdminUI
-                            dashboard={ProjectSelectorList}
-                            layout={LayoutInitialApp}
-                            loginPage={MyLoginPage}
-                            requireAuth={!!authProvider}
-                            disableTelemetry
+                        <HttpClientContextProvider
+                            httpClientProvider={httpClientProvider}
                         >
-                            <Resource {...projectDefinition} />
-                            <Resource name="tokens/refresh" />
-                            <Resource name="tokens/personal" />
-                            <Resource
-                                {...runDefinition}
-                                list={AdminRunList}
-                                show={AdminRunShow}
-                            />
-                            <Resource name="schemas" />
-                            <CustomRoutes>
-                                <Route
-                                    path="/account"
-                                    element={<MyAccount />}
-                                />
-                                <Route path="/logs" element={<LogsView />} />
-                                <Route
-                                    path="/profiles"
-                                    element={<ProfilesPage />}
-                                />
-                            </CustomRoutes>
-                        </AdminUI>
+                            <FileContextProvider fileProvider={fileProvider}>
+                                <AdminUI
+                                    dashboard={ProjectSelectorList}
+                                    layout={LayoutInitialApp}
+                                    loginPage={MyLoginPage}
+                                    requireAuth={!!authProvider}
+                                    disableTelemetry
+                                >
+                                    <Resource {...projectDefinition} />
+                                    <Resource name="tokens/refresh" />
+                                    <Resource name="tokens/personal" />
+                                    <Resource
+                                        {...runDefinition}
+                                        list={AdminRunList}
+                                        show={AdminRunShow}
+                                    />
+                                    <Resource
+                                        {...containerImageDefinition}
+                                        list={AdminContainerImageList}
+                                        show={AdminContainerImageShow}
+                                    />
+                                    <Resource name="schemas" />
+                                    <CustomRoutes>
+                                        <Route
+                                            path="/account"
+                                            element={<MyAccount />}
+                                        />
+                                        <Route
+                                            path="/logs"
+                                            element={<LogsView />}
+                                        />
+                                        <Route
+                                            path="/profiles"
+                                            element={<ProfilesPage />}
+                                        />
+                                    </CustomRoutes>
+                                </AdminUI>
+                            </FileContextProvider>
+                        </HttpClientContextProvider>
                     </ResourceSchemaProvider>
                 </SearchContextProvider>
             </AdminContext>

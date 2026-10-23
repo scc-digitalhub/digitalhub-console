@@ -2,18 +2,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-    JSXElementConstructor,
-    ReactElement,
-    useEffect,
-    useState,
-} from 'react';
+import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { Box, Container } from '@mui/material';
+import { Box, Container, LinearProgress } from '@mui/material';
 import {
     CreateBase,
     CreateView,
-    useDataProvider,
     useNotify,
     useRedirect,
     useResourceContext,
@@ -35,34 +29,17 @@ import { useExtensionsSteps } from '../../../features/extensions/steps';
 import { DataItemSpecStep, BaseStep, UploadStep } from './steps';
 import { transformDataItemData } from './utils';
 import { TemplatesSelector } from '../../../common/components/TemplatesSelector';
+import { useGetTemplates } from '../../../common/provider/templateProvider';
 
 export const DataItemCreate = () => {
     const { root } = useRootSelector();
-    const dataProvider = useDataProvider();
     const [id] = useState(randomId);
     const notify = useNotify();
     const redirect = useRedirect();
     const resource = useResourceContext();
     const uploader = useResourceUploader({ id });
-    const [templates, setTemplates] = useState<any[] | undefined>();
+    const { data: templates, isLoading } = useGetTemplates(resource);
     const [template, setTemplate] = useState<any | undefined>();
-
-    useEffect(() => {
-        if (dataProvider) {
-            dataProvider
-                .getList('templates', {
-                    pagination: { page: 1, perPage: 100 },
-                    sort: { field: 'name', order: 'ASC' },
-                    filter: { type: resource?.slice(0, -1) },
-                })
-                .then(({ data }) => {
-                    setTemplates(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching templates:', error);
-                });
-        }
-    }, [resource, dataProvider]);
 
     const onSuccess = () => {};
 
@@ -99,8 +76,9 @@ export const DataItemCreate = () => {
 
                     <CreateView component={Box} actions={<CreateToolbar />}>
                         <FlatCard sx={{ paddingBottom: '12px' }}>
-                            {' '}
-                            {templates &&
+                            {isLoading ? (
+                                <LinearProgress />
+                            ) : templates &&
                             templates.length > 0 &&
                             template === undefined ? (
                                 <TemplatesSelector

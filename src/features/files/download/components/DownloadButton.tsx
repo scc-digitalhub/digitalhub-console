@@ -15,6 +15,7 @@ import {
 import DownloadIcon from '@mui/icons-material/GetApp';
 import { ReactElement } from 'react';
 import { useDownload } from '../useDownload';
+import { DownloadParams, ResourceDownloadParams } from '../types';
 
 const defaultIcon = <DownloadIcon fontSize="small" />;
 
@@ -42,14 +43,14 @@ export const DownloadButton = (props: DownloadButtonProps) => {
     const fileName = fileNameProp || record.name;
 
     const handleDownload = () => {
-        const params =
-            resource && record.id
-                ? {
-                      resource,
-                      id: record.id,
-                      sub,
-                  }
-                : { path };
+        let params: DownloadParams | ResourceDownloadParams;
+        if (pathProp) {
+            params = { path: pathProp };
+        } else if (resource && record.id) {
+            params = { resource, id: record.id, sub };
+        } else {
+            params = { path };
+        }
         download(params)
             .then(data => {
                 if (data?.url) {

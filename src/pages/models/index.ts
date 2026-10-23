@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ModelCreate } from './create/ModelCreate';
+import { ModelCreatePage } from './create/CreateView';
 import { ModelEdit } from './edit/ModelEdit';
 import { ModelIcon } from './icon';
 import { ModelList } from './list/ModelList';
@@ -13,7 +13,7 @@ export default {
     list: ModelList,
     icon: ModelIcon,
     show: ModelShow,
-    create: ModelCreate,
+    create: ModelCreatePage,
     edit: ModelEdit,
     options: {
         type: 'model',

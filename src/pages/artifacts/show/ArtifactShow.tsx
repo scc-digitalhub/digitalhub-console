@@ -25,6 +25,7 @@ import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { MetadataTab } from '../../../common/components/tabs/metadata';
 import { SpecTab } from '../../../common/components/tabs/spec';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { SarifTab } from './sarif';
 
 export const ArtifactShow = () => {
     return (
@@ -50,6 +51,11 @@ const ArtifactShowLayout = (props: { record?: any }) => {
     const record = useRecordContext(props);
     const translate = useTranslate();
     const extensionTabs = useExtensionsTabs({ source: 'extensions' });
+    const hasSecurityReport =
+        Array.isArray(record?.extensions) &&
+        record.extensions.some(
+            (extension: any) => extension?.kind === 'secops-report'
+        );
 
     if (!record) return <></>;
 
@@ -93,6 +99,14 @@ const ArtifactShowLayout = (props: { record?: any }) => {
             </CustomTabbedShowLayout.Tab>
 
             {extensionTabs}
+            {hasSecurityReport && (
+                <CustomTabbedShowLayout.Tab
+                    value="security-assessment"
+                    label="Security Assessment"
+                >
+                    <SarifTab />
+                </CustomTabbedShowLayout.Tab>
+            )}
             <CustomTabbedShowLayout.Tab
                 value="lineage"
                 label="pages.lineage.title"

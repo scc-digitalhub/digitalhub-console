@@ -85,15 +85,13 @@ export const RecordLineage = (props: {
             const { resource, id } = keyParser(key);
 
             if (resource && id) {
+                const path = `/-/${record.project}/${resource}/${id}/relationships`;
                 dataProvider
-                    ?.getLineage(resource, {
-                        id,
-                        meta: { root },
-                    })
+                    .invoke({ path })
                     .then(data => {
-                        if (data?.lineage) {
+                        if (data) {
                             //extract requested side from list of rels
-                            const rels = data.lineage
+                            const rels = data
                                 .filter(filterRelationships)
                                 .filter(r => r[as] == key)
                                 .map(exp => ({ ...exp, expands: nodeId }));

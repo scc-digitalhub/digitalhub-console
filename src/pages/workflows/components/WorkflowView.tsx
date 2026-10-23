@@ -100,10 +100,12 @@ export const WorkflowView = (props: WorkflowViewProps) => {
     useEffect(() => {
         if (record && dataProvider) {
             dataProvider
-                .getLineage('runs', { id: record.id, meta: { root } })
-                .then((data: { lineage: Relationship[] }) => {
-                    if (data?.lineage) {
-                        const ids = data.lineage
+                .invoke({
+                    path: `/-/${record.project}/runs/${record.id}/relationships`,
+                })
+                .then((data: Relationship[]) => {
+                    if (data) {
+                        const ids = data
                             .filter(r => r.type === 'step_of')
                             .map(r =>
                                 r.source ? keyParser(r.source).id : undefined

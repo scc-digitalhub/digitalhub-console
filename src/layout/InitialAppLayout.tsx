@@ -77,6 +77,8 @@ const InitialMenu = () => {
             )}
             {isAdmin && <Menu.ResourceItem name="projects" />}
             {isAdmin && <Menu.ResourceItem name="runs" />}
+            {isAdmin && <Menu.ResourceItem name="containerimages" />}
+
             {isAdmin && (
                 <MenuItemLink
                     leftIcon={<ProfilesIcon />}

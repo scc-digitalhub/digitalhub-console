@@ -35,6 +35,7 @@ export const DeleteWithConfirmButtonByName = <
         meta: {
             deleteAll,
             name: record.name,
+            project: record.project,
             cascade,
         },
     };

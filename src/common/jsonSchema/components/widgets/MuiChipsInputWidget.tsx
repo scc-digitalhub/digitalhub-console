@@ -5,7 +5,7 @@
 import { Chip, FormControl, InputLabel, Stack } from '@mui/material';
 import { WidgetProps } from '@rjsf/utils';
 import { MuiChipsInput } from 'mui-chips-input';
-import { useState, FocusEvent } from 'react';
+import { FocusEvent } from 'react';
 import { useTranslate } from 'react-admin';
 import { getLabelIcon } from '../../../components/Labels';
 
@@ -21,13 +21,12 @@ export const MuiChipsInputWidget = function (props: WidgetProps) {
         onChange,
         onFocus,
     } = props;
-    const [list, setList] = useState<string[]>(value || []);
+    const list = value || [];
     const translate = useTranslate();
     const placeholder = translate('messages.type_and_press_enter');
     const helperText = translate('messages.double_click_to_edit');
 
     const handleChange = chips => {
-        setList(chips);
         onChange(chips);
     };
     const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
