@@ -49,6 +49,7 @@ export const ModelCreatePage = () => {
                 ) : (
                     <ModelCreate template={template} id={id} redirect="list">
                         <ModelCreateForm
+                            isFromTemplate={!!template}
                             onCancel={() => {
                                 if (templates?.length) {
                                     setTemplate(undefined);
@@ -64,8 +65,11 @@ export const ModelCreatePage = () => {
     );
 };
 
-export const ModelCreateForm = (props: { onCancel?: () => void }) => {
-    const { onCancel } = props;
+export const ModelCreateForm = (props: {
+    isFromTemplate?: boolean;
+    onCancel?: () => void;
+}) => {
+    const { isFromTemplate, onCancel } = props;
     const resource = useResourceContext();
 
     const { data: kindSchemas } = useGetSchemas(resource || '');
@@ -83,8 +87,8 @@ export const ModelCreateForm = (props: { onCancel?: () => void }) => {
             <BaseStep />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label={'fields.spec.title'}>
-            <ModelSpecStep kinds={kinds} />
-            <UploadStep />
+            <ModelSpecStep kinds={kinds} readOnlyKind={isFromTemplate} />
+            <UploadStep readOnly={isFromTemplate} />
         </StepperForm.Step>,
     ];
 

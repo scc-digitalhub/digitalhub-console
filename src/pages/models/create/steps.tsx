@@ -35,9 +35,11 @@ export const BaseStep = () => {
 export const ModelSpecStep = ({
     kinds,
     onKindChange,
+    readOnlyKind,
 }: {
     kinds: { id: string; name: string }[];
     onKindChange?: (kind: string | undefined) => void;
+    readOnlyKind?: boolean;
 }) => {
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
@@ -72,7 +74,7 @@ export const ModelSpecStep = ({
                     onKindChange?.(nextKind);
                 }}
             />
-            <KindSelector kinds={kinds} />
+            <KindSelector kinds={kinds} readOnly={readOnlyKind} />
             {schema && (
                 <SpecInput
                     source="spec"

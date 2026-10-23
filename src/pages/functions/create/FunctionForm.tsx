@@ -4,30 +4,31 @@
 
 import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { Box } from '@mui/material';
-import { TextInput, required } from 'react-admin';
-import { KindSelector } from '../../../common/components/KindSelector';
+import { TextInput, required, useResourceContext } from 'react-admin';
+import {
+    KindSelector,
+    KindChangeGuard,
+} from '../../../common/components/KindSelector';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { ExtensionsForm } from '../../../features/extensions/components/Form';
-import { useGetExtensions } from '../../../features/extensions/utils';
-import { KindChangeGuard } from '../../../common/components/KindSelector';
-import { useExtensionsSteps } from '../../../features/extensions/steps';
+import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 
-export const FunctionForm = (props: {
-    kinds?: { id: string; name: string }[];
+export const FunctionCreateForm = (props: {
     isFromTemplate?: boolean;
-    cancelUrl?: string;
     onCancel?: () => void;
 }) => {
-    const { kinds, isFromTemplate, cancelUrl, onCancel } = props;
+    const { isFromTemplate, onCancel } = props;
+    const resource = useResourceContext();
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
 
-    const { data: extensions } = useGetExtensions();
-    const contributions = useExtensionsSteps();
+    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const kinds = kindSchemas
+        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
+        : [];
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm
@@ -35,7 +36,7 @@ export const FunctionForm = (props: {
         <StepperForm.Step key="kind" label="fields.kind">
             <FunctionKindStepContent
                 kinds={kinds}
-                isFromTemplate={isFromTemplate}
+                readOnly={isFromTemplate}
                 isSpecDirty={isSpecDirty}
                 onKindConfirm={setKind}
             />
@@ -48,27 +49,8 @@ export const FunctionForm = (props: {
         </StepperForm.Step>,
     ];
 
-    if (contributions && contributions.length > 0) {
-        steps.push(...contributions);
-    }
-
-    if (extensions && extensions.length > 0) {
-        steps.push(
-            <StepperForm.Step
-                key="extensions"
-                label={'fields.extensions.title'}
-            >
-                <ExtensionsForm source="extensions" />
-            </StepperForm.Step>
-        );
-    }
-
     return (
-        <StepperForm
-            toolbar={
-                <StepperToolbar cancelUrl={cancelUrl} onCancel={onCancel} />
-            }
-        >
+        <StepperForm toolbar={<StepperToolbar onCancel={onCancel} />}>
             {steps}
         </StepperForm>
     );
@@ -76,19 +58,19 @@ export const FunctionForm = (props: {
 
 const FunctionKindStepContent = ({
     kinds,
-    isFromTemplate,
+    readOnly,
     isSpecDirty,
     onKindConfirm,
 }: {
     kinds?: { id: string; name: string }[];
-    isFromTemplate?: boolean;
+    readOnly?: boolean;
     isSpecDirty: boolean;
     onKindConfirm: (nextKind: string | undefined) => void;
 }) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
             <KindChangeGuard isDirty={isSpecDirty} onConfirm={onKindConfirm} />
-            <KindSelector kinds={kinds} readOnly={isFromTemplate} />
+            <KindSelector kinds={kinds} readOnly={readOnly} />
         </Box>
     );
 };
@@ -112,11 +94,5 @@ const FunctionSpecStepContent = ({
     kind?: string;
     onSpecDirty: (dirty: boolean) => void;
 }) => {
-    return (
-        <SpecInput
-            source="spec"
-            kind={kind}
-            onDirty={onSpecDirty}
-        />
-    );
+    return <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />;
 };

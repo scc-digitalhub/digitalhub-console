@@ -50,7 +50,6 @@ export const ModelCreate = (props: {
     //initialize
     const [id] = useState(idProps ?? randomId);
     const uploader = useResourceUploader({ id });
-    console.log('create for ', id, template);
 
     const onSuccess = (
         data,

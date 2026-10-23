@@ -13,6 +13,10 @@ export const KindSelector = (props: {
 }) => {
     const { kinds = [], readOnly = false } = props;
 
+    if (!kinds || kinds.length === 0) {
+        return <></>;
+    }
+
     return (
         <SelectInput
             readOnly={readOnly}

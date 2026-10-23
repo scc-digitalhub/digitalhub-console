@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import { FunctionCreate } from './create/FunctionCreate';
+    
+import { FunctionCreateView } from './create/FunctionCreate';
 import { FunctionEdit } from './edit/FunctionEdit';
 import { FunctionIcon } from './icon';
 import { FunctionList } from './list/FunctionList';
@@ -13,7 +13,7 @@ export default {
     list: FunctionList,
     icon: FunctionIcon,
     show: FunctionShow,
-    create: FunctionCreate,
+    create: FunctionCreateView,
     edit: FunctionEdit,
     options: {
         type: 'function',
