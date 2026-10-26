@@ -7,14 +7,14 @@ import { Link } from 'react-router-dom';
 import {
     Button,
     ButtonProps,
-    useResourceContext,
-    useCreatePath,
+    useBasename,
 } from 'react-admin';
 import { HubIcon } from '../../../features/hub/components/HubIcon';
 
 export interface HubButtonProps extends Omit<ButtonProps, 'to'> {
     icon?: React.ReactElement;
     to?: string;
+    resource?: string;
 }
 
 export const HubButton = ({
@@ -22,14 +22,12 @@ export const HubButton = ({
     label = 'actions.hub',
     to,
     color = 'primary',
+    resource,
     ...rest
 }: HubButtonProps) => {
-    const resource = useResourceContext();
-    const createPath = useCreatePath();
+    const basename = useBasename();
 
-    const path =
-        to ||
-        (resource ? `${createPath({ resource, type: 'list' })}/hub` : '/');
+    const path = to || `${basename}/hub?resource=${resource}`;
 
     return (
         <Button

@@ -117,7 +117,7 @@ export const HubDetailToolbar = ({
                 </RaButton>
 
                 {/* import via stepper */}
-                <RaButton
+                {/* <RaButton
                     size="small"
                     variant="text"
                     color="primary"
@@ -126,7 +126,7 @@ export const HubDetailToolbar = ({
                     sx={{ marginLeft: 'auto' }}
                 >
                     <ContentAdd />
-                </RaButton>
+                </RaButton> */}
 
                 {/* add direct: salta lo stepper */}
                 <RaButton
@@ -135,6 +135,7 @@ export const HubDetailToolbar = ({
                     color="primary"
                     label="actions.import"
                     onClick={() => setConfirmOpen(true)}
+                    sx={{ marginLeft: 'auto' }}
                     disabled={loading}
                 >
                     <FlashOnIcon fontSize="small" />

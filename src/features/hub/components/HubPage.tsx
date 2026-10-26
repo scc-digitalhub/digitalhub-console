@@ -29,10 +29,10 @@ const extractFilters = (items: any[]): Record<string, string[]> => {
 };
 //type of resource passed as prop to filter by type and show/hide type filter
 interface HubPageProps {
-    resourceName?: string;
+    resource?: string;
 }
 
-export const HubPage = ({ resourceName }: HubPageProps) => {
+export const HubPage = ({ resource: resourceName }: HubPageProps) => {
     const [filterValues, setFilterValues] = useState<Record<string, any>>({});
     const [selectedTemplate, setSelectedTemplate] = useState<any | null>(null);
     const [catalogData, setCatalogData] = useState<any>(null);
@@ -74,6 +74,7 @@ export const HubPage = ({ resourceName }: HubPageProps) => {
             }))
         );
     }, [catalogData, currentResource, hubResources]);
+    
     //filter items based on search query, resource type filter and other label filters
     //useMemo for performance optimization, so that filtering is only recalculated when fullItems or filterValues change
     const filteredItems = useMemo(() => {

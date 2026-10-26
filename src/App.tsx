@@ -275,14 +275,6 @@ const AdminUIWithExtensions = () => {
                     path="/projects/projectimport"
                     element={<HubProjectImport />}
                 />
-                <Route
-                    path="/functions/hub"
-                    element={<HubPage resourceName="functions" />}
-                />
-                <Route
-                    path="/artifacts/hub"
-                    element={<HubPage resourceName="artifacts" />}
-                />
                 {enableSearch && (
                     <Route path="/searchresults" element={<SearchList />} />
                 )}
