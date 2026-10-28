@@ -1,0 +1,168 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {
+    DataTable,
+    DateField,
+    EditButton,
+    FunctionField,
+    ShowButton,
+    TextField,
+} from 'react-admin';
+import { DeleteWithConfirmButtonByName } from '../../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
+import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
+import { BulkDeleteAllVersionsButton } from '../../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
+import { StateChips } from '../../../common/components/StateChips';
+import { IdField } from '../../../common/components/fields/IdField';
+import { prettyBytes } from '../../../features/files/fileBrowser/utils';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { ModelIcon } from '../icon';
+import { Stack } from '@mui/material';
+import { VersionsCount } from '../../../common/components/VersionsList';
+import humanFormat from 'human-format';
+import { parameterScale } from '../show/tabs/huggingface';
+
+export const ModelDataTable = (props: { storeKey?: string }) => {
+    const { storeKey } = props;
+    return (
+        <DataTable
+            storeKey={storeKey}
+            rowClick="show"
+            bulkActionButtons={
+                <BulkDeleteAllVersionsButton
+                    deleteAll
+                    cascade
+                    askForDeleteAll
+                    askForCascade
+                    disableDeleteAll
+                />
+            }
+            hiddenColumns={[
+                'id',
+                'created_by',
+                'spec.path',
+                'status.files',
+                'metadata.created_by',
+                'metadata.updated',
+            ]}
+        >
+            <DataTable.Col source="name" label="fields.name.title">
+                <Stack direction="column" gap={1}>
+                    <TextField source="name" sx={{ fontWeight: '600' }} />
+                    <VersionsCount />
+                </Stack>
+            </DataTable.Col>
+            <DataTable.Col source="id" label="fields.id" />
+            <DataTable.Col source="kind" label="fields.kind">
+                <FunctionField
+                    render={record => (
+                        <Stack direction="row" gap={0.9}>
+                            <ModelIcon kind={record.kind} color="secondary" />
+                            {record.kind}
+                        </Stack>
+                    )}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                source="metadata.updated"
+                label="fields.updated.title"
+            >
+                <DateField
+                    source="metadata.updated"
+                    label="fields.updated.title"
+                    showDate={true}
+                    showTime={true}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                disableSort
+                source="metadata.created_by"
+                label="fields.user.title"
+            />
+            <DataTable.Col
+                source="spec.path"
+                disableSort
+                label="fields.path.title"
+            >
+                <IdField source="spec.path" truncate={35} popover={true} />
+            </DataTable.Col>
+
+            <DataTable.Col
+                source="status.files"
+                disableSort
+                label="fields.files.title"
+            >
+                <FunctionField
+                    render={record => record?.status?.files?.length || ''}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                source="status.size"
+                disableSort
+                label="fields.files.size"
+            >
+                <FunctionField
+                    render={record => {
+                        if (record?.status?.files) {
+                            return prettyBytes(
+                                record.status.files
+                                    .filter(f => f.size > 0)
+                                    .reduce(
+                                        (acc, file) => acc + (file.size || 0),
+                                        0
+                                    )
+                            );
+                        }
+
+                        if (
+                            record?.status?.huggingface?.model?.safetensors
+                                ?.total
+                        ) {
+                            return (
+                                <>
+                                    {humanFormat(
+                                        record.status.huggingface.model
+                                            .safetensors.total,
+                                        {
+                                            scale: parameterScale,
+                                            maxDecimals: 1,
+                                            separator: '',
+                                        }
+                                    )}
+                                </>
+                            );
+                        }
+                    }}
+                />
+            </DataTable.Col>
+            <DataTable.Col
+                source="metadata.labels"
+                disableSort
+                label="fields.labels.title"
+            >
+                <LabelsField
+                    label="fields.labels.title"
+                    source="metadata.labels"
+                    sortable={false}
+                />
+            </DataTable.Col>
+            <DataTable.Col source="status.state" label="fields.status.state">
+                <StateChips source="status.state" label="fields.status.state" />
+            </DataTable.Col>
+            <DataTable.Col>
+                <RowButtonGroup>
+                    <ShowButton />
+                    <EditButton />
+                    <DeleteWithConfirmButtonByName
+                        deleteAll
+                        cascade
+                        askForDeleteAll
+                        askForCascade
+                        disableDeleteAll
+                    />
+                </RowButtonGroup>
+            </DataTable.Col>
+        </DataTable>
+    );
+};

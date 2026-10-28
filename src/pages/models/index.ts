@@ -2,22 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ModelCreatePage } from './create/CreateView';
-import { ModelEdit } from './edit/ModelEdit';
-import { ModelIcon } from './icon';
-import { ModelList } from './list/ModelList';
-import { ModelShow } from './show/ModelShow';
+import { ModelCreateView } from './create';
+import { ModelEditView } from './edit';
+import { ModelIcon } from '../../resources/models/icon';
+import { ModelListView } from './list';
+import { ModelShowView } from './show';
 
 export default {
     name: 'models',
-    list: ModelList,
+    list: ModelListView,
     icon: ModelIcon,
-    show: ModelShow,
-    create: ModelCreatePage,
-    edit: ModelEdit,
+    show: ModelShowView,
+    create: ModelCreateView,
+    edit: ModelEditView,
     options: {
         type: 'model',
-        hasVersions: true,
-        hasFiles: true,
     },
 };

@@ -2,17 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ProjectCreate } from './create';
-import { ProjectEdit } from './edit';
-import { ProjectList } from './list/ProjectList';
+import { ProjectIcon } from '../../resources/projects/icon';
+import { ProjectEditView } from './edit';
 
 export default {
     name: 'projects',
-    list: ProjectList,
-    create: ProjectCreate,
-    edit: ProjectEdit,
+    edit: ProjectEditView,
+    icon: ProjectIcon,
     options: {
         type: 'project',
-        hub: true,
     },
 };

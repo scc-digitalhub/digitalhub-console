@@ -2,22 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ArtifactCreate } from './create/ArtifactCreate';
-import { ArtifactEdit } from './edit/ArtifactEdit';
-import { ArtifactIcon } from './icon';
-import { ArtifactList } from './list/ArtifactList';
-import { ArtifactShow } from './show/ArtifactShow';
+import { ArtifactCreateView } from './create';
+import { ArtifactEditView } from './edit';
+import { ArtifactIcon } from '../../resources/artifacts/icon';
+import { ArtifactListView } from './list';
+import { ArtifactShowView } from './show';
 
 export default {
     name: 'artifacts',
-    list: ArtifactList,
+    list: ArtifactListView,
     icon: ArtifactIcon,
-    show: ArtifactShow,
-    create: ArtifactCreate,
-    edit: ArtifactEdit,
+    show: ArtifactShowView,
+    create: ArtifactCreateView,
+    edit: ArtifactEditView,
     options: {
         type: 'artifact',
-        hasVersions: true,
-        hasFiles: true,
     },
 };

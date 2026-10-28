@@ -4,14 +4,8 @@
 
 import { useMemo } from 'react';
 import {
-    Datagrid,
-    DateField,
-    DeleteWithConfirmButton,
-    FunctionField,
     ListView,
     SelectInput,
-    ShowButton,
-    TextField,
     TextInput,
     TopToolbar,
     useLocaleState,
@@ -22,31 +16,20 @@ import { Box, Container } from '@mui/material';
 import yamlExporter from '@dslab/ra-export-yaml';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { ListPageTitle } from '../../common/components/layout/PageTitle';
-import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips, StateColors } from '../../common/components/StateChips';
-import { TriggerIcon } from './icon';
-import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
+import { TriggerIcon } from '../../resources/triggers/icon';
 import { useRootSelector } from '@dslab/ra-root-selector';
-import { functionParser, taskParser } from '../../common/utils/parsers';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
 import { useKinds } from '../../common/hooks/useKinds';
 import { FILTER_INPUT_PROPS } from '../../common/theme';
+import { TriggerList } from '../../resources/triggers/TriggerList';
 
 const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
     name: 'states.' + s.toLowerCase(),
 }));
 
-const RowActions = () => {
-    return (
-        <RowButtonGroup>
-            <ShowButton />
-            <DeleteWithConfirmButton redirect={false} />
-        </RowButtonGroup>
-    );
-};
-
-export const TriggerList = () => {
+export const TriggerListView = () => {
     const resource = useResourceContext();
     const { root } = useRootSelector();
     const kinds = useKinds();
@@ -119,87 +102,7 @@ export const TriggerList = () => {
                             component={Box}
                             sx={{ pb: 2 }}
                         >
-                            <Datagrid
-                                rowClick="show"
-                                bulkActionButtons={
-                                    <BulkDeleteAllVersionsButton />
-                                }
-                            >
-                                <TextField
-                                    source="name"
-                                    label="fields.name.title"
-                                />
-                                <DateField
-                                    source="metadata.created"
-                                    label="fields.created.title"
-                                    showDate
-                                    showTime
-                                />
-                                <DateField
-                                    source="metadata.updated"
-                                    label="fields.updated.title"
-                                    showDate
-                                    showTime
-                                />
-                                <FunctionField
-                                    source="spec.function"
-                                    label="fields.function.title"
-                                    sortable={false}
-                                    render={record => {
-                                        if (record?.spec?.function) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.function
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        if (record?.spec?.workflow) {
-                                            return (
-                                                <>
-                                                    {
-                                                        functionParser(
-                                                            record.spec.workflow
-                                                        ).name
-                                                    }
-                                                </>
-                                            );
-                                        }
-
-                                        return <></>;
-                                    }}
-                                />
-                                <TextField source="kind" label="fields.kind" />
-
-                                <FunctionField
-                                    source="spec.task"
-                                    label="fields.task.title"
-                                    sortable={false}
-                                    render={record =>
-                                        record?.spec?.task ? (
-                                            <>
-                                                {
-                                                    taskParser(record.spec.task)
-                                                        .kind
-                                                }
-                                            </>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                />
-
-                                <StateChips
-                                    source="status.state"
-                                    label="fields.status.state"
-                                />
-
-                                <RowActions />
-                            </Datagrid>
+                            <TriggerList />
                         </ListView>
                     </FlatCard>
                 </>

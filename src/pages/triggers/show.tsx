@@ -3,262 +3,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    Datagrid,
-    DateField,
     DeleteWithConfirmButton,
     FunctionField,
-    IconButtonWithTooltip,
-    Labeled,
-    ListContextProvider,
-    LoadingIndicator,
-    Pagination,
-    ResourceContextProvider,
     ShowBase,
     ShowView,
-    TextField,
     TopToolbar,
-    useCreatePath,
-    useList,
-    useRecordContext,
-    useTranslate,
 } from 'react-admin';
-import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
-import { Container, Divider, Stack, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import { BackButton } from '@dslab/ra-back-button';
-import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';
+import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
-import { TriggerIcon } from './icon';
+import { TriggerIcon } from '../../resources/triggers/icon';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
-import { StateChips, StateColors } from '../../common/components/StateChips';
-import { DeactivateButton } from './components/DeactivateButton';
-import { AceEditorField } from '@dslab/ra-ace-editor';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useNavigate } from 'react-router-dom';
-import { ActivateButton } from './components/ActivateButton';
-import { IdField } from '../../common/components/fields/IdField';
-import { functionParser, taskParser } from '../../common/utils/parsers';
+import { DeactivateButton } from '../../resources/triggers/components/DeactivateButton';
+import { ActivateButton } from '../../resources/triggers/components/ActivateButton';
 
-import { MetadataField } from '../../features/metadata/components/MetadataField';
-import { useGetRunIds } from './hooks/useGetRunIds';
-import { useTriggerRunsController } from './hooks/useTriggerRunsController';
 import { SHOW_VIEW_PROPS } from '../../common/theme';
-
-export const TriggerShowComponent = () => {
-    const record = useRecordContext();
-    const translate = useTranslate();
-    const createPath = useCreatePath();
-    const navigate = useNavigate();
-
-    const uri = record?.spec?.function
-        ? new URL(record.spec.function)
-        : record?.spec?.workflow
-        ? new URL(record.spec.workflow)
-        : null;
-
-    const functionId =
-        record?.spec?.function && uri ? uri.pathname.split(':')[1] : null;
-    const workflowId =
-        record?.spec?.workflow && uri ? uri.pathname.split(':')[1] : null;
-
-    const states: any[] = [];
-    for (const c in StateColors) {
-        states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
-    }
-
-    if (!record) return <LoadingIndicator />;
-
-    return (
-        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
-            <CustomTabbedShowLayout.Tab value="summary" label={translate('fields.summary')}>
-                <Stack direction={'row'} spacing={3}>
-                    <Labeled>
-                        <TextField source="kind" label="fields.kind" />
-                    </Labeled>
-                    <Labeled>
-                        <IdField source="id" />
-                    </Labeled>
-                </Stack>
-                <Labeled>
-                    <IdField source="key" />
-                </Labeled>
-                {record?.metadata && <MetadataField />}
-                <Divider />
-
-                <Stack direction={'row'}>
-                    <Labeled>
-                        <TextField
-                            source="spec.task"
-                            label="fields.spec.task.title"
-                        />
-                    </Labeled>
-                    {functionId && (
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'functions',
-                                    id: functionId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    )}
-                    {workflowId && (
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'workflows',
-                                    id: workflowId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    )}
-                </Stack>
-
-                <Labeled>
-                    <StateChips
-                        source="status.state"
-                        label="fields.status.state"
-                    />
-                </Labeled>
-                {record?.status?.transitions && <EventsList record={record} />}
-            </CustomTabbedShowLayout.Tab>
-
-            <CustomTabbedShowLayout.Tab value="spec" label={translate('fields.spec.title')}>
-                <AceEditorField
-                    source="spec"
-                    parse={toYaml}
-                    mode="yaml"
-                    minLines={20}
-                />
-            </CustomTabbedShowLayout.Tab>
-
-            <CustomTabbedShowLayout.Tab
-                value="runs"
-                label={translate('resources.runs.name', { smart_count: 2 })}
-            >
-                <GeneratedRunsList />
-            </CustomTabbedShowLayout.Tab>
-        </CustomTabbedShowLayout>
-    );
-};
-
-const GeneratedRunsList = () => {
-    const translate = useTranslate();
-    const result = useGetRunIds();
-    const listContext = useTriggerRunsController(result);
-
-    const renderFunctionName = record => {
-        if (record?.spec?.function) {
-            return <>{functionParser(record.spec.function).name}</>;
-        }
-
-        if (record?.spec?.workflow) {
-            return <>{functionParser(record.spec.workflow).name}</>;
-        }
-
-        return <></>;
-    };
-
-    return (
-        <ListContextProvider value={listContext}>
-            <Typography variant="h6" gutterBottom>
-                {translate('resources.runs.name', { smart_count: 2 })}
-            </Typography>
-            <ResourceContextProvider value="runs">
-                <>
-                    <Datagrid bulkActionButtons={false} rowClick="show">
-                        <TextField source="id" label="fields.id" />
-                        <DateField
-                            source="metadata.created"
-                            label="fields.created.title"
-                            showDate
-                            showTime
-                        />
-                        <DateField
-                            source="metadata.updated"
-                            label="fields.updated.title"
-                            showDate
-                            showTime
-                        />
-                        <FunctionField
-                            source="spec.function"
-                            label="fields.function.title"
-                            sortable={false}
-                            render={renderFunctionName}
-                        />
-                        <TextField source="kind" label="fields.kind" />
-                        <FunctionField
-                            source="spec.task"
-                            label="fields.task.title"
-                            sortable={false}
-                            render={record =>
-                                record?.spec?.task ? (
-                                    <>{taskParser(record.spec.task).kind}</>
-                                ) : (
-                                    <></>
-                                )
-                            }
-                        />
-                        <StateChips
-                            source="status.state"
-                            label="fields.status.state"
-                        />
-                    </Datagrid>
-                    <Pagination />
-                </>
-            </ResourceContextProvider>
-        </ListContextProvider>
-    );
-};
-
-const EventsList = (props: { record: any }) => {
-    const { record } = props;
-    const data = record?.status?.transitions ? record.status.transitions : [];
-    const listContext = useList({ data });
-    return (
-        <Labeled label="fields.events.title">
-            <ListContextProvider value={listContext}>
-                <Datagrid bulkActionButtons={false} rowClick={false}>
-                    <DateField
-                        showTime
-                        source="time"
-                        label="fields.events.time.title"
-                    />
-                    <StateChips
-                        source="status"
-                        sortable={false}
-                        label="fields.events.status.title"
-                    />
-                    <TextField
-                        source="message"
-                        sortable={false}
-                        label="fields.events.message.title"
-                    />
-                    <TextField
-                        source="details"
-                        sortable={false}
-                        label="fields.events.details.title"
-                    />
-                </Datagrid>
-            </ListContextProvider>
-        </Labeled>
-    );
-};
+import { TriggerShow } from '../../resources/triggers/TriggerShow';
 
 const ShowToolbar = () => (
     <TopToolbar>
@@ -278,14 +39,14 @@ const ShowToolbar = () => (
     </TopToolbar>
 );
 
-export const TriggerShow = () => {
+export const TriggerShowView = () => {
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
             <ShowBase>
                 <>
                     <ShowPageTitle icon={<TriggerIcon fontSize={'large'} />} />
                     <ShowView actions={<ShowToolbar />} {...SHOW_VIEW_PROPS}>
-                        <TriggerShowComponent />
+                        <TriggerShow />
                     </ShowView>
                 </>
             </ShowBase>

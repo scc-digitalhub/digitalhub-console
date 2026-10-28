@@ -2,24 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { DataItemCreate } from './create/DataItemCreate';
-import { DataItemEdit } from './edit/DataItemEdit';
-import { DataItemIcon } from './icon';
-import { DataItemList } from './list/DataItemList';
-import { DataItemShow } from './show/DataItemShow';
+import { DataItemCreateView } from './create';
+import { DataItemEditView } from './edit';
+import { DataItemIcon } from '../../resources/dataitems/icon';
+import { DataItemListView } from './list';
+import { DataItemShowView } from './show';
 
 export default {
     name: 'dataitems',
-    list: DataItemList,
+    list: DataItemListView,
     icon: DataItemIcon,
-    show: DataItemShow,
-    create: DataItemCreate,
-    edit: DataItemEdit,
+    show: DataItemShowView,
+    create: DataItemCreateView,
+    edit: DataItemEditView,
     options: {
         type: 'dataitem',
-        hub: false,
-        catalogKey: 'dataitems',
-        hasVersions: true,
-        hasFiles: true,
     },
 };

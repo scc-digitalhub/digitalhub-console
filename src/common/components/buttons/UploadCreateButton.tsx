@@ -4,11 +4,18 @@
 
 import { MouseEventHandler, ReactNode, useState } from 'react';
 import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
-import { Button } from 'react-admin';
+import {
+    Button,
+    useGetResourceLabel,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
 import {
     StyledDialog,
     StyledDialogClasses,
 } from '../../../common/theme/StyledDialog';
+import { DialogTitle, DialogContent, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export const UploadCreateButton = (props: {
     children: (dialogProps: DialogProps) => ReactNode;
@@ -37,16 +44,60 @@ export const UploadCreateButton = (props: {
                 open={open}
                 className={StyledDialogClasses.dialog}
             >
-                {props.children({
-                    closeDialog,
-                    handleClose: handleDialogClose,
-                })}
+                <UploadDialog
+                    closeDialog={closeDialog}
+                    handleClose={handleDialogClose}
+                >
+                    {props.children}
+                </UploadDialog>
             </StyledDialog>
         </>
     );
 };
 
-export type DialogProps = {
+const UploadDialog = (props: {
     closeDialog: () => void;
     handleClose: (event: any, reason?: string) => void;
+    children: (dialogProps: DialogProps) => ReactNode;
+}) => {
+    const { closeDialog, handleClose } = props;
+    const resource = useResourceContext();
+    const translate = useTranslate();
+    const getResourceLabel = useGetResourceLabel();
+
+    return (
+        <>
+            <div className={StyledDialogClasses.header}>
+                <DialogTitle
+                    id="create-dialog-title"
+                    className={StyledDialogClasses.title}
+                >
+                    {translate('ra.page.create', {
+                        name: getResourceLabel(resource || '', 1),
+                    })}
+                </DialogTitle>
+                <IconButton
+                    className={StyledDialogClasses.closeButton}
+                    aria-label={translate('ra.action.close')}
+                    title={translate('ra.action.close')}
+                    onClick={handleClose}
+                    size="small"
+                >
+                    <CloseIcon fontSize="small" />
+                </IconButton>
+            </div>
+            <DialogContent
+                sx={{ p: 0 }}
+                className={StyledDialogClasses.content}
+            >
+                {props.children({
+                    closeDialog,
+                })}
+            </DialogContent>
+        </>
+    );
+};
+
+export type DialogProps = {
+    closeDialog?: () => void;
 };

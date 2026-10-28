@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { ContainerImageIcon } from './icon';
-import { ContainerImageList } from './list';
-import { ContainerImageShow } from './show';
+import { ContainerImageIcon } from '../../resources/containerimages/icon';
+import { ContainerImageListView } from './list';
+import { ContainerImageShowView } from './show';
 
 export default {
     name: 'containerimages',
-    list: ContainerImageList,
-    show: ContainerImageShow,
+    list: ContainerImageListView,
+    show: ContainerImageShowView,
     icon: ContainerImageIcon,
     recordRepresentation: record =>
         record?.spec?.image

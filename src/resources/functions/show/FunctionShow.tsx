@@ -1,0 +1,294 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { Divider, Stack } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import {
+    Labeled,
+    LoadingIndicator,
+    TextField,
+    useDataProvider,
+    useLocale,
+    useRecordContext,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
+import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
+import { getFunctionUiSpec } from '../types';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import deepEqual from 'deep-is';
+import { IdField } from '../../../common/components/fields/IdField';
+import { FunctionTaskShow } from '../tasks';
+import { FilteredJsonSchemaField } from '../../../common/jsonSchema/components/FilteredJsonSchemaField';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
+import { cards } from './cards';
+import { MetadataTab } from '../../../common/components/tabs/metadata';
+import { LabelsField } from '../../../common/components/fields/LabelsField';
+import { SpecTab } from '../../../common/components/tabs/spec';
+
+export const FunctionShow = () => {
+    const resource = useResourceContext();
+    const record = useRecordContext();
+    const translate = useTranslate();
+    const locale = useLocale();
+    const dataProvider = useDataProvider();
+    const schemaProvider = useSchemaProvider();
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
+
+    const [schema, setSchema] = useState<any>();
+    const [tasks, setTasks] = useState<any[]>([]);
+    const [sourceCode, setSourceCode] = useState<any>();
+    const [fabSourceCode, setFabSourceCode] = useState<any>();
+    const [config, setConfig] = useState<any>();
+    const [requirements, setRequirements] = useState<string[]>();
+    const initializing = useRef<boolean>(false);
+    const cur = useRef<any>(null);
+
+    const isInitializing = () => {
+        return initializing.current === true;
+    };
+
+    const acquireInitializing = () => {
+        if (!initializing.current) {
+            initializing.current = true;
+            return initializing.current;
+        }
+
+        return false;
+    };
+
+    useEffect(() => {
+        if (!schemaProvider || !dataProvider || !record) {
+            return;
+        }
+
+        if (cur.current != null && !deepEqual(cur.current, record)) {
+            //reloading, reset
+            cur.current = null;
+            if (isInitializing()) {
+                initializing.current = false;
+            }
+        }
+
+        //single loading
+        if (isInitializing() || !acquireInitializing()) {
+            return;
+        }
+
+        if (record?.spec?.source) {
+            setSourceCode(record.spec.source);
+        }
+        if (record?.spec?.fab_source) {
+            setFabSourceCode(record.spec.fab_source);
+        }
+        if (record?.spec?.config) {
+            setConfig(record.spec.config);
+        }
+        if (record?.spec?.requirements) {
+            setRequirements(record.spec.requirements);
+        }
+
+        if (record && resource) {
+            cur.current = record;
+
+            schemaProvider.get(resource, record.kind).then(s => {
+                setSchema(s);
+            });
+
+            Promise.all([
+                schemaProvider.list('tasks', record.kind).then(schemas => {
+                    if (schemas) {
+                        schemas.sort((a, b) => {
+                            return a.kind.localeCompare(b.kind);
+                        });
+                    }
+                    return schemas;
+                }),
+
+                dataProvider.getList('tasks', {
+                    pagination: { page: 1, perPage: 100 },
+                    sort: { field: 'kind', order: 'ASC' },
+                    filter: {
+                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                    },
+                }),
+            ])
+                .then(([schemas, list]) => {
+                    if (!schemas || !list || !list.data) {
+                        return;
+                    }
+
+                    //check if some tasks are still missing
+                    const missing = schemas.filter(
+                        k => !list.data.find(t => t.kind == k.kind)
+                    );
+                    if (missing.length == 0) {
+                        //all tasks defined
+                        setTasks(schemas);
+                        return;
+                    }
+
+                    //set tasks to the currently available ones
+                    const available = schemas.filter(k =>
+                        list.data.find(t => t.kind == k.kind)
+                    );
+                    setTasks(available);
+
+                    //create missing tasks
+                    Promise.all(
+                        missing.map(async k => {
+                            return await dataProvider.create('tasks', {
+                                data: {
+                                    project: record.project,
+                                    kind: k.kind,
+                                    spec: {
+                                        function: `${record.kind}://${record.project}/${record.name}:${record.id}`,
+                                    },
+                                },
+                            });
+                        })
+                    )
+                        .then(records => {
+                            const rts = records
+                                .filter(r => r.data)
+                                .map(r => r.data);
+
+                            //update the tasks with the newly created ones
+                            const available = schemas.filter(
+                                k =>
+                                    list.data.find(t => t.kind == k.kind) ||
+                                    rts.find(t => t.kind == k.kind)
+                            );
+                            setTasks(available);
+                        })
+                        .catch(e => {
+                            throw e;
+                        });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    }, [record, schemaProvider, dataProvider, resource]);
+
+    if (!record) {
+        return <LoadingIndicator />;
+    }
+    const Card = record?.kind && cards[record.kind] ? cards[record.kind] : null;
+
+    const getAction = (kind: string) => {
+        if (kind.indexOf('+') > 0) {
+            return kind.split('+')[1];
+        }
+        return kind;
+    };
+
+    return (
+        <CustomTabbedShowLayout record={record} syncWithLocation={false}>
+            <CustomTabbedShowLayout.Tab
+                value="summary"
+                label={translate('fields.summary')}
+            >
+                <Stack direction={'column'} gap={1}>
+                    <Stack direction={'row'} spacing={3}>
+                        <Labeled>
+                            <TextField source="kind" />
+                        </Labeled>
+
+                        <Labeled>
+                            <IdField source="id" />
+                        </Labeled>
+                    </Stack>
+                    <Labeled>
+                        <IdField source="key" />
+                    </Labeled>
+
+                    {record?.metadata?.description && (
+                        <Labeled>
+                            <TextField
+                                label="fields.metadata.description"
+                                source="metadata.description"
+                            />
+                        </Labeled>
+                    )}
+
+                    {record?.metadata?.labels && (
+                        <Labeled>
+                            <LabelsField
+                                label="fields.labels.title"
+                                source="metadata.labels"
+                                sortable={false}
+                            />
+                        </Labeled>
+                    )}
+                </Stack>
+                <Divider />
+                {Card && <Card />}
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
+                <MetadataTab />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value="spec"
+                label={translate('fields.spec.title')}
+            >
+                <SpecTab />
+            </CustomTabbedShowLayout.Tab>
+
+            {sourceCode && schema?.schema && (
+                <CustomTabbedShowLayout.Tab
+                    value="code"
+                    label={'fields.code'}
+                    key={record.id + ':source_code'}
+                    path="code"
+                >
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{
+                            spec: { source: sourceCode, requirements, config },
+                        }}
+                        fields={['source', 'requirements', 'config']}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
+                </CustomTabbedShowLayout.Tab>
+            )}
+
+            {fabSourceCode && schema?.schema && (
+                <CustomTabbedShowLayout.Tab
+                    value="fab_source-code"
+                    label={'fields.code'}
+                    key={record.id + ':fab_source_code'}
+                    path="code"
+                >
+                    <FilteredJsonSchemaField
+                        sourceName="spec"
+                        record={{
+                            spec: { fab_source: fabSourceCode, requirements },
+                        }}
+                        fields={['fab_source', 'requirements']}
+                        schema={schema.schema}
+                        uiSchema={getFunctionUiSpec(record.kind)}
+                    />
+                </CustomTabbedShowLayout.Tab>
+            )}
+
+            {tasks?.map(task => (
+                <CustomTabbedShowLayout.Tab
+                    value={task.kind}
+                    label={
+                        task.uiSchema?.['ui:title@' + locale] ||
+                        task.uiSchema?.['ui:title'] ||
+                        'resources.tasks.kinds.' + getAction(task.kind)
+                    }
+                    key={task.kind}
+                    path={task.kind}
+                >
+                    <FunctionTaskShow kind={task.kind} />
+                </CustomTabbedShowLayout.Tab>
+            ))}
+            {extensionTabs}
+        </CustomTabbedShowLayout>
+    );
+};

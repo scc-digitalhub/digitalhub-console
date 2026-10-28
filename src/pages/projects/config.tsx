@@ -24,7 +24,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { MetadataSchema } from '../../common/jsonSchema/schemas';
 import { JsonSchemaField } from '../../common/jsonSchema/components/JsonSchema';
 import { DeleteWithDialogButton } from '@dslab/ra-delete-dialog-button';
-import { ProjectMetadataViewUiSchema } from './types';
+import { ProjectMetadataViewUiSchema } from '../../resources/projects/types';
 import { ShareProjectButton } from '../../common/components/buttons/ShareProjectButton';
 import { useProjectPermissions } from '../../common/provider/authProvider';
 import { IdField } from '../../common/components/fields/IdField';
@@ -47,7 +47,7 @@ const ShowToolbar = () => {
             {isAdmin(record.id) && <ShareProjectButton />}
             {isAdmin(record.id) && (
                 <DeleteWithDialogButton
-                    redirect="/projects"
+                    redirect="/"
                     mutationOptions={{ meta: { cascade: true } }}
                 />
             )}

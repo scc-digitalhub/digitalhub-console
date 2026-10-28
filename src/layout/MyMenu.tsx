@@ -14,7 +14,7 @@ import { Divider } from '@mui/material';
 import { BrowserIcon } from '../features/files/fileBrowser/components/icon';
 import { ServiceIcon } from '../pages/services/icon';
 import { LineageIcon } from '../features/lineage/components/icon';
-import { ProjectIcon } from '../pages/projects/icon';
+import { ProjectIcon } from '../resources/projects/icon';
 import { UploadSafeLink } from './UploadSafeLink';
 import { HubIcon } from '../features/hub/components/HubIcon';
 import { TutorialsIcon } from '../features/tutorials/components/icon';

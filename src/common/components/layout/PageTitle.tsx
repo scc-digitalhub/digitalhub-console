@@ -5,13 +5,10 @@
 import { Typography, Box, SxProps, Theme, Stack } from '@mui/material';
 import { isValidElement, ReactElement } from 'react';
 import {
-    useCreateContext,
-    useEditContext,
     useGetResourceLabel,
-    useListContext,
+    useRecordContext,
     useResourceContext,
     useResourceDefinition,
-    useShowContext,
     useTranslate,
 } from 'react-admin';
 import { StateBadge } from '../StateBadge';
@@ -80,11 +77,11 @@ export type PageTitleProps = {
 export type ListPageTitleProps = Omit<PageTitleProps, 'text'>;
 
 export const ListPageTitle = (props: ListPageTitleProps) => {
-    const { resource } = useListContext();
+    const resource = useResourceContext();
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-    const label = getResourceLabel(resource, 2);
+    const label = resource ? getResourceLabel(resource, 2) : '';
     const secondaryText = translate('resources.' + resource + '.list');
 
     return <PageTitle text={label} secondaryText={secondaryText} {...props} />;
@@ -98,13 +95,13 @@ export type RecordPageTitleProps = Omit<
 export const ShowPageTitle = (props: RecordPageTitleProps) => {
     const { icon: iconProps, badge: badgeProps, ...rest } = props;
     const resourceDefinition = useResourceDefinition(props);
-
-    const { resource, record } = useShowContext();
+    const resource = useResourceContext();
+    const record = useRecordContext(props);
 
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-    const label = getResourceLabel(resource, 1);
+    const label = resource ? getResourceLabel(resource, 1) : '';
     const name = record?.name || '';
     const kind = record?.kind || '';
 
@@ -196,12 +193,12 @@ export const CreatePageTitle = (props: RecordPageTitleProps) => {
 export const EditPageTitle = (props: RecordPageTitleProps) => {
     const { icon: iconProps, badge: badgeProps, ...rest } = props;
     const resourceDefinition = useResourceDefinition(props);
-
-    const { resource, record } = useEditContext();
+    const resource = useResourceContext();
+    const record = useRecordContext(props);
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 
-    const label = getResourceLabel(resource, 1).toLowerCase();
+    const label = resource ? getResourceLabel(resource, 1).toLowerCase() : '';
     const name = record?.name || '';
     const kind = record?.kind || '';
 

@@ -21,7 +21,6 @@ import { SecretIcon } from './icon';
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { FormLabel } from '../../common/components/layout/FormLabel';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
-import { SecretUiSchema } from './types';
 import { useRef } from 'react';
 import { CreateToolbar } from '../../common/components/toolbars/CreateToolbar';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
@@ -37,7 +36,11 @@ export const SecretCreate = () => {
 
     //hardcoded: only 1 kind supported
     const kind = 'secret';
-    const uiSchema = SecretUiSchema;
+    const uiSchema = {
+        path: {
+            'ui:widget': 'hidden',
+        },
+    };
     const rawSchema = schemas ? schemas.find(s => s.kind === kind)?.schema : {};
     const schema = rawSchema
         ? {

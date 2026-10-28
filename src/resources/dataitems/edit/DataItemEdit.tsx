@@ -1,0 +1,242 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { Box, Divider, Stack, Typography } from '@mui/material';
+import {
+    Fragment,
+    JSXElementConstructor,
+    ReactElement,
+    useEffect,
+    useState,
+} from 'react';
+import {
+    Button,
+    EditBase,
+    EditView,
+    Labeled,
+    SaveButton,
+    SimpleForm,
+    Toolbar,
+    useNotify,
+    useRecordContext,
+    useRedirect,
+    useResourceContext,
+    useTranslate,
+} from 'react-admin';
+import { useWatch } from 'react-hook-form';
+import { FlatCard } from '../../../common/components/layout/FlatCard';
+import { FormLabel } from '../../../common/components/layout/FormLabel';
+import { randomId } from '../../../common/utils/helpers';
+import { UploadCoordinatorContext } from '../../../features/files/upload/UploaderContext';
+import { useResolveUploadPath } from '../../../features/files/upload/useResolveUploadPath';
+import { useResourceUploader } from '../../../features/files/upload/useRecordUploader';
+import { PathInput } from '../../../features/files/upload/components/PathInput';
+import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
+import { ExtensionsForm } from '../../../features/extensions/components/Form';
+import {
+    transformExtensionPaths,
+    useGetExtensions,
+} from '../../../features/extensions/utils';
+import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
+import { useSchemaProvider } from '../../../common/provider/schemaProvider';
+import { filterProperties } from '../../../common/jsonSchema/utils';
+import { useExtensionsSections } from '../../../features/extensions/sections';
+import { useNavigate } from 'react-router';
+import ClearIcon from '@mui/icons-material/Clear';
+
+export const DataItemEdit = (props: {
+    actions?:
+        | false
+        | ReactElement<any, string | JSXElementConstructor<any>>
+        | undefined;
+}) => {
+    const resource = useResourceContext();
+    const notify = useNotify();
+    const redirect = useRedirect();
+    const [id] = useState(randomId);
+    const uploader = useResourceUploader({ id });
+    const [isSpecDirty, setIsSpecDirty] = useState<boolean>(false);
+    const [isPathDirty, setIsPathDirty] = useState<boolean>(false);
+    const [isMetadataVersionDirty, setIsMetadataVersionDirty] =
+        useState<boolean>(false);
+    //uploaded files always go into a new version
+    const isNewVersion =
+        isSpecDirty ||
+        isPathDirty ||
+        uploader.files.some(file => file.resource === resource);
+
+    //overwrite onSuccess and use onSettled to handle optimistic rendering
+    const onSuccess = () => {};
+    const onSettled = async (data, error) => {
+        if (error) {
+            //onError already handles notify
+            return;
+        }
+
+        await uploader.prepare(data);
+        uploader.start();
+        notify('ra.notification.updated', {
+            type: 'info',
+            messageArgs: { smart_count: 1 },
+        });
+        redirect('show', resource, data.id, data);
+    };
+
+    const transform = data => {
+        //merge path into spec.path, then strip transient field
+        const { path, ...rest } = data;
+        const resetMetadataVersion = isNewVersion && !isMetadataVersionDirty;
+
+        //reset status if new version
+        //reset metadata version if new version, unless manually filled
+        return {
+            ...rest,
+            ...transformExtensionPaths(rest),
+            spec: { ...(rest.spec || {}), ...(path != null ? { path } : {}) },
+            status: isNewVersion ? {} : rest.status,
+            metadata: resetMetadataVersion
+                ? { ...rest.metadata, version: undefined }
+                : rest.metadata,
+        };
+    };
+
+    return (
+        <EditBase
+            mutationMode="optimistic"
+            transform={transform}
+            mutationOptions={{
+                meta: { update: !isNewVersion, id },
+                onSuccess,
+                onSettled,
+            }}
+        >
+            <UploadCoordinatorContext.Provider value={uploader}>
+                <EditView component={Box} actions={props.actions}>
+                    <FlatCard sx={{ paddingBottom: '12px' }}>
+                        <SimpleForm
+                            toolbar={<EditToolbar />}
+                            defaultValues={record => ({
+                                path: record?.spec?.path ?? null,
+                            })}
+                        >
+                            <DataItemEditForm
+                                onSpecDirty={setIsSpecDirty}
+                                onPathDirty={setIsPathDirty}
+                                onMetadataVersionDirty={
+                                    setIsMetadataVersionDirty
+                                }
+                            />
+                        </SimpleForm>
+                    </FlatCard>
+                </EditView>
+            </UploadCoordinatorContext.Provider>
+        </EditBase>
+    );
+};
+
+const DataItemEditForm = ({
+    onSpecDirty,
+    onPathDirty,
+    onMetadataVersionDirty,
+}: {
+    onSpecDirty: (dirty: boolean) => void;
+    onPathDirty: (dirty: boolean) => void;
+    onMetadataVersionDirty: (dirty: boolean) => void;
+}) => {
+    const record = useRecordContext();
+    const pathResolver = useResolveUploadPath({
+        id: record?.id == null ? undefined : String(record.id),
+        name: record?.name,
+    });
+    const kind = useWatch({ name: 'kind' });
+    const path = useWatch({ name: 'path' });
+    const [schema, setSchema] = useState<any>();
+    const schemaProvider = useSchemaProvider();
+    const resource = useResourceContext();
+    const { data: extensions } = useGetExtensions();
+    const contributions = useExtensionsSections();
+
+    useEffect(() => {
+        onPathDirty(path !== (record?.spec?.path ?? null));
+    }, [onPathDirty, path, record?.spec?.path]);
+
+    useEffect(() => {
+        if (!kind || !resource || !schemaProvider) {
+            setSchema(undefined);
+            return;
+        }
+
+        schemaProvider
+            .get(resource, kind)
+            .then(schemaResult => {
+                const nextSchema = filterProperties(schemaResult?.schema, [
+                    'path',
+                ]);
+                setSchema({ ...schemaResult, schema: nextSchema ?? undefined });
+            })
+            .catch(() => setSchema(undefined));
+    }, [kind, resource, schemaProvider]);
+
+    return (
+        <>
+            <FormLabel label="fields.base" />
+            <Stack direction={'row'} spacing={3} pt={4} pb={2}>
+                <Labeled source="name">
+                    <Typography variant="body1">{record?.name}</Typography>
+                </Labeled>
+                <Labeled source="kind">
+                    <Typography variant="body1">{record?.kind}</Typography>
+                </Labeled>
+            </Stack>
+            <MetadataInput onVersionDirty={onMetadataVersionDirty} />
+
+            {schema && (
+                <SpecInput
+                    source="spec"
+                    schema={schema?.schema}
+                    uiSchema={schema?.uiSchema}
+                    kind={kind}
+                    onDirty={onSpecDirty}
+                />
+            )}
+
+            <PathInput source="path" pathResolver={pathResolver} />
+
+            {contributions &&
+                contributions.length > 0 &&
+                contributions.map((contribution, index) => (
+                    <Fragment key={contribution.key ?? `contribution-${index}`}>
+                        {contribution}
+                    </Fragment>
+                ))}
+
+            {extensions && extensions.length > 0 && (
+                <>
+                    <Divider />
+                    <ExtensionsForm source="extensions" />
+                </>
+            )}
+        </>
+    );
+};
+const EditToolbar = () => {
+    const translate = useTranslate();
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(-1);
+    };
+
+    return (
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <SaveButton />
+            <Button
+                color="info"
+                label={translate('actions.cancel')}
+                onClick={handleClick}
+            >
+                <ClearIcon />
+            </Button>
+        </Toolbar>
+    );
+};

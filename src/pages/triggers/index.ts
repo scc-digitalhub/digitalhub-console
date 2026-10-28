@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { TriggerIcon } from './icon';
-import { TriggerList } from './list';
-import { TriggerShow } from './show';
+import { TriggerIcon } from '../../resources/triggers/icon';
+import { TriggerListView } from './list';
+import { TriggerShowView } from './show';
 
 export default {
     name: 'triggers',
-    list: TriggerList,
+    list: TriggerListView,
     icon: TriggerIcon,
-    show: TriggerShow,
+    show: TriggerShowView,
     recordRepresentation: record => record?.kind || record.id,
     options: {
         type: 'trigger',

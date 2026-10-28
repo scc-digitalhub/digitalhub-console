@@ -95,7 +95,7 @@ export const FileDetails = (props: {
                             <DeleteButton
                                 size="small"
                                 iconButton
-                                onDelete={() => onDelete && onDelete(file)}
+                                onDelete={() => onDelete?.(file)}
                             />
                         </Stack>
 

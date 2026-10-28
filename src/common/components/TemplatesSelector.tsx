@@ -25,9 +25,9 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useFormContext } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
-import { ChipsField } from './fields/ChipsField';
 import { StyledTemplate } from '../theme/StyledTemplate';
 import { LabelsField } from './fields/LabelsField';
+import { shorten } from '../utils/helpers';
 
 export type Template = {
     id: string;
@@ -239,7 +239,7 @@ const TemplateCard = (props: {
                             variant="body2"
                             sx={{ height: '120px', overflowY: 'auto' }}
                         >
-                            {template.metadata?.description}
+                            {shorten(template.metadata?.description, 230)}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

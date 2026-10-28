@@ -4,7 +4,6 @@
 
 import { isEmpty, regex } from 'react-admin';
 import memoize from 'lodash/memoize';
-import { B } from '@wtfcode/byte-converter';
 import { round } from 'lodash';
 import { toYaml } from '@dslab/ra-export-record-button';
 
@@ -236,4 +235,29 @@ export function resolveThemeColor(color, theme) {
         default:
             return 'currentColor';
     }
+}
+
+export function shorten(text: string | undefined, maxLength: number): string {
+    const ellipsis = '...';
+
+    if (maxLength <= ellipsis.length) {
+        throw new Error('maxLength must be > ' + ellipsis.length);
+    }
+
+    if (!text) {
+        return '';
+    }
+
+    if (text.length <= maxLength) {
+        return text;
+    }
+
+    const availableLength = maxLength - ellipsis.length;
+    const truncated = text.slice(0, availableLength);
+    const lastSpace = truncated.lastIndexOf(' ');
+
+    return (
+        truncated.slice(0, lastSpace === -1 ? 0 : lastSpace).trimEnd() +
+        ellipsis
+    );
 }

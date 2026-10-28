@@ -2,22 +2,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { WorkflowCreate } from './create/WorkflowCreate';
-import { WorkflowEdit } from './edit/WorkflowEdit';
-import { WorkflowIcon } from './icon';
-import { WorkflowList } from './list/WorkflowList';
-import { WorkflowShow } from './show/WorkflowShow';
+import { WorkflowCreateView } from './create';
+import { WorkflowEditView } from './edit';
+import { WorkflowIcon } from '../../resources/workflows/icon';
+import { WorkflowListView } from './list';
+import { WorkflowShowView } from './show';
 
 export default {
     name: 'workflows',
-    list: WorkflowList,
+    list: WorkflowListView,
     icon: WorkflowIcon,
-    show: WorkflowShow,
-    create: WorkflowCreate,
-    edit: WorkflowEdit,
+    show: WorkflowShowView,
+    create: WorkflowCreateView,
+    edit: WorkflowEditView,
     options: {
         type: 'workflow',
-        hasVersions: true,
-        hasFiles: false,
     },
 };

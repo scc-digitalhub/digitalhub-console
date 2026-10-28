@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { RunIcon } from './icon';
-import { RunList } from './list/RunList';
-import { RunShow } from './show/show';
+import { RunIcon } from '../../resources/runs/icon';
+import { RunListView } from './list';
+import { RunShowView } from './show';
 
 export default {
     name: 'runs',
-    list: RunList,
+    list: RunListView,
     icon: RunIcon,
-    show: RunShow,
+    show: RunShowView,
     recordRepresentation: record =>
         record?.spec?.function
             ? record.spec.function.split('/')[3].split(':')[0]
@@ -19,7 +19,5 @@ export default {
             : record.id,
     options: {
         type: 'run',
-        hasVersions: false,
-        hasFiles: false,
     },
 };

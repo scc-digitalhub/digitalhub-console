@@ -24,7 +24,7 @@ import { ListBaseLive } from '../../features/notifications/components/ListBaseLi
 import { Stack } from '@mui/system';
 import { ServiceIcon } from './icon';
 import { IdField } from '../../common/components/fields/IdField';
-import { FunctionIcon } from '../functions/icon';
+import { FunctionIcon } from '../../resources/functions/icon';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 
 const RowActions = () => {

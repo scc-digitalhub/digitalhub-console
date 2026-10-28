@@ -20,12 +20,12 @@ import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../common/jsonSchema/schemaController';
 import { Empty } from '../../common/components/layout/Empty';
-import { StopButton } from '../runs/components/StopButton';
+import { StopButton } from '../../resources/runs/components/StopButton';
 import { DropDownButton } from '../../common/components/buttons/DropdownButton';
-import { RunCreateForm } from '../runs/create/RunCreateForm';
+import { RunCreateForm } from '../../resources/runs/create/RunCreateForm';
 import { BulkDeleteAllVersionsButton } from '../../common/components/buttons/delete/BulkDeleteAllVersionsButton';
 import { ListBaseLive } from '../../features/notifications/components/ListBaseLive';
-import { CloneButton } from '../runs/components/CloneButton';
+import { CloneButton } from '../../resources/runs/components/CloneButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { LogsButton } from '../../features/logs/components/LogsButton';
 

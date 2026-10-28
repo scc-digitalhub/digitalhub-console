@@ -30,7 +30,7 @@ import {
     RootSelectorContextProvider,
     RootSelectorInitialWrapper,
 } from '@dslab/ra-root-selector';
-import { ProjectSelectorList } from './pages/projects/list/ProjectSelectorList';
+import { ProjectSelectorList } from './pages/projects/selector';
 import { ProfilesPage } from './pages/profiles/ProfilesPage';
 import { Dashboard } from './pages/dashboard/components/Dashboard';
 //config
@@ -137,6 +137,7 @@ import {
     useExtensionsMenuRoutes,
 } from './features/extensions/registry';
 import { createContext } from 'react';
+// resource definitions
 import artifactDefinition from './pages/artifacts';
 import dataitemDefinition from './pages/dataitems';
 import functionDefinition from './pages/functions';
@@ -147,8 +148,9 @@ import projectDefinition from './pages/projects';
 import runDefinition from './pages/runs';
 import triggerDefinition from './pages/triggers';
 import containerImageDefinition from './pages/containerimages';
+
 import { StompContextProvider } from './features/notifications/StompContextProvider';
-import { ProjectLineage } from './pages/projects/components/ProjectLineage';
+import { ProjectLineage } from './resources/projects/components/ProjectLineage';
 import { StoreResetter } from './common/components/StoreResetter';
 import { MyAccount } from './features/account/components/MyAccount';
 import { ServiceList } from './pages/services/list';
@@ -161,12 +163,10 @@ import { HubPage } from './features/hub/components/HubPage';
 import MyTrinoApp from './features/sql/components/MyTrinoApp';
 import { HubProjectImport } from './features/hub/components/HubProjectImport';
 import { TutorialsPage } from './features/tutorials/components/TutorialsPage';
-import { AdminRunList } from './pages/runs/list/RunList';
-import { AdminRunShow } from './pages/runs/show/show';
 import { LogsView } from './pages/logs/LogsView';
 import { ResourceTemplateProvider } from './common/provider/templateProvider';
-import { AdminContainerImageShow } from './pages/containerimages/show';
-import { AdminContainerImageList } from './pages/containerimages/list';
+import { AdminView } from './common/components/AdminView';
+import { ProjectList } from './pages/projects/list';
 
 export const SearchEnabledContext = createContext(false);
 
@@ -253,10 +253,7 @@ const AdminUIWithExtensions = () => {
             <Resource {...runDefinition} />
             <Resource {...containerImageDefinition} />
             <Resource {...triggerDefinition} />
-            <Resource
-                name={projectDefinition.name}
-                edit={projectDefinition.edit}
-            />
+            <Resource {...projectDefinition} />
             <Resource {...secretDefinition} />
             <Resource name="schemas" />
             <Resource name="logs" />
@@ -327,18 +324,41 @@ const InitialWrapper = () => {
                                     requireAuth={!!authProvider}
                                     disableTelemetry
                                 >
-                                    <Resource {...projectDefinition} />
+                                    <Resource
+                                        {...projectDefinition}
+                                        list={
+                                            <AdminView>
+                                                <ProjectList />
+                                            </AdminView>
+                                        }
+                                    />
                                     <Resource name="tokens/refresh" />
                                     <Resource name="tokens/personal" />
                                     <Resource
                                         {...runDefinition}
-                                        list={AdminRunList}
-                                        show={AdminRunShow}
+                                        list={
+                                            <AdminView>
+                                                {runDefinition.list}
+                                            </AdminView>
+                                        }
+                                        show={
+                                            <AdminView>
+                                                {runDefinition.show}
+                                            </AdminView>
+                                        }
                                     />
                                     <Resource
                                         {...containerImageDefinition}
-                                        list={AdminContainerImageList}
-                                        show={AdminContainerImageShow}
+                                        list={
+                                            <AdminView>
+                                                {containerImageDefinition.list}
+                                            </AdminView>
+                                        }
+                                        show={
+                                            <AdminView>
+                                                {containerImageDefinition.show}
+                                            </AdminView>
+                                        }
                                     />
                                     <Resource name="schemas" />
                                     <CustomRoutes>
