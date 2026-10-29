@@ -19,7 +19,7 @@ interface HubFilterBarProps {
 
 export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
     const translate = useTranslate();
-    const { availableFilters } = useListContext() as any;
+    const { availableFilters, data } = useListContext() as any;
     const hubResources = useHubResources();
     const searchFilter = useMemo(
         () => [
@@ -36,35 +36,37 @@ export const HubFilterBar = ({ showTypeFilter }: HubFilterBarProps) => {
         [translate]
     );
 
-    const typeFilter = useMemo(
-        () =>
-            showTypeFilter
-                ? [
-                      <SelectArrayInput
-                          key="resourceName"
-                          source="resourceName"
-                          label="Resource Type"
-                          choices={hubResources.map(r => ({
-                              id: r.name,
-                              name: r.name,
-                          }))}
-                          sx={{
-                              '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)':
-                                  {
-                                      transform: 'none',
-                                      bottom: 0,
-                                      left: 10,
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                  },
-                          }}
-                          alwaysOn
-                          helperText={false}
-                      />,
-                  ]
-                : [],
-        [showTypeFilter, hubResources]
-    );
+    const typeFilter = useMemo(() => {
+        if (!showTypeFilter) return [];
+
+        const available = data?.map((item: any) => item.resourceName) || [];
+        const choices = hubResources
+            .filter(r => available.includes(r.name))
+            .map(r => ({
+                id: r.name,
+                name: r.name,
+            }));
+
+        return [
+            <SelectArrayInput
+                key="resourceName"
+                source="resourceName"
+                label="Resource Type"
+                choices={choices}
+                sx={{
+                    '& .MuiInputLabel-root:not(.MuiInputLabel-shrink)': {
+                        transform: 'none',
+                        bottom: 0,
+                        left: 10,
+                        display: 'flex',
+                        alignItems: 'center',
+                    },
+                }}
+                alwaysOn
+                helperText={false}
+            />,
+        ];
+    }, [showTypeFilter, hubResources, data]);
 
     const labelFilters = useMemo(
         () =>

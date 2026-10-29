@@ -27,7 +27,6 @@ export const useHubResources = (): HubResourceDefinition[] => {
     return useMemo(
         () =>
             Object.entries(definitions)
-                .filter(([, def]) => def.options?.hub === true)
                 .map(([name, def]) => ({
                     name,
                     catalogKey: def.options?.catalogKey ?? name,

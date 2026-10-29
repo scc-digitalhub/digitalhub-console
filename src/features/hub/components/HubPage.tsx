@@ -49,7 +49,6 @@ export const HubPage = ({ resource: resourceName }: HubPageProps) => {
             .then(data => setCatalogData(data))
             .catch(err => console.error('Failed to load catalog:', err));
     }, []);
-
     //prepare the list of items to show based on the catalog and
     //the selected resource type, adding the resourceName as property to each item for easier filtering later
     //if resourceName is not specified, show all items from all types
@@ -74,7 +73,6 @@ export const HubPage = ({ resource: resourceName }: HubPageProps) => {
             }))
         );
     }, [catalogData, currentResource, hubResources]);
-    
     //filter items based on search query, resource type filter and other label filters
     //useMemo for performance optimization, so that filtering is only recalculated when fullItems or filterValues change
     const filteredItems = useMemo(() => {
@@ -111,7 +109,6 @@ export const HubPage = ({ resource: resourceName }: HubPageProps) => {
             );
         });
     }, [fullItems, filterValues]);
-
     //prepare the context value for the list, including the filtered items,
     // filter values and available filters extracted from the full list of items
     const listContext = useList({ data: filteredItems });
