@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-    CloneButton,
     DeleteWithConfirmButton,
     ShowView,
     TopToolbar,
@@ -21,6 +20,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 import { StopButton } from '../../resources/runs/components/StopButton';
 import { RunShow } from '../../resources/runs/show/RunShow';
+import { CloneButton } from '../../resources/runs/components/CloneButton';
 
 export const RunShowView = () => {
     return (

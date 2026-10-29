@@ -15,10 +15,11 @@ import { ExtensionsField } from './components/Field';
 import get from 'lodash/get';
 import { useViewContributions } from './registry';
 import { ConsoleViewName, ConsoleViewShowIn } from './ConsoleExtension';
+import { ExtensionsForm } from './components/Form';
 
 export const useExtensions = <
     T extends ElementType,
-    P extends object = ComponentPropsWithoutRef<T>,
+    P extends object = ComponentPropsWithoutRef<T>
 >(props: {
     resource?: string;
     record?: any;
@@ -37,7 +38,6 @@ export const useExtensions = <
         resource: props.resource,
         view: props.view,
     });
-
     const value = get(record, source);
 
     const Component = (props.component || Fragment) as T;
@@ -62,7 +62,7 @@ export const useExtensions = <
     }
 
     if (!value || isLoading || !schemas) {
-        return result;   // ritorna comunque i contributi custom già raccolti
+        return result; // ritorna comunque i contributi custom già raccolti
     }
 
     const kinds = value.map((e: any) => e.kind);
@@ -74,9 +74,11 @@ export const useExtensions = <
         )
     );
 
-    //TODO input field
-    // const Field = props.view == 'create'  || props.view == 'edit' ? ExtensionsInput: ExtensionsField;
-    const Field = ExtensionsField;
+    //handle form/input field
+    const Field =
+        props.view == 'create' || props.view == 'edit'
+            ? ExtensionsForm
+            : ExtensionsField;
 
     tabs.forEach((k: string) => {
         const ts = schemas.find(s => s.kind === k) || {};
@@ -104,8 +106,10 @@ export const useExtensions = <
         );
     });
 
+    //inject extension records only for the 'show' view
+    //TODO align with forms to leverage only this
     const restExtensions = value.filter((e: any) => !tabs.includes(e.kind));
-    if (restExtensions.length > 0) {
+    if (restExtensions.length > 0 && props.view == 'show') {
         const restRecord = { ...record, [source]: restExtensions };
         const field = createElement(ExtensionsField, {
             source,

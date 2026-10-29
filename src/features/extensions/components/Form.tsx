@@ -182,10 +182,7 @@ const ExtensionsFormItem = (props: {
         [id, name]
     );
     const pathResolver = useResolveUploadPath({
-        id:
-            parentId == null
-                ? coordinator?.id
-                : String(parentId),
+        id: parentId == null ? coordinator?.id : String(parentId),
         name: parentName,
         resource: parentResource,
         uploadTarget,
@@ -201,8 +198,7 @@ const ExtensionsFormItem = (props: {
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const getSpecSchema = (kind: string | undefined) => {
-        const schema = schemas?.find(s => s.kind === kind)?.schema;
-        return filterProperties(schema, ['path']);
+        return schemas?.find(s => s.kind === kind)?.schema;
     };
 
     const getUiSchema = (kind: string | undefined) => {
@@ -243,25 +239,38 @@ const ExtensionsFormItem = (props: {
                     validate={[required()]}
                 />
                 <FormDataConsumer<{ kind: string }>>
-                    {({ scopedFormData }) =>
-                        scopedFormData?.kind && (
-                            <ScopedFormData
-                                source="spec"
-                                schema={getSpecSchema(scopedFormData.kind)}
-                                uiSchema={getUiSchema(scopedFormData.kind)}
-                            />
-                        )
-                    }
+                    {({ scopedFormData }) => {
+                        if (!scopedFormData?.kind) {
+                            return null;
+                        }
+
+                        const exs = getSpecSchema(scopedFormData.kind);
+                        if (!exs?.properties) {
+                            return null;
+                        }
+
+                        return (
+                            <>
+                                <ScopedFormData
+                                    source="spec"
+                                    schema={filterProperties(exs, ['path'])}
+                                    uiSchema={getUiSchema(scopedFormData.kind)}
+                                />
+                                {'path' in exs.properties && (
+                                    <PathInput
+                                        source="path"
+                                        defaultValue={getValues(
+                                            sourceContext.getSource('spec.path')
+                                        )}
+                                        pathResolver={pathResolver}
+                                        uploadTarget={uploadTarget}
+                                        onChange={onPathFilesChange}
+                                    />
+                                )}
+                            </>
+                        );
+                    }}
                 </FormDataConsumer>
-                <PathInput
-                    source="path"
-                    defaultValue={getValues(
-                        sourceContext.getSource('spec.path')
-                    )}
-                    pathResolver={pathResolver}
-                    uploadTarget={uploadTarget}
-                    onChange={onPathFilesChange}
-                />
             </Box>
         </ResourceContextProvider>
     );

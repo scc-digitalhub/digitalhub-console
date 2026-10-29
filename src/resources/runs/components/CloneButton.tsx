@@ -10,12 +10,15 @@ import { taskParser } from '../../../common/utils/parsers';
 import { Alert } from '@mui/material';
 import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
 import { transformExtensionPaths } from '../../../features/extensions/utils';
+import { useState } from 'react';
+import { randomId } from '../../../common/utils/helpers';
 
 export const CloneButton = props => {
     const translate = useTranslate();
 
     const record = useRecordContext(props);
     const task = taskParser(record?.spec?.task);
+    const [id] = useState(randomId);
 
     //TODO remove hardcoded dereference of task/runtime
     const runtime = task?.kind?.split('+')[0] || '';
@@ -34,6 +37,21 @@ export const CloneButton = props => {
     const taskKey = `${task.kind}://${task.project}/${task.id}`;
     const taskFunction = record?.spec?.function;
     const taskWorkflow = record?.spec?.workflow;
+
+    const defaultValues = {
+        id,
+        project: record?.project,
+        kind: runSchema ? runSchema.kind : 'run',
+        spec: record?.spec,
+    } as any;
+
+    if (record?.extensions) {
+        defaultValues.extensions = record.extensions.map(e => ({
+            kind: e.kind,
+            name: e.name,
+            spec: e.spec,
+        }));
+    }
 
     const prepare = (r: any) => {
         return {
@@ -55,11 +73,7 @@ export const CloneButton = props => {
             resource="runs"
             label="ra.action.clone"
             icon={<ContentCopyIcon />}
-            record={{
-                project: record?.project,
-                kind: runSchema ? runSchema.kind : 'run',
-                spec: record?.spec,
-            }}
+            record={defaultValues}
             fullWidth
             maxWidth={'lg'}
             transform={prepare}

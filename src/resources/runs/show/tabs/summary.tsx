@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import { useEffect, useState } from 'react';
 import {
     IconButtonWithTooltip,
     Labeled,
@@ -25,6 +26,7 @@ import { endStates } from '../../../projects/list/ProjectDataTable';
 import { WorkflowIcon } from '../../../workflows/icon';
 import { useNavigate } from 'react-router-dom';
 import { TransitionsList } from './transitions';
+import { LiveDuration } from '../../components/LiveDuration';
 
 export const RunSummary = (props?: UseRecordContextParams) => {
     const record = useRecordContext(props);
@@ -140,19 +142,18 @@ export const RunSummary = (props?: UseRecordContextParams) => {
                         color="secondary"
                         sx={{ fontWeight: 'bold' }}
                     >
-                        {record.status?.state === 'RUNNING'
-                            ? formatDuration(
-                                  Date.now() -
-                                      new Date(
-                                          record.metadata.created
-                                      ).getTime()
-                              ).asString
-                            : formatDuration(
-                                  new Date(record.metadata.updated).getTime() -
-                                      new Date(
-                                          record.metadata.created
-                                      ).getTime()
-                              ).asString}
+                        {record.status?.state === 'RUNNING' ? (
+                            <LiveDuration
+                                startedAt={new Date(
+                                    record.metadata.created
+                                ).getTime()}
+                            />
+                        ) : (
+                            formatDuration(
+                                new Date(record.metadata.updated).getTime() -
+                                    new Date(record.metadata.created).getTime()
+                            ).asString
+                        )}
                     </Typography>
                 </Labeled>
             </Stack>

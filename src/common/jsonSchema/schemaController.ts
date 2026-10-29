@@ -90,7 +90,6 @@ export const useGetManySchemas = (
                 kinds.map(k => schemaProvider.list(k.resource, k.runtime))
             )
                 .then(lists => {
-                    console.log('got lists', lists);
                     setSchemas(lists ? lists.flat() : []);
                     isLoading.current = false;
                 })
