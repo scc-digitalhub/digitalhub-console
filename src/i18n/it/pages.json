@@ -68,7 +68,8 @@
     "search": {
         "createdBy": {
             "me": "me",
-            "anyone": "chiunque"
+            "anyone": "chiunque",
+            "shared": "condivisi con me"
         }
     },
     "share": {

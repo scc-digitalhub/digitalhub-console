@@ -52,6 +52,10 @@ export const ProjectSelectorList = props => {
                   source="user"
                   choices={[
                       { id: username, name: 'pages.search.createdBy.me' },
+                      {
+                          id: username + ':shared',
+                          name: 'pages.search.createdBy.shared',
+                      },
                   ]}
                   emptyText={'pages.search.createdBy.anyone'}
                   emptyValue={''}
