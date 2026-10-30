@@ -29,6 +29,7 @@ import '@xyflow/react/dist/style.css';
 import { StateChips } from '../../../../common/components/StateChips';
 import { endStates } from '../../../../common/components/RunStateBadge';
 import { formatDuration } from '../../../../common/utils/helpers';
+import { LiveDuration } from '../../components/LiveDuration';
 
 export const TransitionsList = (props: {
     record: any;
@@ -135,7 +136,15 @@ const TransitionEventNode = ({ id, data }: NodeProps<TransitionNode>) => (
                         color="secondary"
                         sx={{ fontWeight: 'bold' }}
                     >
-                        {formatDuration(data.duration).asString}
+                        {data.transition.status === 'RUNNING' && !data.hasOutgoing ? (
+                            <LiveDuration
+                                startedAt={new Date(
+                                    data.transition.time
+                                ).getTime()}
+                            />
+                        ) : (
+                            formatDuration(data.duration).asString
+                        )}
                     </Typography>
                 )}
             </Stack>

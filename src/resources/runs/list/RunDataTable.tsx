@@ -22,6 +22,7 @@ import { MetricsField } from '../../../features/k8smetrics/MetricsField';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import InfoIcon from '@mui/icons-material/Info';
 import { useRootSelector } from '@dslab/ra-root-selector';
+import { LiveDuration } from '../components/LiveDuration';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
@@ -168,19 +169,18 @@ export const RunDataTable = (props: { storeKey?: string }) => {
                     label="fields.duration.title"
                     sortable={false}
                     render={record =>
-                        record.status?.state === 'RUNNING'
-                            ? formatDuration(
-                                  Date.now() -
-                                      new Date(
-                                          record.metadata.created
-                                      ).getTime()
-                              ).asString
-                            : formatDuration(
-                                  new Date(record.metadata.updated).getTime() -
-                                      new Date(
-                                          record.metadata.created
-                                      ).getTime()
-                              ).asString
+                        record.status?.state === 'RUNNING' ? (
+                            <LiveDuration
+                                startedAt={new Date(
+                                    record.metadata.created
+                                ).getTime()}
+                            />
+                        ) : (
+                            formatDuration(
+                                new Date(record.metadata.updated).getTime() -
+                                    new Date(record.metadata.created).getTime()
+                            ).asString
+                        )
                     }
                 />
             </DataTable.Col>
