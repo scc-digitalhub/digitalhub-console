@@ -18,7 +18,7 @@ export const CloneButton = props => {
 
     const record = useRecordContext(props);
     const task = taskParser(record?.spec?.task);
-    const [id] = useState(randomId);
+    const [id, setId] = useState(randomId);
 
     //TODO remove hardcoded dereference of task/runtime
     const runtime = task?.kind?.split('+')[0] || '';
@@ -78,6 +78,7 @@ export const CloneButton = props => {
             maxWidth={'lg'}
             transform={prepare}
             closeOnClickOutside={false}
+            mutationOptions={{ onSuccess: () => setId(randomId()) }}
         >
             {runSchema?.schema && taskSchema?.schema ? (
                 <RunCreateForm runSchema={runSchema} taskSchema={taskSchema} />
