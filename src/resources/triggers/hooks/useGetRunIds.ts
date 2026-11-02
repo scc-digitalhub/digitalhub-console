@@ -23,7 +23,7 @@ export const useGetRunIds = (): RunIdsResult => {
         if (dataProvider && record) {
             dataProvider
                 .invoke({
-                    path: `/-/${record.project}/trigger/${record.id}/relationships`,
+                    path: `/-/${record.project}/triggers/${record.id}/relationships`,
                 })
                 .then((data: Relationship[]) => {
                     if (data) {

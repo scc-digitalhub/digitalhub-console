@@ -17,7 +17,7 @@ import { JsonSchemaInput } from '../../common/jsonSchema/components/JsonSchema';
 import { useGetSchemas } from '../../common/jsonSchema/schemaController';
 import { AceEditorField, AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
-import { isAlphaNumeric } from '../../common/utils/helpers';
+import { isAlphaNumeric, isValidName } from '../../common/utils/helpers';
 import { isValidAgainstSchema } from '../../common/jsonSchema/utils';
 import Ajv2020 from 'ajv/dist/2020';
 import { customizeValidator } from '@rjsf/validator-ajv8';
@@ -25,8 +25,8 @@ import { StepperToolbar } from '../../common/components/toolbars/StepperToolbar'
 import { getRunUiSpec } from '../runs/types';
 import { KindSelector } from '../../common/components/KindSelector';
 import { Stack } from '@mui/material';
-import { stripProperties } from "../../common/jsonSchema/utils";
-import { filterProps } from "../../common/jsonSchema/utils";
+import { stripProperties } from '../../common/jsonSchema/utils';
+import { filterProps } from '../../common/jsonSchema/utils';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -46,6 +46,9 @@ export const TriggerCreateForm = (props: {
               name: s.kind,
           }))
         : [];
+    console.log('runSchemaProps:', runSchemaProps);
+    console.log('taskSchema:', taskSchema);
+    console.log('schemas:', schemas);
 
     const getSpecSchema = (kind: string | undefined) => {
         return schemas
@@ -73,7 +76,7 @@ export const TriggerCreateForm = (props: {
                 <Stack direction={'row'} spacing={3} pt={4}>
                     <TextInput
                         source="name"
-                        validate={[required(), isAlphaNumeric()]}
+                        validate={[required(), isValidName()]}
                     />
                     <KindSelector kinds={kinds} />
                 </Stack>

@@ -1,4 +1,4 @@
-import { SourceCode } from './SourceCode';
+import { SourceCode } from '../SourceCode';
 const fields = ['fab_source', 'requirements'];
 
 export const FabSourceCode = () => {

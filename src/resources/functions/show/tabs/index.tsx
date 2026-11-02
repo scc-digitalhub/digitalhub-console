@@ -1,5 +1,5 @@
 import { ConsoleTabContribution } from '../../../../features/extensions/ConsoleExtension';
-import { SourceCode } from './SourceCode';
+import { SourceCode } from '../SourceCode';
 import { FabSourceCode } from './flower';
 import { PythonSourceCode } from './python';
 

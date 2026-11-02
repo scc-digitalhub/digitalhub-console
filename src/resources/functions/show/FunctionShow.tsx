@@ -19,6 +19,7 @@ import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { SpecTab } from '../../../common/components/tabs/spec';
 import { RunListView } from './runs';
 import tabsDefinitions from './tabs';
+import { TriggersListView } from './triggers';
 
 export const FunctionShow = () => {
     const record = useRecordContext();
@@ -128,6 +129,12 @@ export const FunctionShow = () => {
                 label={getResourceLabel('runs', 2)}
             >
                 <RunListView />
+            </CustomTabbedShowLayout.Tab>
+            <CustomTabbedShowLayout.Tab
+                value={'triggers'}
+                label={getResourceLabel('triggers', 2)}
+            >
+                <TriggersListView />
             </CustomTabbedShowLayout.Tab>
             {extensionTabs}
         </CustomTabbedShowLayout>

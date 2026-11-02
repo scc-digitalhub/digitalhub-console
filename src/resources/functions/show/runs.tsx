@@ -172,6 +172,7 @@ export const RunListView = props => {
                     project: record.project,
                     spec: {},
                 };
+                const taskSchema = schemas?.find(s => s.kind == task.kind);
 
                 //kind or full reference
                 const taskKey = task.id
@@ -206,8 +207,8 @@ export const RunListView = props => {
                 };
 
                 const label =
-                    task.uiSchema?.['ui:title@' + locale] ||
-                    task.uiSchema?.['ui:title'] ||
+                    taskSchema?.uiSchema?.['ui:title@' + locale] ||
+                    taskSchema?.uiSchema?.['ui:title'] ||
                     'resources.tasks.kinds.' + getAction(task.kind);
                 return (
                     <CreateInDialogButton
@@ -223,7 +224,7 @@ export const RunListView = props => {
                     >
                         <RunCreateForm
                             runSchema={schemas?.find(s => s.kind == kind)}
-                            taskSchema={schemas?.find(s => s.kind == task.kind)}
+                            taskSchema={taskSchema}
                         />
                     </CreateInDialogButton>
                 );

@@ -1,8 +1,8 @@
 import { RecordContextProvider, useRecordContext } from 'react-admin';
-import { useGetSchema } from '../../../../common/jsonSchema/schemaController';
-import { filterProperties } from '../../../../common/jsonSchema/utils';
-import { getFunctionUiSpec } from '../../types';
-import { JsonSchemaField } from '../../../../common/jsonSchema/components/JsonSchema';
+import { useGetSchema } from '../../../common/jsonSchema/schemaController';
+import { filterProperties } from '../../../common/jsonSchema/utils';
+import { getFunctionUiSpec } from '../types';
+import { JsonSchemaField } from '../../../common/jsonSchema/components/JsonSchema';
 
 export const SourceCode = (props: { fields?: string[] }) => {
     const { fields = ['source'] } = props;
