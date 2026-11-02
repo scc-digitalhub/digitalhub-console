@@ -23,6 +23,7 @@ import { LabelsField } from '../../../common/components/fields/LabelsField';
 import InfoIcon from '@mui/icons-material/Info';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { LiveDuration } from '../components/LiveDuration';
+import { isValidElement, ReactNode } from 'react';
 
 const enableMetrics: string =
     (globalThis as any).REACT_APP_ENABLE_METRICS ||
@@ -42,11 +43,15 @@ const RowActions = () => {
     );
 };
 
-export const RunDataTable = (props: { storeKey?: string }) => {
-    const { storeKey } = props;
+export const RunDataTable = (props: {
+    storeKey?: string;
+    hiddenColumns?: string[];
+    actions?: ReactNode;
+}) => {
+    const { storeKey, hiddenColumns: hiddenColumnsProp, actions } = props;
     const { root } = useRootSelector();
 
-    const hiddenColumns = [
+    const hiddenColumns = hiddenColumnsProp || [
         'id',
         'metadata.updated',
         'metadata.labels',
@@ -249,7 +254,7 @@ export const RunDataTable = (props: { storeKey?: string }) => {
             </DataTable.Col>
 
             <DataTable.Col>
-                <RowActions />
+                {actions && isValidElement(actions) ? actions : <RowActions />}
             </DataTable.Col>
         </DataTable>
     );

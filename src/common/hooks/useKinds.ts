@@ -6,15 +6,20 @@ import { useEffect, useState } from 'react';
 import { useResourceContext } from 'react-admin';
 import { useSchemaProvider } from '../provider/schemaProvider';
 
-export const useKinds = (): string[] | undefined => {
-    const resource = useResourceContext();
+export const useKinds = (
+    props: {
+        resource?: string;
+        runtime?: string;
+    } = {}
+): string[] | undefined => {
+    const resource = useResourceContext(props);
     const schemaProvider = useSchemaProvider();
     const [kinds, setKinds] = useState<string[] | undefined>(undefined);
 
     useEffect(() => {
         if (schemaProvider && resource) {
             schemaProvider
-                .kinds(resource)
+                .kinds(resource, props.runtime)
                 .then(res => {
                     if (res) {
                         setKinds(res.sort((a, b) => a.localeCompare(b)));
@@ -22,7 +27,7 @@ export const useKinds = (): string[] | undefined => {
                 })
                 .catch(() => {});
         }
-    }, [resource, schemaProvider]);
+    }, [resource, schemaProvider, props.runtime]);
 
     return kinds;
 };

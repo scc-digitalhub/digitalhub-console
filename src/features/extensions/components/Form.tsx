@@ -27,7 +27,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { isValidKind, randomId } from '../../../common/utils/helpers';
 import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
-import { filterProperties } from '../../../common/jsonSchema/utils';
+import { stripProperties } from '../../../common/jsonSchema/utils';
 import { PathInput } from '../../files/upload/components/PathInput';
 import { useResolveUploadPath } from '../../files/upload/useResolveUploadPath';
 import { FileSelection } from '../../files/upload/types';
@@ -253,7 +253,7 @@ const ExtensionsFormItem = (props: {
                             <>
                                 <ScopedFormData
                                     source="spec"
-                                    schema={filterProperties(exs, ['path'])}
+                                    schema={stripProperties(exs, ['path'])}
                                     uiSchema={getUiSchema(scopedFormData.kind)}
                                 />
                                 {'path' in exs.properties && (

@@ -40,7 +40,7 @@ import {
 } from '../../../features/extensions/utils';
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
-import { filterProperties } from '../../../common/jsonSchema/utils';
+import { stripProperties } from '../../../common/jsonSchema/utils';
 import { useExtensionsSections } from '../../../features/extensions/sections';
 import { useNavigate } from 'react-router-dom';
 import { CancelIcon } from '../../../common/components/icons/CancelIcon';
@@ -170,7 +170,7 @@ const ArtifactEditForm = ({
         schemaProvider
             .get(resource, kind)
             .then(schemaResult => {
-                const nextSchema = filterProperties(schemaResult?.schema, [
+                const nextSchema = stripProperties(schemaResult?.schema, [
                     'path',
                 ]);
                 setSchema({ ...schemaResult, schema: nextSchema ?? undefined });

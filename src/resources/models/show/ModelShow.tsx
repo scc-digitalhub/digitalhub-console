@@ -15,7 +15,7 @@ import { LineageTabComponent } from '../../../features/lineage/components/Lineag
 import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { cards } from './cards';
-import { tabs } from './tabs';
+import tabsDefinitions from './tabs';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { MetadataTab } from '../../../common/components/tabs/metadata';
 import { SpecTab } from '../../../common/components/tabs/spec';
@@ -29,7 +29,17 @@ export const ModelShow = (props: { record?: any }) => {
 
     const kind = record?.kind;
     const Card = kind && cards[kind] ? cards[kind] : null;
-    const kindTabs = kind ? tabs[kind] : null;
+    const kindTabs = kind
+        ? ([] as any[]).concat(tabsDefinitions[kind] ?? [])
+        : null;
+    const genericTabs = tabsDefinitions['*'] ?? [];
+    const tabs = kindTabs
+        ? kindTabs.concat(
+              genericTabs.filter(tab =>
+                  kindTabs.every(kTab => kTab.key !== tab.key)
+              )
+          )
+        : genericTabs;
 
     return (
         <CustomTabbedShowLayout
@@ -78,20 +88,17 @@ export const ModelShow = (props: { record?: any }) => {
             >
                 <SpecTab />
             </CustomTabbedShowLayout.Tab>
-            {kind &&
-                kindTabs
-                    ?.filter(Tab =>
-                        Tab.isVisible ? Tab.isVisible(record) : true
-                    )
-                    .map(Tab => (
-                        <CustomTabbedShowLayout.Tab
-                            key={Tab.key || kind}
-                            value={Tab.key || kind}
-                            label={Tab.label || kind}
-                        >
-                            <Tab.Element />
-                        </CustomTabbedShowLayout.Tab>
-                    ))}
+            {tabs
+                ?.filter(Tab => (Tab.isVisible ? Tab.isVisible(record) : true))
+                .map(Tab => (
+                    <CustomTabbedShowLayout.Tab
+                        key={Tab.key || kind}
+                        value={Tab.key || kind}
+                        label={Tab.label || kind}
+                    >
+                        <Tab.Element />
+                    </CustomTabbedShowLayout.Tab>
+                ))}
 
             {extensionTabs}
 

@@ -171,24 +171,21 @@ export const VersionsCount = () => {
         }
     }, [record, resource, dataProvider]);
 
-    if (!record) {
-        return <></>;
-    }
-
     return (
         <Typography
             variant="body2"
             color="textSecondary"
             sx={{ color: theme.palette.text.secondary }}
         >
-            {count &&
-                translate('messages.navigation.x-elements', {
-                    resource:
-                        count > 1
-                            ? translate('resources.common.version.title')
-                            : translate('resources.common.version.version'),
-                    smart_count: count,
-                }).toLocaleLowerCase()}
+            {count
+                ? translate('messages.navigation.x-elements', {
+                      resource:
+                          count > 1
+                              ? translate('resources.common.version.title')
+                              : translate('resources.common.version.version'),
+                      smart_count: count,
+                  }).toLocaleLowerCase()
+                : ''}
         </Typography>
     );
 };

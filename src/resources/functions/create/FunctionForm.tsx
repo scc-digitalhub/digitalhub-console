@@ -4,7 +4,7 @@
 
 import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { Box } from '@mui/material';
-import { TextInput, required, useResourceContext } from 'react-admin';
+import { TextInput, required } from 'react-admin';
 import {
     KindSelector,
     KindChangeGuard,
@@ -14,21 +14,18 @@ import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
+import { useKinds } from '../../../common/hooks/useKinds';
 
 export const FunctionCreateForm = (props: {
     isFromTemplate?: boolean;
     onCancel?: () => void;
 }) => {
     const { isFromTemplate, onCancel } = props;
-    const resource = useResourceContext();
     const [kind, setKind] = useState<string | undefined>();
     const [isSpecDirty, setIsSpecDirty] = useState(false);
 
-    const { data: kindSchemas } = useGetSchemas(resource || '');
-    const kinds = kindSchemas
-        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
-        : [];
+    const kindSchemas = useKinds();
+    const kinds = kindSchemas ? kindSchemas.map(s => ({ id: s, name: s })) : [];
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm

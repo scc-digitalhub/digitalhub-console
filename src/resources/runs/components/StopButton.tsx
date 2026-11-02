@@ -22,8 +22,9 @@ export const StopButton = (props: StopButtonProps) => {
     const id = idProp || record?.id;
     const stopRun = useStopRun();
 
-    const onClick = () => {
+    const onClick = e => {
         stopRun(id);
+        e.stopPropagation();
     };
 
     if (

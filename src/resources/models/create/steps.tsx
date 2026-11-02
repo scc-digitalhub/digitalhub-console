@@ -13,7 +13,7 @@ import {
 import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { PathInput } from '../../../features/files/upload/components/PathInput';
 import { useSchemaProvider } from '../../../common/provider/schemaProvider';
-import { filterProperties } from '../../../common/jsonSchema/utils';
+import { stripProperties } from '../../../common/jsonSchema/utils';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { FileSelection } from '../../../features/files/upload/types';
 import {
@@ -57,7 +57,7 @@ export const ModelSpecStep = ({
         schemaProvider
             .get(resource, kind)
             .then(schemaResult => {
-                const nextSchema = filterProperties(schemaResult?.schema, [
+                const nextSchema = stripProperties(schemaResult?.schema, [
                     'path',
                 ]);
                 setSchema({ ...schemaResult, schema: nextSchema ?? undefined });

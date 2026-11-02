@@ -3,30 +3,26 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { JSXElementConstructor, ReactElement } from 'react';
-import { useResourceContext } from 'react-admin';
 
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useGetExtensions } from '../../../features/extensions/utils';
-import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { useExtensionsSteps } from '../../../features/extensions/steps';
 import { ModelSpecStep, BaseStep, UploadStep } from './steps';
+import { useKinds } from '../../../common/hooks/useKinds';
 
 export const ModelCreateForm = (props: {
     isFromTemplate?: boolean;
     onCancel?: () => void;
 }) => {
     const { isFromTemplate, onCancel } = props;
-    const resource = useResourceContext();
 
-    const { data: kindSchemas } = useGetSchemas(resource || '');
+    const kindSchemas = useKinds();
     const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSteps();
 
-    const kinds = kindSchemas
-        ? kindSchemas.map(s => ({ id: s.kind, name: s.kind }))
-        : [];
+    const kinds = kindSchemas ? kindSchemas.map(s => ({ id: s, name: s })) : [];
 
     //TODO fix stepperform handling for empty (null) children
     //we build steps outside to avoid false/null children to stepperForm

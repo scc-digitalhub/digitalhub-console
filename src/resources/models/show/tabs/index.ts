@@ -5,7 +5,7 @@ import { MlflowParams } from './mlflow';
 import { MetricsTab } from './metrics';
 
 export const tabs: Record<string, ConsoleTabContribution[]> = {
-    metrics: [
+    '*': [
         {
             key: 'metrics',
             Element: MetricsTab,
@@ -43,3 +43,5 @@ export const tabs: Record<string, ConsoleTabContribution[]> = {
         },
     ],
 };
+
+export default tabs;

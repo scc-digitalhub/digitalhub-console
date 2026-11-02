@@ -82,7 +82,7 @@ export const filterProps = (first: any, second: any) => {
     return filteredFirst;
 };
 
-export const filterProperties = (schema, keys) => {
+export const stripProperties = (schema, keys) => {
     if (!schema) return null;
 
     //remove properties definition
@@ -100,6 +100,29 @@ export const filterProperties = (schema, keys) => {
     if (Array.isArray(schema.required)) {
         filteredSchema.required = schema.required.filter(
             key => !keys.includes(key)
+        );
+    }
+
+    return filteredSchema;
+};
+export const filterProperties = (schema, keys) => {
+    if (!schema) return null;
+
+    //keep only properties in keys
+    //TODO handle nested in allOf/anyOf
+    const filteredSchema = {
+        ...JSON.parse(JSON.stringify(schema)),
+        properties: Object.keys(schema.properties ?? {})
+            .filter(key => keys.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = schema.properties[key];
+                return obj;
+            }, {}),
+    };
+
+    if (Array.isArray(schema.required)) {
+        filteredSchema.required = schema.required.filter(
+            key => keys.includes(key)
         );
     }
 

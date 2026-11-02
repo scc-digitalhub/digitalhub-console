@@ -38,28 +38,31 @@ export const useGetSchemas = (
 };
 
 export const useGetSchema = (
-    resource: string,
-    kind: string
+    resource?: string,
+    kind?: string
 ): { data?: any; isLoading?: boolean; error?: any } => {
     const schemaProvider = useSchemaProvider();
-    const [schema, setSchema] = useState<any>();
     const resourceName = useResourceContext({ resource: resource });
+    const record = useRecordContext();
+    const [schema, setSchema] = useState<any>();
 
     const isLoading = useRef(true);
     const error = useRef<any>(null);
 
     useEffect(() => {
-        if (schemaProvider && resourceName && kind) {
+        const kindToUse = kind || record?.kind;
+
+        if (schemaProvider && resourceName && kindToUse) {
             isLoading.current = true;
             schemaProvider
-                .get(resourceName, kind)
+                .get(resourceName, kindToUse)
                 .then(res => {
                     setSchema(res || null);
                     isLoading.current = false;
                 })
                 .catch(e => (error.current = e));
         }
-    }, [resourceName, kind]);
+    }, [resourceName, record, kind]);
 
     return useMemo(
         () => ({

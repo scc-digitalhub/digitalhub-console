@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react';
 import {
     Identifier,
     RaRecord,
@@ -18,7 +19,9 @@ import StopIcon from '@mui/icons-material/Stop';
 import HardwareIcon from '@mui/icons-material/Hardware';
 import AssistantPhotoIcon from '@mui/icons-material/AssistantPhoto';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import React from 'react';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export const StateChips = (props: {
     resource?: string;
@@ -166,7 +169,11 @@ export const StateIcons = {
     COMPLETED: DoneAllIcon,
     ERROR: ErrorIcon,
     STOPPED: StopIcon,
+    STOP: StopIcon,
     BUILT: HardwareIcon,
     READY: AssistantPhotoIcon,
     PENDING: PendingActionsIcon,
+    DELETED: DeleteForeverIcon,
+    DELETING: AutoDeleteIcon,
+    UPLOADING: FileUploadIcon,
 };

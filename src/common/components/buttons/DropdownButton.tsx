@@ -66,7 +66,11 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                     sx={{
                         minWidth: '80px',
                         marginX: '10px',
-                        alignItems: 'flex-start',
+                        alignItems: 'stretch',
+                        '& .MuiButton-root': {
+                            justifyContent: 'flex-start',
+                            textAlign: 'left',
+                        },
                     }}
                 >
                     {children}

@@ -29,6 +29,7 @@ const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
 export const RunCreateForm = (props: { runSchema: any; taskSchema: any }) => {
     const { runSchema: runSchemaProps, taskSchema: taskSchemaProps } = props;
+    console.log('props', props);
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
 

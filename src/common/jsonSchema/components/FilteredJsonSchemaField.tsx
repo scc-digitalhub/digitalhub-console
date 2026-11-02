@@ -6,10 +6,17 @@ import { RecordContextProvider } from 'react-admin';
 import { JsonSchemaField } from '../../../common/jsonSchema/components/JsonSchema';
 import { JsonSchemaFieldProps } from '@dslab/ra-jsonschema-input';
 
+//TODO drop, mixes render with logic
 export const FilteredJsonSchemaField = (
     props: FilteredJsonSchemaFieldProps
 ) => {
-    const { record, sourceName, fields, schema: schemaFromProps, uiSchema } = props;
+    const {
+        record,
+        sourceName,
+        fields,
+        schema: schemaFromProps,
+        uiSchema,
+    } = props;
     const schema = schemaFromProps
         ? JSON.parse(JSON.stringify(schemaFromProps))
         : {};

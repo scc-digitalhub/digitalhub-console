@@ -27,11 +27,23 @@ export const PageTitle = (props: PageTitleProps) => {
         ...sx,
     };
 
+    const hSize =
+        props.fontSize === 'small'
+            ? 'h6'
+            : props.fontSize === 'large'
+            ? 'h3'
+            : 'h4';
+    const sSize =
+        props.fontSize === 'small'
+            ? 'body1'
+            : props.fontSize === 'large'
+            ? 'h5'
+            : 'h6';
     return (
         <Box sx={sxProps}>
             <Box sx={{ textAlign: 'left', flexGrow: 1 }}>
                 <Typography
-                    variant="h4"
+                    variant={hSize}
                     sx={{ pb: secondaryText ? 1 : 0, color: 'secondary.main' }}
                 >
                     {text} {badge && isValidElement(badge) ? badge : null}
@@ -40,7 +52,7 @@ export const PageTitle = (props: PageTitleProps) => {
                     secondaryText
                 ) : (
                     <Typography
-                        variant="h6"
+                        variant={sSize}
                         sx={{
                             pb: secondaryText ? 1 : 0,
                             color: 'secondary.light',
@@ -70,6 +82,7 @@ export type PageTitleProps = {
     icon?: ReactElement | false;
     badge?: ReactElement | false;
     sx?: SxProps<Theme>;
+    fontSize?: 'small' | 'medium' | 'large';
     resource?: string;
     record?: any;
 };

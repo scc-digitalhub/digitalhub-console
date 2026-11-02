@@ -78,7 +78,7 @@ export type SchemaProvider<ResourceType extends string = string> = {
 interface SchemaProviderContextValue {
     provider: SchemaProvider | undefined;
     schemas: any | null;
-    kinds: (resource: string) => Promise<string[] | null>;
+    kinds: (resource: string, runtime?: string) => Promise<string[] | null>;
     list: (resource: string, runtime?: string) => Promise<any[]>;
     get: (resource: string, kind: string) => Promise<any>;
 }
@@ -213,11 +213,14 @@ export const ResourceSchemaProvider = (props: ResourceSchemaProviderParams) => {
             return JSON.parse(JSON.stringify(hit));
         };
 
-        const kinds = async (resource: string): Promise<string[]> => {
+        const kinds = async (
+            resource: string,
+            runtime?: string
+        ): Promise<string[]> => {
             if (!(resource in definitions)) {
                 return [];
             }
-            const schemas = await list(resource);
+            const schemas = await list(resource, runtime);
             if (schemas == null) {
                 return [];
             }
