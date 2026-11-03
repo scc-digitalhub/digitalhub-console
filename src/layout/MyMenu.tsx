@@ -123,11 +123,27 @@ export const MyMenu = () => {
             />
 
             <MenuItemLink
-                leftIcon={<ProjectIcon />}
+                leftIcon={
+                    <ProjectIcon
+                        sx={theme => ({
+                            color: `${theme.palette.text.primary} !important`,
+                            fill: `${theme.palette.text.primary} !important`,
+                        })}
+                    />
+                }
                 to={'/'}
-                primaryText={<>{getResourceLabel('projects', 2)}</>}
-                selected={false}
+                primaryText={`${getResourceLabel('projects', 2)}`}
                 component={UploadSafeLink}
+                sx={{
+                    '&&.RaMenuItemLink-active': {
+                        backgroundColor: 'transparent',
+                        color: 'text.primary',
+                        '& .MuiSvgIcon-root': {
+                            color: 'text.primary',
+                            fill: 'text.primary',
+                        },
+                    },
+                }}
             />
         </Menu>
     );
