@@ -4,7 +4,10 @@
 
 import { mergeUiTemplate } from "../../common/jsonSchema/utils";
 
-export const getTriggerUiSpec = (schema: any | undefined, taskSchema: any) => {
+export const getTriggerUiSpec = (
+    schema: any | undefined,
+    taskSchema: any = {}
+) => {
     //filter and merge with template
     if (!schema || !('properties' in schema)) {
         return {};
@@ -15,10 +18,10 @@ export const getTriggerUiSpec = (schema: any | undefined, taskSchema: any) => {
         task: {
             'ui:readonly': true,
         },
-        function: taskSchema.properties.function
+        function: taskSchema.properties?.function
             ? { 'ui:readonly': true }
             : { 'ui:widget': 'hidden' },
-        workflow: taskSchema.properties.workflow
+        workflow: taskSchema.properties?.workflow
             ? { 'ui:readonly': true }
             : { 'ui:widget': 'hidden' },
         template: {

@@ -21,7 +21,7 @@ import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../common/jsonSchema/schemaController';
 import { DropDownButton } from '../../common/components/buttons/DropdownButton';
-import { TriggerCreateForm } from '../../resources/triggers/create';
+import { TriggerCreate } from '../../resources/triggers/create';
 import { DeactivateButton } from '../../resources/triggers/components/DeactivateButton';
 import { LoadMore } from '../../common/components/layout/LoadMore';
 import { sanitizeObj } from '../../common/utils/helpers';
@@ -108,7 +108,8 @@ export const TaskTriggerList = () => {
                     maxWidth={'lg'}
                     closeOnClickOutside={false}
                 >
-                    <TriggerCreateForm
+                    <TriggerCreate
+                        taskKind={record?.kind}
                         runSchema={runSchema.schema}
                         taskSchema={taskSchema.schema}
                     />

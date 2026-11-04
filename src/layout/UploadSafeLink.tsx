@@ -9,6 +9,7 @@ import { LinkProps, useHref, useLinkClickHandler } from 'react-router-dom';
 /**
  * Adaptation of react-router Link to warn the user before navigation if there are ongoing uploads
  */
+//TODO remove or refactor, this has mixed logic, routing and upload handling
 export const UploadSafeLink = forwardRef<HTMLAnchorElement, LinkProps>(
     function LinkWithRef(props, forwardedRef) {
         const {

@@ -3,15 +3,24 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { SelectInput, required, useRecordContext } from 'react-admin';
+import { useRef } from 'react';
 import { isValidKind } from '../utils/helpers';
 import { useFormContext } from 'react-hook-form';
 import { FormGuard } from './FormGuard';
+import { get } from 'lodash';
 
 export const KindSelector = (props: {
     kinds?: any[] | undefined;
     readOnly?: boolean;
+    source?: string;
+    defaultValue?: string;
 }) => {
-    const { kinds = [], readOnly = false } = props;
+    const {
+        kinds = [],
+        readOnly = false,
+        source = 'kind',
+        defaultValue,
+    } = props;
 
     if (!kinds || kinds.length === 0) {
         return <></>;
@@ -20,8 +29,9 @@ export const KindSelector = (props: {
     return (
         <SelectInput
             readOnly={readOnly}
-            source="kind"
+            source={source}
             choices={kinds}
+            defaultValue={defaultValue}
             validate={[required(), isValidKind(kinds)]}
         />
     );
@@ -35,19 +45,27 @@ export const KindSelector = (props: {
 export const KindChangeGuard = ({
     isDirty,
     onConfirm,
+    source = 'kind',
+    field = 'spec',
 }: {
     isDirty?: boolean;
     onConfirm?: (nextKind: any) => void;
+    source?: string;
+    field?: string;
 } = {}) => {
     const { setValue } = useFormContext();
     const record = useRecordContext();
+    const hasMounted = useRef(false);
 
     return (
         <FormGuard
-            field="kind"
+            field={source}
             isDirty={isDirty}
             onConfirm={nextKind => {
-                setValue('spec', record?.spec || {});
+                if (hasMounted.current) {
+                    setValue(field, get(record, field) || {});
+                }
+                hasMounted.current = true;
                 onConfirm?.(nextKind);
             }}
         />
