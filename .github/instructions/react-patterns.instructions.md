@@ -77,6 +77,12 @@ Use `useCallback` **only** when:
 
 Be consistent: if some handlers in a component are wrapped in `useCallback` and others are not, there must be a concrete reason for the difference.
 
+## Changes to shared controllers and hooks
+
+When changing a component, carefully assess whether the requested behavior can be implemented within that component or its call site before changing a shared controller or hook. Shared changes affect other consumers and can expand the task beyond its requested scope.
+
+**Always ask the user for explicit confirmation before modifying a shared controller or hook**, including adding parameters or behavior, changing defaults, or making an optimization. Do not assume a component-level request authorizes changes to shared logic. If confirmed, inspect relevant consumers and preserve existing behavior for callers that do not opt into the change.
+
 ## State: Avoid derived state
 
 Do NOT use `useState` + `useEffect` to keep state in sync with other state or props. Compute the derived value directly during render:
