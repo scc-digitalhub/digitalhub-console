@@ -15,7 +15,7 @@ import {
     useResourceContext,
     useResourceDefinition,
 } from 'react-admin';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
+import { VersionsListAside } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { WorkflowIcon } from '../../resources/workflows/icon';
 import { exporter } from '../../resources/workflows/exporter';
@@ -36,7 +36,7 @@ export const WorkflowShowView = () => {
                     <ShowPageTitle icon={<WorkflowIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar exporter={exporter} />}
-                        aside={<VersionsListWrapper />}
+                        aside={<VersionsListAside />}
                         {...SHOW_VIEW_VERSION_PROPS}
                     >
                         <WorkflowShow />

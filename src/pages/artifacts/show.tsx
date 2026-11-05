@@ -17,7 +17,7 @@ import { InspectButton } from '@dslab/ra-inspect-button';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useState } from 'react';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
+import { VersionsListAside } from '../../common/components/VersionsList';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 import { ExtensionsToolbarButtons } from '../../features/extensions/components/ExtensionsButtons';
@@ -32,7 +32,7 @@ export const ArtifactShowView = () => {
                     <ShowPageTitle icon={<ArtifactIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar />}
-                        aside={<VersionsListWrapper />}
+                        aside={<VersionsListAside />}
                         {...SHOW_VIEW_VERSION_PROPS}
                         component={StyledFlatCard}
                     >

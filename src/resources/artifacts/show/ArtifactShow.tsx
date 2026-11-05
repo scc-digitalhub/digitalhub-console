@@ -12,7 +12,7 @@ import {
 import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
 import { IdField } from '../../../common/components/fields/IdField';
 import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
-import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
+import { FileExplorer } from '../../../features/files/fileExplorer/components/FileExplorer';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { MetadataTab } from '../../../common/components/tabs/metadata';
 import { SpecTab } from '../../../common/components/tabs/spec';
@@ -52,7 +52,7 @@ export const ArtifactShow = (props: { record?: any }) => {
                     )}
                 </Stack>
                 <Divider />
-                {record?.status?.files && <FileInfoTree />}
+                {record?.spec?.path && <FileExplorer path={record.spec.path} />}
             </CustomTabbedShowLayout.Tab>
             <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
                 <MetadataTab />

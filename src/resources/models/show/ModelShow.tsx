@@ -12,13 +12,13 @@ import {
 import { CustomTabbedShowLayout } from '../../../common/components/CustomTabbedShowLayout';
 import { IdField } from '../../../common/components/fields/IdField';
 import { LineageTabComponent } from '../../../features/lineage/components/LineageTabComponent';
-import { FileInfoTree } from '../../../features/files/fileInfoTree/components/FileInfoTree';
 import { useExtensionsTabs } from '../../../features/extensions/tabs';
 import { cards } from './cards';
 import tabsDefinitions from './tabs';
 import { LabelsField } from '../../../common/components/fields/LabelsField';
 import { MetadataTab } from '../../../common/components/tabs/metadata';
 import { SpecTab } from '../../../common/components/tabs/spec';
+import { FileExplorer } from '../../../features/files/fileExplorer/components/FileExplorer';
 
 export const ModelShow = (props: { record?: any }) => {
     const record = useRecordContext(props);
@@ -77,7 +77,7 @@ export const ModelShow = (props: { record?: any }) => {
                 </Stack>
                 <Divider />
                 {Card && <Card />}
-                {record?.status?.files && <FileInfoTree />}
+                {record?.spec?.path && <FileExplorer path={record.spec.path} />}
             </CustomTabbedShowLayout.Tab>
             <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
                 <MetadataTab />

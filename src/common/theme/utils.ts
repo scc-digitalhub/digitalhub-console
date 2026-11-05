@@ -26,7 +26,7 @@ export const SHOW_VIEW_PROPS = {
 };
 
 /**
- * Shared sx/prop presets for resources show views, with version list aside.
+ * Shared layout for show views with a self-sizing, collapsible versions aside.
  */
 export const SHOW_VIEW_VERSION_PROPS = {
     ...SHOW_VIEW_PROPS,
@@ -34,12 +34,19 @@ export const SHOW_VIEW_VERSION_PROPS = {
         ...SHOW_VIEW_PROPS.sx,
         '& .RaShow-main': {
             display: 'grid',
-            gridTemplateColumns: { lg: '1fr 350px' },
+            gridTemplateColumns: {
+                xs: 'minmax(0, 1fr)',
+                lg: 'minmax(0, 1fr) auto',
+            },
             gridTemplateRows: {
                 xs: 'repeat(1, 1fr)',
                 lg: '',
             },
             gap: 2,
+        },
+        '& .RaShow-card': {
+            minWidth: 0,
+            maxWidth: '100%',
         },
     },
 };

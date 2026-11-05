@@ -15,7 +15,7 @@ import {
     useResourceContext,
     useResourceDefinition,
 } from 'react-admin';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
+import { VersionsListAside } from '../../common/components/VersionsList';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
 import { FunctionIcon } from '../../resources/functions/icon';
 import { exporter } from '../../resources/functions/exporter';
@@ -36,7 +36,7 @@ export const FunctionShowView = () => {
                     <ShowPageTitle icon={<FunctionIcon fontSize={'large'} />} />
                     <ShowView
                         actions={<ShowToolbar exporter={exporter} />}
-                        aside={<VersionsListWrapper />}
+                        aside={<VersionsListAside />}
                         {...SHOW_VIEW_VERSION_PROPS}
                     >
                         <FunctionShow />

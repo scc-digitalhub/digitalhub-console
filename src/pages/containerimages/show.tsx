@@ -22,7 +22,7 @@ import { useRootSelector } from '@dslab/ra-root-selector';
 import { useState } from 'react';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { ExtensionsToolbarButtons } from '../../features/extensions/components/ExtensionsButtons';
-import { VersionsListWrapper } from '../../common/components/VersionsList';
+import { VersionsListAside } from '../../common/components/VersionsList';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { StyledFlatCard } from '../../common/theme/StyledFlatCard';
 import { shorten } from '../../common/utils/helpers';
@@ -55,7 +55,7 @@ export const ContainerImageShowView = () => {
                     <ShowView
                         actions={<ShowToolbar />}
                         aside={
-                            <VersionsListWrapper
+                            <VersionsListAside
                                 primaryText={primaryText}
                                 secondaryText={() => null}
                             />

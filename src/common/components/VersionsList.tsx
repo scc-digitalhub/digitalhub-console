@@ -5,13 +5,17 @@
 import {
     Box,
     CardContent,
+    IconButton,
     SxProps,
     Theme,
     Typography,
+    Tooltip,
     Tab as MuiTab,
     useTheme,
     alpha,
+    Stack,
 } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
     List,
     Pagination,
@@ -21,13 +25,15 @@ import {
     useDataProvider,
     useRecordContext,
     useResourceContext,
+    useStore,
     useTranslate,
 } from 'react-admin';
 
-import { useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useId, useMemo, useState } from 'react';
 import { FlatCard } from './layout/FlatCard';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 
-export type VersionListProps = VersionsListWrapperProps & {
+export type VersionListProps = VersionsListAsideProps & {
     showActions?: boolean;
     usePagination?: boolean;
     perPage?: number;
@@ -125,24 +131,63 @@ export const VersionsList = (props: VersionListProps) => {
     );
 };
 
-export type VersionsListWrapperProps = Pick<
+export type VersionsListAsideProps = Pick<
     SimpleListProps,
     'rowClick' | 'primaryText' | 'secondaryText' | 'rightIcon' | 'leftIcon'
 >;
 
-export const VersionsListWrapper = (props: VersionsListWrapperProps) => {
+export const VersionsListAside = (props: VersionsListAsideProps) => {
     const translate = useTranslate();
+    const [open, setOpen] = useStore<boolean>('versionsListAside.open', true);
+    const contentId = useId();
+    const toggleLabel = `${translate(
+        open ? 'ra.action.close' : 'ra.action.expand'
+    )} ${translate('resources.common.version.title')}`;
 
     return (
-        <FlatCard>
-            <MuiTab
-                label={translate('resources.common.version.title')}
-                disableFocusRipple
-                disableRipple
-            />
+        <FlatCard
+            sx={{
+                boxSizing: 'border-box',
+                minWidth: 0,
+                width: open ? { xs: '100%', lg: 350 } : 56,
+                justifySelf: 'end',
+            }}
+        >
+            <Box sx={{ display: 'flex', alignItems: 'center', minHeight: 48 }}>
+                <MuiTab
+                    label={translate('resources.common.version.title')}
+                    disableFocusRipple
+                    disableRipple
+                    sx={{ display: open ? 'inline-flex' : 'none' }}
+                />
+                <Tooltip title={toggleLabel}>
+                    <IconButton
+                        aria-label={toggleLabel}
+                        aria-expanded={open}
+                        aria-controls={contentId}
+                        onClick={() => setOpen(value => !value)}
+                        sx={{ ml: 'auto' }}
+                    >
+                        {open ? (
+                            <ChevronRightIcon />
+                        ) : (
+                            <Stack direction="row" gap={0.3}>
+                                <DynamicFeedIcon />
+                                <VersionsCount
+                                    message={c => {
+                                        return c ? ` ${c}` : ``;
+                                    }}
+                                />
+                            </Stack>
+                        )}
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <CardContent
+                id={contentId}
                 sx={{
                     padding: 0,
+                    display: open ? 'block' : 'none',
                 }}
             >
                 <VersionsList
@@ -155,7 +200,10 @@ export const VersionsListWrapper = (props: VersionsListWrapperProps) => {
     );
 };
 
-export const VersionsCount = () => {
+export const VersionsCount = (props: {
+    message?: string | ((count: number) => string | ReactElement);
+}) => {
+    const { message } = props;
     const record = useRecordContext();
     const resource = useResourceContext();
     const dataProvider = useDataProvider();
@@ -177,21 +225,35 @@ export const VersionsCount = () => {
         }
     }, [record, resource, dataProvider]);
 
+    const content = count => {
+        if (message) {
+            return typeof message === 'function'
+                ? message(count)
+                : translate(message, {
+                      resource:
+                          count > 1
+                              ? translate('resources.common.version.title')
+                              : translate('resources.common.version.version'),
+                      smart_count: count,
+                  }).toLocaleLowerCase();
+        }
+
+        return translate('messages.navigation.x-elements', {
+            resource:
+                count > 1
+                    ? translate('resources.common.version.title')
+                    : translate('resources.common.version.version'),
+            smart_count: count,
+        }).toLocaleLowerCase();
+    };
+
     return (
         <Typography
             variant="body2"
             color="textSecondary"
             sx={{ color: theme.palette.text.secondary }}
         >
-            {count
-                ? translate('messages.navigation.x-elements', {
-                      resource:
-                          count > 1
-                              ? translate('resources.common.version.title')
-                              : translate('resources.common.version.version'),
-                      smart_count: count,
-                  }).toLocaleLowerCase()
-                : ''}
+            {count ? content(count) : ''}
         </Typography>
     );
 };

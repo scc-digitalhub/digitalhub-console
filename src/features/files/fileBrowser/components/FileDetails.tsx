@@ -9,8 +9,9 @@ import {
     Labeled,
     RecordContextProvider,
     TextField,
+    TopToolbar,
 } from 'react-admin';
-import { CardContent, Divider, Stack, Typography } from '@mui/material';
+import { CardContent, Stack, Typography } from '@mui/material';
 import { PreviewButton } from '../../download/components/PreviewButton';
 import { DownloadButton } from '../../download/components/DownloadButton';
 import { prettyBytes } from '../utils';
@@ -28,20 +29,23 @@ export const FileDetails = (props: {
     onDelete?: (file) => void;
     onDownload?: (file) => void;
     onPreview?: (file) => void;
+    readOnly?: boolean;
 }) => {
-    const { file, onDelete } = props;
+    const { file, onDelete, readOnly = false } = props;
     const getFileInfo = useGetFileInfo();
     const [info, setInfo] = useState<FileInfo | null>(null);
+    const path: string | undefined = file?.path;
 
     useEffect(() => {
-        if (file) {
-            getFileInfo({ path: file.path }).then(json => {
+        setInfo(null);
+        if (path) {
+            getFileInfo({ path }).then(json => {
                 if (json && json.data?.length > 0) {
-                    setInfo({ ...json[0], path: file.path });
+                    setInfo({ ...json.data[0], path });
                 }
             });
         }
-    }, [file, getFileInfo, setInfo]);
+    }, [path, getFileInfo]);
 
     if (!file) {
         return <></>;
@@ -53,7 +57,9 @@ export const FileDetails = (props: {
             : undefined) ||
         getTypeFromMimeType(
             getMimeTypeFromExtension(file.name.split('.').pop())
-        );
+        ) ||
+        // details always refer to a file: avoid FileIcon's folder fallback
+        'file';
 
     return (
         <FlatCard>
@@ -73,31 +79,24 @@ export const FileDetails = (props: {
                     </Typography>
                 </Stack>
 
-                <Divider />
-
                 {info && (
                     <RecordContextProvider value={info}>
-                        <Stack
-                            direction={'row'}
-                            pb={2}
-                            justifyContent="space-around"
-                        >
+                        <TopToolbar>
                             <DownloadButton
                                 size="small"
                                 iconButton
                                 color="success"
                             />
-                            <PreviewButton
-                                size="small"
-                                iconButton
-                            />
+                            <PreviewButton size="small" iconButton />
                             <ShareButton size="small" iconButton />
-                            <DeleteButton
-                                size="small"
-                                iconButton
-                                onDelete={() => onDelete?.(file)}
-                            />
-                        </Stack>
+                            {!readOnly && (
+                                <DeleteButton
+                                    size="small"
+                                    iconButton
+                                    onDelete={() => onDelete?.(file)}
+                                />
+                            )}
+                        </TopToolbar>
 
                         <Stack spacing={1}>
                             <Labeled>
