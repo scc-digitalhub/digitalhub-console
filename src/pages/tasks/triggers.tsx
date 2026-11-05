@@ -16,7 +16,7 @@ import {
 } from 'react-admin';
 import { Typography, Box, alpha } from '@mui/material';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../common/jsonSchema/schemaController';

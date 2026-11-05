@@ -19,6 +19,9 @@ import { useExtensionsSteps } from '../../../features/extensions/steps';
 import { useGetSchemas } from '../../../common/jsonSchema/schemaController';
 import { FunctionStep, RunStep, SummaryStep, TaskStep } from './steps';
 import { Divider } from '@mui/material';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useFieldObserver } from '../../../common/hooks/useFieldObserver';
+import { pick } from 'lodash';
 
 export const RunCreate = (props: {
     task?: string;
@@ -36,8 +39,107 @@ export const RunCreate = (props: {
     return <RunCreateForm task={taskProps} runtime={runtime} />;
 };
 
+/**
+ * Extract the kind from a key.
+ * - function: `container://project/name` or `container://project/function/name:id` -> `container`
+ * - task: `container+deploy` or `container+deploy://project/id` -> `container+deploy`
+ */
+const kindOf = (key?: string): string | undefined =>
+    key ? key.split('://')[0] || undefined : undefined;
+
+//spec keys not owned by the task: preserved when the task is reset
+const BASE_SPEC_KEYS = ['function', 'workflow', 'local_execution'];
+
+//undefined while schemas are loading
+const getTaskKinds = (
+    taskSchemas: any[] | undefined,
+    runtime: string | undefined
+): string[] | undefined =>
+    runtime
+        ? taskSchemas?.filter(s => s.runtime === runtime).map(s => s.kind)
+        : [];
+
+/**
+ * Form-level coordinator: observes spec.function and spec.task, realigning the task
+ * with the runtime and keeping `kind` aligned with the task.
+ * Must be mounted inside the form and outside of steps, as only the active step is mounted.
+ */
+const RunCreateCoordinator = (props: {
+    runtime?: string;
+    task?: string;
+    taskSchemas?: any[];
+    onTaskChange: (task: string | undefined) => void;
+}) => {
+    const {
+        runtime: runtimeProp,
+        task: taskProp,
+        taskSchemas,
+        onTaskChange,
+    } = props;
+    const { getValues, setValue } = useFormContext();
+
+    useFieldObserver<string | undefined>('spec.function', value => {
+        if (runtimeProp || taskProp) {
+            return;
+        }
+
+        //drop task and its params in a single write when not valid for the new runtime
+        const kinds = getTaskKinds(taskSchemas, kindOf(value));
+        const task = kindOf(getValues('spec.task'));
+        if (task && kinds && !kinds.includes(task)) {
+            setValue('spec', pick(getValues('spec') || {}, BASE_SPEC_KEYS));
+        }
+    });
+
+    useFieldObserver<string | undefined>('spec.task', value => {
+        const task = taskProp ?? kindOf(value);
+        onTaskChange(task);
+
+        const kind = task ? task + ':run' : undefined;
+        if (getValues('kind') !== kind) {
+            setValue('kind', kind, { shouldDirty: false });
+        }
+    });
+
+    return null;
+};
+
+/**
+ * Task step content: derives runtime and task kinds from the form values in the same render,
+ * so the task selector (and its guard) never mounts with a task stale for the current runtime.
+ */
+const RunTaskStep = (props: {
+    runtime?: string;
+    task?: string;
+    taskSchemas?: any[];
+}) => {
+    const { runtime: runtimeProp, task: taskProp, taskSchemas } = props;
+    const functionValue = useWatch({ name: 'spec.function' });
+    const taskValue = useWatch({ name: 'spec.task' });
+
+    const runtime = runtimeProp ?? kindOf(functionValue);
+    const task = taskProp ?? kindOf(taskValue);
+    const kinds = getTaskKinds(taskSchemas, runtime);
+    //wait for the coordinator to realign a task left over from a previous function
+    const isStale =
+        !taskProp && Boolean(task) && (!kinds || !kinds.includes(task!));
+
+    return (
+        <>
+            <TextInput source="spec.function" readOnly />{' '}
+            {!isStale && (
+                <TaskStep
+                    kind={task}
+                    kinds={(kinds ?? []).map(k => ({ id: k, name: k }))}
+                    readOnly={Boolean(taskProp)}
+                />
+            )}
+        </>
+    );
+};
+
 export const RunCreateForm = (props: { task?: string; runtime?: string }) => {
-    const { task: taskProps, runtime: runtimeProp } = props;
+    const { task: taskProp, runtime: runtimeProp } = props;
     const translate = useTranslate();
     const getResourceLabel = useGetResourceLabel();
     const { data: taskSchemas } = useGetSchemas('tasks');
@@ -45,21 +147,15 @@ export const RunCreateForm = (props: { task?: string; runtime?: string }) => {
     const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSteps();
 
-    const [runtime, setRuntime] = useState<string | undefined>(runtimeProp);
-    const [task, setTask] = useState<string | undefined>(taskProps);
+    //observed task kind, updated only by the coordinator
+    const [taskKind, setTaskKind] = useState<string>();
 
-    const tasks =
-        taskSchemas && runtime
-            ? taskSchemas
-                  .filter(s => s.runtime === runtime)
-                  .map(s => ({ id: s.kind, name: s.kind }))
-            : [];
-
-    const kind = taskProps || task ? (taskProps || task) + ':run' : undefined;
+    const task = taskProp ?? taskKind;
+    const kind = task ? task + ':run' : undefined;
 
     const steps: ReactElement<any, JSXElementConstructor<Step>>[] = [];
 
-    if (runtimeProp === undefined) {
+    if (!runtimeProp) {
         steps.push(
             <StepperForm.Step
                 key="function"
@@ -70,20 +166,17 @@ export const RunCreateForm = (props: { task?: string; runtime?: string }) => {
                     readOnly
                     validate={[required()]}
                 />
-                <FunctionStep onSelect={setRuntime} />
+                <FunctionStep />
             </StepperForm.Step>
         );
     }
 
     steps.push(
         <StepperForm.Step key="task" label={getResourceLabel('tasks', 1)}>
-            <TextInput source="spec.function" readOnly />
-            <Divider />
-            <TaskStep
-                kind={task}
-                kinds={tasks}
-                onKindChange={setTask}
-                readOnly={Boolean(taskProps)}
+            <RunTaskStep
+                runtime={runtimeProp}
+                task={taskProp}
+                taskSchemas={taskSchemas}
             />
         </StepperForm.Step>,
         <StepperForm.Step key="run" label={getResourceLabel('runs', 1)}>
@@ -118,7 +211,17 @@ export const RunCreateForm = (props: { task?: string; runtime?: string }) => {
 
     return (
         <StepperForm
-            toolbar={<StepperToolbar saveProps={{ alwaysEnable: true }} />}
+            toolbar={
+                <>
+                    <RunCreateCoordinator
+                        runtime={runtimeProp}
+                        task={taskProp}
+                        taskSchemas={taskSchemas}
+                        onTaskChange={setTaskKind}
+                    />
+                    <StepperToolbar saveProps={{ alwaysEnable: true }} />
+                </>
+            }
         >
             {steps}
         </StepperForm>

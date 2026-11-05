@@ -19,7 +19,6 @@ export const FunctionDataGrid = (props: {
     selected?: string;
     onSelect?: (record: any | undefined) => void;
 }) => {
-    console.log('Selected:', props.selected)
     const theme = useTheme();
     return (
         <DataTable

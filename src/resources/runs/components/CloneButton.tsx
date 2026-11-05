@@ -4,7 +4,7 @@
 
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { RunCreateForm } from '../create/RunCreateForm';
+import { RunCreate } from '../create/RunCreateForm';
 import { useRecordContext, useTranslate } from 'react-admin';
 import { taskParser } from '../../../common/utils/parsers';
 import { Alert } from '@mui/material';
@@ -12,6 +12,7 @@ import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
 import { transformExtensionPaths } from '../../../features/extensions/utils';
 import { useState } from 'react';
 import { randomId } from '../../../common/utils/helpers';
+import { DialogWrapper } from '../../../common/components/DialogWrapper';
 
 export const CloneButton = props => {
     const translate = useTranslate();
@@ -58,35 +59,37 @@ export const CloneButton = props => {
             ...r,
             ...transformExtensionPaths(r),
             spec: {
+                //copy the task spec  (using form)
+                ...r.spec,
                 task: taskKey,
                 function: taskFunction,
                 workflow: taskWorkflow,
                 local_execution: false,
-                //copy the task spec  (using form)
-                ...r.spec,
             },
         };
     };
 
     return (
-        <CreateInDialogButton
-            resource="runs"
-            label="ra.action.clone"
-            icon={<ContentCopyIcon />}
-            record={defaultValues}
-            fullWidth
-            maxWidth={'lg'}
-            transform={prepare}
-            closeOnClickOutside={false}
-            mutationOptions={{ onSuccess: () => setId(randomId()) }}
-        >
-            {runSchema?.schema && taskSchema?.schema ? (
-                <RunCreateForm runSchema={runSchema} taskSchema={taskSchema} />
-            ) : (
-                <Alert severity="error">
-                    {translate('messages.invalidKind')}
-                </Alert>
-            )}
-        </CreateInDialogButton>
+        <DialogWrapper>
+            <CreateInDialogButton
+                resource="runs"
+                label="ra.action.clone"
+                icon={<ContentCopyIcon />}
+                record={defaultValues}
+                fullWidth
+                maxWidth={'lg'}
+                transform={prepare}
+                closeOnClickOutside={false}
+                mutationOptions={{ onSuccess: () => setId(randomId()) }}
+            >
+                {runSchema?.schema && taskSchema?.schema ? (
+                    <RunCreate runtime={runtime} task={taskSchema.kind} />
+                ) : (
+                    <Alert severity="error">
+                        {translate('messages.invalidKind')}
+                    </Alert>
+                )}
+            </CreateInDialogButton>
+        </DialogWrapper>
     );
 };

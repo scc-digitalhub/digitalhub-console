@@ -37,17 +37,18 @@ import { ListBaseLive } from '../../../features/notifications/components/ListBas
 import { RunIcon } from '../../runs/icon';
 import { RunDataTable } from '../../runs/list/RunDataTable';
 import { RunDetails } from '../../runs/list/RunDetails';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../../common/components/buttons/InspectButton';
 import { DropDownButton } from '../../../common/components/buttons/DropdownButton';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { LogsButton } from '../../../features/logs/components/LogsButton';
 import { StopButton } from '../../runs/components/StopButton';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { RunCreate, RunCreateForm } from '../../runs/create/RunCreateForm';
+import { RunCreate } from '../../runs/create/RunCreateForm';
 import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
 import { Spacer } from '../../../common/components/layout/Spacer';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { CloneButton } from '../../runs/components/CloneButton';
+import { transformExtensionPaths } from '../../../features/extensions/utils';
 
 const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
@@ -194,6 +195,7 @@ export const RunListView = props => {
                 const prepare = (r: any) => {
                     return {
                         ...r,
+                        ...transformExtensionPaths(r),
                         project: record.project,
                         kind: task.kind + ':run',
                         spec: {

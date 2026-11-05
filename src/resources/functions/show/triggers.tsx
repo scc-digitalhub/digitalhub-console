@@ -22,7 +22,7 @@ import { ListPageTitle } from '../../../common/components/layout/PageTitle';
 import { StateChips } from '../../../common/components/StateChips';
 import { useKinds } from '../../../common/hooks/useKinds';
 import { RunIcon } from '../../runs/icon';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../../common/components/buttons/InspectButton';
 import { DropDownButton } from '../../../common/components/buttons/DropdownButton';
 import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGroup';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';

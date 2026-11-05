@@ -4,9 +4,10 @@
 
 import { Menu, Button, Stack, ButtonOwnProps } from '@mui/material';
 import { Box } from '@mui/system';
-import { useState, MouseEvent, ReactElement, FocusEvent } from 'react';
+import { useState, MouseEvent, ReactElement } from 'react';
 import { useTranslate, RaRecord, ShowButtonProps } from 'react-admin';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { DialogWrapper } from '../DialogWrapper';
 
 export const DropDownButton = (props: DrodownButtonProps) => {
     const {
@@ -16,7 +17,7 @@ export const DropDownButton = (props: DrodownButtonProps) => {
         color = 'primary',
         variant = 'contained',
         size = 'small',
-        sx ,
+        sx,
     } = props;
     const translate = useTranslate();
 
@@ -29,10 +30,14 @@ export const DropDownButton = (props: DrodownButtonProps) => {
         event.stopPropagation();
         setAnchorEl(null);
     };
-
-    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-        event.stopPropagation();
-        setAnchorEl(null);
+    const handleSelection = (event: MouseEvent<HTMLElement>): void => {
+        // Capture selections even when children stop propagation, but ignore portals.
+        if (
+            event.target instanceof Node &&
+            event.currentTarget.contains(event.target)
+        ) {
+            setAnchorEl(null);
+        }
     };
 
     return (
@@ -59,22 +64,24 @@ export const DropDownButton = (props: DrodownButtonProps) => {
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                onBlur={handleBlur}
             >
-                <Stack
-                    direction={'column'}
-                    sx={{
-                        minWidth: '80px',
-                        marginX: '10px',
-                        alignItems: 'stretch',
-                        '& .MuiButton-root': {
-                            justifyContent: 'flex-start',
-                            textAlign: 'left',
-                        },
-                    }}
-                >
-                    {children}
-                </Stack>
+                <DialogWrapper>
+                    <Stack
+                        direction={'column'}
+                        onClickCapture={handleSelection}
+                        sx={{
+                            minWidth: '80px',
+                            marginX: '10px',
+                            alignItems: 'stretch',
+                            '& .MuiButton-root': {
+                                justifyContent: 'flex-start',
+                                textAlign: 'left',
+                            },
+                        }}
+                    >
+                        {children}
+                    </Stack>
+                </DialogWrapper>
             </Menu>
         </Box>
     );

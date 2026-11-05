@@ -13,7 +13,7 @@ import { Box, Stack } from '@mui/material';
 import { TaskTriggerList } from './triggers';
 import { TaskRunList } from './runs';
 import { ShowInDialogButton, EditInDialogButton } from '@dslab/ra-dialog-crud';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { TaskEditComponent } from './edit';
 import { AceEditorField } from '@dslab/ra-ace-editor';
 import { ExportRecordButton, toYaml } from '@dslab/ra-export-record-button';

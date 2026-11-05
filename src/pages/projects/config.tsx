@@ -19,7 +19,7 @@ import {
 import { FlatCard } from '../../common/components/layout/FlatCard';
 import { PageTitle } from '../../common/components/layout/PageTitle';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { MetadataSchema } from '../../common/jsonSchema/schemas';
 import { JsonSchemaField } from '../../common/jsonSchema/components/JsonSchema';

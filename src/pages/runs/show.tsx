@@ -15,7 +15,7 @@ import { SHOW_VIEW_PROPS } from '../../common/theme';
 import { RunShowTitle } from '../../resources/runs/show/RunShowTitle';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { ClientButton } from '../../features/httpclients/ClientButton';
 import { StopButton } from '../../resources/runs/components/StopButton';

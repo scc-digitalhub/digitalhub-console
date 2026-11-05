@@ -17,7 +17,7 @@ import { ShowBaseLive } from '../../features/notifications/components/ShowBaseLi
 import { ContainerImageShow } from '../../resources/containerimages/show/ContainerImageShow';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useState } from 'react';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';

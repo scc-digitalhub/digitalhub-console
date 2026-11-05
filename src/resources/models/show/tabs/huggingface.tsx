@@ -23,7 +23,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { IdField } from '../../../../common/components/fields/IdField';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import humanFormat from 'human-format';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../../../common/components/buttons/InspectButton';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import { LabelsField } from '../../../../common/components/fields/LabelsField';
 import { JsonTab } from '../../../../common/components/tabs/json';

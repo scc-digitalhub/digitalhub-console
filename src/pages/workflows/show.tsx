@@ -22,7 +22,7 @@ import { exporter } from '../../resources/workflows/exporter';
 import { SHOW_VIEW_VERSION_PROPS } from '../../common/theme';
 import { BackButton } from '@dslab/ra-back-button';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { DeleteWithConfirmButtonByName } from '../../common/components/buttons/delete/DeleteWithConfirmButtonByName';
 import { ExtensionsToolbarButtons } from '../../features/extensions/components/ExtensionsButtons';

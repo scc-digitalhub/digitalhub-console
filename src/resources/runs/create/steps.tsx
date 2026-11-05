@@ -8,6 +8,7 @@ import {
     required,
     SelectInput,
     TextInput,
+    useRecordContext,
 } from 'react-admin';
 import { useStepper } from '@dslab/ra-stepper';
 import { toYaml } from '@dslab/ra-export-record-button';
@@ -34,21 +35,20 @@ import { useKinds } from '../../../common/hooks/useKinds';
 import { FILTER_INPUT_PROPS } from '../../../common/theme';
 import { FunctionDataGrid } from '../../functions/list/FunctionDataGrid';
 import { useFormContext, useWatch } from 'react-hook-form';
+import deepEqual from 'deep-is';
+import { omit } from 'lodash';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
-export const FunctionStep = ({
-    onSelect,
-}: {
-    onSelect?: (record: any | undefined) => void;
-}) => {
+const NON_TASK_SPEC_KEYS = ['function', 'workflow', 'task', 'local_execution'];
+
+export const FunctionStep = () => {
     const kinds = useKinds({ resource: 'functions' });
     const { setValue } = useFormContext();
     const { currentStep, goToStep, steps } = useStepper();
 
     const handleSelect = (record: any) => {
         if (record) {
-            onSelect?.(record.kind);
             setValue(
                 'spec.function',
                 `${record.kind}://${record.project}/${record.name}:${record.id}`
@@ -98,20 +98,25 @@ export const FunctionStep = ({
 export const TaskStep = ({
     kind,
     kinds,
-    onKindChange,
     readOnly,
 }: {
     kind?: string;
     kinds: { id: string; name: string }[];
-    onKindChange?: (kind: string | undefined) => void;
     readOnly: boolean;
 }) => {
-    const [isSpecDirty, setIsSpecDirty] = useState(false);
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
+    const record = useRecordContext();
     const { getValues, setValue } = useFormContext();
-    const functionValue = useWatch({ name: 'spec.function' });
-    const workflowValue = useWatch({ name: 'spec.workflow' });
+    const specValue = useWatch({ name: 'spec' });
+    const functionValue = specValue?.function;
+    const workflowValue = specValue?.workflow;
+
+    //dirty only when task-owned params differ from the record, ignoring function/task bindings
+    const isSpecDirty = !deepEqual(
+        omit(specValue || {}, NON_TASK_SPEC_KEYS),
+        omit(record?.spec || {}, NON_TASK_SPEC_KEYS)
+    );
 
     useEffect(() => {
         if (!kind || !schemaProvider) {
@@ -135,42 +140,42 @@ export const TaskStep = ({
 
     return (
         <>
-            <KindChangeGuard
-                source="spec.task"
-                field="spec"
-                isDirty={Boolean(isSpecDirty)}
-                onConfirm={nextKind => {
-                    const nextSpec = {
-                        ...(getValues('spec') || {}),
-                        ...(functionValue !== undefined
-                            ? { function: functionValue }
-                            : {}),
-                        ...(workflowValue !== undefined
-                            ? { workflow: workflowValue }
-                            : {}),
-                    };
-                    if (nextKind === undefined) {
-                        delete nextSpec.task;
-                    } else {
-                        nextSpec.task = nextKind;
-                    }
-                    setValue('spec', nextSpec, { shouldDirty: true });
-                    onKindChange?.(nextKind);
-                }}
-            />
-            <KindSelector
-                source="spec.task"
-                kinds={kinds}
-                defaultValue={kind}
-                readOnly={readOnly}
-            />
+            {readOnly ? (
+                <TextInput source="spec.task" readOnly />
+            ) : (
+                <>
+                    <KindChangeGuard
+                        source="spec.task"
+                        field="spec"
+                        isDirty={isSpecDirty}
+                        onConfirm={nextKind => {
+                            const nextSpec = {
+                                ...(getValues('spec') || {}),
+                                ...(functionValue !== undefined
+                                    ? { function: functionValue }
+                                    : {}),
+                                ...(workflowValue !== undefined
+                                    ? { workflow: workflowValue }
+                                    : {}),
+                            };
+                            if (nextKind === undefined) {
+                                delete nextSpec.task;
+                            } else {
+                                nextSpec.task = nextKind;
+                            }
+                            setValue('spec', nextSpec, { shouldDirty: true });
+                        }}
+                    />
+                    <KindSelector source="spec.task" kinds={kinds} />
+                </>
+            )}
+
             {schema && (
                 <SpecStep
                     source="spec"
                     schema={schema?.schema}
                     uiSchema={getTaskUiSpec(schema?.schema)}
                     kind={kind}
-                    onDirty={setIsSpecDirty}
                 />
             )}
         </>
@@ -180,18 +185,11 @@ export const TaskStep = ({
 export const RunStep = ({ kind, task }: { kind?: string; task?: string }) => {
     const [schema, setSchema] = useState<any>();
     const schemaProvider = useSchemaProvider();
-    const { getValues, setValue } = useFormContext();
 
     useEffect(() => {
         if (!kind || !task || !schemaProvider) {
             setSchema(undefined);
             return;
-        }
-
-        //set kind in kind field of the form if not aligned
-        const currentKind = getValues('kind');
-        if (currentKind !== kind) {
-            setValue('kind', kind, { shouldDirty: false });
         }
 
         Promise.all([

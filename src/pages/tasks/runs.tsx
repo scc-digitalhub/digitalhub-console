@@ -15,7 +15,7 @@ import {
 } from 'react-admin';
 import { Typography, Box } from '@mui/material';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../../common/components/buttons/InspectButton';
 import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../common/jsonSchema/schemaController';
@@ -110,8 +110,8 @@ export const TaskRunList = () => {
                                 closeOnClickOutside={false}
                             >
                                 <RunCreateForm
-                                    runSchema={runSchema}
-                                    taskSchema={taskSchema}
+                                    task={taskSchema.kind}
+                                    runtime={runtime}
                                 />
                             </CreateInDialogButton>
                         </Empty>
@@ -126,8 +126,8 @@ export const TaskRunList = () => {
                             closeOnClickOutside={false}
                         >
                             <RunCreateForm
-                                runSchema={runSchema}
-                                taskSchema={taskSchema}
+                                runtime={runtime}
+                                task={taskSchema.kind}
                             />
                         </CreateInDialogButton>
                     }

@@ -13,7 +13,7 @@ import {
     useResourceContext,
     useResourceDefinition,
 } from 'react-admin';
-import { InspectButton } from '@dslab/ra-inspect-button';
+import { InspectButton } from '../buttons/InspectButton';
 import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { DeleteWithConfirmButtonByName } from '../buttons/delete/DeleteWithConfirmButtonByName';
 import { useRootSelector } from '@dslab/ra-root-selector';

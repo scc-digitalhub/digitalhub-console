@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Fragment, ReactElement, useCallback, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import {
     Button,
     ButtonProps,
@@ -26,6 +26,7 @@ import {
     StyledDialog,
     StyledDialogClasses,
 } from '../../../common/theme/StyledDialog';
+import { DialogWrapper } from '../../../common/components/DialogWrapper';
 
 const defaultIcon = <SegmentIcon />;
 
@@ -65,12 +66,8 @@ export const LogsButton = (props: LogsButtonProps) => {
         e.stopPropagation();
         setOpen(false);
     };
-    const handleClick = useCallback(e => {
-        e.stopPropagation();
-    }, []);
-
     return (
-        <Fragment>
+        <DialogWrapper>
             <Button
                 label={label}
                 onClick={handleDialogOpen}
@@ -82,7 +79,6 @@ export const LogsButton = (props: LogsButtonProps) => {
             <StyledDialog
                 open={open}
                 onClose={handleDialogClose}
-                onClick={handleClick}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
                 aria-labelledby="logs-dialog-title"
@@ -114,7 +110,7 @@ export const LogsButton = (props: LogsButtonProps) => {
                     )}
                 </DialogContent>
             </StyledDialog>
-        </Fragment>
+        </DialogWrapper>
     );
 };
 
