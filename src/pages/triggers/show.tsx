@@ -15,8 +15,8 @@ import { ExportRecordButton } from '@dslab/ra-export-record-button';
 import { InspectButton } from '@dslab/ra-inspect-button';
 import { TriggerIcon } from '../../resources/triggers/icon';
 import { ShowPageTitle } from '../../common/components/layout/PageTitle';
-import { DeactivateButton } from '../../resources/triggers/components/DeactivateButton';
-import { ActivateButton } from '../../resources/triggers/components/ActivateButton';
+import { StopButton } from '../../resources/triggers/components/StopButton';
+import { RunButton } from '../../resources/triggers/components/RunButton';
 
 import { SHOW_VIEW_PROPS } from '../../common/theme';
 import { TriggerShow } from '../../resources/triggers/TriggerShow';
@@ -28,9 +28,9 @@ const ShowToolbar = () => (
         <FunctionField
             render={record =>
                 record.status?.state == 'RUNNING' ? (
-                    <DeactivateButton record={record} />
+                    <StopButton record={record} />
                 ) : record.status?.state == 'STOPPED' ? (
-                    <ActivateButton record={record} />
+                    <RunButton record={record} />
                 ) : null
             }
         />

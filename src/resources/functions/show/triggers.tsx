@@ -28,9 +28,9 @@ import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGrou
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
 import { Spacer } from '../../../common/components/layout/Spacer';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { DeactivateButton } from '../../triggers/components/DeactivateButton';
-import { ActivateButton } from '../../triggers/components/ActivateButton';
-import { TriggerCreate } from '../../triggers/create';
+import { StopButton } from '../../triggers/components/StopButton';
+import { RunButton } from '../../triggers/components/RunButton';
+import { TriggerCreate } from '../../triggers/TriggerCreate';
 import InfoIcon from '@mui/icons-material/Info';
 
 export const TriggersListView = props => {
@@ -101,7 +101,7 @@ export const TriggersListView = props => {
                         fullWidth
                         maxWidth={'lg'}
                         transform={prepare}
-                        closeOnClickOutside={true}
+                        closeOnClickOutside={false}
                         label={label}
                         icon={<KeyboardArrowRightIcon fontSize="small" />}
                     >
@@ -194,12 +194,12 @@ export const TriggersListView = props => {
                                             render={record =>
                                                 record.status?.state ==
                                                 'RUNNING' ? (
-                                                    <DeactivateButton
+                                                    <StopButton
                                                         record={record}
                                                     />
                                                 ) : record.status?.state ==
                                                   'STOPPED' ? (
-                                                    <ActivateButton
+                                                    <RunButton
                                                         record={record}
                                                     />
                                                 ) : null

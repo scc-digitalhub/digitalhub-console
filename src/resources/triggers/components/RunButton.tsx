@@ -12,14 +12,14 @@ import {
 } from 'react-admin';
 
 import { useRootSelector } from '@dslab/ra-root-selector';
-import StopCircleIcon from '@mui/icons-material/StopCircle';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { ReactElement } from 'react';
 
-const defaultIcon = <StopCircleIcon />;
+const defaultIcon = <PlayCircleIcon />;
 
-export const DeactivateButton = (props: DeactivateButtonProps) => {
+export const RunButton = (props: RunButtonProps) => {
     const {
-        label = 'actions.deactivate',
+        label = 'actions.run',
         icon = defaultIcon,
         id: idProp,
         record: recordProp,
@@ -34,7 +34,7 @@ export const DeactivateButton = (props: DeactivateButtonProps) => {
     const id = idProp || record?.id;
 
     const onClick = () => {
-        const url = '/-/' + projectId + '/triggers/' + id + '/stop';
+        const url = '/-/' + projectId + '/triggers/' + id + '/run';
         dataProvider
             .invoke({ path: url, options: { method: 'POST' } })
             .then(() => {
@@ -42,15 +42,13 @@ export const DeactivateButton = (props: DeactivateButtonProps) => {
             });
     };
 
-    //TODO evaluate using dialog
     return (
         <Button label={label} startIcon={icon} onClick={onClick} {...rest} />
     );
 };
 
-export type DeactivateButtonProps<RecordType extends RaRecord = any> =
-    ButtonProps & {
-        id?: string;
-        record?: RecordType;
-        icon?: ReactElement;
-    };
+export type RunButtonProps<RecordType extends RaRecord = any> = ButtonProps & {
+    id?: string;
+    record?: RecordType;
+    icon?: ReactElement;
+};

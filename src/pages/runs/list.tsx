@@ -36,6 +36,8 @@ import { RunDataTable } from '../../resources/runs/list/RunDataTable';
 import { RunDetails } from '../../resources/runs/list/RunDetails';
 import { ExtensionsToolbarButtons } from '../../features/extensions/components/ExtensionsButtons';
 import { ProfilesButton } from '../profiles/ProfilesButton';
+import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
+import { RunCreate } from '../../resources/runs/create/RunCreateForm';
 
 const allStateChoices = Object.keys(StateColors).map(s => ({
     id: s,
@@ -109,12 +111,12 @@ export const RunListView = () => {
     );
     const { data: functions } = useGetList(
         'functions',
-        { pagination: { page: 1, perPage: 100 } },
+        { pagination: { page: 1, perPage: 100 }, meta: { root } },
         { select: functionSelectOption }
     );
     const { data: workflows } = useGetList(
         'workflows',
-        { pagination: { page: 1, perPage: 100 } },
+        { pagination: { page: 1, perPage: 100 }, meta: { root } },
         { select: workflowSelectOption }
     );
     const { data: projects } = useGetList(
@@ -122,54 +124,51 @@ export const RunListView = () => {
         { pagination: { page: 1, perPage: 100 } },
         { select: projectSelectOption }
     );
-    const filters =
-        kinds && functions && workflows
-            ? [
-                  <TextInput
-                      label="ra.action.search"
-                      source="q"
-                      alwaysOn
-                      resettable
-                      key="q"
-                  />,
-                  <SelectInput
-                      key="kind"
-                      label="fields.kind"
-                      source="kind"
-                      choices={kinds.map(s => ({
-                          id: s,
-                          name: s,
-                      }))}
-                      {...FILTER_INPUT_PROPS}
-                  />,
-                  <SelectInput
-                      key="state"
-                      label="fields.status.state"
-                      source="state"
-                      choices={sortedStateChoices}
-                      optionText={choice => (
-                          <StateChips
-                              record={choice}
-                              source="id"
-                              label="name"
-                              size="small"
-                          />
-                      )}
-                      {...FILTER_INPUT_PROPS}
-                  />,
-                  <SelectInput
-                      key={FUNCTION_OR_WORKFLOW}
-                      label={`${translate('resources.functions.name', {
-                          smart_count: 1,
-                      })}/${translate('resources.workflows.name', {
-                          smart_count: 1,
-                      })}`}
-                      source={FUNCTION_OR_WORKFLOW}
-                      choices={[...functions, ...workflows]}
-                      {...FILTER_INPUT_PROPS}
-                  />,
-              ]
-            : [];
+    const filters = [
+        <TextInput
+            label="ra.action.search"
+            source="q"
+            alwaysOn
+            resettable
+            key="q"
+        />,
+        <SelectInput
+            key="kind"
+            label="fields.kind"
+            source="kind"
+            choices={(kinds || []).map(s => ({
+                id: s,
+                name: s,
+            }))}
+            {...FILTER_INPUT_PROPS}
+        />,
+        <SelectInput
+            key="state"
+            label="fields.status.state"
+            source="state"
+            choices={sortedStateChoices}
+            optionText={choice => (
+                <StateChips
+                    record={choice}
+                    source="id"
+                    label="name"
+                    size="small"
+                />
+            )}
+            {...FILTER_INPUT_PROPS}
+        />,
+        <SelectInput
+            key={FUNCTION_OR_WORKFLOW}
+            label={`${translate('resources.functions.name', {
+                smart_count: 1,
+            })}/${translate('resources.workflows.name', {
+                smart_count: 1,
+            })}`}
+            source={FUNCTION_OR_WORKFLOW}
+            choices={[...(functions || []), ...(workflows || [])]}
+            {...FILTER_INPUT_PROPS}
+        />,
+    ];
 
     if (!root) {
         filters.push(
@@ -232,10 +231,27 @@ const ListToolbar = (props: {
         selectedView = 'dataTable',
         setSelectedView,
     } = props;
+    const { root } = useRootSelector();
+
     return (
         <TopToolbar>
+            <CreateInDialogButton
+                resource="runs"
+                record={{ project: root, spec: { local_execution: false } }}
+                fullWidth
+                maxWidth={'lg'}
+                transform={data => ({
+                    ...data,
+                    project: root,
+                    spec: { ...data.spec, local_execution: false },
+                })}
+                closeOnClickOutside={false}
+            >
+                <RunCreate />
+            </CreateInDialogButton>
             <ExtensionsToolbarButtons />
             <ProfilesButton />
+
             {selectedView === 'dataTable' && (
                 <ColumnsButton
                     storeKey={`${storeKey}.dataTable`}

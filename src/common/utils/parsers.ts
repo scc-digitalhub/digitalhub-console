@@ -52,7 +52,7 @@ export const functionParser = (
 } => {
     // python+run://prj2/f4a21377-fb59-41fe-a16e-157ee5598f28
     const rgx =
-        /([a-zA-Z+\-_0-9]+):\/\/([a-zA-Z\-_0-9]+)\/([a-zA-Z\-_0-9]+):([a-zA-Z\-_0-9]+)/;
+        /([a-zA-Z+\-_0-9]+):\/\/([a-zA-Z\-_0-9]+)\/([a-zA-Z\-_0-9]+)(?::([a-zA-Z\-_0-9]+))?/;
     const result = {
         project: undefined as string | undefined,
         kind: undefined as string | undefined,
@@ -80,8 +80,7 @@ export const taskParser = (
     id: string | undefined;
 } => {
     // python+run://prj2/f4a21377-fb59-41fe-a16e-157ee5598f28
-    const rgx =
-        /([a-zA-Z+\-_0-9]+):\/\/([a-zA-Z\-_0-9]+)\/([a-zA-Z\-_0-9]+)/;
+    const rgx = /([a-zA-Z+\-_0-9]+):\/\/([a-zA-Z\-_0-9]+)\/([a-zA-Z\-_0-9]+)/;
     const result = {
         project: undefined as string | undefined,
         kind: undefined as string | undefined,

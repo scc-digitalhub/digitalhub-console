@@ -15,6 +15,8 @@
     "hub": "Hub",
     "customize": "Customize",
     "load_more": "Load more",
+    "run": "Run",
+    "select": "Select",
     "share": "Share",
     "stop": "Stop",
     "retry": "Retry",

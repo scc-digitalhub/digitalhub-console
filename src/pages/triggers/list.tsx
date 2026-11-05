@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
     ListView,
     SelectInput,
@@ -23,17 +23,27 @@ import { ListBaseLive } from '../../features/notifications/components/ListBaseLi
 import { useKinds } from '../../common/hooks/useKinds';
 import { FILTER_INPUT_PROPS } from '../../common/theme';
 import { TriggerList } from '../../resources/triggers/TriggerList';
+import { DropDownButton } from '../../common/components/buttons/DropdownButton';
+import Spacer from '../../common/components/layout/Spacer';
+import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { TriggerCreate } from '../../resources/triggers/TriggerCreate';
+import AddIcon from '@mui/icons-material/Add';
 
-const allStateChoices = Object.keys(StateColors).map(s => ({
-    id: s,
-    name: 'states.' + s.toLowerCase(),
-}));
+const allStateChoices = [
+    { id: 'CREATED', name: 'states.created' },
+    { id: 'ERROR', name: 'states.error' },
+    { id: 'READY', name: 'states.ready' },
+    { id: 'RUNNING', name: 'states.running' },
+    { id: 'STOPPED', name: 'states.stopped' },
+];
 
 export const TriggerListView = () => {
-    const resource = useResourceContext();
     const { root } = useRootSelector();
-    const kinds = useKinds();
+    const resource = useResourceContext();
     const translate = useTranslate();
+    const kinds = useKinds({ resource: 'triggers' });
+
     const [localeState] = useLocaleState();
     const locale = localeState?.startsWith('it') ? 'it' : 'en';
 
@@ -44,6 +54,71 @@ export const TriggerListView = () => {
             ),
         [translate, locale]
     );
+
+    //generate create buttons
+    const buttons = useMemo(() => {
+        if (kinds) {
+            return kinds.map(kind => {
+                const partial = {
+                    project: root,
+                    kind: kind,
+                    spec: {
+                        template: {
+                            local_execution: false,
+                        },
+                    },
+                };
+
+                const prepare = (r: any) => {
+                    const v = {
+                        ...r,
+                        project: root,
+                        kind: kind,
+                        spec: {
+                            //copy the full spec  (using form)
+                            ...r.spec,
+                        },
+                    };
+
+                    //clear values from template if set
+                    if (v.spec.template) {
+                        if (v.spec.template['function']) {
+                            delete v.spec.template['function'];
+                        }
+                        if (v.spec.template['workflow']) {
+                            delete v.spec.template['workflow'];
+                        }
+                        if (v.spec.template.task) {
+                            delete v.spec.template.task;
+                        }
+                        v.spec.template.local_execution = false;
+                    }
+
+                    return v;
+                };
+
+                //TODO improve label generation based on kind and locale
+                const label = kind;
+
+                return (
+                    <CreateInDialogButton
+                        resource="triggers"
+                        key={kind}
+                        record={partial}
+                        fullWidth
+                        maxWidth={'lg'}
+                        transform={prepare}
+                        closeOnClickOutside={false}
+                        label={label}
+                        icon={<KeyboardArrowRightIcon fontSize="small" />}
+                    >
+                        <TriggerCreate kind={kind} />
+                    </CreateInDialogButton>
+                );
+            });
+        }
+        return [];
+    }, [kinds, root]);
 
     return (
         <Container maxWidth={false} sx={{ pb: 2 }}>
@@ -56,7 +131,7 @@ export const TriggerListView = () => {
                 <>
                     <ListPageTitle icon={<TriggerIcon fontSize={'large'} />} />
 
-                    <TopToolbar />
+                    <ListToolbar buttons={buttons} />
 
                     <FlatCard>
                         <ListView
@@ -108,5 +183,22 @@ export const TriggerListView = () => {
                 </>
             </ListBaseLive>
         </Container>
+    );
+};
+
+const ListToolbar = (props: { buttons?: React.ReactElement<any>[] }) => {
+    return (
+        <TopToolbar>
+            <Spacer />
+            {props.buttons && (
+                <DropDownButton
+                    label="ra.action.create"
+                    variant="text"
+                    icon={<AddIcon />}
+                >
+                    {props.buttons.map(button => button)}
+                </DropDownButton>
+            )}
+        </TopToolbar>
     );
 };

@@ -255,9 +255,10 @@ export function shorten(text: string | undefined, maxLength: number): string {
     const availableLength = maxLength - ellipsis.length;
     const truncated = text.slice(0, availableLength);
     const lastSpace = truncated.lastIndexOf(' ');
+    console.log(availableLength, truncated, lastSpace);
 
     return (
-        truncated.slice(0, lastSpace === -1 ? 0 : lastSpace).trimEnd() +
+        truncated.slice(0, lastSpace === -1 ? undefined : lastSpace).trimEnd() +
         ellipsis
     );
 }

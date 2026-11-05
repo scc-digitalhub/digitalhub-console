@@ -43,7 +43,7 @@ import { RowButtonGroup } from '../../../common/components/buttons/RowButtonGrou
 import { LogsButton } from '../../../features/logs/components/LogsButton';
 import { StopButton } from '../../runs/components/StopButton';
 import { CreateInDialogButton } from '@dslab/ra-dialog-crud';
-import { RunCreateForm } from '../../runs/create/RunCreateForm';
+import { RunCreate, RunCreateForm } from '../../runs/create/RunCreateForm';
 import { useGetManySchemas } from '../../../common/jsonSchema/schemaController';
 import { Spacer } from '../../../common/components/layout/Spacer';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -99,7 +99,7 @@ export const RunListView = props => {
         }
     }, [record, dataProvider]);
 
-    const storeKey = `${root}.${resource}.function.runs`;
+    const storeKey = `${root}.${resource}.function.${record?.id}.runs`;
     const [selectedView, setSelectedView] = useStore(
         `${storeKey}.view`,
         'dataTable'
@@ -197,11 +197,11 @@ export const RunListView = props => {
                         project: record.project,
                         kind: task.kind + ':run',
                         spec: {
+                            //copy the task spec  (using form)
+                            ...r.spec,
                             function: functionKey,
                             task: taskKey,
                             local_execution: false,
-                            //copy the task spec  (using form)
-                            ...r.spec,
                         },
                     };
                 };
@@ -218,14 +218,11 @@ export const RunListView = props => {
                         fullWidth
                         maxWidth={'lg'}
                         transform={prepare}
-                        closeOnClickOutside={true}
+                        closeOnClickOutside={false}
                         label={label}
                         icon={<KeyboardArrowRightIcon fontSize="small" />}
                     >
-                        <RunCreateForm
-                            runSchema={schemas?.find(s => s.kind == kind)}
-                            taskSchema={taskSchema}
-                        />
+                        <RunCreate task={task.kind} runtime={record.kind} />
                     </CreateInDialogButton>
                 );
             });

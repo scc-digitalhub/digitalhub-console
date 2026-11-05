@@ -39,13 +39,15 @@ export const FormGuard = ({
     const { dirtyFields } = useFormState();
     const { setValue, getValues } = useFormContext();
     const prevValue = useRef<any>(undefined);
+    const hasPreviousValue = useRef(false);
     const pendingValue = useRef<any>(undefined);
     const [open, setOpen] = useState(false);
     const translate = useTranslate();
 
     useFieldObserver(field, nextValue => {
-        if (prevValue.current === undefined) {
+        if (!hasPreviousValue.current) {
             prevValue.current = nextValue;
+            hasPreviousValue.current = true;
             onConfirm?.(nextValue);
             return;
         }
@@ -93,5 +95,4 @@ export const FormGuard = ({
         />
     );
 };
-
 

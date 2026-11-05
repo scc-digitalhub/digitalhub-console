@@ -6,11 +6,7 @@ import { useMemo } from 'react';
 import { useResourceContext } from 'react-admin';
 import { useRootSelector } from '@dslab/ra-root-selector';
 import { useFileContext } from '../FileContext';
-import {
-    PathResolver,
-    UploadInfo,
-    UploadTargetContext,
-} from './types';
+import { PathResolver, UploadInfo, UploadTargetContext } from './types';
 
 /**
  * Path resolver for uploads of entity `id` named `name`: the backend returns
@@ -85,12 +81,7 @@ export const useResolveUploadPath = (params: {
                     return `${basePath}/${suffix}`;
                 }
 
-                //zip files are automatically unzipped at download
-                return resolvedFilename &&
-                    info.path.startsWith('s3://') &&
-                    info.path.endsWith('.zip')
-                    ? 'zip+' + info.path
-                    : info.path;
+                return info.path;
             },
         };
     }, [

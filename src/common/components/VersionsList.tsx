@@ -35,12 +35,35 @@ export type VersionListProps = VersionsListWrapperProps & {
     record?: any;
 };
 
+export const primaryText = item => {
+    const value = item.metadata?.updated
+        ? new Date(item.metadata.updated).toLocaleString()
+        : item.id;
+
+    return <Typography sx={{ color: 'primary' }}>{value}</Typography>;
+};
+
+export const secondaryText = item => {
+    return item.metadata?.version && item.metadata.version != item.id ? (
+        <>
+            <strong> {item.metadata.version}</strong> <br />
+            {item.id}
+        </>
+    ) : (
+        <> {item.id} </>
+    );
+};
+
 export const VersionsList = (props: VersionListProps) => {
     const {
         showActions = true,
         usePagination = false,
         perPage = 10,
         leftIcon,
+        rowClick,
+        primaryText: primaryTextProps,
+        secondaryText: secondaryTextProps,
+        rightIcon: rightIconProps,
         ...rest
     } = props;
     const record = useRecordContext(rest);
@@ -64,6 +87,8 @@ export const VersionsList = (props: VersionListProps) => {
             : {};
     };
 
+    const rightIcon = item =>
+        showActions ? <ShowButton record={item} /> : undefined;
     return (
         <List
             component={Box}
@@ -83,34 +108,12 @@ export const VersionsList = (props: VersionListProps) => {
             storeKey={false}
         >
             <SimpleList
-                rowClick="show"
+                rowClick={rowClick || 'show'}
                 rowSx={rowSx}
                 key={resource + ':versions:'}
-                primaryText={item => {
-                    const value = item.metadata?.updated
-                        ? new Date(item.metadata.updated).toLocaleString()
-                        : item.id;
-
-                    return (
-                        <Typography sx={{ color: 'primary' }}>
-                            {value}
-                        </Typography>
-                    );
-                }}
-                secondaryText={item => {
-                    return item.metadata?.version &&
-                        item.metadata.version != item.id ? (
-                        <>
-                            <strong> {item.metadata.version}</strong> <br />
-                            {item.id}
-                        </>
-                    ) : (
-                        <> {item.id} </>
-                    );
-                }}
-                rightIcon={item =>
-                    showActions ? <ShowButton record={item} /> : undefined
-                }
+                primaryText={primaryTextProps || primaryText}
+                secondaryText={secondaryTextProps || secondaryText}
+                rightIcon={rightIconProps || rightIcon}
                 leftIcon={leftIcon}
                 sx={{
                     '& .MuiListItemIcon-root': {
@@ -122,7 +125,10 @@ export const VersionsList = (props: VersionListProps) => {
     );
 };
 
-export type VersionsListWrapperProps = Pick<SimpleListProps, 'leftIcon'>;
+export type VersionsListWrapperProps = Pick<
+    SimpleListProps,
+    'rowClick' | 'primaryText' | 'secondaryText' | 'rightIcon' | 'leftIcon'
+>;
 
 export const VersionsListWrapper = (props: VersionsListWrapperProps) => {
     const translate = useTranslate();

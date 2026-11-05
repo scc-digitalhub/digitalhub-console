@@ -2,7 +2,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { required, TextInput } from 'react-admin';
+import {
+    ListBase,
+    ListView,
+    required,
+    SelectInput,
+    TextInput,
+} from 'react-admin';
+import { useStepper } from '@dslab/ra-stepper';
 import { toYaml } from '@dslab/ra-export-record-button';
 import { AceEditorInput } from '@dslab/ra-ace-editor';
 import yaml from 'yaml';
@@ -24,7 +31,11 @@ import { useState, useEffect } from 'react';
 import { useSchemaProvider } from '../../common/provider/schemaProvider';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { getTriggerUiSpec } from './types';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import { useKinds } from '../../common/hooks/useKinds';
+import { FILTER_INPUT_PROPS } from '../../common/theme';
+import { FunctionDataGrid } from '../functions/list/FunctionDataGrid';
+import { useFormContext } from 'react-hook-form';
 
 const ajv = customizeValidator({ AjvClass: Ajv2020 });
 
@@ -87,14 +98,74 @@ export const TriggerStep = ({
     );
 };
 
+export const FunctionStep = ({
+    onSelect,
+}: {
+    onSelect?: (record: any | undefined) => void;
+}) => {
+    const kinds = useKinds({ resource: 'functions' });
+    const { setValue } = useFormContext();
+    const { currentStep, goToStep, steps } = useStepper();
+
+    const handleSelect = (record: any) => {
+        if (record) {
+            onSelect?.(record.kind);
+            setValue(
+                'spec.function',
+                `${record.kind}://${record.project}/${record.name}`
+            );
+            const nextStep = currentStep + 1;
+            if (nextStep < steps.length) {
+                goToStep(nextStep);
+            }
+        }
+    };
+    return (
+        <ListBase resource="functions" disableSyncWithLocation>
+            <ListView
+                filters={
+                    kinds
+                        ? [
+                              <TextInput
+                                  label="ra.action.search"
+                                  source="q"
+                                  alwaysOn
+                                  resettable
+                                  key="q"
+                              />,
+                              <SelectInput
+                                  key="kind"
+                                  label="fields.kind"
+                                  source="kind"
+                                  choices={kinds.map(s => ({
+                                      id: s,
+                                      name: s,
+                                  }))}
+                                  {...FILTER_INPUT_PROPS}
+                              />,
+                          ]
+                        : undefined
+                }
+                actions={false}
+                component={Box}
+                sx={{ pb: 2 }}
+            >
+                <FunctionDataGrid onSelect={handleSelect} />
+            </ListView>
+        </ListBase>
+    );
+};
+
 export const TaskStep = ({
     kind: kindProps,
     kinds,
     onKindChange,
+    readOnly,
 }: {
     kind?: string;
     kinds: { id: string; name: string }[];
     onKindChange?: (kind: string | undefined) => void;
+    readOnly: boolean;
 }) => {
     const [kind, setKind] = useState<string | undefined>(kindProps);
     const [isSpecDirty, setIsSpecDirty] = useState(false);
@@ -136,7 +207,7 @@ export const TaskStep = ({
                 source="spec.task"
                 kinds={kinds}
                 defaultValue={kindProps}
-                readOnly={!!kindProps}
+                readOnly={readOnly}
             />
             {schema && (
                 <SpecStep

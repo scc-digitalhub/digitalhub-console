@@ -21,8 +21,8 @@ import { RowButtonGroup } from '../../common/components/buttons/RowButtonGroup';
 import { StateChips } from '../../common/components/StateChips';
 import { useGetManySchemas } from '../../common/jsonSchema/schemaController';
 import { DropDownButton } from '../../common/components/buttons/DropdownButton';
-import { TriggerCreate } from '../../resources/triggers/create';
-import { DeactivateButton } from '../../resources/triggers/components/DeactivateButton';
+import { TriggerCreate } from '../../resources/triggers/TriggerCreate';
+import { StopButton } from '../../resources/triggers/components/StopButton';
 import { LoadMore } from '../../common/components/layout/LoadMore';
 import { sanitizeObj } from '../../common/utils/helpers';
 
@@ -166,7 +166,7 @@ export const TaskTriggerList = () => {
                                 <FunctionField
                                     render={record =>
                                         record.status?.state == 'RUNNING' ? (
-                                            <DeactivateButton record={record} />
+                                            <StopButton record={record} />
                                         ) : null
                                     }
                                 />

@@ -14,45 +14,86 @@ import {
     ResourceContextProvider,
     TextField,
     useCreatePath,
+    useDataProvider,
     useList,
     useRecordContext,
     useTranslate,
 } from 'react-admin';
 import { CustomTabbedShowLayout } from '../../common/components/CustomTabbedShowLayout';
 import { Divider, Stack, Typography } from '@mui/material';
-import { toYaml } from '@dslab/ra-export-record-button';
-import { StateChips, StateColors } from '../../common/components/StateChips';
-import { AceEditorField } from '@dslab/ra-ace-editor';
+import { StateChips } from '../../common/components/StateChips';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { IdField } from '../../common/components/fields/IdField';
 import { functionParser, taskParser } from '../../common/utils/parsers';
 
-import { MetadataField } from '../../features/metadata/components/MetadataField';
 import { useGetRunIds } from './hooks/useGetRunIds';
 import { useTriggerRunsController } from './hooks/useTriggerRunsController';
+import { MetadataTab } from '../../common/components/tabs/metadata';
+import { SpecTab } from '../../common/components/tabs/spec';
+import { FunctionIcon } from '../functions/icon';
+import { useEffect, useState } from 'react';
+import { WorkflowIcon } from '../workflows/icon';
 
 export const TriggerShow = () => {
     const record = useRecordContext();
     const translate = useTranslate();
     const createPath = useCreatePath();
     const navigate = useNavigate();
+    const dataProvider = useDataProvider();
 
-    const uri = record?.spec?.function
-        ? new URL(record.spec.function)
-        : record?.spec?.workflow
-        ? new URL(record.spec.workflow)
-        : null;
+    const [functionKey, setFunctionKey] = useState<any>();
+    const [workflowKey, setWorkflowKey] = useState<any>();
 
-    const functionId =
-        record?.spec?.function && uri ? uri.pathname.split(':')[1] : null;
-    const workflowId =
-        record?.spec?.workflow && uri ? uri.pathname.split(':')[1] : null;
+    useEffect(() => {
+        if (record) {
+            //function
+            const fk = record?.spec?.function
+                ? functionParser(record?.spec?.function)
+                : null;
+            if (fk?.id) {
+                setFunctionKey(fk);
+            } else if (dataProvider && fk && !fk.id) {
+                //resolve latest by name
+                dataProvider
+                    .getList('functions', {
+                        filter: { name: fk.name },
+                        sort: { field: 'created', order: 'DESC' },
+                        pagination: { page: 1, perPage: 1 },
+                    })
+                    .then(({ data }) => {
+                        if (data.length > 0) {
+                            fk.id = data[0].id;
+                            setFunctionKey(fk);
+                        }
+                    })
+                    .catch(() => {});
+            }
 
-    const states: any[] = [];
-    for (const c in StateColors) {
-        states.push({ id: c, name: translate('states.' + c.toLowerCase()) });
-    }
+            //workflow
+            const wk = record?.spec?.workflow
+                ? functionParser(record?.spec?.workflow)
+                : null;
+            if (wk?.id) {
+                setWorkflowKey(wk);
+            } else if (dataProvider && wk && !wk.id) {
+                //resolve latest by name
+                dataProvider
+                    .getList('workflows', {
+                        filter: { name: wk.name },
+                        sort: { field: 'created', order: 'DESC' },
+                        pagination: { page: 1, perPage: 1 },
+                    })
+                    .then(({ data }) => {
+                        if (data.length > 0) {
+                            wk.id = data[0].id;
+                            setWorkflowKey(wk);
+                        }
+                    })
+                    .catch(() => {});
+            }
+        }
+    }, [record, dataProvider]);
 
     if (!record) return <LoadingIndicator />;
 
@@ -73,52 +114,83 @@ export const TriggerShow = () => {
                 <Labeled>
                     <IdField source="key" />
                 </Labeled>
-                {record?.metadata && <MetadataField />}
+
                 <Divider />
 
-                <Stack direction={'row'}>
+                <Stack direction={'row'} gap={1} alignItems="center">
+                    {functionKey && (
+                        <Labeled label="fields.function.title">
+                            <Stack
+                                direction={'row'}
+                                gap={1}
+                                alignItems="center"
+                            >
+                                <FunctionIcon
+                                    kind={functionKey.kind}
+                                    color={'secondary'}
+                                />
+
+                                <span>
+                                    {functionKey.name}
+                                    {functionKey.id && (
+                                        <IconButtonWithTooltip
+                                            label="ra.action.show"
+                                            color="primary"
+                                            onClick={() => {
+                                                const path = createPath({
+                                                    resource: 'functions',
+                                                    id: functionKey.id,
+                                                    type: 'show',
+                                                });
+
+                                                navigate(path);
+                                            }}
+                                        >
+                                            <OpenInNewIcon fontSize="small" />
+                                        </IconButtonWithTooltip>
+                                    )}
+                                </span>
+                            </Stack>
+                        </Labeled>
+                    )}
+                    {workflowKey && (
+                        <Labeled label="fields.workflow.title">
+                            <Stack
+                                direction={'row'}
+                                gap={1}
+                                alignItems="center"
+                            >
+                                <WorkflowIcon color={'secondary'} />
+
+                                <span>
+                                    {workflowKey.name}
+                                    {workflowKey.id && (
+                                        <IconButtonWithTooltip
+                                            label="ra.action.show"
+                                            color="primary"
+                                            onClick={() => {
+                                                const path = createPath({
+                                                    resource: 'workflows',
+                                                    id: workflowKey.id,
+                                                    type: 'show',
+                                                });
+
+                                                navigate(path);
+                                            }}
+                                        >
+                                            <OpenInNewIcon fontSize="small" />
+                                        </IconButtonWithTooltip>
+                                    )}
+                                </span>
+                            </Stack>
+                        </Labeled>
+                    )}
                     <Labeled>
                         <TextField
                             source="spec.task"
                             label="fields.spec.task.title"
                         />
                     </Labeled>
-                    {functionId && (
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'functions',
-                                    id: functionId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    )}
-                    {workflowId && (
-                        <IconButtonWithTooltip
-                            label="ra.action.show"
-                            color="primary"
-                            sx={{ mt: 1 }}
-                            onClick={() => {
-                                const path = createPath({
-                                    resource: 'workflows',
-                                    id: workflowId,
-                                    type: 'show',
-                                });
-
-                                navigate(path);
-                            }}
-                        >
-                            <OpenInNewIcon fontSize="small" />
-                        </IconButtonWithTooltip>
-                    )}
                 </Stack>
 
                 <Labeled>
@@ -129,17 +201,14 @@ export const TriggerShow = () => {
                 </Labeled>
                 {record?.status?.transitions && <EventsList record={record} />}
             </CustomTabbedShowLayout.Tab>
-
+            <CustomTabbedShowLayout.Tab value="metadata" label="metadata">
+                <MetadataTab />
+            </CustomTabbedShowLayout.Tab>
             <CustomTabbedShowLayout.Tab
                 value="spec"
                 label={translate('fields.spec.title')}
             >
-                <AceEditorField
-                    source="spec"
-                    parse={toYaml}
-                    mode="yaml"
-                    minLines={20}
-                />
+                <SpecTab />
             </CustomTabbedShowLayout.Tab>
 
             <CustomTabbedShowLayout.Tab

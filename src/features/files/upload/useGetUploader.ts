@@ -309,11 +309,7 @@ export const useGetUploader = (props: GetUploaderProps): Uploader => {
                         //handle zip files so that they can be automatically unzipped at download
                         file['s3'] = {
                             ...res,
-                            path:
-                                res.path.startsWith('s3://') &&
-                                res.path.endsWith('.zip')
-                                    ? 'zip+' + res.path
-                                    : res.path,
+                            path,
                         };
                     }
 
