@@ -688,6 +688,27 @@
             "title": "Model Signature Parameters"
         }
     },
+    "ollama": {
+        "title": "Ollama",
+        "name": { "title": "Model" },
+        "url": { "title": "Model URL" },
+        "description": { "title": "Description" },
+        "capabilities": { "title": "Capabilities" },
+        "sizes": { "title": "Model sizes" },
+        "model_sizes": { "title": "Tag sizes" },
+        "cloud": { "title": "Cloud model" },
+        "pulls": { "title": "Pulls" },
+        "tags": { "title": "Tags" },
+        "updated": { "title": "Updated" },
+        "tag_details": { "title": "Tag details" },
+        "tag": { "title": "Tag" },
+        "digest": { "title": "Digest" },
+        "context": { "title": "Context" },
+        "input": { "title": "Input" },
+        "size": { "title": "Size" },
+        "max": { "title": "Max" },
+        "metadata": { "title": "Model metadata" }
+    },
     "kubeai": {
         "filepath": {
             "description": "",

@@ -686,6 +686,27 @@
             "title": "Parametri del Signature"
         }
     },
+    "ollama": {
+        "title": "Ollama",
+        "name": { "title": "Modello" },
+        "url": { "title": "URL del modello" },
+        "description": { "title": "Descrizione" },
+        "capabilities": { "title": "Capacita" },
+        "sizes": { "title": "Dimensioni del modello" },
+        "model_sizes": { "title": "Dimensioni dei tag" },
+        "cloud": { "title": "Modello cloud" },
+        "pulls": { "title": "Download" },
+        "tags": { "title": "Tag" },
+        "updated": { "title": "Aggiornato" },
+        "tag_details": { "title": "Dettagli dei tag" },
+        "tag": { "title": "Tag" },
+        "digest": { "title": "Digest" },
+        "context": { "title": "Contesto" },
+        "input": { "title": "Input" },
+        "size": { "title": "Dimensione" },
+        "max": { "title": "Massimo" },
+        "metadata": { "title": "Metadati del modello" }
+    },
     "kubeai": {
         "filepath": {
             "description": "",

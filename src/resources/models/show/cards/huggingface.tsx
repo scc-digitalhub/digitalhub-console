@@ -8,7 +8,7 @@ import {
     TextField,
     useRecordContext,
 } from 'react-admin';
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Stack } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { IdField } from '../../../../common/components/fields/IdField';
 import humanFormat from 'human-format';
@@ -19,7 +19,11 @@ export const HuggingfaceCard = () => {
     const huggingface = record?.status?.huggingface || {};
     const model = huggingface?.model || {};
     const cardData = model?.cardData || {};
-    const baseModels = cardData?.base_model || [];
+    const baseModels = cardData?.base_model
+        ? Array.isArray(cardData?.base_model)
+            ? cardData?.base_model
+            : [cardData?.base_model]
+        : [];
     const safetensors = model?.safetensors || {};
     const architectures =
         model?.architectures || model?.config?.architectures || [];

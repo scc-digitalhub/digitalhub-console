@@ -1,8 +1,9 @@
-import { HuggingfaceModelCard } from './modelcard';
+import { ModelCard } from './modelcard';
 import { HuggingfaceModel, HuggingfaceConfigJson } from './huggingface';
 import { ConsoleTabContribution } from '../../../../features/extensions/ConsoleExtension';
 import { MlflowParams } from './mlflow';
 import { MetricsTab } from './metrics';
+import { OllamaModel } from './ollama';
 
 export const tabs: Record<string, ConsoleTabContribution[]> = {
     '*': [
@@ -16,7 +17,7 @@ export const tabs: Record<string, ConsoleTabContribution[]> = {
     huggingface: [
         {
             key: 'modelcard',
-            Element: HuggingfaceModelCard,
+            Element: ModelCard,
             label: 'fields.huggingface.modelcard.title',
         },
         {
@@ -40,6 +41,19 @@ export const tabs: Record<string, ConsoleTabContribution[]> = {
             isVisible: (record?: any) =>
                 !!record?.spec?.parameters &&
                 Object.keys(record?.spec?.parameters).length > 0,
+        },
+    ],
+    ollama: [
+        {
+            key: 'modelcard',
+            Element: ModelCard,
+            label: 'fields.huggingface.modelcard.title',
+        },
+        {
+            key: 'ollama',
+            Element: OllamaModel,
+            label: 'fields.ollama.title',
+            isVisible: (record?: any) => !!record?.status?.ollama,
         },
     ],
 };
