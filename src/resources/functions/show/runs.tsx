@@ -184,11 +184,13 @@ export const RunListView = props => {
                     project: record.project,
                     kind: kind,
                     spec: {
+                        //copy function spec (using record)
+                        ...record.spec,
+                        //copy the task spec  (using record)
+                        ...task.spec,
                         function: functionKey,
                         task: taskKey,
                         local_execution: false,
-                        //copy the task spec  (using record)
-                        ...task.spec,
                     },
                 };
 
@@ -199,7 +201,7 @@ export const RunListView = props => {
                         project: record.project,
                         kind: task.kind + ':run',
                         spec: {
-                            //copy the task spec  (using form)
+                            //copy the run spec  (using form)
                             ...r.spec,
                             function: functionKey,
                             task: taskKey,

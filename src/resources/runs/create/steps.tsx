@@ -221,7 +221,7 @@ export const RunStep = ({ kind, task }: { kind?: string; task?: string }) => {
         <SpecStep
             source="spec"
             schema={schema?.schema}
-            uiSchema={getRunUiSpec(schema)}
+            uiSchema={getRunUiSpec(schema?.schema, schema?.uiSchema)}
             kind={kind}
         />
     );
