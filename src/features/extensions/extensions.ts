@@ -69,7 +69,7 @@ export const useExtensions = <
     const tabs = Array.from(
         new Set(
             kinds.filter((k: string) =>
-                schemas.find(s => s.kind === k && s.showIn == 'tabs')
+                schemas.find(s => s.kind === k && s.showIn == 'tab')
             ) as string[]
         )
     );
@@ -106,9 +106,9 @@ export const useExtensions = <
         );
     });
 
-    //inject extension records only for the 'show' view
+    //inject extension records only for the 'show' view. ShowIn should be explicitly set for these extensions
     //TODO align with forms to leverage only this
-    const restExtensions = value.filter((e: any) => !tabs.includes(e.kind));
+    const restExtensions = value.filter((e: any) => !tabs.includes(e.kind) && !!e.showIn);
     if (restExtensions.length > 0 && props.view == 'show') {
         const restRecord = { ...record, [source]: restExtensions };
         const field = createElement(ExtensionsField, {

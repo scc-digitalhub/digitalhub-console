@@ -23,7 +23,7 @@ import {
     useSourceContext,
     useTranslate,
 } from 'react-admin';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { isValidKind, randomId } from '../../../common/utils/helpers';
 import { JsonSchemaInput } from '../../../common/jsonSchema/components/JsonSchema';
@@ -45,12 +45,21 @@ export const ExtensionsForm = (props: {
     const coordinator = useUploadCoordinator();
     const parentId = props.record?.id ?? record?.id ?? coordinator?.id;
 
+    const [filteredSchemas, setFilteredSchemas] = useState<any[]>([]);
+
     //check if any extension is available
     const { data: schemas, isLoading } = useGetExtensions(
         resourceProp || resource
     );
 
-    if (isLoading || !schemas) {
+    // form is for extensions with standard management (showIn should be explicitly set)
+    useEffect(() => {
+        if (schemas) {
+            setFilteredSchemas(schemas.filter(s => !!s.showIn));
+        }
+    }, [schemas]);
+
+    if (isLoading || !filteredSchemas || filteredSchemas.length === 0) {
         return <></>;
     }
 
@@ -65,7 +74,7 @@ export const ExtensionsForm = (props: {
                 disableClear
                 removeButton={<RemoveExtensionButton />}
             >
-                <ExtensionsFormItem schemas={schemas} parentId={parentId} />
+                <ExtensionsFormItem schemas={filteredSchemas} parentId={parentId} />
             </SimpleFormIterator>
         </ArrayInput>
     );
