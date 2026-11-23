@@ -22,11 +22,14 @@ import {
 import { SpecTab } from '../../../common/components/tabs/spec';
 import { MetadataTab } from '../../../common/components/tabs/metadata';
 import { prettyBytes } from '../../../features/files/fileBrowser/utils';
+import { useExtensionsTabs } from '../../../features/extensions/tabs';
 
 export const ContainerImageShow = props => {
     const record = useRecordContext(props);
     const translate = useTranslate();
     const theme = useTheme();
+
+    const extensionTabs = useExtensionsTabs({ source: 'extensions' });
 
     if (!record) return <></>;
 
@@ -112,6 +115,7 @@ export const ContainerImageShow = props => {
             >
                 <ContainerImageStatusView />
             </CustomTabbedShowLayout.Tab>
+            {extensionTabs}
             <CustomTabbedShowLayout.Tab
                 value="lineage"
                 label="pages.lineage.title"
