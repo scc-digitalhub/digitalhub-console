@@ -65,16 +65,21 @@ export const FunctionEdit = (props: {
         redirect('show', resource, data.id, data);
     };
 
-    const transform = data => {
+   const transform = data => {
+        const { path, ...rest } = data;
         const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
 
         //reset metadata version if new version, unless manually filled
         return {
-            ...data,
-            ...transformExtensionPaths(data),
+            ...rest,
+            ...transformExtensionPaths(rest),
+            spec: {
+                ...rest.spec,
+                ...(path !== undefined ? { path: path || undefined } : {}),
+            },
             metadata: resetMetadataVersion
-                ? { ...data.metadata, version: undefined }
-                : data.metadata,
+                ? { ...rest.metadata, version: undefined }
+                : rest.metadata,
         };
     };
 

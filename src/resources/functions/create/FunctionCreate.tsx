@@ -85,12 +85,20 @@ export const FunctionCreate = (props: {
         redirect(props.redirect ?? 'list', resource);
     };
 
-    const transform = useCallback(
+const transform = useCallback(
         (data: any) => {
+            const { path, ...rest } = data;
+
             return {
-                ...data,
+                ...rest,
                 id,
                 project: root || '',
+                spec: {
+                    ...rest.spec,
+                    ...(path !== undefined
+                        ? { path: path || undefined }
+                        : {}),
+                },
             };
         },
         [root, id]

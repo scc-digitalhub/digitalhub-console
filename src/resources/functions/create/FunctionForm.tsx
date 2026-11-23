@@ -5,16 +5,17 @@
 import { JSXElementConstructor, ReactElement, useState } from 'react';
 import { Box } from '@mui/material';
 import { TextInput, required } from 'react-admin';
+import { useFormContext, useWatch } from 'react-hook-form';
 import {
     KindSelector,
     KindChangeGuard,
 } from '../../../common/components/KindSelector';
-import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { Step, StepperForm } from '@dslab/ra-stepper';
 import { StepperToolbar } from '../../../common/components/toolbars/StepperToolbar';
 import { isAlphaNumeric } from '../../../common/utils/helpers';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
 import { useKinds } from '../../../common/hooks/useKinds';
+import { FunctionSpecFields } from '../FunctionSpecFields';
 
 export const FunctionCreateForm = (props: {
     isFromTemplate?: boolean;
@@ -42,7 +43,7 @@ export const FunctionCreateForm = (props: {
             <FunctionBaseStepContent />
         </StepperForm.Step>,
         <StepperForm.Step key="spec" label="fields.spec.title">
-            <FunctionSpecStepContent kind={kind} onSpecDirty={setIsSpecDirty} />
+            <FunctionSpecFields kind={kind} onDirty={setIsSpecDirty} />
         </StepperForm.Step>,
     ];
 
@@ -64,9 +65,18 @@ const FunctionKindStepContent = ({
     isSpecDirty: boolean;
     onKindConfirm: (nextKind: string | undefined) => void;
 }) => {
+    const path = useWatch({ name: 'path' });
+    const { setValue } = useFormContext();
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', p: 4 }}>
-            <KindChangeGuard isDirty={isSpecDirty} onConfirm={onKindConfirm} />
+            <KindChangeGuard
+                isDirty={Boolean(isSpecDirty || !!path)}
+                onConfirm={nextKind => {
+                    setValue('path', undefined);
+                    onKindConfirm(nextKind);
+                }}
+            />
             <KindSelector kinds={kinds} readOnly={readOnly} />
         </Box>
     );
@@ -82,14 +92,4 @@ const FunctionBaseStepContent = () => {
             <MetadataInput kinds={['metadata.base']} />
         </>
     );
-};
-
-const FunctionSpecStepContent = ({
-    kind,
-    onSpecDirty,
-}: {
-    kind?: string;
-    onSpecDirty: (dirty: boolean) => void;
-}) => {
-    return <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />;
 };
