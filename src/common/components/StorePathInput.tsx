@@ -2,21 +2,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     Autocomplete,
     Box,
-    Chip,
     CircularProgress,
     TextField,
-    Typography,
 } from '@mui/material';
-import { CommonInputProps, useInput, useTranslate,InputHelperText } from 'react-admin';
+import { CommonInputProps, InputHelperText, useTranslate } from 'react-admin';
 import { SearchFilter } from '../../features/search/SearchProvider';
-import {
-    StoreSearchItem,
-    useStorePathSearch,
-} from '../../features/search/useStorePathSearch';
+import { StoreSearchItem } from '../../features/search/useStorePathSearch';
+import { SelectedResourceCard } from './SelectedResourceCard';
+import { StoreResourceSummary } from './StoreResourceSummary';
+import { useStorePathInput } from '../../features/search/useStorePathInput';
+
 export type { StoreSearchItem } from '../../features/search/useStorePathSearch';
 
 export type StorePathInputProps = Omit<
@@ -31,316 +29,101 @@ export type StorePathInputProps = Omit<
     onChange?: (value: string) => void;
 };
 
-const defaultGetOptionValue = (item: StoreSearchItem) =>
-    item.key ?? item.path ?? String(item.id);
-
-const defaultGetOptionLabel = (item: StoreSearchItem) =>
-    item.name ?? String(item.id);
-
-export const StorePathInput = ({
-    source,
-    defaultValue,
-    filters,
-    getOptionValue = defaultGetOptionValue,
-    getOptionLabel = defaultGetOptionLabel,
-    readOnly,
-    label,
-    helperText,
-    validate,
-    onChange,
-}: StorePathInputProps) => {
+export const StorePathInput = (props: StorePathInputProps) => {
+    const { readOnly, helperText } = props;
     const translate = useTranslate();
-
-    // Riferimenti per le funzioni di estrazione dei valori e delle etichette delle opzioni
-    const getOptionValueRef = useRef(getOptionValue);
-    getOptionValueRef.current = getOptionValue;
-
-    const getOptionLabelRef = useRef(getOptionLabel);
-    getOptionLabelRef.current = getOptionLabel;
-
     const {
         field,
-        fieldState: { error, invalid },
+        error,
+        invalid,
         isRequired,
-    } = useInput({
-        source,
-        defaultValue: defaultValue ?? '',
-        validate,
-    });
-    // Stato locale per l'opzione selezionata e il valore di input visualizzato
-    const [selectedOption, setSelectedOption] =
-        useState<StoreSearchItem | null>(null);
-    // Stato locale per il valore di input visualizzato, sincronizzato con l'opzione selezionata e il campo del form
-    const [inputValue, setInputValue] = useState<string>(field.value ?? '');
-    // Hook per la ricerca incrementale dei percorsi nello store:
-    // restituisce le opzioni disponibili, lo stato di caricamento,
-    // eventuali errori e l'elemento risolto corrispondente al valore corrente
-
-
-
-const {
+        resolvedLabel,
         options,
         loading,
-        error: searchError,
-        resolved,
-    } = useStorePathSearch({
-        text: inputValue,
-        value: field.value ?? '',
-        filters,
-        paused: Boolean(
-            readOnly ||
-                (selectedOption &&
-                    getOptionValue(selectedOption) === inputValue)
-        ),
-    });
-    // Effetto per aggiornare l'opzione selezionata quando 
-    // viene risolto un elemento corrispondente al valore corrente --> modifica
-    useEffect(() => {
-        if (resolved && getOptionValueRef.current(resolved) === field.value) {
-            setSelectedOption(resolved);
-        }
-    }, [resolved, field.value]);
-
-    // Mantiene il nome visualizzato se corrisponde all'opzione selezionata,
-    // altrimenti sincronizza con eventuali modifiche esterne (template, edit, reset)
-    useEffect(() => {
-        const currentVal = field.value ?? '';
-        if (!currentVal) {
-            setSelectedOption(null);
-            setInputValue('');
-            return;
-        }
-if (
-    selectedOption &&
-    getOptionValueRef.current(selectedOption) === currentVal
-) {
-    setInputValue(currentVal);
-    return;
-}
-        setSelectedOption(null);
-        setInputValue(currentVal);
-    }, [field.value, selectedOption]);
-
-    // Risolve l'etichetta da visualizzare per il campo, utilizzando la traduzione se disponibile
-    const resolvedLabel = useMemo(() => {
-        if (typeof label === 'string') {
-            return translate(label, { _: label });
-        }
-        return (
-            label ??
-            translate(`fields.${source}.title`, {
-                _: translate(`fields.${source}`, { _: 'Path' }),
-            })
-        );
-    }, [label, source, translate]);
-
-    // Gestisce l'aggiornamento del valore del campo e chiama l'eventuale callback onChange esterna
-    const handleValueUpdate = (nextValue: string) => {
-        field.onChange(nextValue);
-        onChange?.(nextValue);
-    };
+        searchError,
+        selectedOption,
+        inputValue,
+        getOptionValue,
+        getOptionLabel,
+        handleInputChange,
+        handleChange,
+        handleClear,
+    } = useStorePathInput(props);
 
     return (
-        // Componente Autocomplete per la selezione del percorso nello store, testo libero consentito
         <>
-        <Autocomplete<StoreSearchItem, false, false, true>
-            freeSolo
-            fullWidth
-            disabled={readOnly}
-            options={options}
-            loading={loading}
-            inputValue={inputValue}
-            value={selectedOption ?? field.value ?? ''}
-            filterOptions={x => x}
-            isOptionEqualToValue={(option, val) =>
-                typeof val === 'string'
-                    ? getOptionValue(option) === val
-                    : option.id === val.id
-            }
-            // Determina se un'opzione è uguale al valore corrente, confrontando l'ID o il valore della stringa
-            getOptionLabel={option =>
-                typeof option === 'string' ? option : getOptionLabel(option)
-            }
-            // Gestisce i cambiamenti dell'input, aggiornando lo stato locale e il valore del campo,
-            //  resetta selected  quando cambia
-            onInputChange={(_, newInputValue, reason) => {
-                if (reason === 'input') {
-                    setSelectedOption(null);
-                    setInputValue(newInputValue);
-                    handleValueUpdate(newInputValue);
-                } else if (reason === 'clear') {
-                    setSelectedOption(null);
-                    setInputValue('');
-                    handleValueUpdate('');
+            <Autocomplete<StoreSearchItem, false, false, true>
+                freeSolo
+                fullWidth
+                disabled={readOnly}
+                options={options}
+                loading={loading}
+                inputValue={inputValue}
+                value={selectedOption ?? field.value ?? ''}
+                filterOptions={x => x}
+                isOptionEqualToValue={(option, val) =>
+                    typeof val === 'string'
+                        ? getOptionValue(option) === val
+                        : option.id === val.id
                 }
-            }}
-            // Gestisce i cambiamenti della selezione (quando l'utente seleziona un'opzione),
-            //  aggiornando lo stato locale e il valore del campo. 3 casi gestiti: nessun valore, stringa, oggetto selezionato
-            onChange={(_, newValue) => {
-                if (!newValue) {
-                    setSelectedOption(null);
-                    setInputValue('');
-                    handleValueUpdate('');
-                    return;
+                getOptionLabel={option =>
+                    typeof option === 'string' ? option : getOptionLabel(option)
                 }
-                if (typeof newValue === 'string') {
-                    setSelectedOption(null);
-                    setInputValue(newValue);
-                    handleValueUpdate(newValue);
-                    return;
-                }
-const selectedKey = getOptionValue(newValue);
+                onInputChange={handleInputChange}
+                onChange={handleChange}
+                renderOption={(optionProps, option) => (
+                    <li {...optionProps} key={option.id}>
+                        <Box sx={{ width: '100%', py: 0.5 }}>
+                            <StoreResourceSummary
+                                item={option}
+                                resourceKey={getOptionValue(option)}
+                            />
+                        </Box>
+                    </li>
+                )}
+                renderInput={params => (
+                    <TextField
+                        {...params}
+                        label={resolvedLabel}
+                        required={isRequired}
+                        error={invalid}
+                        helperText={
+                            !error?.message && searchError ? (
+                                translate('ra.notification.data_provider_error')
+                            ) : (
+                                <InputHelperText
+                                    error={error?.message}
+                                    helperText={helperText}
+                                />
+                            )
+                        }
+                        onBlur={field.onBlur}
+                        InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                                <>
+                                    {loading ? (
+                                        <CircularProgress
+                                            color="inherit"
+                                            size={18}
+                                        />
+                                    ) : null}
+                                    {params.InputProps.endAdornment}
+                                </>
+                            ),
+                        }}
+                    />
+                )}
+            />
 
-setSelectedOption(newValue);
-setInputValue(selectedKey);
-handleValueUpdate(selectedKey);
-            }}
-            // Personalizza il rendering di ciascuna opzione nell'elenco a discesa,
-            //  mostrando etichetta, tipo e genere se disponibili
-            // Utilizza Box e Typography per la disposizione e lo stile degli elementi
-            renderOption={(props, option) => {
-    const optionKey = getOptionValue(option);
-
-    return (
-        <li {...props} key={option.id}>
-            <Box sx={{ width: '100%', py: 0.5 }}>
-                <Typography variant="body2" fontWeight={600}>
-                    {option.name ?? option.id}
-                </Typography>
-
-                <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{
-                        display: 'block',
-                        fontFamily: 'monospace',
-                        overflowWrap: 'anywhere',
-                    }}
-                >
-                    {optionKey}
-                </Typography>
-
-                <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5 }}>
-                    {option.type && (
-                        <Chip
-                            size="small"
-                            label={option.type}
-                            variant="outlined"
-                        />
-                    )}
-                    {option.kind && (
-                        <Chip
-                            size="small"
-                            label={option.kind}
-                            variant="outlined"
-                        />
-                    )}
-                </Box>
-            </Box>
-        </li>
-    );
-}}
-            renderInput={params => (
-                <TextField
-                    {...params}
-                    label={resolvedLabel}
-                    required={isRequired}
-                    error={invalid}
-                    helperText={
-    !error?.message && searchError ? (
-        translate('ra.notification.data_provider_error')
-    ) : (
-        <InputHelperText
-            error={error?.message}
-            helperText={helperText}
-        />
-    )
-}
-                    onBlur={field.onBlur}
-                    InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                            <>
-                                {loading ? (
-                                    <CircularProgress
-                                        color="inherit"
-                                        size={18}
-                                    />
-                                ) : null}
-                                {params.InputProps.endAdornment}
-                            </>
-                        ),
-                    }}
+            {selectedOption && (
+                <SelectedResourceCard
+                    item={selectedOption}
+                    resourceKey={getOptionValue(selectedOption)}
+                    readOnly={readOnly}
+                    onClear={handleClear}
                 />
             )}
-        />
-        {selectedOption && (
-    <Box
-        sx={{
-            mt: 1,
-            p: 1.5,
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 1,
-        }}
-    >
-        <Box
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mb: 1,
-            }}
-        >
-            <Typography variant="caption" color="text.secondary">
-                {translate('fields.path.selected_resource', {
-                    _: 'Selected resource',
-                })}
-            </Typography>
-            {/* <Chip
-                size="small"
-                color="success"
-                variant="outlined"
-                label={translate('ra.action.select', {
-                    _: 'Selected',
-                })}
-            /> */}
-        </Box>
-
-        <Typography variant="body2" fontWeight={600}>
-            {selectedOption.name ?? selectedOption.id}
-        </Typography>
-
-        <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{
-                display: 'block',
-                fontFamily: 'monospace',
-                overflowWrap: 'anywhere',
-            }}
-        >
-            {getOptionValue(selectedOption)}
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 0.5, mt: 1 }}>
-            {selectedOption.type && (
-                <Chip
-                    size="small"
-                    variant="outlined"
-                    label={selectedOption.type}
-                />
-            )}
-            {selectedOption.kind && (
-                <Chip
-                    size="small"
-                    variant="outlined"
-                    label={selectedOption.kind}
-                />
-            )}
-        </Box>
-    </Box>
-)}
         </>
     );
 };
