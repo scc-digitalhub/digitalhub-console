@@ -11,7 +11,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { CommonInputProps, useInput, useTranslate } from 'react-admin';
+import { CommonInputProps, useInput, useTranslate,InputHelperText } from 'react-admin';
 import { SearchFilter } from '../../features/search/SearchProvider';
 import {
     StoreSearchItem,
@@ -75,7 +75,10 @@ export const StorePathInput = ({
     // Hook per la ricerca incrementale dei percorsi nello store:
     // restituisce le opzioni disponibili, lo stato di caricamento,
     // eventuali errori e l'elemento risolto corrispondente al valore corrente
-    const {
+
+
+
+const {
         options,
         loading,
         error: searchError,
@@ -87,7 +90,7 @@ export const StorePathInput = ({
         paused: Boolean(
             readOnly ||
                 (selectedOption &&
-                    getOptionLabel(selectedOption) === inputValue)
+                    getOptionValue(selectedOption) === inputValue)
         ),
     });
     // Effetto per aggiornare l'opzione selezionata quando 
@@ -107,13 +110,13 @@ export const StorePathInput = ({
             setInputValue('');
             return;
         }
-        if (
-            selectedOption &&
-            getOptionValueRef.current(selectedOption) === currentVal
-        ) {
-            setInputValue(getOptionLabelRef.current(selectedOption));
-            return;
-        }
+if (
+    selectedOption &&
+    getOptionValueRef.current(selectedOption) === currentVal
+) {
+    setInputValue(currentVal);
+    return;
+}
         setSelectedOption(null);
         setInputValue(currentVal);
     }, [field.value, selectedOption]);
@@ -139,6 +142,7 @@ export const StorePathInput = ({
 
     return (
         // Componente Autocomplete per la selezione del percorso nello store, testo libero consentito
+        <>
         <Autocomplete<StoreSearchItem, false, false, true>
             freeSolo
             fullWidth
@@ -185,66 +189,57 @@ export const StorePathInput = ({
                     handleValueUpdate(newValue);
                     return;
                 }
-                const selectedKey = getOptionValue(newValue);
-                const selectedLabel = getOptionLabel(newValue);
-                setSelectedOption(newValue);
-                setInputValue(selectedLabel);
-                handleValueUpdate(selectedKey);
+const selectedKey = getOptionValue(newValue);
+
+setSelectedOption(newValue);
+setInputValue(selectedKey);
+handleValueUpdate(selectedKey);
             }}
             // Personalizza il rendering di ciascuna opzione nell'elenco a discesa,
             //  mostrando etichetta, tipo e genere se disponibili
             // Utilizza Box e Typography per la disposizione e lo stile degli elementi
             renderOption={(props, option) => {
-                const optionKey = getOptionValue(option);
-                return (
-                    <li {...props} key={option.id}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                py: 0.5,
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                }}
-                            >
-                                <Typography variant="body2" fontWeight={600}>
-                                    {getOptionLabel(option)}
-                                </Typography>
-                                {option.type && (
-                                    <Chip
-                                        size="small"
-                                        label={option.type.toLowerCase()}
-                                        variant="outlined"
-                                    />
-                                )}
-                                {option.kind && (
-                                    <Typography
-                                        variant="caption"
-                                        color="text.secondary"
-                                    >
-                                        ({option.kind})
-                                    </Typography>
-                                )}
-                            </Box>
-                            {optionKey && (
-                                <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={{ fontFamily: 'monospace' }}
-                                >
-                                    {optionKey}
-                                </Typography>
-                            )}
-                        </Box>
-                    </li>
-                );
-            }}
+    const optionKey = getOptionValue(option);
+
+    return (
+        <li {...props} key={option.id}>
+            <Box sx={{ width: '100%', py: 0.5 }}>
+                <Typography variant="body2" fontWeight={600}>
+                    {option.name ?? option.id}
+                </Typography>
+
+                <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{
+                        display: 'block',
+                        fontFamily: 'monospace',
+                        overflowWrap: 'anywhere',
+                    }}
+                >
+                    {optionKey}
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5 }}>
+                    {option.type && (
+                        <Chip
+                            size="small"
+                            label={option.type}
+                            variant="outlined"
+                        />
+                    )}
+                    {option.kind && (
+                        <Chip
+                            size="small"
+                            label={option.kind}
+                            variant="outlined"
+                        />
+                    )}
+                </Box>
+            </Box>
+        </li>
+    );
+}}
             renderInput={params => (
                 <TextField
                     {...params}
@@ -252,14 +247,15 @@ export const StorePathInput = ({
                     required={isRequired}
                     error={invalid}
                     helperText={
-                        error?.message ??
-                        (searchError
-                            ? translate('ra.notification.data_provider_error')
-                            : undefined) ??
-                        (typeof helperText === 'string'
-                            ? translate(helperText, { _: helperText })
-                            : helperText)
-                    }
+    !error?.message && searchError ? (
+        translate('ra.notification.data_provider_error')
+    ) : (
+        <InputHelperText
+            error={error?.message}
+            helperText={helperText}
+        />
+    )
+}
                     onBlur={field.onBlur}
                     InputProps={{
                         ...params.InputProps,
@@ -278,5 +274,73 @@ export const StorePathInput = ({
                 />
             )}
         />
+        {selectedOption && (
+    <Box
+        sx={{
+            mt: 1,
+            p: 1.5,
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 1,
+        }}
+    >
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 1,
+            }}
+        >
+            <Typography variant="caption" color="text.secondary">
+                {translate('fields.path.selected_resource', {
+                    _: 'Selected resource',
+                })}
+            </Typography>
+            {/* <Chip
+                size="small"
+                color="success"
+                variant="outlined"
+                label={translate('ra.action.select', {
+                    _: 'Selected',
+                })}
+            /> */}
+        </Box>
+
+        <Typography variant="body2" fontWeight={600}>
+            {selectedOption.name ?? selectedOption.id}
+        </Typography>
+
+        <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+                display: 'block',
+                fontFamily: 'monospace',
+                overflowWrap: 'anywhere',
+            }}
+        >
+            {getOptionValue(selectedOption)}
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 0.5, mt: 1 }}>
+            {selectedOption.type && (
+                <Chip
+                    size="small"
+                    variant="outlined"
+                    label={selectedOption.type}
+                />
+            )}
+            {selectedOption.kind && (
+                <Chip
+                    size="small"
+                    variant="outlined"
+                    label={selectedOption.kind}
+                />
+            )}
+        </Box>
+    </Box>
+)}
+        </>
     );
 };

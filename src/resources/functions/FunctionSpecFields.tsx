@@ -32,7 +32,7 @@ export const FunctionSpecFields = ({ kind, onDirty }: {
         <>
             {schema && (
                 <SpecInput
-                    key={kind}
+                    key={`spec-${kind}`}
                     source="spec"
                     kind={kind}
                     schema={schema}
@@ -42,7 +42,7 @@ export const FunctionSpecFields = ({ kind, onDirty }: {
             )}
             {pathSchema && (
                 <StorePathInput
-                    key={kind}
+                    key={`path-${kind}`}
                     source="path"
                     label={pathSchema.title ?? 'fields.path.title'}
                     helperText={pathSchema.description}
