@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { GetListParams, SortPayload } from 'react-admin';
-import { keyParser } from '../../common/utils/parsers';
-import { useSearchProvider } from './SearchContext';
-import { SearchFilter, SearchRecord } from './SearchProvider';
+import { keyParser } from '../../utils/parsers';
+import { useSearchProvider } from '../../../features/search/SearchContext';
+import { SearchFilter, SearchRecord } from '../../../features/search/SearchProvider';
 
 export type StoreSearchItem = SearchRecord & {
     name?: string;

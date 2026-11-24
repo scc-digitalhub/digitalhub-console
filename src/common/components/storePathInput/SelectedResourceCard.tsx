@@ -5,7 +5,7 @@
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslate } from 'react-admin';
-import { StoreSearchItem } from '../../features/search/useStorePathSearch';
+import { StoreSearchItem } from './useStorePathSearch';
 import { StoreResourceSummary } from './StoreResourceSummary';
 
 export type SelectedResourceCardProps = {

@@ -9,7 +9,7 @@ import {
     StoreSearchItem,
     useStorePathSearch,
 } from './useStorePathSearch';
-import { StorePathInputProps } from '../../common/components/StorePathInput';
+import { StorePathInputProps } from './StorePathInput';
 
 export const defaultGetOptionValue = (item: StoreSearchItem) =>
     item.key ?? item.path ?? String(item.id);

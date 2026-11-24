@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Chip, Typography } from '@mui/material';
-import { StoreSearchItem } from '../../features/search/useStorePathSearch';
+import { StoreSearchItem } from './useStorePathSearch';
 
 export type StoreResourceSummaryProps = {
     item: StoreSearchItem;

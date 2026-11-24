@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecordContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
-import { StorePathInput } from '../../common/components/StorePathInput';
+import { StorePathInput } from '../../common/components/storePathInput/StorePathInput';
 import { SearchFilter } from '../../features/search/SearchProvider';
 import { useFunctionSpecSchema } from './useFunctionSpecSchema';
 

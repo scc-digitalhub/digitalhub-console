@@ -9,13 +9,13 @@ import {
     TextField,
 } from '@mui/material';
 import { CommonInputProps, InputHelperText, useTranslate } from 'react-admin';
-import { SearchFilter } from '../../features/search/SearchProvider';
-import { StoreSearchItem } from '../../features/search/useStorePathSearch';
+import { SearchFilter } from '../../../features/search/SearchProvider';
+import { StoreSearchItem } from './useStorePathSearch';
 import { SelectedResourceCard } from './SelectedResourceCard';
 import { StoreResourceSummary } from './StoreResourceSummary';
-import { useStorePathInput } from '../../features/search/useStorePathInput';
+import { useStorePathInput } from './useStorePathInput';
 
-export type { StoreSearchItem } from '../../features/search/useStorePathSearch';
+export type { StoreSearchItem } from './useStorePathSearch';
 
 export type StorePathInputProps = Omit<
     CommonInputProps,
