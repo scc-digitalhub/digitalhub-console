@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
 import { useEffect, useState } from 'react';
 import { useRecordContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';

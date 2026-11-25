@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react';
+// SPDX-FileCopyrightText: © 2025 DSLab - Fondazione Bruno Kessler
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { useEffect, useRef, useState } from 'react';
 import { GetListParams, SortPayload } from 'react-admin';
 import { keyParser } from '../../utils/parsers';
 import { useSearchProvider } from '../../../features/search/SearchContext';
-import { SearchFilter, SearchRecord } from '../../../features/search/SearchProvider';
+import {
+    SearchFilter,
+    SearchRecord,
+} from '../../../features/search/SearchProvider';
 
 export type StoreSearchItem = SearchRecord & {
     name?: string;
@@ -20,13 +27,19 @@ export type StorePathSearchProps = {
     resultsPerPage?: number;
     sortField?: string;
     sortOrder?: 'ASC' | 'DESC';
+    getOptionValue?: (item: StoreSearchItem) => string;
 };
+
+export const defaultGetOptionValue = (item: StoreSearchItem) =>
+    item.key ?? item.path ?? String(item.id);
+
+const escapeSolr = (value: string) =>
+    value.replace(/([+\-&|!(){}[\]^"~*?:\\/\s])/g, '\\$1');
 
 const buildIncrementalQuery = (raw: string) => {
     const trimmed = raw.trim();
     if (!trimmed || trimmed.includes('://')) return '';
-    const escaped = trimmed.replace(/([+\-&|!(){}[\]^"~*?:\\/])/g, '\\$1');
-    return `${escaped}*`;
+    return `${escapeSolr(trimmed)}*`;
 };
 
 const buildStoreSearchParams = (
@@ -34,25 +47,32 @@ const buildStoreSearchParams = (
     value: string,
     filters?: SearchFilter[]
 ): { q: string; fq?: SearchFilter[]; isResolve: boolean } | null => {
-    // 1. Risoluzione di un URI store:// già presente (es. in Edit o paste):
-    // cerca per nome usando la stessa query q + filters che il backend supporta
+    // 1. Resolve an existing store:// URI (edit, template or paste):
+    // search by name and narrow down to the exact id when available
     if (value.startsWith('store://')) {
         try {
             const parts = keyParser(value);
             const q = parts.name ? buildIncrementalQuery(parts.name) : '';
             if (!q) return null;
-            return { q, fq: filters, isResolve: true };
+            const fq = [
+                ...(filters ?? []),
+                ...(parts.id ? [{ filter: `id:"${parts.id}"` }] : []),
+            ];
+            return { q, fq, isResolve: true };
         } catch {
             return null;
         }
     }
 
-    // 2. Ricerca incrementale da testo libero
+    // 2. Incremental search from free text
     const q = buildIncrementalQuery(text);
     if (!q) return null;
 
     return { q, fq: filters, isResolve: false };
 };
+
+// Return the same reference when already empty, to avoid useless re-renders
+const clearOptions = (prev: StoreSearchItem[]) => (prev.length ? [] : prev);
 
 export const useStorePathSearch = ({
     text,
@@ -62,6 +82,7 @@ export const useStorePathSearch = ({
     resultsPerPage = 15,
     sortField = 'metadata.updated',
     sortOrder = 'DESC',
+    getOptionValue = defaultGetOptionValue,
 }: StorePathSearchProps) => {
     const provider = useSearchProvider();
     const [options, setOptions] = useState<StoreSearchItem[]>([]);
@@ -69,17 +90,33 @@ export const useStorePathSearch = ({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
+    // Latest getter without re-triggering the search effect
+    const getOptionValueRef = useRef(getOptionValue);
+    getOptionValueRef.current = getOptionValue;
+
+    // Stable dependency: callers may pass a new (but equal) filters array on every render
+    const filtersKey = JSON.stringify(filters ?? []);
+
     useEffect(() => {
         let active = true;
-        setOptions([]);
-        setLoading(false);
         setError(false);
 
-        if (paused || !provider) return;
+        if (paused || !provider) {
+            setOptions(clearOptions);
+            setLoading(false);
+            return;
+        }
 
-        const searchQuery = buildStoreSearchParams(text, value, filters);
+        const currentFilters: SearchFilter[] = JSON.parse(filtersKey);
+        const searchQuery = buildStoreSearchParams(
+            text,
+            value,
+            currentFilters.length ? currentFilters : undefined
+        );
         if (!searchQuery) {
             setResolved(null);
+            setOptions(clearOptions);
+            setLoading(false);
             return;
         }
 
@@ -91,38 +128,52 @@ export const useStorePathSearch = ({
             filter: {},
         };
 
-        const timer = setTimeout(() => {
-            setLoading(true);
-            provider
-                .search(searchParams, listParams)
-                .then(({ data }) => {
-                    if (!active) return;
-                    const items = data as StoreSearchItem[];
-                    if (isResolve) {
-                        setResolved(
-                            items.find(
-                                item =>
-                                    (item.key ?? item.path ?? String(item.id)) ===
-                                    value
-                            ) ?? null
-                        );
-                    } else {
-                        setOptions(items);
-                    }
-                })
-                .catch(() => {
-                    if (active) setError(true);
-                })
-                .finally(() => {
-                    if (active) setLoading(false);
-                });
-        }, isResolve ? 0 : 300);
+        // Previous options are kept visible while the new request is pending
+        const timer = setTimeout(
+            () => {
+                setLoading(true);
+                provider
+                    .search(searchParams, listParams)
+                    .then(({ data }) => {
+                        if (!active) return;
+                        const items = data as StoreSearchItem[];
+                        if (isResolve) {
+                            setResolved(
+                                items.find(
+                                    item =>
+                                        getOptionValueRef.current(item) ===
+                                        value
+                                ) ?? null
+                            );
+                            setOptions(clearOptions);
+                        } else {
+                            setOptions(items);
+                        }
+                    })
+                    .catch(() => {
+                        if (active) setError(true);
+                    })
+                    .finally(() => {
+                        if (active) setLoading(false);
+                    });
+            },
+            isResolve ? 0 : 300
+        );
 
         return () => {
             active = false;
             clearTimeout(timer);
         };
-    }, [text, value, filters, paused, resultsPerPage, sortField, sortOrder, provider]);
+    }, [
+        text,
+        value,
+        filtersKey,
+        paused,
+        resultsPerPage,
+        sortField,
+        sortOrder,
+        provider,
+    ]);
 
     return { options, loading, error, resolved };
 };

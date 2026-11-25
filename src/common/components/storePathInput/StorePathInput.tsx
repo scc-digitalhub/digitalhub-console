@@ -71,8 +71,8 @@ export const StorePathInput = (props: StorePathInputProps) => {
                 }
                 onInputChange={handleInputChange}
                 onChange={handleChange}
-                renderOption={(optionProps, option) => (
-                    <li {...optionProps} key={option.id}>
+                renderOption={({ key: _key, ...optionProps }, option) => (
+                    <li key={option.id} {...optionProps}>
                         <Box sx={{ width: '100%', py: 0.5 }}>
                             <StoreResourceSummary
                                 item={option}

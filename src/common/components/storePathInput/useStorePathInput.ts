@@ -7,12 +7,12 @@ import { AutocompleteInputChangeReason } from '@mui/material';
 import { useInput, useTranslate } from 'react-admin';
 import {
     StoreSearchItem,
+    defaultGetOptionValue,
     useStorePathSearch,
 } from './useStorePathSearch';
 import { StorePathInputProps } from './StorePathInput';
 
-export const defaultGetOptionValue = (item: StoreSearchItem) =>
-    item.key ?? item.path ?? String(item.id);
+export { defaultGetOptionValue };
 
 export const defaultGetOptionLabel = (item: StoreSearchItem) =>
     item.name ?? String(item.id);
@@ -64,6 +64,7 @@ export const useStorePathInput = ({
         text: inputValue,
         value: field.value ?? '',
         filters,
+        getOptionValue,
         paused: Boolean(
             readOnly ||
                 (selectedOption &&
