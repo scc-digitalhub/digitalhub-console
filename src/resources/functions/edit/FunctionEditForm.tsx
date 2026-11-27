@@ -8,10 +8,10 @@ import { Labeled, useRecordContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';
-import { SpecInput } from '../../../common/jsonSchema/components/SpecInput';
 import { useGetExtensions } from '../../../features/extensions/utils';
 import { ExtensionsForm } from '../../../features/extensions/components/Form';
 import { useExtensionsSections } from '../../../features/extensions/sections';
+import { FunctionSpecFields } from '../FunctionSpecFields';
 
 export const FunctionEditForm = ({
     onSpecDirty,
@@ -21,7 +21,8 @@ export const FunctionEditForm = ({
     onMetadataVersionDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
-    const kind = useWatch({ name: 'kind' });
+    const kind = useWatch({ name: 'kind' }) ?? record?.kind;
+
     const { data: extensions } = useGetExtensions();
     const contributions = useExtensionsSections();
 
@@ -39,7 +40,7 @@ export const FunctionEditForm = ({
 
             <MetadataInput onVersionDirty={onMetadataVersionDirty} />
 
-            <SpecInput source="spec" kind={kind} onDirty={onSpecDirty} />
+            <FunctionSpecFields kind={kind} onDirty={onSpecDirty} />
 
             {contributions &&
                 contributions.length > 0 &&

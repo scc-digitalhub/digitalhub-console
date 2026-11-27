@@ -910,7 +910,8 @@
     },
     "path": {
         "description": "URI pointing to the content",
-        "title": "Path"
+        "title": "Path",
+        "selected_resource": "Selected resource"
     },
     "port": {
         "description": "Port number for incoming traffic to service",

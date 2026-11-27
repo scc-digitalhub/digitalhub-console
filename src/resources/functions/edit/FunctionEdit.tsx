@@ -21,6 +21,7 @@ import { transformExtensionPaths } from '../../../features/extensions/utils';
 import { useNavigate } from 'react-router';
 import { CancelIcon } from '../../../common/components/icons/CancelIcon';
 import { FunctionEditForm } from './FunctionEditForm';
+import { movePathIntoSpec } from '../utils';
 
 const EditToolbar = () => {
     const translate = useTranslate();
@@ -66,15 +67,16 @@ export const FunctionEdit = (props: {
     };
 
     const transform = data => {
+        const values = movePathIntoSpec(data);
         const resetMetadataVersion = isSpecDirty && !isMetadataVersionDirty;
 
         //reset metadata version if new version, unless manually filled
         return {
-            ...data,
-            ...transformExtensionPaths(data),
+            ...values,
+            ...transformExtensionPaths(values),
             metadata: resetMetadataVersion
-                ? { ...data.metadata, version: undefined }
-                : data.metadata,
+                ? { ...values.metadata, version: undefined }
+                : values.metadata,
         };
     };
 

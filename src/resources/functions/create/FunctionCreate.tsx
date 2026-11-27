@@ -18,6 +18,7 @@ import {
     MutationFunctionContext,
     UseMutationOptions,
 } from '@tanstack/react-query';
+import { movePathIntoSpec } from '../utils';
 
 export const FunctionCreate = (props: {
     id?: string;
@@ -86,13 +87,11 @@ export const FunctionCreate = (props: {
     };
 
     const transform = useCallback(
-        (data: any) => {
-            return {
-                ...data,
-                id,
-                project: root || '',
-            };
-        },
+        (data: any) => ({
+            ...movePathIntoSpec(data),
+            id,
+            project: root || '',
+        }),
         [root, id]
     );
 
