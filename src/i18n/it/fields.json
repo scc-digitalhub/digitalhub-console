@@ -908,7 +908,8 @@
     },
     "path": {
         "description": "URI che punta al contenuto",
-        "title": "Path"
+        "title": "Path",
+        "selected_resource": "Risorsa selezionata"
     },
     "port": {
         "description": "Numero di porta per il traffico in ingresso al servizio",

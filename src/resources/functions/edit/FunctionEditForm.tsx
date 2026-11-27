@@ -4,10 +4,7 @@
 
 import { Divider, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
-import {
-    Labeled,
-    useRecordContext,
-} from 'react-admin';
+import { Labeled, useRecordContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { FormLabel } from '../../../common/components/layout/FormLabel';
 import { MetadataInput } from '../../../features/metadata/components/MetadataInput';

@@ -18,6 +18,7 @@ import {
     MutationFunctionContext,
     UseMutationOptions,
 } from '@tanstack/react-query';
+import { movePathIntoSpec } from '../utils';
 
 export const FunctionCreate = (props: {
     id?: string;
@@ -85,22 +86,12 @@ export const FunctionCreate = (props: {
         redirect(props.redirect ?? 'list', resource);
     };
 
-const transform = useCallback(
-        (data: any) => {
-            const { path, ...rest } = data;
-
-            return {
-                ...rest,
-                id,
-                project: root || '',
-                spec: {
-                    ...rest.spec,
-                    ...(path !== undefined
-                        ? { path: path || undefined }
-                        : {}),
-                },
-            };
-        },
+    const transform = useCallback(
+        (data: any) => ({
+            ...movePathIntoSpec(data),
+            id,
+            project: root || '',
+        }),
         [root, id]
     );
 

@@ -6,13 +6,10 @@ import { SyntheticEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AutocompleteInputChangeReason } from '@mui/material';
 import { useInput, useTranslate } from 'react-admin';
 import {
-    StoreSearchItem,
     defaultGetOptionValue,
     useStorePathSearch,
 } from './useStorePathSearch';
-import { StorePathInputProps } from './StorePathInput';
-
-export { defaultGetOptionValue };
+import { StorePathInputProps, StoreSearchItem } from './types';
 
 export const defaultGetOptionLabel = (item: StoreSearchItem) =>
     item.name ?? String(item.id);
@@ -30,12 +27,9 @@ export const useStorePathInput = ({
 }: StorePathInputProps) => {
     const translate = useTranslate();
 
-    // Refs to access the latest getter functions without re-triggering effects
+    // Ref to access the latest getter without re-triggering effects
     const getOptionValueRef = useRef(getOptionValue);
     getOptionValueRef.current = getOptionValue;
-
-    const getOptionLabelRef = useRef(getOptionLabel);
-    getOptionLabelRef.current = getOptionLabel;
 
     const {
         field,

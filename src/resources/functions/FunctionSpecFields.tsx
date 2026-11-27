@@ -6,25 +6,35 @@ import { useRecordContext } from 'react-admin';
 import { useWatch } from 'react-hook-form';
 import { SpecInput } from '../../common/jsonSchema/components/SpecInput';
 import { StorePathInput } from '../../common/components/storePathInput/StorePathInput';
-import { SearchFilter } from '../../features/search/SearchProvider';
 import { useFunctionSpecSchema } from './useFunctionSpecSchema';
+import { functionPathFilters } from './pathFilters';
 
-const modelFilters: Record<string, SearchFilter[]> = {
-    ollamaserve: [{ filter: 'type:model' }, { filter: 'kind:(ollama OR huggingface)' }],
-    huggingfaceserve: [{ filter: 'type:model' }, { filter: 'kind:huggingface' }],
-    mlflowserve: [{ filter: 'type:model' }, { filter: 'kind:mlflow' }],
-    sklearnserve: [{ filter: 'type:model' }, { filter: 'kind:sklearn' }],
-};
-
-export const FunctionSpecFields = ({ kind, onDirty }: {
+/**
+ * Spec fields of a function, shared by create and edit forms.
+ *
+ * The spec is rendered by SpecInput from the kind's JSON schema, except for
+ * `spec.path`: when the schema declares it, it is rendered by StorePathInput
+ * as a separate top-level form field (`path`), and moved back into
+ * `spec.path` by `movePathIntoSpec` (see utils) before saving.
+ *
+ * `onDirty` reports whether spec or path differ from the current record.
+ */
+export const FunctionSpecFields = ({
+    kind,
+    onDirty,
+}: {
     kind?: string;
     onDirty: (dirty: boolean) => void;
 }) => {
     const record = useRecordContext();
-    const { schema, uiSchema, pathSchema, pathValidators } = useFunctionSpecSchema(kind);
+    const { schema, uiSchema, pathSchema, pathValidators } =
+        useFunctionSpecSchema(kind);
     const path = useWatch({ name: 'path' });
     const [specDirty, setSpecDirty] = useState(false);
-    const pathDirty = Boolean(pathSchema) &&
+    // The `path` field is not part of the record (it lives in record.spec.path),
+    // so compare against that; an unset field means "unchanged".
+    const pathDirty =
+        Boolean(pathSchema) &&
         (path ?? record?.spec?.path ?? null) !== (record?.spec?.path ?? null);
 
     useEffect(() => {
@@ -50,7 +60,7 @@ export const FunctionSpecFields = ({ kind, onDirty }: {
                     label={pathSchema.title ?? 'fields.path.title'}
                     helperText={pathSchema.description}
                     defaultValue={record?.spec?.path}
-                    filters={kind ? modelFilters[kind] : undefined}
+                    filters={kind ? functionPathFilters[kind] : undefined}
                     validate={pathValidators}
                 />
             )}

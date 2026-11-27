@@ -6,18 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { GetListParams, SortPayload } from 'react-admin';
 import { keyParser } from '../../utils/parsers';
 import { useSearchProvider } from '../../../features/search/SearchContext';
-import {
-    SearchFilter,
-    SearchRecord,
-} from '../../../features/search/SearchProvider';
-
-export type StoreSearchItem = SearchRecord & {
-    name?: string;
-    type?: string;
-    kind?: string;
-    key?: string;
-    path?: string;
-};
+import { SearchFilter } from '../../../features/search/SearchProvider';
+import { StoreSearchItem } from './types';
 
 export type StorePathSearchProps = {
     text: string;
